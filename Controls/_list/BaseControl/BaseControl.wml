@@ -51,7 +51,6 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -196,9 +195,7 @@
 
         <ws:if data="{{_listViewModel}}">
 
-            <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
-
-            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
+            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="{{_shouldDisplayTopLoadingIndicator() ? '' : 'display: none;'}}"/>
 
             <ws:partial template="fullView" name="listView"
                         attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
@@ -207,6 +204,8 @@
         </ws:if>
 
         <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
+
+        <ws:partial if="{{ _shouldDisplayMiddleLoadingIndicator() }}" template="loadingIndicator"/>
 
         <ws:if data="{{_showContinueSearchButtonDirection === 'down'}}">
             <ws:partial template="continueSearch"/>

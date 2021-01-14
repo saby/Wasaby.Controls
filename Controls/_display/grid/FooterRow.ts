@@ -45,12 +45,6 @@ export default class FooterRow<T> extends Row<T> {
         }
     }
 
-    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
-    setLoadingIndicatorVisibility(visible: boolean): void {
-        this._loadingIndicatorVisible = visible;
-        this._nextVersion();
-    }
-
     getActionsTemplateConfig(): IItemActionsTemplateConfig {
         return this.getOwner().getActionsTemplateConfig();
     }

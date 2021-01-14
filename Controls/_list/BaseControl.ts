@@ -5644,33 +5644,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._sourceController?.updateOptions(options);
     },
 
-    _getLoadingIndicatorClasses(state?: string): string {
-        const hasItems = !!this._items && !!this._items.getCount();
-        const indicatorState = state || this._loadingIndicatorState;
-        return _private.getLoadingIndicatorClasses({
-            hasItems,
-            hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: indicatorState,
-            theme: this._options.theme,
-            isPortionedSearchInProgress: !!this._portionedSearchInProgress
-        });
-    },
-
-    _getLoadingIndicatorStyles(state?: string): string {
-        let styles = '';
-        const indicatorState = state || this._loadingIndicatorState;
-
-        if (indicatorState === 'all') {
-            if (this._loadingIndicatorContainerHeight) {
-                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-            }
-            if (this._loadingIndicatorContainerOffsetTop) {
-                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
-            }
-        }
-        return styles;
-    },
-
     /**
      * Обработчик скролла, вызываемый при помощи регистратора событий по событию в ScrollContainer
      * @param event
@@ -5914,6 +5887,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    // region LoadingIndicator
+
     _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter' | 'attachToNull'): boolean {
         // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
         // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
@@ -5923,29 +5898,55 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
         if (position === 'attachToNull') {
             return this._attachLoadTopTriggerToNull;
-        } else if (position === 'beforeEmptyTemplate') {
-            return this._loadingIndicatorState === 'up' || (
-                this._loadingIndicatorState === 'all' && (
-                    this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) ||
-                    !!this._children.listView && !!this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible()
-                )
-            );
-        } else if (position === 'afterList') {
+        } if (position === 'afterList') {
             return this._loadingIndicatorState === 'down';
-        } else if (position === 'inFooter') {
-            const showLoadingIndicator = this._loadingIndicatorState === 'all' &&
-                !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) &&
-                !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
-
-            // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
-            if (this._listViewModel && this._listViewModel.setLoadingIndicatorVisibility) {
-                this._listViewModel.setLoadingIndicatorVisibility(showLoadingIndicator);
-            }
-
-            return showLoadingIndicator;
         }
         return false;
     },
+
+    _shouldDisplayTopLoadingIndicator(): boolean {
+        return this._loadingIndicatorState === 'up';
+    },
+
+    _shouldDisplayMiddleLoadingIndicator(): boolean {
+        // Также, не должно быть завязки на горизонтальный скролл.
+        // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
+        return this._loadingIndicatorState === 'all' &&
+           !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
+    },
+
+    _shouldDisplayBottomLoadingIndicator(): boolean {
+        return this._loadingIndicatorState === 'down';
+    },
+
+    _getLoadingIndicatorClasses(state?: string): string {
+        const hasItems = !!this._items && !!this._items.getCount();
+        const indicatorState = state || this._loadingIndicatorState;
+        return _private.getLoadingIndicatorClasses({
+            hasItems,
+            hasPaging: !!this._pagingVisible,
+            loadingIndicatorState: indicatorState,
+            theme: this._options.theme,
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress
+        });
+    },
+
+    _getLoadingIndicatorStyles(state?: string): string {
+        let styles = '';
+        const indicatorState = state || this._loadingIndicatorState;
+
+        if (indicatorState === 'all') {
+            if (this._loadingIndicatorContainerHeight) {
+                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
+            }
+            if (this._loadingIndicatorContainerOffsetTop) {
+                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+            }
+        }
+        return styles;
+    },
+
+    // endregion LoadingIndicator
 
     // region Drag-N-Drop
 

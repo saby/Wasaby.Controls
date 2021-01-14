@@ -6422,31 +6422,83 @@ define([
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
+
+      it('_shouldDisplayTopLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         const testCases = [
+            ['up', true, true],
+            ['up', false, true],
+            ['down', true, false],
+            ['down', false, false],
+            ['all', true, false],
+            ['all', false, false]
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value of _shouldDisplayTopLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
+         });
+
+         baseControl._loadingIndicatorState = 'all';
+         baseControl.__needShowEmptyTemplate = () => false;
+         baseControl._children = {
+            listView: {
+               isColumnScrollVisible: () => true
+            }
+         };
+         assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+      });
+
+      it('_shouldDisplayMiddleLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         const testCases = [
+            ['up', true, false],
+            ['up', false, false],
+            ['down', true,  false],
+            ['down', false, false],
+            ['all', true,   true],
+            ['all', false,  true]
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value _shouldDisplayMiddleLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
+         });
+
+
+         baseControl._loadingIndicatorState = 'all';
+         baseControl.__needShowEmptyTemplate = () => false;
+         baseControl._children = {
+            listView: {
+               isColumnScrollVisible: () => true
+            }
+         };
+         assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), false);
+      });
+
       it('_shouldShowLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
          /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
-            ['beforeEmptyTemplate', 'up', true,    true],
-            ['beforeEmptyTemplate', 'up', false,   true],
-            ['beforeEmptyTemplate', 'down', true,  false],
-            ['beforeEmptyTemplate', 'down', false, false],
-            ['beforeEmptyTemplate', 'all', true,   true],
-            ['beforeEmptyTemplate', 'all', false,  false],
-
             ['afterList', 'up', true,     false],
             ['afterList', 'up', false,    false],
             ['afterList', 'down', true,   true],
             ['afterList', 'down', false,  true],
             ['afterList', 'all', true,    false],
             ['afterList', 'all', false,   false],
-
-            ['inFooter', 'up', true,      false],
-            ['inFooter', 'up', false,     false],
-            ['inFooter', 'down', true,    false],
-            ['inFooter', 'down', false,   false],
-            ['inFooter', 'all', true,     false],
-            ['inFooter', 'all', false,    true]
          ];
 
          const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
@@ -6458,16 +6510,6 @@ define([
             baseControl.__needShowEmptyTemplate = () => caseData[2];
             assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
          });
-
-         baseControl._loadingIndicatorState = 'all';
-         baseControl.__needShowEmptyTemplate = () => false;
-         baseControl._children = {
-            listView: {
-               isColumnScrollVisible: () => true
-            }
-         };
-         assert.equal(baseControl._shouldShowLoadingIndicator('beforeEmptyTemplate'), true);
-         assert.equal(baseControl._shouldShowLoadingIndicator('inFooter'), false);
       });
 
       describe('navigation', function() {
