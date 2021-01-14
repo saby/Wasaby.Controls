@@ -1,4 +1,4 @@
-import BaseCollection, { ItemsFactory, IOptions as IBaseOptions } from '../Collection';
+import BaseCollection, { ItemsFactory, IOptions as IBaseOptions, IItemActionsTemplateConfig } from '../Collection';
 import GroupItem from './GroupItem';
 import * as GridLadderUtil from '../utils/GridLadderUtil';
 import { mixin } from 'Types/util';
@@ -29,6 +29,13 @@ export default class Collection<
         }
 
         this._$colgroup?.reBuild();
+    }
+
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig) {
+        super.setActionsTemplateConfig(config);
+        if (this.getFooter()) {
+            this.getFooter().setActionsTemplateConfig(config);
+        }
     }
 
     setHasMoreData(hasMoreData: boolean): void {
