@@ -6,9 +6,10 @@ import {departments} from 'Controls-demo/filterPanel/resources/DataStorage';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _filterButtonData: unknown[] = [];
+    protected _filterButtonData: object[] = [];
     protected _source: Memory = null;
     protected _navigation: object = null;
+    protected _filterItems: object[] = null;
 
     protected _beforeMount(): void {
         this._navigation = {
@@ -43,6 +44,12 @@ export default class extends Control {
                 return addToData;
             }
         });
+        this._filterItems = [
+            { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
+            { id: 2, title: 'Кошелев А.Е.', owner: 'Кошелев А.Е.' },
+            { id: 3, title: 'Субботин А.В.', owner: 'Субботин А.В.' },
+            { id: 4, title: 'Чеперегин А.С.', owner: 'Чеперегин А.С.' },
+        ];
         this._filterButtonData = [
             {
                 group: 'Количество сотрудников',
@@ -51,7 +58,12 @@ export default class extends Control {
                 resetValue: [],
                 caption: '',
                 value: [],
-                textValue: ''
+                textValue: '',
+                editorOptions: {
+                    afterEditorTemplate: 'wml!Controls-demo/filterPanel/resources/AfterEditorTemplate',
+                    minValueInputPlaceholder: '0',
+                    maxValueInputPlaceholder: '1 000 000'
+                }
             },
             {
                 group: 'Ответственный',
@@ -60,7 +72,33 @@ export default class extends Control {
                 caption: '',
                 value: [],
                 textValue: '',
-                editorTemplateName: 'Controls/filterPanel:ListEditor'
+                editorTemplateName: 'Controls/filterPanel:ListEditor',
+                editorOptions: {
+                    style: 'master',
+                    navigation: {
+                        source: 'page',
+                        view: 'page',
+                        sourceConfig: {
+                            pageSize: 3,
+                            page: 0,
+                            hasMore: false
+                        }
+                    },
+                    keyProperty: 'owner',
+                    additionalTextProperty: 'id',
+                    displayProperty: 'title',
+                    selectorTemplate: {
+                        templateName: 'Controls-demo/filterPanel/resources/MultiSelectStackTemplate/StackTemplate',
+                        templateOptions: {items: this._filterItems},
+                        popupOptions: {
+                            width: 500
+                        }
+                    },
+                    source: new Memory({
+                        data: this._filterItems,
+                        keyProperty: 'owner'
+                    })
+                }
             }
         ];
     }

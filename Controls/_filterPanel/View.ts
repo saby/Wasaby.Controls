@@ -133,7 +133,7 @@ export default class View extends Control<IControlOptions> {
     }
 
     private _notifyChanges(): void {
-        this._notify('sendResult', [{items: this._source}], {bubbling: true});
+        this._notify('sendResult', [{items: this._source, filter: this._editingObject}], {bubbling: true});
         this._notify('filterChanged', [this._editingObject]);
         this._notify('sourceChanged', [this._source]);
     }

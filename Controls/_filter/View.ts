@@ -891,6 +891,13 @@ var Filter = Control.extend({
         return this._filterPopupOpener;
     },
 
+    _getStickyOpener(): StickyOpener {
+        if (!this._stickyOpener) {
+            this._stickyOpener = new StickyOpener();
+        }
+        return this._stickyOpener;
+    },
+
     _getStackOpener(): StackOpener {
         if (!this._stackOpener) {
             this._stackOpener = new StackOpener();
