@@ -245,7 +245,7 @@ export type TItemActionVisibilityCallback = (action: IItemAction, item: Model) =
 /**
  * @typedef {Function} TEditArrowVisibilityCallback
  * @description
- * Функция обратного вызова для определения видимости кнопки редактирования в свайпе.
+ * Функция обратного вызова для определения видимости кнопки редактирования.
  * @param item Model
  */
 export type TEditArrowVisibilityCallback = (item: Model) => boolean;
