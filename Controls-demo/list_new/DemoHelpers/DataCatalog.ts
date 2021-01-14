@@ -518,6 +518,7 @@ export {
     getContactsCatalogWithActions,
     getFewCategories,
     getCursorData,
+    getGroupedCollapsedCatalog,
     getGroupedCatalog,
     getGroupedCatalogForSwitchingGroup,
     getGroupedCatalogWithHiddenGroup,
