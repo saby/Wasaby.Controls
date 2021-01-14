@@ -69,22 +69,14 @@
                  _isFullPicker="{{_isFullPicker}}"
          />
       </div>
-      <div on:click="_expandPopup()" class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}} controls-PeriodLiteDialog__{{_isExpandedPopup ? 'collapseButton' : 'expandButton'}}
+      <div class="controls-PeriodLiteDialog__footer_theme-{{_options.theme}} controls-PeriodLiteDialog__{{_isExpandedPopup ? 'collapseButton' : 'expandButton'}}
                                             controls-PeriodLiteDialog__expandButton_theme-{{_options.theme}}">
          <ws:if data="{{_isExpandButtonVisible && _options.stickyPosition }}">
-            <div class="controls-PeriodLiteDialog__footer-points_wrapper  controls-PeriodLiteDialog__footer-points_wrapper_theme-{{_options.theme}}"
-                 title="{{_isExpandedPopup ? rk('Свернуть') : rk('Развернуть')}}">
-               <ws:if data="{{!_isExpandedPopup}}">
-                  <svg class="controls-PeriodLiteDialog__footer-arrow" viewBox="0 0 18 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M17.5 0L9 4.9L0.5 0L0 0.9L9 6L18 0.9L17.5 0Z" class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}"/>
-                  </svg>
-               </ws:if>
-               <ws:else>
-                  <svg class="controls-PeriodLiteDialog__footer-arrow" viewBox="0 0 18 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                     <path d="M17.5 6L9 1.1L0.5 6L0 5.1L9 0L18 5.1L17.5 6Z" class="controls-PeriodLiteDialog__footer-icon_theme-{{_options.theme}}"/>
-                  </svg>
-               </ws:else>
-            </div>
+            <Controls.toggle:BigSeparator attr:class="controls-PeriodLiteDialog__footer-points_wrapper  controls-PeriodLiteDialog__footer-points_wrapper_theme-{{_options.theme}}"
+                                          caption="{{_isExpandedPopup ? rk('Свернуть') : rk('Развернуть')}}"
+                                          iconSize="l"
+                                          on:valueChanged="_expandPopup()"
+                                          viewMode="arrow"/>
          </ws:if>
       </div>
    </ws:if>
