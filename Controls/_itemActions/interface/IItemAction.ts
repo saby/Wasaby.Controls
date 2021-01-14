@@ -140,6 +140,8 @@ export interface IItemAction {
      * @name Controls/_itemActions/interface/IItemAction#showType
      * @default MENU
      * @cfg {TItemActionShowType} Определяет, где будет отображаться элемент.
+     * @remark
+     * Подробнее о
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#showType
