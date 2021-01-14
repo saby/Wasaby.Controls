@@ -4,7 +4,6 @@ import {RecordSet} from 'Types/Collection';
 import FilterController, {IFilterControllerOptions} from 'Controls/_filter/ControllerClass';
 import {IPrefetchHistoryParams} from './IPrefetch';
 import {IFilterItem} from './View/interface/IFilterView';
-import {ISearchInputContainerOptions} from 'Controls/_search/Input/Container';
 import {SyntheticEvent} from 'UI/Vdom';
 
 export interface IFilterHistoryData {
@@ -15,6 +14,7 @@ export interface IFilterHistoryData {
 export interface IFilterContainerOptions extends IControlOptions {
    dataLoadCallback?: Function;
    dataLoadErrback?: Function;
+   minSearchLength: number;
 }
 
 export default class Container extends Control<IFilterContainerOptions> {
@@ -31,7 +31,8 @@ export default class Container extends Control<IFilterContainerOptions> {
       this._notify('filterChanged', [this._filter]);
    }
 
-   protected _beforeMount(options: IFilterContainerOptions, context: object, receivedState?: IFilterHistoryData | IFilterItem[]): Promise<void|IFilterHistoryData|{}> {
+   protected _beforeMount(options: IFilterContainerOptions, context: object,
+                          receivedState?: IFilterHistoryData | IFilterItem[]): Promise<void | IFilterHistoryData|{}> {
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
       this._dataLoadErrback = this._dataLoadErrback.bind(this);
 
@@ -107,7 +108,7 @@ export default class Container extends Control<IFilterContainerOptions> {
       this._fastFilterItems = this._filterController.getFastFilterItems();
    }
 
-   static getDefaultOptions(): ISearchInputContainerOptions {
+   static getDefaultOptions(): IFilterContainerOptions {
       return {
          minSearchLength: 3
       };
