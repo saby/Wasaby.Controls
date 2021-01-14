@@ -8,8 +8,7 @@ import fourthColumnTemplate = require('wml!Controls-demo/BreadCrumbs/Scenarios/F
 import fourthResultTemplate = require('wml!Controls-demo/BreadCrumbs/Scenarios/Fourth/resultTemplate');
 import secondHeaderTemplate = require('wml!Controls-demo/BreadCrumbs/Scenarios/Second/headerTemplate');
 import {HierarchicalMemory} from 'Types/source';
-import {constants} from 'Env/Env';
-import * as getResourceUrl from 'Core/helpers/getResourceUrl';
+import Images from '../Scenarios/images/Images';
 
 class ScenarioFirst extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -57,7 +56,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 'parent': 1,
                 'parent@': null,
                 name: 'Новиков Дмитрий',
-                photo: getResourceUrl(`${constants.resourceRoot}Controls-demo/BreadCrumbs/Scenarios/images/Novikov.png`),
+                photo: Images.Novikov,
                 position: 'Директор департамента разработки',
                 phone: '2300'
             }, {
@@ -74,7 +73,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 'parent': 12,
                 'parent@': null,
                 name: 'Боровиков Кирилл',
-                photo: getResourceUrl(`${constants.resourceRoot}Controls-demo/BreadCrumbs/Scenarios/images/Borovikov.png`),
+                photo: Images.Borovikov,
                 position: 'Заместитель директора по информационным системам',
                 phone: '2500'
             }, {
@@ -90,7 +89,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 'parent': 122,
                 'parent@': null,
                 name: 'Жукова Ольга',
-                photo: getResourceUrl(`${constants.resourceRoot}Controls-demo/BreadCrumbs/Scenarios/images/Zhukova.png`),
+                photo: Images.Zhukova,
                 position: 'Менеджер проекта (2 категории)',
                 phone: '2562'
             }, {
@@ -113,7 +112,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 'parent': 12221,
                 'parent@': null,
                 name: 'Белоконь Дарья',
-                photo: constants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/Belokon.png',
+                photo: Images.Belokon,
                 position: 'Проектировщик пользовательских интерфейсов (3+ категории)',
                 phone: '6377'
             }]
@@ -354,7 +353,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 'parent@': null,
                 name: 'Баранов М.А.',
                 position: 'Инженер-программист (2 категории)',
-                photo: getResourceUrl(`${constants.resourceRoot}Controls-demo/BreadCrumbs/Scenarios/images/Baranov.png`),
+                photo: Images.Baranov,
                 start: 35,
                 received: 170,
                 overdueCompleted: 12,
@@ -366,7 +365,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 'parent@': null,
                 name: 'Белоконь Д.Д.',
                 position: 'Проектировщик пользовательских интерфейсов',
-                photo: getResourceUrl(`${constants.resourceRoot}Controls-demo/BreadCrumbs/Scenarios/images/Belokon.png`),
+                photo: Images.Belokon,
                 start: 22,
                 received: 190,
                 overdueCompleted: 6,
@@ -378,7 +377,7 @@ class ScenarioFirst extends Control<IControlOptions> {
                 'parent@': null,
                 name: 'Боровиков К.К.',
                 position: 'аместитель директора по информационным системам',
-                photo: getResourceUrl(`${constants.resourceRoot}Controls-demo/BreadCrumbs/Scenarios/images/Borovikov.png`),
+                photo: Images.Borovikov,
                 start: 345,
                 received: 234,
                 overdueCompleted: 34,
@@ -469,7 +468,6 @@ class ScenarioFirst extends Control<IControlOptions> {
             }]
         });
     }
-
 
     static _theme: string[] = ['Controls/Classes'];
 
