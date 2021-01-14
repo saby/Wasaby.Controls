@@ -1,7 +1,7 @@
 <div class="demo-Grid" style="margin: 2em;">
    <div>
        Valign:
-       <Controls.dropdown:Input
+       <Controls.dropdown:Selector
                on:selectedKeysChanged="_onToggleValign()"
                bind:selectedKeys="_selectedKeys"
                displayProperty="title"

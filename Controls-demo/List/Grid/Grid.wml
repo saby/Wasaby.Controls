@@ -117,7 +117,7 @@
                      <ws:Object title=""/>
                      <ws:Object>
                         <ws:template>
-                           <Controls.dropdown:Input
+                           <Controls.dropdown:Selector
                               keyProperty="key"
                               displayProperty="title"
                               multiselect="{{ false }}"

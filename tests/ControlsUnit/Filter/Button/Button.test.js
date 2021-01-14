@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/filter',
+      'Controls/deprecatedFilter',
       'Core/core-clone'
    ],
    function(filterMod, Clone) {

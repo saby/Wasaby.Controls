@@ -79,13 +79,13 @@
  * В области видимости шаблона доступен объект **itemData**. Из него можно получить доступ к свойству **item** — это объект, который содержит данные обрабатываемого элемента.
  * @example
  *
- * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/dropdown:Input}, однако то же самое справедливо и для других {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/ выпадающих списков}.
+ * В следующих примерах показано, как изменять опции шаблона для контрола {@link Controls/dropdown:Selector}, однако то же самое справедливо и для других {@link /doc/platform/developmentapl/interface-development/controls/dropdown-menu/ выпадающих списков}.
  * В примерах №№ 1, 2 и 3 показано, как получить доступ к переменной itemData из области видимости шаблона.
  *
  * **Пример 1.** Контрол и шаблон настроены в одном WML-файле.
  * <pre class="brush: html">
  * <!-- file1.wml -->
- * <Controls.dropdown:Input>
+ * <Controls.dropdown:Selector>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/dropdown:ItemTemplate">
  *          <ws:contentTemplate>
@@ -93,17 +93,17 @@
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
- * </Controls.dropdown:Input>
+ * </Controls.dropdown:Selector>
  * </pre>
  *
  * **Пример 2.** Контрол и шаблон itemTemplate настроены в отдельных WML-файлах.
  * <pre class="brush: html">
  * <!-- file1.wml -->
- * <Controls.dropdown:Input>
+ * <Controls.dropdown:Selector>
  *    <ws:itemTemplate>
  *       <ws:partial template="wml!file2" scope="{{itemTemplate}}"/>
  *    </ws:itemTemplate>
- * </Controls.dropdown:Input>
+ * </Controls.dropdown:Selector>
  * </pre>
  *
  * <pre class="brush: html">
@@ -119,7 +119,7 @@
  *
  * <pre class="brush: html">
  * <!-- file1.wml -->
- * <Controls.dropdown:Input>
+ * <Controls.dropdown:Selector>
  *    <ws:itemTemplate>
  *       <ws:partial template="Controls/dropdown:ItemTemplate">
  *          <ws:contentTemplate>
@@ -127,7 +127,7 @@
  *          </ws:contentTemplate>
  *       </ws:partial>
  *    </ws:itemTemplate>
- * </Controls.dropdown:Input>
+ * </Controls.dropdown:Selector>
  * </pre>
  *
  * <pre class="brush: html">

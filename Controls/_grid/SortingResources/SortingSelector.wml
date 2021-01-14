@@ -1,6 +1,6 @@
 <ws:template name="sortingSelector">
     <div class="controls-SortingSelector">
-        <Controls.dropdown:Input
+        <Controls.dropdown:Selector
                 name="dropdown"
                 selectedKeys="{{_selectedKeys}}"
                 keyProperty="paramName"
@@ -21,7 +21,7 @@
             <ws:itemTemplate>
                 <ws:partial template="wml!Controls/_grid/SortingResources/SortingSelectorItemTemplate" scope="{{itemTemplate}}"></ws:partial>
             </ws:itemTemplate>
-        </Controls.dropdown:Input>
+        </Controls.dropdown:Selector>
         <ws:if data="{{_currentParamName}}">
             <ws:partial on:click="_switchValue()"
                         attr:class="controls-SortingSelector_arrow-outside_theme-{{_options.theme}}
