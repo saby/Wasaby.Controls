@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
     <Controls.filter:Controller filterButtonSource="{{_filterButtonData}}">
         <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
-            <div class="controlsDemo__flexRow">
+            <div>
                 <Controls.filter:ViewContainer>
                     <Controls.filter:View source="{{_filterButtonData}}"
                                           alignment="left"

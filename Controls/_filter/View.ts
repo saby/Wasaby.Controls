@@ -873,8 +873,7 @@ var Filter = Control.extend({
                 onResult: this._resultHandler.bind(this)
             }
         };
-        const opener = this._options.detailPanelMode === 'stack' ? this._getStackOpener() : this._getStickyOpener();
-        opener.open(Merge(popupOptions, panelPopupOptions));
+        this._getFilterPopupOpener().open(Merge(popupOptions, panelPopupOptions));
     },
 
     _handleScroll(): void {
