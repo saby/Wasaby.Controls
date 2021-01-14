@@ -43,7 +43,7 @@ export default class HoverFreeze {
     private _unFreezeHoverCallback: () => void;
     private _moveArea: IMouseMoveArea;
     private _itemFreezeHoverTimeout: number;
-    private _itemUnfreezeTimeout: number;
+    private _itemUnfreezeHoverTimeout: number;
 
     constructor(options: IHoverFreezeOptions) {
         this.updateOptions(options);
@@ -101,11 +101,17 @@ export default class HoverFreeze {
 
         // Размораживаем текущую запись, т.к. она более не должна являться замороженной
         if (this._isCursorInsideOfMouseMoveArea(x, y)) {
-            this._itemUnfreezeTimeout = setTimeout(() => {
+            this._itemUnfreezeHoverTimeout = setTimeout(() => {
                 this._unfreezeHover();
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
             this._unfreezeHover();
+        }
+    }
+
+    restartUnfreezeHoverTimeout(event: SyntheticEvent): void {
+        if (this._itemKey && !!this._itemUnfreezeHoverTimeout) {
+            this.startUnfreezeHoverTimeout(event);
         }
     }
 
@@ -120,12 +126,14 @@ export default class HoverFreeze {
     private _clearFreezeHoverTimeout(): void {
         if (this._itemFreezeHoverTimeout) {
             clearTimeout(this._itemFreezeHoverTimeout);
+            this._itemFreezeHoverTimeout = null;
         }
     }
 
     private _clearUnfreezeHoverTimeout(): void {
-        if (this._itemUnfreezeTimeout) {
-            clearTimeout(this._itemUnfreezeTimeout);
+        if (this._itemUnfreezeHoverTimeout) {
+            clearTimeout(this._itemUnfreezeHoverTimeout);
+            this._itemUnfreezeHoverTimeout = null;
         }
     }
 

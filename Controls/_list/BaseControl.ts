@@ -5572,6 +5572,10 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         if (this._dndListController && this._dndListController.isDragging()) {
             this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
         }
+        // Если мы муваем и уже есть таймер выхода, то мы его ресетим
+        if (hoverFreezeController) {
+            hoverFreezeController.restartUnfreezeHoverTimeout(nativeEvent);
+        }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
