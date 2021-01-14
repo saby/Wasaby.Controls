@@ -3555,16 +3555,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
-    changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
-        if (indicatorName) {
-            if (state) {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = '';
-            } else {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
-            }
-        }
-    },
     applyTriggerOffset(offset: {top: number, bottom: number}): void {
         // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
         this._children.topVirtualScrollTrigger?.style.top = `${offset.top}px`;
@@ -5890,16 +5880,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // region LoadingIndicator
 
     _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter' | 'attachToNull'): boolean {
-        // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
-        // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
-        // В таком случае выводим индикатор над списком.
-        // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
-        // Также, не должно быть завязки на горизонтальный скролл.
-        // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
         if (position === 'attachToNull') {
             return this._attachLoadTopTriggerToNull;
-        } if (position === 'afterList') {
-            return this._loadingIndicatorState === 'down';
         }
         return false;
     },
@@ -5916,7 +5898,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _shouldDisplayBottomLoadingIndicator(): boolean {
-        return this._loadingIndicatorState === 'down';
+        return this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
+    },
+
+    _shouldDisplayPortionedSearch(): boolean {
+        return this._portionedSearchInProgress;
     },
 
     _getLoadingIndicatorClasses(state?: string): string {
@@ -5944,6 +5930,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
         return styles;
+    },
+
+    // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
+    changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
+        if (indicatorName) {
+            if (state) {
+                this._children[`${indicatorName}LoadingIndicator`].style.display = '';
+            } else {
+                this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
+            }
+        }
     },
 
     // endregion LoadingIndicator

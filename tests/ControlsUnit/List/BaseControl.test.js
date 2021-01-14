@@ -6422,7 +6422,6 @@ define([
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
-
       it('_shouldDisplayTopLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
@@ -6477,7 +6476,6 @@ define([
             assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
          });
 
-
          baseControl._loadingIndicatorState = 'all';
          baseControl.__needShowEmptyTemplate = () => false;
          baseControl._children = {
@@ -6488,27 +6486,26 @@ define([
          assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), false);
       });
 
-      it('_shouldShowLoadingIndicator', () => {
+      it('_shouldDisplayBottomLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
-         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
-            ['afterList', 'up', true,     false],
-            ['afterList', 'up', false,    false],
-            ['afterList', 'down', true,   true],
-            ['afterList', 'down', false,  true],
-            ['afterList', 'all', true,    false],
-            ['afterList', 'all', false,   false],
+            ['up', true,     false],
+            ['up', false,    false],
+            ['down', true,   true],
+            ['down', false,  true],
+            ['all', true,    false],
+            ['all', false,   false],
          ];
 
          const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
-             `Wrong return value of _shouldShowLoadingIndicator('${caseData[0]}'). Expected ${caseData[3]}. ` +
-             `Params: { _loadingIndicatorState: ${caseData[1]}, __needShowEmptyTemplate: ${caseData[2]} }.`;
+             `Wrong return value _shouldDisplayBottomLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
 
          testCases.forEach((caseData, index) => {
-            baseControl._loadingIndicatorState = caseData[1];
-            baseControl.__needShowEmptyTemplate = () => caseData[2];
-            assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayBottomLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
          });
       });
 
