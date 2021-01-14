@@ -498,7 +498,7 @@ const _private = {
                 }
             }
         } else {
-            const wasItemsReplaced = listModel.getCollection() && !_private.isEqualItemsFormat(listModel.getCollection(), items);
+            const wasItemsReplaced = listModel.getCollection() && !isEqualItems(listModel.getCollection(), items);
             listModel.setItems(items, newOptions);
             self._items = listModel.getCollection();
 
