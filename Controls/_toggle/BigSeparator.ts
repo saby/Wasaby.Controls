@@ -34,7 +34,6 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * @implements Controls/_toggle/interface/ICheckable
  *
  * @demo Controls-demo/toggle/BigSeparator/Index
- * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
  */
 
 /*
@@ -79,6 +78,7 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
 /**
  * @name Controls/_toggle/Separator#value
  * @cfg {Boolean} Если значение - "true", то будет отображаться иконка открытия, иначе будет отображаться иконка закрытия.
+ * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
  */
 
 /*
