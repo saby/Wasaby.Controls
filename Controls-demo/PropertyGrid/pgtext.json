@@ -559,13 +559,13 @@
       }
     }
   },
-  "Controls/dropdown:Input": {
-    "name": "Controls/dropdown:Input",
+  "Controls/dropdown:Selector": {
+    "name": "Controls/dropdown:Selector",
     "title": "Input for selection from the list of options.",
-    "className": "Controls/dropdown:Input",
+    "className": "Controls/dropdown:Selector",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/dropdown:Input",
+    "fullname": "Controls/dropdown:Selector",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

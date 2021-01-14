@@ -16,13 +16,13 @@
 
       <ws:headerContentTemplate>
          <Controls.source:SelectedKey bind:selectedKey="_isClient">
-            <Controls.dropdown:Input
+            <Controls.dropdown:Selector
                     displayProperty="title"
                     keyProperty="key"
                     source="{{_globalSource}}"
                     itemTemplate="wml!Controls/_filterPopup/History/_Favorite/ddlItemTemplate"
                     attr:class="controls-FavoriteEditDialog__selector">
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </Controls.source:SelectedKey>
 
          <ws:if data="{{_options.isFavorite}}">
