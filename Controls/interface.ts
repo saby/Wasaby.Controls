@@ -61,8 +61,7 @@ export {
     IBasePageSourceConfig,
     TNavigationPagingMode,
     TNavigationSource,
-    TNavigationDirection,
-    CursorDirection
+    TNavigationDirection
 } from './_interface/INavigation';
 export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';

@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__childWidth400">
     <Controls.treeGridNew:View
             attr:class="controlsDemo__inline-flex"
             keyProperty="id"

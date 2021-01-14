@@ -37,13 +37,13 @@ const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
 /**
  * Контрол меню.
  * @public
- * @mixes Controls/_interface/IIconSize
- * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/_menu/interface/IMenuControl
- * @mixes Controls/_menu/interface/IMenuBase
- * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/interface:IIconSize
+ * @mixes Controls/interface:ISource
+ * @mixes Controls/interface:INavigation
+ * @mixes Controls/interface:IFilterChanged
+ * @mixes Controls/menu:IMenuControl
+ * @mixes Controls/menu:IMenuBase
+ * @mixes Controls/dropdown:IGrouped
  * @demo Controls-demo/Menu/Control/Source/Index
  *
  * @author Герасимов А.М.

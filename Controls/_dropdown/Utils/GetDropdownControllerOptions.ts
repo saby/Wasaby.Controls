@@ -11,6 +11,7 @@ export default function getDropdownControllerOptions(options: IDropdownControlle
         notifyEvent: options.notifyEvent,
         lazyItemsLoading: options.lazyItemsLoading,
         emptyText: options.emptyText,
+        emptyKey: options.emptyKey,
         itemActions: options.itemActions,
         itemActionVisibilityCallback: options.itemActionVisibilityCallback,
         selectedItemsChangedCallback: options.selectedItemsChangedCallback,
