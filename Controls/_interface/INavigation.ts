@@ -317,7 +317,7 @@ export default interface INavigation {
 
 /**
  * @name Controls/_interface/INavigation#navigation
- * @cfg {INavigationOptionValue} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/ навигации} в {@link /doc/platform/developmentapl/interface-development/controls/list/ списке}.
+ * @cfg {Controls/interface:INavigation/INavigationOptionValue.typedef} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/ навигации} в {@link /doc/platform/developmentapl/interface-development/controls/list/ списке}.
  * @example
  * В этом примере в списке будут отображаться 2 элемента.
  * <pre class="brush: html">
