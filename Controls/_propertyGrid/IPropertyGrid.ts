@@ -75,6 +75,7 @@ export interface IPropertyGrid {
  *     bind:editingObject="_editingObject"
  *     source="{{_source}}"/>
  * </pre>
+ * @demo Controls-demo/PropertyGridNew/Editors/CustomEditor/Index
  */
 
 /*
@@ -117,18 +118,7 @@ export interface IPropertyGrid {
  *    bind:editingObject="_editingObject"
  *    source="{{_source}}"/>
  * </pre>
- */
-
-/**
- * @name Controls/_propertyGrid/IPropertyGrid#collapsedGroups
- * @cfg {Array} Список свернутых идентификаторов групп.
- * Идентификаторы групп вычисляются из значений свойства, указанного в groupProperty.
- */
-
-/*
- * @name Controls/_propertyGrid/IPropertyGrid#collapsedGroups
- * @cfg {Array} List of collapsed group identifiers.
- * Group identifiers are calculated from the property values specified in groupProperty.
+ * @demo Controls-demo/PropertyGridNew/Source/Index
  */
 
 /**
@@ -157,11 +147,65 @@ export interface IPropertyGrid {
  * @remark
  * Подробнее о параметрах шаблона Controls/propertyGrid:GroupTemplate читайте {@link Controls/propertyGrid:GroupTemplate здесь}.
  * @see collapsedGroups
- * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
+ * @demo Controls-demo/PropertyGridNew/Group/Template/Index
  */
 
 /**
  * @name Controls/_propertyGrid/IPropertyGrid#collapsedGroups
  * @cfg {Array.<String>} Список идентификаторов свернутых групп.
  * @see groupTemplate
+ * @demo Controls-demo/PropertyGridNew/CollapsedGroups/Index
+ */
+
+/**
+ * @typedef {String} СaptionPosition
+ * @variant left
+ * @variant top
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#captionPosition
+ * @cfg {СaptionPosition} Расположение заголовка редактора.
+ * @default left
+ * @demo Controls-demo/PropertyGridNew/CaptionPosition/Index
+ */
+
+/**
+ * @typedef {Object} ItemAction
+ * @property {String} id Идентификатор операции над записью.
+ * @property {String} title Название операции операции над записью.
+ * @property {String} icon Иконка операции операции над записью.
+ * @property {Number} showType Расположение операции операции над записью.
+ * @property {String} style Стиль операции операции над записью.
+ * @property {String} iconStyle Стиль иконки операции операции над записью. (secondary | warning | danger | success).
+ * @property {Function} handler Обработчик события клика по операции операции над записью.
+ * @property {String} parent Ключ родителя операции операции над записью.
+ * @property {boolean|null} parent@ Поле, определяющее иерархический тип операции над записью (list, node, hidden node).
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#itemActions
+ * @cfg {Array.<ItemAction>} Конфигурация опций записи.
+ * @demo Controls-demo/PropertyGridNew/ItemActions/Index
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#itemActionVisibilityCallback
+ * @cfg {function} Функция управления видимостью операций над записью.
+ * @param {ItemAction} action Объект с настройкой действия.
+ * @param {Types/entity:Model} item Экземпляр записи, действие над которой обрабатывается.
+ * @returns {Boolean} Определяет, должна ли операция отображаться.
+ * @demo Controls-demo/PropertyGridNew/ItemActionVisibilityCallback/Index
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#captionColumnOptions
+ * @cfg {IPropertyGridColumnOptions} Конфигурации ширины колонки заголовка редактора.
+ * @demo Controls-demo/PropertyGridNew/CaptionColumnOptions/Index
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#editorColumnOptions
+ * @cfg {IPropertyGridColumnOptions} Конфигурации ширины колонки редактора.
+ * @demo Controls-demo/PropertyGridNew/EditorColumnOptions/Index
  */
