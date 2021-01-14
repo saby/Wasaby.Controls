@@ -1211,8 +1211,6 @@ const _private = {
 
     onScrollShow(self, params) {
         _private.doAfterUpdate(self, () => {
-            // ToDo option "loadOffset" is crutch for contacts.
-            // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
             self._viewSize = _private.getViewSize(this, true);
