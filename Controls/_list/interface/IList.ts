@@ -246,7 +246,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {MultiSelectVisibility} Режим отображения флагов множественного выбора.
+ * @cfg {MultiSelectVisibility} Видимость чекбоксов.
  * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
  * @remark
@@ -600,6 +600,10 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @remark
  * Из обработчика события нужно вернуть полученный ключ или новый ключ.
  * Либо можно вернуть промис с нужным ключом.
+ * @see Controls/list:IMarkerList#markedKey
+ * @see Controls/list:IMarkerList#markerVisibility
+ * @see Controls/list:IList#moveMarkerOnScrollPaging
+ * @see Controls/list:IList#markedKeyChanged
  */
 
 /**
