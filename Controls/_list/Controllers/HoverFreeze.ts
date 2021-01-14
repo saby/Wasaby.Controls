@@ -10,7 +10,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 // getIndex
 
 const HOVER_FREEZE_TIMEOUT: number = 400;
-const HOVER_UNFREEZE_TIMEOUT: number = 400;
+const HOVER_UNFREEZE_TIMEOUT: number = 500;
 
 const ITEM_ACTIONS_SELECTOR = '.controls-itemActionsV';
 
@@ -76,7 +76,7 @@ export default class HoverFreeze {
                 // Если есть залипшая запись, то надо понять это та же запись, по которой мы сейчас сделали ховер
                 // или нет. Если нет, то всё надо сбросить.
                 if (this._itemKey !== null) {
-                    // Размораживаем текущую запись, т.к. нам она более не должна являться замороженной
+                    // Размораживаем текущую запись, т.к. она более не должна являться замороженной
                     this._unfreezeHover();
                 }
 
@@ -96,9 +96,9 @@ export default class HoverFreeze {
         const x = (event.nativeEvent as MouseEvent).clientX;
         const y = (event.nativeEvent as MouseEvent).clientY;
 
+        // Размораживаем текущую запись, т.к. она более не должна являться замороженной
         if (this._isCursorInsideOfMouseMoveArea(x, y)) {
             this._itemUnfreezeTimeout = setTimeout(() => {
-                // Размораживаем текущую запись, т.к. нам она более не должна являться замороженной
                 this._unfreezeHover();
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
