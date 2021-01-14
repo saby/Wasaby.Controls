@@ -39,7 +39,7 @@ import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     Collection,
-    CollectionItem,
+    CollectionItem, ICollectionItem,
     IEditableCollectionItem,
     TItemKey,
     TreeItem
@@ -5547,11 +5547,13 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(itemData);
         }
+        const itemKey = itemData.getContents().getKey();
         const hoverFreezeController = _private.getHoverFreezeController(this);
-        if (hoverFreezeController && !hoverFreezeController.isItemHoverFrozen()) {
-            // Очищаем таймаут разморозки, чтобы не было асинхронных нежданчиков
-            hoverFreezeController.clearUnfreezeHoverTimeout();
-            hoverFreezeController.startFreezeHoverTimeout(itemData);
+        if (hoverFreezeController) {
+            const frozenItemKey = hoverFreezeController.getCurrentItemKey();
+            if (frozenItemKey === null || frozenItemKey === itemKey) {
+                hoverFreezeController.startFreezeHoverTimeout(itemData);
+            }
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
@@ -5562,7 +5564,7 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
             !this._itemActionsMenuId &&
-            (!hoverFreezeController || !hoverFreezeController.isItemHoverFrozen())) {
+            (!hoverFreezeController || hoverFreezeController.getCurrentItemKey() === null)) {
             _private.addShowActionsClass(this);
         }
 
@@ -5583,7 +5585,6 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         }
         const hoverFreezeController = _private.getHoverFreezeController(this);
         if (hoverFreezeController) {
-            hoverFreezeController.clearFreezeHoverTimeout();
             hoverFreezeController.startUnfreezeHoverTimeout();
         }
     },
