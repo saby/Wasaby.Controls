@@ -692,6 +692,9 @@ var
         },
         resolveEditArrowVisibility(item, options) {
             let contents = item.getContents();
+            if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
+                return;
+            }
             if (!options.editArrowVisibilityCallback) {
                 return options.showEditArrow;
             }
