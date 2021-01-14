@@ -109,4 +109,9 @@ export default interface ISelectionStrategy {
     * @param {IEntryPathItem[]} entryPath Массив объектов, которые содержат идентификаторы отмеченного "ребенка" и его "родителя"
     */
    setEntryPath(entryPath: IEntryPathItem[]): void;
+
+   /**
+    * Сбрасывает состояние стратегии
+    */
+   reset(): void;
 }

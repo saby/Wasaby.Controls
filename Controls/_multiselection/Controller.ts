@@ -87,6 +87,7 @@ export class Controller {
       // Если сбросили выбор, значит закончили "сессию" выбора и нас не интересует последнее изменение фильтра
       if (!selection.selected.length && !selection.excluded.length) {
          this._filterChanged = false;
+         this._strategy.reset();
       }
 
       this._selection = selection;
