@@ -9,21 +9,17 @@ import * as template from 'wml!Controls/_spoiler/View/View';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import Util from './Util';
 
-/**
- * Интерфейс опций контрола {@link Controls/spoiler:View}.
- *
- * @interface Controls/_spoiler/IView
- * @public
- * @author Красильников А.С.
- */
+
 export interface IViewOptions extends IHeadingOptions {
     /**
-     * Шаблон скрываемой области.
+     * @name Controls/_spoiler/IView#content
+     * @cfg {String|Function} Шаблон скрываемой области.
      * @demo Controls-demo/Spoiler/View/Content/Index
      */
     content: TemplateFunction;
     /**
-     * Контент, занимающий свободное пространство справа от заголовка. Если заголовка нет, то контент занимает все пространство шапки, в этом случае заголовок можно добавить вручную в любом месте.
+     * @name Controls/_spoiler/IView#headerContentTemplate
+     * @cfg {String|Function} Контент, занимающий свободное пространство справа от заголовка. Если заголовка нет, то контент занимает все пространство шапки, в этом случае заголовок можно добавить вручную в любом месте.
      * @demo Controls-demo/Spoiler/Header/Index
      * @demo Controls-demo/Spoiler/HeaderRight/Index
      * @demo Controls-demo/Spoiler/HeadingLeft/Index
@@ -31,6 +27,12 @@ export interface IViewOptions extends IHeadingOptions {
     headerContentTemplate?: TemplateFunction;
 }
 
+/**
+ * Интерфейс опций контрола {@link Controls/spoiler:View}.
+ *
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IView extends IHeading {
     readonly '[Controls/_spoiler/IView]': boolean;
 }
@@ -47,7 +49,6 @@ export interface IView extends IHeading {
  * @extends UI/Base:Control
  * @implements Controls/interface:IExpandable
  * @implements Controls/spoiler:IHeading
- * @implements Controls/spoiler:IView
  *
  * @public
  * @author Красильников А.С.

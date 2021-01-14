@@ -3,10 +3,11 @@ import { Model } from 'Types/entity';
 import { CrudEntityKey } from 'Types/source';
 
 /**
+ * Режимы отображения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
  * @typedef {String} TVisibility
- * @variant visible Маркер отображается всегда, даже если не задан идентификатор элемента в опции {@link markedKey}.
- * @variant hidden Маркер всегда скрыт.
- * @variant onactivated Макер отображается при активации списка, например при клике по элементу.
+ * @variant visible Маркер отображается всегда, даже если не задана опция {@link markedKey}.
+ * @variant hidden Маркер скрыт и не отображается для всех записей. Можно отключить выделение маркером для отдельной записи, о чем подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/#item здесь}.
+ * @variant onactivated Макер отображается при активации списка, например при клике по записи.
  */
 export type TVisibility = 'visible' | 'hidden' | 'onactivated';
 export enum Visibility { Visible = 'visible', Hidden = 'hidden', OnActivated = 'onactivated'}
@@ -22,8 +23,7 @@ export interface IOptions extends IMarkerListOptions {
 }
 
 /**
- * Опции для маркера списка
- * @interface Controls/_marker/interface/IMarkerList
+ * Интерфейс для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера} в списках.
  * @public
  * @author Панихин К.А.
  */
@@ -31,12 +31,13 @@ export interface IMarkerListOptions {
 
 
    /**
-    * @cfg {TVisibility} Режим отображения маркера активного элемента.
-    * @remark
-    * В следующем примере маркер появляется только при активации списка.
-    * @demo Controls-demo/list_new/Marker/OnActivated/Index
+    * @cfg {TVisibility} Режим отображения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
+    * @demo Controls-demo/list_new/Marker/OnActivated/Index В примере опция markerVisibility установлена в значение "onactivated".
     * @default onactivated
     * @see markedKey
+    * @see Controls/list:IListNavigation#moveMarkerOnScrollPaging
+    * @see Controls/list:IList#beforeMarkedKeyChanged
+    * @see Controls/list:IList#markedKeyChanged
     */
 
    /*ENG
@@ -50,17 +51,19 @@ export interface IMarkerListOptions {
    markerVisibility?: TVisibility;
 
    /**
-    * @cfg {Types/source:CrudEntityKey} Идентификатор элемента, который выделен маркером.
+    * @cfg {Types/source:CrudEntityKey} Идентификатор элемента, который выделен {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркером}.
     * @remark
     * Если сделан bind на эту опцию, но она передана изначально в значении undefined,
     * то установка маркера работает аналогично тому, как если бы bind не был задан (по внутреннему состоянию контрола).
-    * @demo Controls-demo/List/List/BasePG
+    * @demo Controls-demo/list_new/Marker/Visible/Index
     * @see markerVisibility
+    * @see Controls/list:IListNavigation#moveMarkerOnScrollPaging
+    * @see Controls/list:IList#beforeMarkedKeyChanged
+    * @see Controls/list:IList#markedKeyChanged
     */
 
    /*ENG
     * @cfg {Number} Identifier of the marked collection item.
-    * @demo Controls-demo/List/List/BasePG
     */
    markedKey?: CrudEntityKey;
 

@@ -36,26 +36,26 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  * @demo Controls-demo/dropdown_new/Button/Source/Index
  * @class Controls/_dropdown/Button
  * @extends Controls/_buttons/Button
- * @mixes Controls/_menu/interface/IMenuPopup
- * @mixes Controls/_menu/interface/IMenuControl
- * @mixes Controls/_menu/interface/IMenuBase
- * @mixes Controls/_dropdown/interface/IDropdownSource
- * @mixes Controls/_dropdown/interface/IBaseDropdown
- * @mixes Controls/_dropdown/interface/IFooterTemplate
- * @mixes Controls/_dropdown/interface/IHeaderTemplate
- * @mixes Controls/_dropdown/interface/IIconSize
- * @mixes Controls/_dropdown/interface/IBaseDropdown
- * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/_interface/IFontSize
- * @mixes Controls/_interface/IHeight
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_interface/IIcon
- * @mixes Controls/_interface/ISearch
- * @mixes Controls/_buttons/interface/IButton
+ * @mixes Controls/menu:IMenuPopup
+ * @mixes Controls/menu:IMenuControl
+ * @mixes Controls/menu:IMenuBase
+ * @mixes Controls/dropdown:IBaseDropdown
+ * @mixes Controls/dropdown:IFooterTemplate
+ * @mixes Controls/dropdown:IHeaderTemplate
+ * @mixes Controls/dropdown:IIconSize
+ * @mixes Controls/dropdown:IBaseDropdown
+ * @mixes Controls/dropdown:IGrouped
+ * @mixes Controls/interface:ISource
+ * @mixes Controls/interface:IIconStyle
+ * @mixes Controls/interface:IFontColorStyle
+ * @mixes Controls/interface:IFilterChanged
+ * @mixes Controls/interface:IFontSize
+ * @mixes Controls/interface:IHeight
+ * @mixes Controls/interface:ICaption
+ * @mixes Controls/interface:ITooltip
+ * @mixes Controls/interface:IIcon
+ * @mixes Controls/interface:ISearch
+ * @mixes Controls/buttons:IButton
  *
  *
  * @public
@@ -69,20 +69,26 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
  *
  * @class Controls/_dropdown/Button
  * @extends UI/Base:Control
- * @mixes Controls/_interface/ICaption
- * @mixes Controls/_interface/ITooltip
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/_interface/IHierarchy
- * @mixes Controls/_dropdown/interface/IFooterTemplate
- * @mixes Controls/_dropdown/interface/IHeaderTemplate
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_dropdown/interface/IGrouped
- * @mixes Controls/_buttons/interface/IButton
- * @mixes Controls/_interface/IIcon
- * @mixes Controls/_dropdown/interface/IIconSize
- * @mixes Controls/_interface/IIconStyle
- * @mixes Controls/_dropdown/interface/IGrouped
+ * @mixes Controls/menu:IMenuPopup
+ * @mixes Controls/menu:IMenuControl
+ * @mixes Controls/menu:IMenuBase
+ * @mixes Controls/dropdown:IBaseDropdown
+ * @mixes Controls/dropdown:IFooterTemplate
+ * @mixes Controls/dropdown:IHeaderTemplate
+ * @mixes Controls/dropdown:IIconSize
+ * @mixes Controls/dropdown:IBaseDropdown
+ * @mixes Controls/dropdown:IGrouped
+ * @mixes Controls/interface:ISource
+ * @mixes Controls/interface:IIconStyle
+ * @mixes Controls/interface:IFontColorStyle
+ * @mixes Controls/interface:IFilterChanged
+ * @mixes Controls/interface:IFontSize
+ * @mixes Controls/interface:IHeight
+ * @mixes Controls/interface:ICaption
+ * @mixes Controls/interface:ITooltip
+ * @mixes Controls/interface:IIcon
+ * @mixes Controls/interface:ISearch
+ * @mixes Controls/buttons:IButton
  *
  * @public
  * @author Герасимов А.М.
@@ -253,18 +259,17 @@ export default class Button extends BaseDropdown {
  * при полной уверенности, что источник вернёт данные для меню.
  * @example
  * В данном примере данные для меню будут загружены лениво, после первого клика по кнопке.
- * WML:
- * <pre>
+ * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.dropdown:Button
- *       bind:selectedKeys="_selectedKeys"
- *       keyProperty="id"
- *       displayProperty="title"
- *       source="{{_source)}}"
- *       lazyItemsLoading="{{true}}">
- * </Controls.dropdown:Input>
+ *    bind:selectedKeys="_selectedKeys"
+ *    keyProperty="id"
+ *    displayProperty="title"
+ *    source="{{_source)}}"
+ *    lazyItemsLoading="{{true}}" />
  * </pre>
- * JS:
  * <pre>
+ * // JavaScript
  * _source:null,
  * _beforeMount: function() {
  *    this._source = new source.Memory({
@@ -282,4 +287,36 @@ export default class Button extends BaseDropdown {
  * @name Controls/_dropdown/Button#fontSize
  * @cfg
  * @demo Controls-demo/dropdown_new/Button/FontSize/Index
+ */
+
+/**
+ * @name Controls/_dropdown/Button#source
+ * @cfg {Controls/_dropdown/interface/IBaseDropdown/SourceCfg.typedef}
+ * @default undefined
+ * @remark
+ * Запись может иметь следующие {@link Controls/_dropdown/interface/IBaseDropdown/Item.typedef свойства}.
+ * @demo Controls-demo/dropdown_new/Button/Source/Index
+ * @example
+ * Записи будут отображены из источника _source.
+ * <pre class="brush: html">
+ * <!-- WML -->
+ * <Controls.dropdown:Button
+ *    keyProperty="key"
+ *    source="{{_source}}"
+ *    caption="Create"
+ *    viewMode="link"
+ *    iconSize="m" />
+ * </pre>
+ * <pre class="brush: js">
+ * // JavaScript
+ * _source: new source.Memory({
+ *    keyProperty: 'key',
+ *    data: [
+ *       {key: '1', icon: 'icon-EmptyMessage', iconStyle: 'info', title: 'Message'},
+ *       {key: '2', icon: 'icon-TFTask', title: 'Task'},
+ *       {key: '3', title: 'Report'},
+ *       {key: '4', title: 'News', readOnly: true}
+ *    ]
+ * })
+ * </pre>
  */

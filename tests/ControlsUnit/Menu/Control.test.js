@@ -160,7 +160,8 @@ define(
 
             it('_loadItems return items', async() => {
                menuControl._listModel = {
-                  setMarkedKey: () => {}
+                  setMarkedKey: () => {},
+                  getItemBySourceKey: () => null
                };
                menuControl._loadItems = () => {
                   return new Promise((resolve) => {

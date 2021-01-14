@@ -1,0 +1,11 @@
+<div class="controls-Demo__wide-propertyGrid">
+    <Controls.propertyGrid:PropertyGrid
+            bind:editingObject="_editingObject"
+            source="{{_source}}"
+            nodeProperty="@parent"
+            parentProperty="parent">
+        <ws:groupTemplate>
+            <ws:partial template="Controls/propertyGrid:GroupTemplate" expanderVisible="{{true}}"/>
+        </ws:groupTemplate>
+    </Controls.propertyGrid:PropertyGrid>
+</div>
