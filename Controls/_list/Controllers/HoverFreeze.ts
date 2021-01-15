@@ -1,13 +1,8 @@
 import {Model} from 'Types/entity';
 import {CrudEntityKey} from 'Types/source';
-import {IBaseCollection, ICollectionItem} from 'Controls/display';
 import {SyntheticEvent} from 'UI/Vdom';
 
-// Collection interface:
-// getItemHoveredContainerSelector
-// getDisplayItemActionsOutsideStyles
-// getItemFreezeHoverStyles
-// getIndex
+import {Collection, CollectionItem} from 'Controls/display';
 
 const HOVER_FREEZE_TIMEOUT: number = 200;
 const HOVER_UNFREEZE_TIMEOUT: number = 50;
@@ -23,7 +18,7 @@ interface IMouseMoveArea {
 
 export interface IHoverFreezeOptions {
     uniqueClass: string;
-    collection: IBaseCollection<Model, ICollectionItem>;
+    collection: Collection<Model, CollectionItem>;
     stylesContainer: HTMLElement;
     viewContainer: HTMLElement;
     freezeHoverCallback: () => void;
@@ -36,7 +31,7 @@ export interface IHoverFreezeOptions {
 export default class HoverFreeze {
     private _itemKey: CrudEntityKey = null;
     private _uniqueClass: string;
-    private _collection: IBaseCollection<Model, ICollectionItem>;
+    private _collection: Collection<Model, CollectionItem>;
     private _stylesContainer: HTMLElement;
     private _viewContainer: HTMLElement;
     private _freezeHoverCallback: () => void;

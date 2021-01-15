@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {spy, assert as sinonAssert, useFakeTimers} from 'sinon';
+import {useFakeTimers} from 'sinon';
 
 import { SyntheticEvent } from 'UI/Vdom';
 
@@ -28,6 +28,8 @@ describe('Controls/list/HoverFreeze', () => {
     let clock: any;
     let hoverFreeze: HoverFreeze;
     let key: string;
+    let isFreezeHoverCallbackCalled: boolean;
+    let isUnFreezeHoverCallbackCalled: boolean;
 
     function createFakeItem(): ICollectionItem {
         return {
@@ -45,6 +47,8 @@ describe('Controls/list/HoverFreeze', () => {
     });
 
     beforeEach(() => {
+        isFreezeHoverCallbackCalled = false;
+        isUnFreezeHoverCallbackCalled = false;
         clock = useFakeTimers();
         hoverContainerRect = {
             top: 25,
@@ -74,8 +78,12 @@ describe('Controls/list/HoverFreeze', () => {
                 innerHTML: ''
             } as undefined as HTMLElement,
             uniqueClass: 'unique-class',
-            freezeHoverCallback: () => { return; },
-            unFreezeHoverCallback: () => { return; }
+            freezeHoverCallback: () => {
+                isFreezeHoverCallbackCalled = true;
+            },
+            unFreezeHoverCallback: () => {
+                isUnFreezeHoverCallbackCalled = true;
+            }
         };
         hoverFreeze =  new HoverFreeze(cfg);
         key = 'key_1';
@@ -150,5 +158,33 @@ describe('Controls/list/HoverFreeze', () => {
         assert.equal(hoverFreeze.getCurrentItemKey(), key);
         clock.tick(TEST_HOVER_UNFREEZE_TIMEOUT);
         assert.equal(hoverFreeze.getCurrentItemKey(), null);
+    });
+
+    it ('should call freezeHoverCallback', () => {
+        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        assert.isFalse(isFreezeHoverCallbackCalled);
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+        assert.isTrue(isFreezeHoverCallbackCalled);
+    });
+
+    it ('should call unFreezeHoverCallback when cursor position is in bottom of the moveArea', () => {
+        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+
+        const event = createFakeMouseEvent(100, 80);
+        hoverFreeze.startUnfreezeHoverTimeout(event);
+        assert.isFalse(isUnFreezeHoverCallbackCalled);
+        clock.tick(TEST_HOVER_UNFREEZE_TIMEOUT);
+        assert.isTrue(isUnFreezeHoverCallbackCalled);
+    });
+
+    it ('should call unFreezeHoverCallback when cursor position is under the moveArea', () => {
+        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+
+        // mouse cursor position is under the moveArea
+        const event = createFakeMouseEvent(100, 100);
+        hoverFreeze.startUnfreezeHoverTimeout(event);
+        assert.isTrue(isUnFreezeHoverCallbackCalled);
     });
 });

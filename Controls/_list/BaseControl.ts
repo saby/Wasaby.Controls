@@ -3127,7 +3127,7 @@ const _private = {
  * @author Авраменко А.С.
  */
 
-const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.prototype */{
+const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototype */{
     _updateShadowModeBeforePaint: null,
     _updateShadowModeAfterMount: null,
 

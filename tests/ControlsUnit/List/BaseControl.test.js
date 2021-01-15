@@ -6512,7 +6512,10 @@ define([
             };
             const instance = correctCreateBaseControl(cfg);
             const enterItemData = {
-               item: {}
+               item: {},
+               getContents: () => ({
+                  getKey: () => null
+               })
             };
             const enterNativeEvent = {};
             let called = false;
@@ -7052,7 +7055,12 @@ define([
                const dragObject = {
                   entity: {}
                };
-               const itemData = { item: {} };
+               const itemData = {
+                  item: {},
+                  getContents: () => ({
+                     getKey: () => null
+                  })
+               };
                baseControl._listViewModel.setDragItemData = () => {};
                baseControl._listViewModel.getItemDataByItem = () => { return { item: {} };};
                baseControl._dndListController = {
