@@ -59,12 +59,15 @@ define([
          validCtrl.destroy();
       });
       it('cleanValid', () => {
-         var validCtrl = new validateMod.Container();
+         validCtrl = new validateMod.Container();
+         const event = {
+            stopImmediatePropagation: () => {}
+         };
          validCtrl._callInfoBox = () => {};
-         validCtrl._valueChangedHandler(null, 'test');
+         validCtrl._valueChangedHandler(event, 'test');
          assert.deepEqual(validCtrl._validationResult, null);
          validCtrl._validationResult = 'Error';
-         validCtrl._valueChangedHandler(null, 'test');
+         validCtrl._valueChangedHandler(event, 'test');
          assert.deepEqual(validCtrl._validationResult, 'Error');
          validCtrl.destroy();
       });

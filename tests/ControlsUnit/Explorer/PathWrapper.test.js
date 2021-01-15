@@ -23,19 +23,58 @@ define([
       describe('needCrumbs', function() {
          var needCrumbs = PathWrapper._private.needCrumbs;
          it('BackButton is in header, items.length === 1', function() {
-            assert.isFalse(needCrumbs([{ title: 'back', isBreadCrumbs: true }], ['first'], false));
+            assert.isFalse(
+               needCrumbs([{ title: 'back', isBreadCrumbs: true }], ['first'], {rootVisible: false})
+            );
          });
          it('BackButton is not in header, items.length === 1', function() {
-            assert.isTrue(needCrumbs(undefined, ['first'], false));
+            assert.isTrue(needCrumbs(undefined, ['first'], {rootVisible: false}));
          });
          it('BackButton is in header, items.length === 2', function() {
-            assert.isTrue(needCrumbs([{ title: 'back' }], ['first', 'second'], false));
+            assert.isTrue(needCrumbs([{ title: 'back' }], ['first', 'second'], {rootVisible: false}));
          });
          it('items === null', function() {
-            assert.isFalse(needCrumbs(undefined, null, false));
+            assert.isFalse(needCrumbs(undefined, null, {rootVisible: false}));
          });
          it('items === null, rootVisible (when dragging from folder)', function() {
-            assert.isTrue(needCrumbs(undefined, null, true));
+            assert.isTrue(needCrumbs(undefined, null, {rootVisible: true}));
+         });
+         it('Hide breadcrumbs by option breadcrumbsVisibility === "hidden"', function() {
+            // BackButton is not in header, items.length === 1
+            assert.isFalse(
+               needCrumbs(
+                  undefined,
+                  ['first'],
+                  {
+                     rootVisible: false,
+                     breadcrumbsVisibility: 'hidden'
+                  }
+               )
+            );
+
+            // BackButton is in header, items.length === 2
+            assert.isFalse(
+               needCrumbs(
+                  [{ title: 'back' }],
+                  ['first', 'second'],
+                  {
+                     rootVisible: false,
+                     breadcrumbsVisibility: 'hidden'
+                  }
+               )
+            );
+
+            // items === null, rootVisible (when dragging from folder)
+            assert.isFalse(
+               needCrumbs(
+                  undefined,
+                  null,
+                  {
+                     rootVisible: true,
+                     breadcrumbsVisibility: 'hidden'
+                  }
+               )
+            );
          });
       });
    });
