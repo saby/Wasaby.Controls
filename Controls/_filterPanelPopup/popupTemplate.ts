@@ -1,9 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_filterPanel/View/popupTemplate';
+import * as template from 'wml!Controls/_filterPanelPopup/popupTemplate';
 
 /**
  * Шаблон стекового окна для панели фильтра.
- * @class Controls/_filterPanel/View/popupTemplate
+ * @class Controls/_filterPanelPopup/popupTemplate
  * @extends UI/Base:Control
  * @author Мельникова Е.А.
  *
@@ -11,7 +11,7 @@ import * as template from 'wml!Controls/_filterPanel/View/popupTemplate';
  */
 
 /**
- * @name Controls/_filterPanel/View/popupTemplate#template
+ * @name Controls/_filterPanelPopup/popupTemplate#template
  * @cfg {TemplateFunction} Шаблон окна панели фильтров.
  */
 
@@ -20,4 +20,5 @@ export default class PopupTemplate extends Control<IControlOptions> {
     protected _handleCloseButtonClick(): void {
         this._notify('close', [], {bubbling: true});
     }
+    static _theme: string[] = ['Controls/filterPanelPopup'];
 }
