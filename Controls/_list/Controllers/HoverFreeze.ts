@@ -61,7 +61,7 @@ export default class HoverFreeze {
         return this._itemKey;
     }
 
-    startFreezeHoverTimeout(item?: ICollectionItem): void {
+    startFreezeHoverTimeout(item?: CollectionItem): void {
         const itemKey = item.getContents().getKey();
         const itemIndex = (item.index !== undefined ? item.index : this._collection.getIndex(item)) + 1;
         // если уже были таймеры разлипания/залипания, то глушим их
@@ -75,7 +75,7 @@ export default class HoverFreeze {
                 // или нет. Если нет, то всё надо сбросить.
                 if (this._itemKey !== null) {
                     // Размораживаем текущую запись, т.к. она более не должна являться замороженной
-                    this._unfreezeHover();
+                    this.unfreezeHover();
                 }
 
                 // Далее, выставляем новую запись как залипшую:
@@ -97,16 +97,26 @@ export default class HoverFreeze {
         // Размораживаем текущую запись, т.к. она более не должна являться замороженной
         if (this._isCursorInsideOfMouseMoveArea(x, y)) {
             this._itemUnfreezeHoverTimeout = setTimeout(() => {
-                this._unfreezeHover();
+                this.unfreezeHover();
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
-            this._unfreezeHover();
+            this.unfreezeHover();
         }
     }
 
     restartUnfreezeHoverTimeout(event: SyntheticEvent): void {
         if (this._itemKey !== null && !!this._itemUnfreezeHoverTimeout) {
             this.startUnfreezeHoverTimeout(event);
+        }
+    }
+
+    private unfreezeHover(): void {
+        // Сбрасываем текущий ховер
+        this._itemKey = null;
+        this._moveArea = null;
+        this._stylesContainer.innerHTML = '';
+        if (this._freezeHoverCallback) {
+            this._unFreezeHoverCallback();
         }
     }
 
@@ -140,16 +150,6 @@ export default class HoverFreeze {
         this._stylesContainer.innerHTML += this._collection.getItemHoverFreezeStyles(this._uniqueClass, index, backgroundColor);
         if (this._freezeHoverCallback) {
             this._freezeHoverCallback();
-        }
-    }
-
-    private _unfreezeHover(): void {
-        // Сбрасываем текущий ховер
-        this._itemKey = null;
-        this._moveArea = null;
-        this._stylesContainer.innerHTML = '';
-        if (this._freezeHoverCallback) {
-            this._unFreezeHoverCallback();
         }
     }
 

@@ -3097,7 +3097,9 @@ const _private = {
                     self._notify('register', ['mousemove', self, self._onHoverFreezeMouseMove], {bubbling: true});
                 },
                 unFreezeHoverCallback: () => {
-                    _private.addShowActionsClass(self);
+                    if (!self._itemActionsMenuId) {
+                        _private.addShowActionsClass(self);
+                    }
                     self._notify('unregister', ['mousemove', self], {bubbling: true});
                 }
             });
@@ -5340,6 +5342,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
         } else if (eventName === 'menuOpened') {
+            const hoverFreezeController = _private.getHoverFreezeController(this);
+            if (hoverFreezeController) {
+                hoverFreezeController.unfreezeHover();
+            }
             _private.removeShowActionsClass(this);
             _private.getItemActionsController(this, this._options).deactivateSwipe(false);
         }
@@ -5540,7 +5546,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
         const hoverFreezeController = _private.getHoverFreezeController(this);
-        if (hoverFreezeController) {
+        if (hoverFreezeController && !this._itemActionsMenuId) {
             hoverFreezeController.startFreezeHoverTimeout(itemData);
         }
     },
@@ -5561,7 +5567,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         const itemKey = itemData.getContents().getKey();
         const hoverFreezeController = _private.getHoverFreezeController(this);
-        if (hoverFreezeController) {
+        if (hoverFreezeController && !this._itemActionsMenuId) {
             const frozenItemKey = hoverFreezeController.getCurrentItemKey();
             if (frozenItemKey === null || frozenItemKey === itemKey) {
                 hoverFreezeController.startFreezeHoverTimeout(itemData);

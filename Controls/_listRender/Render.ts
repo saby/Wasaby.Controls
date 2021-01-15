@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {CollectionItem, Collection, EditInPlaceController, GroupItem} from 'Controls/display';
 import {constants} from 'Env/Env';
 import {Opener as DropdownOpener} from 'Controls/dropdown';
+import {Model} from "Types/entity";
 
 export interface IRenderOptions extends IControlOptions {
     listModel: Collection<unknown>;
@@ -133,6 +134,10 @@ export default class Render extends Control<IRenderOptions> {
     protected _onItemActionMouseDown(e: SyntheticEvent<MouseEvent>, action: unknown, item: CollectionItem<unknown>): void {
         e.stopPropagation();
         this._notify('itemActionMouseDown', [item, action, e]);
+    }
+
+    protected _onItemActionsMouseEnter(e: SyntheticEvent<MouseEvent>, item: CollectionItem<Model>): void {
+        e.stopPropagation();
     }
 
     protected _onItemActionClick(e: SyntheticEvent<MouseEvent>): void {
