@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo__operations-panel-width">
+<div class="controlsDemo__wrapper controlsDemo__operations-panel-width_readOnly">
    <Controls.operations:Panel
          bind:selectedKeys="_selectedKeys"
          bind:excludedKeys="_excludedKeys"
