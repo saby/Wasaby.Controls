@@ -709,6 +709,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _canBeSelectedBySelectionType(item: TreeItem<Model>): boolean {
       const isNode = this._isNode(item);
-      return item.isReadonlyCheckbox() || this._selectionType === 'all' || this._selectionType === 'node' && isNode || this._selectionType === 'leaf' && !isNode;
+      // allBySelectAction используется в lookupPopup и приходит к нам через scope, расцениваем ее как all
+      return item.isReadonlyCheckbox() || this._selectionType === 'all' || this._selectionType === 'allBySelectAction'
+         || this._selectionType === 'node' && isNode || this._selectionType === 'leaf' && !isNode;
    }
 }
