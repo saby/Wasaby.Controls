@@ -229,7 +229,7 @@ describe('Controls/scroll:Container ShadowsModel', () => {
                 });
                 shadows.top._visibilityByInnerComponents = test.visibilityByInnerComponents;
                 const shadowVisible = shadows.top._getShadowEnable();
-                assert.equals(test.shadowVisible, shadowVisible);
+                assert.equal(test.shadowVisible, shadowVisible);
             });
         });
     });
