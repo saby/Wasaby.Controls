@@ -24,14 +24,14 @@
 
 import Container = require("Controls/_lookupPopup/Container");
 import ListContainer = require("Controls/_lookupPopup/List/Container");
-import Controller = require("Controls/_lookupPopup/Controller");
 import Collection = require("Controls/_lookupPopup/SelectedCollection/Popup");
 import listMemorySourceFilter = require('Controls/_lookupPopup/List/Utils/memorySourceFilter');
+
+export {default as Controller} from './_lookupPopup/Controller';
 
 export {
    Container,
    ListContainer,
-   Controller,
    Collection,
    listMemorySourceFilter
 };
