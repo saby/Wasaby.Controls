@@ -101,6 +101,22 @@ define(
                   assert.isNotNull(menuControl._errorConfig);
                });
             });
+
+            it('dataLoadErrback', async () => {
+               let isDataLoadErrbackCalled = false;
+               const options = Clone(defaultOptions);
+               const menuControl = getMenu();
+               menuControl._options.dataLoadErrback = () => {
+                  isDataLoadErrbackCalled = true
+               }
+
+               options.source.query = () => Promise.reject(new Error());
+
+               await menuControl._loadItems(options).catch(() => {
+                  assert.isNotNull(menuControl._errorConfig);
+                  assert.isTrue(isDataLoadErrbackCalled);
+               });
+            });
          });
 
          describe('_beforeUpdate', () => {

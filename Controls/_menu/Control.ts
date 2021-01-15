@@ -935,6 +935,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _processError(error: Error): Promise<dataSourceError.ViewConfig|void> {
+        if (this._options.dataLoadErrback) {
+            this._options.dataLoadErrback(error);
+        }
         return this._getErrorController().process({
             error,
             theme: this._options.theme,
