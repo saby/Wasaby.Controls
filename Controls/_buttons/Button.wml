@@ -1,4 +1,4 @@
-<ws:partial attr:class="controls_theme-{{_options.theme}}" template="wml!Controls/_buttons/ButtonBase"
+<ws:partial template="wml!Controls/_buttons/ButtonBase"
             _viewMode="{{_viewMode}}"
             _options="{{_options}}"
             _buttonStyle="{{_buttonStyle}}"
