@@ -1,13 +1,13 @@
 <div class="controlsDemo__wrapper">
-    <div class="controlsDemo__cell controlsDemo_ViewModes__toolButton">
+    <div class="controlsDemo__cell controlsDemo_ViewModes__toolButton controlsDemo_fixedWidth400">
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=toolButton</div>
         <Controls.popupTemplate:CloseButton viewMode="toolButton"></Controls.popupTemplate:CloseButton>
     </div>
-    <div class="controlsDemo__cell controlsDemo_ViewModes__linkButton">
+    <div class="controlsDemo__cell controlsDemo_ViewModes__linkButton controlsDemo_fixedWidth400">
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=linkButton</div>
         <Controls.popupTemplate:CloseButton viewMode="linkButton"></Controls.popupTemplate:CloseButton>
     </div>
-    <div class="controlsDemo__cell controlsDemo_ViewModes__functionalButton">
+    <div class="controlsDemo__cell controlsDemo_ViewModes__functionalButton controlsDemo_fixedWidth400">
         <div class="controls-text-label_theme-{{_options.theme}}">viewMode=functionalButton</div>
         <Controls.popupTemplate:CloseButton viewMode="functionalButton"></Controls.popupTemplate:CloseButton>
     </div>
