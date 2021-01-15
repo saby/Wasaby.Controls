@@ -3083,7 +3083,8 @@ const _private = {
             !self._listViewModel ||
             self._options.itemActionsPosition !== 'outside' ||
             (!self._options.itemActions && !self._options.itemActionsProperty) ||
-            (this._dndListController && this._dndListController.isDragging())) {
+            (this._dndListController && this._dndListController.isDragging()) ||
+            (this._editInPlaceController && this._editInPlaceController.isEditing())) {
             return;
         }
         if (!self._hoverFreezeController) {
