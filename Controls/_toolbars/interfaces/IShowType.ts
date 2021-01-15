@@ -1,7 +1,9 @@
 
 /**
- * Позволяет настроить, какие опции записи будут показаны по ховеру, а какие - в доп.меню. Влияет на порядок отображения опций записи по свайпу.
- * <pre>
+ * Позволяет настроить, какие {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи} будут показаны на панели, а какие — в меню. Влияет на порядок отображения опций записи по {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/swipe-mobile/ свайпу}.
+ * Подробнее о размещении опций записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/show-type/ здесь}.
+ * <pre class="brush: js">
+ * // TypeScript
  * import {showType} from 'Controls/toolbars';
  *  .....
  * this._defaultItems = [
@@ -25,15 +27,15 @@
  */
 export enum showType {
    /**
-    * Элемент отображается только в меню.
+    * Опция отображается в меню опций и в контекстном меню.
     */
    MENU,
    /**
-    * Элемент отображается в меню и в тулбаре.
+    * Опция отображается в меню опций и в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ контекстном меню}, а также на панели опций.
     */
    MENU_TOOLBAR,
    /**
-    * Элемент отображается только в тулбаре.
+    * Опция отображается только на панели опций.
     */
    TOOLBAR
 }
