@@ -3,7 +3,7 @@ import {IItemAction, TActionCaptionPosition, TItemActionsPosition, TItemActionVi
 import {TActionAlignment} from './IItemActionsTemplateConfig';
 
 /**
- * Допустимые значения для опции {@link itemActionsVisibility}.
+ * @description Допустимые значения для опции {@link itemActionsVisibility}.
  * @typedef {String} TItemActionsVisibility
  * @variant onhover Опции записи отображаются при наведении на запись.
  * @variant visible Опции записи отображены изначально.
@@ -64,12 +64,6 @@ export interface IItemActionsOptions {
      * @remark
      * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View#keyProperty keyProperty}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Inside/Index
-     * @see itemActionsPosition
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
-     * @see actionAlignment
-     * @see actionCaptionPosition
      */
 
     /*ENG
@@ -112,11 +106,6 @@ export interface IItemActionsOptions {
      * <div>{{itemData.item.description}}</div>
      * </pre>
      * @see itemActions
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
-     * @see actionAlignment
-     * @see actionCaptionPosition
      */
 
     /*ENG
@@ -160,8 +149,9 @@ export interface IItemActionsOptions {
     /**
      * @cfg {String} Имя свойства, которое содержит конфигурацию для панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи}.
      * @remark
-     * Функционал используют в тех случаях, когда опции записи привязаны к отображаемым данным.
-     * Настройка для опций записи извлекается из данных самого элемента.
+     * С помощью этой опции можно задать конфигурацию набора опций для каждой записи.
+     * Подробнее об использовании функционала читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/separate-set-options/#item-actions-property здесь}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionsProperty/Index
      * @example
      * <pre class="brush: js">
      * _beforeMount: function(newOptions) {
@@ -197,11 +187,6 @@ export interface IItemActionsOptions {
      * }
      * </pre>
      * @see itemActions
-     * @see itemActionsPosition
-     * @see actionCaptionPosition
-     * @see itemActionVisibilityCallback
-     * @see actionClick
-     * @see actionAlignment
      */
 
     /*ENG
@@ -214,10 +199,6 @@ export interface IItemActionsOptions {
      * @cfg {TActionAlignment} Выравнивание {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}, когда они отображаются в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/swipe-mobile/ режиме swipe}.
      * @demo Controls-demo/List/Swipe/Scenarios
      * @see itemActions
-     * @see itemActionsPosition
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
      * @see actionCaptionPosition
      */
 
@@ -233,10 +214,6 @@ export interface IItemActionsOptions {
      * @cfg {TActionCaptionPosition} Позиция заголовка для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}, когда они отображаются в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/swipe-mobile/ режиме swipe}.
      * @demo Controls-demo/List/Swipe/Scenarios
      * @see itemActions
-     * @see itemActionsPosition
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
      * @see actionAlignment
      */
 
@@ -271,6 +248,7 @@ export interface IItemActionsOptions {
      *
      * Чтобы опция записи отображалась, из функции следует вернуть true.
      * Подробнее об использовании функции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/separate-set-options/#visibility здесь}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionVisibilityCallback/Index
      * @example
      * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
      *

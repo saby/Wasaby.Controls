@@ -1,8 +1,8 @@
 /**
  * @typedef {String} TNavigationSource
  * @description Допустимые значения для параметра {@link Controls/interface:INavigation/INavigationOptionValue.typedef source}.
- * @variant position Навигация по курсору.
- * @variant page Навигация с фиксированным количеством загружаемых записей.
+ * @variant position  Навигация по курсору. Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#cursor здесь}.
+ * @variant page Навигация с фиксированным количеством загружаемых записей. {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/#page здесь}.
  */
 /*
  * @typedef {String} TNavigationSource
@@ -14,24 +14,20 @@ export type TNavigationSource = 'position' | 'page';
 /**
  * @typedef {String} TNavigationView
  * @description Виды {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ визуального представления навигации}.
- * @variant infinity Бесконечная прокрутка.
+ * @variant infinity {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/ Бесконечная прокрутка}.
  * Список отображается в виде "бесконечной ленты" записей.
  * Загрузка данных происходит при прокрутке, когда пользователь достигает конца списка.
  * Можно настроить отображение панели с кнопками навигации и подсчетом общего количества записей.
- * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/ здесь}.
- * @variant pages Постраничное отображение данных.
+ * @variant pages {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/data-pagination/ Постраничное отображение данных}.
  * Список отображает только одну страницу с записями.
  * Загрузка данных происходит при переходе между страницами.
  * Переход осуществляется с помощью панели с кнопками навигации, рядом с которыми можно настроить отображение количества всех записей и диапазона записей на странице.
- * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/data-pagination/ здесь}.
- * @variant demand Навигация по кнопке "Ещё".
+ * @variant demand {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/button-more/ Навигация по кнопке "Ещё"}.
  * Список отображается в виде "бесконечной ленты" записей.
  * Загрузка данных происходит при нажатии на кнопку "Ещё", отображаемой в конце списка.
  * Можно настроить отображение числа оставшихся записей.
- * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/button-more/ здесь}.
- * @variant maxCount Загрузка до достижения заданного числа записей.
+ * @variant maxCount {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#max-count Загрузка до достижения заданного числа записей}.
  * Позволяет прекратить загрузку при достижении заданного количества записей.
- * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#max-count здесь}.
  */
 
 /*
@@ -198,7 +194,7 @@ type TNavigationPagingPadding = 'default' | 'null';
 type TNavigationPagingPosition= 'left' | 'right';
 
 /**
- * @description Допустимые параметры Параметры для конфигурации {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ визуального представления навигации}.
+ * @description Допустимые параметры для конфигурации {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ визуального представления навигации}.
  * @public
  * @author Крайнов Д.О.
  */
@@ -249,19 +245,19 @@ export interface INavigationViewConfig {
  */
 export interface INavigationOptionValue<U> {
     /**
-     * Режим работы с источником данных.
-     * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/ здесь}.
+     * Режим {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/ работы с источником данных}.
      */
     source?: TNavigationSource;
     /**
-     * Вид визуального представления навигации.
-     * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ здесь}.
+     * Вид {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ визуального представления навигации}.
      */
     view?: TNavigationView;
+    /**
+     * Конфигурация режима {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/ работы с источником данных}.
+     */
     sourceConfig?: U;
     /**
-     * Конфигурация вида визуального представления навигации.
-     * Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ здесь}.
+     * Конфигурация вида {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/ визуального представления навигации}.
      */
     viewConfig?: INavigationViewConfig;
 }
@@ -297,7 +293,7 @@ export default interface INavigation {
 
 /**
  * @name Controls/_interface/INavigation#navigation
- * @cfg {Controls/interface:INavigation/INavigationOptionValue.typedef} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/ навигации} в {@link /doc/platform/developmentapl/interface-development/controls/list/ списке}.
+ * @cfg {Controls/interface:INavigationOptionValue} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/ навигации} в {@link /doc/platform/developmentapl/interface-development/controls/list/ списке}.
  * @example
  * В этом примере в списке будут отображаться 2 элемента.
  * <pre class="brush: html">
