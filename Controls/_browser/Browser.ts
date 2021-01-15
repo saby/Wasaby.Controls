@@ -755,7 +755,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _handleError(error: Error | object): void {
         if (error instanceof Error) {
             if (this._options.dataLoadErrback) {
-                this._options.dataLoadErrback(Error);
+                this._options.dataLoadErrback(error);
             }
         } else {
             this._notify('dataError', [error]);
