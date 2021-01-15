@@ -9,6 +9,7 @@
                     itemsReadyCallback="{{_itemsReadyCallback}}"
                     source="{{_source}}"
                     keyProperty="id"
+                    bind:markedKey="_markedKey"
                     navigation="{{_options.navigation}}">
                 <ws:virtualScrollConfig pageSize="{{20}}"/>
             </Controls.list:View>
