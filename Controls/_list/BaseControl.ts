@@ -3093,9 +3093,11 @@ const _private = {
                 viewContainer: self._container,
                 freezeHoverCallback: () => {
                     _private.removeShowActionsClass(self);
+                    self._notify('register', ['mousemove', self, self._onHoverFreezeMouseMove], {bubbling: true});
                 },
                 unFreezeHoverCallback: () => {
                     _private.addShowActionsClass(self);
+                    self._notify('unregister', ['mousemove', self], {bubbling: true});
                 }
             });
         }
@@ -5542,6 +5544,14 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         }
     },
 
+    _onHoverFreezeMouseMove(event: SyntheticEvent<any>): void {
+        // Если мы муваем и уже есть таймер выхода, то мы его ресетим
+        const hoverFreezeController = _private.getHoverFreezeController(this);
+        if (hoverFreezeController) {
+            hoverFreezeController.restartUnfreezeHoverTimeout(event);
+        }
+    },
+
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = itemData;
@@ -5571,10 +5581,6 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
         if (this._dndListController && this._dndListController.isDragging()) {
             this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
-        }
-        // Если мы муваем и уже есть таймер выхода, то мы его ресетим
-        if (hoverFreezeController) {
-            hoverFreezeController.restartUnfreezeHoverTimeout(nativeEvent);
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
