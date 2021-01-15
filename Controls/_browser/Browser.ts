@@ -302,6 +302,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             } else if (updateResult) {
                 this._filterChanged(null, updateResult as QueryWhereExpression<unknown>);
             }
+
+            return updateResult;
         });
     }
 
@@ -620,7 +622,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             ...options,
             filter: this._filter,
             source: this._source,
-            navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+            navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
+            dataLoadCallback: this._dataLoadCallback
         };
     }
 
