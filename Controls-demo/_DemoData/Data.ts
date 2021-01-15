@@ -34,6 +34,7 @@ export const FlatHierarchy = {
                 {
                     id: 11,
                     title: 'Mac',
+                    description: 'Mac item description',
                     parent: 1,
                     rating: '9.2',
                     type: true,
@@ -43,6 +44,7 @@ export const FlatHierarchy = {
                     {
                         id: 111,
                         title: 'MacBook Air',
+                        description: 'MacBook Air item description',
                         parent: 11,
                         rating: '9.2',
                         type: null,
@@ -51,6 +53,7 @@ export const FlatHierarchy = {
                 {
                     id: 12,
                     title: 'iPad',
+                    description: 'iPad item description',
                     parent: 1,
                     rating: '9.2',
                     type: true,
@@ -60,6 +63,7 @@ export const FlatHierarchy = {
                 {
                     id: 13,
                     title: 'iPhone',
+                    description: 'iPhone item description',
                     parent: 1,
                     rating: '9.2',
                     type: true,
@@ -69,6 +73,7 @@ export const FlatHierarchy = {
                 {
                     id: 14,
                     title: 'Watch',
+                    description: 'Watch item description',
                     parent: 1,
                     rating: '9.2',
                     type: true,
@@ -78,6 +83,7 @@ export const FlatHierarchy = {
                     {
                         id: 141,
                         title: 'Apple Watch Series 6',
+                        description: 'Apple Watch Series 6 item description',
                         rating: '9.5',
                         parent: 14,
                         type: null,
@@ -86,6 +92,7 @@ export const FlatHierarchy = {
                     {
                         id: 142,
                         title: 'Apple Watch SE',
+                        description: 'Apple Watch SE item description',
                         rating: '8.9',
                         parent: 14,
                         type: null,
@@ -94,6 +101,7 @@ export const FlatHierarchy = {
                     {
                         id: 143,
                         title: 'Apple Watch Series 3',
+                        description: 'Apple Watch Series 3 item description',
                         rating: '7.6',
                         parent: 14,
                         type: false,
@@ -102,6 +110,7 @@ export const FlatHierarchy = {
                     {
                         id: 144,
                         title: 'Apple Watch Nike',
+                        description: 'Apple Watch Nike item description',
                         rating: '7.6',
                         parent: 14,
                         type: false,
@@ -110,6 +119,7 @@ export const FlatHierarchy = {
                     {
                         id: 145,
                         title: 'Bands',
+                        description: 'Bands item description',
                         rating: '7.6',
                         parent: 14,
                         type: false,
@@ -118,6 +128,7 @@ export const FlatHierarchy = {
                         {
                             id: 1451,
                             title: 'Solo Loop',
+                            description: 'Solo Loop item description',
                             rating: '7.4',
                             parent: 145,
                             type: null,
@@ -126,6 +137,7 @@ export const FlatHierarchy = {
                         {
                             id: 1452,
                             title: 'Braided Solo Loop',
+                            description: 'Braided Solo Loop item description',
                             rating: '6.8',
                             parent: 145,
                             type: null,
@@ -134,6 +146,7 @@ export const FlatHierarchy = {
                         {
                             id: 1453,
                             title: 'Sport Band',
+                            description: 'Sport Band item description',
                             rating: '7.1',
                             parent: 145,
                             type: null,
@@ -142,79 +155,88 @@ export const FlatHierarchy = {
                 {
                     id: 16,
                     title: 'Notebooks',
+                    description: 'Notebooks item description',
                     parent: 1,
                     rating: '9.4',
-                    type: false
+                    type: false,
+                    photo: GadgetsImages.macBook
                 },
                     {
                         id: 161,
                         title: 'MacBook Pro',
+                        modelId: 'MacBookPro 15,4',
+                        description: 'MacBookPro 15,4 item description',
                         rating: '7.2',
-                        modelId: 'MacBookPro15,4',
                         size: '13 дюймов',
                         year: '2019',
                         note: '2 порта Thunderbolt 3',
                         parent: 16,
                         type: null,
-                        photo: BrandsImages.apple
+                        photo: GadgetsImages.macBook
                     },
                     {
                         id: 162,
                         title: 'MacBook Pro',
-                        modelId: 'MacBookPro15,3',
+                        modelId: 'MacBookPro 15,3',
+                        description: 'MacBookPro 15,3 item description',
                         rating: '6.9',
                         size: '15 дюймов',
                         year: '2019',
                         note: '',
                         parent: 16,
                         type: null,
-                        photo: BrandsImages.apple
+                        photo: GadgetsImages.macBook
                     },
                     {
                         id: 163,
                         title: 'MacBook Pro',
-                        modelId: 'MacBookPro15,2',
+                        modelId: 'MacBookPro 15,2',
+                        description: 'MacBookPro 15,2 item description',
                         size: '13 дюймов',
                         rating: '9.1',
                         year: '2019',
                         note: '4 порта Thunderbolt 3',
                         parent: 16,
                         type: null,
-                        photo: BrandsImages.apple
+                        photo: GadgetsImages.macBook
                     },
                     {
                         id: 164,
                         title: 'MacBook Pro',
-                        modelId: 'MacBookPro14,3',
+                        modelId: 'MacBookPro 14,3',
+                        description: 'MacBookPro 14,3 item description',
                         rating: '8.8',
                         size: '15 дюймов',
                         year: '2017',
                         note: '',
                         parent: 16,
                         type: null,
-                        photo: BrandsImages.apple
+                        photo: GadgetsImages.macBook
                     },
                     {
                         id: 165,
                         title: 'MacBook Pro',
-                        modelId: 'MacBookPro14,2',
+                        modelId: 'MacBookPro 14,2',
+                        description: 'MacBookPro 14,2 item description',
                         size: '13 дюймов',
                         rating: '8.5',
                         year: '2017',
                         note: '4 порта Thunderbolt 3',
                         parent: 16,
                         type: null,
-                        photo: BrandsImages.apple
+                        photo: GadgetsImages.macBook
                     },
                 {
-                id: 17,
-                title: 'Magic Mouse 2',
-                modelId: 'MM16',
-                rating: '7.2',
-                year: '2016',
-                parent: 1,
-                type: null
-            },
+                    id: 17,
+                    title: 'Magic Mouse 2',
+                    description: 'Magic Mouse 2 item description',
+                    modelId: 'MM16',
+                    rating: '7.2',
+                    year: '2016',
+                    parent: 1,
+                    type: null,
+                    photo: GadgetsImages.magicMouse2
+                },
             {
                 id: 2,
                 title: 'Samsung',
