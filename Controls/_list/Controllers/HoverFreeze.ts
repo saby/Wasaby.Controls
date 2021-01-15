@@ -110,7 +110,7 @@ export default class HoverFreeze {
         }
     }
 
-    private unfreezeHover(): void {
+    unfreezeHover(): void {
         // Сбрасываем текущий ховер
         this._itemKey = null;
         this._moveArea = null;
