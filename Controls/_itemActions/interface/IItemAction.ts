@@ -22,7 +22,7 @@ export enum TItemActionShowType {
 /**
  * @typedef {String} TActionDisplayMode
  * @description
- * Позволяет настроить режим отображения заголовка и иконки опций записи.
+ * Допустимые значения для опции {@link displayMode}.
  * Экспортируемый enum: Controls/itemActions:TActionDisplayMode
  * @variant TITLE показывать только заголовок
  * @variant ICON показывать только иконку
@@ -38,6 +38,7 @@ export enum TActionDisplayMode {
 
 /**
  * @typedef {String} TIconStyle
+ * @description Допустимые значения для опции {@link style}.
  * @variant secondary
  * @variant warning
  * @variant danger
@@ -91,7 +92,7 @@ export type TItemActionHandler = (item: Model) => void;
  * @remark
  * Опции записи могут быть использованы в следующих вариантах:
  *
- * 1. Панель опций записи, отображаемая в desktop браузерах
+ * 1. Панель опций записи, отображаемая в desktop браузерах.
  * 2. Панель опций записи, появляющаяся при свайпе по записи влево.
  * 3. Всплывающее меню, появляющееся при нажатии на кнопку дополнительных опций записи.
  * 4. Всплывающее (контекстное) меню, появляющееся при нажатии правой кнопкой мыши.
@@ -108,7 +109,10 @@ export type TItemActionHandler = (item: Model) => void;
 export interface IItemAction {
     /**
      * @name Controls/_itemActions/itemActions/interface/IItemAction#id
-     * @cfg {String|Number} Идентификатор опции записи
+     * @cfg {String|Number} Идентификатор {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
+     * @remark
+     * Подробнее об использовании свойства читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/basic/ здесь}.
+     * @demo Controls-demo/list_new/ItemActions/Base/Index
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#id
@@ -118,7 +122,10 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#title
-     * @cfg {String} Название опции записи.
+     * @cfg {String} Название {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
+     * @remark
+     * Подробнее об использовании свойства читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/basic/ здесь}.
+     * @demo Controls-demo/list_new/ItemActions/Base/Index
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#title
@@ -128,7 +135,8 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#icon
-     * @cfg {String} Имя иконки для опции записи.
+     * @cfg {String} Имя иконки для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
+     * @see iconStyle
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#icon
@@ -139,7 +147,9 @@ export interface IItemAction {
     /**
      * @name Controls/_itemActions/interface/IItemAction#showType
      * @default MENU
-     * @cfg {TItemActionShowType} Определяет, где будет отображаться элемент.
+     * @cfg {TItemActionShowType} Определяет, где будет отображаться {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опция записи}.
+     * @remark
+     * Подробнее об использовании свойства читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/show-type/ здесь}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#showType
@@ -150,7 +160,7 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#style
-     * @cfg {TIconStyle} стиль контейнера опции записи
+     * @cfg {TIconStyle} Стиль контейнера {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      * @remark
      * Значение свойства преобразуется в CSS-класс вида "controls-itemActionsV__action_style_<значение_свойства>".
      * Он будет установлен для html-контейнера самой опции записи,
@@ -168,6 +178,7 @@ export interface IItemAction {
      * @remark
      * Каждому значению свойства соответствует стиль, который определяется {@link /doc/platform/developmentapl/interface-development/themes/ темой оформления} приложения.
      * @default secondary
+     * @see icon
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#iconStyle
@@ -178,9 +189,10 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#handler
-     * @cfg {TItemActionHandler} Обработчик опции записи.
+     * @cfg {TItemActionHandler} Обработчик клика по {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      * @remark
-     * См. {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/event/ пример обработчика}.
+     * Подробнее об использовании свойства читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/event/#handler здесь}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionClickHandler/Index
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#handler
@@ -192,6 +204,7 @@ export interface IItemAction {
      * @name Controls/_itemActions/interface/IItemAction#parent@
      * @cfg {Boolean} Поле, описывающее тип узла (список, узел, скрытый узел).
      * @remark
+     * Подробнее о поддержке иерархии в опциях записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/show-type/#hierarchy-support здесь}.
      * Подробнее о различиях между типами узлов можно прочитать {@link /doc/platform/developmentapl/service-development/bd-development/vocabl/tabl/relations/#hierarchy здесь}.
      */
     /*
@@ -202,7 +215,7 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#displayMode
-     * @cfg {TActionDisplayMode} Режим отображения опции записи.
+     * @cfg {TActionDisplayMode} Режим отображения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#displayMode
@@ -212,7 +225,7 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#tooltip
-     * @cfg {String} Текст всплывающей подсказки, отображаемой при наведении на опцию записи.
+     * @cfg {String} Текст всплывающей подсказки, отображаемой при наведении на {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опцию записи}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#tooltip
@@ -222,9 +235,9 @@ export interface IItemAction {
 
     /**
      * @name Controls/_itemActions/interface/IItemAction#parent
-     * @cfg {String|Number} Идентификатор родительской опции записи.
+     * @cfg {String|Number} Идентификатор родительской {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи}.
      * @remark
-     * Используется для создания {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ многоуровневого контекстного меню}.
+     * Подробнее о поддержке иерархии в опциях записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/show-type/#hierarchy-support здесь}.
      */
     /*
      * @name Controls/_itemActions/interface/IItemAction#parent
@@ -236,7 +249,7 @@ export interface IItemAction {
 /**
  * @typedef {Function} TItemActionVisibilityCallback
  * @description
- * Функция обратного вызова для определения видимости опций записи.
+ * Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
  * @param action Item Action to check
  * @param item Model
  */
