@@ -10,13 +10,13 @@
                   <Controls.search:Input bind:value="_searchValue"/>
                </Controls.search:InputContainer>
                <div class="controls-demo__Layouts_filter">
-                  <Controls.filter:FastContainer>
-                     <Controls.filter:Fast/>
-                  </Controls.filter:FastContainer>
-                  <Controls.filter:ButtonContainer>
-                     <Controls.filter:Selector
+                  <Controls.deprecatedFilter:FastContainer>
+                     <Controls.deprecatedFilter:Fast/>
+                  </Controls.deprecatedFilter:FastContainer>
+                  <Controls.deprecatedFilter:ButtonContainer>
+                     <Controls.deprecatedFilter:Selector
                              templateName="wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate"/>
-                  </Controls.filter:ButtonContainer>
+                  </Controls.deprecatedFilter:ButtonContainer>
                </div>
             </div>
             <Controls.list:Container>

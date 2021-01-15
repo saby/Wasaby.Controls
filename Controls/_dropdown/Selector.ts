@@ -43,7 +43,7 @@ interface IDropdownInputChildren {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdown.less переменные тем оформления dropdown}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less переменные тем оформления dropdownPopup}
  *
- * @class Controls/_dropdown/Input
+ * @class Controls/_dropdown/Selector
  * @extends UI/Base:Control
  * @mixes Controls/menu:IMenuPopup
  * @mixes Controls/menu:IMenuControl
@@ -88,7 +88,7 @@ interface IDropdownInputChildren {
  * @demo Controls-demo/dropdown_new/Input/Source/Index
  */
 
-export default class Input extends BaseDropdown {
+export default class Selector extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _defaultContentTemplate: TemplateFunction = defaultContentTemplate;
    protected _text: string = '';
@@ -295,7 +295,7 @@ export default class Input extends BaseDropdown {
    }
 }
 /**
- * @name Controls/_dropdown/Input#contentTemplate
+ * @name Controls/_dropdown/Selector#contentTemplate
  * @cfg {Function} Шаблон, который будет отображать вызываемый элемент.
  * @remark
  * Для определения шаблона вызовите базовый шаблон - "Controls/dropdown:inputDefaultContentTemplate".
@@ -308,13 +308,13 @@ export default class Input extends BaseDropdown {
  * Отображение иконки и текста.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Input
+ * <Controls.dropdown:Selector
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
  *    source="{{_source)}}"
  *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
- * </Controls.dropdown:Input>
+ * </Controls.dropdown:Selector>
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
@@ -342,13 +342,13 @@ export default class Input extends BaseDropdown {
  * Отображение иконки и текста.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Input
+ * <Controls.dropdown:Selector
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
  *    source="{{_source)}}"
  *    contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon">
- * </Controls.dropdown:Input>
+ * </Controls.dropdown:Selector>
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
@@ -363,7 +363,7 @@ export default class Input extends BaseDropdown {
  */
 
 /**
- * @name Controls/_dropdown/Input#multiSelect
+ * @name Controls/_dropdown/Selector#multiSelect
  * @cfg {Boolean} Определяет, установлен ли множественный выбор.
  * @default false
  * @demo Controls-demo/dropdown_new/Input/MultiSelect/Simple/Index
@@ -372,7 +372,7 @@ export default class Input extends BaseDropdown {
  * Множественный выбор установлен.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Input
+ * <Controls.dropdown:Selector
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
@@ -401,7 +401,7 @@ export default class Input extends BaseDropdown {
  * Multiple selection is set.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Input
+ * <Controls.dropdown:Selector
  *    bind:selectedKeys="_selectedKeys"
  *    keyProperty="id"
  *    displayProperty="title"
@@ -424,7 +424,7 @@ export default class Input extends BaseDropdown {
 
 /**
  * @event Происходит при изменении выбранных элементов.
- * @name Controls/_dropdown/Input#selectedKeysChanged
+ * @name Controls/_dropdown/Selector#selectedKeysChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Array.<Number|String>} keys Набор ключей выбранных элементов.
  * @remark Из обработчика события можно возвращать результат обработки. Если результат будет равен false, выпадающий список не закроется.
@@ -433,7 +433,7 @@ export default class Input extends BaseDropdown {
  * В следующем примере создается список и устанавливается опция selectedKeys со значением [1, 2, 3], а также показано, как изменить сообщение, выведенное пользователю на основе выбора.
  * <pre class="brush: html; highlight: [3,4]">
  * <!-- WML -->
- * <Controls.dropdown:Input
+ * <Controls.dropdown:Selector
  *     on:selectedKeysChanged="onSelectedKeysChanged()"
  *     selectedKeys="{{ _selectedKeys }}"/>
  *    <h1>{{ _message }}</h1>
@@ -455,13 +455,13 @@ export default class Input extends BaseDropdown {
  */
 
  /**
- * @name Controls/_dropdown/Input#fontSize
+ * @name Controls/_dropdown/Selector#fontSize
  * @cfg
  * @demo Controls-demo/dropdown_new/Input/FontSize/Index
  */
 
  /**
- * @name Controls/_dropdown/Input#source
+ * @name Controls/_dropdown/Selector#source
  * @cfg {Controls/_dropdown/interface/IBaseDropdown/SourceCfg.typedef}
  * @default undefined
  * @remark
@@ -471,7 +471,7 @@ export default class Input extends BaseDropdown {
  * Записи будут отображены из источника _source.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Input
+ * <Controls.dropdown:Selector
  *    keyProperty="key"
  *    source="{{_source}}"
  *    caption="Create"
