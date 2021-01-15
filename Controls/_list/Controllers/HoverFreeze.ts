@@ -9,7 +9,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 // getItemFreezeHoverStyles
 // getIndex
 
-const HOVER_FREEZE_TIMEOUT: number = 400;
+const HOVER_FREEZE_TIMEOUT: number = 200;
 const HOVER_UNFREEZE_TIMEOUT: number = 50;
 
 const ITEM_ACTIONS_SELECTOR = '.controls-itemActionsV';

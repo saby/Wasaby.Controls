@@ -3082,7 +3082,8 @@ const _private = {
         if (self.__error ||
             !self._listViewModel ||
             self._options.itemActionsPosition !== 'outside' ||
-            (!self._options.itemActions && !self._options.itemActionsProperty)) {
+            (!self._options.itemActions && !self._options.itemActionsProperty) ||
+            (this._dndListController && this._dndListController.isDragging())) {
             return;
         }
         if (!self._hoverFreezeController) {
@@ -5544,6 +5545,7 @@ const BaseControl = Control.extend([], /** @lends Controls/_list/BaseControl.pro
         }
     },
 
+    // Использовать itemMouseMove тут нельзя, т.к. отслеживать перемещение мышки надо вне itemsContainer
     _onHoverFreezeMouseMove(event: SyntheticEvent<any>): void {
         // Если мы муваем и уже есть таймер выхода, то мы его ресетим
         const hoverFreezeController = _private.getHoverFreezeController(this);
