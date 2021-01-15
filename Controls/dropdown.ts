@@ -33,7 +33,7 @@
  */
 
 import {default as Button} from 'Controls/_dropdown/Button';
-import {default as Input} from 'Controls/_dropdown/Input';
+import {default as Input} from 'Controls/_dropdown/Selector';
 import {default as _Controller} from 'Controls/_dropdown/_Controller';
 import Combobox = require('Controls/_dropdown/ComboBox');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
@@ -48,6 +48,7 @@ import defaultContentTemplateWithIcon = require('wml!Controls/_dropdown/Input/re
 export {default as IGrouped, IGroupedOptions} from 'Controls/_dropdown/interface/IGrouped';
 export {default as IDropdownSource} from 'Controls/_dropdown/interface/IDropdownSource';
 export {default as IBaseDropdown} from 'Controls/_dropdown/interface/IBaseDropdown';
+export {default as Selector} from 'Controls/_dropdown/Selector';
 
 export {
     Button,
@@ -62,4 +63,4 @@ export {
     dropdownHistoryUtils,
     inputDefaultContentTemplate,
     defaultContentTemplateWithIcon
-}
+};

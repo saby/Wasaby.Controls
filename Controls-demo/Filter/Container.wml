@@ -3,13 +3,13 @@
         <Controls.list:DataContainer source="{{_source}}" navigation="{{_navigation}}" keyProperty="id">
             <div>
                 <div class="controls-demo__filter-filtersWrapper">
-                    <Controls.filter:FastContainer>
-                        <Controls.filter:Fast attr:class="controls-demo__fastFilter"/>
-                    </Controls.filter:FastContainer>
+                    <Controls.deprecatedFilter:FastContainer>
+                        <Controls.deprecatedFilter:Fast attr:class="controls-demo__fastFilter"/>
+                    </Controls.deprecatedFilter:FastContainer>
 
-                    <Controls.filter:ButtonContainer>
-                        <Controls.filter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/Filter/Panel"/>
-                    </Controls.filter:ButtonContainer>
+                    <Controls.deprecatedFilter:ButtonContainer>
+                        <Controls.deprecatedFilter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/Filter/Panel"/>
+                    </Controls.deprecatedFilter:ButtonContainer>
                 </div>
                 <Controls.list:Container>
                     <Controls.list:View emptyTemplate="Не найдено">

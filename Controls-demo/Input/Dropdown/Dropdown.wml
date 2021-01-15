@@ -3,7 +3,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divSimple">
          <h4>Simple</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSimple"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysSimple"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="ControlsDemo-simple ControlsDemo-InputDropdown__item"
@@ -13,7 +13,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divSubparagraphs">
          <h4>With subparagraphs (as an application solution)</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSub"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysSub"
                                      keyProperty="id"
                                      displayProperty="text"
                                      attr:class="demo-InputDropdown__subparagraphs ControlsDemo-InputDropdown__item"
@@ -24,7 +24,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divLimitMaxWidth">
          <h4>With the second level</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysHierarchy"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysHierarchy"
                                      keyProperty="id"
                                      displayProperty="title"
                                      parentProperty="parent"
@@ -36,7 +36,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divIconLeft">
          <h4>With icons on the left</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysIcon"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysIcon"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="ControlsDemo-iconLeft ControlsDemo-InputDropdown__item"
@@ -46,7 +46,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divScroll">
          <h4>With scroll</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysScroll"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysScroll"
                                      keyProperty="id"
                                      displayProperty="title"
                                      dropdownClassName="ControlsDemo-InputDropdown__scroll"
@@ -57,7 +57,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divWithTitle">
          <h4>With title</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysTitle"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysTitle"
                                      keyProperty="id"
                                      displayProperty="title"
                                      source="{{_titleItems}}"
@@ -68,7 +68,7 @@
                      <ws:partial template="{{ content.resolvedTemplate }}" scope="{{headerTemplate}}" caption="Sort"/>
                   </Controls.Container.Async>
                </ws:headerTemplate>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
    </div>
@@ -76,7 +76,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divMultiSelect">
          <h4>MultiSelect</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysMultiSelect"
                                      keyProperty="id"
                                      displayProperty="title"
                                      multiSelect="{{true}}"
@@ -85,7 +85,7 @@
                                      source="{{_multiSelectItems}}" />
          </div>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect2"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysMultiSelect2"
                                      keyProperty="id"
                                      displayProperty="title"
                                      multiSelect="{{true}}"
@@ -94,7 +94,7 @@
                                      source="{{_multiSelectItems}}" />
          </div>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect3"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysMultiSelect3"
                                      keyProperty="id"
                                      displayProperty="title"
                                      multiSelect="{{true}}"
@@ -107,7 +107,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divMultiSelectMore">
          <h4>MultiSelect and "more" button</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect4"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysMultiSelect4"
                                      keyProperty="id"
                                      displayProperty="title"
                                      multiSelect="{{true}}"
@@ -120,13 +120,13 @@
                <ws:navigation view="page" source="page">
                   <ws:sourceConfig pageSize="{{4}}" page="{{0}}" hasMore="{{false}}"/>
                </ws:navigation>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divMultiSelectHiddenMore">
          <h4>MultiSelect and hidden "more" button in footer</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiSelect5"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysMultiSelect5"
                                      keyProperty="id"
                                      displayProperty="title"
                                      multiSelect="{{true}}"
@@ -136,13 +136,13 @@
                <ws:selectorTemplate templateName="Controls-demo/Input/Dropdown/stackTemplate/StackTemplate">
                   <ws:templateOptions multiSelect="{{true}}" items="{{_multiSelectStackItems}}"/>
                </ws:selectorTemplate>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divWithComment">
          <h4>With comment(and icon on the right)</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMyTemplate"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysMyTemplate"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="demo-InputDropdown__withComment ControlsDemo-InputDropdown__item"
@@ -158,10 +158,10 @@
                      </ws:additionalTextTemplate>
                   </ws:partial>
                </ws:itemTemplate>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysWithDescription"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysWithDescription"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="demo-InputDropdown__withComment ControlsDemo-InputDropdown__item"
@@ -174,7 +174,7 @@
                      </ws:additionalTextTemplate>
                   </ws:partial>
                </ws:itemTemplate>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
    </div>
@@ -182,7 +182,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divWithEmpty">
          <h4>With empty text</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysEmpty"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysEmpty"
                                      keyProperty="id"
                                      displayProperty="title"
                                      emptyText="{{true}}"
@@ -190,7 +190,7 @@
                                      source="{{_emptyItems}}"/>
          </div>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysEmpty2"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysEmpty2"
                                      keyProperty="id"
                                      displayProperty="title"
                                      emptyText="Other region"
@@ -201,7 +201,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divWithDuplication">
          <h4>With duplication of the selected item</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysDuplicate"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysDuplicate"
                                      keyProperty="id"
                                      displayProperty="title"
                                      on:selectedKeysChanged="_selectedKeysHandler()"
@@ -212,22 +212,22 @@
                      <ws:partial template="{{ content.resolvedTemplate }}" scope="{{headerTemplate}}" caption="{{_duplicateCaption}}"/>
                   </Controls.Container.Async>
                </ws:headerTemplate>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper demo-InputDropdown__divWithFooter">
          <h4>With footer</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysFooter"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysFooter"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="demo-InputDropdown__withFooter ControlsDemo-InputDropdown__item"
                                      source="{{_footerItems}}"
                                      on:footerClick="footerClickHandler()"
                                      footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown">
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
             <h4>With footer on the second level</h4>
-            <Controls.dropdown:Input name="nodeFooterDropdown"
+            <Controls.dropdown:Selector name="nodeFooterDropdown"
                                      bind:selectedKeys="_selectedKeysFooterHierarchy"
                                      keyProperty="id"
                                      displayProperty="title"
@@ -242,7 +242,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>With history</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysHistory"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysHistory"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="demo-InputDropdown__withHistory ControlsDemo-InputDropdown__item"
@@ -252,7 +252,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>With history and multiSelect</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysHistoryMulti"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysHistoryMulti"
                                      emptyText="All categories"
                                      keyProperty="id"
                                      multiSelect="{{true}}"
@@ -266,7 +266,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>Text with ellipsis</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysLong"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysLong"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="demo-InputDropdown__withEllipsis ControlsDemo-InputDropdown__item"
@@ -274,23 +274,23 @@
                <ws:itemTemplate>
                   <ws:partial template="Controls/dropdown:ItemTemplate" class="ControlsDemo-InputDropdown-limitWidth" />
                </ws:itemTemplate>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>With grouping</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroup"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysGroup"
                                      keyProperty="id"
                                      displayProperty="title"
                                      groupingKeyCallback="{{_groupingKeyCallback}}"
                                      groupTemplate="Controls/dropdown:GroupTemplate"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__keysGroup"
                                      source="{{_groupItems}}">
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroupText"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysGroupText"
                                      keyProperty="id"
                                      displayProperty="title"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__keysGroupText"
@@ -299,10 +299,10 @@
                <ws:groupTemplate>
                   <ws:partial template="Controls/dropdown:GroupTemplate" showText="{{true}}"/>
                </ws:groupTemplate>
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysGroupHierarchy"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysGroupHierarchy"
                                      keyProperty="id"
                                      displayProperty="title"
                                      parentProperty="parent"
@@ -311,13 +311,13 @@
                                      groupingKeyCallback="{{_groupingKeyCallback}}"
                                      groupTemplate="Controls/dropdown:GroupTemplate"
                                      source="{{_groupHierarchyItems}}">
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>With itemActions</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysItemActions"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysItemActions"
                                      keyProperty="id"
                                      itemActions="{{_itemActions}}"
                                      displayProperty="title"
@@ -325,13 +325,13 @@
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__itemActions"
                                      dropdownClassName="ControlsDemo-InputDropdown__item-MinWidth"
                                      source="{{_itemActionsSource}}">
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>With search</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSearch"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysSearch"
                                      emptyText="Not selected"
                                      keyProperty="id"
                                      displayProperty="title"
@@ -339,13 +339,13 @@
                                      emptyTemplate="Controls/menu:EmptyTemplate"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__search"
                                      source="{{_searchItems}}">
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>With search and hierarchy</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSearchHierarchy"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysSearchHierarchy"
                                      keyProperty="id"
                                      displayProperty="title"
                                      searchParam="title"
@@ -354,13 +354,13 @@
                                      emptyTemplate="Controls/menu:EmptyTemplate"
                                      attr:class="ControlsDemo-InputDropdown__item demo-InputDropdown__searchHierarchy"
                                      source="{{_hierarchySearchItems}}">
-            </Controls.dropdown:Input>
+            </Controls.dropdown:Selector>
          </div>
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>ReadOnly</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysReadOnly"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysReadOnly"
                                      keyProperty="id"
                                      displayProperty="title"
                                      readOnly="{{true}}"
@@ -368,7 +368,7 @@
                                      source="{{_defaultMemory}}"/>
          </div>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysMultiReadOnly"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysMultiReadOnly"
                                      keyProperty="id"
                                      displayProperty="title"
                                      readOnly="{{true}}"
@@ -379,7 +379,7 @@
       </div>
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>One item</h4>
-         <Controls.dropdown:Input bind:selectedKeys="_selectedKeyOneItem"
+         <Controls.dropdown:Selector bind:selectedKeys="_selectedKeyOneItem"
                                   keyProperty="id"
                                   displayProperty="title"
                                   attr:class="ControlsDemo-iconLeft ControlsDemo-InputDropdown__item"
@@ -388,7 +388,7 @@
       <div class="ControlsDemo-InputDropdown__wrapper">
          <h4>One item + emptyText</h4>
          <div>
-            <Controls.dropdown:Input bind:selectedKeys="_selectedKeysOneEmpty"
+            <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysOneEmpty"
                                      keyProperty="id"
                                      displayProperty="title"
                                      emptyText="Not selected"
@@ -398,7 +398,7 @@
       </div>
    </div>
    <div attr:class="ControlsDemo-InputDropdown__wrapper ControlsDemo-InputDropdown-bottom-left">
-      <Controls.dropdown:Input bind:selectedKeys="_selectedKeys0"
+      <Controls.dropdown:Selector bind:selectedKeys="_selectedKeys0"
                                keyProperty="id"
                                displayProperty="title"
                                attr:class="demo-InputDropdown__bottomLeft"
@@ -407,7 +407,7 @@
    </div>
 
    <div attr:class="ControlsDemo-InputDropdown__wrapper ControlsDemo-InputDropdown-bottom-right">
-      <Controls.dropdown:Input bind:selectedKeys="_selectedKeys1"
+      <Controls.dropdown:Selector bind:selectedKeys="_selectedKeys1"
                                keyProperty="id"
                                displayProperty="title"
                                attr:class="demo-InputDropdown__bottomRight"
@@ -415,7 +415,7 @@
       <h4>Can't open down</h4>
    </div>
    <div attr:class="ControlsDemo-InputDropdown__wrapper ControlsDemo-InputDropdown-top-right">
-      <Controls.dropdown:Input bind:selectedKeys="_selectedKeys2"
+      <Controls.dropdown:Selector bind:selectedKeys="_selectedKeys2"
                                keyProperty="id"
                                displayProperty="title"
                                attr:class="demo-InputDropdown__topRight"

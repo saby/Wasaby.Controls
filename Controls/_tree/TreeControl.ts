@@ -624,7 +624,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         if ((this._options.keyProperty !== newOptions.keyProperty) || (newOptions.source !== this._options.source)) {
             this._initKeyProperty(newOptions);
-            updateSourceController = true;
         }
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {

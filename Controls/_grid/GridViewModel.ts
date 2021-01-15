@@ -692,6 +692,9 @@ var
         },
         resolveEditArrowVisibility(item, options) {
             let contents = item.getContents();
+            if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
+                return;
+            }
             if (!options.editArrowVisibilityCallback) {
                 return options.showEditArrow;
             }
@@ -1749,8 +1752,9 @@ var
 
             current.columnIndex = 0;
 
+            const origGetVersion = current.getVersion;
             current.getVersion = function() {
-                return self._calcItemVersion(current.item, current.key, current.index);
+                return origGetVersion() + self._calcItemVersion(current.item, current.key, current.index);
             };
 
             current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {

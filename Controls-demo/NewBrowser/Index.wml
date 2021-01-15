@@ -6,7 +6,7 @@
          captions="{{['master on', 'master off']}}"
       />
 
-      <Controls.dropdown:Input
+      <Controls.dropdown:Selector
          keyProperty="key"
          displayProperty="title"
          attr:class="controlsDemo_m"
