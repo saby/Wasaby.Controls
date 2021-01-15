@@ -10,7 +10,7 @@ import {SyntheticEvent} from 'UI/Vdom';
 // getIndex
 
 const HOVER_FREEZE_TIMEOUT: number = 400;
-const HOVER_UNFREEZE_TIMEOUT: number = 500;
+const HOVER_UNFREEZE_TIMEOUT: number = 50;
 
 const ITEM_ACTIONS_SELECTOR = '.controls-itemActionsV';
 
@@ -110,7 +110,7 @@ export default class HoverFreeze {
     }
 
     restartUnfreezeHoverTimeout(event: SyntheticEvent): void {
-        if (this._itemKey && !!this._itemUnfreezeHoverTimeout) {
+        if (this._itemKey !== null && !!this._itemUnfreezeHoverTimeout) {
             this.startUnfreezeHoverTimeout(event);
         }
     }
@@ -138,9 +138,9 @@ export default class HoverFreeze {
     }
 
     private _freezeHover(index: number): void {
-        const hoveredContainer = this._getHoveredItemContainer(index);
-        const backgroundColor = getComputedStyle(hoveredContainer).backgroundColor;
-        this._moveArea = this._calculateMouseMoveArea(hoveredContainer);
+        const hoveredContainers = this._getHoveredItemContainers(index);
+        const backgroundColor = getComputedStyle(hoveredContainers[0]).backgroundColor;
+        this._moveArea = this._calculateMouseMoveArea(hoveredContainers);
         this._stylesContainer.innerHTML = this._collection.getDisplayItemActionsOutsideStyles(this._uniqueClass, index);
         this._stylesContainer.innerHTML += this._collection.getItemFreezeHoverStyles(this._uniqueClass, index, backgroundColor);
         if (this._freezeHoverCallback) {
@@ -158,25 +158,39 @@ export default class HoverFreeze {
         }
     }
 
-    // current hovered item
-    private _getHoveredItemContainer(index: number): HTMLElement {
+    // current hovered item containers
+    private _getHoveredItemContainers(index: number): NodeListOf<HTMLElement> {
         const hoveredContainerSelector = this._collection.getItemHoveredContainerSelector(this._uniqueClass, index);
-        return this._viewContainer.querySelector(hoveredContainerSelector) as HTMLElement;
+        return this._viewContainer.querySelectorAll(hoveredContainerSelector);
     }
 
     // Calculate move area as item area considering itemActions height
-    private _calculateMouseMoveArea(hoveredContainer: HTMLElement): IMouseMoveArea {
-        const itemActionsContainer = hoveredContainer.querySelector(ITEM_ACTIONS_SELECTOR);
-        const hoveredRect = hoveredContainer.getBoundingClientRect();
+    private _calculateMouseMoveArea(hoveredContainers: NodeListOf<HTMLElement>): IMouseMoveArea {
+        const lastContainer = hoveredContainers[hoveredContainers.length - 1];
+        const itemActionsContainer = lastContainer.querySelector(ITEM_ACTIONS_SELECTOR);
+        const resultRect = {
+            bottom: 0,
+            left: 0,
+            right: 0,
+            top: 0
+        };
         let itemActionsHeight = 0;
         if (itemActionsContainer) {
             itemActionsHeight = (itemActionsContainer as HTMLElement).offsetHeight;
         }
-        return {
-            bottom: hoveredRect.top + hoveredRect.height + itemActionsHeight,
-            left: hoveredRect.left,
-            right: hoveredRect.left + hoveredRect.width,
-            top: hoveredRect.top
-        };
+        hoveredContainers.forEach((container) => {
+            const containerRect = container.getBoundingClientRect();
+            if (!resultRect.top) {
+                resultRect.top = containerRect.top;
+            }
+            if (!resultRect.bottom) {
+                resultRect.bottom = containerRect.top + containerRect.height + itemActionsHeight;
+            }
+            if (!resultRect.left) {
+                resultRect.left = containerRect.left;
+            }
+            resultRect.right += containerRect.right;
+        });
+        return resultRect;
     }
 }

@@ -2820,7 +2820,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     getDisplayItemActionsOutsideStyles(uniqueClass: string, index: number): string {
         return `
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) > .controls-itemActionsV_outside_theme-default {
+              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) > .controls-itemActionsV_outside_theme-${this._$theme} {
                 opacity: 1;
                 visibility: visible;
               }`;
