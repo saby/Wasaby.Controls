@@ -61,32 +61,33 @@ define('Controls/interface/IGroupedList', [
 
    /**
     * @name Controls/interface/IGroupedList#groupHistoryId
-    * @cfg {String} Идентификатор, по которому на Сервисе параметров сохраняется текущее состояние развернутости групп.
+    * @cfg {String} Идентификатор, по которому на {@link /doc/platform/developmentapl/middleware/parameter_service/ Сервисе параметров} сохраняется текущее состояние развернутости групп.
     * @remark
     * Подробнее об управлении состоянием развернутости групп читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/group/ здесь}.
     */
 
-   /**
-    * @event Происходит при развертывании группы.
-    * @name Controls/interface/IGroupedList#groupExpanded
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {String} changes Идентификатор группы.
-    * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
-    * @see groupCollapsed
-    * @remark
-    * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
-    */
 
-   /**
-    * @event Происходит при сворачивании группы.
-    * @name Controls/interface/IGroupedList#groupCollapsed
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {String} changes Идентификатор группы.
-    * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
-    * @see groupExpanded
-    * @remark
-    * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
-    */
 
 });
 
+/**
+ * @event Происходит при развертывании группы.
+ * @name Controls/interface/IGroupedList#groupExpanded
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} changes Идентификатор группы.
+ * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
+ * @see groupCollapsed
+ * @remark
+ * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
+ */
+
+/**
+ * @event Происходит при сворачивании группы.
+ * @name Controls/interface/IGroupedList#groupCollapsed
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} changes Идентификатор группы.
+ * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
+ * @see groupExpanded
+ * @remark
+ * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
+ */
