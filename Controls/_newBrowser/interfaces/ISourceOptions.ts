@@ -1,4 +1,5 @@
 import {ICrudPlus} from 'Types/source';
+import {RecordSet} from 'Types/collection';
 
 /**
  * Интерфейс описывает структуру данных, которая представляет из себя настройки
@@ -49,4 +50,6 @@ export interface ISourceOptions {
     filter?: {[key: string]: unknown};
 
     columns?: unknown;
+
+    dataLoadCallback?: (items: RecordSet) => void;
 }
