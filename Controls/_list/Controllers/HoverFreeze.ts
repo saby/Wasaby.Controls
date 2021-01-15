@@ -189,7 +189,7 @@ export default class HoverFreeze {
             if (!resultRect.left) {
                 resultRect.left = containerRect.left;
             }
-            resultRect.right += containerRect.right;
+            resultRect.right += containerRect.left + containerRect.width;
         });
         return resultRect;
     }
