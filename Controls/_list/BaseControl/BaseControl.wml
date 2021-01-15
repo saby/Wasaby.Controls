@@ -5,7 +5,7 @@
 </ws:template>
 
 <ws:template name="portionedSearch">
-    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}" style="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}">
+    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}" style="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}" name="{{indicatorName}}LoadingIndicator">
         <ws:partial template="{{_options.loadingIndicatorTemplate}}"
                     showLoadingIndicator="{{showLoadingIndicator || _showLoadingIndicatorImage}}"
                     portionedSearchInProgress="{{_portionedSearchInProgress}}">
