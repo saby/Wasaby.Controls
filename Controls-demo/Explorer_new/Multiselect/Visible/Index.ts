@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/Explorer_new/Multiselect/Visible/Visible';
-import {Gadgets} from '../DataHelpers/DataCatalog';
+import {Gadgets} from '../../DataHelpers/DataCatalog';
 import * as MemorySource from 'Controls-demo/Explorer/ExplorerMemory';
 import {IColumn} from 'Controls/grid';
 import {TRoot, IHeader} from 'Controls-demo/types';
