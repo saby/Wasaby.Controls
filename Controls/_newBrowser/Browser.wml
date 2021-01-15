@@ -1,16 +1,15 @@
 <Controls.masterDetail:Base
+   masterVisibility="{{_masterVisibility}}"
    propStorageId="{{_basePropStorageId + 'masterWidth'}}"
    masterWidth="{{_options.master ? _options.master.width}}"
    masterMinWidth="{{_options.master ? _options.master.minWidth}}"
    masterMaxWidth="{{_options.master ? _options.master.maxWidth}}"
-   masterVisibility="{{!_options.master ? 'hidden' : _options.master.visibility}}"
 >
 
    <ws:master>
       <Controls.scroll:Container>
          <Controls.explorer:View
-            bind:root="masterRoot"
-            bind:markedKey="detailRoot"
+            bind:root="root"
             scope="{{_masterExplorerOptions}}"
          />
       </Controls.scroll:Container>
@@ -19,39 +18,48 @@
    <ws:detail>
       <div class="controls-Catalog__detail">
 
-         <div class="controls-Catalog__toolbar">
-            <Controls.search:InputContainer
-               searchDelay="{{300}}"
-               minSearchLength="{{3}}"
-               on:search="onSearch()"
-               on:searchReset="onSearchReset()"
-            >
-               <Controls.search:Input/>
-            </Controls.search:InputContainer>
-         </div>
-
-         <Controls.list:Container>
+         <Controls.scroll:Container>
             <Controls.explorer:View
-               bind:root="detailRoot"
-               viewMode="{{currentViewMode}}"
+               bind:root="root"
+               viewMode="{{viewMode}}"
                scope="{{_detailExplorerOptions}}"
-               sourceController="{{_detailSourceController}}"
-               on:itemClick="onDetailItemClick()"
-               backgroundStyle="gray"
+               breadcrumbsVisibility="{{_masterVisibility === _masterVisibilityEnum.hidden ? 'visible' : 'hidden'}}"
             >
+               <ws:afterBreadCrumbsTemplate>
+                  <Controls.search:InputContainer
+                     searchDelay="{{300}}"
+                     minSearchLength="{{3}}"
+                     on:search="_onSearch()"
+                     on:searchReset="_onSearchReset()"
+                  >
+                     <Controls.search:Input/>
+                  </Controls.search:InputContainer>
+               </ws:afterBreadCrumbsTemplate>
                <ws:itemTemplate>
-                  <ws:if data="{{currentViewMode === _viewModeEnum.table || currentViewMode === 'search'}}">
+                  <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
+                  <ws:if data="{{viewMode === _viewModeEnum.table || viewMode === 'search'}}">
                      <Controls.grid:ItemTemplate
                         scope="{{itemTemplate}}"
+                        listConfiguration="{{_listConfiguration}}"
                      />
                   </ws:if>
-                  <ws:else>
+                  <!-- Если передан кастомный шаблон отображения итема списка, то используем его -->
+                  <ws:else data="{{_options.detail.customItemTemplate}}">
                      <ws:partial
                         scope="{{itemTemplate}}"
-                        template="{{_listItemTemplate}}"
-                        imageCfg="{{_imageItemTemplateCfg}}"
-                        itemContent="{{_options.detail.itemContent}}"
-                        itemFooter="{{_options.detail.itemFooter}}"
+                        template="{{_options.detail.customItemTemplate}}"
+                        listConfiguration="{{_listConfiguration}}"
+                     />
+                  </ws:else>
+                  <!-- Если кастомный шаблон отображения итема списка не передан, то используем дефолтный -->
+                  <ws:else>
+                     <ws:partial
+                        listCfg="{{_listCfg}}"
+                        scope="{{itemTemplate}}"
+                        template="wml!Controls/_newBrowser/templates/ListItemTemplate"
+                        captionTemplate="{{_options.detail.defaultItemTemplate.captionTemplate}}"
+                        contentTemplate="{{_options.detail.defaultItemTemplate.contentTemplate}}"
+                        footerTemplate="{{_options.detail.defaultItemTemplate.footerTemplate}}"
                      />
                   </ws:else>
                </ws:itemTemplate>
@@ -74,7 +82,8 @@
                   </ws:else>
                </ws:tileItemTemplate>
             </Controls.explorer:View>
-         </Controls.list:Container>
+         </Controls.scroll:Container>
+
       </div>
    </ws:detail>
 
