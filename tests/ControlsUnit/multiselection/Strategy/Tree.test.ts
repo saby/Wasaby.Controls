@@ -758,5 +758,23 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             assert.deepEqual(toArray(res.get(false)), ListData.getItems().filter((it) => ![1, 2, 3, 6].includes(it.id)));
          });
       });
+
+      describe('allBySelectAction', () => {
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: model,
+            selectionType: 'allBySelectAction'
+         });
+
+         it('should select any item', () => {
+            let result = strategy.select({ selected: [], excluded: [] }, 1);
+            assert.deepEqual(result, { selected: [1], excluded: [] });
+
+            result = strategy.select({ selected: [], excluded: [] }, 7);
+            assert.deepEqual(result, { selected: [7], excluded: [] });
+         });
+      });
    });
 });
