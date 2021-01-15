@@ -2808,7 +2808,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return `.${uniqueClass} .controls-ListView__itemV:nth-child(${index})`;
     }
 
-    getItemFreezeHoverStyles(uniqueClass: string, index: number, backgroundColor: string): string {
+    getItemHoverFreezeStyles(uniqueClass: string, index: number, backgroundColor: string): string {
         return `
               .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})).controls-ListView__item_highlightOnHover_default_theme_${this._$theme}:hover {
                 background-color: transparent;
@@ -2818,7 +2818,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
               }`;
     }
 
-    getDisplayItemActionsOutsideStyles(uniqueClass: string, index: number): string {
+    getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
         return `
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) > .controls-itemActionsV_outside_theme-${this._$theme} {
                 opacity: 1;

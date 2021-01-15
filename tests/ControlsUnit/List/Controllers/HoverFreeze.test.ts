@@ -60,8 +60,8 @@ describe('Controls/list/HoverFreeze', () => {
         cfg = {
             collection: {
                 getItemHoveredContainerSelector: () => '.selector',
-                getDisplayItemActionsOutsideStyles: () => '',
-                getItemFreezeHoverStyles: () => '',
+                getItemActionsOutsideFreezeStyles: () => '',
+                getItemHoverFreezeStyles: () => '',
                 getIndex: () => 0
             } as undefined as IBaseCollection<any, any>,
             viewContainer: {

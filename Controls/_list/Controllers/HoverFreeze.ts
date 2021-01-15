@@ -136,8 +136,8 @@ export default class HoverFreeze {
         const hoveredContainers = this._getHoveredItemContainers(index);
         const backgroundColor = getComputedStyle(hoveredContainers[0]).backgroundColor;
         this._moveArea = this._calculateMouseMoveArea(hoveredContainers);
-        this._stylesContainer.innerHTML = this._collection.getDisplayItemActionsOutsideStyles(this._uniqueClass, index);
-        this._stylesContainer.innerHTML += this._collection.getItemFreezeHoverStyles(this._uniqueClass, index, backgroundColor);
+        this._stylesContainer.innerHTML = this._collection.getItemActionsOutsideFreezeStyles(this._uniqueClass, index);
+        this._stylesContainer.innerHTML += this._collection.getItemHoverFreezeStyles(this._uniqueClass, index, backgroundColor);
         if (this._freezeHoverCallback) {
             this._freezeHoverCallback();
         }

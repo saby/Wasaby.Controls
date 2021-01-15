@@ -55,6 +55,33 @@ export default class Collection<
         this._updateItemsColumns();
     }
 
+    getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
+        return `.${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${this._$theme}:hover .controls-Grid__row-cell-background-hover-default_theme-${this._$theme}:not(.controls-Grid__row-ladder-cell)`;
+    }
+
+    getItemHoverFreezeStyles(uniqueClass: string, index: number, backgroundColor: string): string {
+        return `
+              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})).controls-Grid__row_highlightOnHover_default_theme-${this._$theme}:hover .controls-Grid__item_background-hover_default_theme-${this._$theme}:not(.controls-Grid__row-ladder-cell__content),
+              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})).controls-Grid__row_highlightOnHover_default_theme-${this._$theme}:hover .controls-Grid__row-cell-background-hover-default_theme-${this._$theme}:not(.controls-Grid__row-ladder-cell) {
+                background-color: inherit!important;
+              }
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${this._$theme} .controls-Grid__item_background-hover_default_theme-${this._$theme}:not(.controls-Grid__row-ladder-cell__content),
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${this._$theme} .controls-Grid__row-cell-background-hover-default_theme-${this._$theme}:not(.controls-Grid__row-ladder-cell) {
+                background-color: ${backgroundColor}!important;
+              }`;
+    }
+
+    getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
+        return `
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell  > .controls-itemActionsV_outside_theme-${this._$theme},
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper  > .controls-itemActionsV_outside_theme-${this._$theme},
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell .controls-Grid__row-cell__content  > .controls-itemActionsV_outside_theme-${this._$theme},
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-itemActionsV__container > .controls-itemActionsV_outside_theme-${this._$theme} {
+                 opacity: 1;
+                 visibility: visible;
+              }`;
+    }
+
     protected _handleAfterCollectionChange(): void {
         super._handleAfterCollectionChange();
         if (GridLadderUtil.isSupportLadder(this._$ladderProperties)) {

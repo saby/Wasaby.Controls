@@ -1008,7 +1008,7 @@ var
             return `.${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${theme}:hover .controls-Grid__row-cell-background-hover-default_theme-${theme}:not(.controls-Grid__row-ladder-cell)`;
         },
 
-        getItemFreezeHoverStyles(uniqueClass: string, index: number, backgroundColor: string): string {
+        getItemHoverFreezeStyles(uniqueClass: string, index: number, backgroundColor: string): string {
             const theme = this._options.theme;
             return `
               .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})).controls-Grid__row_highlightOnHover_default_theme-${theme}:hover .controls-Grid__item_background-hover_default_theme-${theme}:not(.controls-Grid__row-ladder-cell__content),
@@ -1021,7 +1021,7 @@ var
               }`;
         },
 
-        getDisplayItemActionsOutsideStyles(uniqueClass: string, index: number): string {
+        getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
             const theme = this._options.theme;
             return `
               .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell  > .controls-itemActionsV_outside_theme-${theme},
