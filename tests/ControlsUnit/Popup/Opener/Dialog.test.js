@@ -5,8 +5,16 @@ define(
       'Controls/_popup/Opener/Dialog',
       'Controls/_popupTemplate/BaseController',
       'Controls/Application/SettingsController',
+      'Controls/_popupTemplate/Dialog/Opener/DirectionUtil'
    ],
-   (DialogStrategy, DialogController, DialogOpener, BaseController, SettingsController) => {
+   (
+      DialogStrategy,
+      DialogController,
+      DialogOpener,
+      BaseController,
+      SettingsController,
+      DirectionUtil
+   ) => {
       'use strict';
       const mockedSettingsController = {
          storage: {
@@ -312,7 +320,8 @@ define(
                sizes: {
                   width: 50,
                   height: 50
-               }
+               },
+               popupOptions: {}
             };
             let offset = {
                x: 10,
@@ -322,7 +331,7 @@ define(
             DialogController._prepareConfig = (item, sizes) => {
                assert.equal(item.sizes, sizes);
             };
-            DialogController.popupDragStart(item, null, offset);
+            DialogController.popupDragStart(item, {}, offset);
             assert.equal(item.startPosition.left, 100);
             assert.equal(item.startPosition.top, 50);
             assert.equal(item.position.left, 110);
@@ -454,6 +463,117 @@ define(
             DialogController._getRestrictiveContainerSize(item);
             assert.equal(bodySelector, 'body');
             BaseController.getRootContainerCoords = getCoordsByContainer;
+         });
+         describe('position with direction', () => {
+            const dialogSizes = {
+               width: 200,
+               height: 100
+            };
+            const item = {
+               popupOptions: {},
+               sizes: {
+                  width: 50,
+                  height: 50
+               },
+               position: {},
+               dragged: false
+            };
+            const windowData = {
+               width: 1920,
+               height: 960,
+               left: 0,
+               top: 0,
+               leftScroll: 0
+            };
+            const HORIZONTAL_DIRECTION = DirectionUtil.HORIZONTAL_DIRECTION;
+            const VERTICAL_DIRECTION = DirectionUtil.VERTICAL_DIRECTION;
+            it('direction left top', () => {
+               item.popupOptions.direction = {
+                  horizontal: HORIZONTAL_DIRECTION.LEFT,
+                  vertical: VERTICAL_DIRECTION.TOP
+               };
+               let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.right, 860);
+               assert.equal(position.bottom, 430);
+            });
+            it('direction left bottom', () => {
+               item.popupOptions.direction = {
+                  horizontal: HORIZONTAL_DIRECTION.LEFT,
+                  vertical: VERTICAL_DIRECTION.BOTTOM
+               };
+               let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.right, 860);
+               assert.equal(position.top, 430);
+            });
+            it('direction right top', () => {
+               item.popupOptions.direction = {
+                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
+                  vertical: VERTICAL_DIRECTION.TOP
+               };
+               let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.left, 860);
+               assert.equal(position.bottom, 430);
+            });
+            it('direction right bottom', () => {
+               item.popupOptions.direction = {
+                  horizontal: HORIZONTAL_DIRECTION.RIGHT,
+                  vertical: VERTICAL_DIRECTION.BOTTOM
+               };
+               let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.left, 860);
+               assert.equal(position.top, 430);
+            });
+            it('dragging', () => {
+               item.popupOptions.direction = {
+                  horizontal: HORIZONTAL_DIRECTION.LEFT,
+                  vertical: VERTICAL_DIRECTION.TOP
+               };
+               DialogController._getRestrictiveContainerSize = () => windowData;
+               let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.right, 860);
+               assert.equal(position.bottom, 430);
+               item.position = {
+                  ...position,
+                  ...dialogSizes
+               };
+               DialogController.popupDragStart(item, null, {
+                  x: 20,
+                  y: 20
+               });
+               position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.right, 840);
+               assert.equal(position.bottom, 410);
+               DialogController._getRestrictiveContainerSize = getRestrictiveContainer;
+               item.position = {};
+               item.dragged = false;
+               item.startPosition = null;
+            });
+
+            it('dragging overflow', () => {
+               item.popupOptions.direction = {
+                  horizontal: HORIZONTAL_DIRECTION.LEFT,
+                  vertical: VERTICAL_DIRECTION.TOP
+               };
+               DialogController._getRestrictiveContainerSize = () => windowData;
+               let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.right, 860);
+               assert.equal(position.bottom, 430);
+               item.position = {
+                  ...position,
+                  ...dialogSizes
+               };
+               DialogController.popupDragStart(item, null, {
+                  x: 2000,
+                  y: 2000
+               });
+               position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.right, 0);
+               assert.equal(position.bottom, 0);
+               DialogController._getRestrictiveContainerSize = getRestrictiveContainer;
+               item.position = {};
+               item.dragged = false;
+               item.startPosition = null;
+            });
          });
       });
    }

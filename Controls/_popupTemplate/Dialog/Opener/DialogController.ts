@@ -5,7 +5,8 @@ import {List} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
-import {IPopupDirection} from 'Controls/_popup/interface/IDirection';
+import {IDirection} from 'Controls/_popup/interface/IDialog';
+import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from './DirectionUtil';
 
 interface IDialogItem extends IPopupItem {
     popupOptions: IDialogOptions;
@@ -19,7 +20,7 @@ interface IDialogOptions extends IPopupOptions {
     left?: number;
     right?: number;
     bottom?: number;
-    direction?: IPopupDirection;
+    direction?: IDirection;
     propStorageId: string;
 }
 
@@ -105,7 +106,7 @@ class DialogController extends BaseController {
         const {
             horizontal: horisontalProperty,
             vertical: verticalProperty
-        } = DialogStrategy.getPositionProperties(item.popupOptions.direction);
+        } = getPositionProperties(item.popupOptions.direction);
         if (item.popupOptions.propStorageId) {
             return this._getPopupCoords(item, horisontalProperty, verticalProperty).then(() => {
                 this._getDefaultConfig(item, horisontalProperty, verticalProperty);
@@ -119,9 +120,9 @@ class DialogController extends BaseController {
         const {
             horizontal: horizontalProperty,
             vertical: verticalProperty
-        } = DialogStrategy.getPositionProperties(item.popupOptions.direction);
-        const horisontalOffset = horizontalProperty === 'left' ? offset.x : -offset.x;
-        const verticalOffset = verticalProperty === 'top' ? offset.y : -offset.y;
+        } = getPositionProperties(item.popupOptions.direction);
+        const horizontalOffset = horizontalProperty === HORIZONTAL_DIRECTION.LEFT ? offset.x : -offset.x;
+        const verticalOffset = verticalProperty === VERTICAL_DIRECTION.TOP ? offset.y : -offset.y;
         if (!item.startPosition) {
             item.startPosition = {
                 [horizontalProperty]: item.position[horizontalProperty],
@@ -129,7 +130,7 @@ class DialogController extends BaseController {
             };
         }
         item.dragged = true;
-        item.position[horizontalProperty] = item.startPosition[horizontalProperty] + horisontalOffset;
+        item.position[horizontalProperty] = item.startPosition[horizontalProperty] + horizontalOffset;
         item.position[verticalProperty] = item.startPosition[verticalProperty] + verticalOffset;
 
         // Take the size from cache, because they don't change when you move
@@ -229,7 +230,7 @@ class DialogController extends BaseController {
         const {
             vertical: verticalProperty,
             horizontal: horizontalProperty
-        } = DialogStrategy.getPositionProperties(item.popupOptions.direction);
+        } = getPositionProperties(item.popupOptions.direction);
         if (propStorageId && item.position[verticalProperty] >= 0 && item.position[horizontalProperty] >= 0) {
             setSettings({[propStorageId]: {
                 [verticalProperty]: item.position[verticalProperty],

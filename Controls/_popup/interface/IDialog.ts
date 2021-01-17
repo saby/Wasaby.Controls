@@ -1,5 +1,4 @@
 import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
-import {IPopupDirection} from 'Controls/_popup/interface/IDirection';
 
 /**
  * Интерфейс для опций диалоговых окон.
@@ -20,7 +19,7 @@ export interface IDialogPopupOptions extends IBasePopupOptions {
     bottom?: number;
     left?: number;
     right?: number;
-    direction?: IPopupDirection;
+    direction?: IDirection;
     maximize?: boolean;
     restrictiveContainer?: string;
 }
@@ -28,6 +27,17 @@ export interface IDialogPopupOptions extends IBasePopupOptions {
 export interface IDialogOpener extends IOpener {
     readonly '[Controls/_popup/interface/IDialogOpener]': boolean;
 }
+
+/**
+ * @typedef {Object} Controls/_popup/interface/IDialog
+ * @property {String} vertical
+ * @property {String} horizontal
+ */
+export interface IDirection {
+    vertical?: 'top' | 'bottom' | 'center';
+    horizontal?: 'left' | 'right' | 'center';
+}
+
 
 /**
  * @name Controls/_popup/interface/IDialogOpener#height
@@ -54,6 +64,11 @@ export interface IDialogOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IDialogOpener#minWidth
  * @cfg {Number} Минимально допустимая ширина диалогового окна.
+ */
+/**
+ * @name Controls/_popup/interface/IDialogOpener#direction
+ * @cfg {Controls/_popup/interface/IDialog.typedef} Направление для попапа,
+ * в котором его высота может динамически меняться без изменения позиции.
  */
 /*
  * @name Controls/_popup/interface/IDialogOpener#top

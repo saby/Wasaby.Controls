@@ -1,6 +1,6 @@
 import {detection} from 'Env/Env';
 import {IDialogPopupOptions, IPopupItem, IPopupPosition, IPopupSizes} from 'Controls/popup';
-import {IPopupDirection} from 'Controls/_popup/interface/IDirection';
+import {getPositionProperties, VERTICAL_DIRECTION} from './DirectionUtil';
 
 interface ILimitingSizes {
     minWidth: number;
@@ -19,13 +19,6 @@ interface IDialogPosition {
     width: number;
     height: number;
 }
-
-const DIRECTION_TO_POSITION_MAP = {
-    top: 'bottom',
-    bottom: 'top',
-    left: 'right',
-    right: 'left'
-};
 
 class DialogStrategy {
 
@@ -53,18 +46,6 @@ class DialogStrategy {
     }
 
     /**
-     * Получение набора свойст в которых хранятся названия свойств отвечающих за позиционирование попапа.
-     * @param {IPopupDirection} direction
-     * @return {IPopupDirection}
-     */
-    getPositionProperties(direction: IPopupDirection = {horizontal: 'left', vertical: 'top'}): IPopupDirection {
-        return {
-            horizontal: DIRECTION_TO_POSITION_MAP[direction.horizontal] || 'left',
-            vertical: DIRECTION_TO_POSITION_MAP[direction.vertical] || 'top'
-        };
-    }
-
-    /**
      * Получение позиции диалога
      * @param {IPopupPosition} windowData
      * @param {IPopupSizes} containerSizes
@@ -80,7 +61,7 @@ class DialogStrategy {
         const {
             horizontal: horizontalPositionProperty,
             vertical: verticalPositionProperty
-        } = this.getPositionProperties(popupItem.popupOptions.direction);
+        } = getPositionProperties(popupItem?.popupOptions.direction);
 
         if (popupItem.dragged) {
             return this._getPositionForDraggedDialog(
@@ -147,7 +128,8 @@ class DialogStrategy {
             !detection.isMobileIOS &&
             !detection.isMobileAndroid
         ) {
-            position[verticalPositionProperty] = verticalPositionProperty === 'top' ? 0 : containerSizes.height;
+            position[verticalPositionProperty] = verticalPositionProperty === VERTICAL_DIRECTION.TOP
+                ? 0 : containerSizes.height;
         } else {
             position[verticalPositionProperty] = this._getVerticalPostion(
                 windowData,
@@ -174,7 +156,7 @@ class DialogStrategy {
      * @private
      */
     private _getPositionForDraggedDialog(
-        popupPosition: IPopupPosition,
+        popupPosition: IPopupPosition = {},
         windowData: IPopupPosition,
         containerSizes: IPopupSizes,
         verticalPositionProperty: string,
@@ -204,7 +186,7 @@ class DialogStrategy {
         };
     }
 
-    private _calculateLimitOfSizes(popupOptions: IDialogPopupOptions, windowData: IPopupPosition): ILimitingSizes {
+    private _calculateLimitOfSizes(popupOptions: IDialogPopupOptions = {}, windowData: IPopupPosition): ILimitingSizes {
         return {
             minWidth: popupOptions.minWidth,
             minHeight: popupOptions.minHeight,
@@ -214,7 +196,7 @@ class DialogStrategy {
     }
 
     private _calculateValue(
-        popupOptions: IDialogPopupOptions,
+        popupOptions: IDialogPopupOptions = {},
         containerValue: number,
         windowValue: number,
         popupValue: number,
