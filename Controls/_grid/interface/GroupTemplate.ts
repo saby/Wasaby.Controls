@@ -1,5 +1,5 @@
 /**
- * Шаблон, который по умолчанию используется для отображения горизонтальной линии-разделителя {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в контроле {@link Controls/grid:View Таблица}.
+ * Шаблон, который по умолчанию используется для отображения заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link Controls/grid:View таблице}, {@link Controls/treeGrid:View дереве} и {@link Controls/explorer:View иерархическом проводнике}.
  * 
  * @class Controls/_grid/interface/GroupTemplate
  * @mixes Controls/list:IBaseGroupTemplate
@@ -25,7 +25,7 @@
  */
 export default interface IGroupTemplateOptions {
    /**
-    * @cfg {Number|undefined} Номер колонки, относительно которой происходит горизонтальное выравнивание заголовка группы.
+    * @cfg {Number|undefined} Номер колонки, относительно которой происходит горизонтальное выравнивание заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
     * @default undefined
     * @remark
     * В значении undefined выравнивание отключено.

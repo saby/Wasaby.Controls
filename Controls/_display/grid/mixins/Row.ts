@@ -8,9 +8,10 @@ import { TResultsPosition } from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
-import {IHeaderCell, THeader} from '../../../_grid/interface/IHeaderCell';
+import {THeader} from '../../../_grid/interface/IHeaderCell';
 import {TColspanCallback, TColspanCallbackResult} from './Grid';
 import {ILadderConfig, TLadderElement} from 'Controls/_display/utils/GridLadderUtil';
+import { isEqual } from 'Types/object';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
 
@@ -26,8 +27,8 @@ export interface IItemTemplateParams {
 
 export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
-    colspanCallback: TColspanCallback;
-    columnSeparatorSize: TColumnSeparatorSize;
+    colspanCallback?: TColspanCallback;
+    columnSeparatorSize?: TColumnSeparatorSize;
 }
 
 export default abstract class Row<T> {
@@ -225,10 +226,23 @@ export default abstract class Row<T> {
         return ladderWrapperClasses;
     }
 
-    setLadder(ladder: {}): void {
+    setLadder(ladder: TLadderElement<ILadderConfig>): void {
         if (this._$ladder !== ladder) {
-            this._$ladder = ladder;
-            this._reinitializeColumns();
+            const itemIndex = this._$owner.getIndex(this);
+
+            const currentLadder = this._$ladder?.ladder[itemIndex];
+            const newLadder = ladder?.ladder[itemIndex];
+
+            const currentStickyLadder = this._$ladder?.stickyLadder[itemIndex];
+            const newStickyLadder = ladder?.stickyLadder[itemIndex];
+
+            const isLadderChanged = !isEqual(currentLadder, newLadder);
+            const isStickyLadderChanged = !isEqual(currentStickyLadder, newStickyLadder);
+
+            if (isLadderChanged || isStickyLadderChanged) {
+                this._$ladder = ladder;
+                this._reinitializeColumns();
+            }
         }
     }
 

@@ -3,7 +3,7 @@ define('Controls/interface/IGroupedGrid', [
 ], function() {
 
    /**
-    * Интерфейс для компонентов, реализующих группировку элементов.
+    * Интерфейс для контролов, реализующих {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировку} элементов.
     *
     * @interface Controls/interface/IGroupedGrid
     * @public
@@ -12,9 +12,7 @@ define('Controls/interface/IGroupedGrid', [
 
    /**
     * @name Controls/interface/IGroupedGrid#groupProperty
-    * @cfg {String} Имя свойства, содержащего идентификатор группы элемента списка.
-    * Примечание: Для отображения элементов вне группы необходимо передавать в качестве значений поля, по которому производится группировка CONTROLS_HIDDEN_GROUP
-    * @demo Controls-demo/grid/Grouped/Custom/Index
+    * @cfg {String} Имя свойства, содержащего идентификатор {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} элемента списка.
     * @see groupTemplate
     * @see collapsedGroups
     * @see groupHistoryId
@@ -24,11 +22,10 @@ define('Controls/interface/IGroupedGrid', [
 
    /**
     * @name Controls/interface/IGroupedGrid#groupTemplate
-    * @cfg {String|Function} Шаблон отображения заголовка группы.
+    * @cfg {String|Function} Устанавливает пользовательский шаблон, с помощью которого настраивается {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ визуальное отображение заголовка группы}.
     * @default undefined
     * @remark
-    * Подробнее о параметрах шаблона Controls/grid:GroupTemplate читайте {@link Controls/grid:GroupTemplate здесь}.
-    * Подробнее о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/basic/#header-group здесь}.
+    * Конфигурация визуального представления группировки задаётся в опции groupTemplate путём настройки шаблона группировки {@link Controls/grid:GroupTemplate}.
     * @demo Controls-demo/grid/Grouped/Custom/Index
     * @see groupHistoryId
     * @see collapsedGroups
@@ -39,46 +36,38 @@ define('Controls/interface/IGroupedGrid', [
 
    /**
     * @name Controls/interface/IGroupedGrid#collapsedGroups
-    * @cfg {Array.<String>} Список идентификаторов свернутых групп. Идентификаторы групп получаются из свойства {@link groupProperty}.
-    * @see groupTemplate
-    * @see groupHistoryId
+    * @cfg {Array.<String>} Идентификаторы групп, которые будут свернуты при инициализации списка.
+    * @remark
+    * Подробнее об управлении состоянием развернутости групп читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/group/ здесь}.
+    * @see groupProperty
     * @see groupExpanded
     * @see groupCollapsed
-    * @see groupProperty
     */
 
    /**
     * @name Controls/interface/IGroupedGrid#groupHistoryId
-    * @cfg {String} Идентификатор для сохранения в истории списка идентификаторов свернутых групп.
-    * @see groupTemplate
-    * @see collapsedGroups
-    * @see groupExpanded
-    * @see groupCollapsed
-    * @see groupProperty
-    */
-
-   /**
-    * @event Происходит при развертывании группы.
-    * @name Controls/interface/IGroupedGrid#groupExpanded
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {String} changes Идентификатор группы.
-    * @see groupTemplate
-    * @see collapsedGroups
-    * @see groupHistoryId
-    * @see groupCollapsed
-    * @see groupProperty
-    */
-
-   /**
-    * @event Происходит при сворачивании группы.
-    * @name Controls/interface/IGroupedGrid#groupCollapsed
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {String} changes Идентификатор группы.
-    * @see groupTemplate
-    * @see collapsedGroups
-    * @see groupHistoryId
-    * @see groupExpanded
-    * @see groupProperty
+    * @cfg {String} Идентификатор, по которому на {@link /doc/platform/developmentapl/middleware/parameter_service/ Сервисе параметров} сохраняется текущее состояние развернутости групп.
+    * @remark
+    * Подробнее об управлении состоянием развернутости групп читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/group/ здесь}.
     */
 
 });
+/**
+ * @event Происходит при развертывании группы.
+ * @name Controls/interface/IGroupedGrid#groupExpanded
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} changes Идентификатор группы.
+ * @see groupCollapsed
+ * @remark
+ * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
+ */
+
+/**
+ * @event Происходит при сворачивании группы.
+ * @name Controls/interface/IGroupedGrid#groupCollapsed
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} changes Идентификатор группы.
+ * @see groupExpanded
+ * @remark
+ * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
+ */

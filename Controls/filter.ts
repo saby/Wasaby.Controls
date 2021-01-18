@@ -44,10 +44,10 @@ import Fast = require('Controls/_filter/Fast');
 import View = require('Controls/_filter/View');
 import ViewItemTemplate = require('wml!Controls/_filter/View/ItemTemplate');
 import FastContainer = require('Controls/_filter/Fast/Container');
-import Controller = require('Controls/_filter/Controller');
 import HistoryUtils = require('Controls/_filter/HistoryUtils');
 import FilterUtils = require('Controls/_filter/resetFilterUtils');
 
+import {default as Controller} from 'Controls/_filter/Controller';
 export {default as ControllerClass, IFilterControllerOptions} from './_filter/ControllerClass';
 export {default as ButtonContainer} from './_filter/Button/Container';
 export {default as ViewContainer} from './_filter/View/Container';

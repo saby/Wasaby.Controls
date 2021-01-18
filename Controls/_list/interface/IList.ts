@@ -459,7 +459,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * Загружает модель из источника данных, объединяет изменения в текущих данные и отображает элемент.
+ * Загружает модель из {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}, объединяет изменения в текущих данные и отображает элемент.
  * @function Controls/_list/interface/IList#reloadItem
  * @param {String} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
  * @param {Object} readMeta Метаинформация, которая будет передана методу запроса/чтения.
