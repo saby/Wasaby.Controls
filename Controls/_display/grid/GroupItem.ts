@@ -59,7 +59,7 @@ export default class GroupItem<T> extends mixin<
     }
 
     isSticked(): boolean {
-        return this._$owner.isStickyHeader();
+        return this._$owner.isStickyHeader() && !this.isHiddenGroup();
     }
 
     getStickyColumn(): GridLadderUtil.IStickyColumn {

@@ -59,7 +59,6 @@ export interface ILookupOptions extends ILookupInputOptions {
  * 
  * @public
  * @author Герасимов А.М.
- * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 /*
  * “Lookup:Input” is an input field with auto-completion and the ability to select a value from the directory.

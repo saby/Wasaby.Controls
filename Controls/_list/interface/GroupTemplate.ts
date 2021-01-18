@@ -1,13 +1,14 @@
 /**
- * Шаблон, который по умолчанию используется для отображения заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link Controls/list:View плоских списках}.
+ * Шаблон, который по умолчанию используется для отображения заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link Controls/list:View плоских списках} и {@link Controls/tile:View плитке}.
  *
  * @class Controls/_list/interface/GroupTemplate
  * @mixes Controls/list:IBaseGroupTemplate
  * @author Авраменко А.С.
- * @see Controls/interface/IGroupedGrid#groupTemplate
+ * @see Controls/interface/IGroupedList#groupTemplate
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
  * <pre class="brush: html">
+ * <!-- WML -->
  * <Controls.list:View>
  *    <ws:groupTemplate>
  *       <ws:partial template="Controls/list:GroupTemplate"
@@ -26,7 +27,7 @@
  * </Controls.list:View>
  * </pre>
  * @remark
- * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ здесь}.
+ * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ здесь}.
  * @public
  */
 

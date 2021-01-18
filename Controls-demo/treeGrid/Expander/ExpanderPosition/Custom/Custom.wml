@@ -6,5 +6,6 @@
             parentProperty="parent"
             nodeProperty="type"
             expanderIcon="emptyNode"
+            bind:expandedItems="_expandedItems"
             expanderPosition="custom"/>
 </div>

@@ -3,7 +3,7 @@ define('Controls/interface/IGroupedList', [
 ], function() {
 
    /**
-    * Интерфейс для контролов, реализующих группировку элементов.
+    * Интерфейс для контролов, реализующих {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировку} элементов.
     *
     * @interface Controls/interface/IGroupedList
     * @public
@@ -12,9 +12,7 @@ define('Controls/interface/IGroupedList', [
 
    /**
     * @name Controls/interface/IGroupedList#groupProperty
-    * @cfg {String} Имя свойства, содержащего идентификатор группы элемента списка.
-    * @remark
-    * Элементы списка могут отображаться в группе без заголовка. Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/hidden/ здесь}.
+    * @cfg {String} Имя свойства, содержащего идентификатор {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} элемента списка.
     * @see groupTemplate
     * @see collapsedGroups
     * @see groupHistoryId
@@ -24,14 +22,12 @@ define('Controls/interface/IGroupedList', [
 
    /**
     * @name Controls/interface/IGroupedList#groupTemplate
-    * @cfg {String|Function} Устанавливает шаблон отображения заголовка группы.
-    * @default Controls/list:GroupTemplate
+    * @cfg {String|Function} Устанавливает пользовательский шаблон, с помощью которого настраивается {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/visual/ визуальное представление заголовка группы}.
+    * @default undefined
     * @remark
-    * См. {@link /materials/Controls-demo/app/Controls-demo%2FList%2FList%2FGroupPG демо-пример}.
-    * Подробнее о параметрах шаблона Controls/list:GroupTemplate читайте {@link Controls/list:GroupTemplate здесь}.
-    * Подробнее о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/basic/#header-group здесь}.
+    * Конфигурация визуального представления группировки задаётся в опции groupTemplate путём настройки шаблона группировки {@link Controls/list:GroupTemplate}.
     * @example
-    * Далее показано как изменить параметры шаблона на примере контрола Controls/list:View, однако то же самое справедливо и для других {@link /doc/platform/developmentapl/interface-development/controls/list/ списочных контролов}..
+    * Далее показано как изменить параметры шаблона на примере контрола Controls/list:View, однако то же самое справедливо и для других {@link /doc/platform/developmentapl/interface-development/controls/list/ списочных контролов}.
     * <pre class="brush: html">
     * <Controls.list:View>
     *    <ws:groupTemplate>
@@ -55,39 +51,41 @@ define('Controls/interface/IGroupedList', [
 
    /**
     * @name Controls/interface/IGroupedList#collapsedGroups
-    * @cfg {Array.<String>} Список идентификаторов свернутых групп. Идентификаторы групп получаются из свойства {@link groupProperty}.
+    * @cfg {Array.<String>} Идентификаторы {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ групп}, которые будут свернуты при инициализации списка.
     * @remark
-    * См. {@link /materials/Controls-demo/app/Controls-demo%2FList%2FList%2FGroupPG демо-пример}.
-    * @see groupTemplate
+    * Подробнее об управлении состоянием развернутости групп читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/group/ здесь}.
     * @see groupProperty
-    * @see groupHistoryId
-    */
-
-   /**
-    * @name Controls/interface/IGroupedList#groupHistoryId
-    * @cfg {String} Идентификатор для сохранения в истории списка идентификаторов свернутых групп.
-    * @see groupTemplate
-    * @see groupProperty
-    * @see collapsedGroups
-    */
-
-   /**
-    * @event Происходит при развертывании группы.
-    * @name Controls/interface/IGroupedList#groupExpanded
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {String} changes Идентификатор группы.
-    * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
+    * @see groupExpanded
     * @see groupCollapsed
     */
 
    /**
-    * @event Происходит при сворачивании группы.
-    * @name Controls/interface/IGroupedList#groupCollapsed
-    * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {String} changes Идентификатор группы.
-    * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
-    * @see groupExpanded
+    * @name Controls/interface/IGroupedList#groupHistoryId
+    * @cfg {String} Идентификатор, по которому на {@link /doc/platform/developmentapl/middleware/parameter_service/ Сервисе параметров} сохраняется текущее {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/group/ состояние развернутости групп}.
     */
+
+
 
 });
 
+/**
+ * @event Происходит при развертывании {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
+ * @name Controls/interface/IGroupedList#groupExpanded
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} changes Идентификатор группы.
+ * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
+ * @see groupCollapsed
+ * @remark
+ * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
+ */
+
+/**
+ * @event Происходит при сворачивании {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
+ * @name Controls/interface/IGroupedList#groupCollapsed
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {String} changes Идентификатор группы.
+ * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
+ * @see groupExpanded
+ * @remark
+ * Подробнее о событиях изменения состояния развернутости группы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/action/ здесь}.
+ */

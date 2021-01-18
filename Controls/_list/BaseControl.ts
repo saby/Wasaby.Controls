@@ -2449,7 +2449,8 @@ const _private = {
                 rootId: options.root,
                 model: collection,
                 entryPath,
-                selectionType: options.selectionType
+                selectionType: options.selectionType || 'all',
+                recursiveSelection: options.recursiveSelection || false
             };
         } else {
             return { model: collection };
@@ -6136,6 +6137,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const draggedKey = draggableItem.getContents().getKey();
                     _private.changeMarkedKey(this, draggedKey);
                 }
+            }
+
+            if (_private.hasSelectionController(this)) {
+                _private.changeSelection(this, {selected: [], excluded: []});
             }
 
             this._dndListController = null;

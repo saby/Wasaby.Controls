@@ -491,7 +491,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._historyServiceLoad;
    }
 
-   private _getRecentKeys(): Deffered {
+   private _getRecentKeys(): Deferred {
       if (this._historyLoad) {
          return this._historyLoad;
       }
