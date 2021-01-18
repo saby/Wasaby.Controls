@@ -878,26 +878,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             });
 
             if (dragTargetPosition) {
-                if (this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem.getContents(), dragTargetPosition.position]) !== false) {
-                    dndListController.setDragPosition(dragTargetPosition);
+                const result = this._notify('changeDragTarget', [dndListController.getDragEntity(), dragTargetPosition.dispItem.getContents(), dragTargetPosition.position]);
+                if (result !== false) {
+                    const changedPosition = dndListController.setDragPosition(dragTargetPosition);
+                    if (changedPosition) {
+                        this._clearTimeoutForExpandOnDrag();
+                        if (!dispItem.isExpanded() && targetIsNotDraggableItem && dragTargetPosition.position === 'on') {
+                            this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
+                        }
+                    }
                 }
-
-                /*
-                    Если мы сверху меняем позицию на before, то есть перед этим узлом вставляем элемент,
-                    то почему-то не срабатывает mouseLeave
-                 */
-                if (dragTargetPosition.position === 'before') {
-                    this._clearTimeoutForExpandOnDrag();
-                }
-            }
-
-            if (!dispItem.isExpanded() && targetIsNotDraggableItem && this._isInsideDragTargetNode(nativeEvent, targetElement)) {
-                this._startCountDownForExpandNode(dispItem, this._expandNodeOnDrag);
             }
         }
-    },
-    _draggingItemMouseLeave: function() {
-        this._clearTimeoutForExpandOnDrag();
     },
     _dragEnd: function() {
         this._clearTimeoutForExpandOnDrag();
@@ -961,7 +953,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     _startCountDownForExpandNode(item: TreeItem<Model>, expandNode: Function): void {
         if (!this._itemOnWhichStartCountDown && item.isNode()) {
-            this._clearTimeoutForExpandOnDrag();
             this._itemOnWhichStartCountDown = item;
             this._setTimeoutForExpandOnDrag(item, expandNode);
         }
@@ -979,18 +970,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._timeoutForExpandOnDrag = setTimeout(() => {
             expandNode(item);
         }, EXPAND_ON_DRAG_DELAY);
-    },
-
-    _isInsideDragTargetNode(event: SyntheticEvent<MouseEvent>, targetElement: EventTarget): boolean {
-        const offset = this._calculateOffset(event, targetElement);
-
-        if (offset) {
-            if (offset.top > DRAG_MAX_OFFSET && offset.bottom > DRAG_MAX_OFFSET) {
-                return true;
-            }
-        }
-
-        return false;
     },
 
     _calculateOffset(event: SyntheticEvent<MouseEvent>, targetElement: Element): {top: number, bottom: number} {

@@ -5522,11 +5522,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
-
-            // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
-            if (this._dndListController && this._dndListController.isDragging()) {
-                this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
-            }
         }
     },
     _sortingChanged(event, propName) {
