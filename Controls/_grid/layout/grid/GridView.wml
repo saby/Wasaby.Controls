@@ -100,7 +100,6 @@
                 attr:class="{{ _options.footer ? 'controls-GridView__footer' }}"
                 backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                 isFullGridSupport="{{ true }}"/>
-
 </div>
 
 
