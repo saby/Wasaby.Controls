@@ -14,7 +14,7 @@
         </div>
         <div>
             <Controls.toggle:Checkbox
-                    attr:class="constrolsDemo__SearchWithColumnScroll__checkbox__colspanBreadcrumbs"
+                    attr:class="constrolsDemo__SearchWithColumnScroll__checkbox__isStickyColumnsCount"
                     readOnly="{{ !_isBigData }}"
                     bind:value="_isStickyColumnsCount"
                     caption="Количество зафиксированных колонок равно 2"/>
