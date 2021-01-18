@@ -835,6 +835,7 @@ var
     * @name Controls/_explorer/View#tileItemTemplate
     * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
     * @default undefined
+    * @markdown
     * @remark
     * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
     *
