@@ -16,10 +16,24 @@
             bind:selectedKeys="_selectedKeys"
             on:itemClick="_onItemClick()"
             on:itemActivate="_onItemActivate()"
-    />
+    >
+        <ws:editingConfig editOnClick="{{true}}"/>
+        <ws:itemTemplate>
+            <ws:partial template="Controls/list:ItemTemplate">
+                <ws:contentTemplate>
+                    <ws:partial template="Controls/list:EditingTemplate" value="{{ itemTemplate.itemData.item.title }}">
+                        <ws:editorTemplate>
+                            <Controls.input:Text bind:value="itemTemplate.itemData.item.title"/>
+                        </ws:editorTemplate>
+                    </ws:partial>
+                </ws:contentTemplate>
+            </ws:partial>
+        </ws:itemTemplate>
+    </Controls.list:View>
 
     <ws:if data="{{_textsInfo.length}}">
-        <Controls.scroll:Container attr:class="controlsDemo__margin-top controlsDemo__height200 controlsDemo__maxWidth200">
+        <Controls.scroll:Container
+                attr:class="controlsDemo__margin-top controlsDemo__height200 controlsDemo__maxWidth200">
             <ws:for data="textInfo in _textsInfo">
                 <div class="controlsDemo__cell">{{ textInfo }}</div>
             </ws:for>
