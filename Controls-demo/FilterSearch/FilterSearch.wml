@@ -48,9 +48,9 @@
                                                 <Controls.deprecatedFilter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
                                             </Controls.deprecatedFilter:FastContainer>
 
-                                            <Controls.deprecatedFilter:ButtonContainer>
+                                            <Controls.filter:ViewContainer>
                                                 <Controls.deprecatedFilter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
-                                            </Controls.deprecatedFilter:ButtonContainer>
+                                            </Controls.filter:ViewContainer>
                                         </div>
                                     </div>
                                 </div>
@@ -88,9 +88,9 @@
                                         <Controls.deprecatedFilter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
                                     </Controls.deprecatedFilter:FastContainer>
 
-                                    <Controls.deprecatedFilter:ButtonContainer>
+                                    <Controls.filter:ViewContainer>
                                         <Controls.deprecatedFilter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/FilterSearch/Panel"/>
-                                    </Controls.deprecatedFilter:ButtonContainer>
+                                    </Controls.filter:ViewContainer>
                                 </div>
                             </div>
                             <Controls.list:Container>
@@ -126,9 +126,9 @@
                                         attr:class="demo__filterSearch-tabs">
                                     <ws:tabSpaceTemplate>
                                         <div class="controls-demo__filterSearch-filters">
-                                            <Controls.deprecatedFilter:ButtonContainer>
+                                            <Controls.filter:ViewContainer>
                                                 <Controls.deprecatedFilter:Selector attr:class="controls-demo__filterButton" items="{{_options.items}}" templateName="Controls-demo/FilterSearch/Panel" alignment="left"/>
-                                            </Controls.deprecatedFilter:ButtonContainer>
+                                            </Controls.filter:ViewContainer>
 
                                             <Controls.deprecatedFilter:FastContainer>
                                                 <Controls.deprecatedFilter:Fast attr:class="controls-demo__filterSearch-fastFilter"/>
