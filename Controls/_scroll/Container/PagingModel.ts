@@ -2,7 +2,7 @@ import {mixin} from 'Types/util';
 import {IVersionable, VersionableMixin} from 'Types/entity';
 import {SCROLL_POSITION} from '../Utils/Scroll';
 import {IScrollState} from '../Utils/ScrollState';
-import {IArrowState} from '../../_paging/Paging';
+import {IArrowState} from 'Controls/paging';
 
 export type TPagingModeScroll = 'hidden' | 'basic' | 'edge' | 'end';
 

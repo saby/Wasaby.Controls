@@ -1,4 +1,4 @@
-<div class="controls-DigitButtons">
+<div class="controls-DigitButtons controls-DigitButtons_theme-{{_options.theme}}">
 <ws:for data="digit in _digits">
    <ws:if data="{{digit == '. . .'}}">
       <span class="controls-Paging__btn controls-Paging__btn_theme-{{_options.theme}} controls-DigitButtons__digit
