@@ -5571,12 +5571,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(itemData);
         }
-        const itemKey = itemData.getContents().getKey();
-        const hoverFreezeController = _private.getHoverFreezeController(this);
-        if (hoverFreezeController && !this._itemActionsMenuId) {
-            const frozenItemKey = hoverFreezeController.getCurrentItemKey();
-            if (frozenItemKey === null || frozenItemKey === itemKey) {
-                hoverFreezeController.startFreezeHoverTimeout(itemData);
+        if (!itemData['[Controls/_display/GroupItem]'] && !itemData['[Controls/_display/SearchSeparator]']) {
+            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const hoverFreezeController = _private.getHoverFreezeController(this);
+            if (hoverFreezeController && !this._itemActionsMenuId) {
+                const frozenItemKey = hoverFreezeController.getCurrentItemKey();
+                if (frozenItemKey === null || frozenItemKey === itemKey) {
+                    hoverFreezeController.startFreezeHoverTimeout(itemData);
+                }
             }
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
