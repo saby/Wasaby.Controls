@@ -1,4 +1,3 @@
-import {ItemsUtil} from 'Controls/list';
 import {Record, Model} from 'Types/entity';
 import {getFontWidth} from 'Controls/Utils/getFontWidth';
 import {IMultilinePathOptions} from './MultilinePath';
@@ -19,7 +18,7 @@ export default {
     getItemsWidth(items: Record[], options: IMultilinePathOptions, getTextWidth: Function = this.getTextWidth): number[] {
         const itemsWidth = [];
         items.forEach((item, index) => {
-            const itemTitleWidth = getTextWidth(ItemsUtil.getPropertyValue(item, options.displayProperty), options.fontSize);
+            const itemTitleWidth = getTextWidth(item.get(options.displayProperty), options.fontSize);
             const itemWidth = index !== 0 ? itemTitleWidth + ARROW_WIDTH : itemTitleWidth;
             itemsWidth.push(itemWidth + PADDING_RIGHT);
         });
@@ -112,14 +111,14 @@ export default {
             }
             // добавляем точки
             const dotsItem = new Model({
-                rawData: {},
-                keyProperty: options.keyProperty
+                rawData: {
+                    [options.displayProperty]: '...',
+                    [options.keyProperty]: 'dots'
+                },
+                keyProperty: options.keyProperty,
             });
-            dotsItem[options.displayProperty] = '...';
-            dotsItem[options.keyProperty] = 'dots';
 
             secondContainerItems.push({
-                getPropValue: ItemsUtil.getPropertyValue,
                 item: dotsItem,
                 isDots: true,
                 hasArrow: true

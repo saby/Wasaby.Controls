@@ -50,8 +50,6 @@ export interface ISearchInputContainerOptions extends IControlOptions {
  * @author Крюков Н.Ю.
  */
 export default class Container extends Control<ISearchInputContainerOptions> {
-   readonly '[Controls/_search/Input/Container]': boolean;
-
    protected _template: TemplateFunction = template;
 
    protected _value: string;
@@ -59,8 +57,8 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _searchResolverController: SearchResolver = null;
 
    protected _beforeMount(options?: ISearchInputContainerOptions): void {
-      if (this._options.inputSearchValue !== options.inputSearchValue) {
-         this._value = options.inputSearchValue;
+      if (options.inputSearchValue) {
+         this._updateSearchData(options.inputSearchValue);
       }
    }
 
@@ -75,8 +73,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    protected _beforeUpdate(newOptions: ISearchInputContainerOptions): void {
       if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
-         this._value = newOptions.inputSearchValue;
-         this._getSearchResolverController().setSearchStarted(true);
+         this._updateSearchData(newOptions.inputSearchValue);
       }
    }
 
@@ -107,6 +104,11 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    protected _notifySearch(value: string): void {
       this._resolve(value);
+   }
+
+   private _updateSearchData(inputSearchValue: string): void {
+      this._value = inputSearchValue;
+      this._getSearchResolverController().setSearchStarted(true);
    }
 
    private _resolve(value: string): void {

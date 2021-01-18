@@ -8,6 +8,15 @@ describe('Controls/_search/Input/Container', () => {
 
    afterEach(() => sandbox.restore());
 
+   it('_beforeMount', () => {
+      const cont = new InputContainer({});
+      cont.saveOptions({});
+      cont._value = '';
+
+      cont._beforeMount({inputSearchValue: 'test'});
+      assert.equal(cont._value, 'test');
+   });
+
    it('_beforeUpdate', () => {
       const cont = new InputContainer({});
       cont.saveOptions({});

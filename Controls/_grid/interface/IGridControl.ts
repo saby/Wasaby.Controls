@@ -461,6 +461,7 @@ export interface IGridControl extends IList {
  * @cfg {Function} Шаблон отображения строки итогов.
  * @default undeined
  * @demo Controls-demo/grid/Results/ResultsTemplate/Index
+ * @markdown
  * @remark
  * Позволяет установить пользовательский шаблон отображения строки итогов (именно шаблон, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона Controls/grid:ResultsTemplate.
  *

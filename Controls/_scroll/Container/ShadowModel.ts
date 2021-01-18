@@ -120,7 +120,7 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
     }
 
     _updateEnabled(): boolean {
-        const isEnabled: boolean = this._getShadowEnable();
+        const isEnabled: boolean = this._getContainerShadowEnable();
         let isChanged = false;
         if (isEnabled !== this._isEnabled) {
             this._isEnabled = isEnabled;
@@ -158,26 +158,28 @@ export default class ShadowModel extends mixin<VersionableMixin>(VersionableMixi
     }
 
     isStickyHeadersShadowsEnabled(): boolean {
-        if (this._visibilityByInnerComponents !== SHADOW_VISIBILITY.AUTO) {
-            return SHADOW_ENABLE_MAP[this._visibilityByInnerComponents];
-        }
-        return (this._options[`${this._position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
-            (this._isShadowEnable() && this._canScrollByScrollState()));
+        return this._getShadowEnable();
     }
 
     private _canScrollByScrollState(): boolean {
         return !!(this._scrollState[`can${upperDirection[this._direction]}Scroll`]);
     }
 
-    private _getShadowEnable(): boolean {
+    private _getContainerShadowEnable(): boolean {
         if (this._isStickyFixed) {
             return false;
+        }
+        return this._getShadowEnable();
+    }
+
+    private _getShadowEnable(): boolean {
+        if (this._options[`${this._position}ShadowVisibility`] !== SHADOW_VISIBILITY.AUTO) {
+            return this._isShadowEnable();
         }
         if (this._visibilityByInnerComponents !== SHADOW_VISIBILITY.AUTO) {
             return SHADOW_ENABLE_MAP[this._visibilityByInnerComponents];
         }
-        return this._options[`${this._position}ShadowVisibility`] === SHADOW_VISIBILITY.VISIBLE ||
-            (this._isShadowEnable() && this._canScrollByScrollState());
+        return this._canScrollByScrollState();
     }
 
     /**

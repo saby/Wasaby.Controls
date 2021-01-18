@@ -115,10 +115,9 @@
   display: flex;
 }
 .controls-itemActionsV__action_icon_theme-@{themeName} {
-  width: @item_icon-size_itemActions;
-  height: @item_icon-size_itemActions;
-  justify-content: center;
-  align-items: center;
+   width: @item_icon-size_itemActions;
+   height: @item_icon-size_itemActions;
+   justify-content: center;
 }
 .controls-itemActionsV__action {
   cursor: pointer;
@@ -152,11 +151,13 @@
 }
 
 .controls-itemActionsV__action_icon_size_m_theme-@{themeName} {
-  .icon(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
+   .icon(@item_icon-size_itemActions, @item_icon_font-family_itemsActions);
+   align-items: baseline;
 }
 
 .controls-itemActionsV__action_icon_size_s_theme-@{themeName} {
    .icon-with-size(@item_icon-size_editing_itemActions, @item_icon_font-family_editing_itemsActions, @item_icon-size_itemActions);
+   align-items: center;
 }
 
 .controls-itemActionsV__action_title_theme-@{themeName} {
@@ -212,4 +213,11 @@
    width: 100%;
    flex-shrink: 1;
    flex-grow: 1;
+}
+
+.ws-is-firefox {
+   .icon-SettingsNew.controls-itemActionsV__action_icon_theme-@{themeName}::before {
+      line-height: @item_icon-size_itemActions - 1;
+      transform: rotate(360deg);
+   }
 }

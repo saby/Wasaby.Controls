@@ -34,7 +34,7 @@ export interface IMarkerListOptions {
    /**
     * @name Controls/_marker/interface/IMarkerList#markerVisibility
     * @cfg {Controls/_marker/interface/IMarkerList/TVisibility.typedef} Режим отображения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
-    * @demo Controls-demo/list_new/Marker/OnActivated/Index В примере опция markerVisibility установлена в значение "onactivated".
+    * @demo Controls-demo/list_new/Marker/Base/Index В примере опция markerVisibility установлена в значение "onactivated".
     * @default onactivated
     * @see markedKey
     * @see markedKeyChanged
@@ -105,7 +105,7 @@ export interface IMarkerListOptions {
  */
 
 /**
- * @event Происходит до изменения ключа маркера.
+ * @event Происходит до изменения ключа {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
  * @name Controls/_marker/interface/IMarkerList#beforeMarkedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Новый ключ маркера.
