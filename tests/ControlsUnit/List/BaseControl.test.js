@@ -1594,14 +1594,14 @@ define([
             assert.isFalse(isHandlerCalled);
          });
 
-         it('should not work when itemAction "delete" is not visible', async () => {
+         it('should work even when itemAction "delete" is not visible', async () => {
             await initTest({
                itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }],
                itemActionVisibilityCallback: (action, item) => action.id !== 'delete',
             });
             instance.setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
-            assert.isFalse(isHandlerCalled);
+            assert.isTrue(isHandlerCalled);
          });
 
          it('should not work when no item is marked', () => {
