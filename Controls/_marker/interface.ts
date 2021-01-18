@@ -105,7 +105,7 @@ export interface IMarkerListOptions {
  */
 
 /**
- * @event Происходит до изменения ключа маркера.
+ * @event Происходит до изменения ключа {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
  * @name Controls/_marker/interface/IMarkerList#beforeMarkedKeyChanged
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Number} key Новый ключ маркера.
