@@ -14,6 +14,7 @@ import {TimeInterval} from 'Types/entity';
 interface ITimeInterval {
     readonly _options: {
         /**
+         * @name Controls/interface/ITimeInterval#mask
          * @cfg {String} Формат ввода временного интервала.
          * @variant 'HH:MM'
          * @variant 'HHH:MM'
@@ -55,6 +56,7 @@ interface ITimeInterval {
         mask: 'HH:MM' | 'HHH:MM' | 'HHHH:MM' | 'HH:MM:SS' | 'HHH:MM:SS' | 'HHHH:MM:SS';
 
         /**
+         * @name Controls/interface/ITimeInterval#value
          * @cfg {Types/entity:applied.TimeInterval} Значение поля.
          * @demo Controls-demo/Input/TimeInterval/Base/Index
          */

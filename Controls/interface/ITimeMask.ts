@@ -14,6 +14,7 @@
 interface ITimeMask {
    readonly _options: {
       /**
+       * @name Controls/interface/ITimeMask#mask
        * @cfg {String} Формат ввода даты.
        * @remark
        *
