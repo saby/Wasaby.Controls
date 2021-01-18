@@ -225,12 +225,18 @@ const _private = {
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
-        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey);
+        const items = viewModel.getItems();
+        const dispItem = viewModel.getItemBySourceKey(nodeKey);
+        const isAlreadyLoaded =
+            baseControl.getSourceController().hasLoaded(nodeKey) ||
+            (dispItem && viewModel.getChildren(nodeKey, items).length);
+
         if (isAlreadyLoaded) {
             return false;
         }
+
         if (self._options.hasChildrenProperty) {
-            const node = viewModel.getItems().getRecordById(nodeKey);
+            const node = items.getRecordById(nodeKey);
             return node.get(self._options.hasChildrenProperty) !== false;
         }
         return true;
