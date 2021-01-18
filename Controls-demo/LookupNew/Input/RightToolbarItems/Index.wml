@@ -8,7 +8,7 @@
                 source="{{_source}}"
                 rightToolbarItems="{{_rightToolbarItems}}"
                 keyProperty="id"
-                on:itemClick="_eventHandler()"
+                on:toolbarItemClick="_eventHandler()"
                 multiSelect="{{true}}">
             <ws:itemTemplate>
                 <ws:partial template="Controls/lookup:ItemTemplate"/>

@@ -99,7 +99,8 @@
                         </ws:if>
                         <ws:if data="{{_options.rightToolbarItems}}">
                             <Controls.toolbars:View items="{{_options.rightToolbarItems}}"
-                                                    on:itemClick="_itemClickHandler()"
+                                                    iconSize="s"
+                                                    on:itemClick="_toolbarItemClickHandler()"
                                                     attr:class="controls-Lookup__toolbar_theme-{{_options.theme}}"/>
                         </ws:if>
                         <ws:partial template="{{_showSelectorTemplate}}"
