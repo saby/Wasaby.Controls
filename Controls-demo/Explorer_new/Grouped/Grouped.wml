@@ -1,0 +1,18 @@
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth550">
+    <div class="controlsDemo__wrapper">
+        <Controls.scroll:Container attr:class="demo-Explorer__scrollContainer controlsDemo__height300">
+            <Controls.explorer:View
+                    source="{{_viewSource}}"
+                    bind:root="_root"
+                    attr:class="demo-Explorer"
+                    keyProperty="id"
+                    displayProperty="title"
+                    parentProperty="parent"
+                    header="{{_header}}"
+                    style="master"
+                    nodeProperty="parent@"
+                    groupProperty="group"
+                    columns="{{_columns}}"/>
+        </Controls.scroll:Container>
+    </div>
+</div>
