@@ -5603,6 +5603,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
+            newNavigation.sourceConfig.page = this._currentPage - 1;
         }
         if (params.page) {
             newNavigation.sourceConfig.page = params.page - 1;
