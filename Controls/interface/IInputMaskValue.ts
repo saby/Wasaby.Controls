@@ -12,6 +12,7 @@
 interface IInputMaskValue {
     readonly _options: {
         /**
+         * @name Controls/interface/IInputMaskValue#value
          * @cfg {String} Значение контрола ввода. 
          * Параметр представляет собой текст в поле ввода без разделителей.
          * @default '' (пустая строка)
@@ -26,7 +27,7 @@ interface IInputMaskValue {
          * <Controls.buttons:Button on:click="_sendButtonClick()" />
          * </pre>
          *
-         * <pre>
+         * <pre class="brush: js">
          * // JavaScript
          * Control.extend({
          *    _inputValue: '',

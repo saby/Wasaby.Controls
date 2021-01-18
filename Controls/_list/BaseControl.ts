@@ -6139,6 +6139,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
             }
 
+            if (_private.hasSelectionController(this)) {
+                _private.changeSelection(this, {selected: [], excluded: []});
+            }
+
             this._dndListController = null;
         };
 
