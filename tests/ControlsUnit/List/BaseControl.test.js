@@ -605,6 +605,39 @@ define([
          assert.deepEqual(ctrl._loadedItems, loadedItems);
       });
 
+      it('call itemsReadyCallback on recreation RS', async function () {
+         var source = new sourceLib.Memory({});
+         var sourceController = new dataSource.NewSourceController({
+            source: source,
+            keyProperty: 'id'
+         });
+         sourceController.setItems(new collection.RecordSet());
+         let isItemsReadyCallbackSetted = false;
+         const itemsReadyCallback = () => {
+            isItemsReadyCallbackSetted = true;
+         };
+         var
+             cfg = {
+                viewName: 'Controls/List/ListView',
+                source: source,
+                sourceController: sourceController,
+                viewModelConstructor: lists.ListViewModel,
+                keyProperty: 'id',
+                itemsReadyCallback
+             },
+             ctrl = new lists.BaseControl(cfg);
+
+         ctrl.saveOptions(cfg);
+         await ctrl._beforeMount(cfg);
+
+         lists.BaseControl._private.assignItemsToModel(ctrl, new collection.RecordSet({
+            keyProperty: 'id',
+            rawData: [ { id: 2, title: 'qwe' } ]
+         }), cfg);
+
+         assert.isTrue(isItemsReadyCallbackSetted);
+      });
+
       it('_private.checkPortionedSearchByScrollTriggerVisibility', () => {
          const self = {};
          lists.BaseControl._private.checkPortionedSearchByScrollTriggerVisibility(self, false);

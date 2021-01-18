@@ -3,6 +3,11 @@ import {ITreeControlOptions} from 'Controls/tree';
 import {IHierarchyOptions} from 'Controls/interface';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
+export enum MasterVisibilityEnum {
+    visible = 'visible',
+    hidden = 'hidden'
+}
+
 /**
  * Интерфейс описывает структуру настроек master-колонки компонента {@link Controls/catalog:Browser}
  * @interface Controls/catalog:IMasterOptions
@@ -49,7 +54,7 @@ export interface IMasterOptions extends ISourceOptions {
      * Регулирует видимость master-колонки
      * @default 'hidden'
      */
-    visibility?: 'visible' | 'hidden';
+    visibility?: MasterVisibilityEnum;
     //endregion
 
     /**

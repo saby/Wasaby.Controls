@@ -14,7 +14,7 @@
 
    <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()" attr:class="ControlsDemo-InfoboxTemplate__stickyButton"/>
    <div style="margin-left: 20px;" class="ControlsDemo-InfoboxTemplate__blockOptions">
-      <Controls.dropdown:Input bind:selectedKeys="_selectedKeysSimple"
+      <Controls.dropdown:Selector bind:selectedKeys="_selectedKeysSimple"
                                keyProperty="id"
                                displayProperty="title"
                                attr:class="ControlsDemo-simple ControlsDemo-InputDropdown__item"

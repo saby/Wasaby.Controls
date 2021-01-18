@@ -1,5 +1,5 @@
 /**
- * Шаблон, который по умолчанию используется в {@link Controls/dropdown:Input} для отображения элемента, выбранного из выпадающего списка.
+ * Шаблон, который по умолчанию используется в {@link Controls/dropdown:Selector} для отображения элемента, выбранного из выпадающего списка.
  * @class Controls/dropdown:inputDefaultContentTemplate
  * @public
  * @author Герасимов А.М.

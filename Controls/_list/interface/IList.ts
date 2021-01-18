@@ -246,11 +246,13 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {MultiSelectVisibility} Режим отображения флагов множественного выбора.
+ * @cfg {MultiSelectVisibility} Видимость чекбоксов.
  * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
  * @remark
- * Чтобы включить в списочном контроле режим "Множественный выбор элементов", обратитесь к <a href="/doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/">руководству разработчика</a>.
+ * Подробнее о работе с чекбоксами читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ здесь}.
+ * @see multiSelectAccessibilityProperty
+ * @see multiSelectPosition
  */
 
 /*ENG
@@ -269,15 +271,17 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @typedef {String} MultiSelectPosition
- * @variant custom Нестандартная позиця расположени чекбоксов множественного выбора. При данном значении опции, шаблон чекбоксов передается в прикладной шаблон и может быть выведен в любом месте записи.
+ * @variant custom Позиционирование чекбокса в произвольном месте пользовательского шаблона. Подробнее читайте {@link здесь}.
  * @variant default Стандартная позиция чекбоксов множественного выбора в начале строки.
  */
 
 /**
  * @name Controls/_list/interface/IList#multiSelectPosition
- * @cfg {MultiSelectPosition} Позиция чекбоксов множественного выбора.
+ * @cfg {MultiSelectPosition} Позиционирование чекбокса.
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
  * @default default
+ * @see multiSelectAccessibilityProperty
+ * @see multiSelectVisibility
  */
 
 /*ENG
@@ -303,6 +307,8 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * * {@link Controls/list:MultiSelectAccessibility#disabled disabled} Чекбокс виден, но с ним нельзя взаимодействовать
  * * {@link Controls/list:MultiSelectAccessibility#hidden hidden} Чекбокс скрыт
  * @demo Controls-demo/list_new/ItemTemplate/MultiSelectAccessibilityProperty/Index
+ * @see multiSelectVisibility
+ * @see multiSelectPosition
  */
 
 /**
@@ -453,7 +459,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * Загружает модель из источника данных, объединяет изменения в текущих данные и отображает элемент.
+ * Загружает модель из {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}, объединяет изменения в текущих данные и отображает элемент.
  * @function Controls/_list/interface/IList#reloadItem
  * @param {String} key Идентификатор элемента коллекции, который должен быть перезагружен из источника.
  * @param {Object} readMeta Метаинформация, которая будет передана методу запроса/чтения.
@@ -576,30 +582,6 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Model} item Instance of the item whose action was clicked.
  * @param {HTMLElement} itemContainer Container of the item.
- */
-
-/**
- * @event Происходит при выделении пользователем элемента списка.
- * @name Controls/_list/interface/IList#markedKeyChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Number} key Ключ выбранного элемента.
- */
-
-/*ENG
- * @event Occurs when list item was selected (marked).
- * @name Controls/_list/interface/IList#markedKeyChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
- * @param {Number} key Key of the selected item.
- */
-
-/**
- * @event Происходит до изменения ключа маркера.
- * @name Controls/_list/interface/IList#beforeMarkedKeyChanged
- * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
- * @param {Number} key Новый ключ маркера.
- * @remark
- * Из обработчика события нужно вернуть полученный ключ или новый ключ.
- * Либо можно вернуть промис с нужным ключом.
  */
 
 /**

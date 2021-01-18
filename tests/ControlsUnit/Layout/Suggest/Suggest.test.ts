@@ -736,9 +736,11 @@ describe('Controls/suggest', () => {
 
          beforeEach(() => {
             inputContainer = getComponentObject();
-            getSearchControllerStub = sandbox.stub(inputContainer, '_getSearchController').callsFake(() => ({
-               reset: () => Promise.resolve(recordSet)
-            }));
+            getSearchControllerStub = sandbox.stub(inputContainer, '_getSearchController').callsFake(() => {
+               return Promise.resolve({
+                  reset: () => Promise.resolve(recordSet)
+               });
+            });
             setItemsSpy = sandbox.stub(inputContainer, '_setItems');
          });
 

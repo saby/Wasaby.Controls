@@ -50,7 +50,6 @@ function getActionsForContacts(): IItemAction[] {
         }
     ];
 }
-
 function getActionsWithDisplayMode(): IItemAction[] {
     return [
         {
@@ -119,5 +118,6 @@ function getMoreActions(): Array<{
 export {
     getActionsForContacts,
     getActionsWithDisplayMode,
-    getMoreActions
+    getMoreActions,
+    getActionsWithParent
 };

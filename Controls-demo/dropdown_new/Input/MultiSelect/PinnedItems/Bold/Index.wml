@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper controlsDemo__flexRow">
     <div class="controlsDemo_m demo-Dropdown__bold">
-        <Controls.dropdown:Input bind:selectedKeys="_selectedKeys"
+        <Controls.dropdown:Selector bind:selectedKeys="_selectedKeys"
                                  keyProperty="id"
                                  displayProperty="title"
                                  multiSelect="{{true}}"
@@ -14,6 +14,6 @@
                 <ws:partial template="Controls/dropdown:ItemTemplate"
                             class="{{itemTemplate.itemData.item.get('pinned') ? 'controlsDemo__dropdownItem_bold'}}"/>
             </ws:itemTemplate>
-        </Controls.dropdown:Input>
+        </Controls.dropdown:Selector>
     </div>
 </div>
