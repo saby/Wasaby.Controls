@@ -227,9 +227,10 @@ const _private = {
         const viewModel = baseControl.getViewModel();
         const items = viewModel.getItems();
         const dispItem = viewModel.getItemBySourceKey(nodeKey);
-        const isAlreadyLoaded =
-            baseControl.getSourceController().hasLoaded(nodeKey) ||
-            (dispItem && viewModel.getChildren(nodeKey, items).length);
+        const loadedChildren = dispItem && (self._options.useNewModel ?
+            viewModel.getChildren(dispItem, items).getCount() :
+            viewModel.getChildren(nodeKey, items).length);
+        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey) || loadedChildren;
 
         if (isAlreadyLoaded) {
             return false;
