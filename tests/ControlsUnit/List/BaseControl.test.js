@@ -6882,8 +6882,8 @@ define([
                let isEditingCanceled = false;
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
-               baseControl.recreateSourceController = function(newSource, newNavigation) {
-                  assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
+               baseControl._sourceController.updateOptions = function(newOptions) {
+                  assert.deepEqual(expectedSourceConfig, newOptions.navigation.sourceConfig);
                };
                baseControl._cancelEdit = () => {
                   isEditingCanceled = true;
@@ -6905,6 +6905,13 @@ define([
                assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
+               assert.isTrue(isEditingCanceled);
+               baseControl._options.navigation.sourceConfig.page = 1;
+               expectedSourceConfig.page = 0;
+               expectedSourceConfig.pageSize = 200;
+               isEditingCanceled = false;
+               expectedSourceConfig.hasMore = false;
+               baseControl._changePageSize({}, 6);
                assert.isTrue(isEditingCanceled);
             });
          });
