@@ -45,7 +45,5 @@
             <ws:partial template="{{_options.footerTemplate}}"/>
          </div>
       </ws:else>
-
-      <ws:partial template="{{ _options.middleLoadingIndicatorTemplate }}"/>
    </ws:if>
 </div>

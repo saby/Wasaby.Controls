@@ -169,9 +169,6 @@
             <ws:emptyTemplate>
                 <ws:partial template="emptyTemplateIf"/>
             </ws:emptyTemplate>
-            <ws:middleLoadingIndicatorTemplate>
-                <ws:partial if="{{ _shouldDisplayMiddleLoadingIndicator() }}" template="loadingIndicator"/>
-            </ws:middleLoadingIndicatorTemplate>
         </ws:partial>
         <div name="bottomVirtualScrollTrigger" style="position: relative; bottom: 0;"></div>
         <ws:if data="{{_needScrollCalculation}}">
@@ -206,6 +203,8 @@
 
             <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="{{_getBottomLoadingIndicatorStyles()}}"/>
         </ws:if>
+
+        <ws:partial if="{{ _shouldDisplayMiddleLoadingIndicator() }}" template="loadingIndicator"/>
 
         <ws:partial if="{{ _shouldDisplayPortionedSearch() }}" template="portionedSearch"/>
 
