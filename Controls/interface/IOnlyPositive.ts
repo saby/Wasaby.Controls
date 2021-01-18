@@ -1,10 +1,12 @@
 /**
+ * Интерфейс для контролов, которые поддерживают ввод положительных чисел.
  * @public
  * @author Красильников А.С.
  */
 interface IOnlyPositive {
     readonly _options: {
         /**
+         * @name Controls/interface/IOnlyPositive#onlyPositive
          * @cfg {Boolean} Определяет, можно ли вводить в поле только положительные числа.
          * @default false
          * @remark
