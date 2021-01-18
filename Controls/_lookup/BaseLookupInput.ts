@@ -134,9 +134,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     protected _itemClickHandler(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent): void {
-        this._notify('itemClick', [item, nativeEvent, {
-            selected: this._options.selectedKeys
-        }]);
+        this._notify('itemClick', [item, nativeEvent]);
     }
 
     protected _getFieldWrapper(): HTMLElement {
