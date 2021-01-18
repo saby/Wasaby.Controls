@@ -56,7 +56,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/input:IBorderVisibility
  * @mixes Controls/input:IPadding
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
@@ -90,7 +90,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/_input/interface/IValueOptions
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
@@ -570,4 +570,10 @@ export default class Lookup extends BaseLookupInput {
  * @name Controls/_lookup/Lookup#fontSize
  * @cfg
  * @demo Controls-demo/LookupNew/Input/FontSize/Index
+ */
+
+/**
+ * @name Controls/_lookup/Lookup#rightToolbarItems
+ * @cfg {Controls/_toolbars/IToolbarSource.typedef} Источник данных для дполнительных команд в правой части поля ввода.
+ * @demo Controls-demo/LookupNew/Input/RightToolbarItems/Index
  */

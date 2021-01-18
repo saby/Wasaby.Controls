@@ -33,6 +33,7 @@ export interface ILookupInputOptions extends
     multiLine?: boolean;
     autoDropDown?: boolean;
     comment?: string;
+    rightToolbarItems?: ICrudPlus;
 }
 
 export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOptions> {
@@ -129,6 +130,12 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
                 }
             }
         }
+    }
+
+    protected _itemClickHandler(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent): void {
+        this._notify('itemClick', [item, nativeEvent, {
+            selected: this._options.selectedKeys
+        }]);
     }
 
     protected _getFieldWrapper(): HTMLElement {
