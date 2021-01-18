@@ -86,8 +86,6 @@
                 attr:class="{{ _options.footer ? 'controls-GridView__footer' }}"
                 backgroundStyle="{{_options.backgroundStyle || _options.style}}"
                 isFullGridSupport="{{ false }}"/>
-
-    <ws:partial template="{{ _options.middleLoadingIndicatorTemplate }}"/>
 </table>
 
 

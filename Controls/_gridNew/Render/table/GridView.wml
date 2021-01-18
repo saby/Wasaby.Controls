@@ -73,9 +73,6 @@
                         containerSize="{{ _containerSize }}"
                         backgroundStyle="{{ _options.backgroundStyle || _options.style }}"/>
         </ws:if>
-
-        <!-- Middle loading indicator-->
-        <ws:partial template="{{ _options.middleLoadingIndicatorTemplate }}"/>
     </table>
 </ws:template>
 
