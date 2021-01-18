@@ -14,7 +14,6 @@ type IEdge = 'start' | 'end';
 export default class extends Control {
     protected _template: TemplateFunction = template;
     protected _source: Memory;
-    protected _markedKey: number = 0;
 
     private _items: RecordSet;
     private _newItemsOrderNumber: number = 99;
@@ -45,7 +44,6 @@ export default class extends Control {
                 title: `Новая запись #${this._newItemsOrderNumber}`
             }]
         }));
-        this._markedKey = this._newItemsOrderNumber;
     }
 
     protected _removeItem(event: Event, edge: IEdge): void {
