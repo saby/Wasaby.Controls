@@ -41,8 +41,6 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
- * @mixes Controls/_list/interface/IMovableList
- * @mixes Controls/_list/interface/IRemovableList
  * @mixes Controls/_marker/interface/IMarkerList
  *
  * @mixes Controls/_list/interface/IVirtualScrollConfig
@@ -77,8 +75,6 @@ import { RecordSet } from 'Types/collection';
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_list/interface/IClickableView
  * @mixes Controls/_list/interface/IReloadableList
- * @mixes Controls/_list/interface/IMovableList
- * @mixes Controls/_list/interface/IRemovableList
  * @mixes Controls/_marker/interface/IMarkerList
  *
  * @mixes Controls/_list/interface/IVirtualScrollConfig

@@ -29,7 +29,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _rootId: CrudEntityKey;
    private _model: Tree<Model, TreeItem<Model>>;
    private _entryPath: IEntryPathItem[];
-   private _selectionType: 'node'|'leaf'|'all' = 'all';
+   private _selectionType: 'node'|'leaf'|'all'|'allBySelectAction' = 'all';
+   private _recursiveSelection: boolean;
    private _rootChanged: boolean;
 
    constructor(options: ITreeSelectionStrategyOptions) {
@@ -48,6 +49,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       this._model = options.model;
       this._entryPath = options.entryPath;
       this._selectionType = options.selectionType;
+      this._recursiveSelection = options.recursiveSelection;
    }
 
    setEntryPath(entryPath: IEntryPathItem[]): void {
@@ -216,9 +218,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const parentId = this._getKey(item.getParent());
          const isNode = this._isNode(item);
 
-         let isSelected = this._canBeSelected(item)
-            ? !selection.excluded.includes(key) && (selection.selected.includes(key) || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key)
-            : selection.selected.includes(key) || this._isAllSelected(selection, parentId) && !selection.excluded.includes(key) && this._canBeSelectedBySelectionType(item);
+         let isSelected = this._canBeSelected(item) && (!selection.excluded.includes(key) && (selection.selected.includes(key) || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key));
 
          if ((this._selectAncestors || searchValue) && isNode) {
             isSelected = this._getStateNode(item, isSelected, {
@@ -709,6 +709,16 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _canBeSelectedBySelectionType(item: TreeItem<Model>): boolean {
       const isNode = this._isNode(item);
-      return item.isReadonlyCheckbox() || this._selectionType === 'all' || this._selectionType === 'node' && isNode || this._selectionType === 'leaf' && !isNode;
+
+      switch (this._selectionType) {
+         case 'all':
+         // allBySelectAction используется в lookupPopup и приходит к нам через scope, расцениваем ее как all
+         case 'allBySelectAction':
+            return true;
+         case 'leaf':
+            return !isNode || this._recursiveSelection && isNode;
+         case 'node':
+            return isNode;
+      }
    }
 }
