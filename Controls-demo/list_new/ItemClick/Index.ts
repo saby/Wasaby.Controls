@@ -10,7 +10,6 @@ export default class extends Control {
     protected _viewSource: Memory;
     protected _itemActions: IItemAction[];
     protected _hasMultiSelect: boolean = false;
-    protected _hasItemActions: boolean = true;
     protected _textsInfo: string[] = [];
     protected _selectedKeys: number[] = [];
 

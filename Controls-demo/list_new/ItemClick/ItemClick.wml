@@ -6,25 +6,20 @@
                     bind:value="_hasMultiSelect"
                     caption="Множественный выбор"/>
         </div>
-        <div>
-            <Controls.toggle:Checkbox
-                    attr:class="constrolsDemo__SearchWithColumnScroll__checkbox__isBigData"
-                    bind:value="_hasItemActions"
-                    caption="Операции над записью"/>
-        </div>
     </div>
     <Controls.list:View
+            attr:class="controlsDemo__margin-top"
             keyProperty="id"
             multiSelectVisibility="{{ _hasMultiSelect ? 'visible' : 'hidden'}}"
             source="{{_viewSource}}"
-            itemActions="{{_hasItemActions ? _itemActions : null}}"
+            itemActions="{{_itemActions}}"
             bind:selectedKeys="_selectedKeys"
             on:itemClick="_onItemClick()"
             on:itemActivate="_onItemActivate()"
     />
 
     <ws:if data="{{_textsInfo.length}}">
-        <Controls.scroll:Container attr:class="controlsDemo__height200 controlsDemo__maxWidth200">
+        <Controls.scroll:Container attr:class="controlsDemo__margin-top controlsDemo__height200 controlsDemo__maxWidth200">
             <ws:for data="textInfo in _textsInfo">
                 <div class="controlsDemo__cell">{{ textInfo }}</div>
             </ws:for>
