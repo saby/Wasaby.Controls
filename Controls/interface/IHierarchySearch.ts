@@ -3,7 +3,7 @@ export interface IHierarchySearchOptions {
     searchNavigationMode?: string;
 }
 /**
- * Интерфейс для контролов, реализующих поиск в иерархических списках.
+ * Интерфейс для контролов, реализующих поиск в {@link /doc/platform/developmentapl/interface-development/controls/list/ иерархических списках}.
  * @public
  * @author Герасимов А.М.
  */
@@ -11,10 +11,12 @@ interface IHierarchySearch {
     readonly _options: {
         /**
          * @typedef {String} StartingWith
-         * @variant root Поиск происходит в корне .
+         * @description Допустимые значения для опции {@link startingWith}.
+         * @variant root Поиск происходит в корне.
          * @variant current Поиск происходит в текущем резделе.
          */
         /**
+         * @name Controls/interface/IHierarchySearch#startingWith
          * @cfg {StartingWith} Режим поиска в иерархическом списке.
          * @default root
          * @example
@@ -48,10 +50,12 @@ interface IHierarchySearch {
         startingWith: string;
         /**
          * @typedef {String} SearchNavigationMode
+         * @description Допустимые значения для опции {@link searchNavigationMode}.
          * @variant open В {@link Controls/_explorer/interface/IExplorer#viewMode режиме поиска} при клике на хлебную крошку происходит проваливание в данный узел.
          * @variant expand В режиме поиска при клике на хлебную крошку данные отображаются от корня, путь до узла разворачивается.
          */
         /**
+         * @name Controls/interface/IHierarchySearch#searchNavigationMode
          * @cfg {SearchNavigationMode} Режим навигации при поиске в иерархическом списке.
          * @default open
          */

@@ -11,6 +11,7 @@
 interface ISelectableInput {
     readonly _options: {
         /**
+         * @name Controls/interface/ISelectableInput#selectOnClick
          * @cfg {Boolean} Определяет, будет ли выделен текст при клике по полю ввода.
          * @default false
          * @remark
