@@ -3089,8 +3089,8 @@ const _private = {
             !self._listViewModel ||
             self._options.itemActionsPosition !== 'outside' ||
             (!self._options.itemActions && !self._options.itemActionsProperty) ||
-            (self._dndListController && this._dndListController.isDragging()) ||
-            (self._editInPlaceController && this._editInPlaceController.isEditing())) {
+            (self._dndListController && self._dndListController.isDragging()) ||
+            (self._editInPlaceController && self._editInPlaceController.isEditing())) {
             return;
         }
         if (!self._hoverFreezeController) {
