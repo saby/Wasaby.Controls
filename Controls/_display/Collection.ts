@@ -2345,6 +2345,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         }
     }
 
+    getDraggedItemsCount(): number {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
+        return strategy ? strategy.getDraggedItemsCount() : 0;
+    }
+
     isDragging(): boolean {
         return !!this.getStrategyInstance(this._dragStrategy);
     }

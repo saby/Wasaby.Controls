@@ -139,6 +139,10 @@
          <ws:partial template="itemActionsTemplateChooser"/>
       </ws:if>
 
+      <ws:if data="{{ !itemData.hasNextColumn(colspan) && itemData.getDraggedItemsCount() > 1 }}">
+         <span class="controls-ListView__item-dragging-counter">{{(item || itemData).getDraggedItemsCount()}}</span>
+      </ws:if>
+
    </ws:else>
 </ws:template>
 

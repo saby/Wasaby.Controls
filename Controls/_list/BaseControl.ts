@@ -2960,7 +2960,7 @@ const _private = {
             }
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
-                if (self._options.draggingTemplate) {
+                if (self._options.draggingTemplate && !self._insideDragging) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
             }

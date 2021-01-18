@@ -277,6 +277,8 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             return 'default';
         };
 
+        itemsModelCurrent.getDraggedItemsCount = () => this._dragEntity?.getItems()?.length || 0;
+
         itemsModelCurrent.getMarkerClasses = (markerClassName = 'default'): string => {
             const style = this._options.style || 'default';
             return `controls-ListView__itemV_marker

@@ -547,6 +547,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
     }
 
+    getDraggedItemsCount(): number {
+        return this.getOwner().getDraggedItemsCount();
+    }
+
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента для корневого div'а.
      * @param templateHighlightOnHover - подсвечивать или нет запись по ховеру
