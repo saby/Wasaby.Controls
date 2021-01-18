@@ -190,10 +190,12 @@ define([
                   }
                }
             });
+            component._isExpandedPopup = true;
             component._isExpandButtonVisible = false;
             component._expandPopup();
             assert.deepEqual(component._isExpandedPopup, false);
 
+            component._isExpandedPopup = true;
             component._isExpandButtonVisible = true;
             component._expandPopup();
             assert.deepEqual(component._isExpandedPopup, true);

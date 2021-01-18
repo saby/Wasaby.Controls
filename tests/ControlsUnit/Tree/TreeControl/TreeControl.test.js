@@ -228,7 +228,8 @@ define([
                }},
                appendItems: function() {},
                mergeItems: function() {},
-               getItemBySourceKey: () => undefined
+               getItemBySourceKey: () => undefined,
+               getItems: () => new collection.RecordSet()
             };
          };
 
@@ -479,6 +480,39 @@ define([
                 '_private.shouldLoadChildren returns unexpected result for ' + nodeKey
             );
          }
+      });
+
+      it('_private.shouldLoadChildren without navigation', async function() {
+         let treeControl;
+         const
+             source = new sourceLib.Memory({
+                keyProperty: 'id',
+                data: [
+                   {
+                      id: 'leaf',
+                      parent: 'node',
+                      nodeType: null,
+                   },
+
+                   {
+                      id: 'node',
+                      parent: null,
+                      nodeType: true,
+                   }
+                ],
+                filter: function() {
+                   return true;
+                }
+             });
+         const treeControlConfig = {
+            columns: [],
+            parentProperty: 'parent',
+            nodeProperty: 'nodeType',
+            source: source
+         };
+
+         treeControl = await correctCreateTreeControlAsync(treeControlConfig);
+         assert.isFalse(tree.TreeControl._private.shouldLoadChildren(treeControl, 'node'));
       });
 
       it('toggleExpanded does not load if shouldLoadChildren===false', function() {

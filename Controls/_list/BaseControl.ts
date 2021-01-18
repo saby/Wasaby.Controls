@@ -1211,8 +1211,6 @@ const _private = {
 
     onScrollShow(self, params) {
         _private.doAfterUpdate(self, () => {
-            // ToDo option "loadOffset" is crutch for contacts.
-            // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
             self._viewSize = _private.getViewSize(this, true);
@@ -5522,11 +5520,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
-
-            // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
-            if (this._dndListController && this._dndListController.isDragging()) {
-                this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
-            }
         }
     },
     _sortingChanged(event, propName) {
@@ -5610,6 +5603,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
+            newNavigation.sourceConfig.page = this._currentPage - 1;
         }
         if (params.page) {
             newNavigation.sourceConfig.page = params.page - 1;

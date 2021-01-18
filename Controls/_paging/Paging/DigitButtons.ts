@@ -24,7 +24,7 @@ interface ISurroundElements {
 
 class DigitButtons extends Control<IDigitButtonsOptions> {
     protected _template: TemplateFunction = dButtonsTemplate;
-    _digits: DigitElem[] | null = null;
+    protected _digits: DigitElem[];
 
     protected _beforeMount(newOptions: IDigitButtonsOptions): void {
         this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey,

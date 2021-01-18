@@ -5442,78 +5442,6 @@ define([
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 50);
       });
 
-      /*it('_itemMouseMove: notify draggingItemMouseMove', async function() {
-         var cfg = {
-                viewName: 'Controls/List/ListView',
-                itemsDragNDrop: true,
-                viewConfig: {
-                   idProperty: 'id'
-                },
-                viewModelConfig: {
-                   items: [],
-                   idProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                source: source
-             },
-             instance = correctCreateBaseControl(cfg);
-         let eName;
-         await instance._beforeMount(cfg);
-         instance.saveOptions(cfg);
-         instance._listViewModel.getDragItemData = () => ({});
-         instance._notify = (eventName) => {
-            eName = eventName;
-         };
-
-         instance._dndListController = new listDragNDrop.DndTreeController(instance._listViewModel);
-         instance._dndListController.isDragging = function () {
-            return true;
-         };
-
-         instance._itemMouseMove({}, {});
-         assert.equal(eName, 'draggingItemMouseMove');
-
-         instance._dndListController = null;
-         instance._itemMouseLeave({}, {});
-         assert.equal(eName, 'itemMouseLeave');
-      });*/
-
-      /*it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
-         var cfg = {
-                viewName: 'Controls/List/ListView',
-                itemsDragNDrop: true,
-                viewConfig: {
-                   idProperty: 'id'
-                },
-                viewModelConfig: {
-                   items: [],
-                   idProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                source: source
-             },
-             instance = correctCreateBaseControl(cfg);
-         let eName;
-         await instance._beforeMount(cfg);
-         instance.saveOptions(cfg);
-         instance._notify = (eventName) => {
-            eName = eventName;
-         };
-         instance._listViewModel.getDragItemData = () => ({});
-
-         instance._itemMouseLeave({}, {});
-         assert.equal(eName, 'itemMouseLeave');
-         eName = null;
-
-         instance._dndListController = new listDragNDrop.DndTreeController(instance._listViewModel);
-         instance._dndListController.isDragging = function () {
-            return true;
-         };
-
-         instance._itemMouseLeave({}, {});
-         assert.equal(eName, 'draggingItemMouseLeave');
-      });
-*/
       it('should fire "drawItems" in afterMount', async function() {
          let
              cfg = {
@@ -6854,8 +6782,8 @@ define([
                let isEditingCanceled = false;
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
-               baseControl.recreateSourceController = function(newSource, newNavigation) {
-                  assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
+               baseControl._sourceController.updateOptions = function(newOptions) {
+                  assert.deepEqual(expectedSourceConfig, newOptions.navigation.sourceConfig);
                };
                baseControl._cancelEdit = () => {
                   isEditingCanceled = true;
@@ -6877,6 +6805,13 @@ define([
                assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
+               assert.isTrue(isEditingCanceled);
+               baseControl._options.navigation.sourceConfig.page = 1;
+               expectedSourceConfig.page = 0;
+               expectedSourceConfig.pageSize = 200;
+               isEditingCanceled = false;
+               expectedSourceConfig.hasMore = false;
+               baseControl._changePageSize({}, 6);
                assert.isTrue(isEditingCanceled);
             });
          });
