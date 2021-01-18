@@ -7497,7 +7497,10 @@ define([
                source,
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel,
-               itemsDragNDrop: true
+               itemsDragNDrop: true,
+               multiSelectVisibility: 'visible',
+               selectedKeys: [1],
+               excludedKeys: []
             };
 
          let baseControl, notifySpy;
@@ -7682,6 +7685,7 @@ define([
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged', [[], [1], []]).called);
 
             baseControl._dndListController.getDraggableItem = () => ({
                getContents: () => ({
