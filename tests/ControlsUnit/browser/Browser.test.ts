@@ -476,6 +476,15 @@ describe('Controls/browser:Browser', () => {
            assert.equal(browser._root, 'test123');
            assert.equal(browser._searchController._root, 'test123');
        });
+
+        it ('root is changed, shearchController is not created', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+
+            browser._handleItemOpen('test123', undefined, 'test123');
+
+            assert.equal(browser._root, 'test123');
+        });
     });
 
     describe('_afterSearch', () => {
