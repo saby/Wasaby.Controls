@@ -29,6 +29,8 @@
                     <ws:partial template="{{_options.footerTemplate}}"/>
                 </div>
             </ws:if>
+
+            <ws:partial template="{{ _options.middleLoadingIndicatorTemplate }}"/>
         </ws:if>
     </div>
 </div>
