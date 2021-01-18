@@ -118,7 +118,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#pagingContentTemplate
- * @cfg {Function} Опция управляет отображением {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/#button-number счетчика непрочитанных сообщений}
+ * @cfg {Function} Опция управляет отображением {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/#button-number счетчика непрочитанных сообщений}.
  * @demo Controls-demo/list_new/Navigation/Paging/End/ContentTemplate/Index
  * @see pagingMode
  */
@@ -215,8 +215,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#pagingLeftTemplate
- * @cfg {Function} Шаблон для отображения слева от постраничной навигации.
+ * @cfg {Function} Шаблон для отображения слева от {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/data-pagination/ постраничной навигации}.
  * @demo Controls-demo/list_new/Navigation/Paging/LeftTemplate/Index
+ * @see pagingRightTemplate
  */
 
 /*ENG
@@ -227,8 +228,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#pagingRightTemplate
- * @cfg {Function} Шаблон для отображения справа от постраничной навигации.
+ * @cfg {Function} Шаблон для отображения справа от {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/data-pagination/ постраничной навигации}.
  * @demo Controls-demo/list_new/Navigation/Paging/Position/RightTemplate/Index
+ * @see pagingLeftTemplate
  */
 
 /*ENG
