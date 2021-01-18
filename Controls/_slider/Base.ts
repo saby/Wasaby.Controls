@@ -98,7 +98,9 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 
    private _setValue(val: number): void {
-      this._notify('valueChanged', [val]);
+      if (this._value !== val) {
+         this._notify('valueChanged', [val]);
+      }
    }
 
    protected _beforeMount(options: ISliderBaseOptions): void {
@@ -133,6 +135,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
       if (!this._options.readOnly) {
+         const newValue = this._getValue(event);
+         this._setValue(newValue);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
    }
@@ -148,9 +152,7 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
              ratio,
              this._options.precision
          );
-         if (this._value !== newValue) {
-            this._setValue(newValue);
-         }
+         this._setValue(newValue);
       }
    }
 
