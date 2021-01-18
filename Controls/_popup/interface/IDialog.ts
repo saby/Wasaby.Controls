@@ -34,10 +34,9 @@ export interface IDialogOpener extends IOpener {
  * @property {String} horizontal
  */
 export interface IDirection {
-    vertical?: 'top' | 'bottom' | 'center';
-    horizontal?: 'left' | 'right' | 'center';
+    vertical?: 'top' | 'bottom';
+    horizontal?: 'left' | 'right';
 }
-
 
 /**
  * @name Controls/_popup/interface/IDialogOpener#height
@@ -67,8 +66,9 @@ export interface IDirection {
  */
 /**
  * @name Controls/_popup/interface/IDialogOpener#direction
- * @cfg {Controls/_popup/interface/IDialog.typedef} Направление для попапа,
- * в котором его высота может динамически меняться без изменения позиции.
+ * @cfg {Controls/_popup/interface/IDialog.typedef} Направление в котором размеры попапа
+ * могут динамически меняться без изменения позиции
+ * @demo Controls-demo/Popup/Dialog/Direction/Index
  */
 /*
  * @name Controls/_popup/interface/IDialogOpener#top

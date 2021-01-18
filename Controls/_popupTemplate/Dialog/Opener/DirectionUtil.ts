@@ -9,14 +9,12 @@ const DIRECTION_TO_POSITION_MAP = {
 
 export enum HORIZONTAL_DIRECTION {
     LEFT = 'left',
-    RIGHT = 'right',
-    CENTER = 'center'
+    RIGHT = 'right'
 }
 
 export enum VERTICAL_DIRECTION {
     TOP = 'top',
-    BOTTOM = 'bottom',
-    CENTER = 'center'
+    BOTTOM = 'bottom'
 }
 
 /**

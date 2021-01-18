@@ -1,21 +1,22 @@
 define(
    [
-      'Controls/_popupTemplate/Dialog/Opener/DialogStrategy',
-      'Controls/_popupTemplate/Dialog/Opener/DialogController',
-      'Controls/_popup/Opener/Dialog',
-      'Controls/_popupTemplate/BaseController',
-      'Controls/Application/SettingsController',
-      'Controls/_popupTemplate/Dialog/Opener/DirectionUtil'
+      'Controls/popupTemplate',
+      'Controls/popup',
+      'Controls/Application/SettingsController'
    ],
    (
-      DialogStrategy,
-      DialogController,
-      DialogOpener,
-      BaseController,
-      SettingsController,
-      DirectionUtil
+      popupTemplate,
+      popupLib,
+      SettingsController
    ) => {
       'use strict';
+      const {
+         DialogStrategy,
+         DialogController,
+         BaseController,
+         DirectionUtil
+      } = popupTemplate;
+      const DialogOpener = popupLib.Dialog;
       const mockedSettingsController = {
          storage: {
             'testDialogPosition': {
@@ -57,12 +58,12 @@ define(
             height: 960
          };
 
-         let getRestrictiveContainer =  DialogController._getRestrictiveContainerSize;
+         let getRestrictiveContainer = DialogController._getRestrictiveContainerSize;
 
          DialogController._getRestrictiveContainerSize = () => windowSize;
 
          it('Opener: getConfig', () => {
-            let getDialogConfig = DialogOpener.default.prototype._getDialogConfig;
+            let getDialogConfig = DialogOpener.prototype._getDialogConfig;
             let config = getDialogConfig();
             assert.equal(config.isDefaultOpener, true);
 
@@ -457,7 +458,7 @@ define(
             let bodySelector;
             let getCoordsByContainer = BaseController.getCoordsByContainer;
             DialogController._getRestrictiveContainerSize = getRestrictiveContainer;
-            BaseController.default.getCoordsByContainer = (selector) => {
+            BaseController.getCoordsByContainer = (selector) => {
                bodySelector = selector;
             };
             DialogController._getRestrictiveContainerSize(item);
