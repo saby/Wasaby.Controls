@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filter/Controller';
 import {RecordSet} from 'Types/Collection';
+import * as Deferred from 'Core/Deferred';
 import FilterController, {IFilterControllerOptions} from 'Controls/_filter/ControllerClass';
 import {IPrefetchHistoryParams} from './IPrefetch';
 import {IFilterItem} from './View/interface/IFilterView';
@@ -114,11 +115,11 @@ export default class Container extends Control<IFilterContainerOptions, IFilterH
       };
    }
 
-   static getCalculatedFilter(cfg: unknown): FilterController {
+   static getCalculatedFilter(cfg: object): Deferred {
       return new FilterController({}).getCalculatedFilter(cfg);
    }
 
-   static updateFilterHistory(cfg: unknown): FilterController {
+   static updateFilterHistory(cfg: object): unknown {
       return new FilterController({}).saveFilterToHistory(cfg);
    }
 }
