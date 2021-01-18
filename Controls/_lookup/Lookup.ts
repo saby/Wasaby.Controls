@@ -574,6 +574,6 @@ export default class Lookup extends BaseLookupInput {
 
 /**
  * @name Controls/_lookup/Lookup#rightToolbarItems
- * @cfg {Controls/_toolbars/IToolbarSource.typedef} Источник данных для дполнительных команд в правой части поля ввода.
+ * @cfg {RecordSet} Набор записей для дполнительных команд в правой части поля ввода.
  * @demo Controls-demo/LookupNew/Input/RightToolbarItems/Index
  */

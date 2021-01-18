@@ -3,6 +3,7 @@ import * as Template from 'wml!Controls-demo/LookupNew/Input/RightToolbarItems/I
 import {COMPANIES} from 'Controls-demo/LookupNew/resources/DataStorage';
 import {showType} from 'Controls/toolbars';
 import {Memory} from 'Types/source';
+import {RecordSet} from 'Types/collection';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
@@ -12,9 +13,9 @@ export default class extends Control {
     });
     protected _selectedKeys: string[] = ['Ромашка, ООО'];
     protected _value: string = 'Ромашка, ООО';
-    protected _rightToolbarItems: Memory = new Memory({
+    protected _rightToolbarItems: RecordSet = new RecordSet({
         keyProperty: 'id',
-        data: [
+        rawData: [
             {
                 id: '1',
                 viewMode: 'icon',
