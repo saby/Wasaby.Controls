@@ -56,7 +56,7 @@ export default class Collection<
     }
 
     getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
-        return `.${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${this._$theme}:hover .controls-Grid__row-cell-background-hover-default_theme-${this._$theme}:not(.controls-Grid__row-ladder-cell)`;
+        return `.${uniqueClass} .controls-Grid__row:nth-child(${index}):hover .controls-Grid__row-cell:not(.controls-Grid__row-ladder-cell)`;
     }
 
     getItemHoverFreezeStyles(uniqueClass: string, index: number, backgroundColor: string): string {

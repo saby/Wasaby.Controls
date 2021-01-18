@@ -1007,8 +1007,7 @@ var
         },
 
         getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
-            const theme = this._options.theme;
-            return `.${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${theme}:hover .controls-Grid__row-cell-background-hover-default_theme-${theme}:not(.controls-Grid__row-ladder-cell)`;
+            return `.${uniqueClass} .controls-Grid__row:nth-child(${index}):hover .controls-Grid__row-cell:not(.controls-Grid__row-ladder-cell)`;
         },
 
         getItemHoverFreezeStyles(uniqueClass: string, index: number, backgroundColor: string): string {
