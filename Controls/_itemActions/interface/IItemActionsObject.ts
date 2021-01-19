@@ -30,7 +30,7 @@ export interface IShownItemAction extends IItemAction {
     isMenu?: boolean;
 }
 
-export interface IItemActionsContainer {
+export interface IItemActionsObject {
     all: IItemAction[];
     showed: IShownItemAction[];
 }
