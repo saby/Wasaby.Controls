@@ -56,12 +56,6 @@ export interface IMenuOptions {
     template: string;
 }
 
-/**
- * Интерфейс опций контрола {@link Controls/toolbars:View}.
- * @interface Controls/_toolbars/IToolbar
- * @public
- * @author Красильников А.С.
- */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions, IFilterOptions {
@@ -121,13 +115,22 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * * {@link /materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex демо-пример}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toolbars.less переменные тем оформления}
  *
- *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
  * @implements Controls/interface/IItemTemplate
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
+ */
+
+/**
+ * @name Controls/_toolbars/View#iconStyle
+ * @demo Controls-demo/Toolbar/IconStyle/Index
+ */
+
+/**
+ * @name Controls/_toolbars/View#fontColorStyle
+ * @demo Controls-demo/Toolbar/IconStyle/Index
  */
 
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
@@ -258,6 +261,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             parentProperty: options.parentProperty,
             nodeProperty: options.nodeProperty,
             iconSize: options.iconSize,
+            iconStyle: options.iconStyle,
             itemTemplateProperty: options.itemTemplateProperty
         };
     }
