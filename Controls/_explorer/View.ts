@@ -534,8 +534,8 @@ var
          // Но если отменили проваливание, то нужно поставить маркер.
          if (this._potentialMarkedKey !== undefined && !isRootChanged) {
             this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
-            this._potentialMarkedKey = undefined;
          }
+         this._potentialMarkedKey = undefined;
 
          const loadedBySourceController =
              cfg.sourceController &&
