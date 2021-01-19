@@ -39,6 +39,7 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
 import {IoC} from "Env/Env";
+import {IFilterOptions} from 'Controls/_interface/IFilter';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -63,7 +64,7 @@ export interface IMenuOptions {
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
-    IIconStyleOptions {
+    IIconStyleOptions, IFilterOptions {
     /**
      * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
      * @default ''
@@ -110,10 +111,6 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @cfg {Boolean} Определяет наличие подложки у кнопки открытия выпадающего меню тулбара.
      */
     contrastBackground?: true;
-    /**
-     * Конфигурация объекта фильтра. Фильтр отправляется в запрос к источнику для получения данных.
-     */
-    filter?: Object;
 }
 
 /**
