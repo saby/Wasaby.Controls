@@ -498,7 +498,7 @@ define([
             };
 
             instance.saveOptions(cfg);
-            instance._rootOnWhichClick = 1;
+            instance._potentialMarkedKey = 1;
 
             instance._beforeUpdate(cfg);
             assert.equal(setMarkedKeyArg, 1);

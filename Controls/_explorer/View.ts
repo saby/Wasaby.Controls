@@ -49,7 +49,7 @@ var
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
             } else {
-               self._rootOnWhichClick = root;
+               self._potentialMarkedKey = root;
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
@@ -532,9 +532,9 @@ var
 
          // Мы не должны ставить маркер до проваливания, т.к. это лишняя синхронизация.
          // Но если отменили проваливание, то нужно поставить маркер.
-         if (this._rootOnWhichClick !== undefined && !isRootChanged) {
-            this._children.treeControl.setMarkedKey(this._rootOnWhichClick);
-            this._rootOnWhichClick = undefined;
+         if (this._potentialMarkedKey !== undefined && !isRootChanged) {
+            this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
+            this._potentialMarkedKey = undefined;
          }
 
          const loadedBySourceController =
