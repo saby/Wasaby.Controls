@@ -151,9 +151,19 @@ export default class GridCollection<
     }
 
     protected _updateItemsLadder(): void {
-        this.getViewIterator().each((item: GridCollectionItem<T>) => {
+        this.getViewIterator().each((item: GridCollectionItem<T>, index: number) => {
+            let ladder;
+            let stickyLadder;
+            if (this._$ladder) {
+                if (this._$ladder.ladder) {
+                    ladder = this._$ladder.ladder[index];
+                }
+                if (this._$ladder.stickyLadder) {
+                    stickyLadder = this._$ladder.stickyLadder[index];
+                }
+            }
             if (item['[Controls/_display/ILadderedCollectionItem]']) {
-                item.setLadder(this._$ladder);
+                item.updateLadder(ladder, stickyLadder);
             }
         });
     }
