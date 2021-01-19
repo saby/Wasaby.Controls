@@ -106,21 +106,21 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       this._resolve(value);
    }
 
+   protected _notifySearchReset(): void {
+      this._resolve('', 'searchReset');
+   }
+
    private _updateSearchData(inputSearchValue: string): void {
       this._value = inputSearchValue;
       this._getSearchResolverController().setSearchStarted(true);
    }
 
-   private _resolve(value: string): void {
+   private _resolve(value: string, event: 'searchReset' | 'search' = 'search'): void {
       if (this._options.useStore) {
          Store.dispatch('searchValue', value);
       } else {
-         this._notify('search', [value || ''], {bubbling: true});
+         this._notify(event, event === 'search' ? [value || ''] : [], { bubbling: true });
       }
-   }
-
-   protected _notifySearchReset(): void {
-      this._notify('searchReset', [], {bubbling: true});
    }
 
    protected _searchClick(event: SyntheticEvent): void {
