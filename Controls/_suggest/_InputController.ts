@@ -31,6 +31,7 @@ import clone = require('Core/core-clone');
 import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
 import {DependencyTimer} from 'Controls/popup';
+import {ISearchControllerOptions} from "../_search/ControllerClass";
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -839,21 +840,26 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    }
 
    private _searchResetCallback(): Promise<void> {
-      return this._getSearchController()
-          .then((searchController) => {
-             if (searchController) {
-                if (this._updateSuggestState() || this._options.autoDropDown) {
-                   searchController.reset()
-                       .then((items) => {
-                          if (items instanceof RecordSet) {
-                             this._setItems(items);
-                          }
-                       })
-                       .catch((error) => error);
-                }
-             }
-          })
-          .catch((error) => error);
+      return this._getSearchController().then((searchController) => {
+         if (searchController) {
+            if (this._updateSuggestState() || this._options.autoDropDown) {
+               return new Promise((resolve) => {
+                  const resetResult = searchController.reset();
+                  if (resetResult instanceof Promise) {
+                     resetResult.then((recordSet) => {
+                        if (recordSet instanceof RecordSet) {
+                           this._setItems(recordSet);
+                        }
+                     }).catch((e) => {
+                        if (!e.isCanceled) {
+                           return e;
+                        }
+                     }).finally(() => resolve());
+                  }
+               });
+            }
+         }
+      });
    }
 
    protected _getSearchController(): Promise<SearchController | void> {
@@ -865,7 +871,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                searchDelay: this._options.searchDelay as number,
                searchParam: this._options.searchParam,
                searchValueTrim: this._options.trim
-            });
+            } as ISearchControllerOptions);
             return this._searchController;
          }).catch((error) => this._searchErrback(error));
       }
