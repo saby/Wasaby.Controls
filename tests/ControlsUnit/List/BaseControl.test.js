@@ -1553,7 +1553,8 @@ define([
          beforeEach(() => {
             isHandlerCalled = false;
             event = {
-               preventDefault: () => {}
+               preventDefault: () => {},
+               stopImmediatePropagation: () => {}
             };
          });
 
