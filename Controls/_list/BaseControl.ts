@@ -515,10 +515,6 @@ const _private = {
         if (options.afterReloadCallback) {
             options.afterReloadCallback(options, loadedList);
         }
-
-        if (options.serviceDataLoadCallback instanceof Function) {
-            options.serviceDataLoadCallback(self._items, loadedList);
-        }
     },
 
     resetScrollAfterLoad(self): void {
@@ -2154,6 +2150,10 @@ const _private = {
     },
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void>|void {
+        if (this._options.serviceDataLoadCallback instanceof Function) {
+            this._options.serviceDataLoadCallback(this._items, items);
+        }
+
         if (!direction) {
             return;
         }
@@ -2166,9 +2166,6 @@ const _private = {
         _private.setHasMoreData(
             this._listViewModel, _private.hasMoreDataInAnyDirection(this, this._sourceController)
         );
-        if (this._options.serviceDataLoadCallback instanceof Function) {
-            this._options.serviceDataLoadCallback(this._items, items);
-        }
 
         if (
             this._loadingState === 'all' ||
@@ -3736,11 +3733,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const sourceChanged = newOptions.source !== this._options.source;
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
+        const rootChanged = this._options.root !== newOptions.root;
+        const needReloadByOptions = sourceChanged || filterChanged || sortingChanged || recreateSource;
         let isItemsResetFromSourceController = false;
         const self = this;
 
         // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
-        if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
+        if (needReloadByOptions) {
             if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
                 self._hideTopTrigger = true;
             }
@@ -3748,7 +3747,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
-            (sourceChanged || searchValueChanged && newOptions.searchValue);
+            (needReloadByOptions || searchValueChanged && newOptions.searchValue || rootChanged);
 
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
@@ -5561,7 +5560,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _applyPagingNavigationState(params): void {
-        const options = {...this._options};
         const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
@@ -5571,11 +5569,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
 
-        options.navigation = newNavigation;
-
         const updateData = () => {
-            this._sourceController.updateOptions(options);
-            const result = _private.reload(this, this._options);
+            const result = _private.reload(this, this._options, newNavigation.sourceConfig);
             this._shouldRestoreScrollPosition = true;
             return result;
         };
