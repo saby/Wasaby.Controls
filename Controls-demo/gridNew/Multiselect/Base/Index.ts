@@ -11,28 +11,32 @@ interface IColumn {
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
+    protected _radioSource: Memory;
     protected _columns: IColumn[] = getCountriesStats().getColumnsWithoutWidths();
-    private _multiselect: 'visible'|'hidden'|'onhover' = 'visible';
+    protected _selectedKey: string = 'visible';
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
             data: getCountriesStats().getData()
         });
-    }
-    protected _onToggle(): void {
-        switch (this._multiselect) {
-            case 'visible':
-                this._multiselect = 'hidden';
-                break;
-            case 'hidden':
-                this._multiselect = 'onhover';
-                break;
-            case 'onhover':
-                this._multiselect = 'visible';
-                break;
-        }
-        this._forceUpdate();
+        this._radioSource = new Memory({
+            keyProperty: 'id',
+            data: [
+                {
+                    id: 'visible',
+                    title: 'multiSelectVisibility = visible',
+                },
+                {
+                    id: 'hidden',
+                    title: 'multiSelectVisibility = hidden',
+                },
+                {
+                    id: 'onhover',
+                    title: 'multiSelectVisibility = onhover',
+                }
+            ]
+        });
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];
