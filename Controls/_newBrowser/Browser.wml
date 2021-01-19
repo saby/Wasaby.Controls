@@ -1,4 +1,5 @@
 <Controls.masterDetail:Base
+   attr:class="controls-newBrowser_theme-{{_options.theme}}"
    masterVisibility="{{_masterVisibility}}"
    propStorageId="{{_basePropStorageId + 'masterWidth'}}"
    masterWidth="{{_options.master ? _options.master.width}}"
@@ -16,24 +17,30 @@
    </ws:master>
 
    <ws:detail>
-      <div class="controls-Catalog__detail">
+      <div class="controls-newBrowser__detail">
 
          <Controls.scroll:Container>
             <Controls.explorer:View
-               bind:root="root"
+               root="{{root}}"
+               on:rootChanged="_onDetailRootChanged()"
+
+               tileMode="static"
+               tileSize="{{_tileCfg.imageSize}}"
+
                viewMode="{{viewMode}}"
                scope="{{_detailExplorerOptions}}"
+               backgroundStyle="transparent"
                breadcrumbsVisibility="{{_masterVisibility === _masterVisibilityEnum.hidden ? 'visible' : 'hidden'}}"
             >
                <ws:afterBreadCrumbsTemplate>
-                  <Controls.search:InputContainer
-                     searchDelay="{{300}}"
-                     minSearchLength="{{3}}"
-                     on:search="_onSearch()"
-                     on:searchReset="_onSearchReset()"
-                  >
-                     <Controls.search:Input/>
-                  </Controls.search:InputContainer>
+                  <ws:if data="{{_options.detail.afterBreadCrumbsTemplate}}">
+                     <div on:search="_onSearch()" on:searchReset="_onSearchReset()">
+                        <ws:partial template="{{_options.detail.afterBreadCrumbsTemplate}}"/>
+                     </div>
+                  </ws:if>
+                  <ws:else>
+                     <invisible-node/>
+                  </ws:else>
                </ws:afterBreadCrumbsTemplate>
                <ws:itemTemplate>
                   <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
