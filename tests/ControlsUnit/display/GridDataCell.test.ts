@@ -84,6 +84,9 @@ describe('Controls/display/GridDataCell', () => {
             return new GridDataRow({
                 columns,
                 owner,
+                contents: {
+                    getKey: () => 1
+                },
                 colspanCallback: ((item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => {
                     return null; // number | 'end'
                 }) as TColspanCallback

@@ -317,6 +317,7 @@ export default abstract class Row<T> {
             }
             columnItems.push(factory({
                 column,
+                instanceId: `${this.key}_column_${columnIndex}`,
                 colspan: colspan as number,
                 isFixed: columnIndex < this.getStickyColumnsCount(),
                 columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex),
@@ -343,6 +344,7 @@ export default abstract class Row<T> {
             this._$columnItems.splice(1, 0, new StickyLadderCell({
                 column: this._$columns[0],
                 owner: this,
+                instanceId: `${this.key}_column_secondSticky`,
                 wrapperStyle: stickyLadderStyleForSecondProperty,
                 contentStyle: `left: -${this._$columns[0].width}; right: 0;`,
                 stickyProperty: stickyLadderProperties[1],
@@ -355,6 +357,7 @@ export default abstract class Row<T> {
                 new StickyLadderCell({
                     column: this._$columns[0],
                     owner: this,
+                    instanceId: `${this.key}_column_firstSticky`,
                     wrapperStyle: stickyLadderStyleForFirstProperty,
                     contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this._$columns[0].width};` : '',
                     stickyProperty: stickyLadderProperties[0],
@@ -373,6 +376,7 @@ export default abstract class Row<T> {
                 this._$columnItems = ([
                     new CheckboxCell({
                         column: {} as IColumn,
+                        instanceId: `${this.key}_column_checkbox`,
                         owner: this,
                         isFixed: true
                     })
