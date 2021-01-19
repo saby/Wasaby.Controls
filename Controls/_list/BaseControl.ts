@@ -5878,13 +5878,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // region LoadingIndicator
 
-    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter' | 'attachToNull'): boolean {
-        if (position === 'attachToNull') {
-            return this._attachLoadTopTriggerToNull;
-        }
-        return false;
-    },
-
     _shouldDisplayTopLoadingIndicator(): boolean {
         return this._loadingIndicatorState === 'up';
     },
