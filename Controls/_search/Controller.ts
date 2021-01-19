@@ -109,6 +109,10 @@ export default class Container extends Control<IContainerOptions> {
          this._searchValue = searchController.getSearchValue();
       });
 
+      if (options.searchValue) {
+         this._inputSearchValue = options.searchValue;
+      }
+
       if (options.root !== undefined) {
          this._root = options.root;
       }
