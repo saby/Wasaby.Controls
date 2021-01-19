@@ -6,7 +6,7 @@ import GridCheckboxColumn from './GridCheckboxColumn';
 import GridHeader from './GridHeader';
 import { TResultsPosition } from './GridResults';
 import GridStickyLadderColumn from './GridStickyLadderColumn';
-import {INavigationOptionValue} from 'Controls/_interface/INavigation';
+import { isEqual } from 'Types/object';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     owner: GridCollection<T>;
@@ -18,6 +18,7 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     protected _$columns: TColumns;
     protected _$columnItems: GridColumn<T>[];
     protected _$ladder: {};
+    protected _$stickyLadder: {};
 
     readonly '[Controls/_display/ILadderedCollectionItem]': boolean = true;
 
@@ -143,10 +144,16 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
         return ladderWrapperClasses;
     }
 
-    setLadder(ladder: {}) {
-        if (this._$ladder !== ladder) {
-            this._$ladder = ladder;
-            this._reinitializeColumns();
+    updateLadder(newLadder: {}, newStickyLadder: {}): void {
+        if (this._$ladder !== newLadder) {
+            const isLadderChanged = !isEqual(this._$ladder, newLadder);
+            const isStickyLadderChanged = !isEqual(this._$stickyLadder, newStickyLadder);
+
+            if (isLadderChanged || isStickyLadderChanged) {
+                this._$ladder = newLadder;
+                this._$stickyLadder = newStickyLadder;
+                this._reinitializeColumns();
+            }
         }
     }
 
@@ -195,19 +202,11 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
     // endregion
 
     getLadder(): {} {
-        let result;
-        if (this._$ladder && this._$ladder.ladder) {
-            result = this._$ladder.ladder[this._$owner.getIndex(this)];
-        }
-        return result;
+        return this._$ladder;
     }
 
     getStickyLadder(): {} {
-        let result;
-        if (this._$ladder && this._$ladder.stickyLadder) {
-            result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
-        }
-        return result;
+        return this._$stickyLadder;
     }
 
     protected _reinitializeColumns(): void {
