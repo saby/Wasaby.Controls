@@ -16,6 +16,7 @@
               searchHeaderTheme="{{_options.theme}}"
               headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
               iconSize="{{_options.iconSize}}"
+              iconStyle="{{_options.iconStyle}}"
               dropdownClassName="{{_options.dropdownClassName}}"
               headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
               footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
@@ -46,6 +47,7 @@
                <ws:if data="{{_options.headerTemplate}}">
                   <ws:partial template="{{_options.headerTemplate}}"
                               iconSize="{{_options.iconSize}}"
+                              iconStyle="{{_options.iconStyle}}"
                               icon="{{_headingIcon}}"
                               caption="{{_headingCaption}}"
                               theme="{{_headerTheme}}"
