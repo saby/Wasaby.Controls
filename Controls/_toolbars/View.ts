@@ -110,6 +110,10 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
      * @cfg {Boolean} Определяет наличие подложки у кнопки открытия выпадающего меню тулбара.
      */
     contrastBackground?: true;
+    /**
+     * Конфигурация объекта фильтра. Фильтр отправляется в запрос к источнику для получения данных.
+     */
+    filter?: Object;
 }
 
 /**
@@ -499,6 +503,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._openMenu(this._getMenuConfig());
         }
     }
+
     protected _onClickHandler(event: SyntheticEvent): void {
         event.stopPropagation();
     }
