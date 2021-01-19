@@ -794,6 +794,20 @@ describe('Controls/suggest', () => {
             assert.isFalse(setItemsSpy.called);
             assert.isTrue(closeSpy.calledOnce);
          });
+
+         it('double called resetCallback should be caught on promise cancelled', async () => {
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => true);
+
+            inputContainer._options.historyId = undefined;
+            inputContainer._options.autoDropDown = true;
+
+            assert.doesNotThrow(async () => {
+               inputContainer._searchResetCallback();
+               await inputContainer._searchResetCallback();
+
+               assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
+            });
+         });
       });
 
       it('Suggest::_loadDependencies', (done) => {

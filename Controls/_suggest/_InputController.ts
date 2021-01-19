@@ -839,7 +839,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       };
    }
 
-   private async _searchResetCallback(): Promise<void> {
+   private _searchResetCallback(): Promise<void> {
       return this._getSearchController().then((searchController) => {
          if (searchController) {
             if (this._updateSuggestState() || this._options.autoDropDown) {
