@@ -86,19 +86,20 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(browser._viewMode === 'table');
             });
 
-            it('searchValue', async () => {
+            it('searchValue/inputSearchValue', async () => {
                 let options = getBrowserOptions();
                 const browser = getBrowser(options);
 
                 await browser._beforeMount(options);
                 assert.ok(browser._searchValue === '');
+                assert.ok(browser._inputSearchValue === '');
 
                 options = {...options};
                 options.searchValue = 'test';
                 await browser._beforeMount(options);
                 assert.ok(browser._searchValue === 'test');
+                assert.ok(browser._inputSearchValue === 'test');
             });
-
         });
 
         describe('searchController', () => {

@@ -1553,7 +1553,8 @@ define([
          beforeEach(() => {
             isHandlerCalled = false;
             event = {
-               preventDefault: () => {}
+               preventDefault: () => {},
+               stopImmediatePropagation: () => {}
             };
          });
 
@@ -1594,14 +1595,14 @@ define([
             assert.isFalse(isHandlerCalled);
          });
 
-         it('should not work when itemAction "delete" is not visible', async () => {
+         it('should work even when itemAction "delete" is not visible', async () => {
             await initTest({
                itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }],
                itemActionVisibilityCallback: (action, item) => action.id !== 'delete',
             });
             instance.setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
-            assert.isFalse(isHandlerCalled);
+            assert.isTrue(isHandlerCalled);
          });
 
          it('should not work when no item is marked', () => {
@@ -4797,6 +4798,54 @@ define([
             instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
             sinon.assert.called(stubHandleItemActionClick);
             stubHandleItemActionClick.restore();
+         });
+
+         // Клик по itemAction с подменю ('parent@': true) не должен закрывать меню если обрабочик события вернул false
+         it('should not close actions menu when event has returned false', async () => {
+            const fakeEvent2 = initFakeEvent();
+            const spyCloseActionsMenu = sinon.spy(lists.BaseControl._private, 'closeActionsMenu');
+            const stubNotify = sinon.stub(instance, '_notify').callsFake((event, args) => {
+               if (event === 'actionClick') {
+                  return false;
+               }
+            });
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1,
+                  'parent@': true
+               })
+            };
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            sinon.assert.notCalled(spyCloseActionsMenu);
+            stubNotify.restore();
+            spyCloseActionsMenu.restore();
+         });
+
+         // Клик по itemAction с подменю ('parent@': true) должен закрывать меню если обрабочик события не вернул false
+         it('should close actions menu when event hasn\'t returned false', async () => {
+            const fakeEvent2 = initFakeEvent();
+            const stubCloseActionsMenu = sinon.stub(lists.BaseControl._private, 'closeActionsMenu').callsFake(() => {});
+            const stubNotify = sinon.stub(instance, '_notify').callsFake((event, args) => {
+               if (event === 'actionClick') {
+                  return null;
+               }
+            });
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1,
+                  'parent@': true
+               })
+            };
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            sinon.assert.called(stubCloseActionsMenu);
+            stubNotify.restore();
+            stubCloseActionsMenu.restore();
          });
 
          // Скрытие ItemActions должно происходить только после открытия меню (событие menuOpened)

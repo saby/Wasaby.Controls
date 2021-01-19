@@ -755,6 +755,21 @@ export const Gadgets = {
             id: 3111, parent: 311, 'parent@': true, code: null, price: null, title: 'Жесткие диски SATA'
          },
          {
+            id: 31111, parent: 3111, 'parent@': null, code: 'ST1000NC001', price: 2800,
+            title: 'Жесткий диск SATA-II 1Tb ST1000NC001 Constellation СS (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
+         },
+         {
+            id: 31112, parent: 3111, 'parent@': null, code: 'ST1100DX001', price: 3750,
+            title: 'Жесткий диск SATA-II 2Tb ST2000DX001 Desktop SSHD (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
+         },
+         {
+            id: 31113, parent: 3111, 'parent@': null, code: 'ST2300CD001', price: 6500,
+            title: 'Жесткий диск SATA-II 2Tb ST2000NC001 Constellation СS (7200rpm) 64Mb 3.5',
+            image: explorerImages[0]
+         },
+         {
             id: 4, parent: null, 'parent@': true, code: null, price: null, title: 'Цифровое фото и видео', SearchResult: true
          },
          {
