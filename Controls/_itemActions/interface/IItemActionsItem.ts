@@ -1,4 +1,4 @@
-import {IItemActionsContainer} from './IItemActionsContainer';
+import {IItemActionsObject} from './IItemActionsObject';
 import {Model} from 'Types/entity';
 import {ANIMATION_STATE, ICollectionItem} from 'Controls/display';
 
@@ -22,18 +22,18 @@ export interface IItemActionsItem extends ICollectionItem {
      * Получить опции записи
      * @method
      * @public
-     * @return {Controls/_itemActions/interface/IItemActionsContainer} Опции записи
+     * @return {Controls/_itemActions/interface/IItemActionsObject} Опции записи
      */
-    getActions(): IItemActionsContainer;
+    getActions(): IItemActionsObject;
 
     /**
      * Установить опции записи
-     * @param {Controls/_itemActions/interface/IItemActionsContainer} actions Опции записи
+     * @param {Controls/_itemActions/interface/IItemActionsObject} actions Опции записи
      * @param {boolean} [silent=false] Не генерировать событие onCurrentChange
      * @method
      * @public
      */
-    setActions(actions: IItemActionsContainer, silent?: boolean): void;
+    setActions(actions: IItemActionsObject, silent?: boolean): void;
 
     /**
      * Получить состояние активности текущего элемента
