@@ -487,6 +487,23 @@ define([
             assert.isTrue(instance._isGoingFront);
          });
 
+         it('set marker when cancel root changed', () => {
+            const cfg = { root: null };
+            const instance = new explorerMod.View(cfg);
+            let setMarkedKeyArg;
+            instance._children = {
+               treeControl: {
+                  setMarkedKey: (key) => setMarkedKeyArg = key
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._potentialMarkedKey = 1;
+
+            instance._beforeUpdate(cfg);
+            assert.equal(setMarkedKeyArg, 1);
+         });
+
          it('changes viewMode on items set if both viewMode and root changed(tree -> search)', () => {
             const cfg = { viewMode: 'tree', root: null };
             const cfg2 = { viewMode: 'search' , root: 'abc' };
