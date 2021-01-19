@@ -98,7 +98,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
-      this._errorRegister = new RegisterClass({register: 'dataError'});
+
+      if (!options.hasOwnProperty('sourceController')) {
+         this._errorRegister = new RegisterClass({register: 'dataError'});
+      }
 
       if (receivedState && options.source instanceof PrefetchProxy) {
          this._source = options.source.getOriginal();
@@ -249,11 +252,15 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _registerHandler(event, registerType, component, callback, config): void {
-      this._errorRegister.register(event, registerType, component, callback, config);
+      if (this._errorRegister) {
+         this._errorRegister.register(event, registerType, component, callback, config);
+      }
    }
 
    _unregisterHandler(event, registerType, component, config): void {
-      this._errorRegister.unregister(event, component, config);
+      if (this._errorRegister) {
+         this._errorRegister.unregister(event, component, config);
+      }
    }
 
    _itemsReadyCallbackHandler(items): void {
@@ -316,7 +323,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _onDataError(event, errbackConfig): void {
-      this._errorRegister.start(errbackConfig);
+      if (this._errorRegister) {
+         this._errorRegister.start(errbackConfig);
+      }
    }
 
    static getDefaultOptions(): object {

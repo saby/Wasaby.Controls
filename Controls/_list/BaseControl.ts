@@ -752,6 +752,7 @@ const _private = {
             const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === DELETE_ACTION_KEY);
             if (deleteAction) {
                 _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
+                event.stopImmediatePropagation();
             }
         }
     },
@@ -1862,11 +1863,13 @@ const _private = {
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(item);
         const itemContainer = _private.resolveItemContainer(self, item, isMenuClick);
-        self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
+        const result = self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
         }
-        _private.closeActionsMenu(self);
+        if (result !== false) {
+            _private.closeActionsMenu(self);
+        }
     },
 
     /**
@@ -5490,7 +5493,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || key === 33 // PageUp
                 || key === 34 // PageDown
                 || key === 35 // End
-                || key === 36; // Home
+                || key === 36 // Home
+                || key === 46; // Delete
             EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
