@@ -6,7 +6,7 @@ import GridCheckboxColumn from './GridCheckboxColumn';
 import GridHeader from './GridHeader';
 import { TResultsPosition } from './GridResults';
 import GridStickyLadderColumn from './GridStickyLadderColumn';
-import {INavigationOptionValue} from 'Controls/_interface/INavigation';
+import { isEqual } from 'Types/object';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     owner: GridCollection<T>;
@@ -145,8 +145,21 @@ export default class GridCollectionItem<T> extends CollectionItem<T> {
 
     setLadder(ladder: {}) {
         if (this._$ladder !== ladder) {
-            this._$ladder = ladder;
-            this._reinitializeColumns();
+            const itemIndex = this._$owner.getIndex(this);
+
+            const currentLadder = this._$ladder?.ladder[itemIndex];
+            const newLadder = ladder?.ladder[itemIndex];
+
+            const currentStickyLadder = this._$ladder?.stickyLadder[itemIndex];
+            const newStickyLadder = ladder?.stickyLadder[itemIndex];
+
+            const isLadderChanged = !isEqual(currentLadder, newLadder);
+            const isStickyLadderChanged = !isEqual(currentStickyLadder, newStickyLadder);
+
+            if (isLadderChanged || isStickyLadderChanged) {
+                this._$ladder = ladder;
+                this._reinitializeColumns();
+            }
         }
     }
 
