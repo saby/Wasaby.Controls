@@ -22,6 +22,7 @@ const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
     column: IColumn;
+    instanceId?: string;
     hiddenForLadder?: boolean;
     startColumn?: number;
     endColumn?: number;
@@ -49,6 +50,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$hiddenForLadder: boolean;
     protected _$startColumn: number;
     protected _$endColumn: number;
+    protected _$instanceId: string;
     protected _$colspan: number;
     protected _$isFixed: boolean;
     protected _$ladderCell: boolean;
@@ -461,6 +463,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return false;
     }
 
+    getInstanceId(): string {
+        return this._$instanceId || super.getInstanceId();
+    }
+
     // endregion
 }
 
@@ -475,6 +481,7 @@ Object.assign(Cell.prototype, {
     _$endColumn: null,
     _$colspan: null,
     _$isFixed: null,
+    _$instanceId: null,
     _$ladderCell: null,
     _$columnSeparatorSize: null,
     _$rowSeparatorSize: null

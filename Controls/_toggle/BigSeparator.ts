@@ -14,8 +14,15 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
     /**
      * Режим отображения иконки открытия.
      * @default ellipsis
+     * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
      */
-   viewMode: TViewMode;
+   viewMode?: TViewMode;
+    /**
+     * Определяет контрастность фона кнопки по отношению к ее окружению.
+     * @default true
+     * @demo Controls-demo/toggle/BigSeparator/ContrastBackground/Index
+     */
+    contrastBackground?: boolean;
 }
 
 /**
@@ -65,7 +72,8 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
    static getDefaultOptions(): object {
       return {
          value: false,
-         iconSize: 'm'
+         iconSize: 'm',
+         contrastBackground: true
       };
    }
 
@@ -78,7 +86,6 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
 /**
  * @name Controls/_toggle/Separator#value
  * @cfg {Boolean} Если значение - "true", то будет отображаться иконка открытия, иначе будет отображаться иконка закрытия.
- * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
  */
 
 /*

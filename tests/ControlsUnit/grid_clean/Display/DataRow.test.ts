@@ -1,33 +1,83 @@
 import { assert } from 'chai';
 import { GridDataRow, GridCollection } from 'Controls/display';
-import { Record } from 'Types/entity';
+import { Model } from 'Types/entity';
 
-const rawData = [{ key: 1, firstStickyProperty: 'first', secondStickyProperty: 'second', caption: 'item_1' }];
+const rawData = { key: 1, firstStickyProperty: 'first', secondStickyProperty: 'second', caption: 'item_1' };
 const columns = [{
     stickyProperty: ['firstStickyProperty', 'secondStickyProperty']
 }, {
     displayProperty: 'caption'
 }];
 
+let multiSelectVisibility = 'hidden';
+
 const mockedCollection = {
     getStickyColumnsCount: () => 2,
-    hasMultiSelectColumn: () => false,
+    hasMultiSelectColumn: () => multiSelectVisibility === 'visible',
     hasItemActionsSeparatedCell: () => false,
     getColumnsConfig: () => columns,
-    getIndex: () => 0
-} as GridCollection<Record>;
+    getIndex: () => 0,
+    notifyItemChange: () => {}
+} as GridCollection<Model>;
 
 describe('Controls/grid_clean/Display/DataRow', () => {
-    let record: Record;
+    let record: Model;
 
     beforeEach(() => {
-        record = new Record({
-            rawData: rawData
+        record = new Model({
+            rawData: rawData,
+            keyProperty: 'key'
         });
     });
 
     afterEach(() => {
         record = undefined;
+    });
+
+    it('Generate columns.instanceId', () => {
+        const gridRow = new GridDataRow({
+            owner: mockedCollection,
+            columns: [{
+                displayProperty: 'key'
+            }, {
+                displayProperty: 'caption'
+            }],
+            contents: record
+        });
+
+        let columns = gridRow.getColumns();
+        assert.strictEqual(columns.length, 2);
+        assert.strictEqual(columns[0].getInstanceId(), '1_column_0');
+        assert.strictEqual(columns[1].getInstanceId(), '1_column_1');
+
+        const newRecord = new Model({
+            rawData: rawData,
+            keyProperty: 'key'
+        });
+
+        gridRow.setContents(newRecord);
+
+        columns = gridRow.getColumns();
+        assert.strictEqual(columns.length, 2);
+        assert.strictEqual(columns[0].getInstanceId(), '1_column_0');
+        assert.strictEqual(columns[1].getInstanceId(), '1_column_1');
+
+        multiSelectVisibility = 'visible';
+        gridRow.setMultiSelectVisibility('visible');
+
+        columns = gridRow.getColumns();
+        assert.strictEqual(columns.length, 3);
+        assert.strictEqual(columns[0].getInstanceId(), '1_column_checkbox');
+        assert.strictEqual(columns[1].getInstanceId(), '1_column_0');
+        assert.strictEqual(columns[2].getInstanceId(), '1_column_1');
+
+        multiSelectVisibility = 'hidden';
+        gridRow.setMultiSelectVisibility('hidden');
+
+        columns = gridRow.getColumns();
+        assert.strictEqual(columns.length, 2);
+        assert.strictEqual(columns[0].getInstanceId(), '1_column_0');
+        assert.strictEqual(columns[1].getInstanceId(), '1_column_1');
     });
 
     it('Initialize with ladder', () => {

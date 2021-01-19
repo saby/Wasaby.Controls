@@ -1,0 +1,16 @@
+<div class="removeDemo">
+    <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+        <Controls.operations:Controller bind:selectedKeys="_selectedKeys"
+                                        bind:excludedKeys="_excludedKeys">
+            <Controls.list:Container>
+                <Controls.list:View
+                        class="removeDemo__list test_list_1"
+                        name="list"
+                        itemActionVisibilityCallback="{{_itemActionsVisibilityCallback}}"
+                        itemActions="{{_itemActions}}"
+                        multiSelectVisibility="visible"
+                        bind:markedKey="_markedKey"/>
+            </Controls.list:Container>
+        </Controls.operations:Controller>
+    </Controls.list:DataContainer>
+</div>

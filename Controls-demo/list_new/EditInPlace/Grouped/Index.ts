@@ -45,16 +45,18 @@ export default class extends Control {
             this._activeGroup = this._groupingKeyCallback(options.item);
             return;
         }
-        return this._viewSource.create().addCallback((model) => {
-            model.set('id', ++this._fakeItemId);
-            model.set('title', '');
-            model.set('brand', this._activeGroup || 'asd');
-            return model;
-        }) as unknown as Promise<Model>;
     }
 
     protected _beginAdd(): void {
-        this._children.list.beginAdd();
+        const item = new Model({
+            keyProperty: 'id',
+            rawData: {
+                id: ++this._fakeItemId,
+                title: '',
+                brand:  this._activeGroup || 'asd'
+            }
+        });
+        this._children.list.beginAdd({item});
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

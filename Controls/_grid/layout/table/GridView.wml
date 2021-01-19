@@ -14,7 +14,7 @@
     </ws:if>
 
     <tbody name="itemsContainer" class="controls-GridViewV__itemsContainer">
-        <ws:partial template="wml!Controls/_list/resources/For"
+        <ws:partial template="Controls/list:_forTemplate"
                     listModel="{{_listModel}}"
                     itemTemplate="{{_itemTemplate}}"
                     multiSelectTpl="{{_options.multiSelectTpl}}"
