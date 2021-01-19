@@ -6306,31 +6306,31 @@ define([
             getCount: () => itemsCount
          };
 
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), '');
 
          baseControl._loadingIndicatorContainerHeight = 32;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; ');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          itemsCount = 10;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; ');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          baseControl._loadingIndicatorContainerOffsetTop = 48;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          itemsCount = 10;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
       });
 
       it('hide indicator if shouldn\'t load more', function() {
