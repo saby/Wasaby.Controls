@@ -2,6 +2,7 @@
     <Controls.toggle:RadioGroup
             bind:selectedKey="_selectedKey"
             keyProperty="id"
+            direction="horizontal"
             source="{{_radioSource}}"
     />
     <div class="controlsDemo__wrapper">
