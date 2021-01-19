@@ -145,7 +145,6 @@ export const data = {
             fontColorStyle: 'secondary',
             showHeader: true,
             viewMode: 'link',
-            iconStyle: 'secondary',
             contrastBackground: true,
             title: 'Обсудить',
             '@parent': true,
