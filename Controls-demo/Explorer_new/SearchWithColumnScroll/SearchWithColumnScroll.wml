@@ -14,6 +14,13 @@
         </div>
         <div>
             <Controls.toggle:Checkbox
+                    attr:class="constrolsDemo__SearchWithColumnScroll__checkbox__isStickyColumnsCount"
+                    readOnly="{{ !_isBigData }}"
+                    bind:value="_isStickyColumnsCount"
+                    caption="Количество зафиксированных колонок равно 2"/>
+        </div>
+        <div>
+            <Controls.toggle:Checkbox
                     attr:class="constrolsDemo__SearchWithColumnScroll__checkbox__canSetConfig"
                     on:valueChanged="_reload()"
                     bind:value="_canSetConfig"
@@ -28,8 +35,13 @@
                     caption="Хлебные крошки во всю строку (когда нет скролла колонок)"/>
         </div>
     </div>
-    <Controls.list:DataContainer source="{{ _isBigData ? _viewSource2 : _viewSource1 }}" keyProperty="id" bind:filter="_filter">
-        <Controls.search:Controller searchParam="title" minSearchLength="{{ 3 }}" searchStartingWith="{{ _searchStartingWith }}">
+    <Controls.list:DataContainer
+            attr:class="controlsDemo__margin-top"
+            source="{{ _isBigData ? _viewSource2 : _viewSource1 }}"
+            keyProperty="id"
+            bind:filter="_filter">
+        <Controls.search:Controller searchParam="title" minSearchLength="{{ 3 }}"
+                                    searchStartingWith="{{ _searchStartingWith }}">
             <div class="ws-fragment">
                 <Controls.search:InputContainer>
                     <Controls.search:Input/>
@@ -48,10 +60,11 @@
                                 columnSeparatorSize="s"
                                 multiSelectVisibility="{{ _hasMultiSelect ? 'visible' : 'hidden'}}"
                                 columnScroll="{{ true }}"
-                                stickyColumnsCount="{{ 1 }}"
+                                stickyColumnsCount="{{ _isStickyColumnsCount + 1 }}"
                                 columnScrollStartPosition="end">
                             <ws:searchBreadCrumbsItemTemplate>
-                                <ws:partial template="Controls/treeGrid:SearchBreadCrumbsItemTemplate" colspan="{{ _canSetConfig ? _colspanBreadcrumbs : undefined }}"/>
+                                <ws:partial template="Controls/treeGrid:SearchBreadCrumbsItemTemplate"
+                                            colspan="{{ _canSetConfig ? _colspanBreadcrumbs : undefined }}"/>
                             </ws:searchBreadCrumbsItemTemplate>
                         </Controls.explorer:View>
                     </Controls.scroll:Container>
