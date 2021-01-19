@@ -752,6 +752,7 @@ const _private = {
             const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === DELETE_ACTION_KEY);
             if (deleteAction) {
                 _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
+                event.stopImmediatePropagation();
             }
         }
     },
@@ -1211,8 +1212,6 @@ const _private = {
 
     onScrollShow(self, params) {
         _private.doAfterUpdate(self, () => {
-            // ToDo option "loadOffset" is crutch for contacts.
-            // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
             self._viewSize = _private.getViewSize(this, true);
@@ -1864,11 +1863,13 @@ const _private = {
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(item);
         const itemContainer = _private.resolveItemContainer(self, item, isMenuClick);
-        self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
+        const result = self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
         }
-        _private.closeActionsMenu(self);
+        if (result !== false) {
+            _private.closeActionsMenu(self);
+        }
     },
 
     /**
@@ -5482,7 +5483,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || key === 33 // PageUp
                 || key === 34 // PageDown
                 || key === 35 // End
-                || key === 36; // Home
+                || key === 36 // Home
+                || key === 46; // Delete
             EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
@@ -5512,11 +5514,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
-
-            // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
-            if (this._dndListController && this._dndListController.isDragging()) {
-                this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
-            }
         }
     },
     _sortingChanged(event, propName) {
@@ -5600,6 +5597,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
+            newNavigation.sourceConfig.page = this._currentPage - 1;
         }
         if (params.page) {
             newNavigation.sourceConfig.page = params.page - 1;
@@ -6153,6 +6151,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const draggedKey = draggableItem.getContents().getKey();
                     _private.changeMarkedKey(this, draggedKey);
                 }
+            }
+
+            if (_private.hasSelectionController(this)) {
+                _private.changeSelection(this, {selected: [], excluded: []});
             }
 
             this._dndListController = null;

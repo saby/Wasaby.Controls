@@ -155,9 +155,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._source = options.source;
         }
         if (options.useStore) {
-            this._searchValue = Store.getState().searchValue as unknown as string;
+            this._inputSearchValue = this._searchValue = Store.getState().searchValue as unknown as string;
         } else if (options.searchValue) {
-            this._searchValue = options.searchValue;
+            this._inputSearchValue = this._searchValue = options.searchValue;
         }
 
         const controllerState = this._getSourceController(
@@ -409,30 +409,27 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _handleItemOpen(root: Key, items: RecordSet, dataRoot: Key = null): void {
-        if (this._searchController) {
-            if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
-                this._notifiedMarkedKey = root;
+        if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
+            this._notifiedMarkedKey = root;
 
-                const expandedItems = Browser._prepareExpandedItems(
-                   this._searchController.getRoot(),
-                   root,
-                   items,
-                   this._options.parentProperty);
+            const expandedItems = Browser._prepareExpandedItems(
+                this._searchController.getRoot(),
+                root,
+                items,
+                this._options.parentProperty);
 
-                this._notify('expandedItemsChanged', [expandedItems]);
+            this._notify('expandedItemsChanged', [expandedItems]);
 
-                if (!this._deepReload) {
-                    this._deepReload = true;
-                }
-            } else {
-                this._searchController.setRoot(root);
-                this._root = root;
+            if (!this._deepReload) {
+                this._deepReload = true;
             }
-            if (root !== dataRoot) {
-                this._updateFilter(this._searchController);
-
-                this._inputSearchValue = '';
-            }
+        } else {
+            this._searchController?.setRoot(root);
+            this._root = root;
+        }
+        if (root !== dataRoot && this._searchController) {
+            this._updateFilter(this._searchController);
+            this._inputSearchValue = '';
         }
     }
 

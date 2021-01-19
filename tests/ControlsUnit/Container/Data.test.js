@@ -323,6 +323,7 @@ define(
             assert.isTrue(!mountResult);
             assert.isTrue(dataContainer._sourceController === sourceController, 'wrong sourceController after mount');
             assert.isTrue(dataContainer._items === sourceController.getItems(), 'wrong items after mount');
+            assert.isTrue(!dataContainer._errorRegister);
          });
 
          it('_itemsReadyCallbackHandler', async function() {

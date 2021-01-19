@@ -22,7 +22,7 @@ export {
     TIconStyle,
     IItemAction
 } from './_itemActions/interface/IItemAction';
-export {IShownItemAction, IItemActionsContainer} from './_itemActions/interface/IItemActionsContainer';
+export {IShownItemAction, IItemActionsObject} from './_itemActions/interface/IItemActionsObject';
 export {IContextMenuConfig} from './_itemActions/interface/IContextMenuConfig';
 export {IItemActionsItem} from './_itemActions/interface/IItemActionsItem';
 export {IItemActionsCollection} from './_itemActions/interface/IItemActionsCollection';

@@ -252,7 +252,8 @@ export interface INavigationOptionValue<U> {
      */
     view?: TNavigationView;
     /**
-     * Конфигурация режима {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/ работы с источником данных}.
+     * @name Controls/_interface/INavigation/INavigationOptionValue#sourceConfig
+     * @cfg {INavigationSourceConfig} Конфигурация режима {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/data-source/ работы с источником данных}.
      */
     sourceConfig?: U;
     /**
@@ -264,11 +265,6 @@ export interface INavigationOptionValue<U> {
 export interface INavigationOptions<U> {
     navigation?: INavigationOptionValue<U>;
 }
-
-/**
- * @name Controls/_interface/INavigation/INavigationOptionValue#sourceConfig
- * @cfg {INavigationSourceConfig} sourceConfig Конфигурация режима работы с источником данных.
- */
 
 /**
  * Интерфейс для контролов, поддерживающих {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/ навигацию}.
