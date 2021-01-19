@@ -22,7 +22,7 @@ class Index extends Control<IControlOptions> {
     protected _openDialogHandler(): void {
         this._dialogOpener.open({
             ...baseStackConfig,
-            direction: {
+            resizeDirection: {
                 horizontal: this._horizontal ? 'left' : 'right',
                 vertical: this._vertical ? 'top' : 'bottom'
             }

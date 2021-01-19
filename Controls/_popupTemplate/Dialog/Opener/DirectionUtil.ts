@@ -19,15 +19,15 @@ export enum VERTICAL_DIRECTION {
 
 /**
  * Получение набора свойст в которых хранятся названия свойств отвечающих за позиционирование попапа.
- * @param {IDirection} direction
- * @return {IDirection}
+ * @param {IResizeDirection} direction
+ * @return {IResizeDirection}
  */
 export function getPositionProperties(
-    direction: IDialogPopupOptions['direction'] = {
+    direction: IDialogPopupOptions['resizeDirection'] = {
         horizontal: HORIZONTAL_DIRECTION.RIGHT,
         vertical: VERTICAL_DIRECTION.BOTTOM
     }
-): IDialogPopupOptions['direction'] {
+): IDialogPopupOptions['resizeDirection'] {
     return {
         horizontal: DIRECTION_TO_POSITION_MAP[direction.horizontal] || HORIZONTAL_DIRECTION.RIGHT,
         vertical: DIRECTION_TO_POSITION_MAP[direction.vertical] || VERTICAL_DIRECTION.BOTTOM

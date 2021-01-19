@@ -61,7 +61,7 @@ class DialogStrategy {
         const {
             horizontal: horizontalPositionProperty,
             vertical: verticalPositionProperty
-        } = getPositionProperties(popupItem?.popupOptions.direction);
+        } = getPositionProperties(popupItem?.popupOptions.resizeDirection);
 
         if (popupItem.dragged) {
             return this._getPositionForDraggedDialog(
@@ -228,7 +228,7 @@ class DialogStrategy {
     }
 
     /**
-     * Получение горизонтального отступа для центрированного диалога с учетом direction
+     * Получение горизонтального отступа для центрированного диалога с учетом resizeDirection
      * @param windowData
      * @param width
      * @param popupOptions
@@ -249,7 +249,11 @@ class DialogStrategy {
         return windowOffset + Math.max(Math.round((wWidth - width) / 2), 0);
     }
 
-    private _getVerticalPostion(windowData, height, popupOptions) {
+    private _getVerticalPostion(
+        windowData: IPopupPosition,
+        height: number,
+        popupOptions: IDialogPopupOptions
+    ): number {
         if (popupOptions.maximize) {
             return 0;
         }

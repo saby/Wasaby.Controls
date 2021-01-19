@@ -5,7 +5,7 @@ import {List} from 'Types/collection';
 import * as Deferred from 'Core/Deferred';
 import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
-import {IDirection} from 'Controls/_popup/interface/IDialog';
+import {IResizeDirection} from 'Controls/_popup/interface/IDialog';
 import {getPositionProperties, HORIZONTAL_DIRECTION, VERTICAL_DIRECTION} from './DirectionUtil';
 
 interface IDialogItem extends IPopupItem {
@@ -20,7 +20,7 @@ interface IDialogOptions extends IPopupOptions {
     left?: number;
     right?: number;
     bottom?: number;
-    direction?: IDirection;
+    resizeDirection?: IResizeDirection;
     propStorageId: string;
 }
 
@@ -106,7 +106,7 @@ class DialogController extends BaseController {
         const {
             horizontal: horisontalProperty,
             vertical: verticalProperty
-        } = getPositionProperties(item.popupOptions.direction);
+        } = getPositionProperties(item.popupOptions.resizeDirection);
         if (item.popupOptions.propStorageId) {
             return this._getPopupCoords(item, horisontalProperty, verticalProperty).then(() => {
                 this._getDefaultConfig(item, horisontalProperty, verticalProperty);
@@ -120,7 +120,7 @@ class DialogController extends BaseController {
         const {
             horizontal: horizontalProperty,
             vertical: verticalProperty
-        } = getPositionProperties(item.popupOptions.direction);
+        } = getPositionProperties(item.popupOptions.resizeDirection);
         const horizontalOffset = horizontalProperty === HORIZONTAL_DIRECTION.LEFT ? offset.x : -offset.x;
         const verticalOffset = verticalProperty === VERTICAL_DIRECTION.TOP ? offset.y : -offset.y;
         if (!item.startPosition) {
@@ -230,7 +230,7 @@ class DialogController extends BaseController {
         const {
             vertical: verticalProperty,
             horizontal: horizontalProperty
-        } = getPositionProperties(item.popupOptions.direction);
+        } = getPositionProperties(item.popupOptions.resizeDirection);
         if (propStorageId && item.position[verticalProperty] >= 0 && item.position[horizontalProperty] >= 0) {
             setSettings({[propStorageId]: {
                 [verticalProperty]: item.position[verticalProperty],

@@ -19,7 +19,7 @@ export interface IDialogPopupOptions extends IBasePopupOptions {
     bottom?: number;
     left?: number;
     right?: number;
-    direction?: IDirection;
+    resizeDirection?: IResizeDirection;
     maximize?: boolean;
     restrictiveContainer?: string;
 }
@@ -29,11 +29,11 @@ export interface IDialogOpener extends IOpener {
 }
 
 /**
- * @typedef {Object} Controls/_popup/interface/IDialog
+ * @typedef {Object} IResizeDirection
  * @property {String} vertical
  * @property {String} horizontal
  */
-export interface IDirection {
+export interface IResizeDirection {
     vertical?: 'top' | 'bottom';
     horizontal?: 'left' | 'right';
 }
@@ -65,8 +65,8 @@ export interface IDirection {
  * @cfg {Number} Минимально допустимая ширина диалогового окна.
  */
 /**
- * @name Controls/_popup/interface/IDialogOpener#direction
- * @cfg {Controls/_popup/interface/IDialog.typedef} Направление в котором размеры попапа
+ * @name Controls/_popup/interface/IDialogOpener#resizeDirection
+ * @cfg {IResizeDirection} Направление в котором размеры попапа
  * могут динамически меняться без изменения позиции
  * @demo Controls-demo/Popup/Dialog/Direction/Index
  */

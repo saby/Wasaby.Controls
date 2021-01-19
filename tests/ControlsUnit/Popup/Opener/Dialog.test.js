@@ -465,7 +465,7 @@ define(
             assert.equal(bodySelector, 'body');
             BaseController.getRootContainerCoords = getCoordsByContainer;
          });
-         describe('position with direction', () => {
+         describe('position with resizeDirection', () => {
             const dialogSizes = {
                width: 200,
                height: 100
@@ -489,7 +489,7 @@ define(
             const HORIZONTAL_DIRECTION = DirectionUtil.HORIZONTAL_DIRECTION;
             const VERTICAL_DIRECTION = DirectionUtil.VERTICAL_DIRECTION;
             it('direction left top', () => {
-               item.popupOptions.direction = {
+               item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
@@ -498,7 +498,7 @@ define(
                assert.equal(position.bottom, 430);
             });
             it('direction left bottom', () => {
-               item.popupOptions.direction = {
+               item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.BOTTOM
                };
@@ -507,7 +507,7 @@ define(
                assert.equal(position.top, 430);
             });
             it('direction right top', () => {
-               item.popupOptions.direction = {
+               item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.RIGHT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
@@ -516,7 +516,7 @@ define(
                assert.equal(position.bottom, 430);
             });
             it('direction right bottom', () => {
-               item.popupOptions.direction = {
+               item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.RIGHT,
                   vertical: VERTICAL_DIRECTION.BOTTOM
                };
@@ -525,7 +525,7 @@ define(
                assert.equal(position.top, 430);
             });
             it('dragging', () => {
-               item.popupOptions.direction = {
+               item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
@@ -551,7 +551,7 @@ define(
             });
 
             it('dragging overflow', () => {
-               item.popupOptions.direction = {
+               item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
                   vertical: VERTICAL_DIRECTION.TOP
                };
