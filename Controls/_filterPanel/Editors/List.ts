@@ -108,7 +108,7 @@ class ListEditor extends Control<IListEditorOptions> {
         result.forEach((item) => {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
-        this._notifyPropertyValueChanged(selectedKeys, !this._options.multiSelect, result);
+        this._notifyPropertyValueChanged(selectedKeys, !this._options.multiSelect);
     }
 
     protected _handleFooterClick(event: SyntheticEvent): void {
@@ -133,10 +133,10 @@ class ListEditor extends Control<IListEditorOptions> {
         });
     }
 
-    protected _notifyPropertyValueChanged(value: string[]|number[], needColapse?: boolean, selectorResult?: Model[]): void {
+    protected _notifyPropertyValueChanged(value: string[]|number[], needColapse?: boolean): void {
         const extendedValue = {
             value,
-            textValue: this._getTextValue(selectorResult || value),
+            textValue: this._getTextValue(value),
             needColapse
         };
         this._selectedKeys = value;
@@ -178,15 +178,11 @@ class ListEditor extends Control<IListEditorOptions> {
         });
     }
 
-    private _getTextValue(selectedKeys: number[]|string[]|Model[]): string {
+    private _getTextValue(selectedKeys: number[]|string[]): string {
         const textArray = [];
         selectedKeys.forEach((item, index) => {
             const record = this._items.getRecordById(item);
-            if (record) {
-                textArray.push(record.get(this._options.displayProperty));
-            } else {
-                textArray.push(item.get(this._options.displayProperty));
-            }
+            textArray.push(record.get(this._options.displayProperty));
         });
         return textArray.join(', ');
     }
