@@ -1643,6 +1643,8 @@ var
                 current.shadowVisibility = 'initial';
             }
 
+            current.shouldDisplayDraggingCounter = () => current.isDragged() && current.getLastColumnIndex() == current.columnIndex && current.getDraggedItemsCount() > 1;
+
             // конец
             current.showEditArrow = _private.resolveEditArrowVisibility(dispItem, this._options);
             current.isFullGridSupport = this.isFullGridSupport.bind(this);

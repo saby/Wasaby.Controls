@@ -22,6 +22,7 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
 ) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
 
     readonly Markable: boolean = true;
+    readonly Draggable: boolean = true;
     readonly TagCell: boolean = true;
     readonly ItemActionsCell: boolean = true;
     readonly LadderContentCell: boolean = true;
@@ -94,6 +95,14 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     }
 
     // endregion
+
+    // region Drag-n-drop
+
+    shouldDisplayDraggingCounter(): boolean {
+        return this.getOwner().isDragged() && this.isLastColumn() && this.getOwner().getDraggedItemsCount() > 1;
+    }
+
+    // endregion Drag-n-drop
 }
 
 Object.assign(DataCell.prototype, {

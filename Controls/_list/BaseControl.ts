@@ -5546,6 +5546,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._documentDragging) {
             this._insideDragging = true;
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
 
             this._dragEnter(this._getDragObject());
         }
