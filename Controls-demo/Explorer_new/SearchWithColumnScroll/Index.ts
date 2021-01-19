@@ -18,6 +18,7 @@ export default class extends Control {
     private _isBigData: boolean = false;
     private _canSetConfig: boolean = false;
     private _colspanBreadcrumbs: boolean = false;
+    protected _isStickyColumnsCount: boolean = false;
 
     protected _beforeMount(): void {
         this._columns1 = Gadgets.getSearchColumnsWithColumnScroll().map((c) => ({
