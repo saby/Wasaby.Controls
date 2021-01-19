@@ -5916,47 +5916,42 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _getTopLoadingIndicatorStyles(): string {
-        let styles = '';
-
-        if (!this._shouldDisplayTopLoadingIndicator()) {
-            styles += 'display: none; ';
-        }
-
-        if (this._attachLoadTopTriggerToNull) {
-            styles += `margin-bottom: -${this._attachedToNullLoadTopTriggerOffset}px; `;
-        }
-
-        return styles;
-    },
-
-    _getBottomLoadingIndicatorStyles(): string {
-        return this._shouldDisplayBottomLoadingIndicator() ? '' : 'display: none;';
-    },
-
     _getLoadingIndicatorStyles(state?: string): string {
         let styles = '';
-        const indicatorState = state || this._loadingIndicatorState;
 
-        if (indicatorState === 'all') {
-            if (this._loadingIndicatorContainerHeight) {
-                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-            }
-            if (this._loadingIndicatorContainerOffsetTop) {
-                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
-            }
+        const indicatorState = state || this._loadingIndicatorState;
+        switch (indicatorState) {
+            case 'all':
+                if (this._loadingIndicatorContainerHeight) {
+                    styles += `min-height: ${this._loadingIndicatorContainerHeight}px; `;
+                }
+                if (this._loadingIndicatorContainerOffsetTop) {
+                    styles += `top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+                }
+                break;
+            case 'up':
+                if (!this._shouldDisplayTopLoadingIndicator()) {
+                    styles += 'display: none; ';
+                }
+                if (this._attachLoadTopTriggerToNull) {
+                    styles += `margin-bottom: -${this._attachedToNullLoadTopTriggerOffset}px; `;
+                }
+                break;
+            case 'down':
+                if (!this._shouldDisplayBottomLoadingIndicator()) {
+                    styles += 'display: none;';
+                }
+                break;
         }
+
         return styles;
     },
 
     // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
     changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
-        if (indicatorName) {
-            if (state) {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = '';
-            } else {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
-            }
+        const indicator = this._children[`${indicatorName}LoadingIndicator`];
+        if (indicator) {
+            indicator.style.display = state ? '' : 'none';
         }
     },
 

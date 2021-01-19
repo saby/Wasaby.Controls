@@ -1,6 +1,5 @@
 <ws:template name="loadingIndicator">
     <ws:partial template="wml!Controls/_list/LoadingIndicatorTemplate"
-                name="{{indicatorName}}LoadingIndicator"
                 customClass="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}"
                 customStyle="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}"/>
 </ws:template>
@@ -9,7 +8,6 @@
     <ws:partial template="{{_options.loadingIndicatorTemplate}}"
                 showLoadingIndicator="{{showLoadingIndicator || _showLoadingIndicatorImage}}"
                 portionedSearchInProgress="{{_portionedSearchInProgress}}"
-                name="{{indicatorName}}LoadingIndicator"
                 customClass="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}"
                 customStyle="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}">
         <ws:contentTemplate>
@@ -200,12 +198,12 @@
         </ws:if>
 
         <ws:if data="{{_listViewModel}}">
-            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="{{_getTopLoadingIndicatorStyles()}}"/>
+            <ws:partial template="loadingIndicator" loadingIndicatorState="up" name="upLoadingIndicator"/>
 
             <ws:partial template="fullView" name="listView"
                         attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
 
-            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="{{_getBottomLoadingIndicatorStyles()}}"/>
+            <ws:partial template="loadingIndicator" loadingIndicatorState="down" name="downLoadingIndicator"/>
         </ws:if>
 
         <ws:partial if="{{ _shouldDisplayPortionedSearch() }}" template="portionedSearch"/>
