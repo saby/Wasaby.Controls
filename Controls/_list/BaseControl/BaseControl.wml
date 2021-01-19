@@ -1,19 +1,21 @@
 <ws:template name="loadingIndicator">
-    <ws:partial template="wml!Controls/_list/LoadingIndicatorTemplate"
-                customClass="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}"
-                customStyle="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}"/>
+    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}"
+         style="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}"
+         name="{{loadingIndicatorState}}LoadingIndicator">
+        <ws:partial template="wml!Controls/_list/LoadingIndicatorTemplate"/>
+    </div>
 </ws:template>
 
 <ws:template name="portionedSearch">
-    <ws:partial template="{{_options.loadingIndicatorTemplate}}"
-                showLoadingIndicator="{{showLoadingIndicator || _showLoadingIndicatorImage}}"
-                portionedSearchInProgress="{{_portionedSearchInProgress}}"
-                customClass="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}"
-                customStyle="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}">
-        <ws:contentTemplate>
-            <div class="controls-BaseControl__abortSearch controls-BaseControl__abortSearch_theme-{{_options.theme}}" on:click="_abortSearch()">{[Прервать поиск]}</div>
-        </ws:contentTemplate>
-    </ws:partial>
+    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}">
+        <ws:partial template="{{_options.loadingIndicatorTemplate}}"
+                    showLoadingIndicator="{{_showLoadingIndicatorImage}}"
+                    portionedSearchInProgress="{{_portionedSearchInProgress}}">
+            <ws:contentTemplate>
+                <div class="controls-BaseControl__abortSearch controls-BaseControl__abortSearch_theme-{{_options.theme}}" on:click="_abortSearch()">{[Прервать поиск]}</div>
+            </ws:contentTemplate>
+        </ws:partial>
+    </div>
 </ws:template>
 
 <ws:template name="continueSearch">
@@ -198,12 +200,12 @@
         </ws:if>
 
         <ws:if data="{{_listViewModel}}">
-            <ws:partial template="loadingIndicator" loadingIndicatorState="up" name="upLoadingIndicator"/>
+            <ws:partial template="loadingIndicator" loadingIndicatorState="up"/>
 
             <ws:partial template="fullView" name="listView"
                         attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
 
-            <ws:partial template="loadingIndicator" loadingIndicatorState="down" name="downLoadingIndicator"/>
+            <ws:partial template="loadingIndicator" loadingIndicatorState="down"/>
         </ws:if>
 
         <ws:partial if="{{ _shouldDisplayPortionedSearch() }}" template="portionedSearch"/>

@@ -5927,7 +5927,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     styles += 'display: none; ';
                 }
                 if (this._attachLoadTopTriggerToNull) {
-                    styles += `margin-bottom: -${this._attachedToNullLoadTopTriggerOffset}px; `;
+                    styles += `margin-bottom: -${this._attachedToNullLoadTopTriggerOffset}px;`;
                 }
                 break;
             case 'down':
