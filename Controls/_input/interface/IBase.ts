@@ -1,9 +1,10 @@
 import {TemplateFunction} from 'UI/Base';
+import IContrastBackground from 'Controls/_interface/IContrastBackground';
 
 export type TextAlign = 'left' | 'right' | 'center';
 export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
 
-export interface IBaseOptions {
+export interface IBaseOptions extends IContrastBackground {
     autoComplete?: AutoComplete;
     textAlign?: TextAlign;
     selectOnClick?: boolean;
@@ -115,9 +116,7 @@ export interface IBase {
 
 /**
  * @name Controls/_input/interface/IBase#contrastBackground
- * @cfg {Boolean} Определяет контрастность фона контрола по отношению к ее окружению.
+ * @cfg
  * @default true
- * @variant true Контрастный фон.
- * @variant false Фон, гармонично сочетающийся с окружением.
  * @demo Controls-demo/Input/ContrastBackground/Index
  */
