@@ -57,7 +57,7 @@ describe('Controls/_search/Input/Container', () => {
          cont._options.useStore = false;
 
          cont._notifySearchReset();
-         assert.isTrue(stub.withArgs('searchReset', []).calledOnce);
+         assert.isTrue(stub.withArgs('searchReset', ['']).calledOnce);
          assert.isFalse(dispatchStub.called);
       });
 
