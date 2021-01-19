@@ -119,7 +119,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       if (this._options.useStore) {
          Store.dispatch('searchValue', value);
       } else {
-         this._notify(event, event === 'search' ? [value || ''] : [], { bubbling: true });
+         this._notify(event, [value], { bubbling: true });
       }
    }
 
