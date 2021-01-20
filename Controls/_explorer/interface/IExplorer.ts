@@ -93,7 +93,7 @@ export type TExplorerViewMode = 'table' | 'search' | 'tile' | 'list';
  */
 
 /**
- * @typedef {String} SearchNavigationMode
+ * @typedef {String} SearchStartingWith
  * @description Допустимые значения для опции {@link SearchStartingWith}.
  * @variant open В {@link Controls/_explorer/interface/IExplorer#viewMode режиме поиска} при клике на хлебную крошку происходит проваливание в данный узел.
  * @variant expand В режиме поиска при клике на хлебную крошку данные отображаются от корня, путь до узла разворачивается.
