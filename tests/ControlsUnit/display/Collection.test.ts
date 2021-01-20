@@ -4672,4 +4672,36 @@ describe('Controls/_display/Collection', () => {
             assert.isTrue(notifyLaterSpy.called);
         });
     });
+
+    describe('multiSelectAccessibility', () => {
+        const items = [
+            { id: 1, name: 'Ivan', multiSelectAccessibility: true },
+            { id: 2, name: 'Alexey', multiSelectAccessibility: true },
+            { id: 3, name: 'Olga', multiSelectAccessibility: true }
+        ];
+
+        let display: CollectionDisplay;
+        let rs;
+        beforeEach(() => {
+            rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs,
+                multiSelectAccessibilityProperty: 'multiSelectAccessibility'
+            });
+        });
+
+        it('change multiSelectAccessibility', () => {
+            const item = display.at(0);
+            assert.isTrue(item.isVisibleCheckbox());
+            assert.isFalse(item.isReadonlyCheckbox());
+
+            rs.at(0).set('multiSelectAccessibility', null);
+
+            assert.isFalse(item.isVisibleCheckbox());
+            assert.isTrue(item.isReadonlyCheckbox());
+        });
+    });
 });

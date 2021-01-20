@@ -34,7 +34,7 @@ export interface IOptions<T extends Model = Model> {
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
     multiSelectVisibility?: string;
-    checkboxState?: boolean|null;
+    multiSelectAccessibility?: boolean|null;
     rowSeparatorSize?: string;
 }
 
@@ -130,7 +130,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$dragged: boolean;
 
-    protected _$checkboxState: boolean|null;
+    protected _$multiSelectAccessibility: boolean|null;
 
     protected _instancePrefix: string;
 
@@ -289,17 +289,24 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion
 
-    // region CheckboxState
+    // region MultiSelectAccessibility
 
     isReadonlyCheckbox(): boolean {
-        return this._$checkboxState !== true;
+        return this._$multiSelectAccessibility !== true;
     }
 
     isVisibleCheckbox(): boolean {
-        return this._$checkboxState !== null && !this.isAdd;
+        return this._$multiSelectAccessibility !== null && !this.isAdd;
     }
 
-    // endregion CheckboxState
+    setMultiSelectAccessibility(state: boolean|null): void {
+        if (this._$multiSelectAccessibility !== state) {
+            this._$multiSelectAccessibility = state;
+            this._nextVersion();
+        }
+    }
+
+    // endregion MultiSelectAccessibility
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();

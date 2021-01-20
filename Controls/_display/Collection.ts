@@ -352,7 +352,7 @@ function onCollectionChange<T>(
  * @param index Индекс измененного элемента.
  * @param [properties] Изменившиеся свойства
  */
-function onCollectionItemChange<T>(
+function onCollectionItemChange<T extends EntityModel>(
     event: EventObject,
     item: T,
     index: number,
@@ -367,6 +367,14 @@ function onCollectionItemChange<T>(
     } else {
         this._sourceCollectionDelayedCallbacks = this._sourceCollectionDelayedCallbacks || [];
         this._sourceCollectionDelayedCallbacks.push([this._notifySourceCollectionItemChange, arguments]);
+    }
+
+    if (this._$multiSelectAccessibilityProperty && properties?.hasOwnProperty(this._$multiSelectAccessibilityProperty)) {
+        const displayItem = this.getItemBySourceItem(item);
+        if (displayItem) {
+            const newValue = item.get(this._$multiSelectAccessibilityProperty);
+            displayItem.setMultiSelectAccessibility(newValue);
+        }
     }
 
     this._nextVersion();
@@ -622,6 +630,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _$multiSelectPosition: 'default' | 'custom';
 
+    /**
+     * Задает состояние чекбокса
+     * @variant true Чекбокс виден и включен
+     * @variant false Чекбокс виден и задизейблен
+     * @variant null Чекбокс скрыт
+     * @protected
+     */
+    protected _$multiSelectAccessibilityProperty: boolean|null;
+
     protected _$leftPadding: string;
 
     protected _$rightPadding: string;
@@ -663,15 +680,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _$style: string;
 
     protected _$navigation: INavigationOptionValue;
-
-    /**
-     * Задает состояние чекбокса
-     * @variant true Чекбокс виден и включен
-     * @variant false Чекбокс виден и задизейблен
-     * @variant null Чекбокс скрыт
-     * @protected
-     */
-    protected _$multiSelectAccessibilityProperty: boolean|null;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -3192,7 +3200,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             if (options.contents instanceof EntityModel && options.contents.has(this._$multiSelectAccessibilityProperty)) {
-                options.checkboxState = object.getPropertyValue<boolean|null>(options.contents, this._$multiSelectAccessibilityProperty);
+                options.multiSelectAccessibility = object.getPropertyValue<boolean|null>(options.contents, this._$multiSelectAccessibilityProperty);
             }
             return create(this._itemModule, options);
         };
