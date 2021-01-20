@@ -7,9 +7,13 @@
  export default interface IValidateResult {
 
 /** 
- * Есть ли ошибки в результате валидации.
+ * Массив ошибок
  */
 
     [key: number]: boolean;
+
+/** 
+ * Есть ли ошибки в результате валидации.
+ */
     hasErrors?: boolean;
 }
