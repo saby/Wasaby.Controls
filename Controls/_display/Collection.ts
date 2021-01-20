@@ -2348,6 +2348,18 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return strategy ? strategy.getDraggedItemsCount() : 0;
     }
 
+    /**
+     * Устанавливает признак, что запись утащили за пределы списка
+     * @param outside
+     */
+    setDragOutsideList(outside: boolean): void {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
+        if (strategy) {
+            strategy.avatarItem.setDragOutsideList(outside);
+            this._nextVersion();
+        }
+    }
+
     isDragging(): boolean {
         return !!this.getStrategyInstance(this._dragStrategy);
     }

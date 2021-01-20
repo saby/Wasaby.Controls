@@ -543,6 +543,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
+    setDragOutsideList(outside: boolean): void {
+        if (this.getDisplay()) {
+            this.getDisplay().setDragOutsideList(outside);
+        }
+    },
+
     setDragEntity(entity: ItemsEntity): void {
         if (this._dragEntity !== entity) {
             this._dragEntity = entity;

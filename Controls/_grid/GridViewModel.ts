@@ -1643,7 +1643,8 @@ var
                 current.shadowVisibility = 'initial';
             }
 
-            current.shouldDisplayDraggingCounter = () => current.isDragged() && current.getLastColumnIndex() == current.columnIndex && current.getDraggedItemsCount() > 1;
+            current.shouldDisplayDraggingCounter = () => current.isDragged() && current.getLastColumnIndex() === current.columnIndex
+               && current.getDraggedItemsCount() > 1 && !this._dragOutsideList;
 
             // конец
             current.showEditArrow = _private.resolveEditArrowVisibility(dispItem, this._options);
@@ -2351,6 +2352,13 @@ var
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
+        },
+        setDragOutsideList(outside: boolean): void {
+            this._model.setDragOutsideList(outside);
+            if (this._dragOutsideList !== outside) {
+                this._dragOutsideList = outside;
+                this._nextModelVersion();
+            }
         },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();

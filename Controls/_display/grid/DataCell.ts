@@ -99,7 +99,7 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     // region Drag-n-drop
 
     shouldDisplayDraggingCounter(): boolean {
-        return this.getOwner().isDragged() && this.isLastColumn() && this.getOwner().getDraggedItemsCount() > 1;
+        return this.isLastColumn() && this.getOwner().shouldDisplayDraggingCounter();
     }
 
     // endregion Drag-n-drop

@@ -130,6 +130,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$dragged: boolean;
 
+    protected _dragOutsideList: boolean;
+
     protected _$multiSelectAccessibilityProperty: string;
 
     protected _instancePrefix: string;
@@ -535,18 +537,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         this._$rendered = state;
     }
 
-    isDragged(): boolean {
-        return this._$dragged;
-    }
-
-    isSticked(): boolean {
-        return this.isMarked() && this._isSupportSticky(this.getOwner().getStyle());
-    }
-
-    protected _isSupportSticky(style: string = 'default'): boolean {
-        return this.getOwner().isStickyMarkedItem() !== false &&
-            (style === 'master');
-    }
+    // region Drag-n-drop
 
     setDragged(dragged: boolean, silent?: boolean): void {
         if (this._$dragged === dragged) {
@@ -559,8 +550,38 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
     }
 
+    isDragged(): boolean {
+        return this._$dragged;
+    }
+
+    setDragOutsideList(outside: boolean): void {
+        if (this._dragOutsideList !== outside) {
+            this._dragOutsideList = outside;
+            this._nextVersion();
+        }
+    }
+
+    isDragOutsideList(): boolean {
+        return this._dragOutsideList;
+    }
+
+    shouldDisplayDraggingCounter(): boolean {
+        return this.isDragged() && !this.isDragOutsideList() && this.getDraggedItemsCount() > 1;
+    }
+
     getDraggedItemsCount(): number {
         return this.getOwner().getDraggedItemsCount();
+    }
+
+    // endregion Drag-n-drop
+
+    isSticked(): boolean {
+        return this.isMarked() && this._isSupportSticky(this.getOwner().getStyle());
+    }
+
+    protected _isSupportSticky(style: string = 'default'): boolean {
+        return this.getOwner().isStickyMarkedItem() !== false &&
+            (style === 'master');
     }
 
     /**
