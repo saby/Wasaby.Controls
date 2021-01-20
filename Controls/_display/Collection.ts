@@ -369,14 +369,6 @@ function onCollectionItemChange<T extends EntityModel>(
         this._sourceCollectionDelayedCallbacks.push([this._notifySourceCollectionItemChange, arguments]);
     }
 
-    if (this._$multiSelectAccessibilityProperty && properties?.hasOwnProperty(this._$multiSelectAccessibilityProperty)) {
-        const displayItem = this.getItemBySourceItem(item);
-        if (displayItem) {
-            const newValue = item.get(this._$multiSelectAccessibilityProperty);
-            displayItem.setMultiSelectAccessibility(newValue);
-        }
-    }
-
     this._nextVersion();
 }
 
@@ -631,13 +623,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _$multiSelectPosition: 'default' | 'custom';
 
     /**
-     * Задает состояние чекбокса
-     * @variant true Чекбокс виден и включен
-     * @variant false Чекбокс виден и задизейблен
-     * @variant null Чекбокс скрыт
+     * Задает доступность чекбокса
      * @protected
      */
-    protected _$multiSelectAccessibilityProperty: boolean|null;
+    protected _$multiSelectAccessibilityProperty: string;
 
     protected _$leftPadding: string;
 
@@ -2417,6 +2406,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._updateItemsMultiSelectVisibility(visibility);
     }
 
+    setMultiSelectAccessibilityProperty(property: string): void {
+        if (this._$multiSelectAccessibilityProperty === property) {
+            return;
+        }
+        this._$multiSelectAccessibilityProperty = property;
+        this._nextVersion();
+        this._updateItemsMultiSelectAccessibilityProperty(property);
+    }
+
     setMultiSelectPosition(position: 'default' | 'custom'): void {
         if (this._$multiSelectPosition === position) {
             return;
@@ -2431,8 +2429,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectVisibility(visibility: string): void {
         this.getViewIterator().each((item: CollectionItem<T>) => {
-            if (item.setMultiSelectVisibility) {
+            if (item.SelectableItem) {
                 item.setMultiSelectVisibility(visibility);
+            }
+        });
+    }
+
+    protected _updateItemsMultiSelectAccessibilityProperty(property: string): void {
+        this.getViewIterator().each((item: CollectionItem) => {
+            if (item.SelectableItem) {
+                item.setMultiSelectAccessibilityProperty(property);
             }
         });
     }
@@ -3199,9 +3205,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
-            if (options.contents instanceof EntityModel && options.contents.has(this._$multiSelectAccessibilityProperty)) {
-                options.multiSelectAccessibility = object.getPropertyValue<boolean|null>(options.contents, this._$multiSelectAccessibilityProperty);
-            }
+            options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
             return create(this._itemModule, options);
         };
     }
