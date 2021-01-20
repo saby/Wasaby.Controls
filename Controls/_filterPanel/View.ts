@@ -84,9 +84,10 @@ export default class View extends Control<IControlOptions> {
             this._collapsedGroups = this._collapsedGroups.concat(itemContents);
         }
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
+        const isGroupTitleClick = clickEvent?.target.closest('.controls-FilterViewPanel__group');
         if (isResetClick) {
             this._resetFilterItem(displayItem);
-        } else {
+        } else if (isGroupTitleClick) {
             displayItem.toggleExpanded();
         }
     }
