@@ -5,15 +5,12 @@
  */
 
  export default interface IValidateResult {
-
-/** 
- * Массив ошибок
- */
-
+    /** 
+     * Массив ошибок
+     */
     [key: number]: boolean;
-
-/** 
- * Есть ли ошибки в результате валидации.
- */
+    /** 
+     * Есть ли ошибки в результате валидации.
+     */
     hasErrors?: boolean;
 }
