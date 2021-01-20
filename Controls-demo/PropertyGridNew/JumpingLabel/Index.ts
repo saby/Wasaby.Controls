@@ -14,7 +14,8 @@ export default class Demo extends Control<IControlOptions> {
                     name: 'description',
                     caption: 'Описание',
                     editorOptions: {
-                        minLines: 3
+                        minLines: 3,
+                        jumpingLabel: true
                     },
                     editorClass: 'controls-demo-pg-text-editor',
                     type: 'text'
@@ -27,6 +28,9 @@ export default class Demo extends Control<IControlOptions> {
                 {
                     caption: 'URL',
                     name: 'siteUrl',
+                    editorOptions: {
+                        jumpingLabel: true
+                    },
                     type: 'string'
                 },
                 {

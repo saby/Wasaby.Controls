@@ -2,14 +2,13 @@
     <ws:if data="{{item.captionTemplate}}">
         <ws:partial template="{{item.captionTemplate}}" item="{{item}}"/>
     </ws:if>
-    <ws:else data="{{item.caption !== '' && !jumpingLabel}}">
+    <ws:else data="{{item.caption !== '' && !item.editorOptions.jumpingLabel}}">
         <Controls.input:Label
                 attr:class="controls-PropertyGrid__editor-caption_theme-{{theme}}"
                 caption="{{item.caption || item.name}}"
                 scope="{{item.captionOptions}}" />
     </ws:else>
     <ws:partial template="wml!Controls/_propertyGrid/Render/resources/editorTemplate"
-                jumpingLabel="{{jumpingLabel}}"
                 caption="{{item.caption || item.name}}"
                 scope="{{_options}}"/>
 </ws:template>

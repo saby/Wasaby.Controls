@@ -6,7 +6,6 @@
                 source="{{_source}}">
             <ws:itemTemplate>
                 <ws:partial template="Controls/propertyGrid:ItemTemplate"
-                            jumpingLabel="{{itemTemplate.item.type === 'text' || itemTemplate.item.type === 'string' ? true : false}}"
                             scope="{{itemTemplate}}"/>
             </ws:itemTemplate>
         </Controls.propertyGrid:PropertyGrid>
