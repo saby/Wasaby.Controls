@@ -74,6 +74,7 @@ export default class ControllerClass {
    protected _sourceController: NewSourceController = null;
    private _root: Key = null;
    private _path: RecordSet = null;
+   private _rootBeforeSearch: Key = null;
 
    constructor(options: ISearchControllerOptions) {
       this._options = options;
@@ -116,6 +117,8 @@ export default class ControllerClass {
          this._deleteRootFromFilter(filter);
       }
 
+      this._root = this._rootBeforeSearch;
+
       if (!dontLoad) {
          return this._updateFilterAndLoad(filter);
       }
@@ -133,6 +136,8 @@ export default class ControllerClass {
       const filter: QueryWhereExpression<unknown> = {...this._sourceController.getFilter()};
 
       filter[this._options.searchParam] = this._searchValue = this._trim(value);
+
+      this._rootBeforeSearch = this._root;
 
       if (this._root !== undefined && this._options.parentProperty) {
          if (this._options.startingWith === 'current') {
