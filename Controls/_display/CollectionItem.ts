@@ -337,7 +337,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             templateMarker &&
             this._$owner.getMarkerVisibility() !== 'hidden' &&
             this.isMarked() &&
-            !this.isEditing()
+            !this.getOwner().isEditing()
         );
     }
 
