@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import {StackOpener, ManagerClass} from 'Controls/popup';
+import {StackOpener, Controller} from 'Controls/popup';
 import * as Template from 'wml!Controls-demo/Popup/Loader/Index';
 
 export default class extends Control {
@@ -9,7 +9,8 @@ export default class extends Control {
     _openStack(): void {
 
         // Потому что в странице которая строит демки на WI не задал лоадер
-        ManagerClass.prototype._dataLoaderModule = 'Controls-demo/DataLoader';
+        const popupManager = Controller.getManager();
+        popupManager._dataLoaderModule = 'Controls-demo/DataLoader';
 
         this._stackOpener.open({
             template: 'Controls-demo/Popup/Loader/Template',
@@ -31,7 +32,7 @@ export default class extends Control {
             },
             eventHandlers: {
                 onClose: () => {
-                    ManagerClass.prototype._dataLoaderModule = null;
+                    popupManager._dataLoaderModule = null;
                 }
             }
         });

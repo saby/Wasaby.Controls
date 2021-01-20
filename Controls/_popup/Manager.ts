@@ -49,12 +49,9 @@ class Manager {
 
     constructor(options = {}) {
         this.initTheme(options);
+        this._dataLoaderModule = options.dataLoaderModule;
         this._pageScrolled = debounce(this._pageScrolledBase, SCROLL_DELAY);
-        options.dataLoaderModule = null;
         this._popupResizeOuter = debounce(this._popupResizeOuterBase, RESIZE_DELAY);
-        if (options.dataLoaderModule) {
-            this._dataLoaderModule = options.dataLoaderModule;
-        }
     }
 
     protected initTheme(options): void {
@@ -116,7 +113,7 @@ class Manager {
         return new Promise((resolve) => {
             Library.load(this._dataLoaderModule).then((DataLoader) => {
                resolve(DataLoader.load(dataLoaders));
-            });
+           });
         });
     }
 
