@@ -780,7 +780,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
-    private _wasNotifyAddEventOnStartDrag: boolean = false;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2297,21 +2296,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             targetIndex
         });
         this._reIndex();
-
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
-
-        if (!this.getItemBySourceKey(draggableItem.getContents().getKey())) {
-            this._wasNotifyAddEventOnStartDrag = true;
-            this._notifyBeforeCollectionChange();
-            this._notifyCollectionChange(
-                IObservable.ACTION_ADD,
-                [strategy.avatarItem],
-                targetIndex,
-                [],
-                0
-            );
-            this._notifyAfterCollectionChange();
-        }
     }
 
     setDragPosition(position: IDragPosition<T>): void {
@@ -2327,19 +2311,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     resetDraggedItems(): void {
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
         if (strategy) {
-            const avatarItem = strategy.avatarItem;
-            const avatarIndex = this.getIndex(strategy.avatarItem as T);
-
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
             this._reFilter();
-
-            if (this._wasNotifyAddEventOnStartDrag) {
-                this._wasNotifyAddEventOnStartDrag = false;
-                this._notifyBeforeCollectionChange();
-                this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [avatarItem], avatarIndex);
-                this._notifyAfterCollectionChange();
-            }
         }
     }
 
