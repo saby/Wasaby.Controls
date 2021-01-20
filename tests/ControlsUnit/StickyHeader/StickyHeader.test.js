@@ -252,7 +252,7 @@ define([
             const component = createComponent(StickyHeader, { shadowVisibility: 'initial', position });
             let style;
 
-            style = component._getStyle();
+            style = component._getStyle(position, 2);
             assert.include(style, 'z-index: 2;');
          });
       });
