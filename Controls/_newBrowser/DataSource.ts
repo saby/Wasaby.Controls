@@ -38,11 +38,6 @@ export class DataSource {
     }
 
     setSearchString(searchString: string): Promise<RecordSet> {
-        // Если задают пустую строку поиска, то нужно перезагрузить последние данные
-        if (!searchString) {
-            return this.loadData();
-        }
-
         return this.getSearchController()
             .then((sc) => sc.search(searchString))
             .then((result) => {
@@ -50,7 +45,7 @@ export class DataSource {
                     return;
                 }
 
-                this.sourceController.setItems(result);
+                // this.sourceController.setItems(result);
                 return result;
             });
     }
