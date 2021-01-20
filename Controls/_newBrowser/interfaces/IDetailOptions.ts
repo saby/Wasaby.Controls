@@ -78,6 +78,12 @@ export interface IDetailOptions extends ISourceOptions {
      * Пользовательский шаблон отображения пустого списка.
      */
     emptyTemplate?: TemplateFunction | string;
+
+    /**
+     * Пользовательский шаблон, который будет выведен справа от хлебных
+     * крошек
+     */
+    afterBreadCrumbsTemplate?: TemplateFunction | string;
     //endregion
 
     /**
@@ -98,4 +104,9 @@ export interface IDetailOptions extends ISourceOptions {
     gradientColorProperty?: string;
 
     columns?: unknown;
+
+    /**
+     * Цвет фона detail-колонки
+     */
+    backgroundColor?: string;
 }

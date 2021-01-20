@@ -8,8 +8,8 @@ import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
  * в detail-колонке
  */
 export function getListConfiguration(items: RecordSet): IBrowserViewConfig {
-    return items.getMetaData().listConfiguration;
-    // return items.getMetaData().results.get('ConfigurationTemplate');
+    const meta = items.getMetaData();
+    return meta.listConfiguration || meta.results?.get('ConfigurationTemplate');
 }
 
 /**
