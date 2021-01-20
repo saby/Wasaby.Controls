@@ -58,7 +58,7 @@ const WIDTH_CURSOR: number = 1;
  * @implements Controls/interface:IValidationStatus
  * @implements Controls/input:IBase
  * @implements Controls/input:ITag
- * @implements Controls/_input/interface/IValueOptions
+ * @implements Controls/input:IValue
  * @implements Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
  * @implements Controls/input:ISelection
