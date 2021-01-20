@@ -326,6 +326,34 @@ define(
             assert.isTrue(!dataContainer._errorRegister);
          });
 
+         it('_beforeMount with sourceController and dataLoadCallback in options', async () => {
+            const memorySource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: sourceData
+            });
+            const items = new collection.RecordSet({
+               rawData: sourceData,
+               keyProperty: 'id'
+            });
+            const sourceController = new dataSourceLib.NewSourceController({
+               source: memorySource
+            });
+            sourceController.setItems(items);
+            let dataLoadCallbackItems;
+            const dataOptions = {
+               sourceController,
+               source: memorySource,
+               keyProperty: 'id',
+               dataLoadCallback: (loadedItems) => {
+                  dataLoadCallbackItems = loadedItems;
+               }
+            };
+            const dataContainer = getDataWithConfig(dataOptions);
+            await dataContainer._beforeMount(dataOptions);
+
+            assert.isTrue(dataLoadCallbackItems === items, 'wrong items in dataLoadCallback');
+         });
+
          it('_itemsReadyCallbackHandler', async function() {
             const options = {source: source, keyProperty: 'id'};
             let data = getDataWithConfig(options);

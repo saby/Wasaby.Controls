@@ -42,7 +42,7 @@ import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
 import ItemTemplate = require('wml!Controls/_list/ItemTemplateChooser');
 import {default as View} from 'Controls/_list/List';
 import BaseAction from 'Controls/_list/BaseAction';
-import LoadingIndicatorTemplate = require('wml!Controls/_list/LoadingIndicatorTemplate');
+import LoadingIndicatorTemplate = require('wml!Controls/_list/PortionedSearchTemplate');
 import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
 import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
