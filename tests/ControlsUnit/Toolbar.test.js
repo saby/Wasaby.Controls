@@ -396,6 +396,7 @@ define(
                         groupTemplate: 'groupTemplate',
                         groupingKeyCallback: 'groupingKeyCallback',
                         iconSize: 'm',
+                        iconStyle: 'secondary',
                         keyProperty: 'id',
                         nodeProperty: '@parent',
                         parentProperty: 'parent'
@@ -409,6 +410,7 @@ define(
                   },
                   templateOptions = {
                      iconSize: 'm',
+                     iconStyle: 'secondary',
                      keyProperty: 'id',
                      nodeProperty: '@parent',
                      parentProperty: 'parent',
