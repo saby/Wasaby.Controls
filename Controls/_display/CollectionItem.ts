@@ -10,7 +10,7 @@ import {
     Model
 } from 'Types/entity';
 import {IList} from 'Types/collection';
-import {mixin} from 'Types/util';
+import {mixin, object} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
@@ -34,7 +34,7 @@ export interface IOptions<T extends Model = Model> {
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
     multiSelectVisibility?: string;
-    checkboxState?: boolean|null;
+    multiSelectAccessibilityProperty?: string;
     rowSeparatorSize?: string;
 }
 
@@ -130,7 +130,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$dragged: boolean;
 
-    protected _$checkboxState: boolean|null;
+    protected _$multiSelectAccessibilityProperty: string;
 
     protected _instancePrefix: string;
 
@@ -289,17 +289,29 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion
 
-    // region CheckboxState
+    // region MultiSelectAccessibility
 
     isReadonlyCheckbox(): boolean {
-        return this._$checkboxState !== true;
+        return this._getMultiSelectAccessibility() !== true;
     }
 
     isVisibleCheckbox(): boolean {
-        return this._$checkboxState !== null && !this.isAdd;
+        return this._getMultiSelectAccessibility() !== null && !this.isAdd;
     }
 
-    // endregion CheckboxState
+    setMultiSelectAccessibilityProperty(property: string): void {
+        if (this._$multiSelectAccessibilityProperty !== property) {
+            this._$multiSelectAccessibilityProperty = property;
+            this._nextVersion();
+        }
+    }
+
+    protected _getMultiSelectAccessibility(): boolean|null {
+        const value = object.getPropertyValue<boolean|null>(this.getContents(), this._$multiSelectAccessibilityProperty);
+        return value === undefined ? true : value;
+    }
+
+    // endregion MultiSelectAccessibility
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();
@@ -833,7 +845,7 @@ Object.assign(CollectionItem.prototype, {
     _$active: false,
     _$hovered: false,
     _$dragged: false,
-    _$checkboxState: true,
+    _$multiSelectAccessibilityProperty: '',
     _$multiSelectVisibility: null,
     _$rowSeparatorSize: null,
     _contentsIndex: undefined,
