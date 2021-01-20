@@ -195,13 +195,6 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
-    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
-    setLoadingIndicatorVisibility(visible: boolean): void {
-        if (this.getFooter()) {
-            this._$footer.setLoadingIndicatorVisibility(visible);
-        }
-    }
-
     getFooter(): FooterRow<S> {
         return this._$footer;
     }
@@ -321,13 +314,21 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     protected _updateItemsLadder(): void {
-        this.getViewIterator().each((item: GridRowMixin<S>) => {
+        this.getViewIterator().each((item: GridRowMixin<S>, index: number) => {
+            let ladder;
+            let stickyLadder;
+            if (this._$ladder) {
+                if (this._$ladder.ladder) {
+                    ladder = this._$ladder.ladder[index];
+                }
+                if (this._$ladder.stickyLadder) {
+                    stickyLadder = this._$ladder.stickyLadder[index];
+                }
+            }
             if (item.LadderSupport) {
-                item.setLadder(this._$ladder);
+                item.updateLadder(ladder, stickyLadder);
             }
         });
-        this.getHeader()?.getRow()?.setLadder(this._$ladder);
-        this.getResults()?.setLadder(this._$ladder);
     }
 
     protected _updateItemsColumns(): void {

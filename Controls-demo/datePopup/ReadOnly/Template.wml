@@ -1,21 +1,25 @@
 <div class="PageWrap" style="padding-top: 50px;">
     <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; flex-wrap: wrap; align-items: flex-start;">
         <Controls.datePopup
+                attr:class="controlsDemo_datePopup__readonly-one"
                 selectionType="single"
                 readOnly="{{true}}"
                 name="datePopup1"
         />
         <Controls.datePopup
+                attr:class="controlsDemo_datePopup__readonly-two"
                 selectionType="range"
                 readOnly="{{true}}"
                 name="datePopup2"
         />
         <Controls.datePopup
+                attr:class="controlsDemo_datePopup__readonly-three"
                 startValue="{{_startValue}}"
                 endValue="{{_startValue}}"
                 readOnly="{{true}}"
         />
         <Controls.datePopup
+                attr:class="controlsDemo_datePopup__readonly-four"
                 startValue="{{_startValue}}"
                 endValue="{{_endValue}}"
                 selectionType="range"
