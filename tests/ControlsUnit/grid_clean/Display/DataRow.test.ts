@@ -82,15 +82,15 @@ describe('Controls/grid_clean/Display/DataRow', () => {
 
     it('Initialize with ladder', () => {
         const initialLadder = {
-            ladder: [{
+            ladder: {
                 firstStickyProperty: {
                     ladderLength: 5
                 },
                 secondStickyProperty: {
                     ladderLength: 2
                 }
-            }],
-            stickyLadder: [{
+            },
+            stickyLadder: {
                 firstStickyProperty: {
                     ladderLength: 5,
                     headingStyle: 'grid-row: span 5'
@@ -98,20 +98,20 @@ describe('Controls/grid_clean/Display/DataRow', () => {
                 secondStickyProperty: {
                     ladderLength: 2,
                     headingStyle: 'grid-row: span 2'
-                },
-            }]
+                }
+            }
         };
 
         const secondLadder = {
-            ladder: [{
+            ladder: {
                 firstStickyProperty: {
                     ladderLength: 3
                 },
                 secondStickyProperty: {
                     ladderLength: 1
                 }
-            }],
-            stickyLadder: [{
+            },
+            stickyLadder: {
                 firstStickyProperty: {
                     ladderLength: 3,
                     headingStyle: 'grid-row: span 3'
@@ -119,8 +119,8 @@ describe('Controls/grid_clean/Display/DataRow', () => {
                 secondStickyProperty: {
                     ladderLength: 1,
                     headingStyle: 'grid-row: span 1'
-                },
-            }]
+                }
+            }
         };
 
         const gridRow = new GridDataRow({
@@ -129,18 +129,18 @@ describe('Controls/grid_clean/Display/DataRow', () => {
             contents: record
         });
 
-        gridRow.setLadder(initialLadder);
+        gridRow.updateLadder(initialLadder.ladder, initialLadder.stickyLadder);
 
         let columnsItems = gridRow.getColumns();
         assert.strictEqual(columnsItems.length, 4);
         assert.strictEqual(gridRow.getVersion(), 0, 'The row version after initialize must be equals "0". No other variants!');
 
-        gridRow.setLadder(initialLadder);
+        gridRow.updateLadder(initialLadder.ladder, initialLadder.stickyLadder);
         columnsItems = gridRow.getColumns();
         assert.strictEqual(columnsItems.length, 4);
         assert.strictEqual(gridRow.getVersion(), 0, 'The row version after setLadder(currentLadder) must be equals "0". No other variants!');
 
-        gridRow.setLadder(secondLadder);
+        gridRow.updateLadder(secondLadder.ladder, secondLadder.stickyLadder);
         columnsItems = gridRow.getColumns();
         assert.strictEqual(columnsItems.length, 4);
         assert.strictEqual(gridRow.getVersion(), 1, 'The row version after setLadder(newLadder) must be equals "1". No other variants!');

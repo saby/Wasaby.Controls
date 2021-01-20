@@ -321,13 +321,21 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     protected _updateItemsLadder(): void {
-        this.getViewIterator().each((item: GridRowMixin<S>) => {
+        this.getViewIterator().each((item: GridRowMixin<S>, index: number) => {
+            let ladder;
+            let stickyLadder;
+            if (this._$ladder) {
+                if (this._$ladder.ladder) {
+                    ladder = this._$ladder.ladder[index];
+                }
+                if (this._$ladder.stickyLadder) {
+                    stickyLadder = this._$ladder.stickyLadder[index];
+                }
+            }
             if (item.LadderSupport) {
-                item.setLadder(this._$ladder);
+                item.updateLadder(ladder, stickyLadder);
             }
         });
-        this.getHeader()?.getRow()?.setLadder(this._$ladder);
-        this.getResults()?.setLadder(this._$ladder);
     }
 
     protected _updateItemsColumns(): void {

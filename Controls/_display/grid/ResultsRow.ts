@@ -8,7 +8,6 @@ import ResultsCell from 'Controls/_display/grid/ResultsCell';
 import Cell from 'Controls/_display/grid/Cell';
 import ItemActionsCell from 'Controls/_display/grid/ItemActionsCell';
 
-
 export type TResultsPosition = 'top' | 'bottom';
 
 export interface IOptions<T> {
