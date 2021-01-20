@@ -1,4 +1,4 @@
-<Controls.filterPanelPopup:PopupTemplate closeButtonViewMode="link">
+<Controls.filterPanelPopup:PopupTemplate>
     <ws:template>
         <Controls.filterPanel:View attr:class="controls-demo__filterButton" source="{{_options.items}}"/>
     </ws:template>
