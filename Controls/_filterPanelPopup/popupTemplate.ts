@@ -11,7 +11,7 @@ import * as template from 'wml!Controls/_filterPanelPopup/popupTemplate';
  */
 
 /**
- * @name Controls/_filterPanelPopup/popupTemplate#template
+ * @name Controls/_filterPanelPopup/popupTemplate#bodyContentTemplate
  * @cfg {TemplateFunction} Шаблон окна панели фильтров.
  */
 
