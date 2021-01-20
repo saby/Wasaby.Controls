@@ -475,6 +475,25 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
+    describe('.setCollection()', () => {
+        it('Increase version after .setCollection', () => {
+            const list = new ObservableList({
+                items: [1, 2, 3, 4]
+            });
+            const display = new CollectionDisplay({
+                collection: list
+            });
+
+            assert.strictEqual(display.getVersion(), 0);
+
+            const newList = new ObservableList({
+                items: [5, 6, 7]
+            });
+
+            display.setCollection(newList);
+            assert.strictEqual(display.getVersion(), 1);
+        });
+    });
     describe('.setFilter()', () => {
         function getItems(): number[] {
             return [1, 2, 3, 4];
