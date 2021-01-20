@@ -36,7 +36,7 @@ interface IReceivedState {
  */
 export default class Browser extends Control<IOptions, IReceivedState> {
 
-    //region fields
+    //region ⽥ fields
     /**
      * Шаблон отображения компонента
      */
@@ -82,24 +82,13 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * Идентификатор текущий корневой узел относительно которого отображаются данные
      */
     get root(): TKey {
-        return this._root;
+        return this._detailDataSource?.root || null;
     }
-    set root(value: TKey) {
-        if (this._root === value) {
-            return;
-        }
-
-        this._root = value;
-        this._notify('rootChanged', [value]);
-    }
-    protected _root: TKey;
 
     //region source
     protected _masterSourceController: SourceController;
 
-    protected _detailSourceController: SourceController;
-
-    protected _dataSource: DataSource;
+    private _detailDataSource: DataSource;
 
     protected _breadcrumbs: Model[];
 
@@ -157,7 +146,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     //endregion
     //endregion
 
-    // region life circle hooks
+    //region ⎆ life circle hooks
     protected _beforeMount(
         options?: IOptions,
         contexts?: object,
@@ -173,12 +162,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
                 this._masterSourceController.setItems(receivedState.masterItems);
             }
 
-            this._detailSourceController.setItems(receivedState.detailItems);
+            this._detailDataSource.setItems(receivedState.detailItems);
             this._processItemsMetadata(receivedState.detailItems, options);
         } else {
             const detailDataPromise = this.setRoot(options.root);
             // Если master-колонка скрыта, то незачем запрашивать данные для неё
-            const masterDataPromise = options.master?.visibility === 'visible'
+            const masterDataPromise = this._masterVisibility === MasterVisibilityEnum.visible
                 ? this._masterSourceController.load() as Promise<RecordSet>
                 : Promise.resolve(undefined);
 
@@ -204,25 +193,31 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     protected _beforeUnmount(): void {
-        this._dataSource.destroy();
+        this._detailDataSource.destroy();
         this._masterSourceController.destroy();
     }
     //endregion
 
-    setRoot(root: TKey): Promise<RecordSet> {
-        return this._dataSource
-            .setRoot(root)
-            .then((items) => {
+    setRoot(root: TKey, noLoad: boolean = false): Promise<RecordSet> {
+        const rootChanged = this.root !== root;
+        const result = this._detailDataSource.setRoot(root, noLoad);
 
-                this._processItemsMetadata(items);
-                this._notify('rootChanged', [root], {bubbling: true});
+        if (rootChanged) {
+            this._notify('rootChanged', [root], {bubbling: true});
+        }
 
-                return items;
-            });
+        if (noLoad) {
+            return result;
+        }
+
+        return result.then((items) => {
+            this._processItemsMetadata(items);
+            return items;
+        });
     }
 
     setSearchString(searchString: string): Promise<RecordSet> {
-        return this._dataSource
+        return this._detailDataSource
             .setSearchString(searchString)
             .then((items) => {
                 this._setViewMode(
@@ -243,10 +238,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     /**
      * Обновляет состояние контрола в соответствии с переданной настройкой отображения списков
      */
-    private _applyListConfiguration(
-        cfg: IBrowserViewConfig,
-        options: IOptions = this._options
-    ): void {
+    private _applyListConfiguration(cfg: IBrowserViewConfig, options: IOptions = this._options): void {
         if (!cfg) {
             return;
         }
@@ -283,9 +275,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._notify('viewModeChanged', [result]);
     }
 
-    //region events handlers
-    protected _onDetailChangedRoot(event: SyntheticEvent, root: TKey): void {
-        this.setRoot(root).then();
+    //region ⇑ events handlers
+    protected _onDetailRootChanged(event: SyntheticEvent, root: TKey): void {
+        this.setRoot(root, true).then();
     }
 
     protected _onSearch(event: SyntheticEvent, validatedValue: string): void {
@@ -297,28 +289,20 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
     //endregion
 
-    //region update state
+    //region 🗘 update state
     /**
      * Обновляет текущее состояние контрола в соответствии с переданными опциями
      */
     private updateState(options: IOptions = this._options): void {
         Browser.validateOptions(options);
 
-        this._detailSourceOptions = compileSourceOptions(options, true);
-        this._masterSourceOptions = compileSourceOptions(options, false);
-
-        // Если передан кастомный идентификатор хранилища, то на основании него собираем
-        // базовую часть нашего идентификатора для того, что бы в дальнейшем использовать
-        // её для генерации ключей в которых будем хранить свои настройки
-        if (typeof options.propStorageId === 'string') {
-            this._basePropStorageId = `Controls/newBrowser:Browser_${options.propStorageId}_`;
-        }
-
-        this._root = options.root;
         // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
         // об изменении значения, т.к. и так идет синхронизация опций
         this._userViewMode = options.userViewMode;
         this._updateMasterVisibility(options);
+
+        this._detailSourceOptions = compileSourceOptions(options, true);
+        this._masterSourceOptions = compileSourceOptions(options, false);
 
         //region update master fields
         // Если еще не создавался SourceController для master-колонки, то создадим
@@ -331,15 +315,16 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         //endregion
 
         //region update detail fields
-        // Если еще не создавался SourceController для detail-колонки, то создадим
-        if (!this._detailSourceController) {
-            this._dataSource = new DataSource({
+        // Если еще не создавался DataSource для detail-колонки, то создадим
+        if (!this._detailDataSource) {
+            this._detailDataSource = new DataSource({
                 ...this._detailSourceOptions,
                 dataLoadCallback: (items: RecordSet) => {
                     this._processItemsMetadata(items);
                 }
             });
-            this._detailSourceController = this._dataSource.sourceController;
+        } else {
+            // this._detailDataSource.setRoot(options.root, true).then();
         }
 
         // На основании полученного состояния соберем опции для detail-explorer
@@ -347,6 +332,13 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         this._tileItemTemplate = options.detail.customTileItemTemplate || 'wml!Controls/_newBrowser/templates/TileItemTemplate';
         //endregion
+
+        // Если передан кастомный идентификатор хранилища, то на основании него собираем
+        // базовую часть нашего идентификатора для того, что бы в дальнейшем использовать
+        // её для генерации ключей в которых будем хранить свои настройки
+        if (typeof options.propStorageId === 'string') {
+            this._basePropStorageId = `Controls/newBrowser:Browser_${options.propStorageId}_`;
+        }
     }
 
     /**
@@ -379,10 +371,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      */
     private _buildDetailExplorerOptions(options: IOptions = this._options): unknown {
         return {
+            style: 'default',
+
             // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
             // а список все равно в первую очередь смотрит на sourceController
             ...this._detailSourceOptions,
-            sourceController: this._detailSourceController,
+            sourceController: this._detailDataSource.sourceController,
             imageProperty: options.detail.imageProperty,
             emptyTemplate: options.detail.emptyTemplate,
             columns: options.detail.columns
@@ -397,7 +391,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     private _updateMasterVisibility(options: IOptions = this._options): void {
         this._masterVisibility = !options.master ? MasterVisibilityEnum.hidden : options.master.visibility;
 
-        if (!this._listConfiguration || !this.viewMode) {
+        if (!this._listConfiguration || !this.viewMode || this.viewMode === DetailViewMode.search) {
             return;
         }
 
@@ -439,8 +433,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             if (options.master && !options.master.source) {
                 Logger.error(
                     'Не задан источник данных для master-колонки. ' +
-                    'Необходимо указать либо базовый источник данных в опции listSource либо источник данных ' +
-                    'для master-колонки в опции master.listSource.',
+                    'Необходимо указать либо базовый источник данных в опции source либо источник данных ' +
+                    'для master-колонки в опции master.source.',
                     this
                 );
             }
@@ -448,8 +442,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             if (options.detail && !options.detail.source) {
                 Logger.error(
                     'Не задан источник данных для detail-колонки. ' +
-                    'Необходимо указать либо базовый источник данных в опции listSource либо источник данных ' +
-                    'для detail-колонки в опции detail.listSource.',
+                    'Необходимо указать либо базовый источник данных в опции source либо источник данных ' +
+                    'для detail-колонки в опции detail.source.',
                     this
                 );
             }
