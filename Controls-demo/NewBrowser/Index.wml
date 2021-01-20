@@ -46,6 +46,7 @@
       </ws:master>
       <!-- Задаем общую настройку detail-колонки -->
       <ws:detail
+         backgroundColor="#f0f0f0"
          imageProperty="photo"
          columns="{{_detailTableColumns}}"
       >

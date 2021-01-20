@@ -104,4 +104,9 @@ export interface IDetailOptions extends ISourceOptions {
     gradientColorProperty?: string;
 
     columns?: unknown;
+
+    /**
+     * Цвет фона detail-колонки
+     */
+    backgroundColor?: string;
 }

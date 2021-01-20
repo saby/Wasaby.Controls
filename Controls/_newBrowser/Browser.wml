@@ -1,5 +1,5 @@
 <Controls.masterDetail:Base
-   attr:class="controls-newBrowser_theme-{{_options.theme}}"
+   attr:class="controls-newBrowser"
    masterVisibility="{{_masterVisibility}}"
    propStorageId="{{_basePropStorageId + 'masterWidth'}}"
    masterWidth="{{_options.master ? _options.master.width}}"
@@ -17,8 +17,10 @@
    </ws:master>
 
    <ws:detail>
-      <div class="controls-newBrowser__detail">
-
+      <div
+         class="controls-newBrowser__detail"
+         style="background-color: {{_options.detail.backgroundColor ? _options.detail.backgroundColor : 'transparent'}};"
+      >
          <Controls.scroll:Container>
             <Controls.explorer:View
                root="{{root}}"
