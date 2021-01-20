@@ -152,7 +152,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._sourceController = newOptions.sourceController;
       }
 
-      if (newOptions.sourceController) {
+      if (newOptions.hasOwnProperty('sourceController')) {
          updateResult = this._updateWithSourceControllerInOptions(newOptions);
       } else {
          updateResult = this._updateWithoutSourceControllerInOptions(newOptions);
@@ -212,11 +212,13 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _updateWithSourceControllerInOptions(newOptions: IDataOptions): void {
-      const sourceControllerState = this._sourceController.getState();
+      if (this._sourceController) {
+         const sourceControllerState = this._sourceController.getState();
 
-      if (!isEqual(sourceControllerState, this._sourceControllerState)) {
-         this._filter = sourceControllerState.filter;
-         this._updateContext(sourceControllerState);
+         if (!isEqual(sourceControllerState, this._sourceControllerState)) {
+            this._filter = sourceControllerState.filter;
+            this._updateContext(sourceControllerState);
+         }
       }
    }
 

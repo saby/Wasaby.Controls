@@ -375,6 +375,17 @@ define(
             });
          });
 
+         it('sourceController is null in _beforeUpdate', async function() {
+            let config = {source: source, keyProperty: 'id'};
+            const data = getDataWithConfig(config);
+            await data._beforeMount(config);
+
+            config = { ...config, sourceController: null };
+            data._beforeUpdate(config);
+            assert.isTrue(data._sourceController === null);
+
+         });
+
          it('set source after mount', function(done) {
             const config = {keyProperty: 'id'};
             const data = getDataWithConfig(config);
