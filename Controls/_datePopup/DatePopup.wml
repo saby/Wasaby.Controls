@@ -93,6 +93,7 @@
                ranges="{{_options.ranges}}"
                calendarSource="{{_options.calendarSource}}"
                dateConstructor="{{_options.dateConstructor}}"
+               _date="{{_options._date}}"
             >
                <ws:dayTemplate>
                   <ws:partial
