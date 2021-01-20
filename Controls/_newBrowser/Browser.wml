@@ -19,7 +19,7 @@
    <ws:detail>
       <div
          class="controls-newBrowser__detail"
-         style="background-color: {{_options.detail.backgroundColor ? _options.detail.backgroundColor : 'transparent'}};"
+         style="background-color: {{_options.detail.backgroundColor ? _options.detail.backgroundColor : '#ffffff'}};"
       >
          <Controls.scroll:Container>
             <Controls.explorer:View
