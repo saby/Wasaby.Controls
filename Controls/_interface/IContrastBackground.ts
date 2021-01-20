@@ -16,7 +16,6 @@ export default interface IContrastBackground {
  * @cfg {Boolean} Определяет контрастность фона контрола по отношению к его окружению.
  * @variant true Контрастный фон.
  * @variant false Фон, гармонично сочетающийся с окружением.
- * @demo Controls-demo/Input/ContrastBackground/Index
  */
 
 /*
@@ -24,5 +23,4 @@ export default interface IContrastBackground {
  * @cfg {Boolean} Determines if control has contrast background.
  * @variant true Control has contrast background.
  * @variant false Control has the harmony background.
- * @demo Controls-demo/Input/ContrastBackground/Index
  */

@@ -116,7 +116,5 @@ export interface IBase {
 
 /**
  * @name Controls/_input/interface/IBase#contrastBackground
- * @cfg
- * @default true
  * @demo Controls-demo/Input/ContrastBackground/Index
  */
