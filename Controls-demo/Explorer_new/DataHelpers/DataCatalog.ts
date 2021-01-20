@@ -3,691 +3,722 @@ import * as editingColumnTemplate from 'wml!Controls-demo/Explorer/Editing/editi
 import * as notEditableTemplate from 'wml!Controls-demo/Explorer/Editing/notEditableCell';
 import * as CntTpl from 'wml!Controls-demo/Explorer_new/SearchWithPhoto/content';
 import * as CntTplLadder from 'wml!Controls-demo/Explorer_new/SearchWithLadderPhoto/content';
-import { IHeader } from 'Controls-demo/types';
-import { IColumn } from 'Controls/grid';
+import {IHeader} from 'Controls-demo/types';
+import {IColumn} from 'Controls/grid';
+import {groupConstants} from 'Controls/list';
 
 export interface IData {
-   id: number;
-   parent: null | number;
-   'parent@': null | Boolean;
-   title: string;
-   discr?: string;
-   price?: number | string;
-   isDocument?: Boolean;
-   code?: string;
-   image?: string;
-   // Специальное свойство для того, чтобы вывести в поиске хлебные крошки в несколько строк
-   SearchResult?: boolean;
+    id: number;
+    parent: null | number;
+    'parent@': null | Boolean;
+    title: string;
+    discr?: string;
+    price?: number | string;
+    isDocument?: Boolean;
+    code?: string;
+    image?: string;
+    group?: string;
+    // Специальное свойство для того, чтобы вывести в поиске хлебные крошки в несколько строк
+    SearchResult?: boolean;
 }
 
 export const DataWithLongFolderName = {
-   getManyData: (): IData[] => [
-       {
-           id: 1,
-           'parent': null,
-           'parent@': true,
-           title: 'Документы отделов'
-       }, {
-           id: 11,
-           'parent': 1,
-           'parent@': true,
-           title: '1. Электронный документооборот'
-       }, {
-           id: 12,
-           'parent': 1,
-           'parent@': true,
-           title: '2. Отчетность через интернет'
-       }, {
-           id: 121,
-           'parent': 12,
-           'parent@': true,
-           title: 'Papo4ka'
-       },
-       {
-           id: 1211,
-           'parent': 121,
-           'parent@': true,
-           title: 'Doc1',
-           isDocument: true
-       },
-       {
-           id: 1212,
-           'parent': 121,
-           'parent@': true,
-           title: 'Doc12',
-           isDocument: true
-       },
-       {
-           id: 122,
-           'parent': 12,
-           'parent@': true,
-           title: 'Papo4ka2'
-       },
-       {
-           id: 13,
-           'parent': 1,
-           'parent@': null,
-           title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-           isDocument: true
-       }, {
-           id: 14,
-           'parent': 1,
-           'parent@': null,
-           title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-           isDocument: true
-       }, {
-           id: 15,
-           'parent': 1,
-           'parent@': null,
-           title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-           isDocument: true
-       }, {
-           id: 16,
-           'parent': 1,
-           'parent@': null,
-           title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-           isDocument: true
-       }, {
-           id: 17,
-           'parent': 1,
-           'parent@': null,
-           title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-           isDocument: true
-       }, {
-           id: 18,
-           'parent': 1,
-           'parent@': null,
-           title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-           isDocument: true
-       }, {
-           id: 19,
-           'parent': 1,
-           'parent@': null,
-           title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-           isDocument: true
-       }, {
-           id: 111,
-           'parent': 11,
-           'parent@': true,
-           title: 'Задачи'
-       }, {
-           id: 91,
-           'parent': 111,
-           'parent@': true,
-           title: 'Очень длинный текст внтури папки "Задачи"'
-       }, {
-           id: 92,
-           'parent': 91,
-           'parent@': true,
-           title: 'Очень длинный текст внтури папки "Очень длинный текст внтури папки Задачи"'
-       }, {
-           id: 94,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 95,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 96,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 97,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 98,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 99,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 911,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 912,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 913,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 914,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 915,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 916,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 917,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 918,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 919,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 920,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 921,
-           'parent': 92,
-           'parent@': null,
-           title: 'Задача'
-       }, {
-           id: 112,
-           'parent': 11,
-           'parent@': null,
-           title: 'Сравнение систем по учету рабочего времени.xlsx',
-           isDocument: true
-       }, {
-           id: 2,
-           'parent': null,
-           'parent@': true,
-           title: 'Техническое задание'
-       }, {
-           id: 21,
-           'parent': 2,
-           'parent@': null,
-           title: 'PandaDoc.docx',
-           isDocument: true
-       }, {
-           id: 22,
-           'parent': 2,
-           'parent@': null,
-           title: 'SignEasy.docx',
-           isDocument: true
-       }, {
-           id: 3,
-           'parent': null,
-           'parent@': true,
-           title: 'Анализ конкурентов'
-       }, {
-           id: 4,
-           'parent': null,
-           'parent@': null,
-           title: 'Договор на поставку печатной продукции',
-           isDocument: true
-       }, {
-           id: 5,
-           'parent': null,
-           'parent@': null,
-           title: 'Договор аренды помещения',
-           isDocument: true
-       }, {
-           id: 6,
-           'parent': null,
-           'parent@': null,
-           title: 'Конфеты'
+    getManyData: (): IData[] => [
+        {
+            id: 1,
+            'parent': null,
+            'parent@': true,
+            title: 'Документы отделов'
+        }, {
+            id: 11,
+            'parent': 1,
+            'parent@': true,
+            title: '1. Электронный документооборот'
+        }, {
+            id: 12,
+            'parent': 1,
+            'parent@': true,
+            title: '2. Отчетность через интернет'
+        }, {
+            id: 121,
+            'parent': 12,
+            'parent@': true,
+            title: 'Papo4ka'
+        },
+        {
+            id: 1211,
+            'parent': 121,
+            'parent@': true,
+            title: 'Doc1',
+            isDocument: true
+        },
+        {
+            id: 1212,
+            'parent': 121,
+            'parent@': true,
+            title: 'Doc12',
+            isDocument: true
+        },
+        {
+            id: 122,
+            'parent': 12,
+            'parent@': true,
+            title: 'Papo4ka2'
+        },
+        {
+            id: 13,
+            'parent': 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            isDocument: true
+        }, {
+            id: 14,
+            'parent': 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            isDocument: true
+        }, {
+            id: 15,
+            'parent': 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            isDocument: true
+        }, {
+            id: 16,
+            'parent': 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            isDocument: true
+        }, {
+            id: 17,
+            'parent': 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            isDocument: true
+        }, {
+            id: 18,
+            'parent': 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            isDocument: true
+        }, {
+            id: 19,
+            'parent': 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            isDocument: true
+        }, {
+            id: 111,
+            'parent': 11,
+            'parent@': true,
+            title: 'Задачи'
+        }, {
+            id: 91,
+            'parent': 111,
+            'parent@': true,
+            title: 'Очень длинный текст внтури папки "Задачи"'
+        }, {
+            id: 92,
+            'parent': 91,
+            'parent@': true,
+            title: 'Очень длинный текст внтури папки "Очень длинный текст внтури папки Задачи"'
+        }, {
+            id: 94,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 95,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 96,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 97,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 98,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 99,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 911,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 912,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 913,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 914,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 915,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 916,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 917,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 918,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 919,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 920,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 921,
+            'parent': 92,
+            'parent@': null,
+            title: 'Задача'
+        }, {
+            id: 112,
+            'parent': 11,
+            'parent@': null,
+            title: 'Сравнение систем по учету рабочего времени.xlsx',
+            isDocument: true
+        }, {
+            id: 2,
+            'parent': null,
+            'parent@': true,
+            title: 'Техническое задание'
+        }, {
+            id: 21,
+            'parent': 2,
+            'parent@': null,
+            title: 'PandaDoc.docx',
+            isDocument: true
+        }, {
+            id: 22,
+            'parent': 2,
+            'parent@': null,
+            title: 'SignEasy.docx',
+            isDocument: true
+        }, {
+            id: 3,
+            'parent': null,
+            'parent@': true,
+            title: 'Анализ конкурентов'
+        }, {
+            id: 4,
+            'parent': null,
+            'parent@': null,
+            title: 'Договор на поставку печатной продукции',
+            isDocument: true
+        }, {
+            id: 5,
+            'parent': null,
+            'parent@': null,
+            title: 'Договор аренды помещения',
+            isDocument: true
+        }, {
+            id: 6,
+            'parent': null,
+            'parent@': null,
+            title: 'Конфеты'
 
-       }, {
-           id: 7,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 71,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 72,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 73,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 74,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 75,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 76,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 77,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 78,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 79,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 80,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 81,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 82,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 83,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 84,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 85,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }, {
-           id: 86,
-           'parent': null,
-           'parent@': null,
-           title: 'Скриншот от 25.12.16, 11-37-16',
-           isDocument: true
-       }
-   ],
-   getData: (): IData[] => [{
-         id: 1,
-         parent: null,
-         'parent@': true,
-         title: 'Папка 1. ДлинноеназваниеДлинноеназваниеДлинноеназвание'
-      },
-      {
-         id: 11,
-         parent: 1,
-         'parent@': null,
-         title: 'Файл 11'
-      },
-      {
-         id: 12,
-         parent: 1,
-         'parent@': null,
-         title: 'Файл 12'
-      }],
+        }, {
+            id: 7,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 71,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 72,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 73,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 74,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 75,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 76,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 77,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 78,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 79,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 80,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 81,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 82,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 83,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 84,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 85,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }, {
+            id: 86,
+            'parent': null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            isDocument: true
+        }
+    ],
+    getData: (): IData[] => [{
+        id: 1,
+        parent: null,
+        'parent@': true,
+        title: 'Папка 1. ДлинноеназваниеДлинноеназваниеДлинноеназвание'
+    },
+        {
+            id: 11,
+            parent: 1,
+            'parent@': null,
+            title: 'Файл 11'
+        },
+        {
+            id: 12,
+            parent: 1,
+            'parent@': null,
+            title: 'Файл 12'
+        }],
 
-   getColumns: (): IColumn[] => [
-      {
-         displayProperty: 'title',
-         width: '1fr',
-         textOverflow: 'ellipsis'
-      }
-   ]
+    getColumns: (): IColumn[] => [
+        {
+            displayProperty: 'title',
+            width: '1fr',
+            textOverflow: 'ellipsis'
+        }
+    ]
 };
 export const Gadgets = {
-   getData: (): IData[] => [{
-      id: 1,
-      parent: null,
-      'parent@': true,
-      title: 'Документы отделов',
-      discr: '5',
-      price: 123
-   },
-   {
-      id: 11,
-      parent: 1,
-      'parent@': true,
-      title: '1. Электронный документооборот',
-      discr: '5',
-      price: 123
-   },
-   {
-      id: 12,
-      parent: 1,
-      'parent@': true,
-      title: '2. Отчетность через интернет',
-      discr: '5',
-      price: 123
-   },
-   {
-      id: 121,
-      parent: 12,
-      'parent@': true,
-      title: 'Papo4ka',
-         discr: '5',
-         price: 123
-   },
-   {
-      id: 1211,
-      parent: 121,
-      'parent@': true,
-      title: 'Doc1',
-      isDocument: true,
-      discr: '5',
-      price: 123
-   },
-   {
-      id: 1212,
-      parent: 121,
-      'parent@': true,
-      title: 'Doc12',
-      isDocument: true,
-      discr: '5',
-      price: 123
-   },
-   {
-      id: 122,
-      parent: 12,
-      'parent@': true,
-      title: 'Papo4ka2',
-      discr: '5',
-      price: 123
-   },
-   {
-      id: 13,
-      parent: 1,
-      'parent@': null,
-      title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-      isDocument: true,
-      discr: '5',
-      price: 123
-   }, {
-      id: 14,
-      parent: 1,
-      'parent@': null,
-      title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 15,
-      parent: 1,
-      'parent@': null,
-      title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 16,
-      parent: 1,
-      'parent@': null,
-      title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 17,
-      parent: 1,
-      'parent@': null,
-      title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 18,
-      parent: 1,
-      'parent@': null,
-      title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 19,
-      parent: 1,
-      'parent@': null,
-      title: 'Сравнение условий конкурентов по ЭДО.xlsx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 111,
-      parent: 11,
-      'parent@': true,
-      title: 'Задачи',
-         discr: '5',
-         price: 123
-   }, {
-      id: 112,
-      parent: 11,
-      'parent@': null,
-      title: 'Сравнение систем по учету рабочего времени.xlsx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 2,
-      parent: null,
-      'parent@': true,
-      title: 'Техническое задание',
-         discr: '5',
-         price: 123
-   }, {
-      id: 21,
-      parent: 2,
-      'parent@': null,
-      title: 'PandaDoc.docx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 22,
-      parent: 2,
-      'parent@': null,
-      title: 'SignEasy.docx',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 3,
-      parent: null,
-      'parent@': true,
-      title: 'Анализ конкурентов',
-         discr: '5',
-         price: 123
-   }, {
-      id: 4,
-      parent: null,
-      'parent@': null,
-      title: 'Договор на поставку печатной продукции',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 5,
-      parent: null,
-      'parent@': null,
-      title: 'Договор аренды помещения',
-      isDocument: true,
-         discr: '5',
-         price: 123
-   }, {
-      id: 6,
-      parent: null,
-      'parent@': null,
-      title: 'Конфеты',
-         discr: '5',
-         price: 123
-   }, {
-      id: 82,
-      parent: null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-      discr: '5',
-      price: 123,
-      image: explorerImages[1]
-   }, {
-      id: 83,
-      parent: null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-      discr: '5',
-      price: 123,
-      // tslint:disable-next-line
-      image: explorerImages[2]
-   }, {
-      id: 84,
-      parent: null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-      discr: '5',
-      price: 123,
-      // tslint:disable-next-line
-      image: explorerImages[3]
-   }, {
-      id: 85,
-      parent: null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-      discr: '5',
-      price: 123,
-      // tslint:disable-next-line
-      image: explorerImages[4]
-   }, {
-      id: 86,
-      parent: null,
-      'parent@': null,
-      title: 'Скриншот от 25.12.16, 11-37-16',
-      isDocument: true,
-      discr: '5',
-      price: 123,
-      // tslint:disable-next-line
-      image: explorerImages[5]
-   }],
+    getData: (): IData[] => [
+        {
+            id: 1,
+            parent: null,
+            'parent@': true,
+            title: 'Документы отделов',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        },
+        {
+            id: 11,
+            parent: 1,
+            'parent@': true,
+            title: '1. Электронный документооборот',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        },
+        {
+            id: 12,
+            parent: 1,
+            'parent@': true,
+            title: '2. Отчетность через интернет',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        },
+        {
+            id: 121,
+            parent: 12,
+            'parent@': true,
+            title: 'Papo4ka',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        },
+        {
+            id: 1211,
+            parent: 121,
+            'parent@': true,
+            title: 'Doc1',
+            group: groupConstants.hiddenGroup,
+            isDocument: true,
+            discr: '5',
+            price: 123
+        },
+        {
+            id: 1212,
+            parent: 121,
+            'parent@': true,
+            title: 'Doc12',
+            group: groupConstants.hiddenGroup,
+            isDocument: true,
+            discr: '5',
+            price: 123
+        },
+        {
+            id: 122,
+            parent: 12,
+            'parent@': true,
+            title: 'Papo4ka2',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        },
+        {
+            id: 13,
+            parent: 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 14,
+            parent: 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 15,
+            parent: 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 16,
+            parent: 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 17,
+            parent: 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 18,
+            parent: 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 19,
+            parent: 1,
+            'parent@': null,
+            title: 'Сравнение условий конкурентов по ЭДО.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 111,
+            parent: 11,
+            'parent@': true,
+            title: 'Задачи',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        }, {
+            id: 112,
+            parent: 11,
+            'parent@': null,
+            title: 'Сравнение систем по учету рабочего времени.xlsx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 2,
+            parent: null,
+            'parent@': true,
+            title: 'Техническое задание',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        }, {
+            id: 21,
+            parent: 2,
+            'parent@': null,
+            title: 'PandaDoc.docx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 22,
+            parent: 2,
+            'parent@': null,
+            title: 'SignEasy.docx',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 3,
+            parent: null,
+            'parent@': true,
+            title: 'Анализ конкурентов',
+            group: groupConstants.hiddenGroup,
+            discr: '5',
+            price: 123
+        }, {
+            id: 4,
+            parent: null,
+            'parent@': null,
+            title: 'Договор на поставку печатной продукции',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 5,
+            parent: null,
+            'parent@': null,
+            title: 'Договор аренды помещения',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123
+        }, {
+            id: 6,
+            parent: null,
+            'parent@': null,
+            title: 'Конфеты',
+            group: 'Файлы',
+            discr: '5',
+            price: 123
+        }, {
+            id: 82,
+            parent: null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123,
+            image: explorerImages[1]
+        }, {
+            id: 83,
+            parent: null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123,
+            // tslint:disable-next-line
+            image: explorerImages[2]
+        }, {
+            id: 84,
+            parent: null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123,
+            // tslint:disable-next-line
+            image: explorerImages[3]
+        }, {
+            id: 85,
+            parent: null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123,
+            // tslint:disable-next-line
+            image: explorerImages[4]
+        }, {
+            id: 86,
+            parent: null,
+            'parent@': null,
+            title: 'Скриншот от 25.12.16, 11-37-16',
+            group: 'Файлы',
+            isDocument: true,
+            discr: '5',
+            price: 123,
+            // tslint:disable-next-line
+            image: explorerImages[5]
+        }],
 
-   getColumns: () => [
-      {
-         displayProperty: 'title',
-         width: '1fr'
-      }
-   ],
+    getColumns: () => [
+        {
+            displayProperty: 'title',
+            width: '1fr'
+        }
+    ],
 
-   getGridColumns: () => [
-      {
-         displayProperty: 'title',
-         width: '200px'
-      },
-      {
-         displayProperty: 'discr',
-         width: '1fr'
-      },
-      {
-         displayProperty: 'price',
-         width: '1fr'
-      }
-   ],
+    getGridColumns: () => [
+        {
+            displayProperty: 'title',
+            width: '200px'
+        },
+        {
+            displayProperty: 'discr',
+            width: '1fr'
+        },
+        {
+            displayProperty: 'price',
+            width: '1fr'
+        }
+    ],
 
-   getGridEditingCol: () => [
-      {
-         displayProperty: 'title',
-         width: '200px',
-         template: editingColumnTemplate
-      },
-      {
-         displayProperty: 'discr',
-         width: '1fr',
-         template: notEditableTemplate
-      }
-   ],
+    getGridEditingCol: () => [
+        {
+            displayProperty: 'title',
+            width: '200px',
+            template: editingColumnTemplate
+        },
+        {
+            displayProperty: 'discr',
+            width: '1fr',
+            template: notEditableTemplate
+        }
+    ],
 
-   getGridColumnsForScroll: () => [
-      {
-         displayProperty: 'title',
-         width: '150px'
-      },
-      {
-         displayProperty: 'id',
-         width: 'max-content',
-         align: 'right'
-      },
-      {
-         displayProperty: 'discr',
-         width: '200px',
-         align: 'right'
+    getGridColumnsForScroll: () => [
+        {
+            displayProperty: 'title',
+            width: '150px'
+        },
+        {
+            displayProperty: 'id',
+            width: 'max-content',
+            align: 'right'
+        },
+        {
+            displayProperty: 'discr',
+            width: '200px',
+            align: 'right'
 
-      },
-      {
-         displayProperty: 'price',
-         width: '200px',
-         align: 'right'
+        },
+        {
+            displayProperty: 'price',
+            width: '200px',
+            align: 'right'
 
-      }
-   ],
+        }
+    ],
 
-   getHeader(): IHeader[] {
-      return [
-         {
-            title: ''
-         },
-         {
-            title: 'Рейтинг покупателей'
-         },
-         {
-            title: 'Страна производитель'
-         }
-      ];
-   },
+    getHeader(): IHeader[] {
+        return [
+            {
+                title: ''
+            },
+            {
+                title: 'Рейтинг покупателей'
+            },
+            {
+                title: 'Страна производитель'
+            }
+        ];
+    },
 
    getSearchData(): IData[] {
       return [
@@ -946,16 +977,16 @@ export const Gadgets = {
     getSearchDataForColumnScroll(): IData[] {
         return [
             {
-               id: 1, parent: null, 'parent@': true, code: '2131521542341',
-               price: 'Цены поставщика оборудования', title: 'Комплектующие'
+                id: 1, parent: null, 'parent@': true, code: '2131521542341',
+                price: 'Цены поставщика оборудования', title: 'Комплектующие'
             },
             {
-               id: 11, parent: 1, 'parent@': true, code: '2134215dsa41',
-               price: 'Розничные цены на оборудование', title: 'Жесткие диски'
+                id: 11, parent: 1, 'parent@': true, code: '2134215dsa41',
+                price: 'Розничные цены на оборудование', title: 'Жесткие диски'
             },
             {
-               id: 111, parent: 11, 'parent@': true, code: 'kjn523452',
-               price: 'Цены на оборудование без НДС ', title: 'SATA'
+                id: 111, parent: 11, 'parent@': true, code: 'kjn523452',
+                price: 'Цены на оборудование без НДС ', title: 'SATA'
             },
             {
                 id: 1111, parent: 111, 'parent@': null, code: '1', price: 0,
@@ -985,12 +1016,12 @@ export const Gadgets = {
                 title: 'Жесткий диск Seagate Original SAS SATA-III 2Tb ST2000NC001 Constellation СS (7200rpm) 64Mb 3.5'
             },
             {
-               id: 2, parent: null, 'parent@': true, code: '23542ycc5r24',
-               price: 'Цены поставщика оборудования', title: 'Компьютеры'
+                id: 2, parent: null, 'parent@': true, code: '23542ycc5r24',
+                price: 'Цены поставщика оборудования', title: 'Компьютеры'
             },
             {
-               id: 21, parent: 2, 'parent@': true, code: 'sadGV54asd34',
-               price: 'Цены поставщика оборудования', title: 'Аксессуары'
+                id: 21, parent: 2, 'parent@': true, code: 'sadGV54asd34',
+                price: 'Цены поставщика оборудования', title: 'Аксессуары'
             }
         ];
     }

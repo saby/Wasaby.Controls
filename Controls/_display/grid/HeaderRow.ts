@@ -9,7 +9,6 @@ import {
 import Row, {IOptions as IRowOptions} from './Row';
 import Header, {IHeaderBounds} from './Header';
 import ItemActionsCell from './ItemActionsCell';
-import StickyLadderCell from 'Controls/_display/grid/StickyLadderCell';
 import Cell from 'Controls/_display/grid/Cell';
 import HeaderCell from 'Controls/_display/grid/HeaderCell';
 import { Model } from 'Types/entity';
