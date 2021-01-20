@@ -1,7 +1,7 @@
 import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 
 /**
- * 
+ *
  * Опции интерфейса подробно описаны {@link Controls/_popup/interface/IDialogOpener здесь}.
  * @public
  * @author Красильников А.С.
@@ -82,9 +82,10 @@ export interface IResizeDirection {
  */
 /**
  * @name Controls/_popup/interface/IDialogOpener#resizeDirection
- * @cfg {IResizeDirection} Направление в котором размеры попапа
- * могут динамически меняться без изменения позиции
- * @demo Controls-demo/Popup/Dialog/Direction/Index
+ * @cfg {IResizeDirection} Направление в котором размеры попапа могут динамически меняться без изменения позиции.
+ * @remark Следует использовать если в шаблоне у вас контент имеющий динамические размеры и
+ * определенные стороны попапа должны быть зафиксированы при изменении размеров.
+ * @demo Controls-demo/Popup/Dialog/ResizeDirection/Index
  */
 /*
  * @name Controls/_popup/interface/IDialogOpener#top
@@ -117,7 +118,7 @@ export interface IResizeDirection {
  * @cfg {String} Опция задает контейнер (через селектор), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
  * @remark
  * Алгоритм поиска контейнера, внутри которого будут строиться окна:
- * 
+ *
  * * Если задана опция restrictiveContainer, то ищем глобальным поиском класс по селектору, заданному в опции.
  * Если ничего не нашли или опция не задана см. следующий шаг.
  * * Если опция не задана, то ищем глобальным селектором класс "controls-Popup__dialog-target-container".

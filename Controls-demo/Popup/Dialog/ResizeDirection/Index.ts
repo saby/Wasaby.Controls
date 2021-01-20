@@ -1,9 +1,9 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/Popup/Dialog/Direction/Index');
+import controlTemplate = require('wml!Controls-demo/Popup/Dialog/ResizeDirection/Index');
 import {DialogOpener} from 'Controls/popup';
 
 const baseStackConfig = {
-    template: 'Controls-demo/Popup/Dialog/Direction/Popup',
+    template: 'Controls-demo/Popup/Dialog/ResizeDirection/Popup',
     closeOnOutsideClick: true,
     autofocus: true,
     opener: null
