@@ -787,6 +787,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     // New Model compatibility
+    setMultiSelectAccessibilityProperty(property: string): void {
+        if (this._display) {
+            this._display.setMultiSelectAccessibilityProperty(property);
+        }
+    },
+
+    // New Model compatibility
     getMultiSelectPosition(): 'default' | 'custom' {
         if (this._display) {
             return this._display.getMultiSelectPosition();
