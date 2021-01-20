@@ -1,11 +1,16 @@
-export default interface IValidateResult {
+/**
+ * Интерфейс ответа после валидации.
+ * @public
+ * @autor Красильников А.С.
+ */
+
+ export default interface IValidateResult {
+    /** 
+     * Массив ошибок.
+     */
     [key: number]: boolean;
+    /** 
+     * Есть ли ошибки в результате валидации.
+     */
     hasErrors?: boolean;
 }
-
-/**
- * Интерфейс ответа после валидации
- *
- * @interface Controls/_validate/interfaces/IValidateResult
- * @public
- */

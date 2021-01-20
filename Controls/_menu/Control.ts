@@ -38,6 +38,7 @@ const MAX_HISTORY_VISIBLE_ITEMS_COUNT = 10;
  * Контрол меню.
  * @public
  * @mixes Controls/interface:IIconSize
+ * @mixes Controls/interface:IIconStyle
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:INavigation
  * @mixes Controls/interface:IFilterChanged
@@ -935,6 +936,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _processError(error: Error): Promise<dataSourceError.ViewConfig|void> {
+        if (this._options.dataLoadErrback) {
+            this._options.dataLoadErrback(error);
+        }
         return this._getErrorController().process({
             error,
             theme: this._options.theme,

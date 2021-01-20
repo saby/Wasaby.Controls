@@ -503,6 +503,19 @@ describe('Controls/scroll:ContainerBase', () => {
    });
 
    describe('_updateState', () => {
+      it('scrollState and oldScrollState should be different', () => {
+         const component = new ContainerBase();
+         component._children = {
+            content: {
+               getBoundingClientRect: () => undefined,
+               scrollTop: 100
+            }
+         };
+         component._updateState({});
+         assert.notEqual(component._scrollModel.scrollTop, component._oldScrollState.scrollTop);
+         assert.isUndefined(component._oldScrollState.scrollTop);
+      });
+
       it('should not update state if unchanged state arrives', () => {
          const inst:ContainerBase = new ContainerBase();
          inst._children = {

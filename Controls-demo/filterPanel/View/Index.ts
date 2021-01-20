@@ -43,8 +43,7 @@ export default class extends Control {
                         const filterValue = queryFilter[filterField];
                         const itemValue = item.get(filterField);
                         addToData = (itemValue >= filterValue[0] && itemValue <= filterValue[1]) || filterValue.includes(itemValue);
-
-                        if (emptyFields && isEqual(filterValue, emptyFields[filterField])) {
+                        if (emptyFields && isEqual(filterValue, emptyFields[filterField]) || filterValue[0] === null || filterValue[1] === null) {
                             addToData = true;
                         }
                     }

@@ -101,9 +101,13 @@ class Popup extends Control<IPopupControlOptions> {
     protected _beforeUpdate(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
         if (options._prefetchPromise !== this._options._prefetchPromise) {
-            this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
-                this._prefetchData = data;
-            });
+            if (options._prefetchPromise) {
+                this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
+                    this._prefetchData = data;
+                });
+            } else {
+                this._prefetchData = null;
+            }
         }
     }
 

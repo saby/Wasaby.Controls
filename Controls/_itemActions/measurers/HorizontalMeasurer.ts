@@ -8,7 +8,7 @@ import {
    TItemActionsSize,
    TActionCaptionPosition
 } from '../interface/IItemAction';
-import { IShownItemAction } from '../interface/IItemActionsContainer';
+import { IShownItemAction } from '../interface/IItemActionsObject';
 import { MeasurerUtils } from './MeasurerUtils';
 import { ISwipeActionTemplateConfig } from '../interface/ISwipeActionTemplateConfig';
 

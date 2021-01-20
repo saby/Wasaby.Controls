@@ -48,6 +48,8 @@ var
          setRoot: function(self, root, dataRoot = null) {
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
+            } else {
+               self._potentialMarkedKey = root;
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
@@ -516,6 +518,14 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
+
+         // Мы не должны ставить маркер до проваливания, т.к. это лишняя синхронизация.
+         // Но если отменили проваливание, то нужно поставить маркер.
+         if (this._potentialMarkedKey !== undefined && !isRootChanged) {
+            this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
+         }
+         this._potentialMarkedKey = undefined;
+
          const loadedBySourceController =
              cfg.sourceController &&
              ((isSearchViewMode && cfg.searchValue && cfg.searchValue !== this._options.searchValue) ||
@@ -835,6 +845,7 @@ var
     * @name Controls/_explorer/View#tileItemTemplate
     * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
     * @default undefined
+    * @markdown
     * @remark
     * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
     *

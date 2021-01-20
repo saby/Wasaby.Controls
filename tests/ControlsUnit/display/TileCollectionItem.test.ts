@@ -282,6 +282,9 @@ describe('Controls/_display/TileCollectionItem', () => {
             },
             setSwipeAnimation(animation) {
                 this._swipeAnimation = animation;
+            },
+            isEditing() {
+                return false;
             }
         };
 

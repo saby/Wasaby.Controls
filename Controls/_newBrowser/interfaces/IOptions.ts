@@ -1,7 +1,7 @@
 import {ICrudPlus} from 'Types/source';
 import {IControlOptions} from 'UI/Base';
 import {IMasterOptions} from 'Controls/_newBrowser/interfaces/IMasterOptions';
-import {CatalogDetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
+import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
 /**
@@ -49,10 +49,10 @@ export interface IOptions extends IControlOptions, ISourceOptions {
     propStorageId?: string;
 
     /**
-     * Режим отображения списка
-     * @default CatalogDetailViewMode.list
+     * Пользовательский режим отображения списка. Если задан, то является
+     * приоритетным и настройка из listConfiguration не применяется.
      */
-    viewMode: CatalogDetailViewMode;
+    userViewMode?: DetailViewMode;
 
     /**
      * Конфигурация master-колонки. Если не задана, то мастер-колонка не отображается.

@@ -1,64 +1,23 @@
-import {Control} from 'UI/Base';
-import template = require('wml!Controls/_lookupPopup/Controller');
-import Utils = require('Types/util');
-import SelectorContext = require('Controls/_lookupPopup/__ControllerContext');
-import collection = require('Types/collection');
-import ParallelDeferred = require('Core/ParallelDeferred');
-import chain = require('Types/chain');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as template from 'wml!Controls/_lookupPopup/Controller';
 import {Model} from 'Types/entity';
 import {List, RecordSet} from 'Types/collection';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import { IFormOperation } from 'Controls/interface';
+import {IFormOperation} from 'Controls/interface';
 import * as Deferred from 'Core/Deferred';
-import {RegisterClass} from "Controls/event";
+import {RegisterClass} from 'Controls/event';
+import {IRegisterClassConfig} from 'Controls/_event/RegisterClass';
+import Utils = require('Types/util');
+import SelectorContext = require('Controls/_lookupPopup/__ControllerContext');
+import ParallelDeferred = require('Core/ParallelDeferred');
+import chain = require('Types/chain');
 
-var _private = {
-   prepareItems: function(items) {
-      return items ? Utils.object.clone(items) : new collection.List();
-   },
+export interface ILookupPopupControllerOptions extends IControlOptions {
+   selectionLoadMode: boolean;
+   selectedItems: List<Model> | RecordSet;
+   keyProperty: string;
+}
 
-   addItemToSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
-      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
-
-      if (index === -1) {
-         selectedItems.add(item);
-      } else {
-         selectedItems.replace(item, index);
-      }
-   },
-
-   removeFromSelected(item: Model, selectedItems: List|RecordSet, keyProperty: string): void {
-      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
-
-      if (index !== -1) {
-         selectedItems.removeAt(index);
-      }
-   },
-
-   processSelectionResult(result, selectedItems: List|RecordSet, multiSelect: boolean, keyProp: string|undefined): void {
-      let i;
-      let initialSelection;
-      let resultSelection;
-      let keyProperty;
-
-      if (result) {
-         for (i in result) {
-            if (result.hasOwnProperty(i) && (multiSelect !== false || result[i].selectCompleteInitiator)) {
-               initialSelection = result[i].initialSelection;
-               resultSelection = result[i].resultSelection;
-               keyProperty = keyProp || result[i].keyProperty;
-
-               chain.factory(initialSelection).each((item) => {
-                  _private.removeFromSelected(item, selectedItems, keyProperty);
-               });
-               chain.factory(resultSelection).each((item) => {
-                  _private.addItemToSelected(item, selectedItems, keyProperty);
-               });
-            }
-         }
-      }
-   }
-};
 /**
  *
  * Контроллер, который позволяет выбирать данные из одного или нескольких списков (например, из {@link Controls/list:View} или {@link Controls/grid:View}).
@@ -71,7 +30,7 @@ var _private = {
  *
  * @class Controls/_lookupPopup/Controller
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Герасимов А.М.
  */
@@ -88,53 +47,55 @@ var _private = {
  *
  * @class Controls/_lookupPopup/Controller
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Герасимов Александр Максимович
  */
-var Controller = Control.extend({
+export default class Controller extends Control<ILookupPopupControllerOptions> {
+   protected _template: TemplateFunction = template;
 
-   _template: template,
-   _selectedItems: null,
-   _selectionLoadDef: null,
-   _formOperationsStorage: null,
-   _selectCompleteRegister: null,
+   _selectedItems: List<Model> | RecordSet = null;
+   _selectionLoadDef: typeof ParallelDeferred = null;
+   _formOperationsStorage: IFormOperation[] = null;
+   _selectCompleteRegister: RegisterClass = null;
 
-   _beforeMount: function(options) {
-      this._selectedItems = _private.prepareItems(options.selectedItems);
+   protected _beforeMount(options: ILookupPopupControllerOptions): void {
+      this._selectedItems = Controller._prepareItems(options.selectedItems);
       this._formOperationsStorage = [];
       this._selectCompleteRegister = new RegisterClass({register: 'selectComplete'});
-   },
+   }
 
-   _beforeUpdate: function(newOptions) {
+   protected _beforeUpdate(newOptions: ILookupPopupControllerOptions): void {
       if (this._options.selectedItems !== newOptions.selectedItems) {
-         this._selectedItems = _private.prepareItems(newOptions.selectedItems);
+         this._selectedItems = Controller._prepareItems(newOptions.selectedItems);
       }
-   },
+   }
 
-   _registerHandler(event, registerType, component, callback, config): void {
+   protected _registerHandler(event: Event, registerType: string,
+                              component: Control, callback: Function, config: IRegisterClassConfig): void {
       this._selectCompleteRegister.register(event, registerType, component, callback, config);
-   },
+   }
 
-   _unregisterHandler(event, registerType, component, config): void {
+   protected _unregisterHandler(event: Event, registerType: string,
+                                component: Control, config: IRegisterClassConfig): void {
       this._selectCompleteRegister.unregister(event, registerType, component, config);
-   },
+   }
 
-   _beforeUnmount(): void {
+   protected _beforeUnmount(): void {
       if (this._selectCompleteRegister) {
          this._selectCompleteRegister.destroy();
          this._selectCompleteRegister = null;
       }
-   },
+   }
 
-   _selectComplete(event?: SyntheticEvent<'selectComplete'>, multiSelect?: boolean): void {
+   protected _selectComplete(event?: SyntheticEvent<'selectComplete'>, multiSelect?: boolean): void {
       const selectCallback = (selectResult) => {
          this._notify('sendResult', [selectResult], {bubbling: true});
          this._notify('close', [], {bubbling: true});
       };
 
       this._startFormOperations().then(() => {
-         this._selectCompleteRegister.start();
+         this._selectCompleteRegister.start(event);
 
          if (this._selectionLoadDef) {
             this._selectionLoadDef.done().getResult().addCallback((result) => {
@@ -148,7 +109,8 @@ var Controller = Control.extend({
                      // то очистим список выбранных элементов и возьмем только запись из этого справочника
                      this._selectedItems.clear();
                   }
-                  _private.processSelectionResult(result, this._selectedItems, multiSelect, this._options.keyProperty);
+                  Controller._processSelectionResult(result, this._selectedItems,
+                     multiSelect, this._options.keyProperty);
                   selectCallback(this._selectedItems);
                } else {
                   selectCallback(result);
@@ -162,13 +124,13 @@ var Controller = Control.extend({
             selectCallback(this._selectedItems);
          }
       });
-   },
+   }
 
-   _registerFormOperationHandler(event: Event, operation: IFormOperation): void {
+   protected _registerFormOperationHandler(event: Event, operation: IFormOperation): void {
       this._formOperationsStorage.push(operation);
-   },
+   }
 
-   _startFormOperations(): Promise<unknown> {
+   private _startFormOperations(): Promise<unknown> {
       const resultPromises = [];
 
       this._formOperationsStorage.forEach((operation: IFormOperation) => {
@@ -181,33 +143,74 @@ var Controller = Control.extend({
       });
 
       return Promise.all(resultPromises);
-   },
+   }
 
-   _selectionLoad: function(event, deferred) {
+   protected _selectionLoad(event: SyntheticEvent, deferred: Deferred): void {
       if (!this._selectionLoadDef) {
          this._selectionLoadDef = new ParallelDeferred();
       }
       this._selectionLoadDef.push(deferred);
-   },
+   }
 
-   _getChildContext: function() {
+   private _getChildContext(): object {
       return {
          selectorControllerContext: new SelectorContext(this._selectedItems)
       };
-   },
+   }
 
    selectComplete(): void {
       this._selectComplete();
    }
 
-});
+   private static _processSelectionResult(result: object, selectedItems: List<Model> | RecordSet,
+                                          multiSelect?: boolean, keyProp?: string): void {
+      if (result) {
+         for (const i in result) {
+            if (result.hasOwnProperty(i) && (multiSelect !== false || result[i].selectCompleteInitiator)) {
+               const initialSelection = result[i].initialSelection;
+               const resultSelection = result[i].resultSelection;
+               const keyProperty = keyProp || result[i].keyProperty;
 
-Controller._private = _private;
-Controller.getDefaultOptions = function getDefaultOptions() {
-   return {
-      selectionLoadMode: true
-   };
-};
+               chain.factory(initialSelection).each((item: Model) => {
+                  Controller._removeFromSelected(item, selectedItems, keyProperty);
+               });
+               chain.factory(resultSelection).each((item: Model) => {
+                  Controller._addItemToSelected(item, selectedItems, keyProperty);
+               });
+            }
+         }
+      }
+   }
+
+   private static _prepareItems(items: List<Model> | RecordSet): List<Model> {
+      return items ? Utils.object.clone(items) : new List();
+   }
+
+   private static _addItemToSelected(item: Model, selectedItems: List<Model> | RecordSet, keyProperty: string): void {
+      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
+
+      if (index === -1) {
+         selectedItems.add(item);
+      } else {
+         selectedItems.replace(item, index);
+      }
+   }
+
+   private static _removeFromSelected(item: Model, selectedItems: List<Model> | RecordSet, keyProperty: string): void {
+      const index = selectedItems.getIndexByValue(keyProperty, item.get(keyProperty));
+
+      if (index !== -1) {
+         selectedItems.removeAt(index);
+      }
+   }
+
+   static getDefaultOptions(): Partial<ILookupPopupControllerOptions> {
+      return {
+         selectionLoadMode: true
+      };
+   }
+}
+
 /**
  * @name Controls/_lookupPopup/Controller#selectedItems
  * @cfg {null|Types/collection:RecordSet} Выбранные элементы.
@@ -289,4 +292,3 @@ Controller.getDefaultOptions = function getDefaultOptions() {
  *    </Controls.lookupPopup:Controller>
  * </pre>
  */
-export = Controller;
