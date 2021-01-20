@@ -27,7 +27,9 @@ import {
     IFontColorStyle,
     IFontColorStyleOptions,
     IIconStyle,
-    IIconStyleOptions
+    IIconStyleOptions,
+    IFilter,
+    IFilterOptions
 } from 'Controls/interface';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
@@ -39,7 +41,6 @@ import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
 import {IoC} from "Env/Env";
-import {IFilterOptions} from 'Controls/_interface/IFilter';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -134,7 +135,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  */
 
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
-    IGrouped, IToolbarSource, IItems, IFontColorStyle, IIconStyle {
+    IGrouped, IToolbarSource, IItems, IFontColorStyle, IIconStyle, IFilter {
     /*
      * Used in template
      */
@@ -169,6 +170,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
+    readonly '[Controls/_interface/IFilter]': boolean = true;
     private _sticky: StickyOpener;
 
     constructor(...args) {
