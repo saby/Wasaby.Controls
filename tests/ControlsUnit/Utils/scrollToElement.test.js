@@ -39,6 +39,10 @@ define([
          it('to top', function() {
             mockDOM();
             var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 110,
@@ -68,6 +72,10 @@ define([
          it('to top force', function() {
             mockDOM();
             var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 110,
@@ -97,6 +105,10 @@ define([
          it('to bottom', function() {
             mockDOM();
             var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 110,
@@ -126,6 +138,10 @@ define([
          it('should scroll only first parentElement', function () {
             mockDOM();
             let element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 110,
@@ -172,6 +188,10 @@ define([
          it('to bottom with fractional coords', function() {
             mockDOM();
             var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 110,
@@ -202,6 +222,10 @@ define([
             it('to top', function() {
                mockDOM(10, 100);
                var element = {
+                  classList: {
+                     contains: () => false
+                  },
+                  querySelector: () => null,
                   parentElement: document.body,
                   className: '',
                   getBoundingClientRect: function() {
@@ -218,6 +242,10 @@ define([
             it('to bottom', function() {
                mockDOM(10, 100);
                var element = {
+                  classList: {
+                     contains: () => false
+                  },
+                  querySelector: () => null,
                   parentElement: document.body,
                   getBoundingClientRect: function() {
                      return {
@@ -234,6 +262,10 @@ define([
             it('to bottom with fractional coords', function() {
                mockDOM(10, 100);
                var element = {
+                  classList: {
+                     contains: () => false
+                  },
+                  querySelector: () => null,
                   parentElement: document.body,
                   getBoundingClientRect: function() {
                      return {
@@ -253,6 +285,10 @@ define([
          it('to top', function() {
             mockDOM();
             var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 160,
@@ -282,6 +318,10 @@ define([
          it('to top force', function() {
             mockDOM();
             var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 160,
@@ -311,6 +351,10 @@ define([
          it('to bottom', function() {
             mockDOM();
             var element = {
+               classList: {
+                  contains: () => false
+               },
+               querySelector: () => null,
                parentElement: {
                   overflowY: 'scroll',
                   scrollHeight: 160,
@@ -341,6 +385,10 @@ define([
             it('to top', function() {
                mockDOM(15, 150);
                var element = {
+                  classList: {
+                     contains: () => false
+                  },
+                  querySelector: () => null,
                   parentElement: document.body,
                   className: '',
                   getBoundingClientRect: function() {
@@ -357,6 +405,10 @@ define([
             it('to bottom', function() {
                mockDOM(15, 150);
                var element = {
+                  classList: {
+                     contains: () => false
+                  },
+                  querySelector: () => null,
                   parentElement: document.body,
                   className: '',
                   getBoundingClientRect: function() {
