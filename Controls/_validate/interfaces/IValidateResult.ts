@@ -6,7 +6,7 @@
 
  export default interface IValidateResult {
     /** 
-     * Массив ошибок
+     * Массив ошибок.
      */
     [key: number]: boolean;
     /** 
