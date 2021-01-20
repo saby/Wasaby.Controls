@@ -5,9 +5,11 @@
  */
 
  export default interface IValidateResult {
+
 /** 
  * Есть ли ошибки в результате валидации.
  */
+
     [key: number]: boolean;
     hasErrors?: boolean;
 }
