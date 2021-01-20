@@ -91,3 +91,15 @@ export type TExplorerViewMode = 'table' | 'search' | 'tile' | 'list';
  * @name Controls/_explorer/interface/IExplorer#dedicatedItemProperty
  * @cfg {String} Имя свойства узла дерева, которое определяет, что при поиске этот узел должен быть показан отдельной хлебной крошкой.
  */
+
+/**
+ * @typedef {String} SearchNavigationMode
+ * @description Допустимые значения для опции {@link SearchStartingWith}.
+ * @variant open В {@link Controls/_explorer/interface/IExplorer#viewMode режиме поиска} при клике на хлебную крошку происходит проваливание в данный узел.
+ * @variant expand В режиме поиска при клике на хлебную крошку данные отображаются от корня, путь до узла разворачивается.
+ */
+/**
+ * @name @name Controls/_explorer/interface/IExplorer#searchStartingWith
+ * @cfg {SearchStartingWith} Режим навигации при поиске в иерархическом списке.
+ * @default open
+ */
