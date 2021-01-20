@@ -78,15 +78,16 @@ export default class View extends Control<IControlOptions> {
 
     protected _groupClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
         const itemContents = displayItem.getContents();
-        if (displayItem.isExpanded()) {
-            const index = this._collapsedGroups.indexOf(displayItem.getContents());
-            this._collapsedGroups.splice(index, 1);
+        if (this._collapsedGroups.length && (displayItem.isExpanded() || this._collapsedGroups.includes(itemContents))) {
+            this._collapsedGroups = this._collapsedGroups.filter((item) => itemContents !== item);
         } else {
-            this._collapsedGroups.push(itemContents);
+            this._collapsedGroups = this._collapsedGroups.concat(itemContents);
         }
         const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
         if (isResetClick) {
             this._resetFilterItem(displayItem);
+        } else {
+            displayItem.toggleExpanded();
         }
     }
 
