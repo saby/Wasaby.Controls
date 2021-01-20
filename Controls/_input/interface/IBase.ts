@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import IContrastBackground from 'Controls/_interface/IContrastBackground';
+import {IContrastBackground} from 'Controls/interface';
 
 export type TextAlign = 'left' | 'right' | 'center';
 export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
