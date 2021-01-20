@@ -6306,31 +6306,31 @@ define([
             getCount: () => itemsCount
          };
 
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), '');
 
          baseControl._loadingIndicatorContainerHeight = 32;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; ');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          itemsCount = 10;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; ');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          baseControl._loadingIndicatorContainerOffsetTop = 48;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          itemsCount = 10;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
       });
 
       it('hide indicator if shouldn\'t load more', function() {
@@ -6399,41 +6399,26 @@ define([
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
-      it('_shouldShowLoadingIndicator', () => {
+      it('_shouldDisplayTopLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
-         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
-            ['beforeEmptyTemplate', 'up', true,    true],
-            ['beforeEmptyTemplate', 'up', false,   true],
-            ['beforeEmptyTemplate', 'down', true,  false],
-            ['beforeEmptyTemplate', 'down', false, false],
-            ['beforeEmptyTemplate', 'all', true,   true],
-            ['beforeEmptyTemplate', 'all', false,  false],
-
-            ['afterList', 'up', true,     false],
-            ['afterList', 'up', false,    false],
-            ['afterList', 'down', true,   true],
-            ['afterList', 'down', false,  true],
-            ['afterList', 'all', true,    false],
-            ['afterList', 'all', false,   false],
-
-            ['inFooter', 'up', true,      false],
-            ['inFooter', 'up', false,     false],
-            ['inFooter', 'down', true,    false],
-            ['inFooter', 'down', false,   false],
-            ['inFooter', 'all', true,     false],
-            ['inFooter', 'all', false,    true]
+            ['up', true, true],
+            ['up', false, true],
+            ['down', true, false],
+            ['down', false, false],
+            ['all', true, false],
+            ['all', false, false]
          ];
 
          const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
-             `Wrong return value of _shouldShowLoadingIndicator('${caseData[0]}'). Expected ${caseData[3]}. ` +
-             `Params: { _loadingIndicatorState: ${caseData[1]}, __needShowEmptyTemplate: ${caseData[2]} }.`;
+             `Wrong return value of _shouldDisplayTopLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
 
          testCases.forEach((caseData, index) => {
-            baseControl._loadingIndicatorState = caseData[1];
-            baseControl.__needShowEmptyTemplate = () => caseData[2];
-            assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
          });
 
          baseControl._loadingIndicatorState = 'all';
@@ -6443,8 +6428,62 @@ define([
                isColumnScrollVisible: () => true
             }
          };
-         assert.equal(baseControl._shouldShowLoadingIndicator('beforeEmptyTemplate'), true);
-         assert.equal(baseControl._shouldShowLoadingIndicator('inFooter'), false);
+         assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+      });
+
+      it('_shouldDisplayMiddleLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         const testCases = [
+            ['up', true, false],
+            ['up', false, false],
+            ['down', true,  false],
+            ['down', false, false],
+            ['all', true,   true],
+            ['all', false,  true]
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value _shouldDisplayMiddleLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
+         });
+
+         baseControl._loadingIndicatorState = 'all';
+         baseControl.__needShowEmptyTemplate = () => false;
+         baseControl._children = {
+            listView: {
+               isColumnScrollVisible: () => true
+            }
+         };
+         assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), false);
+      });
+
+      it('_shouldDisplayBottomLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         const testCases = [
+            ['up', true,     false],
+            ['up', false,    false],
+            ['down', true,   true],
+            ['down', false,  true],
+            ['all', true,    false],
+            ['all', false,   false],
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value _shouldDisplayBottomLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayBottomLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
+         });
       });
 
       describe('navigation', function() {
