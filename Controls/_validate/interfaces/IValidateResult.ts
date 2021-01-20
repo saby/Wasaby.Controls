@@ -6,7 +6,7 @@
 
  export default interface IValidateResult {
 /** 
- * Есть ли ошибки в результате валидации и собственно сам массив ошибок.
+ * Есть ли ошибки в результате валидации.
  */
     [key: number]: boolean;
     hasErrors?: boolean;
