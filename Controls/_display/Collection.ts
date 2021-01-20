@@ -2740,71 +2740,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     setAddingItem(item: T): void {
-        const groupMethod = this.getGroup();
-        let groupsBefore;
-
-        if (groupMethod) {
-            groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
-        }
-
         this._prependStrategy(AddStrategy, {
             item,
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
         }, GroupItemsStrategy);
-
-        const itemsForNotify = [item];
-        let addingIndex: number = this.getItems().indexOf(item);
-
-        if (groupMethod) {
-            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
-
-            // Добавление элемента привело к добавлению группы.
-            // Необходимо уведомить о создании двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
-            if (groupsBefore.length < groupsAfter.length) {
-                const itemGroupId = groupMethod(item.contents);
-                addingIndex--;
-                itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
-            }
-        }
-
-        const session = this._startUpdateSession();
-        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0, session);
-        this._finishUpdateSession(session);
     }
 
     resetAddingItem(): void {
-        const addStrategy = this.getStrategyInstance(AddStrategy);
-
-        if (addStrategy) {
-            const groupMethod = this.getGroup();
-            const item = addStrategy?.getAddingItem();
-            let addingIndex: number = this.getItems().indexOf(item);
-            let groupsBefore;
-
-            if (groupMethod) {
-                groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
-            }
-
+        if (this.getStrategyInstance(AddStrategy)) {
             this.removeStrategy(AddStrategy);
-
-            const itemsForNotify = [item];
-
-            if (groupMethod) {
-                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
-
-                // Отмена добавления элемента привела к удалению его группы.
-                // Необходимо уведомить об удалении двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
-                if (groupsBefore.length > groupsAfter.length) {
-                    const itemGroupId = groupMethod(item.contents);
-                    addingIndex--;
-                    itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
-                }
-            }
-
-            const session = this._startUpdateSession();
-            this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addingIndex);
-            this._finishUpdateSession(session);
         }
     }
 
@@ -2836,10 +2781,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options: strategyOptions
         });
 
+        const session = this._startUpdateSession();
         if (this._composer) {
             this._composer.prepend(strategy, strategyOptions, before);
-            this._reBuild(true);
+            this._reBuild();
         }
+        this._finishUpdateSession(session);
 
         this.nextVersion();
     }
