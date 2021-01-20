@@ -630,14 +630,19 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         if (this._options.keyDownMode === 'leavesOnly') {
             const items = viewModel.getItems();
             const current = items.getRecordById(this._options.markedKey) || items.at(0);
-            if (current && current.get(this._options.nodeProperty)) {
-                this._tempItem = current.getKey();
-                this._currentItem = this._tempItem;
-                this._doAfterItemExpanded = () => {
-                    this._doAfterItemExpanded = null;
-                    this.goToNext();
-                };
-                this.toggleExpanded(this._tempItem);
+            if (current) {
+                if (current.get(this._options.nodeProperty)) {
+                    this._tempItem = current.getKey();
+                    this._currentItem = this._tempItem;
+                    this._doAfterItemExpanded = () => {
+                        this._doAfterItemExpanded = null;
+                        this.goToNext();
+                    };
+                    this.toggleExpanded(this._tempItem);
+                } else {
+                    this._tempItem = current.getKey();
+                    this._applyLeafPosition();
+                }
             }
         }
     },
@@ -688,8 +693,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             viewModel.setCollapsedItems(newOptions.collapsedItems);
         }
         if (this._options.markedKey !== newOptions.markedKey) {
-            this._tempItem = newOptions.markedKey;
-            this._applyLeafPosition();
+            if (newOptions.keyDownMode === 'leavesOnly') {
+                this._tempItem = newOptions.markedKey;
+                this._applyLeafPosition();
+            }
         }
         if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
@@ -1047,7 +1054,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         let hasPrevLeaf = false;
         for (let i = index - 1; i >= 0; i--) {
-            if (!model.at(i).isNode()) {
+            if (!model.at(i).isNode() || !model.at(i).isExpanded()) {
                 hasPrevLeaf = true;
                 break;
             }
