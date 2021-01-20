@@ -926,6 +926,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             0
         );
         this._handleAfterCollectionChange();
+        this._nextVersion();
     }
 
     destroy(): void {

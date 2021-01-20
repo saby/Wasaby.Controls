@@ -156,6 +156,23 @@ describe('Controls/browser:Browser', () => {
                 });
 
             });
+
+            describe('search', () => {
+                it('search query returns error', async () => {
+                    let dataErrorProcessed = false;
+                    const options = {...getBrowserOptions(), dataLoadErrback: () => {
+                            dataErrorProcessed = true;
+                        }
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options, {});
+                    browser.saveOptions(options);
+                    options.source.query = () => Promise.reject(new Error());
+
+                    await browser._search({}, 'test');
+                    assert.isTrue(dataErrorProcessed);
+                });
+            });
         });
 
         describe('init shadow visibility', () => {
@@ -506,25 +523,6 @@ describe('Controls/browser:Browser', () => {
             assert.deepEqual(browser._filter, filter);
             assert.isTrue(notifyStub.calledWith('filterChanged', [filter]));
         });
-    });
-
-    it('_startSearch', async () => {
-        const searchController = getBrowser(getBrowserOptions());
-        let errorProcessed = false;
-        const error = new Error('error');
-        error.canceled = true;
-        searchController._getSearchController = () => {
-            return Promise.resolve({
-                search: () => {
-                    return Promise.resolve(error);
-                }
-            });
-        };
-        searchController._options.dataLoadErrback = () => {
-            errorProcessed = true;
-        };
-        await searchController._startSearch('testValue');
-        assert.isFalse(errorProcessed);
     });
 
 });

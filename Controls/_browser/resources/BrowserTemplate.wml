@@ -8,7 +8,6 @@
         isAllSelected="{{ _isAllSelected }}"
         listMarkedKey="{{ _listMarkedKey }}"
         dataLoadCallback="{{_dataLoadCallback}}"
-        dataLoadErrback="{{_dataLoadErrback}}"
         afterSetItemsOnReloadCallback="{{_afterSetItemsOnReloadCallback}}"
         deepReload="{{_deepReload}}"
         root="{{_options.searchNavigationMode === 'expand' ? undefined : _root}}"

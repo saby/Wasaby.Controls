@@ -4,6 +4,7 @@
                           borderVisibility='partial'
                           placeholder="{{_options.minValueInputPlaceholder}}"
                           value="{{_minValue}}"
+                          horizontalPadding="null"
                           on:valueChanged="_handleMinValueChanged()"
                           on:inputCompleted="_handleInputCompleted()"/>
    <span class="controls-FilterEditors__numberRange_separator_theme-{{_options.theme}}">-</span>
@@ -12,6 +13,7 @@
                           contrastBackground="{{false}}"
                           placeholder="{{_options.maxValueInputPlaceholder}}"
                           value="{{_maxValue}}"
+                          horizontalPadding="null"
                           on:valueChanged="_handleMaxValueChanged()"
                           on:inputCompleted="_handleInputCompleted()"/>
 

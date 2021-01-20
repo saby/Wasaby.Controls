@@ -617,7 +617,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             ...options,
             filter: this._filter,
             source: this._source,
-            navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+            navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
+            dataLoadErrback: this._dataLoadErrback
         };
     }
 
@@ -635,32 +636,36 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    private _startSearch(value: string): Promise<RecordSet | Error> {
-        return this._getSearchController().then((searchController) => {
-           return searchController.search(value);
-        });
-    }
+    protected _search(event: SyntheticEvent, value: string): Promise<Error|RecordSet|void> {
+        this._inputSearchValue = value;
 
-    protected _search(event: SyntheticEvent, validatedValue: string): void {
-        this._inputSearchValue = validatedValue;
-        this._startSearch(validatedValue).then((result) => {
-            this._searchDataLoad(result, validatedValue);
-        }).catch((error: Error & {
-            isCancelled?: boolean;
-        }) => {
-            if (!error.isCancelled) {
-                return error;
+        return this._getSearchController().then(
+            (searchController) => {
+                return searchController.search(value)
+                    .then((result) => {
+                        return this._searchDataLoad(result, value);
+                    })
+                    .catch((error) => {
+                        return this._processSearchError(error);
+                    });
             }
-        });
+        );
     }
 
     protected _searchDataLoad(result: RecordSet|Error, searchValue: string): void {
         if (result instanceof RecordSet) {
             this._handleDataLoad(result);
             this._afterSearch(result, searchValue);
-            this._getSourceController().setItems(result);
-        } else {
-            this._handleError(result);
+        }
+    }
+
+    private _processSearchError(error: Error): void|Error {
+        if (!error.isCancelled) {
+            this._getErrorRegister().start({
+                error,
+                mode: dataSourceError.Mode.include
+            });
+            return error;
         }
     }
 
@@ -682,7 +687,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._afterSourceLoad(this._sourceController, this._options);
         this._dataLoadCallback(recordSet);
 
-        this._itemsChanged(null, recordSet);
         this._filterChanged(null, this._sourceController.getFilter());
 
         const switchedStr = getSwitcherStrFromData(recordSet);
@@ -749,21 +753,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    protected _handleError(error: Error | object): void {
-        if (error instanceof Error) {
-            if (this._options.dataLoadErrback) {
-                this._options.dataLoadErrback(error);
-            }
-        } else {
-            this._notify('dataError', [error]);
-            this._errorRegister.start(error);
-        }
-    }
-
     private _dataLoadErrback(error: Error): void {
         this._filterController.handleDataError();
-
-        this._handleError(error);
+        if (this._options.dataLoadErrback) {
+            this._options.dataLoadErrback(error);
+        }
     }
 
     _afterSetItemsOnReloadCallback(): void {
