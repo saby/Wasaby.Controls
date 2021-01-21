@@ -10,6 +10,9 @@ import { isEqual } from 'Types/object';
 export type TFooter = IFooter[];
 
 interface IFooter extends IColspanParams {
+    startColumn?: number;
+    endColumn?: number;
+    template?: TemplateFunction;
 }
 
 export interface IOptions<T> extends IRowOptions<T> {

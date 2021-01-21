@@ -46,6 +46,12 @@ export default class Header<T> {
         });
     }
 
+    setMultiSelectVisibility(multiSelectVisibility: string): void {
+        this._$rows.forEach((row) => {
+            row.setMultiSelectVisibility(multiSelectVisibility);
+        });
+    }
+
     setColumns(newColumns: TColumns): void {
         this._$rows.forEach((row) => {
             row.setColumns(newColumns);
