@@ -181,11 +181,29 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         });
     }
 
+    protected _updatePropertyValue(
+        editingObject: Record<string, any> | Model,
+        name: string, value: any
+    ): Record<string, any> | Model {
+        const editingObjectClone = object.clone(editingObject);
+        if (editingObjectClone instanceof Model) {
+            if (!editingObjectClone.has(name)) {
+                const newEditingObject = editingObjectClone.getRawData();
+                newEditingObject[name] = value;
+                return Model.fromObject(newEditingObject, editingObjectClone.getAdapter());
+            } else {
+                editingObjectClone.set(name, value);
+            }
+        } else {
+            editingObjectClone[name] = value;
+        }
+        return editingObjectClone;
+    }
+
     protected _propertyValueChanged(event: SyntheticEvent<Event>, item: Model, value: any): void {
         const name = item.get(PROPERTY_NAME_FIELD);
-        const editingObjectClone = object.clone(this._options.editingObject);
-        object.setPropertyValue(editingObjectClone, name, value);
-        this._notify('editingObjectChanged', [editingObjectClone]);
+        const propertyValue = this._updatePropertyValue(this._options.editingObject, name, value);
+        this._notify('editingObjectChanged', [propertyValue]);
     }
 
     protected _groupClick(
