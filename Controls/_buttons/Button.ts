@@ -213,7 +213,7 @@ class Button extends Control<IButtonControlOptions> implements IHref, ICaption, 
         }
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/theme'];
 
     static getDefaultOptions(): object {
         return getDefaultOptions();

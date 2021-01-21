@@ -1553,7 +1553,8 @@ define([
          beforeEach(() => {
             isHandlerCalled = false;
             event = {
-               preventDefault: () => {}
+               preventDefault: () => {},
+               stopImmediatePropagation: () => {}
             };
          });
 
@@ -1594,14 +1595,14 @@ define([
             assert.isFalse(isHandlerCalled);
          });
 
-         it('should not work when itemAction "delete" is not visible', async () => {
+         it('should work even when itemAction "delete" is not visible', async () => {
             await initTest({
                itemActions: [{ id: 'delete', handler: () => {isHandlerCalled = true} }, { id: 1 }, { id: 2 }],
                itemActionVisibilityCallback: (action, item) => action.id !== 'delete',
             });
             instance.setMarkedKey(1);
             lists.BaseControl._private.keyDownDel(instance, event);
-            assert.isFalse(isHandlerCalled);
+            assert.isTrue(isHandlerCalled);
          });
 
          it('should not work when no item is marked', () => {
@@ -4799,6 +4800,54 @@ define([
             stubHandleItemActionClick.restore();
          });
 
+         // Клик по itemAction с подменю ('parent@': true) не должен закрывать меню если обрабочик события вернул false
+         it('should not close actions menu when event has returned false', async () => {
+            const fakeEvent2 = initFakeEvent();
+            const spyCloseActionsMenu = sinon.spy(lists.BaseControl._private, 'closeActionsMenu');
+            const stubNotify = sinon.stub(instance, '_notify').callsFake((event, args) => {
+               if (event === 'actionClick') {
+                  return false;
+               }
+            });
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1,
+                  'parent@': true
+               })
+            };
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            sinon.assert.notCalled(spyCloseActionsMenu);
+            stubNotify.restore();
+            spyCloseActionsMenu.restore();
+         });
+
+         // Клик по itemAction с подменю ('parent@': true) должен закрывать меню если обрабочик события не вернул false
+         it('should close actions menu when event hasn\'t returned false', async () => {
+            const fakeEvent2 = initFakeEvent();
+            const stubCloseActionsMenu = sinon.stub(lists.BaseControl._private, 'closeActionsMenu').callsFake(() => {});
+            const stubNotify = sinon.stub(instance, '_notify').callsFake((event, args) => {
+               if (event === 'actionClick') {
+                  return null;
+               }
+            });
+            const actionModel = {
+               getRawData: () => ({
+                  id: 2,
+                  showType: 0,
+                  parent: 1,
+                  'parent@': true
+               })
+            };
+            instance._listViewModel.setActiveItem(instance._listViewModel.at(0));
+            instance._onItemActionsMenuResult('itemClick', actionModel, fakeEvent2);
+            sinon.assert.called(stubCloseActionsMenu);
+            stubNotify.restore();
+            stubCloseActionsMenu.restore();
+         });
+
          // Скрытие ItemActions должно происходить только после открытия меню (событие menuOpened)
          it('should hide ItemActions on menuOpened event', () => {
             const fakeEvent = initFakeEvent();
@@ -5442,78 +5491,6 @@ define([
          assert.equal(lists.BaseControl._private.getListTopOffset(bc), 50);
       });
 
-      /*it('_itemMouseMove: notify draggingItemMouseMove', async function() {
-         var cfg = {
-                viewName: 'Controls/List/ListView',
-                itemsDragNDrop: true,
-                viewConfig: {
-                   idProperty: 'id'
-                },
-                viewModelConfig: {
-                   items: [],
-                   idProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                source: source
-             },
-             instance = correctCreateBaseControl(cfg);
-         let eName;
-         await instance._beforeMount(cfg);
-         instance.saveOptions(cfg);
-         instance._listViewModel.getDragItemData = () => ({});
-         instance._notify = (eventName) => {
-            eName = eventName;
-         };
-
-         instance._dndListController = new listDragNDrop.DndTreeController(instance._listViewModel);
-         instance._dndListController.isDragging = function () {
-            return true;
-         };
-
-         instance._itemMouseMove({}, {});
-         assert.equal(eName, 'draggingItemMouseMove');
-
-         instance._dndListController = null;
-         instance._itemMouseLeave({}, {});
-         assert.equal(eName, 'itemMouseLeave');
-      });*/
-
-      /*it('_itemMouseLeave: notify draggingItemMouseLeave', async function() {
-         var cfg = {
-                viewName: 'Controls/List/ListView',
-                itemsDragNDrop: true,
-                viewConfig: {
-                   idProperty: 'id'
-                },
-                viewModelConfig: {
-                   items: [],
-                   idProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                source: source
-             },
-             instance = correctCreateBaseControl(cfg);
-         let eName;
-         await instance._beforeMount(cfg);
-         instance.saveOptions(cfg);
-         instance._notify = (eventName) => {
-            eName = eventName;
-         };
-         instance._listViewModel.getDragItemData = () => ({});
-
-         instance._itemMouseLeave({}, {});
-         assert.equal(eName, 'itemMouseLeave');
-         eName = null;
-
-         instance._dndListController = new listDragNDrop.DndTreeController(instance._listViewModel);
-         instance._dndListController.isDragging = function () {
-            return true;
-         };
-
-         instance._itemMouseLeave({}, {});
-         assert.equal(eName, 'draggingItemMouseLeave');
-      });
-*/
       it('should fire "drawItems" in afterMount', async function() {
          let
              cfg = {
@@ -6329,31 +6306,31 @@ define([
             getCount: () => itemsCount
          };
 
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), '');
 
          baseControl._loadingIndicatorContainerHeight = 32;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; ');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          itemsCount = 10;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
-         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
+         assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; ');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          baseControl._loadingIndicatorContainerOffsetTop = 48;
          itemsCount = 0;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
 
          itemsCount = 10;
-         assert.equal(baseControl._getLoadingIndicatorStyles('down'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('down'), 'display: none;');
          assert.equal(baseControl._getLoadingIndicatorStyles('all'), 'min-height: 32px; top: 48px;');
-         assert.equal(baseControl._getLoadingIndicatorStyles('up'), '');
+         assert.equal(baseControl._getLoadingIndicatorStyles('up'), 'display: none; ');
       });
 
       it('hide indicator if shouldn\'t load more', function() {
@@ -6422,41 +6399,26 @@ define([
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
-      it('_shouldShowLoadingIndicator', () => {
+      it('_shouldDisplayTopLoadingIndicator', () => {
          const baseControl = new lists.BaseControl();
 
-         /*[position, _loadingIndicatorState, __needShowEmptyTemplate, expectedResult]*/
          const testCases = [
-            ['beforeEmptyTemplate', 'up', true,    true],
-            ['beforeEmptyTemplate', 'up', false,   true],
-            ['beforeEmptyTemplate', 'down', true,  false],
-            ['beforeEmptyTemplate', 'down', false, false],
-            ['beforeEmptyTemplate', 'all', true,   true],
-            ['beforeEmptyTemplate', 'all', false,  false],
-
-            ['afterList', 'up', true,     false],
-            ['afterList', 'up', false,    false],
-            ['afterList', 'down', true,   true],
-            ['afterList', 'down', false,  true],
-            ['afterList', 'all', true,    false],
-            ['afterList', 'all', false,   false],
-
-            ['inFooter', 'up', true,      false],
-            ['inFooter', 'up', false,     false],
-            ['inFooter', 'down', true,    false],
-            ['inFooter', 'down', false,   false],
-            ['inFooter', 'all', true,     false],
-            ['inFooter', 'all', false,    true]
+            ['up', true, true],
+            ['up', false, true],
+            ['down', true, false],
+            ['down', false, false],
+            ['all', true, false],
+            ['all', false, false]
          ];
 
          const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
-             `Wrong return value of _shouldShowLoadingIndicator('${caseData[0]}'). Expected ${caseData[3]}. ` +
-             `Params: { _loadingIndicatorState: ${caseData[1]}, __needShowEmptyTemplate: ${caseData[2]} }.`;
+             `Wrong return value of _shouldDisplayTopLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
 
          testCases.forEach((caseData, index) => {
-            baseControl._loadingIndicatorState = caseData[1];
-            baseControl.__needShowEmptyTemplate = () => caseData[2];
-            assert.equal(baseControl._shouldShowLoadingIndicator(caseData[0]), caseData[3], getErrorMsg(index, caseData));
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
          });
 
          baseControl._loadingIndicatorState = 'all';
@@ -6466,8 +6428,62 @@ define([
                isColumnScrollVisible: () => true
             }
          };
-         assert.equal(baseControl._shouldShowLoadingIndicator('beforeEmptyTemplate'), true);
-         assert.equal(baseControl._shouldShowLoadingIndicator('inFooter'), false);
+         assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+      });
+
+      it('_shouldDisplayMiddleLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         const testCases = [
+            ['up', true, false],
+            ['up', false, false],
+            ['down', true,  false],
+            ['down', false, false],
+            ['all', true,   true],
+            ['all', false,  true]
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value _shouldDisplayMiddleLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
+         });
+
+         baseControl._loadingIndicatorState = 'all';
+         baseControl.__needShowEmptyTemplate = () => false;
+         baseControl._children = {
+            listView: {
+               isColumnScrollVisible: () => true
+            }
+         };
+         assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), false);
+      });
+
+      it('_shouldDisplayBottomLoadingIndicator', () => {
+         const baseControl = new lists.BaseControl();
+
+         const testCases = [
+            ['up', true,     false],
+            ['up', false,    false],
+            ['down', true,   true],
+            ['down', false,  true],
+            ['all', true,    false],
+            ['all', false,   false],
+         ];
+
+         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
+             `Wrong return value _shouldDisplayBottomLoadingIndicator. Expected ${caseData[2]}. ` +
+             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+
+         testCases.forEach((caseData, index) => {
+            baseControl._loadingIndicatorState = caseData[0];
+            baseControl.__needShowEmptyTemplate = () => caseData[1];
+            assert.equal(baseControl._shouldDisplayBottomLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
+         });
       });
 
       describe('navigation', function() {
@@ -6857,8 +6873,8 @@ define([
                let isEditingCanceled = false;
                baseControl.saveOptions(cfg);
                await baseControl._beforeMount(cfg);
-               baseControl.recreateSourceController = function(newSource, newNavigation) {
-                  assert.deepEqual(expectedSourceConfig, newNavigation.sourceConfig);
+               baseControl._sourceController.updateOptions = function(newOptions) {
+                  assert.deepEqual(expectedSourceConfig, newOptions.navigation.sourceConfig);
                };
                baseControl._cancelEdit = () => {
                   isEditingCanceled = true;
@@ -6880,6 +6896,13 @@ define([
                assert.equal(baseControl._currentPage, 1);
                expectedSourceConfig.page = 1;
                baseControl.__pagingChangePage({}, 2);
+               assert.isTrue(isEditingCanceled);
+               baseControl._options.navigation.sourceConfig.page = 1;
+               expectedSourceConfig.page = 0;
+               expectedSourceConfig.pageSize = 200;
+               isEditingCanceled = false;
+               expectedSourceConfig.hasMore = false;
+               baseControl._changePageSize({}, 6);
                assert.isTrue(isEditingCanceled);
             });
          });
@@ -7479,7 +7502,10 @@ define([
                source,
                keyProperty: 'id',
                viewModelConstructor: lists.ListViewModel,
-               itemsDragNDrop: true
+               itemsDragNDrop: true,
+               multiSelectVisibility: 'visible',
+               selectedKeys: [1],
+               excludedKeys: []
             });
 
          let baseControl, notifySpy;
@@ -7666,6 +7692,7 @@ define([
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged', [[], [1], []]).called);
 
             dndController.getDraggableItem = () => ({
                getContents: () => ({

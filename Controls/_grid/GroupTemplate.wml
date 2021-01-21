@@ -76,24 +76,32 @@
 </div>
 </ws:template>
 
+<ws:template name="stickyGroupContent">
+   <div style="display: contents;">
+      <ws:partial template="groupContentStickyWrapper"
+                  attr:class="{{ itemData.groupPaddingClasses.left }}
+                             {{ !rightTemplate && !itemData.shouldFixGroupOnColumn(columnAlignGroup) ? itemData.groupPaddingClasses.right }}"
+                  attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"/>
+      <ws:if data="{{itemData.shouldFixGroupOnColumn(columnAlignGroup)}}">
+         <ws:partial template="groupRightStickyTemplate"
+                     attr:class="{{ itemData.groupPaddingClasses.right }}"
+                     attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).right}}"/>
+      </ws:if>
+   </div>
+</ws:template>
 
 <ws:if data="{{itemData.isFullGridSupport()}}">
    <div class="controls-ListView__itemV {{itemData.isHiddenGroup ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group'}}"
         key="group-{{itemData.item}}">
-      <ws:if data="{{itemData.isStickyHeader}}">
-         <Controls.scroll:Group>
-           <div style="display: contents;">
-              <ws:partial template="groupContentStickyWrapper"
-                          attr:class="{{ itemData.groupPaddingClasses.left }}
-                          {{ !rightTemplate && !itemData.shouldFixGroupOnColumn(columnAlignGroup) ? itemData.groupPaddingClasses.right }}"
-                          attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"/>
-              <ws:if data="{{itemData.shouldFixGroupOnColumn(columnAlignGroup)}}">
-                 <ws:partial template="groupRightStickyTemplate"
-                             attr:class="{{ itemData.groupPaddingClasses.right }}"
-                             attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).right}}"/>
-              </ws:if>
-           </div>
-         </Controls.scroll:Group>
+      <ws:if data="{{itemData.isStickyHeader && !itemData.isHiddenGroup}}">
+         <ws:if data="{{itemData.shouldFixGroupOnColumn(columnAlignGroup)}}">
+            <Controls.scroll:Group>
+               <ws:partial template="stickyGroupContent"/>
+            </Controls.scroll:Group>
+         </ws:if>
+         <ws:else>
+            <ws:partial template="stickyGroupContent"/>
+         </ws:else>
       </ws:if>
       <ws:else>
          <ws:partial template="groupContentWrapper" attr:style="{{itemData.getColumnAlignGroupStyles(columnAlignGroup).left}}"

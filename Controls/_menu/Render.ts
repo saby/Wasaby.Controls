@@ -109,8 +109,8 @@ class MenuRender extends Control<IMenuRenderOptions> {
             if (!this._isFixedItem(treeItem) && item.get('pinned') === true && !this.hasParent(item)) {
                 classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
             }
-            if (this._options.listModel.getLast() !== treeItem &&
-                !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
+            if (this._options.listModel.getLast() !== treeItem && !this._isGroupNext(treeItem) &&
+                !(this._options.allowPin && this._isHistorySeparatorVisible(treeItem))) {
                 classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
             }
         } else if (item) {

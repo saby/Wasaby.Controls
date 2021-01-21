@@ -1,6 +1,6 @@
 import {TItemActionsSize} from '../interface/IItemAction';
 import {MeasurerUtils} from './MeasurerUtils';
-import {IItemActionsContainer} from '../interface/IItemActionsContainer';
+import {IItemActionsObject} from '../interface/IItemActionsObject';
 
 const ICON_SIZES = {
     m: 24,
@@ -25,11 +25,11 @@ export function getAvailableActionsCount(iconSize: TItemActionsSize, availableSi
 }
 
 export function getActions(
-    actions: IItemActionsContainer,
+    actions: IItemActionsObject,
     iconSize: TItemActionsSize,
     aligment: string,
     containerSize: number
-): IItemActionsContainer {
+): IItemActionsObject {
     let showedActions = [];
     const allActions = MeasurerUtils.getActualActions(actions.all);
     const rootActions = allActions.filter((action) => !action['parent@']);

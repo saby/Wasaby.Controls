@@ -27,7 +27,9 @@ import {
     IFontColorStyle,
     IFontColorStyleOptions,
     IIconStyle,
-    IIconStyleOptions
+    IIconStyleOptions,
+    IFilter,
+    IFilterOptions
 } from 'Controls/interface';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 
@@ -63,7 +65,7 @@ export interface IMenuOptions {
  */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
-    IIconStyleOptions {
+    IIconStyleOptions, IFilterOptions {
     /**
      * @cfg {String} Имя класса, которое будет добавлено к атрибуту class на корневой ноде выпадающего меню.
      * @default ''
@@ -120,7 +122,6 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * * {@link /materials/Controls-demo/app/Controls-demo%2FToolbar%2FBase%2FIndex демо-пример}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toolbars.less переменные тем оформления}
  *
- *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
  * @implements Controls/interface/IItemTemplate
@@ -129,8 +130,18 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @demo Controls-demo/Toolbar/Base/Index
  */
 
+/**
+ * @name Controls/_toolbars/View#iconStyle
+ * @demo Controls-demo/Toolbar/IconStyle/Index
+ */
+
+/**
+ * @name Controls/_toolbars/View#fontColorStyle
+ * @demo Controls-demo/Toolbar/IconStyle/Index
+ */
+
 class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, IIconSize, IItemTemplate,
-    IGrouped, IToolbarSource, IItems, IFontColorStyle, IIconStyle {
+    IGrouped, IToolbarSource, IItems, IFontColorStyle, IIconStyle, IFilter {
     /*
      * Used in template
      */
@@ -165,6 +176,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     readonly '[Controls/_interface/IItemTemplate]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
     readonly '[Controls/_dropdown/interface/IGrouped]': boolean = true;
+    readonly '[Controls/_interface/IFilter]': boolean = true;
     private _sticky: StickyOpener;
 
     constructor(...args) {
@@ -257,6 +269,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             parentProperty: options.parentProperty,
             nodeProperty: options.nodeProperty,
             iconSize: options.iconSize,
+            iconStyle: options.iconStyle,
             itemTemplateProperty: options.itemTemplateProperty
         };
     }
@@ -499,6 +512,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
             this._openMenu(this._getMenuConfig());
         }
     }
+
     protected _onClickHandler(event: SyntheticEvent): void {
         event.stopPropagation();
     }
@@ -566,7 +580,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return void 0;
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars', 'Controls/theme'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {

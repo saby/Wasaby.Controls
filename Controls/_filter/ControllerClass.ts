@@ -12,7 +12,7 @@ import {TKeysSelection} from 'Controls/interface';
 
 import * as clone from 'Core/core-clone';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
-import {CrudWrapper} from '../_dataSource/CrudWrapper';
+import {CrudWrapper} from 'Controls/dataSource';
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';

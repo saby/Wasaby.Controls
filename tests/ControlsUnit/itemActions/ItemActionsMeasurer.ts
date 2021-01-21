@@ -1,5 +1,5 @@
 import {assert} from 'chai';
-import {IItemAction, IItemActionsContainer} from 'Controls/ItemActions';
+import {IItemAction, IItemActionsObject} from 'Controls/ItemActions';
 import {getActions} from 'Controls/_itemActions/measurers/ItemActionMeasurer';
 
 describe('itemActionsMeasurer', () => {

@@ -14,6 +14,7 @@
 interface IInputPlaceholder {
     readonly _options: {
         /**
+         * @name Controls/interface/IInputPlaceholder#placeholder
          * @cfg {String|Function} Текст, который отображается в пустом поле ввода.
          * @remark
          * Отображает текст в пустом поле ввода. Мы не используем собственные HTML-подсказки и не отображаем подсказки как div, наложенный поверх поля, чтобы разрешить использование пользовательских шаблонов.

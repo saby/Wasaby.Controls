@@ -98,7 +98,9 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 
    private _setValue(val: number): void {
-      this._notify('valueChanged', [val]);
+      if (this._value !== val) {
+         this._notify('valueChanged', [val]);
+      }
    }
 
    protected _beforeMount(options: ISliderBaseOptions): void {
@@ -133,8 +135,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
       if (!this._options.readOnly) {
-         this._value = this._getValue(event);
-         this._setValue(this._value);
+         const newValue = this._getValue(event);
+         this._setValue(newValue);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
    }
@@ -144,8 +146,13 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
          const box = this._children.area.getBoundingClientRect();
          const target = this._options.direction === 'vertical' ? dragObject.position.y : dragObject.position.x;
          const ratio = this._getRatio(this._options.direction, target, box, window.pageXOffset, window.pageYOffset);
-         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-         this._setValue(this._value);
+         const newValue = Utils.calcValue(
+             this._options.minValue,
+             this._options.maxValue,
+             ratio,
+             this._options.precision
+         );
+         this._setValue(newValue);
       }
    }
 

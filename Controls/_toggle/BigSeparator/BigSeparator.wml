@@ -20,6 +20,7 @@
 <div on:click="_clickHandler()"
      class="controls-BigSeparator controls-BigSeparator-size-{{_options.iconSize}}_theme-{{_options.theme}}">
     <div class="controls-BigSeparator-{{_options.readOnly ? 'readonly' : 'iconContainer'}}_theme-{{_options.theme}}
+                {{(!_options.readOnly && _options.contrastBackground) ? ('controls-BigSeparator-contrast_theme-' + _options.theme) : ''}}
                 controls-BigSeparator-container-icon-size-{{_options.iconSize}}_theme-{{_options.theme}}">
         <ws:if data="{{_options.value}}">
             <ws:partial template="arrowIcon" rotate="0"></ws:partial>

@@ -1,12 +1,22 @@
 import {assert} from 'chai';
-import {InputContainer, SearchResolver} from 'Controls/search';
+import {InputContainer} from 'Controls/search';
 import * as sinon from 'sinon';
+import Store from 'Controls/Store';
 
 describe('Controls/_search/Input/Container', () => {
 
    const sandbox = sinon.createSandbox();
 
    afterEach(() => sandbox.restore());
+
+   it('_beforeMount', () => {
+      const cont = new InputContainer({});
+      cont.saveOptions({});
+      cont._value = '';
+
+      cont._beforeMount({inputSearchValue: 'test'});
+      assert.equal(cont._value, 'test');
+   });
 
    it('_beforeUpdate', () => {
       const cont = new InputContainer({});
@@ -17,12 +27,50 @@ describe('Controls/_search/Input/Container', () => {
       assert.equal(cont._value, 'test');
    });
 
-   it('_notifySearch', () => {
-      const cont = new InputContainer({});
-      const stub = sandbox.stub(cont, '_notify');
+   describe('_resolve', () => {
+      it('search: useStore = false', () => {
+         const cont = new InputContainer({});
+         const stub = sandbox.stub(cont, '_notify');
+         const dispatchStub = sandbox.stub(Store, 'dispatch');
+         cont._options.useStore = false;
 
-      cont._notifySearch('test');
-      assert.isTrue(stub.withArgs('search', ['test']).calledOnce);
+         cont._notifySearch('test');
+         assert.isTrue(stub.withArgs('search', ['test']).calledOnce);
+         assert.isFalse(dispatchStub.called);
+      });
+
+      it('search: useStore = true', () => {
+         const cont = new InputContainer({});
+         const stub = sandbox.stub(cont, '_notify');
+         const dispatchStub = sandbox.stub(Store, 'dispatch');
+         cont._options.useStore = true;
+
+         cont._notifySearch('test');
+         assert.isFalse(stub.called);
+         assert.isTrue(dispatchStub.withArgs('searchValue', 'test').calledOnce);
+      });
+
+      it('searchReset: useStore = false', () => {
+         const cont = new InputContainer({});
+         const stub = sandbox.stub(cont, '_notify');
+         const dispatchStub = sandbox.stub(Store, 'dispatch');
+         cont._options.useStore = false;
+
+         cont._notifySearchReset();
+         assert.isTrue(stub.withArgs('searchReset', ['']).calledOnce);
+         assert.isFalse(dispatchStub.called);
+      });
+
+      it('searchReset: useStore = true', () => {
+         const cont = new InputContainer({});
+         const stub = sandbox.stub(cont, '_notify');
+         const dispatchStub = sandbox.stub(Store, 'dispatch');
+         cont._options.useStore = true;
+
+         cont._notifySearchReset();
+         assert.isFalse(stub.called);
+         assert.isTrue(dispatchStub.withArgs('searchValue', '').calledOnce);
+      });
    });
 
    it('_searchClick', () => {

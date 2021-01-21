@@ -92,14 +92,12 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
     protected _itemsArray: ITabButtonItem[];
     private _itemsOrder: number[];
     private _lastRightOrder: number;
-    private _markerThickness: string;
     private _items: RecordSet;
     private _crudWrapper: CrudWrapper;
 
     protected _beforeMount(options: ITabsOptions,
                            context: object,
                            receivedState: IReceivedState): void | Promise<IReceivedState> {
-        this._markerThickness = TabsButtons._getMarkerThickness(options);
         if (receivedState) {
             this._prepareState(receivedState);
         } else if (options.items) {
@@ -125,10 +123,6 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         if (newOptions.items && newOptions.items !== this._options.items) {
             const itemsData = this._prepareItems(newOptions.items);
             this._prepareState(itemsData);
-        }
-        if (newOptions.markerThickness !== this._options.markerThickness
-            || newOptions.borderThickness !== this._options.borderThickness) {
-            this._markerThickness = TabsButtons._getMarkerThickness(newOptions);
         }
     }
 
@@ -284,11 +278,6 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         } else {
             return style;
         }
-    }
-
-    static _getMarkerThickness(options: ITabsOptions): string {
-        //  TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=21dfec57-300d-42b7-aa76-4d13bea8d53f
-        return options.borderThickness ? options.borderThickness : options.markerThickness;
     }
 
     static _checkHasFunction(receivedState: IReceivedState): boolean {

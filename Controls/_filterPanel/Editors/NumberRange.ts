@@ -91,9 +91,13 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     private _notifyExtendedValue(value: number[]): void {
         const extendedValue = {
             value,
-            textValue: this._getTextValue(value[0]) + ' - ' + this._getTextValue(value[1])
+            textValue: !this._isValueEmpty(value) && this._getTextValue(value[0]) + ' - ' + this._getTextValue(value[1])
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    }
+
+    private _isValueEmpty(value: number[]): boolean {
+        return value[0] === null || value[1] === null;
     }
 
     private _getTextValue(value: number): string|number {

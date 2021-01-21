@@ -20,6 +20,7 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * @name Controls/interface/ITreeGridItemTemplate#itemTemplate
     * @cfg {Function} Пользовательский шаблон отображения элемента.
     * @default undefined
+    * @markdown
     * @remark
     * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/treeGrid:ItemTemplate}. Шаблон Controls/treeGrid:ItemTemplate поддерживает {@link Controls/treeGrid:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
     *

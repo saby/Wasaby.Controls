@@ -12,12 +12,10 @@ export class DataSource {
     private searchController: SearchController;
 
     get root(): TKey {
-        return this._root;
+        return this.sourceController.getRoot();
     }
-    private _root: TKey;
 
     constructor(private sourceOptions: ISourceOptions) {
-        this._root = sourceOptions.root;
         this.sourceController = new SourceController(this.sourceOptions);
     }
 
@@ -25,18 +23,21 @@ export class DataSource {
         this.sourceController.destroy();
     }
 
-    setRoot(root: TKey): Promise<RecordSet> {
-        this._root = root;
+    setRoot(root: TKey, noLoad: boolean = false): Promise<RecordSet> {
         this.sourceController.setRoot(root);
+
+        if (noLoad) {
+            return Promise.resolve(undefined);
+        }
+
         return this.loadData();
     }
 
-    setSearchString(searchString: string): Promise<RecordSet> {
-        // Если задают пустую строку поиска, то нужно перезагрузить последние данные
-        if (!searchString) {
-            return this.loadData();
-        }
+    setItems(items: RecordSet): RecordSet {
+        return this.sourceController.setItems(items);
+    }
 
+    setSearchString(searchString: string): Promise<RecordSet> {
         return this.getSearchController()
             .then((sc) => sc.search(searchString))
             .then((result) => {
@@ -44,7 +45,7 @@ export class DataSource {
                     return;
                 }
 
-                this.sourceController.setItems(result);
+                // this.sourceController.setItems(result);
                 return result;
             });
     }

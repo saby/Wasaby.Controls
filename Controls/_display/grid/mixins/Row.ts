@@ -10,7 +10,7 @@ import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
 import {THeader} from '../../../_grid/interface/IHeaderCell';
 import {TColspanCallback, TColspanCallbackResult} from './Grid';
-import {ILadderConfig, TLadderElement} from 'Controls/_display/utils/GridLadderUtil';
+import { ILadderConfig, IStickyLadderConfig, TLadderElement } from 'Controls/_display/utils/GridLadderUtil';
 import { isEqual } from 'Types/object';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
@@ -41,6 +41,7 @@ export default abstract class Row<T> {
     protected _$columnItems: Array<Cell<T, Row<T>>>;
     protected _$colspanCallback: TColspanCallback;
     protected _$ladder: TLadderElement<ILadderConfig>;
+    protected _$stickyLadder: TLadderElement<IStickyLadderConfig>;
     protected _$columnSeparatorSize: TColumnSeparatorSize;
     protected _$rowSeparatorSize: string;
 
@@ -226,26 +227,6 @@ export default abstract class Row<T> {
         return ladderWrapperClasses;
     }
 
-    setLadder(ladder: TLadderElement<ILadderConfig>): void {
-        if (this._$ladder !== ladder) {
-            const itemIndex = this._$owner.getIndex(this);
-
-            const currentLadder = this._$ladder?.ladder[itemIndex];
-            const newLadder = ladder?.ladder[itemIndex];
-
-            const currentStickyLadder = this._$ladder?.stickyLadder[itemIndex];
-            const newStickyLadder = ladder?.stickyLadder[itemIndex];
-
-            const isLadderChanged = !isEqual(currentLadder, newLadder);
-            const isStickyLadderChanged = !isEqual(currentStickyLadder, newStickyLadder);
-
-            if (isLadderChanged || isStickyLadderChanged) {
-                this._$ladder = ladder;
-                this._reinitializeColumns();
-            }
-        }
-    }
-
     setColumns(newColumns: TColumns): void {
         if (this._$columns !== newColumns) {
             this._$columns = newColumns;
@@ -258,20 +239,25 @@ export default abstract class Row<T> {
         this._reinitializeColumns();
     }
 
-    getLadder(): TLadderElement<ILadderConfig> {
-        let result;
-        if (this._$ladder && this._$ladder.ladder) {
-            result = this._$ladder.ladder[this._$owner.getIndex(this)];
+    updateLadder(newLadder: TLadderElement<ILadderConfig>, newStickyLadder: TLadderElement<IStickyLadderConfig>): void {
+        if (this._$ladder !== newLadder) {
+            const isLadderChanged = !isEqual(this._$ladder, newLadder);
+            const isStickyLadderChanged = !isEqual(this._$stickyLadder, newStickyLadder);
+
+            if (isLadderChanged || isStickyLadderChanged) {
+                this._$ladder = newLadder;
+                this._$stickyLadder = newStickyLadder;
+                this._reinitializeColumns();
+            }
         }
-        return result;
     }
 
-    getStickyLadder(): {} {
-        let result;
-        if (this._$ladder && this._$ladder.stickyLadder) {
-            result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
-        }
-        return result;
+    getLadder(): TLadderElement<ILadderConfig> {
+        return this._$ladder;
+    }
+
+    getStickyLadder(): TLadderElement<IStickyLadderConfig> {
+        return this._$stickyLadder;
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
@@ -317,6 +303,7 @@ export default abstract class Row<T> {
             }
             columnItems.push(factory({
                 column,
+                instanceId: `${this.key}_column_${columnIndex}`,
                 colspan: colspan as number,
                 isFixed: columnIndex < this.getStickyColumnsCount(),
                 columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex),
@@ -343,6 +330,7 @@ export default abstract class Row<T> {
             this._$columnItems.splice(1, 0, new StickyLadderCell({
                 column: this._$columns[0],
                 owner: this,
+                instanceId: `${this.key}_column_secondSticky`,
                 wrapperStyle: stickyLadderStyleForSecondProperty,
                 contentStyle: `left: -${this._$columns[0].width}; right: 0;`,
                 stickyProperty: stickyLadderProperties[1],
@@ -355,6 +343,7 @@ export default abstract class Row<T> {
                 new StickyLadderCell({
                     column: this._$columns[0],
                     owner: this,
+                    instanceId: `${this.key}_column_firstSticky`,
                     wrapperStyle: stickyLadderStyleForFirstProperty,
                     contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this._$columns[0].width};` : '',
                     stickyProperty: stickyLadderProperties[0],
@@ -373,6 +362,7 @@ export default abstract class Row<T> {
                 this._$columnItems = ([
                     new CheckboxCell({
                         column: {} as IColumn,
+                        instanceId: `${this.key}_column_checkbox`,
                         owner: this,
                         isFixed: true
                     })
