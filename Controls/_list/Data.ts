@@ -292,6 +292,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    // TODO сейчас есть подписка на itemsChanged из поиска. По хорошему не должно быть.
    _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
+      this._sourceController.cancelLoading();
       this._items = this._sourceController.setItems(items);
       this._updateContext(this._sourceController.getState());
       event.stopPropagation();
