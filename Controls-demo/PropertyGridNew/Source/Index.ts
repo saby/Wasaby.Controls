@@ -8,8 +8,8 @@ export default class Demo extends Control<IControlOptions> {
 
     protected _beforeMount(): void {
         this._editingObject = {
-            description: 'This is http://mysite.com',
-            tileView: true,
+            description: null,
+            tileView: null,
             showBackgroundImage: true,
             showVideo: true
         };
@@ -17,19 +17,14 @@ export default class Demo extends Control<IControlOptions> {
         this._source = [
             {
                 name: 'description',
-                editorOptions: {
-                    minLines: 3
-                },
+                caption: 'Описание',
                 editorClass: 'controls-demo-pg-text-editor',
-                group: 'text',
-                type: 'text',
                 '@parent': true,
                 parent: null
             },
             {
                 name: 'tileView',
                 caption: 'Список плиткой',
-                group: 'booleanGroup',
                 '@parent': true,
                 parent: null
             },
