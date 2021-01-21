@@ -22,7 +22,6 @@ export {default as templateInfoBox} from 'Controls/_popupTemplate/InfoBox/Opener
 export {default as BaseController} from 'Controls/_popupTemplate/BaseController';
 
 import DialogController = require('Controls/_popupTemplate/Dialog/Opener/DialogController');
-import DialogStrategy = require('Controls/_popupTemplate/Dialog/Opener/DialogStrategy');
 import StickyController = require('Controls/_popupTemplate/Sticky/StickyController');
 import InfoBoxController = require('Controls/_popupTemplate/InfoBox/Opener/InfoBoxController');
 import StackController = require('Controls/_popupTemplate/Stack/Opener/StackController');
@@ -31,11 +30,9 @@ import TargetCoords = require('Controls/_popupTemplate/TargetCoords');
 import NotificationController = require('Controls/_popupTemplate/Notification/Opener/NotificationController');
 import PreviewerController = require('Controls/_popupTemplate/Previewer/PreviewerController');
 import StackStrategy = require('Controls/_popupTemplate/Stack/Opener/StackStrategy');
-import * as DirectionUtil from 'Controls/_popupTemplate/Dialog/Opener/DirectionUtil';
 
 export {
    DialogController,
-   DialogStrategy,
    StickyController,
    StackContent,
    InfoBoxController,
@@ -43,6 +40,5 @@ export {
    TargetCoords,
    NotificationController,
    PreviewerController,
-   StackStrategy,
-   DirectionUtil
+   StackStrategy
 };
