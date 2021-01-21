@@ -634,6 +634,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (newOptions.suggestState !== this._options.suggestState) {
          if (newOptions.suggestState) {
             if (!this._searchResult && !this._errorConfig && !this._pendingErrorConfig) {
+               this._searchResolverController && this._searchResolverController.clearTimer();
                this._loadDependencies(newOptions).addCallback(() => {
                   this._resolveLoad(this._searchValue, newOptions).then(() => {
                      // Проверка нужна из-за асинхронщины, которая возникает при моментальном расфокусе поля ввода, что

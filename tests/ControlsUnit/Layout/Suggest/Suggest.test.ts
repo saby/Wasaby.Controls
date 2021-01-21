@@ -1124,6 +1124,31 @@ describe('Controls/suggest', () => {
 
             assert.ok(inputController._getSourceController().getState().source !== null);
          });
+
+         it('value and suggestState are changed in options while loading', async () => {
+            let options = {
+               emptyTemplate: 'anyTpl',
+               footerTemplate: 'anyTp',
+               suggestState: false,
+               value: '',
+               trim: true,
+               searchParam: 'testSearchParam',
+               minSearchLength: 3,
+               source: new Memory()
+            };
+
+            const inputController = getComponentObject(options);
+            await inputController._beforeMount(options);
+            await inputController._getSearchResolver();
+
+            inputController._changeValueHandler({}, 'newValue');
+
+            options = {...options};
+            options.value = 'newValue';
+            options.suggestState = true;
+            inputController._beforeUpdate(options);
+            assert.ok(!inputController._searchResolverController._delayTimer);
+         });
       });
 
       it('PrefetchProxy source should became to original source type', async () => {
