@@ -66,6 +66,14 @@ export default class TreeGridCollection<
             this.getFooter().setMultiSelectVisibility(visibility);
         }
 
+        if (this.getResults()) {
+            this.getResults().setMultiSelectVisibility(visibility);
+        }
+
+        if (this.getHeader()) {
+            this.getHeader().setMultiSelectVisibility(visibility);
+        }
+
         this._$colgroup?.reBuild();
     }
 
