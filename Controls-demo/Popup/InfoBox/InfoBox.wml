@@ -1,0 +1,42 @@
+<div>
+    <div class="controlsDemo__flexRow controlsDemo__flex_ai-baseline">
+        <div class="controlsDemo__wrapper__horizontal">Нажмите на иконку</div>
+        <Controls.buttons:Button
+                name="dialogButton"
+                viewMode="linkButton"
+                fontColorStyle="link"
+                icon="icon-EmptyMessage"
+                iconSize="m"
+                iconStyle="secondary"
+                on:click="_openInfoBox()"
+        />
+        <Controls.popup:Sticky
+                name="sticky"
+                closeOnOutsideClick="{{true}}">
+            <ws:template>
+                <Controls.popupTemplate:InfoBox stickyPosition="{{_stickyPosition}}">
+                    <ws:content>
+                        <div>
+                            <Controls.heading:Title
+                                    caption="Список"
+                                    readOnly="{{true}}"
+                                    fontColorStyle="secondary"
+                                    fontSize="3xl"
+                                    attr:style="padding: 5px"
+                            />
+                            <Controls.scroll:Container attr:class="controlsDemo__height200 controlsDemo__maxWidth200">
+                                <div>
+                                    <ws:for data="i in 20">
+                                        <p class="controlsDemo_ColumnsView_itemTemplate-wrapper">Запись под номером {{i}}</p>
+                                    </ws:for>
+                                </div>
+                            </Controls.scroll:Container>
+                        </div>
+                    </ws:content>
+                </Controls.popupTemplate:InfoBox>
+            </ws:template>
+            <ws:direction vertical="top" horizontal="right"/>
+            <ws:targetPoint vertical="top" horizontal="left"/>
+        </Controls.popup:Sticky>
+    </div>
+</div>
