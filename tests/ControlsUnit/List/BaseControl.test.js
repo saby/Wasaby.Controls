@@ -4499,6 +4499,7 @@ define([
              it('_onItemSwipe() animated item null', () => {
                  return initTest({
                      multiSelectVisibility: 'visible',
+                     selectedKeysCount: null,
                      selectedKeys: [1],
                      excludedKeys: [],
                      itemActions: [

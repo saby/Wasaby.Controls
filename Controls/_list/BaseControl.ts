@@ -2837,16 +2837,15 @@ const _private = {
     },
 
     /**
-     * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
-     * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
-     * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
-     * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
-     *
-     * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
-     * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+     * Метод isItemsSelectionAllowed проверяет, возможно ли выделение в списке для обработки свайпа
+     * Это необходимо для корректной работы выделения на Ipad'e
+     * swipe влево по записи должен ставить чекбокс, даже если multiSelectVisibility: 'hidden'.
+     * Layout/Browser, когда в нём не предусмотрено массовое выделение (нет панели действий), опцию selectedKeysCount
+     * передаёт как undefined, поэтому считаем, что в таком случае выделения в списке нет, и swipe
+     * не должен ставить чекбокс
      */
     isItemsSelectionAllowed(options: object): boolean {
-        return options.hasOwnProperty('selectedKeysCount');
+        return options.selectedKeysCount !== null;
     },
 
     /**
