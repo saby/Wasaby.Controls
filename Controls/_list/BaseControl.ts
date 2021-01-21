@@ -1105,15 +1105,28 @@ const _private = {
         const allowLoadBySearch =
             !_private.isPortionedLoad(self) ||
             _private.getPortionedSearch(self).shouldSearch();
+        const allowLoadByDrag = !(self._dndListController?.isDragging() && self._selectionController?.isAllSelected());
 
-        if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
+        if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch && allowLoadByDrag) {
             _private.setHasMoreData(self._listViewModel, hasMoreData);
-            _private.loadToDirection(
-                self, direction,
-                self._options.dataLoadCallback,
-                self._options.dataLoadErrback,
-                filter
-            );
+
+            if (self._dndListController?.isDragging()) {
+                self._loadToDirectionAfterDrag = _private.loadToDirection.bind(
+                   null,
+                   self,
+                   direction,
+                   self._options.dataLoadCallback,
+                   self._options.dataLoadErrback,
+                   filter
+                );
+            } else {
+                _private.loadToDirection(
+                   self, direction,
+                   self._options.dataLoadCallback,
+                   self._options.dataLoadErrback,
+                   filter
+                );
+            }
         }
     },
 
@@ -6135,6 +6148,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (_private.hasSelectionController(this)) {
                 _private.changeSelection(this, {selected: [], excluded: []});
+            }
+
+            if (this._loadToDirectionAfterDrag instanceof Function) {
+                this._loadToDirectionAfterDrag();
+                this._loadToDirectionAfterDrag = undefined;
             }
         };
 
