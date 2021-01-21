@@ -2,19 +2,21 @@ define(
    [
       'Controls/popupTemplate',
       'Controls/popup',
-      'Controls/Application/SettingsController'
+      'Controls/Application/SettingsController',
+      'Controls/_popupTemplate/Dialog/Opener/DialogStrategy',
+      'Controls/_popupTemplate/Dialog/Opener/DirectionUtil'
    ],
    (
       popupTemplate,
       popupLib,
-      SettingsController
+      SettingsController,
+      DialogStrategy,
+      DirectionUtil
    ) => {
       'use strict';
       const {
-         DialogStrategy,
-         DialogController,
          BaseController,
-         DirectionUtil
+         DialogController
       } = popupTemplate;
       const DialogOpener = popupLib.Dialog;
       const mockedSettingsController = {
