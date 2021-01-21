@@ -7713,6 +7713,73 @@ define([
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
             assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
          });
+
+         it('loadToDirection, drag all items', () => {
+            const self = {
+               _sourceController: {
+                  hasMoreData: () => true,
+                  isLoading: () => false
+               },
+               _loadedItems: new collection.RecordSet(),
+               _options: {
+                  navigation: {}
+               }
+            };
+            let isLoadStarted = false;
+
+            // navigation.view !== 'infinity'
+            sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+            sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+            sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+               isLoadStarted = true;
+            });
+
+            self._dndListController = {isDragging: () => true};
+            self._selectionController = {isAllSelected: () => true};
+
+            lists.BaseControl._private.loadToDirectionIfNeed(self);
+            assert.isFalse(isLoadStarted);
+            sandbox.restore();
+         });
+
+         it('loadToDirection, is dragging', () => {
+            baseControl._sourceController = {
+               hasMoreData: () => true,
+               isLoading: () => false
+            };
+            baseControl._loadedItems = new collection.RecordSet();
+            let isLoadStarted = false;
+
+            // navigation.view !== 'infinity'
+            sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+            sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+            sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+               isLoadStarted = true;
+            });
+
+            baseControl._dndListController = {isDragging: () => true};
+
+            lists.BaseControl._private.loadToDirectionIfNeed(baseControl);
+            assert.isFalse(isLoadStarted);
+
+            baseControl._dndListController = {
+               endDrag: () => undefined,
+               getDragPosition: () => {
+                  return {
+                     dispItem: {
+                        getContents: () => {}
+                     }
+                  };
+               },
+               getDraggableItem: () => undefined
+            };
+
+            const spy = sinon.spy(baseControl, 'checkTriggerVisibilityAfterRedraw');
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            assert.isTrue(spy.called);
+
+            sandbox.restore();
+         });
       });
 
       // region Move

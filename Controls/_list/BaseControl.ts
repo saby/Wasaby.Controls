@@ -1105,15 +1105,21 @@ const _private = {
         const allowLoadBySearch =
             !_private.isPortionedLoad(self) ||
             _private.getPortionedSearch(self).shouldSearch();
+        const allowLoadByDrag = !(self._dndListController?.isDragging() && self._selectionController?.isAllSelected());
 
-        if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch) {
+        if (allowLoadBySource && allowLoadByLoadedItems && allowLoadBySearch && allowLoadByDrag) {
             _private.setHasMoreData(self._listViewModel, hasMoreData);
-            _private.loadToDirection(
-                self, direction,
-                self._options.dataLoadCallback,
-                self._options.dataLoadErrback,
-                filter
-            );
+
+            if (self._dndListController?.isDragging()) {
+                self._checkTriggersAfterEndDrag = true;
+            } else {
+                _private.loadToDirection(
+                   self, direction,
+                   self._options.dataLoadCallback,
+                   self._options.dataLoadErrback,
+                   filter
+                );
+            }
         }
     },
 
@@ -6135,6 +6141,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (_private.hasSelectionController(this)) {
                 _private.changeSelection(this, {selected: [], excluded: []});
+            }
+
+            if (this._checkTriggersAfterEndDrag) {
+                /*
+                    Триггеры нужно проверить после того, как отрисуем состояние "после драг-н-дроп".
+                    Т.к. если, например, перетаскивают несколько записей на другое место,
+                    то в данный момент вместо нескольких записей отображается одна и триггер может сработать,
+                    а после отрисовки отобразятся все записи и триггер уже точно не сработает.
+                 */
+                this.checkTriggerVisibilityAfterRedraw();
+                this._checkTriggersAfterEndDrag = undefined;
             }
         };
 
