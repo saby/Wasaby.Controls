@@ -5,7 +5,7 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{ (gridColumn || colData).getSortingProperty() }}">
-            <Controls._grid.SortingButton
+            <Controls.grid:SortingButton
                     align="{{ (gridColumn || colData).getAlign() }}"
                     textOverflow="{{ (gridColumn || colData).getTextOverflow() }}"
                     caption="{{ (gridColumn || colData).getCaption() }}"
