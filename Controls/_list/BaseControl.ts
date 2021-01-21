@@ -1036,12 +1036,7 @@ const _private = {
             _private.setHasMoreData(self._listViewModel, hasMoreData);
 
             if (self._dndListController?.isDragging()) {
-                self._loadToDirectionAfterDrag = _private.loadToDirection.bind(
-                   null,
-                   self,
-                   direction,
-                   filter
-                );
+                self._checkTriggersAfterEndDrag = true;
             } else {
                 _private.loadToDirection(
                    self,
@@ -6169,9 +6164,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.changeSelection(this, {selected: [], excluded: []});
             }
 
-            if (this._loadToDirectionAfterDrag instanceof Function) {
-                this._loadToDirectionAfterDrag();
-                this._loadToDirectionAfterDrag = undefined;
+            if (this._checkTriggersAfterEndDrag) {
+                /*
+                    Триггеры нужно проверить после того, как отрисуем состояние "после драг-н-дроп".
+                    Т.к. если, например, перетаскивают несколько записей на другое место,
+                    то в данный момент вместо нескольких записей отображается одна и триггер может сработать,
+                    а после отрисовки отобразятся все записи и триггер уже точно не сработает.
+                 */
+                this.checkTriggerVisibilityAfterRedraw();
+                this._checkTriggersAfterEndDrag = undefined;
             }
 
             this._dndListController = null;

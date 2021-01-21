@@ -7767,8 +7767,9 @@ define([
                getDraggableItem: () => undefined
             };
 
+            const spy = sinon.spy(baseControl, 'checkTriggerVisibilityAfterRedraw');
             baseControl._documentDragEnd({ entity: baseControl._dragEntity });
-            assert.isTrue(isLoadStarted);
+            assert.isTrue(spy.called);
 
             sandbox.restore();
          });
