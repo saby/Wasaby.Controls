@@ -7,7 +7,7 @@ export default class extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
     protected _sticky: StickyOpener = new StickyOpener();
 
-    openSticky() {
+    _openSticky() {
         this._sticky.open({
             template,
             target: this._children.dialogButton,

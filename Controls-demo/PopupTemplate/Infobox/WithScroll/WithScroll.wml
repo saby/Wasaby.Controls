@@ -8,7 +8,7 @@
                 icon="icon-EmptyMessage"
                 iconSize="m"
                 iconStyle="secondary"
-                on:click="openSticky()"
+                on:click="_openSticky()"
         />
     </div>
 </div>
