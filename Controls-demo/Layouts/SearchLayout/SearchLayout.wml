@@ -13,10 +13,10 @@
                   <Controls.deprecatedFilter:FastContainer>
                      <Controls.deprecatedFilter:Fast/>
                   </Controls.deprecatedFilter:FastContainer>
-                  <Controls.deprecatedFilter:ButtonContainer>
+                  <Controls.filter:ViewContainer>
                      <Controls.deprecatedFilter:Selector
                              templateName="wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate"/>
-                  </Controls.deprecatedFilter:ButtonContainer>
+                  </Controls.filter:ViewContainer>
                </div>
             </div>
             <Controls.list:Container>

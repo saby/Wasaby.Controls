@@ -119,6 +119,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._dataOptionsContext = this._createContext(controllerState);
 
       if (options.sourceController) {
+         if (!controllerState.dataLoadCallback && options.dataLoadCallback) {
+            options.dataLoadCallback(options.sourceController.getItems());
+         }
          this._setItemsAndUpdateContext();
       } else if (receivedState instanceof RecordSet && isNewEnvironment()) {
          if (options.source && options.dataLoadCallback) {

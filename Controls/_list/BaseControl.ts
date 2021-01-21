@@ -3557,16 +3557,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
-    changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
-        if (indicatorName) {
-            if (state) {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = '';
-            } else {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
-            }
-        }
-    },
     applyTriggerOffset(offset: {top: number, bottom: number}): void {
         // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
         this._children.topVirtualScrollTrigger?.style.top = `${offset.top}px`;
@@ -3898,6 +3888,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (this._loadedBySourceController) {
+                if (this._listViewModel) {
+                    this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController))
+                }
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
@@ -3910,6 +3903,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (newOptions.multiSelectPosition !== this._options.multiSelectPosition) {
             this._listViewModel.setMultiSelectPosition(newOptions.multiSelectPosition);
+        }
+        if (newOptions.multiSelectAccessibilityProperty !== this._options.multiSelectAccessibilityProperty) {
+            this._listViewModel.setMultiSelectAccessibilityProperty(newOptions.multiSelectAccessibilityProperty);
         }
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
@@ -4430,6 +4426,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Другой порядок не даст нам таких гарантий,
         // и либо IO не отработает, либо попадаем в цикл синхронизации.
         window.requestAnimationFrame(() => {
+            if (this._destroyed) {
+                return;
+            }
             this._checkTriggerVisibilityTimeout = setTimeout(() => {
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
@@ -4441,6 +4440,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Проверяем видимость триггеров после перерисовки.
     // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
+        if (this._destroyed) {
+            return;
+        }
         const triggerDown = this._loadTriggerVisibility.down;
         const triggerUp = this._loadTriggerVisibility.up;
         this._scrollController.setTriggerVisibility('down', triggerDown);
@@ -5643,33 +5645,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._sourceController?.updateOptions(options);
     },
 
-    _getLoadingIndicatorClasses(state?: string): string {
-        const hasItems = !!this._items && !!this._items.getCount();
-        const indicatorState = state || this._loadingIndicatorState;
-        return _private.getLoadingIndicatorClasses({
-            hasItems,
-            hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: indicatorState,
-            theme: this._options.theme,
-            isPortionedSearchInProgress: !!this._portionedSearchInProgress
-        });
-    },
-
-    _getLoadingIndicatorStyles(state?: string): string {
-        let styles = '';
-        const indicatorState = state || this._loadingIndicatorState;
-
-        if (indicatorState === 'all') {
-            if (this._loadingIndicatorContainerHeight) {
-                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-            }
-            if (this._loadingIndicatorContainerOffsetTop) {
-                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
-            }
-        }
-        return styles;
-    },
-
     /**
      * Обработчик скролла, вызываемый при помощи регистратора событий по событию в ScrollContainer
      * @param event
@@ -5913,38 +5888,79 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter' | 'attachToNull'): boolean {
-        // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
-        // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
-        // В таком случае выводим индикатор над списком.
-        // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
+    // region LoadingIndicator
+
+    _shouldDisplayTopLoadingIndicator(): boolean {
+        return this._loadingIndicatorState === 'up';
+    },
+
+    _shouldDisplayMiddleLoadingIndicator(): boolean {
         // Также, не должно быть завязки на горизонтальный скролл.
         // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
-        if (position === 'attachToNull') {
-            return this._attachLoadTopTriggerToNull;
-        } else if (position === 'beforeEmptyTemplate') {
-            return this._loadingIndicatorState === 'up' || (
-                this._loadingIndicatorState === 'all' && (
-                    this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) ||
-                    !!this._children.listView && !!this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible()
-                )
-            );
-        } else if (position === 'afterList') {
-            return this._loadingIndicatorState === 'down';
-        } else if (position === 'inFooter') {
-            const showLoadingIndicator = this._loadingIndicatorState === 'all' &&
-                !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) &&
-                !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
-
-            // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
-            if (this._listViewModel && this._listViewModel.setLoadingIndicatorVisibility) {
-                this._listViewModel.setLoadingIndicatorVisibility(showLoadingIndicator);
-            }
-
-            return showLoadingIndicator;
-        }
-        return false;
+        return this._loadingIndicatorState === 'all' &&
+           !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
     },
+
+    _shouldDisplayBottomLoadingIndicator(): boolean {
+        return this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
+    },
+
+    _shouldDisplayPortionedSearch(): boolean {
+        return this._portionedSearchInProgress;
+    },
+
+    _getLoadingIndicatorClasses(state?: string): string {
+        const hasItems = !!this._items && !!this._items.getCount();
+        const indicatorState = state || this._loadingIndicatorState;
+        return _private.getLoadingIndicatorClasses({
+            hasItems,
+            hasPaging: !!this._pagingVisible,
+            loadingIndicatorState: indicatorState,
+            theme: this._options.theme,
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress
+        });
+    },
+
+    _getLoadingIndicatorStyles(state?: string): string {
+        let styles = '';
+
+        const indicatorState = state || this._loadingIndicatorState;
+        switch (indicatorState) {
+            case 'all':
+                if (this._loadingIndicatorContainerHeight) {
+                    styles += `min-height: ${this._loadingIndicatorContainerHeight}px; `;
+                }
+                if (this._loadingIndicatorContainerOffsetTop) {
+                    styles += `top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+                }
+                break;
+            case 'up':
+                if (!this._shouldDisplayTopLoadingIndicator()) {
+                    styles += 'display: none; ';
+                }
+                if (this._attachLoadTopTriggerToNull) {
+                    styles += `margin-bottom: -${this._attachedToNullLoadTopTriggerOffset}px;`;
+                }
+                break;
+            case 'down':
+                if (!this._shouldDisplayBottomLoadingIndicator()) {
+                    styles += 'display: none;';
+                }
+                break;
+        }
+
+        return styles;
+    },
+
+    // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
+    changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
+        const indicator = this._children[`${indicatorName}LoadingIndicator`];
+        if (indicator) {
+            indicator.style.display = state ? '' : 'none';
+        }
+    },
+
+    // endregion LoadingIndicator
 
     // region Drag-N-Drop
 

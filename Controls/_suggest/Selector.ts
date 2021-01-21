@@ -59,7 +59,6 @@ var _private = {
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  *
  * @author Герасимов А.М.
  * @public
@@ -76,7 +75,6 @@ var _private = {
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
- * @demo Controls-demo/Input/Search/Suggest/SuggestPG
  *
  * @public
  */

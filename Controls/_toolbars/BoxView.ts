@@ -96,7 +96,7 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
         return getTemplateByItem(item, this._options);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars', 'Controls/theme'];
 
     static getDefaultOptions(): object {
         return {
