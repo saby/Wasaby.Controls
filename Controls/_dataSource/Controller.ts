@@ -530,8 +530,9 @@ export default class Controller {
         return new Promise((resolve) => {
             if (parentProperty) {
                 resultFilter = {...initialFilter};
+                const isDeepReload = this._isDeepReload() && root === this._root;
 
-                if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && this._isDeepReload()) {
+                if (expandedItemsForFilter?.length && expandedItemsForFilter?.[0] !== null && isDeepReload) {
                     resultFilter[parentProperty] = Array.isArray(resultFilter[parentProperty]) ?
                         resultFilter[parentProperty] :
                         [];

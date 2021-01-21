@@ -251,6 +251,29 @@ describe('Controls/dataSource:SourceController', () => {
             ok(controller.getItems().at(2).get('title') === 'Aleksey');
         });
 
+        it('load with root in arguments and deepReload, expandedItems in options',  async () => {
+            const controller = getController({
+                navigation: {
+                    source: 'page',
+                    sourceConfig: {
+                        pageSize: 2,
+                        hasMore: false
+                    }
+                },
+                source: new Memory({
+                    keyProperty: 'key',
+                    data: hierarchyItems,
+                    filter: filterByRoot
+                }),
+                parentProperty: 'parent',
+                deepReload: true,
+                expandedItems: [3]
+            });
+
+            await controller.load(null, 0);
+            ok(controller.getItems().getCount() === 2);
+        });
+
         it('load with multiNavigation and without extendedItems',  async () => {
             const pageSize = 3;
             const navigation = getPagingNavigation(false, pageSize);
