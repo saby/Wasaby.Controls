@@ -1300,7 +1300,7 @@ const _private = {
             self._viewSize = _private.getViewSize(this, true);
             self._viewportRect = params.viewPortRect;
 
-            self._updateItemsHeights();
+            self._updateHeights();
 
             if (_private.needScrollPaging(self._options.navigation)) {
                 const scrollParams = {
@@ -3534,7 +3534,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollTop = scrollTop;
         }
         if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
-            this._updateItemsHeights();
+            this._updateHeights(false);
         }
         if (this._loadingIndicatorState) {
             _private.updateIndicatorContainerHeight(this, _private.getViewRect(this), this._viewportRect);
@@ -3629,7 +3629,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             this._viewRect = container.getBoundingClientRect();
             if (this._isScrollShown || this._scrollController && this._scrollController.isAppliedVirtualScroll()) {
-                this._updateItemsHeights();
+                this._updateHeights(false);
             }
 
             if (_private.needScrollPaging(this._options.navigation)) {
@@ -5812,7 +5812,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopPropagation();
     },
 
-    _updateItemsHeights(): void {
+    _updateHeights(updateItems: boolean = true): void {
         if (this._scrollController) {
             const itemsHeights = getItemsHeightsData(this._getItemsContainer(), this._options.plainItemsContainer === false);
             this._scrollController.updateItemsHeights(itemsHeights);
@@ -5831,7 +5831,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._viewReady = true;
         if (this._isScrollShown) {
             this._viewSize = _private.getViewSize(this, true);
-            this._updateItemsHeights();
+            this._updateHeights();
         }
     },
 
