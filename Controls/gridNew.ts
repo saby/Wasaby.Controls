@@ -34,6 +34,8 @@ import * as MoneyTypeRender from 'wml!Controls/_gridNew/Render/types/money';
 import * as NumberTypeRender from 'wml!Controls/_gridNew/Render/types/number';
 import * as StringTypeRender from 'wml!Controls/_gridNew/Render/types/string';
 
+import SortingButton from 'Controls/_gridNew/SortingButton';
+
 export {
     View,
     GridView,
@@ -51,5 +53,6 @@ export {
     MoneyTypeRender,
     NumberTypeRender,
     StringTypeRender,
-    TableTemplate
+    TableTemplate,
+    SortingButton
 };
