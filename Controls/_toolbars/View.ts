@@ -57,6 +57,12 @@ export interface IMenuOptions {
     template: string;
 }
 
+/**
+ * Интерфейс опций контрола {@link Controls/toolbars:View}.
+ * @interface Controls/_toolbars/IToolbar
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions, IFilterOptions {
