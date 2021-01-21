@@ -120,7 +120,6 @@ describe('Controls/search:ControllerClass', () => {
          assert.isTrue(loadSpy.withArgs(undefined, undefined, {
             payload: 'something'
          }).called);
-         assert.equal(controllerClass._root, 'testRoot');
       });
 
       it('without parent property', () => {
