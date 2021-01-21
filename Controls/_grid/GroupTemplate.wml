@@ -20,7 +20,7 @@
       </ws:if>
       <ws:if data="{{columnAlignGroup === undefined || textVisible === false}}">
          <ws:if data="{{separatorVisibility !== false && (columnAlignGroup !== undefined || textAlign !== 'right' || textVisible === false)}}">
-            <div class="controls-ListView__groupSeparator_theme-{{itemData.theme}} {{textVisible === false ? 'controls-ListView__groupSeparator-right_theme-' + itemData.theme}}">&nbsp;</div>
+            <div class="controls-ListView__groupSeparator_theme-{{itemData.theme}} {{textVisible !== false ? 'controls-ListView__groupSeparator-right_theme-' + itemData.theme}}">&nbsp;</div>
          </ws:if>
          <ws:if data="{{!!rightTemplate}}">
             <ws:partial template="{{rightTemplate}}" itemData="{{itemData}}"
