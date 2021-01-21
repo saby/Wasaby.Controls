@@ -814,6 +814,8 @@ const _private = {
             // Хорошее решение будет в задаче ссылка на которую приведена
             const itemsCountBeforeLoad = self._listViewModel.getCount();
 
+            self._loadToDirectionInProgress = true;
+
             return self._sourceController.load(direction, self._options.root, filter).addCallback((addedItems) => {
                 const itemsCountAfterLoad = self._listViewModel.getCount();
                 // If received list is empty, make another request.
@@ -849,8 +851,12 @@ const _private = {
                 // Скрываем ошибку после успешной загрузки данных
                 _private.hideError(self);
 
+                self._loadToDirectionInProgress = false;
+
                 return addedItems;
             }).addErrback((error: CancelableError) => {
+                self._loadToDirectionInProgress = false;
+
                 _private.hideIndicator(self);
                 // скроллим в край списка, чтобы при ошибке загрузки данных шаблон ошибки сразу был виден
                 if (!error.canceled && !error.isCanceled) {
@@ -1332,7 +1338,7 @@ const _private = {
             return;
         }
         self._loadingState = null;
-        self._showLoadingIndicatorImage = false;
+        self._showLoadingIndicator = false;
         self._loadingIndicatorContainerOffsetTop = 0;
         self._hideIndicatorOnTriggerHideDirection = null;
         _private.clearShowLoadingIndicatorTimer(self);
@@ -1348,7 +1354,7 @@ const _private = {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._loadingIndicatorState = self._loadingState;
-                    self._showLoadingIndicatorImage = true;
+                    self._showLoadingIndicator = true;
                     self._loadingIndicatorContainerOffsetTop = self._scrollTop + _private.getListTopOffset(self);
                     self._notify('controlResize');
                 }
@@ -1369,7 +1375,7 @@ const _private = {
     },
 
     isLoadingIndicatorVisible(self): boolean {
-        return !!self._showLoadingIndicatorImage;
+        return !!self._showLoadingIndicator;
     },
 
     updateScrollPagingButtons(self, scrollParams) {
@@ -5891,18 +5897,23 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // region LoadingIndicator
 
     _shouldDisplayTopLoadingIndicator(): boolean {
-        return this._loadingIndicatorState === 'up';
+        return this._loadToDirectionInProgress
+           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up'
+           :  this._loadingIndicatorState === 'up';
     },
 
     _shouldDisplayMiddleLoadingIndicator(): boolean {
         // Также, не должно быть завязки на горизонтальный скролл.
         // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
-        return this._loadingIndicatorState === 'all' &&
+        return this._showLoadingIndicator && this._loadingIndicatorState === 'all' &&
            !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
     },
 
     _shouldDisplayBottomLoadingIndicator(): boolean {
-        return this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
+        const shouldDisplayDownIndicator = this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
+        return this._loadToDirectionInProgress
+           ? this._showLoadingIndicator && shouldDisplayDownIndicator
+           :  shouldDisplayDownIndicator
     },
 
     _shouldDisplayPortionedSearch(): boolean {
