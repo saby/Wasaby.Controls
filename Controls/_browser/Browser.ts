@@ -90,7 +90,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _notifyHandler: Function = EventUtils.tmplNotify;
 
     private _isMounted: boolean;
-    private _selectedKeysCount: number | null;
+    private _selectedKeysCount: number | null = 0;
     private _selectionType: TSelectionType = 'all';
     private _isAllSelected: boolean = false;
 
