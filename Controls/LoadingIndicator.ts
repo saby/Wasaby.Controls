@@ -528,9 +528,6 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         }
         if (this.small) {
             classList.push('controls-loading-indicator_small');
-            if (this.small !== 'yes') {
-                classList.push('controls-loading-indicator_sided controls-loading-indicator_sided-' + this.small);
-            }
         }
         if (this.overlay) {
             const overlayClassName = 'controls-loading-indicator_overlay-' + this._getOverlay(this.overlay);
