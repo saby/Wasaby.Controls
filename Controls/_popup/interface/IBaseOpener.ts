@@ -639,8 +639,6 @@ export interface IBaseOpener {
  *  }
  * </pre>
  *
- * </pre>
- *
  * Описание шаблона окна
  *
  * <pre>

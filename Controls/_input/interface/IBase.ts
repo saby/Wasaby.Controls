@@ -1,9 +1,10 @@
 import {TemplateFunction} from 'UI/Base';
+import {IContrastBackground} from 'Controls/interface';
 
 export type TextAlign = 'left' | 'right' | 'center';
 export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
 
-export interface IBaseOptions {
+export interface IBaseOptions extends IContrastBackground {
     autoComplete?: AutoComplete;
     textAlign?: TextAlign;
     selectOnClick?: boolean;
@@ -115,7 +116,5 @@ export interface IBase {
 
 /**
  * @name Controls/_input/interface/IBase#contrastBackground
- * @cfg
- * @default true
  * @demo Controls-demo/Input/ContrastBackground/Index
  */

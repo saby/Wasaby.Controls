@@ -27,6 +27,13 @@ export default class Collection<
         if (this.getFooter()) {
             this.getFooter().setMultiSelectVisibility(visibility);
         }
+        if (this.getResults()) {
+            this.getResults().setMultiSelectVisibility(visibility);
+        }
+
+        if (this.getHeader()) {
+            this.getHeader().setMultiSelectVisibility(visibility);
+        }
 
         this._$colgroup?.reBuild();
     }

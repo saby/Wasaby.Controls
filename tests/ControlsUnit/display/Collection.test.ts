@@ -4450,24 +4450,6 @@ describe('Controls/_display/Collection', () => {
                 addPosition: 'bottom'
             })
         });
-
-        it('should notify of two added items if adding in empty group', () => {
-            let isCollectionChanged = false;
-
-            const handler = (e, action, newItems, newItemsIndex, oldItems, oldItemsIndex) => {
-                assert.equal(newItems.length, 2);
-                assert.instanceOf(newItems[0], GroupItem);
-                assert.instanceOf(newItems[1], CollectionItem);
-                isCollectionChanged = true;
-            };
-
-            display.subscribe('onCollectionChange', handler);
-            display.setAddingItem(newItem);
-            display.addFilter(() => true);
-            display.unsubscribe('onCollectionChange', handler);
-
-            assert.isTrue(isCollectionChanged);
-        });
     });
 
     describe('version increases on collection change', () => {
@@ -4689,6 +4671,38 @@ describe('Controls/_display/Collection', () => {
             notifyLaterSpy.resetHistory();
             display.resetDraggedItems();
             assert.isTrue(notifyLaterSpy.called);
+        });
+    });
+
+    describe('multiSelectAccessibility', () => {
+        const items = [
+            { id: 1, name: 'Ivan', multiSelectAccessibility: true },
+            { id: 2, name: 'Alexey', multiSelectAccessibility: true },
+            { id: 3, name: 'Olga', multiSelectAccessibility: true }
+        ];
+
+        let display: CollectionDisplay;
+        let rs;
+        beforeEach(() => {
+            rs = new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            });
+            display = new CollectionDisplay({
+                collection: rs,
+                multiSelectAccessibilityProperty: 'multiSelectAccessibility'
+            });
+        });
+
+        it('change multiSelectAccessibility', () => {
+            const item = display.at(0);
+            assert.isTrue(item.isVisibleCheckbox());
+            assert.isFalse(item.isReadonlyCheckbox());
+
+            rs.at(0).set('multiSelectAccessibility', null);
+
+            assert.isFalse(item.isVisibleCheckbox());
+            assert.isTrue(item.isReadonlyCheckbox());
         });
     });
 });

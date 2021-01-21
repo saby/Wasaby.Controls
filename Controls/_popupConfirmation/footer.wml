@@ -40,7 +40,7 @@
          <div class="controls-ConfirmationDialog__button-mini_theme-{{_options.theme}}
                      controls-ConfirmationDialog__no-cancel-button_theme-{{_options.theme}}">
             <Controls.buttons:Button
-               buttonStyle="secondary"
+               buttonStyle="{{_options.primaryAction === 'cancel' ? 'primary' : 'secondary'}}"
                inlineHeight="confirmation"
                fontSize="confirmation"
                caption="{{_options.cancelCaption}}"

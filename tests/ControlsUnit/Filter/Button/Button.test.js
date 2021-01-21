@@ -178,7 +178,7 @@ define(
             };
 
             return new Promise(function(resolve) {
-               self._options.templateName = 'Controls/filter:Selector';
+               self._options.templateName = 'Controls/deprecatedFilter:Selector';
                filterMod.Selector._private.requireDeps(self).addCallback(function(mod) {
                   assert.isTrue(!!mod);
                   resolve();

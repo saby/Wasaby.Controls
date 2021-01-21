@@ -30,7 +30,7 @@
    <ws:if data="{{_options.arrowVisible}}">
       <div class="controls-FilterPanel__separator"
            title="{{_options.arrowExpanded ? rk('Свернуть') : rk('Развернуть')}}">
-         <Controls.toggle:BigSeparator value="{{_options.arrowExpanded }}" on:click="_clickSeparatorHandler()"/>
+         <Controls.toggle:BigSeparator viewMode="arrow" value="{{_options.arrowExpanded }}" on:click="_clickSeparatorHandler()"/>
       </div>
    </ws:if>
 </div>
