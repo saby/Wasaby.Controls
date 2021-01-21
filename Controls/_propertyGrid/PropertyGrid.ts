@@ -4,6 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {GroupItem, CollectionItem} from 'Controls/display';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
+import {factory} from 'Types/chain';
 import {object} from 'Types/util';
 import {default as renderTemplate} from 'Controls/_propertyGrid/Render';
 import {default as gridRenderTemplate} from 'Controls/_propertyGrid/GridRender';
@@ -188,7 +189,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         const editingObjectClone = object.clone(editingObject);
         if (editingObjectClone instanceof Model) {
             if (!editingObjectClone.has(name)) {
-                const newEditingObject = editingObjectClone.getRawData();
+                const newEditingObject = factory(editingObject).toObject();
                 newEditingObject[name] = value;
                 return Model.fromObject(newEditingObject, editingObjectClone.getAdapter());
             } else {
