@@ -559,7 +559,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                templateOptions: this._options.suggestTemplate.templateOptions,
                searchEndCallback: this._loadEnd,
                searchStartCallback: this._loadStart,
-               searchErrback: this._searchErrback,
                emptyTemplate: this._emptyTemplate,
                source: this._options.source,
                minSearchLength: this._options.autoDropDown ? 0 : this._options.minSearchLength,
@@ -581,7 +580,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _beforeMount(options: IInputControllerOptions): void {
       this._loadStart = this._loadStart.bind(this);
       this._loadEnd = this._loadEnd.bind(this);
-      this._searchErrback = this._searchErrback.bind(this);
       this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
       this._suggestDirectionChangedCallback = this._suggestDirectionChangedCallback.bind(this);
       this._emptyTemplate = this._getEmptyTemplate(options.emptyTemplate);
@@ -613,7 +611,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._searchResult = null;
       this._loadStart = null;
       this._loadEnd = null;
-      this._searchErrback = null;
    }
 
    protected _beforeUpdate(newOptions: IInputControllerOptions): void {

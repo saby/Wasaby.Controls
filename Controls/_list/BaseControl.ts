@@ -3888,6 +3888,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (this._loadedBySourceController) {
+                if (this._listViewModel) {
+                    this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController))
+                }
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
@@ -4423,6 +4426,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Другой порядок не даст нам таких гарантий,
         // и либо IO не отработает, либо попадаем в цикл синхронизации.
         window.requestAnimationFrame(() => {
+            if (this._destroyed) {
+                return;
+            }
             this._checkTriggerVisibilityTimeout = setTimeout(() => {
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
@@ -4434,6 +4440,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Проверяем видимость триггеров после перерисовки.
     // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
+        if (this._destroyed) {
+            return;
+        }
         const triggerDown = this._loadTriggerVisibility.down;
         const triggerUp = this._loadTriggerVisibility.up;
         this._scrollController.setTriggerVisibility('down', triggerDown);

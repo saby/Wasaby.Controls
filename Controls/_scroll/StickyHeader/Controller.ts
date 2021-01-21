@@ -488,7 +488,13 @@ class StickyHeaderController {
 
         for (let headerId: number of headersStack) {
             headerInst = this._headers[headerId].inst;
-            if (headersHeight === this._getHeaderOffsetByContainer(contentContainer, headerId, position)) {
+            let headerOffset = this._getHeaderOffsetByContainer(contentContainer, headerId, position);
+            if (headerOffset !== 0) {
+                // При расчете высоты заголовка, мы учитываем devicePixelRatio. Нужно его учитывать и здесь, иначе
+                // расчеты не сойдутся. Делайем это только если headerOffset не равен нулю, т.е. после первой итерации.
+                headerOffset -= Math.abs(1 - StickyHeader.getDevicePixelRatio());
+            }
+            if (headersHeight === headerOffset) {
                 this._headers[headerId].fixedInitially = true;
             }
             headersHeight += headerInst.height;

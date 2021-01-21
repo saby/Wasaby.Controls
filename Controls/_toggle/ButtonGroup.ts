@@ -29,7 +29,7 @@ class ButtonGroup extends Control<IButtonGroupOptions> {
         this._notify('selectedKeyChanged', [item.get(this._options.keyProperty)]);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes', 'Controls/theme'];
 
     static getDefaultOptions(): IButtonGroupOptions {
         return {
