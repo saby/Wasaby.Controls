@@ -8,7 +8,7 @@
     </Controls.source:EnumAdapter>
     <h2>Dropdown</h2>
     <Controls.source:EnumAdapter enum="{{_enumInst}}">
-            <Controls.dropdown:Input displayProperty="title">
-            </Controls.dropdown:Input>
+            <Controls.dropdown:Selector displayProperty="title">
+            </Controls.dropdown:Selector>
     </Controls.source:EnumAdapter>
 </div>

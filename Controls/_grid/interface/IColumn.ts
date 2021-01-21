@@ -194,6 +194,7 @@ export interface IColumn extends IColspanParams {
      * @name Controls/_grid/interface/IColumn#template
      * @cfg {String|Function} Шаблон отображения ячейки.
      * @default undefined
+     * @markdown
      * @remark
      * Позволяет установить пользовательский шаблон отображения ячейки (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ColumnTemplate}.
      *
@@ -284,6 +285,7 @@ export interface IColumn extends IColspanParams {
      * @cfg {String|Function} Шаблон отображения ячейки в строке итогов.
      * @default undefined
      * @demo Controls-demo/grid/Results/FromMeta/CustomResultsCells/Index
+     * @markdown
      * @remark
      * Позволяет установить пользовательский шаблон отображения ячейки в строке итогов (именно шаблон, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ResultColumnTemplate}.
      *

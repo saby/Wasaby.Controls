@@ -164,7 +164,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         this._calculateState(newOptions);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes', 'Controls/theme'];
 
     static getDefaultOptions(): object {
         return {

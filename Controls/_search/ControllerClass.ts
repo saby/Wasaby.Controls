@@ -97,6 +97,8 @@ export default class ControllerClass {
     * Если аргумент dontLoad установлен в true, то функция вернет просто фильтр без загрузки.
     * @param {boolean} [dontLoad] Производить ли загрузку из источника, или вернуть обновленный фильтр
     */
+   reset(): Promise<RecordSet | Error>;
+   reset(dontLoad: boolean): QueryWhereExpression<unknown>;
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       this._checkSourceController();
 
@@ -230,14 +232,11 @@ export default class ControllerClass {
       return this._searchValue;
    }
 
-   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error|RecordSet> {
-      this._sourceController.setFilter(filter);
-
-      // TODO: Без прямой передачи фильтра в load фильтр не учитывается в sourceController (setFilter тут бесполезен)
+   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error | RecordSet> {
       return this._sourceController.load(undefined, undefined, filter).then((recordSet) => {
          if (recordSet instanceof RecordSet) {
             this._path = recordSet.getMetaData().path;
-
+            this._sourceController.setFilter(filter);
             return recordSet as RecordSet;
          }
       });

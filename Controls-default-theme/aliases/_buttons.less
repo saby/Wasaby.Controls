@@ -98,7 +98,7 @@
 
 // Минимальная ширина кнопки в режиме отображения "по умолчанию".
 
-@min-width_button_button:            @inline_height_default_button + (@border-radius_m_button * 2 * @border-thickness_button);
+@min-width_button_button:                                  @inline_height_default_button + @padding-horizontal_m_button * 2;
 
 
 
@@ -196,13 +196,19 @@
 @box-shadow_button_functionalButton:            0 1px 4px rgba(0, 0, 0, 0.05);
 
 //Стили кнопки-стрелки
-
+@arrow_icon-size_ArrowButton:                   16px;
 @box-shadow_ArrowButton:                        0 1px 4px rgba(0, 0, 0, 0.05);
 @border-color_ArrowButton:                      rgba(0, 0, 0, 0.08);
 @readonly_border-color_ArrowButton:             rgba(0, 0, 0, 0.08);
+@background-color_ArrowButton:                  transparent;
+@background-color_hover_ArrowButton:            transparent;
 @border-color_hover_ArrowButton:                #CCC;
 @icon-color_ArrowButton:                        #999;
 @hover_icon-color_ArrowButton:                  @hover_text-color_button;
 @readonly_icon-color_ArrowButton:               #CCC;
-@width_ArrowButton:                             24px;
-@height_ArrowButton:                            24px;
+@width_ArrowButton:                             @width_s_ArrowButton;
+@height_ArrowButton:                            @height_s_ArrowButton;
+@width_s_ArrowButton:                           24px;
+@height_s_ArrowButton:                          24px;
+@width_l_ArrowButton:                           28px;
+@height_l_ArrowButton:                          28px;

@@ -6,24 +6,28 @@
          captions="{{['master on', 'master off']}}"
       />
 
-      <Controls.dropdown:Input
+      <Controls.dropdown:Selector
          keyProperty="key"
          displayProperty="title"
          attr:class="controlsDemo_m"
          source="{{_viewModeSource}}"
-         bind:selectedKeys="_viewMode"
+         bind:selectedKeys="_userViewMode"
+         on:selectedKeysChanged="_onUserViewModeChanged()"
          contentTemplate="Controls/dropdown:defaultContentTemplateWithIcon"
       />
    </div>
 
    <Controls.newBrowser:Browser
+      name="browser"
+      bind:root="_root"
       source="{{_baseSource}}"
       keyProperty="id"
+      userViewMode="{{_viewMode}}"
       nodeProperty="type"
       parentProperty="parent"
       hasChildrenProperty="hasChild"
       propStorageId="catalogDemoBase"
-      bind:viewMode="_vm"
+      on:viewModeChanged="_onBrowserViewModeChanged()"
       attr:style="flex: 1 1 100%;"
    >
       <!-- Задаем общую настройку master-колонки -->
@@ -42,17 +46,39 @@
       </ws:master>
       <!-- Задаем общую настройку detail-колонки -->
       <ws:detail
+         backgroundColor="#f0f0f0"
          imageProperty="photo"
          columns="{{_detailTableColumns}}"
       >
-         <ws:itemContent>
-            {{itemContent.itemData.item.description}}
-         </ws:itemContent>
-         <ws:itemFooter>
-            <span style="color: grey">
-               {{ itemContent.itemData.item.rating || itemContent.itemData.item.year }}
-            </span>
-         </ws:itemFooter>
+         <ws:afterBreadCrumbsTemplate>
+            <Controls.search:InputContainer
+               searchDelay="{{300}}"
+               minSearchLength="{{3}}"
+            >
+               <Controls.search:Input
+                  placeholder="{[Найти...]}"
+                  contrastBackground="{{ true }}"
+               />
+            </Controls.search:InputContainer>
+         </ws:afterBreadCrumbsTemplate>
+         <ws:defaultItemTemplate>
+            <ws:captionTemplate>
+               <Controls.heading:Title
+                  fontSize="4xl"
+                  fontColorStyle="default"
+                  caption="{{captionTemplate.itemData.item.title}}"
+                  tooltip="{{captionTemplate.itemData.item.title}}"
+               />
+            </ws:captionTemplate>
+            <ws:contentTemplate>
+               {{contentTemplate.itemData.item.description}}
+            </ws:contentTemplate>
+            <ws:footerTemplate>
+               <span style="color: grey">
+                  {{ footerTemplate.itemData.item.rating || footerTemplate.itemData.item.year }}
+               </span>
+            </ws:footerTemplate>
+         </ws:defaultItemTemplate>
       </ws:detail>
    </Controls.newBrowser:Browser>
 

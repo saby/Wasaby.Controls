@@ -20,9 +20,6 @@ export interface ITabsButtonsOptions extends IControlOptions, ISingleSelectableO
     inlineHeight?: string;
     markerThickness?: string;
     displayProperty?: string;
-
-    //TODO: delete
-    borderThickness?: string;
 }
 
 /**

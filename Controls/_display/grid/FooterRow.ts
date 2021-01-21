@@ -5,10 +5,14 @@ import { IColspanParams } from '../../_grid/interface/IColumn';
 import { IItemTemplateParams } from './mixins/Row';
 import { IItemActionsTemplateConfig } from 'Controls/_display/Collection';
 import ItemActionsCell from 'Controls/_display/grid/ItemActionsCell';
+import { isEqual } from 'Types/object';
 
 export type TFooter = IFooter[];
 
 interface IFooter extends IColspanParams {
+    startColumn?: number;
+    endColumn?: number;
+    template?: TemplateFunction;
 }
 
 export interface IOptions<T> extends IRowOptions<T> {
@@ -22,7 +26,7 @@ export default class FooterRow<T> extends Row<T> {
     protected _$footer: TFooter;
 
     private _hasMoreData: boolean;
-    private _loadingIndicatorVisible: boolean;
+    private _actionsTemplateConfig: IItemActionsTemplateConfig;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -45,15 +49,17 @@ export default class FooterRow<T> extends Row<T> {
         }
     }
 
-    // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
-    setLoadingIndicatorVisibility(visible: boolean): void {
-        this._loadingIndicatorVisible = visible;
-        this._nextVersion();
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig) {
+        if (!isEqual(this._actionsTemplateConfig, config)) {
+            this._actionsTemplateConfig = config;
+            this._nextVersion();
+        }
     }
 
     getActionsTemplateConfig(): IItemActionsTemplateConfig {
-        return this.getOwner().getActionsTemplateConfig();
+        return this._actionsTemplateConfig;
     }
+
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
         return 'controls-GridView__footer';
     }

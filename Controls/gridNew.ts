@@ -5,6 +5,7 @@ import GridView from 'Controls/_gridNew/GridView';
 import * as GridItemTemplate from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_gridNew/Render/table/Item';
 
+import * as TableTemplate from 'wml!Controls/_gridNew/Render/table/GridView';
 // FIXME: при обычном условном присвоении шаблона tmpl = isAny ? tmpl1 : tmpl2, переменной один раз присвоится значение и не будет меняться.
 //  В таком случае возникает ошибка при открытии одной страницы из разных браузеров (Chrome и IE), с сервера всегда будет возвращаться один и тот же шаблон,
 //  для того браузера, который первый открыл страницу.
@@ -33,6 +34,8 @@ import * as MoneyTypeRender from 'wml!Controls/_gridNew/Render/types/money';
 import * as NumberTypeRender from 'wml!Controls/_gridNew/Render/types/number';
 import * as StringTypeRender from 'wml!Controls/_gridNew/Render/types/string';
 
+import SortingButton from 'Controls/_gridNew/SortingButton';
+
 export {
     View,
     GridView,
@@ -49,5 +52,7 @@ export {
     EmptyColumnTemplate,
     MoneyTypeRender,
     NumberTypeRender,
-    StringTypeRender
+    StringTypeRender,
+    TableTemplate,
+    SortingButton
 };

@@ -109,6 +109,10 @@ export default class Container extends Control<IContainerOptions> {
          this._searchValue = searchController.getSearchValue();
       });
 
+      if (options.searchValue) {
+         this._inputSearchValue = options.searchValue;
+      }
+
       if (options.root !== undefined) {
          this._root = options.root;
       }
@@ -124,6 +128,10 @@ export default class Container extends Control<IContainerOptions> {
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
       const options = {...newOptions, ...context.dataOptions};
 
+      if (newOptions.root !== this._options.root) {
+         this._root = newOptions.root;
+      }
+
       if (this._searchController && options.sourceController) {
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
@@ -133,6 +141,14 @@ export default class Container extends Control<IContainerOptions> {
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
+         } else if (updateResult instanceof Promise) {
+            updateResult.catch((error: Error & {
+               isCancelled?: boolean;
+            }) => {
+               if (!error.isCancelled) {
+                  return error;
+               }
+            });
          }
       }
    }
@@ -182,7 +198,6 @@ export default class Container extends Control<IContainerOptions> {
             if (this._options.dataLoadCallback) {
                this._options.dataLoadCallback(result);
             }
-            sourceController.setItems(result);
          }
       }).catch((error: Error & {
          isCancelled?: boolean;

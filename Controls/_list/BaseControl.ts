@@ -498,8 +498,13 @@ const _private = {
                 }
             }
         } else {
+            const wasItemsReplaced = listModel.getCollection() && !isEqualItems(listModel.getCollection(), items);
             listModel.setItems(items, newOptions);
             self._items = listModel.getCollection();
+
+            if (wasItemsReplaced && self._options.itemsReadyCallback) {
+                self._options.itemsReadyCallback(self._items);
+            }
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
             // Используется в админке: https://online.sbis.ru/opendoc.html?guid=55dfcace-ec7d-43b1-8de8-3c1a8d102f8c.
@@ -747,6 +752,7 @@ const _private = {
             const deleteAction = itemActions.all.find((itemAction: IItemAction) => itemAction.id === DELETE_ACTION_KEY);
             if (deleteAction) {
                 _private.handleItemActionClick(self, deleteAction, event, toggledItem, false);
+                event.stopImmediatePropagation();
             }
         }
     },
@@ -1206,8 +1212,6 @@ const _private = {
 
     onScrollShow(self, params) {
         _private.doAfterUpdate(self, () => {
-            // ToDo option "loadOffset" is crutch for contacts.
-            // remove by: https://online.sbis.ru/opendoc.html?guid=626b768b-d1c7-47d8-8ffd-ee8560d01076
             self._isScrollShown = true;
 
             self._viewSize = _private.getViewSize(this, true);
@@ -1859,11 +1863,13 @@ const _private = {
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
         const contents = _private.getPlainItemContents(item);
         const itemContainer = _private.resolveItemContainer(self, item, isMenuClick);
-        self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
+        const result = self._notify('actionClick', [action, contents, itemContainer, clickEvent.nativeEvent]);
         if (action.handler) {
             action.handler(contents);
         }
-        _private.closeActionsMenu(self);
+        if (result !== false) {
+            _private.closeActionsMenu(self);
+        }
     },
 
     /**
@@ -2444,7 +2450,8 @@ const _private = {
                 rootId: options.root,
                 model: collection,
                 entryPath,
-                selectionType: options.selectionType
+                selectionType: options.selectionType || 'all',
+                recursiveSelection: options.recursiveSelection || false
             };
         } else {
             return { model: collection };
@@ -3550,16 +3557,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
-    changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
-        if (indicatorName) {
-            if (state) {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = '';
-            } else {
-                this._children[`${indicatorName}LoadingIndicator`].style.display = 'none';
-            }
-        }
-    },
     applyTriggerOffset(offset: {top: number, bottom: number}): void {
         // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
         this._children.topVirtualScrollTrigger?.style.top = `${offset.top}px`;
@@ -3891,6 +3888,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (this._loadedBySourceController) {
+                if (this._listViewModel) {
+                    this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController))
+                }
                 _private.executeAfterReloadCallbacks(self, items, newOptions);
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
@@ -3903,6 +3903,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (newOptions.multiSelectPosition !== this._options.multiSelectPosition) {
             this._listViewModel.setMultiSelectPosition(newOptions.multiSelectPosition);
+        }
+        if (newOptions.multiSelectAccessibilityProperty !== this._options.multiSelectAccessibilityProperty) {
+            this._listViewModel.setMultiSelectAccessibilityProperty(newOptions.multiSelectAccessibilityProperty);
         }
 
         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
@@ -4423,6 +4426,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Другой порядок не даст нам таких гарантий,
         // и либо IO не отработает, либо попадаем в цикл синхронизации.
         window.requestAnimationFrame(() => {
+            if (this._destroyed) {
+                return;
+            }
             this._checkTriggerVisibilityTimeout = setTimeout(() => {
                 _private.doAfterUpdate(this, () => {
                     this.checkTriggersVisibility();
@@ -4434,6 +4440,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // Проверяем видимость триггеров после перерисовки.
     // Если видимость не изменилась, то события не будет, а обработать нужно.
     checkTriggersVisibility(): void {
+        if (this._destroyed) {
+            return;
+        }
         const triggerDown = this._loadTriggerVisibility.down;
         const triggerUp = this._loadTriggerVisibility.up;
         this._scrollController.setTriggerVisibility('down', triggerDown);
@@ -5305,6 +5314,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         } else if (eventName === 'menuOpened') {
             _private.removeShowActionsClass(this);
+            _private.getItemActionsController(this, this._options).deactivateSwipe(false);
         }
     },
 
@@ -5485,7 +5495,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || key === 33 // PageUp
                 || key === 34 // PageDown
                 || key === 35 // End
-                || key === 36; // Home
+                || key === 36 // Home
+                || key === 46; // Delete
             EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
@@ -5515,11 +5526,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
-
-            // TODO dnd при наследовании TreeControl <- BaseControl не нужно будет событие
-            if (this._dndListController && this._dndListController.isDragging()) {
-                this._notify('draggingItemMouseLeave', [itemData, nativeEvent]);
-            }
         }
     },
     _sortingChanged(event, propName) {
@@ -5603,6 +5609,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
+            newNavigation.sourceConfig.page = this._currentPage - 1;
         }
         if (params.page) {
             newNavigation.sourceConfig.page = params.page - 1;
@@ -5636,33 +5643,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     updateSourceController(options): void {
         this._sourceController?.updateOptions(options);
-    },
-
-    _getLoadingIndicatorClasses(state?: string): string {
-        const hasItems = !!this._items && !!this._items.getCount();
-        const indicatorState = state || this._loadingIndicatorState;
-        return _private.getLoadingIndicatorClasses({
-            hasItems,
-            hasPaging: !!this._pagingVisible,
-            loadingIndicatorState: indicatorState,
-            theme: this._options.theme,
-            isPortionedSearchInProgress: !!this._portionedSearchInProgress
-        });
-    },
-
-    _getLoadingIndicatorStyles(state?: string): string {
-        let styles = '';
-        const indicatorState = state || this._loadingIndicatorState;
-
-        if (indicatorState === 'all') {
-            if (this._loadingIndicatorContainerHeight) {
-                styles += `min-height: ${this._loadingIndicatorContainerHeight}px;`;
-            }
-            if (this._loadingIndicatorContainerOffsetTop) {
-                styles += ` top: ${this._loadingIndicatorContainerOffsetTop}px;`;
-            }
-        }
-        return styles;
     },
 
     /**
@@ -5908,38 +5888,79 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _shouldShowLoadingIndicator(position: 'beforeEmptyTemplate' | 'afterList' | 'inFooter' | 'attachToNull'): boolean {
-        // Глобальный индикатор загрузки при пустом списке должен отображаться поверх emptyTemplate.
-        // Если расположить индикатор в подвале, то он будет под emptyTemplate т.к. emptyTemplate выводится до подвала.
-        // В таком случае выводим индикатор над списком.
-        // FIXME: https://online.sbis.ru/opendoc.html?guid=886c7f51-d327-4efa-b998-7cf94f5467cb
+    // region LoadingIndicator
+
+    _shouldDisplayTopLoadingIndicator(): boolean {
+        return this._loadingIndicatorState === 'up';
+    },
+
+    _shouldDisplayMiddleLoadingIndicator(): boolean {
         // Также, не должно быть завязки на горизонтальный скролл.
         // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
-        if (position === 'attachToNull') {
-            return this._attachLoadTopTriggerToNull;
-        } else if (position === 'beforeEmptyTemplate') {
-            return this._loadingIndicatorState === 'up' || (
-                this._loadingIndicatorState === 'all' && (
-                    this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) ||
-                    !!this._children.listView && !!this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible()
-                )
-            );
-        } else if (position === 'afterList') {
-            return this._loadingIndicatorState === 'down';
-        } else if (position === 'inFooter') {
-            const showLoadingIndicator = this._loadingIndicatorState === 'all' &&
-                !this.__needShowEmptyTemplate(this._options.emptyTemplate, this._listViewModel) &&
-                !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
-
-            // TODO зарефакторить по задаче https://online.sbis.ru/doc/83a835c0-e24b-4b5a-9b2a-307f8258e1f8
-            if (this._listViewModel && this._listViewModel.setLoadingIndicatorVisibility) {
-                this._listViewModel.setLoadingIndicatorVisibility(showLoadingIndicator);
-            }
-
-            return showLoadingIndicator;
-        }
-        return false;
+        return this._loadingIndicatorState === 'all' &&
+           !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
     },
+
+    _shouldDisplayBottomLoadingIndicator(): boolean {
+        return this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
+    },
+
+    _shouldDisplayPortionedSearch(): boolean {
+        return this._portionedSearchInProgress;
+    },
+
+    _getLoadingIndicatorClasses(state?: string): string {
+        const hasItems = !!this._items && !!this._items.getCount();
+        const indicatorState = state || this._loadingIndicatorState;
+        return _private.getLoadingIndicatorClasses({
+            hasItems,
+            hasPaging: !!this._pagingVisible,
+            loadingIndicatorState: indicatorState,
+            theme: this._options.theme,
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress
+        });
+    },
+
+    _getLoadingIndicatorStyles(state?: string): string {
+        let styles = '';
+
+        const indicatorState = state || this._loadingIndicatorState;
+        switch (indicatorState) {
+            case 'all':
+                if (this._loadingIndicatorContainerHeight) {
+                    styles += `min-height: ${this._loadingIndicatorContainerHeight}px; `;
+                }
+                if (this._loadingIndicatorContainerOffsetTop) {
+                    styles += `top: ${this._loadingIndicatorContainerOffsetTop}px;`;
+                }
+                break;
+            case 'up':
+                if (!this._shouldDisplayTopLoadingIndicator()) {
+                    styles += 'display: none; ';
+                }
+                if (this._attachLoadTopTriggerToNull) {
+                    styles += `margin-bottom: -${this._attachedToNullLoadTopTriggerOffset}px;`;
+                }
+                break;
+            case 'down':
+                if (!this._shouldDisplayBottomLoadingIndicator()) {
+                    styles += 'display: none;';
+                }
+                break;
+        }
+
+        return styles;
+    },
+
+    // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
+    changeIndicatorStateHandler(state: boolean, indicatorName: IDirection): void {
+        const indicator = this._children[`${indicatorName}LoadingIndicator`];
+        if (indicator) {
+            indicator.style.display = state ? '' : 'none';
+        }
+    },
+
+    // endregion LoadingIndicator
 
     // region Drag-N-Drop
 
@@ -6130,6 +6151,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const draggedKey = draggableItem.getContents().getKey();
                     _private.changeMarkedKey(this, draggedKey);
                 }
+            }
+
+            if (_private.hasSelectionController(this)) {
+                _private.changeSelection(this, {selected: [], excluded: []});
             }
 
             this._dndListController = null;

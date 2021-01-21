@@ -20,7 +20,7 @@ import {
 } from './interface/IItemAction';
 import {IItemActionsItem} from './interface/IItemActionsItem';
 import {IItemActionsCollection} from './interface/IItemActionsCollection';
-import {IShownItemAction, IItemActionsContainer} from './interface/IItemActionsContainer';
+import {IShownItemAction, IItemActionsObject} from './interface/IItemActionsObject';
 import {verticalMeasurer} from './measurers/VerticalMeasurer';
 import {horizontalMeasurer} from './measurers/HorizontalMeasurer';
 import {Utils} from './Utils';
@@ -165,7 +165,7 @@ export class Controller {
     // Видимость опций записи
     private _itemActionsVisibility: TItemActionsVisibility;
 
-    private _savedItemActions: IItemActionsContainer;
+    private _savedItemActions: IItemActionsObject;
 
     /**
      * Метод инициализации и обновления параметров.
@@ -237,7 +237,7 @@ export class Controller {
     /**
      * Деактивирует Swipe для меню операций с записью
      */
-    deactivateSwipe(): void {
+    deactivateSwipe(resetActiveItem: boolean = true): void {
         const currentSwipedItem = this.getSwipeItem();
         if (currentSwipedItem) {
             currentSwipedItem.setSwipeAnimation(null);
@@ -245,7 +245,9 @@ export class Controller {
                 this._restoreItemActions(currentSwipedItem);
             }
             this._setSwipeItem(null);
-            this._collection.setActiveItem(null);
+            if (resetActiveItem) {
+                this._collection.setActiveItem(null);
+            }
             this._collection.setSwipeConfig(null);
             this._collection.nextVersion();
         }
@@ -451,8 +453,8 @@ export class Controller {
         const assignActionsOnItem = (item): void => {
             if (!item['[Controls/_display/GroupItem]'] && !item['[Controls/_display/SearchSeparator]']) {
                 const contents = Controller._getItemContents(item);
-                const actionsContainer = this._fixActionsDisplayOptions(this._getActionsContainer(item));
-                const itemChanged = Controller._setItemActions(item, actionsContainer, this._actionMode);
+                const actionsObject = this._fixActionsDisplayOptions(this._getActionsObject(item));
+                const itemChanged = Controller._setItemActions(item, actionsObject, this._actionMode);
                 hasChanges = hasChanges || itemChanged;
                 if (itemChanged) {
                     changedItemsIds.push(contents.getKey());
@@ -493,9 +495,10 @@ export class Controller {
      * @private
      */
     private _getMenuActions(item: IItemActionsItem, parentAction: IShownItemAction): IItemAction[] {
-        const actions = item.getActions();
-        const allActions = actions && actions.all;
-        if (allActions) {
+        const contents = Controller._getItemContents(item);
+        const actionsObject = item.getActions();
+        const visibleActions = actionsObject && actionsObject.all && this._filterVisibleActions(actionsObject.all, contents);
+        if (visibleActions) {
             // Кроме как intersection all vs showed мы не можем знать, какие опции Measurer скрыл под кнопку "Ещё",
             // Поэтому для свайпнутой записи имеет смысл показывать в меню те опции, которые отсутствуют в showed
             // массиве или у которых showType MENU_TOOLBAR или MENU
@@ -503,11 +506,11 @@ export class Controller {
             // см. https://online.sbis.ru/opendoc.html?guid=91e7bea1-fa6c-483f-a5dc-860b084ab17a
             // см. https://online.sbis.ru/opendoc.html?guid=b5751217-3833-441f-9eb6-53526625bc0c
             if (item.isSwiped() && parentAction.isMenu) {
-                return allActions.filter((action) => (
-                    !this._hasActionInArray(action, actions.showed) || action.showType !== TItemActionShowType.TOOLBAR)
+                return visibleActions.filter((action) => (
+                    !this._hasActionInArray(action, actionsObject.showed) || action.showType !== TItemActionShowType.TOOLBAR)
                 );
             }
-            return allActions.filter((action) => (
+            return visibleActions.filter((action) => (
                 ((!parentAction || parentAction.isMenu) && action.showType !== TItemActionShowType.TOOLBAR) ||
                 (!!parentAction && !parentAction.isMenu && action.parent === parentAction.id)
             ));
@@ -566,34 +569,20 @@ export class Controller {
         });
     }
 
-    /**
-     * Набирает операции с записью для указанного элемента коллекции
-     * @param item IItemActionsItem
-     * @private
-     */
-    private _collectActionsForItem(item: IItemActionsItem): IItemAction[] {
-        const contents = Controller._getItemContents(item);
-        const itemActions: IItemAction[] = this._itemActionsProperty
-            ? contents.get(this._itemActionsProperty)
-            : this._commonItemActions;
-        return itemActions.filter((action) =>
-            this._itemActionVisibilityCallback(action, contents)
-        );
-    }
-
     private _updateSwipeConfig(actionsContainerWidth: number, actionsContainerHeight: number): void {
         const item = this.getSwipeItem();
         if (!item) {
             return;
         }
+        const contents = Controller._getItemContents(item);
         const menuButtonVisibility = this._getSwipeMenuButtonVisibility(this._contextMenuConfig);
         this._actionsWidth = actionsContainerWidth;
         this._actionsHeight = actionsContainerHeight;
-        const actions = item.getActions().all;
+        const actions = this._filterVisibleActions(item.getActions().all, contents);
         const actionsTemplateConfig = this._collection.getActionsTemplateConfig();
         actionsTemplateConfig.actionAlignment = this._actionsAlignment;
 
-        if (this._editArrowAction && this._editArrowVisibilityCallback(item.getContents())) {
+        if (this._editArrowAction && this._editArrowVisibilityCallback(contents)) {
             this._addEditArrow(actions);
         }
 
@@ -673,20 +662,24 @@ export class Controller {
      * @param item
      * @private
      */
-    private _getActionsContainer(item: IItemActionsItem): IItemActionsContainer {
+    private _getActionsObject(item: IItemActionsItem): IItemActionsObject {
         let showed;
-        const actions = this._collectActionsForItem(item);
+        const contents = Controller._getItemContents(item);
+        const all = this._itemActionsProperty
+            ? contents.get(this._itemActionsProperty)
+            : this._commonItemActions;
+        const visibleActions = this._filterVisibleActions(all, contents);
         if (this._isEditing(item)) {
             showed = [];
-        } else if (actions.length > 1) {
-            showed = actions.filter((action) =>
+        } else if (visibleActions.length > 1) {
+            showed = visibleActions.filter((action) =>
                 !action.parent &&
                 (
                     action.showType === TItemActionShowType.TOOLBAR ||
                     action.showType === TItemActionShowType.MENU_TOOLBAR
                 )
             );
-            if (this._isMenuButtonRequired(actions)) {
+            if (this._isMenuButtonRequired(visibleActions)) {
                 showed.push({
                     id: null,
                     icon: 'icon-SettingsNew',
@@ -696,12 +689,15 @@ export class Controller {
                 });
             }
         } else {
-            showed = actions;
+            showed = visibleActions;
         }
-        return {
-            all: actions,
-            showed
-        };
+        return { all, showed };
+    }
+
+    private _filterVisibleActions(itemActions: IItemAction[], contents: Model): IItemAction[] {
+        return itemActions.filter((action) =>
+            this._itemActionVisibilityCallback(action, contents)
+        );
     }
 
     /**
@@ -745,23 +741,23 @@ export class Controller {
 
     /**
      * Обновляет параметры отображения операций с записью
-     * @param actions
+     * @param actionsObject
      * @private
      */
-    private _fixActionsDisplayOptions(actions: IItemActionsContainer): IItemActionsContainer {
-        if (actions.all && actions.all.length) {
-            actions.all = actions.all.map((action) => {
+    private _fixActionsDisplayOptions(actionsObject: IItemActionsObject): IItemActionsObject {
+        if (actionsObject.all && actionsObject.all.length) {
+            actionsObject.all = actionsObject.all.map((action) => {
                 action.style = Utils.getStyle(action.style, 'itemActions/Controller');
                 action.iconStyle = Utils.getStyle(action.iconStyle, 'itemActions/Controller');
                 action.tooltip = Controller._getTooltip(action);
                 return action;
             });
         }
-        if (actions.showed && actions.showed.length) {
+        if (actionsObject.showed && actionsObject.showed.length) {
             const fixShowOptionsBind = this._fixShownActionOptions.bind(this);
-            actions.showed = clone(actions.showed).map(fixShowOptionsBind);
+            actionsObject.showed = clone(actionsObject.showed).map(fixShowOptionsBind);
         }
-        return actions;
+        return actionsObject;
     }
 
     /**
@@ -812,31 +808,31 @@ export class Controller {
     /**
      * Устанавливает операции с записью для конкретного элемента коллекции
      * @param item
-     * @param actions
+     * @param actionsObject
      * @param actionMode
      * @private
      */
     private static _setItemActions(
         item: IItemActionsItem,
-        actions: IItemActionsContainer,
+        actionsObject: IItemActionsObject,
         actionMode: string
     ): boolean {
-        const oldActions = item.getActions();
-        if (!oldActions || (actions && !this._isMatchingActions(oldActions, actions, actionMode, item.isSwiped()))) {
-            item.setActions(actions, true);
+        const oldActionsObject = item.getActions();
+        if (!oldActionsObject || (actionsObject && !this._isMatchingActions(oldActionsObject, actionsObject, actionMode, item.isSwiped()))) {
+            item.setActions(actionsObject, true);
             return true;
         }
         return false;
     }
 
     private static _isMatchingActions(
-        oldContainer: IItemActionsContainer,
-        newContainer: IItemActionsContainer,
+        oldActionsObject: IItemActionsObject,
+        newActionsObject: IItemActionsObject,
         actionMode: string,
         isSwipedItem: boolean
     ): boolean {
-        const isMatchedAll = this._isMatchingActionLists(oldContainer.all, newContainer.all);
-        const isMatchedShowed = this._isMatchingActionLists(oldContainer.showed, newContainer.showed);
+        const isMatchedAll = this._isMatchingActionLists(oldActionsObject.all, newActionsObject.all);
+        const isMatchedShowed = this._isMatchingActionLists(oldActionsObject.showed, newActionsObject.showed);
         return actionMode === 'adaptive' && !isSwipedItem ? isMatchedAll : (isMatchedAll && isMatchedShowed);
     }
 
@@ -864,11 +860,11 @@ export class Controller {
     }
 
     private static _needsHorizontalMeasurement(config: ISwipeConfig): boolean {
-        const actions = config.itemActions;
+        const actionsObject = config.itemActions;
         return (
-            actions &&
-            actions.showed?.length === 1 &&
-            actions.all?.length > 1
+            actionsObject &&
+            actionsObject.showed?.length === 1 &&
+            actionsObject.all?.length > 1
         );
     }
 

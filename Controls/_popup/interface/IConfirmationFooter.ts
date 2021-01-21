@@ -50,6 +50,7 @@ export interface IConfirmationFooter {
  * @cfg {String} Определяет, какая кнопка будет активирована по нажатию ctrl+enter
  * @variant yes
  * @variant no
+ * @variant cancel
  * @default yes
  */
 

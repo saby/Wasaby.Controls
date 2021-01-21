@@ -21,6 +21,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions,
     itemActions?: IItemAction[];
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
     dataLoadCallback: Function;
+    dataLoadErrback: Function;
     selectorDialogResult: Function;
     sourceController?: NewSourceController;
 }

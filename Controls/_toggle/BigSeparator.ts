@@ -3,8 +3,26 @@ import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 
-export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions {
+/**
+ * @typedef TViewMode
+ * @variant ellipsis Иконка открытия отображатеся в виде троеточия
+ * @variant arrow Иконка открытия отображатеся в виде стрелки
+ */
+type TViewMode = 'ellipsis' | 'arrow';
 
+export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions {
+    /**
+     * Режим отображения иконки открытия.
+     * @default ellipsis
+     * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
+     */
+   viewMode?: TViewMode;
+    /**
+     * Определяет контрастность фона кнопки по отношению к ее окружению.
+     * @default true
+     * @demo Controls-demo/toggle/BigSeparator/ContrastBackground/Index
+     */
+    contrastBackground?: boolean;
 }
 
 /**
@@ -54,7 +72,8 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
    static getDefaultOptions(): object {
       return {
          value: false,
-         iconSize: 'm'
+         iconSize: 'm',
+         contrastBackground: true
       };
    }
 

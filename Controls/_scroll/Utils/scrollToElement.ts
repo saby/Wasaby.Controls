@@ -82,13 +82,37 @@ function getStickyHeaderHeight(scrollableElement: HTMLElement): { top: number; b
  * @author Красильников А.С.
  */
 
-export function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boolean) {
+export function scrollToElement(element: HTMLElement, toBottom?: Boolean, force?: Boolean): void {
    getScrollableParents(element).forEach(parent => {
       const
          elemToScroll = parent === document.documentElement ? document.body : parent,
          parentOffset = getOffset(parent),
          elemOffset = getOffset(element), //Offset of the element changes after each scroll, so we can't just cache it
          stickyHeaderHeight = getStickyHeaderHeight(parent);
+      // Если внутри элемента, к которому хотят подскроллиться, лежит StickyHeader или элемент является StickyHeader'ом,
+      // то мы не должны учитывать высоту предыдущего заголовка, т.к. заголовок встанет вместо него
+      // Рассматримается кейс: https://online.sbis.ru/opendoc.html?guid=cf7d3b3a-de34-43f2-ad80-d545d462602b, где все
+      // StickyHeader'ы одной высоты и сменяются друг за другом.
+      let innerStickyHeaderHeight;
+      const stickyHeaderClass = 'controls-StickyHeader';
+      if (element.classList.contains(stickyHeaderClass)) {
+          innerStickyHeaderHeight = element.clientHeight;
+      } else {
+          const innerStickyHeader = element.querySelector(`.${stickyHeaderClass}`);
+          if (innerStickyHeader) {
+              innerStickyHeaderHeight = innerStickyHeader.clientHeight;
+          }
+      }
+      if (innerStickyHeaderHeight) {
+         const positions = ['top', 'bottom'];
+         for (const position of positions) {
+             // Если мы отнимаем высоту заголовка и получаем результат меьнше нуля, значит заголовок был последним.
+             // В таком случае не нужно отнимать высоту.
+            if (stickyHeaderHeight[position] - innerStickyHeaderHeight >= 0) {
+               stickyHeaderHeight[position] -= innerStickyHeaderHeight;
+            }
+         }
+      }
 
       if (force || parentOffset.bottom < elemOffset.bottom) {
          if (toBottom) {

@@ -73,4 +73,24 @@ describe('Controls/_display/GroupItem', () => {
             assert.isTrue(item.isExpanded());
         });
     });
+
+    describe('isSticked', () => {
+        it('sticky enabled', () => {
+            const owner = { isStickyHeader: () => true };
+            const item = new GroupItem({owner});
+            assert.isTrue(item.isStickyHeader());
+        });
+
+        it('sticky disabled', () => {
+            const owner = { isStickyHeader: () => false };
+            const item = new GroupItem({owner});
+            assert.isFalse(item.isStickyHeader());
+        });
+
+        it('hidden group', () => {
+            const owner = { isStickyHeader: () => true };
+            const item = new GroupItem({owner, contents: 'CONTROLS_HIDDEN_GROUP'});
+            assert.isFalse(item.isStickyHeader());
+        });
+    });
 });

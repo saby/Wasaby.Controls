@@ -3,6 +3,7 @@ import { SyntheticEvent } from 'UI/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
+import { isEqual } from 'Types/object';
 
 type StrategyConstructor<P> = new (model: IDraggableCollection<P>, draggableItem: IDraggableItem) => IDragStrategy<P>;
 
@@ -46,15 +47,17 @@ export default class Controller<P> {
 
    /**
     * Отображает перетаскиваемые сущности в указанной позиции списка
-    * @param position - позиция в которой надо отобразить перемещаемые записи
+    * @param position Позиция в которой надо отобразить перемещаемые записи
+    * @return {boolean} Изменилась ли позиция
     */
-   setDragPosition(position: P): void {
-      if (this._dragPosition === position) {
-         return;
+   setDragPosition(position: P): boolean {
+      if (isEqual(this._dragPosition, position)) {
+         return false;
       }
 
       this._dragPosition = position;
       this._model.setDragPosition(position);
+      return true;
    }
 
    /**

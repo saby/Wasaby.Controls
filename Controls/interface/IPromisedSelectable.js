@@ -3,7 +3,7 @@ define('Controls/interface/IPromisedSelectable', [
 ], function() {
 
    /**
-    * Интерфейс для поддержки выбора элементов в списках, где одновременно можно выбрать несколько элементов и количество выбранных элементов неизвестно. Этот интерфейс подходит для деревьев или списков с бесконечным скроллом, где пользователь может выбрать элементы, которые еще не загружены (например, через Панель управления).
+    * Интерфейс для поддержки {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ выбора элементов} в {@link /doc/platform/developmentapl/interface-development/controls/list/ списках}, где одновременно можно выбрать несколько элементов и количество выбранных элементов неизвестно. Этот интерфейс подходит для деревьев или списков с {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/ бесконечным скроллом}, где пользователь может выбрать элементы, которые еще не загружены (например, через {@link /doc/platform/developmentapl/interface-development/controls/list/actions/operations/ Панель управления}).
     * @interface Controls/interface/IPromisedSelectable
     * @public
     * @author Авраменко А.С.
@@ -40,7 +40,7 @@ define('Controls/interface/IPromisedSelectable', [
 
    /**
     * @name Controls/interface/IPromisedSelectable#selectedKeys
-    * @cfg {Array.<Number|String>} Набор ключей выбранных элементов.
+    * @cfg {Array.<Number|String>} Набор ключей {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/select/#all выбранных элементов}.
     * @demo Controls-demo/list_new/MultiSelect/AllSelected/Index В демо-примере по умолчанию выбраны все элементы.
     * @default []
     * @remark
@@ -101,7 +101,7 @@ define('Controls/interface/IPromisedSelectable', [
 
    /**
     * @name Controls/interface/IPromisedSelectable#excludedKeys
-    * @cfg {Array.<Number|String>} Набор ключей элементов, которые исключены из выборки.
+    * @cfg {Array.<Number|String>} Набор ключей элементов, которые {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/select/#excluded-keys исключены из выборки}.
     * @demo Controls-demo/list_new/MultiSelect/AllSelected/Index В демо-примере по умолчанию выбраны все элементы.
     * @default []
     * @remark
@@ -161,7 +161,7 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * @event Происходит при изменении набора выбранных элементов списка.
+    * @event Происходит при изменении {@link selectedKeys набора выбранных элементов} списка.
     * @name Controls/interface/IPromisedSelectable#selectedKeysChanged
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<Number|String>} keys Массив ключей выбранных элементов.
@@ -220,7 +220,7 @@ define('Controls/interface/IPromisedSelectable', [
     */
 
    /**
-    * @event Происходит при изменении набора исключенных из выбора элементов списка.
+    * @event Происходит при изменении {@link excludedKeys набора исключенных из выбора элементов} списка.
     * @name Controls/interface/IPromisedSelectable#excludedKeysChanged
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<Number|String>} keys Набор ключей элементов, которые должны быть исключены из выборки.
@@ -282,7 +282,7 @@ define('Controls/interface/IPromisedSelectable', [
 
 
    /**
-    * @event Происходит до изменения списка выбранных элементов.
+    * @event Происходит до изменения {@link selectedKeys списка выбранных элементов}.
     * @name Controls/interface/IPromisedSelectable#beforeSelectionChanged
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Controls/_multiselection/interface#ISelectionDifference} selectionDiff Изменение в списке выбранных элементов по сравнению с текущим выбором.
@@ -290,5 +290,6 @@ define('Controls/interface/IPromisedSelectable', [
     * @remark
     * Из обработчика события можно вернуть новый список выбранных элементов или промис с ними.
     * Если вы передаете selectedKeys в опции, то в опции вы должны положить те же ключи, что и вернули из обработчика события.
+    * @see selectedKeys
     */
 });

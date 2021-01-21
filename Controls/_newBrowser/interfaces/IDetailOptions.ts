@@ -5,10 +5,15 @@ import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 /**
  * Enum со списком доступных вариантов отображения контента в detail-колонке
  */
-export enum CatalogDetailViewMode {
+export enum DetailViewMode {
+    // Плоский список
     list = 'list',
+    // Плитка
     tile = 'tile',
-    table = 'table'
+    // Таблица
+    table = 'table',
+    // Результаты поиска
+    search = 'search'
 }
 
 /**
@@ -34,52 +39,51 @@ export interface IDetailOptions extends ISourceOptions {
     keyProperty?: string;
     //endregion
 
-    //region display options
+    //region templates
     /**
-     * Опции для компонента {@link Controls/list:View}, который отображается
-     * в detail-колонке в режиме {@link CatalogDetailViewMode.list}
+     * Кастомный шаблон отображения итема плоского списка.
      *
-     * Данные опции перекрывают опции, вычисленные на основании конфигурации
-     * {@link ICatalogOptions.detail|detail-колонки}
-     *
-     * @see viewMode
+     * @remark
+     * Имеет смысл задавать, если нужно польностью переопределить
+     * шаблон итема плоского списка.
      */
-    list?: object;
+    customItemTemplate?: TemplateFunction | string;
 
     /**
-     * Опции для компонента {@link Controls/treeGrid:View}, который отображается
-     * в detail-колонке в режиме {@link CatalogDetailViewMode.table}
+     * Содержимое дефолтного шаблона итема плоского списка.
      *
-     * Данные опции перекрывают опции, вычисленные на основании конфигурации
-     * {@link ICatalogOptions.detail|detail-колонки}
-     *
-     * @see viewMode
+     * Не применяется если задан {@link customItemTemplate|кастомный шаблон}.
      */
-    table?: object;
-    //endregion
-
-    //region item templates
-    /**
-     * Кастомный шаблон отображения итема плоского списка
-     */
-    listItemTemplate?: TemplateFunction | string;
+    defaultItemTemplate: {
+        /**
+         * Шаблон заголовка итема плоского списка.
+         */
+        captionTemplate: TemplateFunction | string;
+        /**
+         * Шаблон содержимого итема плоского списка.
+         */
+        contentTemplate: TemplateFunction | string;
+        /**
+         * Шаблон подвала итема плоского списка.
+         */
+        footerTemplate: TemplateFunction | string;
+    };
 
     /**
      * Кастомный шаблон отображения итема плитки
      */
-    tileItemTemplate?: TemplateFunction | string;
+    customTileItemTemplate?: TemplateFunction | string;
 
     /**
-     * Шаблон отображения контента, который будет внедрен в дефолтный
-     * шаблон отображения итема.
+     * Пользовательский шаблон отображения пустого списка.
      */
-    itemContent: TemplateFunction | string;
+    emptyTemplate?: TemplateFunction | string;
 
     /**
-     * Шаблон отображения футера, который будет внедрен в дефолтный
-     * шаблон отображения итема.
+     * Пользовательский шаблон, который будет выведен справа от хлебных
+     * крошек
      */
-    itemFooter: TemplateFunction | string;
+    afterBreadCrumbsTemplate?: TemplateFunction | string;
     //endregion
 
     /**
@@ -100,4 +104,9 @@ export interface IDetailOptions extends ISourceOptions {
     gradientColorProperty?: string;
 
     columns?: unknown;
+
+    /**
+     * Цвет фона detail-колонки
+     */
+    backgroundColor?: string;
 }

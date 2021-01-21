@@ -14,6 +14,7 @@
 interface IInputDateTime {
     readonly _options: {
         /**
+         * @name Controls/interface/IInputDateTime#value
          * @cfg {Date} Дата, которую пользователь ввел в поле ввода.
          * @default null
          * @remark Если вы не обновите параметр "value", то не сможете ничего ввести в поле.

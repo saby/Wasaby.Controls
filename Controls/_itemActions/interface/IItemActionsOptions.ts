@@ -3,6 +3,7 @@ import {IItemAction, TActionCaptionPosition, TItemActionsPosition, TItemActionVi
 import {TActionAlignment} from './IItemActionsTemplateConfig';
 
 /**
+ * @description Допустимые значения для опции {@link itemActionsVisibility}.
  * @typedef {String} TItemActionsVisibility
  * @variant onhover Опции записи отображаются при наведении на запись.
  * @variant visible Опции записи отображены изначально.
@@ -32,8 +33,10 @@ export type TItemActionsVisibility = 'onhover'|'delayed'|'visible';
 
 export interface IItemActionsOptions {
     /**
-     * @cfg {Boolean} Определяет доступность контекстного меню строки при нажатии на правую кнопку мыши.
+     * @cfg {Boolean} Видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ контекстного меню} опций записи.
      * @default true
+     * @remark
+     * Если опция установлена в значение false, то контекстное меню будет скрыто.
      * @see contextMenuConfig
      */
 
@@ -44,16 +47,9 @@ export interface IItemActionsOptions {
     contextMenuVisibility?: boolean;
 
     /**
-     * @cfg {Controls/itemActions:IContextMenuConfig} Конфигурация для меню опции записи.
+     * @cfg {Controls/itemActions:IContextMenuConfig} Визуальное представление {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/show-type/ меню опций записи} и {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ контекстного меню}.
      * @remark
-     * Набор опций передается объектом. Заданный объект мержится с минимальным объектом опций, отдаваемых в меню по-умолчанию.
-     * В качестве ключей можно использовать следующие свойства:
-     * * items — для смены набора элементов.
-     * * groupProperty, groupTemplate для установки группировки.
-     * * itemTemplate — шаблон элемента меню.
-     * * footerTemplate — шаблон футера.
-     * * headerTemplate — шаблон шапки.
-     * * iconSize — размер иконок в выпадающем меню.
+     * Подробнее о настроке читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/context-menu-config/ здесь}.
      * @see contextMenuVisibility
      */
 
@@ -64,17 +60,10 @@ export interface IItemActionsOptions {
     contextMenuConfig?: IContextMenuConfig;
 
     /**
-     * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация опций записи.
+     * @cfg {Array.<Controls/itemActions:IItemAction>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
      * @remark
      * Для корректной работы опций записи для контрола нужно задать значение в опции {@link Controls/list:View#keyProperty keyProperty}.
-     * Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Inside/Index
-     * @see itemActionsPosition
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
-     * @see actionAlignment
-     * @see actionCaptionPosition
      */
 
     /*ENG
@@ -84,9 +73,8 @@ export interface IItemActionsOptions {
     itemActions?: IItemAction[];
 
     /**
-     * @cfg {TItemActionsPosition} Позиционирование панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ опциями записи}.
+     * @cfg {Controls/itemActions.TItemActionsPosition} Позиционирование панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ опциями записи}.
      * @remark
-     * Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * Пример использования значения custom можно посмотреть в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#custom-position статье}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Outside/Index Панель с опциями записи отображается под элементом.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Custom/Hidden/Index Панель с опциями записи не отображается. Опции записи доступны через контекстное меню.
@@ -118,11 +106,6 @@ export interface IItemActionsOptions {
      * <div>{{itemData.item.description}}</div>
      * </pre>
      * @see itemActions
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
-     * @see actionAlignment
-     * @see actionCaptionPosition
      */
 
     /*ENG
@@ -164,11 +147,11 @@ export interface IItemActionsOptions {
     itemActionsPosition?: TItemActionsPosition;
 
     /**
-     * @cfg {String} Имя свойства, которое содержит конфигурацию для панели с опциями записи.
+     * @cfg {String} Имя свойства, которое содержит конфигурацию для панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи}.
      * @remark
-     * Функционал используют в тех случаях, когда опции записи привязаны к отображаемым данным.
-     * Настройка для опций записи извлекается из данных самого элемента.
-     * Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
+     * С помощью этой опции можно задать конфигурацию набора опций для каждой записи.
+     * Подробнее об использовании функционала читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/separate-set-options/#item-actions-property здесь}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionsProperty/Index
      * @example
      * <pre class="brush: js">
      * _beforeMount: function(newOptions) {
@@ -204,11 +187,6 @@ export interface IItemActionsOptions {
      * }
      * </pre>
      * @see itemActions
-     * @see itemActionsPosition
-     * @see actionCaptionPosition
-     * @see itemActionVisibilityCallback
-     * @see actionClick
-     * @see actionAlignment
      */
 
     /*ENG
@@ -218,15 +196,9 @@ export interface IItemActionsOptions {
     itemActionsProperty?: string;
 
     /**
-     * @cfg {TActionAlignment} Выравнивание опций записи, когда они отображаются в режиме swipe.
+     * @cfg {TActionAlignment} Выравнивание {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}, когда они отображаются в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/swipe-mobile/ режиме swipe}.
      * @demo Controls-demo/List/Swipe/Scenarios
-     * @remark
-     * Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @see itemActions
-     * @see itemActionsPosition
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
      * @see actionCaptionPosition
      */
 
@@ -239,15 +211,9 @@ export interface IItemActionsOptions {
     actionAlignment?: TActionAlignment;
 
     /**
-     * @cfg {TActionCaptionPosition} Позиция заголовка для опций записи, когда они отображаются в режиме swipe.
+     * @cfg {TActionCaptionPosition} Позиция заголовка для {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}, когда они отображаются в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/swipe-mobile/ режиме swipe}.
      * @demo Controls-demo/List/Swipe/Scenarios
-     * @remark
-     * Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
      * @see itemActions
-     * @see itemActionsPosition
-     * @see itemActionVisibilityCallback
-     * @see itemActionsProperty
-     * @see actionClick
      * @see actionAlignment
      */
 
@@ -261,8 +227,10 @@ export interface IItemActionsOptions {
     actionCaptionPosition?: TActionCaptionPosition;
 
     /**
-     * @cfg {TItemActionsVisibility} Отображение опций записи с задержкой или без.
-     * @remark Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
+     * @cfg {TItemActionsVisibility} Отображение {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи} с задержкой или без.
+     * @remark
+     * Подробнее о каждом режиме отображения читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/item-actions-visibility/ здесь}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionsVisibility/Delayed/Index В следующем примере опции записи появляются с задержкой.
      */
 
     /*
@@ -271,7 +239,7 @@ export interface IItemActionsOptions {
     itemActionsVisibility?: TItemActionsVisibility;
 
     /**
-     * @cfg {Function} Функция обратного вызова для определения видимости опций записи.
+     * @cfg {Function} Функция обратного вызова для определения видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опций записи}.
      * @remark
      * Функция принимает два аргумента:
      *
@@ -279,7 +247,8 @@ export interface IItemActionsOptions {
      * * item — модель (см. {@link Types/entity:Model}), содержащая данные записи.
      *
      * Чтобы опция записи отображалась, из функции следует вернуть true.
-     * Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
+     * Подробнее об использовании функции читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/separate-set-options/#visibility здесь}.
+     * @demo Controls-demo/list_new/ItemActions/ItemActionVisibilityCallback/Index
      * @example
      * Режим "Чтение" недоступен, если запись имеет свойство isNew === false.
      *
@@ -369,7 +338,7 @@ export interface IItemActionsOptions {
  * @param {Types/entity:Model} item Экземпляр записи, для которой была отображена опция записи.
  * @param {HTMLElement} itemContainer Контейнер записи, по которой был выполнен клик.
  * @param {Event} nativeEvent Дескриптор исходного события браузера. Может использоваться для получения информации о том, какие клавиши-модификаторы были использованы при клике (Ctrl etc.)
- * @remark Подробнее о работе с опциями записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ здесь}.
+ * @remark Подробнее о работе с событиями опций записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/event/ здесь}.
  * @see itemActions
  * @see itemActionsPosition
  * @see itemActionVisibilityCallback
