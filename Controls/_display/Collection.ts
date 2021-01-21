@@ -2738,28 +2738,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         }
     }
 
-    getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
-        return `.${uniqueClass} .controls-ListView__itemV:nth-child(${index})`;
-    }
-
-    getItemHoverFreezeStyles(uniqueClass: string, index: number, backgroundColor: string): string {
-        return `
-              .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})).controls-ListView__item_highlightOnHover_default_theme_${this._$theme}:hover {
-                background-color: transparent;
-              }
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}).controls-ListView__item_highlightOnHover_default_theme_${this._$theme} {
-                background-color: ${backgroundColor};
-              }`;
-    }
-
-    getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
-        return `
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) > .controls-itemActionsV_outside_theme-${this._$theme} {
-                opacity: 1;
-                visibility: visible;
-              }`;
-    }
-
     private _prependStrategy(strategy: new() => IItemsStrategy<S, T>, options?: object, before?: Function): void {
         const strategyOptions = { ...options, display: this };
         let index = 0;

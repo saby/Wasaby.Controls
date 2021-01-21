@@ -3100,6 +3100,7 @@ const _private = {
                 uniqueClass: _private.getViewUniqueClass(self),
                 stylesContainer: self._children.itemActionsOutsideStyle as HTMLElement,
                 viewContainer: self._container,
+                theme: self._options.theme,
                 freezeHoverCallback: () => {
                     _private.removeShowActionsClass(self);
                     self._notify('register', ['mousemove', self, self._onHoverFreezeMouseMove], {bubbling: true});

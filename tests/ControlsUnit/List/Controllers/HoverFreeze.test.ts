@@ -59,9 +59,6 @@ describe('Controls/list/HoverFreeze', () => {
         itemActionsHeight = 30;
         cfg = {
             collection: {
-                getItemHoveredContainerSelector: () => '.selector',
-                getItemActionsOutsideFreezeStyles: () => '',
-                getItemHoverFreezeStyles: () => '',
                 getIndex: () => 0
             } as undefined as IBaseCollection<any, any>,
             viewContainer: {

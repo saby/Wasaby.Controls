@@ -1006,35 +1006,6 @@ var
             return this._maxEndColumn;
         },
 
-        getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
-            return `.${uniqueClass} .controls-Grid__row:nth-child(${index}):hover .controls-Grid__row-cell:not(.controls-Grid__row-ladder-cell)`;
-        },
-
-        getItemHoverFreezeStyles(uniqueClass: string, index: number, backgroundColor: string): string {
-            const theme = this._options.theme;
-            return `
-              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})).controls-Grid__row_highlightOnHover_default_theme-${theme}:hover .controls-Grid__item_background-hover_default_theme-${theme}:not(.controls-Grid__row-ladder-cell__content),
-              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})).controls-Grid__row_highlightOnHover_default_theme-${theme}:hover .controls-Grid__row-cell-background-hover-default_theme-${theme}:not(.controls-Grid__row-ladder-cell) {
-                background-color: inherit!important;
-              }
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${theme} .controls-Grid__item_background-hover_default_theme-${theme}:not(.controls-Grid__row-ladder-cell__content),
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}).controls-Grid__row_highlightOnHover_default_theme-${theme} .controls-Grid__row-cell-background-hover-default_theme-${theme}:not(.controls-Grid__row-ladder-cell) {
-                background-color: ${backgroundColor}!important;
-              }`;
-        },
-
-        getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
-            const theme = this._options.theme;
-            return `
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell  > .controls-itemActionsV_outside_theme-${theme},
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell > .controls-Grid__table__relative-cell-wrapper  > .controls-itemActionsV_outside_theme-${theme},
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-Grid__row-cell .controls-Grid__row-cell__content  > .controls-itemActionsV_outside_theme-${theme},
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}) > .controls-itemActionsV__container > .controls-itemActionsV_outside_theme-${theme} {
-                 opacity: 1;
-                 visibility: visible;
-              }`;
-        },
-
         /**
          * Метод проверяет, рисовать ли header при отсутствии записей.
          */

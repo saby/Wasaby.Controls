@@ -23,6 +23,7 @@ export interface IHoverFreezeOptions {
     viewContainer: HTMLElement;
     freezeHoverCallback: () => void;
     unFreezeHoverCallback: () => void;
+    theme: string:
 }
 
 /**
@@ -39,6 +40,7 @@ export default class HoverFreeze {
     private _moveArea: IMouseMoveArea;
     private _itemFreezeHoverTimeout: number;
     private _itemUnfreezeHoverTimeout: number;
+    private _theme: string;
 
     constructor(options: IHoverFreezeOptions) {
         this.updateOptions(options);
@@ -51,6 +53,7 @@ export default class HoverFreeze {
         this._viewContainer = options.viewContainer;
         this._freezeHoverCallback = options.freezeHoverCallback;
         this._unFreezeHoverCallback = options.unFreezeHoverCallback;
+        this._theme = options.theme;
     }
 
     /**
@@ -100,6 +103,11 @@ export default class HoverFreeze {
                 this.unfreezeHover();
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
+            if (this._moveArea) {
+                this.adddiv(x, y, 'red');
+                this.adddiv(this._moveArea.top, this._moveArea.left, 'green');
+                this.adddiv(this._moveArea.bottom, this._moveArea.right, 'blue');
+            }
             this.unfreezeHover();
         }
     }
@@ -118,6 +126,18 @@ export default class HoverFreeze {
         if (this._freezeHoverCallback) {
             this._unFreezeHoverCallback();
         }
+    }
+
+    adddiv(top, left, color) {
+        const div = document.createElement('div');
+        div.style.position = 'absolute';
+        div.style.background = color || '#ff0000';
+        div.style.top = top + 'px';
+        div.style.left = left + 'px';
+        div.style.width = '4px';
+        div.style.height = '4px';
+        console.log(top, left);
+        body.appendChild(div);
     }
 
     private _isCursorInsideOfMouseMoveArea(x: number, y: number): boolean {
@@ -144,18 +164,97 @@ export default class HoverFreeze {
 
     private _freezeHover(index: number): void {
         const hoveredContainers = this._getHoveredItemContainers(index);
-        const backgroundColor = getComputedStyle(hoveredContainers[0]).backgroundColor;
+
+        // zero element in grid will be row itself; it doesn't have any background color
+        const hoverBackgroundColor = getComputedStyle(hoveredContainers[hoveredContainers.length - 1]).backgroundColor;
+
+        const hoveredEditingTemplateTextContainer = this._getEditingTemplateTextContainer(index);
+        const hoveredEditingTemplateTextBackground = hoveredEditingTemplateTextContainer ?
+            getComputedStyle(hoveredEditingTemplateTextContainer).backgroundColor : null;
+
         this._moveArea = this._calculateMouseMoveArea(hoveredContainers);
-        this._stylesContainer.innerHTML = this._collection.getItemActionsOutsideFreezeStyles(this._uniqueClass, index);
-        this._stylesContainer.innerHTML += this._collection.getItemHoverFreezeStyles(this._uniqueClass, index, backgroundColor);
+        this._stylesContainer.innerHTML = this._getItemActionsOutsideFreezeStyles(this._uniqueClass, index);
+        this._stylesContainer.innerHTML += this._getItemHoverFreezeStyles(
+            this._uniqueClass,
+            index,
+            hoverBackgroundColor,
+            hoveredEditingTemplateTextBackground);
         if (this._freezeHoverCallback) {
             this._freezeHoverCallback();
         }
     }
 
+    /**
+     * Селектор для определения реального размера строки в таблицах и в списках
+     * также необходим для выбора фона строки под курсором
+     * @param uniqueClass
+     * @param index
+     * @private
+     */
+    private _getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
+        return `.${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell:not(.controls-Grid__row-ladder-cell),` +
+            ` .${uniqueClass} .controls-ListView__itemV:nth-child(${index})`;
+    }
+
+    /**
+     * Селектор для редактируемых полей внутри выделенной строки
+     * @param uniqueClass
+     * @param index
+     * @private
+     */
+    private _getEditingTemplateTextSelector(uniqueClass: string, index: number): string {
+        return `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}):hover .controls-EditingTemplateText_enabled_theme-${this._theme}`;
+    }
+
+    /**
+     * Стили для отключения hover
+     * @param uniqueClass
+     * @param index
+     * @param hoverBackgroundColor
+     * @param hoveredEditingTemplateTextBackground
+     * @private
+     */
+    private _getItemHoverFreezeStyles(uniqueClass: string,
+                                      index: number,
+                                      hoverBackgroundColor: string,
+                                      hoveredEditingTemplateTextBackground: string): string {
+        let styles = `
+              .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})):hover,
+              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})):hover .controls-Grid__item_background-hover_default_theme-${this._theme},
+              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})):hover .controls-Grid__row-cell-background-hover-default_theme-${this._theme} {
+                background-color: inherit;
+              }
+              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}),
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__item_background-hover_default_theme-${this._theme},
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell-background-hover-default_theme-${this._theme} {
+                background-color: ${hoverBackgroundColor};
+              }
+              `;
+        if (hoveredEditingTemplateTextBackground) {
+            styles += `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .controls-EditingTemplateText_enabled_theme-${this._theme} {
+                background-color: ${hoveredEditingTemplateTextBackground};
+            }`;
+        }
+        return styles;
+    }
+
+    private _getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
+        return `
+              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .controls-itemActionsV_outside_theme-${this._theme} {
+                 opacity: 1;
+                 visibility: visible;
+              }
+              `;
+    }
+
+    private _getEditingTemplateTextContainer(index: number): HTMLElement {
+        const editingTemplateTextSelector = this._getEditingTemplateTextSelector(this._uniqueClass, index);
+        return this._viewContainer.querySelector(editingTemplateTextSelector);
+    }
+
     // current hovered item containers
     private _getHoveredItemContainers(index: number): NodeListOf<HTMLElement> {
-        const hoveredContainerSelector = this._collection.getItemHoveredContainerSelector(this._uniqueClass, index);
+        const hoveredContainerSelector = this._getItemHoveredContainerSelector(this._uniqueClass, index);
         return this._viewContainer.querySelectorAll(hoveredContainerSelector);
     }
 
@@ -164,10 +263,10 @@ export default class HoverFreeze {
         const lastContainer = hoveredContainers[hoveredContainers.length - 1];
         const itemActionsContainer = lastContainer.querySelector(ITEM_ACTIONS_SELECTOR);
         const resultRect = {
-            bottom: 0,
-            left: 0,
-            right: 0,
-            top: 0
+            bottom: null,
+            left: null,
+            right: null,
+            top: null
         };
         let itemActionsHeight = 0;
         if (itemActionsContainer) {
@@ -175,16 +274,17 @@ export default class HoverFreeze {
         }
         hoveredContainers.forEach((container) => {
             const containerRect = container.getBoundingClientRect();
-            if (!resultRect.top) {
+            const bottom = containerRect.top + containerRect.height + itemActionsHeight;
+            if (resultRect.left === null) {
                 resultRect.top = containerRect.top;
             }
-            if (!resultRect.bottom) {
-                resultRect.bottom = containerRect.top + containerRect.height + itemActionsHeight;
+            if (resultRect.left === null || resultRect.bottom < bottom) {
+                resultRect.bottom = bottom;
             }
-            if (!resultRect.left) {
+            if (resultRect.left === null) {
                 resultRect.left = containerRect.left;
             }
-            resultRect.right += containerRect.left + containerRect.width;
+            resultRect.right = containerRect.left + containerRect.width;
         });
         return resultRect;
     }
