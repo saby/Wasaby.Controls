@@ -8,7 +8,7 @@
             ntype="scroll"
             fixedZIndex="{{5}}"
             shadowVisibility="hidden">
-        <Controls._scroll.Scroll.Scrollbar
+        <Controls.scroll:_Scrollbar
                 name="scrollbar"
                 position="{{_position}}"
                 direction="horizontal"
@@ -20,7 +20,7 @@
     </Controls.scroll:StickyHeader>
 </ws:if>
 <ws:else>
-    <Controls._scroll.Scroll.Scrollbar
+        <Controls.scroll:_Scrollbar
             name="scrollbar"
             position="{{_position}}"
             direction="horizontal"
