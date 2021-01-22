@@ -110,7 +110,7 @@ describe('ColumnsInnerView', () => {
             })
         });
         rs.prepend(rsForPrepend);
-        assert.deepEqual(columnsView._addingColumnsCounter, 0, 'wrong _addingColumnsCounter');
+        assert.deepEqual(columnsView._addingColumnsCounter, 2, 'wrong _addingColumnsCounter');
 
     });
 });

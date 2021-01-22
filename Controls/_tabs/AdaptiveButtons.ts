@@ -14,6 +14,7 @@ import rk = require('i18n!Controls');
 const MARGIN = 13;
 const MIN_WIDTH = 26;
 const PADDING_OF_MORE_BUTTON = 6;
+const MIN_VISIBLE_LETTERS = 3;
 const COUNT_OF_MARGIN = 2;
 const MORE_BUTTON_TEXT = rk('Ещё...');
 
@@ -137,22 +138,24 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         });
     }
 
-    private _menuItemClickHandler(event: SyntheticEvent<Event>, item: Model): void {
+    private _menuItemClickHandler(event: SyntheticEvent<Event>, item: Model<object>): void {
         item.set('isMainTab', true);
         /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
         Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
         this._selectedKeyHandler(event, item.get(this._options.keyProperty));
         this._visibleItems.replace(item, this._position);
+        // для вызова перерисовки Controls.tabs:Buttons необходимо передать новые items
+        this._visibleItems = this._visibleItems.clone();
         this._updateFilter(this._options);
     }
 
-    //при нажатии на кнопку еще останавливаем событие для того, чтобы вкладка не выбралась.
+    // при нажатии на кнопку еще останавливаем событие для того, чтобы вкладка не выбралась.
     private _onMouseDownHandler(event: SyntheticEvent<Event>): void {
         event.stopPropagation();
     }
 
     private _prepareItems(options: ITabsAdaptiveButtonsOptions): void {
-        this._items.forEach((item) => {
+        this._items.forEach((item: Model<object>) => {
             item.set('align', options.align);
         });
         this._calcVisibleItems(this._items, options);
@@ -225,7 +228,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
 
         if (indexLast === arrWidth.length - 2) {
             const minWidth = this._getMinWidth(this._getTextOfTabByIndex(options, items, 0)) + MARGIN * 2;
-            const width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
+            width = currentWidth - arrWidth[arrWidth.length - 1] + minWidth;
             if (width < options.containerWidth) {
                 indexLast++;
                 return indexLast;
@@ -240,8 +243,8 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         return indexLast;
     }
 
-    private _getLastVisibleItemIndex(lastIndex: number,  arrWidth: number[],
-                                     currentWidth: number, options: ITabsAdaptiveButtonsOptions, items: RecordSet): number {
+    private _getLastVisibleItemIndex(lastIndex: number,  arrWidth: number[], currentWidth: number,
+                                     options: ITabsAdaptiveButtonsOptions, items: RecordSet): number {
         let i = arrWidth.length - 1;
         let indexLast = lastIndex;
         let width = currentWidth;
@@ -280,7 +283,7 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
     }
 
     private _getMinWidth(text: string): number {
-        return this._getTextWidth(text.substring(0, 3) + '...', 'l');
+        return this._getTextWidth(text.substring(0, MIN_VISIBLE_LETTERS) + '...', 'l');
     }
 
     private _getTextWidth(text: string, size: string  = 'l'): number {
