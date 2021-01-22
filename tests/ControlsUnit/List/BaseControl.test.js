@@ -1472,8 +1472,13 @@ define([
          };
 
          // Without marker
-         lists.BaseControl._private.enterHandler(baseControl);
+         lists.BaseControl._private.enterHandler(baseControl, { nativeEvent: {} });
          assert.isTrue(notified);
+
+         // With CtrlKey
+         notified = false;
+         lists.BaseControl._private.enterHandler(baseControl, { nativeEvent: { ctrlKey: true } });
+         assert.isFalse(notified);
       });
 
       it('enterHandler while loading', function() {
@@ -1492,7 +1497,7 @@ define([
                   notified = true;
                },
                _loadingIndicatorState: 'all'
-            });
+            }, {nativeEvent: {}});
          }
 
          // Without marker
