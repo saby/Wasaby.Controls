@@ -5815,7 +5815,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _updateHeights(updateItems: boolean = true): void {
         if (this._scrollController) {
             const itemsHeights = getItemsHeightsData(this._getItemsContainer(), this._options.plainItemsContainer === false);
-            this._scrollController.updateItemsHeights(itemsHeights);
+            if (updateItems) {
+                this._scrollController.updateItemsHeights(itemsHeights);
+            }
             const result = this._scrollController.update({
                 params: {
                     scrollHeight: _private.getViewSize(this),
