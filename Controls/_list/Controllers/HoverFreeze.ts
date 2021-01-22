@@ -103,41 +103,46 @@ export default class HoverFreeze {
                 this.unfreezeHover();
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
-            if (this._moveArea) {
-                this.adddiv(x, y, 'red');
-                this.adddiv(this._moveArea.top, this._moveArea.left, 'green');
-                this.adddiv(this._moveArea.bottom, this._moveArea.right, 'blue');
-            }
             this.unfreezeHover();
         }
     }
 
+    /**
+     * Перезапускает таймаут "заморозки" ховера если ни один из таймаутов
+     * не задан в данный момент и нет текущей "замороженной" записи.
+     * Используется при движении курсора мыши внутри записи.
+     * @param item
+     */
+    restartFreezeHoverTimeout(item?: CollectionItem): void {
+        if (!this._itemUnfreezeHoverTimeout && !this._itemUnfreezeHoverTimeout && !this._itemKey) {
+            this.startFreezeHoverTimeout(item);
+        }
+    }
+
+    /**
+     * Перезапускает таймаут "разморозки" ховера, если задан таймаут "разморозки"
+     * и есть уже "замороженная" запись.
+     * Используется при движении курсора мыши в области всего списка
+     * @param event
+     */
     restartUnfreezeHoverTimeout(event: SyntheticEvent): void {
         if (this._itemKey !== null && !!this._itemUnfreezeHoverTimeout) {
             this.startUnfreezeHoverTimeout(event);
         }
     }
 
+    /**
+     * Немедленно "размораживает" запись
+     */
     unfreezeHover(): void {
         // Сбрасываем текущий ховер
         this._itemKey = null;
         this._moveArea = null;
         this._stylesContainer.innerHTML = '';
+        this._clearUnfreezeHoverTimeout();
         if (this._freezeHoverCallback) {
             this._unFreezeHoverCallback();
         }
-    }
-
-    adddiv(top, left, color) {
-        const div = document.createElement('div');
-        div.style.position = 'absolute';
-        div.style.background = color || '#ff0000';
-        div.style.top = top + 'px';
-        div.style.left = left + 'px';
-        div.style.width = '4px';
-        div.style.height = '4px';
-        console.log(top, left);
-        body.appendChild(div);
     }
 
     private _isCursorInsideOfMouseMoveArea(x: number, y: number): boolean {
@@ -163,6 +168,7 @@ export default class HoverFreeze {
     }
 
     private _freezeHover(index: number): void {
+        this._clearFreezeHoverTimeout();
         const hoveredContainers = this._getHoveredItemContainers(index);
 
         // zero element in grid will be row itself; it doesn't have any background color
