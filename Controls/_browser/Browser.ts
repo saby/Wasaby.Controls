@@ -301,6 +301,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                     .catch((error) => error);
             } else if (updateResult) {
                 this._filterChanged(null, updateResult as QueryWhereExpression<unknown>);
+                this._setSearchValue(newOptions.searchValue);
             }
 
             return updateResult;
