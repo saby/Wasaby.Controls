@@ -69,8 +69,7 @@ define('Controls/interface/IGroupedList', [
 });
 
 /**
- * @event Происходит при развертывании {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
- * @name Controls/interface/IGroupedList#groupExpanded
+ * @event Controls/interface/IGroupedList#groupExpanded Происходит при развертывании {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String} changes Идентификатор группы.
  * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index
@@ -80,8 +79,7 @@ define('Controls/interface/IGroupedList', [
  */
 
 /**
- * @event Происходит при сворачивании {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
- * @name Controls/interface/IGroupedList#groupCollapsed
+ * @event Controls/interface/IGroupedList#groupCollapsed Происходит при сворачивании {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы}.
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {String} changes Идентификатор группы.
  * @demo Controls-demo/list_new/Grouped/OnGroupCollapsed/Index

@@ -57,6 +57,12 @@ export interface IMenuOptions {
     template: string;
 }
 
+/**
+ * Интерфейс опций контрола {@link Controls/toolbars:View}.
+ * @interface Controls/_toolbars/IToolbar
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions, IFilterOptions {
@@ -574,7 +580,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return void 0;
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars', 'Controls/theme'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {

@@ -480,6 +480,21 @@ describe('Controls/browser:Browser', () => {
             browser._dataLoadCallback(null, 'down');
             assert.equal(actualDirection, 'down');
         });
+
+        it('search view mode changed on dataLoadCallback', async () => {
+            let options = getBrowserOptions();
+            options.searchValue = 'Sash';
+            const browser = getBrowser(options);
+
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+
+            browser._viewMode = 'search';
+            browser._searchValue = '';
+
+            browser._dataLoadCallback(new RecordSet());
+            assert.isUndefined(browser._viewMode);
+        });
     });
 
     describe('_handleItemOpen', () => {
@@ -493,6 +508,7 @@ describe('Controls/browser:Browser', () => {
 
            assert.equal(browser._root, 'test123');
            assert.equal(browser._searchController._root, 'test123');
+           assert.isNull(browser._rootBeforeSearch);
        });
 
         it ('root is changed, shearchController is not created', async () => {

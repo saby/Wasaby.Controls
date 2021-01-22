@@ -84,6 +84,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     get root(): TKey {
         return this._detailDataSource?.root || null;
     }
+    protected _masterRoot: TKey;
 
     //region source
     protected _masterSourceController: SourceController;
@@ -199,21 +200,58 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     //endregion
 
     setRoot(root: TKey, noLoad: boolean = false): Promise<RecordSet> {
-        const rootChanged = this.root !== root;
-        const result = this._detailDataSource.setRoot(root, noLoad);
+        // Перед тем как менять root уведомим об этом пользователя.
+        // Что бы он мог либо отменить обработку либо подменить root.
+        return Promise.resolve(
+            this._notify('beforeRootChanged', [root])
+        )
+            // Обработаем результат события
+            .then((beforeChangeResult) => {
+                // Если вернули false, значит нужно отменить смену root
+                if (beforeChangeResult === false) {
+                    return undefined;
+                }
 
-        if (rootChanged) {
-            this._notify('rootChanged', [root], {bubbling: true});
-        }
+                // По умолчанию master- и detail-root меняются синхронно
+                let newRoots = {
+                    detailRoot: root,
+                    masterRoot: root
+                };
+                // Если вернулся не undefined значит считаем что root сменили
+                if (beforeChangeResult !== undefined) {
+                    newRoots = beforeChangeResult as any;
+                }
 
-        if (noLoad) {
-            return result;
-        }
+                return newRoots;
+            })
+            // Загрузим данные если нужно
+            .then((newRoots) => {
+                const hasRoots = newRoots !== undefined;
+                const detailRootChanged = hasRoots ? this.root !== newRoots.detailRoot : false;
+                const masterRootChanged = hasRoots ? this._masterRoot !== newRoots.masterRoot : false;
 
-        return result.then((items) => {
-            this._processItemsMetadata(items);
-            return items;
-        });
+                // Если newRoots не определен или не изменился ни master- ни detail-root,
+                // то и делать ничего не надо
+                if (!hasRoots || (!detailRootChanged && !masterRootChanged)) {
+                    return undefined;
+                }
+
+                // Уведомим об изменении root
+                this._notify('rootChanged', [newRoots.detailRoot], {bubbling: true});
+
+                this._masterRoot = newRoots.masterRoot;
+                // Перезапросим данные
+                return this._detailDataSource.setRoot(newRoots.detailRoot, noLoad);
+            })
+            // Обработаем загруженные данные
+            .then((items) => {
+                // Применим конфигурацию из метаданных, только если требовалась загрузка
+                if (!noLoad) {
+                    this._processItemsMetadata(items);
+                }
+
+                return items;
+            });
     }
 
     setSearchString(searchString: string): Promise<RecordSet> {
@@ -247,11 +285,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._tileCfg = new TileConfig(cfg, options);
         this._listCfg = new ListConfig(cfg, options);
 
-        // 1. Сначала проставим режим отображения
-        this._setViewMode(cfg.settings.clientViewMode);
-        // 2. А потом уже обновим видимость master-колонки,
-        //    т.к. она зависит от режима отображения
-        this._updateMasterVisibility();
+        // Если не в режиме поиска, то нужно применить viewMode из конфига
+        if (this.viewMode !== DetailViewMode.search) {
+            this._setViewMode(cfg.settings.clientViewMode);
+        }
     }
 
     private _setViewMode(value: DetailViewMode): void {
@@ -270,6 +307,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         this._prevViewMode = this._viewMode;
         this._viewMode = result;
+
+        // Обновим видимость мастера, т.к. она зависит от viewMode
+        this._updateMasterVisibility();
 
         // Уведомляем о том, что изменился режим отображения списка в detail-колонке
         this._notify('viewModeChanged', [result]);
@@ -482,9 +522,21 @@ export default class Browser extends Control<IOptions, IReceivedState> {
  */
 
 /**
+ * @event Событие, которое генерируется перед сменой root. Вы можете использовать это событие
+ * что бы:
+ *  * отменить смету root - вернуть false из обработчика события
+ *  * подменить root - вернуть объект с полями masterRoot и detailRoot
+ * Также результатом выполнения обработчика может быть Promise, который резолвится
+ * выше описанными значениями.
+ *
+ * @name Controls/newBrowser:Browser#beforeRootChanged
+ * @param {TKey} root Текущий корневой узел
+ */
+
+/**
  * @event Событие об изменении режима отображения списка в detail-колонке
  * @name Controls/newBrowser:Browser#rootChanged
- * @param {DetailViewMode} root Текущий корневой узел
+ * @param {TKey} root Текущий корневой узел
  */
 
 /**

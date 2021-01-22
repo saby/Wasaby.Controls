@@ -1,4 +1,4 @@
-import {getTextWidth} from 'Controls/_utils/sizeUtils/getTextWidth';
+import {getTextWidth} from 'Controls/sizeUtils';
 import {detection} from 'Env/Env';
 
 export function hasHorizontalScroll(target: HTMLElement): boolean {

@@ -9,7 +9,7 @@
 <ws:template name="portionedSearch">
     <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}" name="LoadingIndicator">
         <ws:partial template="{{_options.loadingIndicatorTemplate}}"
-                    showLoadingIndicator="{{_showLoadingIndicatorImage}}"
+                    showLoadingIndicator="{{_showLoadingIndicator}}"
                     portionedSearchInProgress="{{_portionedSearchInProgress}}">
             <ws:contentTemplate>
                 <div class="controls-BaseControl__abortSearch controls-BaseControl__abortSearch_theme-{{_options.theme}}" on:click="_abortSearch()">{[Прервать поиск]}</div>
@@ -105,7 +105,7 @@
                 name="{{name}}"
                 template="{{ _options.content }}"
                 scope="{{_options}}"
-                loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
+                loadingState="{{_showLoadingIndicator ? _loadingIndicatorState}}"
                 _needBottomPadding="{{_needBottomPadding}}"
                 needShowEmptyTemplate="{{ __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel, _options.emptyTemplateColumns) }}"
                 listModel="{{_listViewModel}}"
@@ -138,7 +138,6 @@
                 on:itemsContainerReady="_itemsContainerReadyHandler()"
                 on:controlResize="_viewResize()"
                 on:doScroll="_stopBubblingEvent()"
-                on:updateShadowMode="_stopBubblingEvent()"
                 on:updatePlaceholdersSize="_stopBubblingEvent()"
                 on:saveScrollPosition="_stopBubblingEvent()"
                 on:restoreScrollPosition="_stopBubblingEvent()"

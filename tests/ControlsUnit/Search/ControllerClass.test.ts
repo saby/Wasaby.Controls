@@ -186,6 +186,7 @@ describe('Controls/search:ControllerClass', () => {
          const resetStub = sandbox.stub(controllerClass, 'reset');
 
          controllerClass._options.searchValue = null;
+         controllerClass._searchValue = null;
 
          controllerClass.update({
             searchValue: null
@@ -246,6 +247,21 @@ describe('Controls/search:ControllerClass', () => {
          assert.isTrue(searchStub.withArgs('test123').calledOnce);
          assert.equal(controllerClass._sourceController, sourceControllerMock);
          assert.isFalse(resetStub.called);
+      });
+
+      it('should call when searchValue not equal options.searchValue', () => {
+         const searchStub = sandbox.stub(controllerClass, 'search');
+         const resetStub = sandbox.stub(controllerClass, 'reset');
+
+         controllerClass._options.searchValue = '';
+         controllerClass._searchValue = 'searchValue';
+
+         controllerClass.update({
+            searchValue: ''
+         });
+
+         assert.isFalse(searchStub.called);
+         assert.isTrue(resetStub.called);
       });
    });
 });
