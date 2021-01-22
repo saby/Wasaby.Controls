@@ -361,7 +361,7 @@ export default class ColumnsInnerView extends Control {
             this.moveMarker(direction);
             e.stopPropagation();
             e.preventDefault();
-            return true;
+            return false;
         }
     }
 

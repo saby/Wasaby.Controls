@@ -2139,28 +2139,33 @@ define([
             markedKey: 4
          };
          const treeControl = correctCreateTreeControl(cfg);
+         let newCfg = {...cfg};
          treeControl._notify = (event, args) => {
-            let newCfg = treeControl._options;
             if (event === 'expandedItemsChanged') {
                newCfg.expandedItems = args[0];
-               treeControl._onDrawItems();
             }
             if (event === 'markedKeyChanged') {
                newCfg.markedKey = args[0];
             }
-            treeControl._beforeUpdate(newCfg);
-            treeControl.saveOptions(newCfg);
          };
          treeControl._children.baseControl.getViewModel().setItems(rs, cfg);
          treeControl._afterMount();
          assert.equal(treeControl._leafPosition, 'last');
          treeControl.goToPrev();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
          assert.equal(treeControl._leafPosition, 'middle');
          treeControl.goToPrev();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
          assert.equal(treeControl._leafPosition, 'first');
          treeControl.goToNext();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
          assert.equal(treeControl._leafPosition, 'middle');
          treeControl.goToNext();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
          assert.equal(treeControl._leafPosition, 'last');
       });
    });

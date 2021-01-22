@@ -16,7 +16,8 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: Data.getData()
+            data: Data.getData(),
+            filter: () => true
         });
         this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
     }
