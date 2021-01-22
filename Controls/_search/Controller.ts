@@ -189,17 +189,7 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _search(event: SyntheticEvent, validatedValue: string): void {
       this._inputSearchValue = validatedValue;
-      this._startSearch(validatedValue, this._options).then((result) => {
-         if (result instanceof RecordSet) {
-            const sourceController = this._sourceController;
-            this._updateParams(validatedValue);
-            this._handleDataLoad(result);
-            this._notify('filterChanged', [sourceController.getFilter()]);
-            if (this._options.dataLoadCallback) {
-               this._options.dataLoadCallback(result);
-            }
-         }
-      }).catch((error: Error & {
+      this._startSearch(validatedValue, this._options).catch((error: Error & {
          isCancelled?: boolean;
       }) => {
          if (!error.isCancelled) {
@@ -264,6 +254,13 @@ export default class Container extends Control<IContainerOptions> {
 
    private _dataLoadCallback(data: RecordSet): void {
       this._handleDataLoad(data);
+
+      if (data instanceof RecordSet) {
+         const sourceController = this._sourceController;
+         this._updateParams(this._inputSearchValue);
+         this._handleDataLoad(data);
+         this._notify('filterChanged', [sourceController.getFilter()]);
+      }
 
       if (this._options.dataLoadCallback) {
          this._options.dataLoadCallback(data);
