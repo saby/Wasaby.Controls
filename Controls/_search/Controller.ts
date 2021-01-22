@@ -90,9 +90,9 @@ export default class Container extends Control<IContainerOptions> {
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
    private _inputSearchValue: string = '';
+   private _searchStarted: boolean = false;
 
    private _searchController: SearchController = null;
-
    private _sourceController: SourceController = null;
 
    protected _beforeMount(options: IContainerOptions, context: typeof DataOptions): void {
@@ -160,6 +160,7 @@ export default class Container extends Control<IContainerOptions> {
 
    private _startSearch(value: string, options?: IContainerOptions): Promise<RecordSet | Error> {
       return this._getSearchController(options).then((searchController) => {
+         this._searchStarted = true;
          return searchController.search(value);
       });
    }
@@ -192,6 +193,7 @@ export default class Container extends Control<IContainerOptions> {
       this._startSearch(validatedValue, this._options).catch((error: Error & {
          isCancelled?: boolean;
       }) => {
+         this._searchStarted = false;
          if (!error.isCancelled) {
             return error;
          }
@@ -255,11 +257,13 @@ export default class Container extends Control<IContainerOptions> {
    private _dataLoadCallback(data: RecordSet): void {
       this._handleDataLoad(data);
 
-      if (data instanceof RecordSet) {
+      if (data instanceof RecordSet && this._searchStarted) {
          const sourceController = this._sourceController;
          this._updateParams(this._inputSearchValue);
          this._handleDataLoad(data);
          this._notify('filterChanged', [sourceController.getFilter()]);
+
+         this._searchStarted = false;
       }
 
       if (this._options.dataLoadCallback) {
