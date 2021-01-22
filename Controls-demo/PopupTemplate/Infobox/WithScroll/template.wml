@@ -1,0 +1,20 @@
+<Controls.popupTemplate:InfoBox stickyPosition="{{_options.stickyPosition}}">
+    <ws:content>
+        <div>
+            <Controls.heading:Title
+                    caption="Список"
+                    readOnly="{{true}}"
+                    fontColorStyle="secondary"
+                    fontSize="3xl"
+                    attr:style="padding: 5px"
+            />
+            <Controls.scroll:Container attr:class="controlsDemo__height200 controlsDemo__maxWidth200">
+                <div>
+                    <ws:for data="i in 20">
+                        <p class="controlsDemo_ColumnsView_itemTemplate-wrapper">Запись под номером {{i}}</p>
+                    </ws:for>
+                </div>
+            </Controls.scroll:Container>
+        </div>
+    </ws:content>
+</Controls.popupTemplate:InfoBox>
