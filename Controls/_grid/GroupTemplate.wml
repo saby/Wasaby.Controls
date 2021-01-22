@@ -43,7 +43,6 @@
 <ws:template name="groupRightStickyTemplate">
       <Controls.scroll:StickyHeader
         backgroundStyle="{{itemData.backgroundStyle}}"
-        shadowVisibility="{{itemData.shadowVisibility ? itemData.shadowVisibility : 'lastVisible'}}"
         attr:class="controls-ListView__stickyGroup_{{itemData.style}} controls-ListView__groupContent"
         fixedZIndex="{{4}}">
          <ws:if data="{{separatorVisibility !== false && (columnAlignGroup !== undefined || textAlign !== 'right')}}">
@@ -60,7 +59,6 @@
 <ws:template name="groupContentStickyWrapper">
 <Controls.scroll:StickyHeader
         backgroundStyle="{{itemData.backgroundStyle}}"
-        shadowVisibility="{{itemData.shadowVisibility ? itemData.shadowVisibility : 'lastVisible'}}"
         attr:class="controls-ListView__stickyGroup_{{itemData.style}} controls-ListView__groupContent
                {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
                controls-ListView__groupContent_align-{{textAlign || 'left'}}"
