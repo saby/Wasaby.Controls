@@ -203,6 +203,10 @@ var
             expanderClasses += ` controls-TreeGrid__row-expander__spacingTop_${itemData.itemPadding.top}_theme-${theme}`;
             expanderClasses += ` controls-TreeGrid__row-expander__spacingBottom_${itemData.itemPadding.bottom}_theme-${theme}`;
 
+            if (itemData.isDragging) {
+                expanderClasses += ` controls-ListView__itemContent_dragging_theme-${theme}`;
+            }
+
             if (expanderIcon) {
                 expanderIconClass = ' controls-TreeGrid__row-expander_' + expanderIcon;
                 expanderClasses += expanderIconClass;

@@ -1692,7 +1692,8 @@ var
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}
             controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (current.itemPadding.top || 'l') + '_' + markerClassName)}
-            controls-ListView__itemV_marker-${current.markerPosition}`;
+            controls-ListView__itemV_marker-${current.markerPosition}
+            ${!!current.isDragging ? ' controls-ListView__itemContent_dragging_theme-' + current.theme : ''}`;
 
             if (current.hasMultiSelectColumn) {
                 current.columns = [{}].concat(this._columns);

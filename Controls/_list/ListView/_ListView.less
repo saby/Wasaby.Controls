@@ -320,13 +320,11 @@
 }
 
 .controls-ListView__item_dragging_theme-@{themeName} {
-   box-shadow: 5px 0 0 white, -5px 0 0 white, 0 3px 5px #e0e0e0, 0 -3px 5px #e0e0e0;
-   z-index: 1;
+   box-shadow: @item_dragging_box-shadow_list;
+}
 
-   // добавляем прозрачность на всех детей, кроме счетчика
-   & > *:not(.controls-ListView__item-dragging-counter) {
-      opacity: @item_dragging_opacity_list;
-   }
+.controls-ListView__itemContent_dragging_theme-@{themeName} {
+   opacity: @item_dragging_opacity_list;
 }
 
 .controls-ListView__item-dragging-counter {
@@ -341,12 +339,13 @@
    align-items: center;
    right: -10px;
    top: -10px;
-   height: 20px;
-   font-size: 14px;
-   color: #ffffff;
-   background-color: @counter_background-color_draggingTemplate;
-   border-radius: 10px;
-   padding: 0 6px;
+   height: @item_dragging_counter_height_list;
+   font-size: @item_dragging_counter_font-size_list;
+   color: @item_dragging_counter_color_list;
+   background-color: @item_dragging_counter_background-color_list;
+   border-radius: @item_dragging_counter_border-radius_list;
+   padding: @item_dragging_counter_padding_list;
+   z-index: 1;
 }
 
 .controls-BaseControl_showActions_visible {

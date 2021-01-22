@@ -378,6 +378,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += 'controls-ListView__checkbox-onhover';
         }
+
+        if (this.isDragged()) {
+            classes += ` controls-ListView__itemContent_dragging_theme-${theme}`;
+        }
+
         return classes;
     }
 
@@ -665,6 +670,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (isAnimatedForSelection) {
             contentClasses += ' controls-ListView__item_rightSwipeAnimation';
+        }
+        if (this.isDragged()) {
+            contentClasses += ` controls-ListView__itemContent_dragging_theme-${theme}`;
         }
         return contentClasses;
     }
