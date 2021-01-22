@@ -7,8 +7,7 @@
                  displayProperty="title"
                  searchParam="title"
                  navigation="{{_navigation}}"
-                 source="{{_source}}"
-                 footerTemplate="{{null}}">
+                 source="{{_source}}">
              <ws:suggestTemplate templateName="wml!Controls-demo/Suggest_new/Input/DirectoryUnavailable/resources/SuggestTemplate">
                  <ws:templateOptions demoClass="demo-SuggestInputList"/>
              </ws:suggestTemplate>
