@@ -407,8 +407,7 @@ export default class Controller {
     private _getFilterHierarchy(
         initialFilter: QueryWhereExpression<unknown>,
         options: IControllerOptions,
-        root?: TKey): Promise<QueryWhereExpression<unknown>> {
-        const rootForFilter = root || this._root;
+        root: TKey = this._root): Promise<QueryWhereExpression<unknown>> {
         const expandedItemsForFilter = this._expandedItems || options.expandedItems;
         const parentProperty = this._parentProperty;
         let resultFilter = initialFilter;
@@ -421,10 +420,10 @@ export default class Controller {
                     resultFilter[parentProperty] = Array.isArray(resultFilter[parentProperty]) ?
                         resultFilter[parentProperty] :
                         [];
-                    resultFilter[parentProperty].push(rootForFilter);
+                    resultFilter[parentProperty].push(root);
                     resultFilter[parentProperty] = resultFilter[parentProperty].concat(expandedItemsForFilter);
-                } else if (rootForFilter !== undefined) {
-                    resultFilter[parentProperty] = rootForFilter;
+                } else if (root !== undefined) {
+                    resultFilter[parentProperty] = root;
                 }
 
                 if (options.selectedKeys && options.selectedKeys.length) {
