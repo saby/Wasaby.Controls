@@ -508,6 +508,7 @@ describe('Controls/browser:Browser', () => {
 
            assert.equal(browser._root, 'test123');
            assert.equal(browser._searchController._root, 'test123');
+           assert.isNull(browser._rootBeforeSearch);
        });
 
         it ('root is changed, shearchController is not created', async () => {

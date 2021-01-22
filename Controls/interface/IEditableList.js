@@ -23,30 +23,30 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @typedef {Object} ItemEditOptions
+    * @typedef {Object} Controls/interface/IEditableList/ItemEditOptions
     * @property {Types/entity:Model} [options.item] Запись списка, которая будет запущена на редактирование. 
     * Если из обработчика события {@link beforeBeginEdit} также будет возвращена запись, то именно она будет запущена на редактирование вместо первоначальной.
     */
 
    /*
-    * @typedef {Object} ItemEditOptions
+    * @typedef {Object} Controls/interface/IEditableList/ItemEditOptions
     * @property {Types/entity:Model} [options.item] Record with initial data.
     */
 
    /**
-    * @typedef {Enum} AddPositionOption
+    * @typedef {Enum} Controls/interface/IEditableList/AddPositionOption
     * @variant top В начале.
     * @variant bottom В конце.
     */
 
    /*
-    * @typedef {Enum} AddPositionOption
+    * @typedef {Enum} Controls/interface/IEditableList/AddPositionOption
     * @variant top Editing in place will appear at the top of the list.
     * @variant bottom Editing in place will appear at the bottom of the list.
     */
 
    /**
-    * @typedef {Object} EditingConfig
+    * @typedef {Object} Controls/interface/IEditableList/EditingConfig
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
     * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже существующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
@@ -54,7 +54,7 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * Когда кнопки не отображаются, аналогичные действия выполняются с помощью {@link /doc/platform/developmentapl/interface-development/controls/list/actions/keys/ клавиш}.
     * @property {String} [backgroundStyle=default] Предназначен для настройки фона редактируемой записи.
-    * @property {AddPositionOption} [addPosition=bottom] Позиция добавления по месту.
+    * @property {Controls/interface/IEditableList/AddPositionOption.typedef} [addPosition=bottom] Позиция добавления по месту.
     * В корне списка, в группе (когда включена группировка) или в рамках узла (для иерархических списков).
     * Если в контроле включена {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировка} элементов, тогда в модели нового элемента необходимо задать поле с группой.
     * @property {Types/entity:Model} [item=undefined] Элемент, который будет запущен на редактирование при первой отрисовке контрола.
@@ -129,7 +129,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /*
-    * @typedef {Object} EditingConfig
+    * @typedef {Object} Controls/interface/IEditableList/EditingConfig
     * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
     * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
     * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
@@ -153,7 +153,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @typedef {String|Promise|undefined} EndEditResult
+    * @typedef {String|Promise|undefined} Controls/interface/IEditableList/EndEditResult
     * @variant Cancel Отмена окончания редактирования или добавления по месту.
     * @variant Promise Применяется для реализации собственной логики сохранения изменений.
     * В этом случае базовая логика сохранения не используется, и поэтому вся ответственность за сохранение изменений перекладывается на прикладного разработчика.
@@ -162,7 +162,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /*
-    * @typedef {String|Core/Deferred} EndEditResult
+    * @typedef {String|Core/Deferred} Controls/interface/IEditableList/EndEditResult
     * @variant Cancel Cancel ending of editing\adding.
     * @variant Deferred Deferred is used for saving with custom logic.
     * @variant undefined
@@ -171,14 +171,14 @@ define('Controls/interface/IEditableList', [
    /**
     * @event Controls/interface/IEditableList#beforeBeginEdit Происходит перед началом {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или добавления по месту.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
-    * @param {ItemEditOptions} options Параметры редактирования.
+    * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Параметры редактирования.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
     *     * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd});
     *     * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
-    * @returns {ItemEditResult}
+    * @returns {Controls/interface/IEditableList/ItemEditResult.typedef}
     * @demo Controls-demo/list_new/EditInPlace/BeginEdit/Index
     * @example
     * В следующем примере показано, как запретить редактирование элемента, если он соответствует условию:
@@ -244,9 +244,9 @@ define('Controls/interface/IEditableList', [
    /*
     * @event Controls/interface/IEditableList#beforeBeginEdit Occurs before the start of editing.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
-    * @param {ItemEditOptions} options Options of editing.
+    * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Options of editing.
     * @param {Boolean} isAdd
-    * @returns {ItemEditResult}
+    * @returns {Controls/interface/IEditableList/ItemEditResult.typedef}
     * @example
     * The following example shows how to prevent editing of an element if it matches condition:
     * WML:
@@ -385,7 +385,7 @@ define('Controls/interface/IEditableList', [
     * 2. после окончания редактирования:
     *     * последнего (уже существующего) элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAdd});
     *     * только что добавленного элемента списка (см. свойство {@link Controls/interface/IEditableList/EditingConfig.typedef autoAddByApplyButton}).
-    * @returns {EndEditResult}
+    * @returns {Controls/interface/IEditableList/EndEditResult.typedef}
     * @demo Controls-demo/list_new/EditInPlace/EndEdit/Index
     * @remark
     * Используйте событие, если необходимо проверить данные и отменить изменения. По умолчанию для сохранения изменений вызывается метод обновления списка.
@@ -419,7 +419,7 @@ define('Controls/interface/IEditableList', [
     * @param {Types/entity:Model} item Editing record.
     * @param {Boolean} willSave Determines whether changes to editing item will be saved.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
-    * @returns {EndEditResult}
+    * @returns {Controls/interface/IEditableList/EndEditResult.typedef}
     * @remark
     * This event is useful if you want to validate data and cancel if needed or if you want to handle saving yourself. By default, list's update method will be called to save changes.
     * Don't update your UI in the handler of this event because if an error happens during preparation of data you'll have to rollback your changes.
@@ -509,7 +509,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @cfg {EditingConfig} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
+    * @cfg {Controls/interface/IEditableList/EditingConfig.typedef} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
     * @demo Controls-demo/list_new/EditInPlace/AutoAdd/Index
     * @name Controls/interface/IEditableList#editingConfig
     * @example
@@ -522,7 +522,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /*
-    * @cfg {EditingConfig} Configuration for editing in place.
+    * @cfg {Controls/interface/IEditableList/EditingConfig.typedef} Configuration for editing in place.
     * @demo Controls-demo/list_new/EditInPlace/AutoAdd/Index
     * @name Controls/interface/IEditableList#editingConfig
     * @example
@@ -537,7 +537,7 @@ define('Controls/interface/IEditableList', [
    /**
     * Начинает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту}.
     * @function Controls/interface/IEditableList#beginEdit
-    * @param {ItemEditOptions} options Параметры редактирования.
+    * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Параметры редактирования.
     * @returns {Core/Deferred}
     * @remark
     * Перед запуском редактирования по месту происходит событие {@link beforeBeginEdit}, а после запуска — {@link afterBeginEdit}.
@@ -567,7 +567,7 @@ define('Controls/interface/IEditableList', [
    /*
     * Starts editing.
     * @function Controls/interface/IEditableList#beginEdit
-    * @param {ItemEditOptions} options Options of editing.
+    * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Options of editing.
     * @returns {Core/Deferred}
     * @remark
     * Use this method in situations when you want to start editing from an unusual location, e.g., from item actions.
@@ -593,7 +593,7 @@ define('Controls/interface/IEditableList', [
    /**
     * Начинает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавление по месту}.
     * @function Controls/interface/IEditableList#beginAdd
-    * @param {ItemEditOptions} options Параметры добавления.
+    * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Параметры добавления.
     * @returns {Core/Deferred}
     * @remark
     * Перед запуском добавления по месту происходит событие {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit}, а после запуска — {@link Controls/interface/IEditableList#afterBeginEdit afterBeginEdit}.
@@ -628,7 +628,7 @@ define('Controls/interface/IEditableList', [
    /*
     * Starts adding.
     * @function Controls/interface/IEditableList#beginAdd
-    * @param {ItemEditOptions} options Options of adding.
+    * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Options of adding.
     * @returns {Core/Deferred}
     * @remark
     * If you don't pass the options then {@link Types/source:ICrud#create create} method of the list's source will be called and the result will be added to the list.
