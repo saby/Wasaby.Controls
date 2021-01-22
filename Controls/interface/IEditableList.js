@@ -169,8 +169,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит перед началом {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или добавления по месту.
-    * @name Controls/interface/IEditableList#beforeBeginEdit
+    * @event Controls/interface/IEditableList#beforeBeginEdit Происходит перед началом {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или добавления по месту.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {ItemEditOptions} options Параметры редактирования.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
@@ -243,8 +242,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /*
-    * @event Occurs before the start of editing.
-    * @name Controls/interface/IEditableList#beforeBeginEdit
+    * @event Controls/interface/IEditableList#beforeBeginEdit Occurs before the start of editing.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {ItemEditOptions} options Options of editing.
     * @param {Boolean} isAdd
@@ -310,8 +308,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит после начала {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} по месту.
-    * @name Controls/interface/IEditableList#afterBeginEdit
+    * @event Controls/interface/IEditableList#afterBeginEdit Происходит после начала {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} по месту.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
@@ -345,8 +342,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /*
-    * @event Occurs after the start of editing\adding.
-    * @name Controls/interface/IEditableList#afterBeginEdit
+    * @event Controls/interface/IEditableList#afterBeginEdit Occurs after the start of editing\adding.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
@@ -374,8 +370,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит перед завершением {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} элемента.
-    * @name Controls/interface/IEditableList#beforeEndEdit
+    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} элемента.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
     * @param {Boolean} willSave Параметр принимает значение true, когда отредактированный элемент сохраняется.
@@ -419,8 +414,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /*
-    * @event Occurs before the end of editing\adding.
-    * @name Controls/interface/IEditableList#beforeEndEdit
+    * @event Controls/interface/IEditableList#beforeEndEditOccurs before the end of editing\adding.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} item Editing record.
     * @param {Boolean} willSave Determines whether changes to editing item will be saved.
@@ -452,8 +446,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Происходит после завершения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} иди {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления}.
-    * @name Controls/interface/IEditableList#afterEndEdit
+    * @event Controls/interface/IEditableList#afterEndEdit Происходит после завершения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} иди {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления}.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
     * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
@@ -488,8 +481,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /*
-    * @event Occurs after the end of editing\adding.
-    * @name Controls/interface/IEditableList#afterEndEdit
+    * @event Controls/interface/IEditableList#afterEndEdit Occurs after the end of editing\adding.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Model} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
