@@ -435,14 +435,8 @@ const _private = {
                         if (self._itemsChanged) {
                             self._shouldNotifyOnDrawItems = true;
                         }
-                    } else if (!self._destroyed && cfg.useNewModel && list) {
-                        // Модели могло изначально не создаться (не передали receivedState и source)
-                        // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
-                        self._initNewModel(cfg, list, cfg);
-                        if (self._groupingLoader) {
-                            self._groupingLoader.resetLoadedGroups(listModel);
-                        }
-                        self._shouldNotifyOnDrawItems = true;
+                    } else {
+                        _private.initializeModel(self, cfg, list)
                     }
                     if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
                         cfg.afterSetItemsOnReloadCallback();
@@ -523,6 +517,20 @@ const _private = {
 
         if (options.serviceDataLoadCallback instanceof Function) {
             options.serviceDataLoadCallback(self._items, loadedList);
+        }
+    },
+
+    initializeModel(self, options, list): void {
+        const listModel = self._listViewModel;
+
+        // Модели могло изначально не создаться (не передали receivedState и source)
+        // https://online.sbis.ru/opendoc.html?guid=79e62139-de7a-43f1-9a2c-290317d848d0
+        if (!self._destroyed && options.useNewModel && list) {
+            self._initNewModel(options, list, options);
+            if (self._groupingLoader) {
+                self._groupingLoader.resetLoadedGroups(listModel);
+            }
+            self._shouldNotifyOnDrawItems = true;
         }
     },
 
@@ -3883,6 +3891,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             if (items && (this._listViewModel && !this._listViewModel.getCollection() || this._items !== items)) {
+                if (!this._listViewModel) {
+                    _private.initializeModel(this, newOptions, items);
+                }
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
                 isItemsResetFromSourceController = true;
