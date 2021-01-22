@@ -5085,6 +5085,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _beginEdit(options, shouldActivateInput: boolean = true) {
         _private.closeSwipe(this);
+        const hoverFreezeController = _private.getHoverFreezeController(this);
+        if (hoverFreezeController) {
+            hoverFreezeController.unfreezeHover();
+        }
         this.showIndicator();
         return this._getEditInPlaceController().edit(options).then((result) => {
             if (shouldActivateInput && !(result && result.canceled)) {
