@@ -187,8 +187,6 @@ export default class ColumnsInnerView extends Control {
             newItems.forEach(this.setColumnOnItem.bind(this));
             if (this._options.columnsMode === 'auto' && newItems.length === 1) {
                 this._addingColumnsCounter++;
-            } else {
-                this._addingColumnsCounter = 0;
             }
         }
         if (action === 'rm') {
