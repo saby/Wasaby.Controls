@@ -145,6 +145,12 @@ export default class HoverFreeze {
         }
     }
 
+    /**
+     * Проверяет, входят ли текущие координаты курсора мыши в зону перемещения курсора для последней "замороженной" записи
+     * @param x
+     * @param y
+     * @private
+     */
     private _isCursorInsideOfMouseMoveArea(x: number, y: number): boolean {
         if (!this._moveArea) {
             return false;
@@ -167,6 +173,11 @@ export default class HoverFreeze {
         }
     }
 
+    /**
+     * Устанавливает необходимые CSS классы и выполняет _freezeHoverCallback
+     * @param index
+     * @private
+     */
     private _freezeHover(index: number): void {
         this._clearFreezeHoverTimeout();
         const hoveredContainers = this._getHoveredItemContainers(index);
@@ -191,8 +202,66 @@ export default class HoverFreeze {
     }
 
     /**
-     * Селектор для определения реального размера строки в таблицах и в списках
-     * также необходим для выбора фона строки под курсором
+     * Получает из DOM первый контейнер с редактируемым полем в текущей записи.
+     * Нам нужен только один контейнер, чтобы получить его фон
+     * @param index
+     * @private
+     */
+    private _getEditingTemplateTextContainer(index: number): HTMLElement {
+        const editingTemplateTextSelector = this._getEditingTemplateTextSelector(this._uniqueClass, index);
+        return this._viewContainer.querySelector(editingTemplateTextSelector);
+    }
+
+    /**
+     * Получает из DOM контейнер текущей записи или контейнеры ячеек таблицы
+     * @param index
+     * @private
+     */
+    private _getHoveredItemContainers(index: number): NodeListOf<HTMLElement> {
+        const hoveredContainerSelector = this._getItemHoveredContainerSelector(this._uniqueClass, index);
+        return this._viewContainer.querySelectorAll(hoveredContainerSelector);
+    }
+
+    /**
+     * Калькулятор зоны перемещения курсора внутри записи.
+     * Вычисляет зону перемещения курсора как высоту и ширину записи + высота операций над записью
+     * @param hoveredContainers
+     * @private
+     */
+    private _calculateMouseMoveArea(hoveredContainers: NodeListOf<HTMLElement>): IMouseMoveArea {
+        const lastContainer = hoveredContainers[hoveredContainers.length - 1];
+        const itemActionsContainer = lastContainer.querySelector(ITEM_ACTIONS_SELECTOR);
+        const resultRect = {
+            bottom: null,
+            left: null,
+            right: null,
+            top: null
+        };
+        let itemActionsHeight = 0;
+        if (itemActionsContainer) {
+            itemActionsHeight = (itemActionsContainer as HTMLElement).offsetHeight;
+        }
+        hoveredContainers.forEach((container) => {
+            const containerRect = container.getBoundingClientRect();
+            const bottom = containerRect.top + containerRect.height + itemActionsHeight;
+            if (resultRect.left === null) {
+                resultRect.top = containerRect.top;
+            }
+            if (resultRect.left === null || resultRect.bottom < bottom) {
+                resultRect.bottom = bottom;
+            }
+            if (resultRect.left === null) {
+                resultRect.left = containerRect.left;
+            }
+            resultRect.right = containerRect.left + containerRect.width;
+        });
+        return resultRect;
+    }
+
+    /**
+     * Селектор для выбора строки или ячеек
+     * Необходим для определения реального размера строки в таблицах и в списках.
+     * Также необходим для выбора фона строки под курсором
      * @param uniqueClass
      * @param index
      * @private
@@ -203,7 +272,8 @@ export default class HoverFreeze {
     }
 
     /**
-     * Селектор для редактируемых полей внутри выделенной строки
+     * Селектор для редактируемых полей внутри выделенной строки.
+     * Позволяет выбрать фон для записи с редактируемыми полями, но которая ещё не переведена в режим редактирования.
      * @param uniqueClass
      * @param index
      * @private
@@ -213,7 +283,7 @@ export default class HoverFreeze {
     }
 
     /**
-     * Стили для отключения hover
+     * Стили для отключения hover в строке плоского списка или в ячейках строки таблицы
      * @param uniqueClass
      * @param index
      * @param hoverBackgroundColor
@@ -251,47 +321,5 @@ export default class HoverFreeze {
                  visibility: visible;
               }
               `;
-    }
-
-    private _getEditingTemplateTextContainer(index: number): HTMLElement {
-        const editingTemplateTextSelector = this._getEditingTemplateTextSelector(this._uniqueClass, index);
-        return this._viewContainer.querySelector(editingTemplateTextSelector);
-    }
-
-    // current hovered item containers
-    private _getHoveredItemContainers(index: number): NodeListOf<HTMLElement> {
-        const hoveredContainerSelector = this._getItemHoveredContainerSelector(this._uniqueClass, index);
-        return this._viewContainer.querySelectorAll(hoveredContainerSelector);
-    }
-
-    // Calculate move area as item area considering itemActions height
-    private _calculateMouseMoveArea(hoveredContainers: NodeListOf<HTMLElement>): IMouseMoveArea {
-        const lastContainer = hoveredContainers[hoveredContainers.length - 1];
-        const itemActionsContainer = lastContainer.querySelector(ITEM_ACTIONS_SELECTOR);
-        const resultRect = {
-            bottom: null,
-            left: null,
-            right: null,
-            top: null
-        };
-        let itemActionsHeight = 0;
-        if (itemActionsContainer) {
-            itemActionsHeight = (itemActionsContainer as HTMLElement).offsetHeight;
-        }
-        hoveredContainers.forEach((container) => {
-            const containerRect = container.getBoundingClientRect();
-            const bottom = containerRect.top + containerRect.height + itemActionsHeight;
-            if (resultRect.left === null) {
-                resultRect.top = containerRect.top;
-            }
-            if (resultRect.left === null || resultRect.bottom < bottom) {
-                resultRect.bottom = bottom;
-            }
-            if (resultRect.left === null) {
-                resultRect.left = containerRect.left;
-            }
-            resultRect.right = containerRect.left + containerRect.width;
-        });
-        return resultRect;
     }
 }
