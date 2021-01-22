@@ -3,7 +3,6 @@
  * Компоненты для обработки и отображения ошибок.
  * {@link /doc/platform/developmentapl/interface-development/application-architecture/error-handling/}
  * @library Controls/dataSource:error
- * @includes Controller Controls/_dataSource/_error/Controller
  * @includes Container Controls/_dataSource/_error/Container
  * @includes DataLoader Controls/_dataSource/_error/DataLoader
  * @includes Mode Controls/_dataSource/_error/Mode
@@ -12,7 +11,6 @@
  * @includes IContainer Controls/_dataSource/_error/IContainer
  * @includes IContainerConfig Controls/_dataSource/_error/IContainerConfig
  * @includes IContainerConstructor Controls/_dataSource/_error/IContainerConstructor
- * @includes process Controls/_dataSource/_error/process
  * @public
  * @author Северьянов А.А.
  */
