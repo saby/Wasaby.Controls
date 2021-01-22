@@ -167,8 +167,7 @@ define('Controls/interface/IMovable', [
     */
 
    /**
-    * @event Происходит до перемещения элементов.
-    * @name Controls/interface/IMovable#beforeItemsMove
+    * @event Controls/interface/IMovable#beforeItemsMove Происходит до перемещения элементов.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<String>|Array.<Number>} movedItems Массив элементов перемещения.
     * @param {Types/entity:Record|String|Number} target Целевой элемент перемещения.
@@ -193,8 +192,7 @@ define('Controls/interface/IMovable', [
     */
 
    /*
-    * @event Occurs before the items are moved.
-    * @name Controls/interface/IMovable#beforeItemsMove
+    * @event Controls/interface/IMovable#beforeItemsMove Occurs before the items are moved.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
@@ -219,8 +217,7 @@ define('Controls/interface/IMovable', [
     */
 
    /**
-    * @event Происходит после перемещения элементов.
-    * @name Controls/interface/IMovable#afterItemsMove
+    * @event Controls/interface/IMovable#afterItemsMove Происходит после перемещения элементов.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Array.<String>|Array.<Number>} movedItems Массив элементов перемещения.
     * @param {Types/entity:Record|String|Number} target Целевой элемент перемещения.
@@ -251,8 +248,7 @@ define('Controls/interface/IMovable', [
     */
 
    /*
-    * @event Occurs after moving items.
-    * @name Controls/interface/IMovable#afterItemsMove
+    * @event Controls/interface/IMovable#afterItemsMove Occurs after moving items.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
