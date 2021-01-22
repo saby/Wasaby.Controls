@@ -23,7 +23,7 @@ export interface IHoverFreezeOptions {
     viewContainer: HTMLElement;
     freezeHoverCallback: () => void;
     unFreezeHoverCallback: () => void;
-    theme: string:
+    theme: string;
 }
 
 /**
