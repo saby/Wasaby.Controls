@@ -4,6 +4,7 @@
  * @includes Button Controls/_dropdown/Button
  * @includes Input Controls/_dropdown/Input
  * @includes Combobox Controls/_dropdown/ComboBox
+ * @includes Toggle Controls/_dropdown/Toggle
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
  * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
  * @includes GroupTemplate Controls/dropdown:GroupTemplate
@@ -49,6 +50,7 @@ export {default as IGrouped, IGroupedOptions} from 'Controls/_dropdown/interface
 export {default as IDropdownSource} from 'Controls/_dropdown/interface/IDropdownSource';
 export {default as IBaseDropdown} from 'Controls/_dropdown/interface/IBaseDropdown';
 export {default as Selector} from 'Controls/_dropdown/Selector';
+export {default as Toggle} from 'Controls/_dropdown/Toggle';
 
 export {
     Button,
