@@ -701,7 +701,7 @@ const _private = {
         }
     },
     spaceHandler(self: typeof BaseControl, event: SyntheticEvent):void {
-        if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden') {
+        if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden' || self._spaceBlocked) {
             return;
         }
 
@@ -715,6 +715,10 @@ const _private = {
             if (toggledItemId) {
                 const result = _private.getSelectionController(self).toggleItem(toggledItemId);
                 _private.changeSelection(self, result);
+
+                // Пробел блокируется, пока не применем новое состояние, то есть пока не произойдет _beforeUpdate,
+                // чтобы адекватно отрабатывать при зажатом пробеле
+                self._spaceBlocked = true;
             }
         }
 
@@ -4128,6 +4132,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._loadedItems) {
             this._shouldRestoreScrollPosition = true;
         }
+
+        this._spaceBlocked = false;
     },
 
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
