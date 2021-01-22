@@ -5513,7 +5513,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 || key === 34 // PageDown
                 || key === 35 // End
                 || key === 36 // Home
-                || key === constants.key.del;
+                || key === 46; // Delete
             EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
