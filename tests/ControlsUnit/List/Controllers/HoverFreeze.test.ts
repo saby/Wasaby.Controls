@@ -62,6 +62,12 @@ describe('Controls/list/HoverFreeze', () => {
                 getIndex: () => 0
             } as undefined as IBaseCollection<any, any>,
             viewContainer: {
+                querySelector: () => ({
+                    querySelector: () => ({
+                        offsetHeight: itemActionsHeight
+                    }),
+                    getBoundingClientRect: () => hoverContainerRect
+                } as undefined as HTMLElement),
                 querySelectorAll: () => ([
                     {
                         querySelector: () => ({
