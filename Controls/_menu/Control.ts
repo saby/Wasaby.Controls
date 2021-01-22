@@ -665,9 +665,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getSelectedItems(): object[] {
-        return factory(this._listModel.getSelectedItems()).map(
-            (item: CollectionItem<Model>): Model => item.getContents()
-        ).reverse().value();
+        const selectedItems = this._listModel.getSelectedItems().map((item) => {
+            return item.getContents();
+        }).reverse();
+        if (!selectedItems.length && this._options.emptyText) {
+            selectedItems.push(this._listModel.getItemBySourceKey(this._options.emptyKey).getContents());
+        }
+        return selectedItems;
     }
 
     private _expandedItemsFilterCheck(item: CollectionItem<Model>, index: number): boolean {
