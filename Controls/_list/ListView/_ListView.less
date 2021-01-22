@@ -329,16 +329,10 @@
 
 .controls-ListView__item-dragging-counter {
    position: absolute;
-   display: -webkit-box;
-   display: -webkit-flex;
-   display: -ms-flexbox;
    display: flex;
-   -webkit-box-align: center;
-   -webkit-align-items: center;
-   -ms-flex-align: center;
    align-items: center;
-   right: -10px;
-   top: -10px;
+   right: @item_dragging_counter_right_list;
+   top: @item_dragging_counter_top_list;
    height: @item_dragging_counter_height_list;
    font-size: @item_dragging_counter_font-size_list;
    color: @item_dragging_counter_color_list;
