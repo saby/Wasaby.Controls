@@ -2975,7 +2975,7 @@ const _private = {
             }
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
-                if (self._options.draggingTemplate) {
+                if (self._options.draggingTemplate && !self._insideDragging) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
             }
@@ -5564,6 +5564,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (this._documentDragging) {
             this._insideDragging = true;
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
+            this._listViewModel.setDragOutsideList(false);
 
             this._dragEnter(this._getDragObject());
         }
@@ -5585,6 +5587,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._documentDragging) {
             this._insideDragging = false;
             this._dragLeave();
+            this._listViewModel.setDragOutsideList(true);
         }
     },
 

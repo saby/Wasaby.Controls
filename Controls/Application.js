@@ -3,7 +3,7 @@
  */
 define('Controls/Application',
    [
-      
+
       'wml!Controls/Application/Page',
       'Core/BodyClasses',
       'Env/Env',
@@ -397,6 +397,10 @@ define('Controls/Application',
 
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
             this._dragnDropController.updateDraggingTemplate(draggingTemplateOptions, draggingTemplate);
+        },
+
+         _removeDraggingTemplate: function(event) {
+            this._dragnDropController.removeDraggingTemplate();
         },
 
          _getResourceUrl: function(str) {

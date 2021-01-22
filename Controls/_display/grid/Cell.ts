@@ -266,6 +266,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme}`;
         }
 
+        if (this.getOwner().isDragged()) {
+            contentClasses += ` controls-ListView__itemContent_dragging_theme-${theme}`;
+        }
+
         return contentClasses;
     }
 
