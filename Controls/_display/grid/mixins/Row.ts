@@ -181,6 +181,10 @@ export default abstract class Row<T> {
         contentClasses += ` controls-GridView__checkbox_theme-${theme}`;
         contentClasses += ` controls-GridView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
 
+        if (this.isDragged()) {
+            contentClasses += ` controls-ListView__itemContent_dragging_theme-${theme}`;
+        }
+
         return contentClasses;
     }
 
@@ -476,6 +480,7 @@ export default abstract class Row<T> {
     abstract getTemplate(): TemplateFunction | string;
     abstract isEditing(): boolean;
     abstract isSelected(): boolean;
+    abstract isDragged(): boolean;
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
     protected abstract _nextVersion(): void;
 }
