@@ -195,8 +195,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Происходит при изменении набора выбранной коллекции.
-    * @name Controls/interface/ISelectedCollection#itemsChanged
+    * @event Controls/interface/ISelectedCollection#itemsChanged Происходит при изменении набора выбранной коллекции.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {RecordSet|List} items Список выбранных записей.
     *
@@ -217,8 +216,7 @@ define('Controls/interface/ISelectedCollection', [
     * </pre>
     */
    /*
-    * @event Occurs when changing the set of the selected collection.
-    * @name Controls/interface/ISelectedCollection#itemsChanged
+    * @event Controls/interface/ISelectedCollection#itemsChanged Occurs when changing the set of the selected collection.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {RecordSet|List} items List of selected entries.
     *
@@ -240,8 +238,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Происходит при нажатии на элемент коллекции.
-    * @name Controls/interface/ISelectedCollection#itemClick
+    * @event Controls/interface/ISelectedCollection#itemClick Происходит при нажатии на элемент коллекции.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {RecordSet} item Элемент выбраной коллекции.
     * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Дескриптор события мыши.
@@ -267,8 +264,7 @@ define('Controls/interface/ISelectedCollection', [
     * </pre>
     */
    /*
-    * @event Occurs when clicking on a collection item.
-    * @name Controls/interface/ISelectedCollection#itemClick
+    * @event Controls/interface/ISelectedCollection#itemClick Occurs when clicking on a collection item.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {RecordSet} item Item selected collection.
     * @param {Vdom/Vdom:SyntheticEvent} nativeEvent Descriptor of the mouse event
@@ -295,8 +291,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Происходит перед открытием всплывающего окна со всеми выбранными записями.
-    * @name Controls/interface/ISelectedCollection#openInfoBox
+    * @event Controls/interface/ISelectedCollection#openInfoBox Происходит перед открытием всплывающего окна со всеми выбранными записями.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Object} config Конфиг, по которому будет построено всплывающее окно.
     *
@@ -324,8 +319,7 @@ define('Controls/interface/ISelectedCollection', [
     * @see Controls/interface/ISelectedCollection#closeInfoBox
     */
    /*
-    * @event Occurs before opening a pop-up with all selected entries
-    * @name Controls/interface/ISelectedCollection#openInfoBox
+    * @event Controls/interface/ISelectedCollection#openInfoBox Occurs before opening a pop-up with all selected entries
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     * @param {Object} config Config on which popup will be built.
     *
@@ -354,8 +348,7 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @event Происходит при закрытии всплывающего окна со всеми выбранными записями.
-    * @name Controls/interface/ISelectedCollection#closeInfoBox
+    * @event Controls/interface/ISelectedCollection#closeInfoBox Происходит при закрытии всплывающего окна со всеми выбранными записями.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     *
     * @example
@@ -378,8 +371,7 @@ define('Controls/interface/ISelectedCollection', [
     * @see Controls/interface/ISelectedCollection#openInfoBox
     */
    /*
-    * @event Occurs when closing a pop-up with all selected entries.
-    * @name Controls/interface/ISelectedCollection#closeInfoBox
+    * @event Controls/interface/ISelectedCollection#closeInfoBox Occurs when closing a pop-up with all selected entries.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject The event descriptor.
     *
     * @example
