@@ -31,6 +31,7 @@ export interface IHoverFreezeOptions {
  */
 export default class HoverFreeze {
     private _itemKey: CrudEntityKey = null;
+    private _delayedHoverItem: CollectionItem;
     private _uniqueClass: string;
     private _collection: Collection<Model, CollectionItem>;
     private _stylesContainer: HTMLElement;
@@ -85,6 +86,8 @@ export default class HoverFreeze {
                 this._freezeHover(itemIndex);
                 // сохранили текущее наведённое значение
                 this._itemKey = itemKey;
+                // Сбросили отложенный ховер
+                this._delayedHoverItem = null;
             }, HOVER_FREEZE_TIMEOUT);
         }
     }
@@ -101,8 +104,12 @@ export default class HoverFreeze {
         if (this._isCursorInsideOfMouseMoveArea(x, y)) {
             this._itemUnfreezeHoverTimeout = setTimeout(() => {
                 this.unfreezeHover();
+                if (this._delayedHoverItem) {
+                    this.startFreezeHoverTimeout(this._delayedHoverItem);
+                }
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
+            this._delayedHoverItem = null;
             this.unfreezeHover();
         }
     }
@@ -113,9 +120,9 @@ export default class HoverFreeze {
      * Используется при движении курсора мыши внутри записи.
      * @param item
      */
-    restartFreezeHoverTimeout(item?: CollectionItem): void {
-        if (!this._itemUnfreezeHoverTimeout && !this._itemUnfreezeHoverTimeout && !this._itemKey) {
-            this.startFreezeHoverTimeout(item);
+    setDelayedHoverItem(item?: CollectionItem): void {
+        if (this._itemKey !== null && !!this._itemUnfreezeHoverTimeout) {
+            this._delayedHoverItem = item;
         }
     }
 

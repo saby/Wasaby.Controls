@@ -5617,7 +5617,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
         }
         if (hoverFreezeController) {
-            hoverFreezeController.restartFreezeHoverTimeout(itemData);
+            hoverFreezeController.setDelayedHoverItem(itemData);
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
