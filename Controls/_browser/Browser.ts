@@ -242,6 +242,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         if (newOptions.root !== this._options.root) {
             this._root = newOptions.root;
+
+            if (this._searchController) {
+                this._searchController.setRoot(newOptions.root);
+            }
         }
 
         if (this._options.viewMode !== newOptions.viewMode) {
@@ -432,7 +436,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (!this._deepReload) {
                 this._deepReload = true;
             }
-        } else {
+        } else if (!this._options.hasOwnProperty('root')) {
             this._searchController?.setRoot(root);
             this._root = root;
         }
