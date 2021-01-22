@@ -688,6 +688,9 @@ const _private = {
     },
 
     enterHandler(self, event) {
+        if (event.nativeEvent.ctrlKey) {
+            return;
+        }
         if (_private.hasMarkerController(self)) {
             const markerController = _private.getMarkerController(self);
             const markedKey = markerController.getMarkedKey();
@@ -699,6 +702,7 @@ const _private = {
                 }
             }
         }
+        event.stopImmediatePropagation();
     },
     spaceHandler(self: typeof BaseControl, event: SyntheticEvent):void {
         if (self._options.multiSelectVisibility === 'hidden' || self._options.markerVisibility === 'hidden') {
@@ -5503,17 +5507,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
         if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
             const key = event.nativeEvent.keyCode;
-
-            // Ctrl+Enter обрабатывается в прикладном коде, исключаем обработку платформой и отсановку события
-            if (key === constants.key.enter && event.nativeEvent.ctrlKey) {
-                return;
-            }
             const dontStop = key === 17 // Ctrl
                 || key === 33 // PageUp
                 || key === 34 // PageDown
                 || key === 35 // End
                 || key === 36 // Home
-                || key === 46; // Delete
+                || key === 46 // Delete
+                || key === constants.key.enter;
             EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     },
