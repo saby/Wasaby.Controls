@@ -510,6 +510,19 @@ define(
             assert.isFalse(result);
          });
 
+         it('_getSelectedItems', () => {
+            const menuControl = getMenu({...defaultOptions, emptyKey: null, emptyText: 'emptyText'});
+            const emptyItem = {
+               key: null,
+               title: 'Not selected'
+            };
+            let itemsWithEmpty = Clone(defaultItems);
+            itemsWithEmpty.push(emptyItem);
+            menuControl._listModel = getListModel(itemsWithEmpty);
+            const result = menuControl._getSelectedItems();
+            assert.isNull(result[0].getKey());
+         });
+
          it('setSubMenuPosition', function() {
             let menuControl = getMenu();
             menuControl._openSubMenuEvent = {
