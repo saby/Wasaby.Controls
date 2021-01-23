@@ -1471,13 +1471,19 @@ define([
             assert.deepEqual(options, { bubbling: true });
          };
 
+         let ctrlKey = false;
+         function getEvent() {
+            return { nativeEvent: { ctrlKey }, isStopped: () => true, stopImmediatePropagation: () => {} }
+         }
+
          // Without marker
-         lists.BaseControl._private.enterHandler(baseControl, { nativeEvent: {} });
+         lists.BaseControl._private.enterHandler(baseControl, getEvent());
          assert.isTrue(notified);
 
          // With CtrlKey
+         ctrlKey = true;
          notified = false;
-         lists.BaseControl._private.enterHandler(baseControl, { nativeEvent: { ctrlKey: true } });
+         lists.BaseControl._private.enterHandler(baseControl, getEvent());
          assert.isFalse(notified);
       });
 
@@ -1487,6 +1493,7 @@ define([
             notified = false;
 
          function enterClick(markedItem) {
+            const event = { nativeEvent: { ctrlKey: false }, isStopped: () => true, stopImmediatePropagation: () => {} };
             lists.BaseControl._private.enterHandler(
             {
                _options: {useNewModel: false},
@@ -1497,7 +1504,7 @@ define([
                   notified = true;
                },
                _loadingIndicatorState: 'all'
-            }, {nativeEvent: {}});
+            }, event);
          }
 
          // Without marker
