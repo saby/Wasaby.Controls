@@ -234,7 +234,7 @@ const _private = {
     getItemActionsMenuConfig(self, item, event, action, isContextMenu): Record<string, any> {
         const itemActionsController = _private.getItemActionsController(self, self._options);
         const defaultMenuConfig = itemActionsController.prepareActionsMenuConfig(item, event, action, self, isContextMenu);
-        const menuConfig = self._children?.listView?.getActionsMenuConfig(
+        const menuConfig = self._children?.listView?.getActionsMenuConfig?.(
             item,
             event,
             action,
