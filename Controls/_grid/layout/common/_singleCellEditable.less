@@ -1,0 +1,44 @@
+@bg_editable: #F0F5FB;
+@bg_not_editable: #F9F9F9;
+
+@hover_editable_border_color: #9CB3CA;
+@editing_editable_border_color: #AAB0C1;
+
+.controls-Grid__row-cell_editing-mode-single-cell_theme-@{themeName} {
+   &::after {
+      position: absolute;
+      top: -@item-separator_s_thickness_list;
+      left: 0;
+      right: -@column_separator_s_thickness_grid;
+      bottom: -@item-separator_s_thickness_list;
+      z-index: 1;
+      box-sizing: border-box;
+      border: 0 solid transparent;
+      pointer-events: none;
+   }
+}
+
+.controls-Grid__row-cell_single-cell-editable_theme-@{themeName} {
+   &:hover {
+      background-color: @bg_editable;
+      &::after {
+         content: '\200b';
+         border-color: @hover_editable_border_color;
+         border-width: 1px;
+      }
+   }
+}
+
+.controls-Grid__row-cell_single-cell-editing_theme-@{themeName} {
+   &::after {
+      content: '\200b';
+      border-color: @editing_editable_border_color;
+      border-width: 2px;
+   }
+}
+
+.controls-Grid__row-cell_single-cell-not-editable_theme-@{themeName} {
+   &:hover {
+      background-color: @bg_not_editable;
+   }
+}

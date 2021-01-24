@@ -94,7 +94,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
      * @void
      * @public
      */
-    edit(item: Model): void {
+    edit(item: Model, a, columnIndex): void {
         if (this._editingItem) {
             throw Error(ERROR_MSG.EDITING_IS_ALREADY_RUNNING);
         }
@@ -104,7 +104,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             this._throwEditingItemMissingError(item);
         }
 
-        this._editingItem.setEditing(true, item);
+        this._editingItem.setEditing(true, item, false, columnIndex);
         this._options.collection.setEditing(true);
     }
 
@@ -116,7 +116,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
      * @void
      * @public
      */
-    add(item: Model, addPosition?: TAddPosition): void {
+    add(item: Model, addPosition?: TAddPosition, columnIndex: number): void {
         if (this._editingItem) {
             throw Error(ERROR_MSG.EDITING_IS_ALREADY_RUNNING);
         }
@@ -153,7 +153,7 @@ export class CollectionEditor extends mixin<DestroyableMixin>(DestroyableMixin) 
             }
         }
 
-        this._editingItem.setEditing(true, item);
+        this._editingItem.setEditing(true, item, false, columnIndex);
         this._options.collection.setAddingItem(this._editingItem);
         this._options.collection.setEditing(true);
     }

@@ -383,12 +383,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._$editing;
     }
 
-    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean, columnIndex?: number): void {
         if (this._$editing === editing && this._$editingContents === editingContents) {
             return;
         }
         this._$editing = editing;
         this._setEditingContents(editingContents);
+        this._$editingColumnIndex = columnIndex;
         this._nextVersion();
         if (!silent) {
             this._notifyItemChangeToOwner('editing');

@@ -355,13 +355,15 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing()) {
-                const editingBackgroundStyle = current.editingBackgroundStyle || 'default';
-                classLists.base += ` controls-Grid__row-cell-editing_theme-${theme}`;
-                classLists.base += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
-            } else {
-                let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
-                classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
+            if (self.getEditingConfig()?.mode !== 'cell') {
+                if (current.isEditing()) {
+                    const editingBackgroundStyle = current.editingBackgroundStyle || 'default';
+                    classLists.base += ` controls-Grid__row-cell-editing_theme-${theme}`;
+                    classLists.base += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+                } else {
+                    let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
+                    classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
+                }
             }
 
             if (current.columnScroll && !current.isEditing()) {
@@ -1845,7 +1847,6 @@ var
                         columnIndex: current.columnIndex,
                         key: current.key,
                         getPropValue: current.getPropValue,
-                        isEditing: current.isEditing,
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
@@ -1869,6 +1870,39 @@ var
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
 
+                currentColumn.isSingleCellEditingMode = self.getEditingConfig()?.mode === 'cell';
+
+                currentColumn.isEditing = () => {
+                    if (currentColumn.isSingleCellEditingMode) {
+                        if (!current.isEditing()) {
+                            return false
+                        }
+                        if (!current.dispItem.isAdd) {
+                            return current.dispItem._$editingColumnIndex === currentColumn.columnIndex
+                        }
+                        const firstEditableColumn = self._options.columns.find((c) => c.editable !== false);
+                        return currentColumn.columnIndex === self._options.columns.indexOf(firstEditableColumn);
+                    } else {
+                        return current.isEditing();
+                    }
+                };
+
+                currentColumn.getEditingClassList = (tmplIsEditable) => {
+                  let classList = '';
+                  if (self.getEditingConfig()?.mode === 'cell') {
+                      classList += `controls-Grid__row-cell_editing-mode-single-cell_theme-${current.theme}`;
+                      if (currentColumn.isEditing()) {
+                          classList += ` controls-Grid__row-cell_single-cell-editing_theme-${current.theme}`;
+                      } else {
+                          if (currentColumn.column.editable !== false && tmplIsEditable !== false) {
+                              classList += ` controls-Grid__row-cell_single-cell-editable_theme-${current.theme}`;
+                          } else {
+                              classList += ` js-controls-ListView__notEditable controls-Grid__row-cell_single-cell-not-editable_theme-${current.theme}`;
+                          }
+                      }
+                  }
+                  return classList;
+                };
 
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
