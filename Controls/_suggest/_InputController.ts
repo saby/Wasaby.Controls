@@ -1096,3 +1096,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       };
    }
 }
+
+Object.defineProperty(InputContainer, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+   get(): object {
+      return InputContainer.getDefaultOptions();
+   }
+});

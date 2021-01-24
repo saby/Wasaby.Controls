@@ -677,3 +677,12 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
  * @default right
  * @demo Controls-demo/Scroll/Paging/PositionLeft/Index
  */
+
+Object.defineProperty(Container, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Container.getDefaultOptions();
+   }
+});

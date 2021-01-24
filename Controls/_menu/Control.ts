@@ -1100,3 +1100,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
  *    }
  * </pre>
  */
+
+Object.defineProperty(MenuControl, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return MenuControl.getDefaultOptions();
+   }
+});

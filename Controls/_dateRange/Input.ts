@@ -216,3 +216,12 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
         };
     }
 }
+
+Object.defineProperty(DateRangeInput, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return DateRangeInput.getDefaultOptions();
+   }
+});

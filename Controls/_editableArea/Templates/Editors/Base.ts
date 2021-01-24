@@ -66,6 +66,15 @@ class Base extends Control<IBaseOptions>
     static _theme: string[] = ['Controls/editableArea', 'Controls/Classes'];
 }
 
+Object.defineProperty(Base, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Base.getDefaultOptions();
+   }
+});
+
 export default Base;
 
 /**

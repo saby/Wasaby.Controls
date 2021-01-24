@@ -70,7 +70,6 @@ define('Controls/Application',
       dragnDrop,
       TimeTesterInv) {
       'use strict';
-
       var _private;
 
       _private = {
@@ -472,6 +471,15 @@ define('Controls/Application',
             pagingVisible: false
          };
       };
+
+      Object.defineProperty(Page, 'defaultProps', {
+         enumerable: true,
+         configurable: true,
+
+         get: function() {
+            return Page.getDefaultOptions();
+         }
+      });
 
       Page._theme = ['Controls/application'];
       Page._styles = ['Controls/dragnDrop'];

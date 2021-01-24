@@ -633,6 +633,15 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
     }
 }
 
+Object.defineProperty(Toolbar, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Toolbar.getDefaultOptions();
+   }
+});
+
 /**
  * @event Происходит при клике по элементу.
  * @name Controls/_toolbars/View#itemClick

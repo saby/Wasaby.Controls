@@ -68,3 +68,12 @@ export default class PropertyGridRender extends Control<IPropertyGridRenderOptio
         };
     }
 }
+
+Object.defineProperty(PropertyGridRender, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return PropertyGridRender.getDefaultOptions();
+   }
+});

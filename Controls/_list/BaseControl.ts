@@ -6314,4 +6314,11 @@ BaseControl.getDefaultOptions = function() {
         moreFontColorStyle: 'listMore'
     };
 };
+Object.defineProperty(BaseControl, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+    get(): object {
+        return BaseControl.getDefaultOptions();
+    }
+});
 export = BaseControl;

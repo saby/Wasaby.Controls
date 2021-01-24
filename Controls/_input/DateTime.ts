@@ -196,4 +196,13 @@ class DateTime extends Control {
     }
 }
 
+Object.defineProperty(DateTime, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return DateTime.getDefaultOptions();
+   }
+});
+
 export default DateTime;
