@@ -94,6 +94,16 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
       };
    }
 }
+
+Object.defineProperty(Checkbox, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Checkbox.getDefaultOptions();
+   }
+});
+
 /**
  * @name Controls/_toggle/Checkbox#triState
  * @cfg {Boolean} Определяет, разрешено ли устанавливать чекбоксу третье состояние — "не определен" (null).

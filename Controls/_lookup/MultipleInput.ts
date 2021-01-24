@@ -154,3 +154,12 @@ export default class MultipleInput extends BaseLookupInput {
         };
     }
 }
+
+Object.defineProperty(MultipleInput, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return MultipleInput.getDefaultOptions();
+   }
+});

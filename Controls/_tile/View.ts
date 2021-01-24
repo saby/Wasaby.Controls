@@ -150,3 +150,12 @@ export default class View extends List {
         };
     }
 }
+
+Object.defineProperty(View, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return View.getDefaultOptions();
+   }
+});

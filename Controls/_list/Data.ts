@@ -342,6 +342,16 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 }
 
 
+Object.defineProperty(Data, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Data.getDefaultOptions();
+   }
+});
+
+
 /**
  * @name Controls/_list/Data#root
  * @cfg {Number|String} Идентификатор корневого узла.

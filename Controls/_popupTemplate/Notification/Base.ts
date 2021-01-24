@@ -64,6 +64,16 @@ class Notification extends Control<INotificationBaseOptions> implements INotific
     }
     static _theme: string[] = ['Controls/popupTemplate'];
 }
+
+Object.defineProperty(Notification, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Notification.getDefaultOptions();
+   }
+});
+
 /**
  * @name Controls/_popupTemplate/Notification/Base#bodyContentTemplate
  * @cfg {Function|String} Определяет основной контент окна уведомления.

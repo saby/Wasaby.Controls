@@ -564,8 +564,17 @@ export default class Lookup extends BaseLookupInput {
  * </pre>
  */
 
- /**
- * @name Controls/_lookup/Lookup#fontSize
- * @cfg
- * @demo Controls-demo/LookupNew/Input/FontSize/Index
- */
+/**
+* @name Controls/_lookup/Lookup#fontSize
+* @cfg
+* @demo Controls-demo/LookupNew/Input/FontSize/Index
+*/
+
+Object.defineProperty(Lookup, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Lookup.getDefaultOptions();
+   }
+});

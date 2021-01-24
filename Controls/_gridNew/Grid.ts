@@ -29,3 +29,12 @@ Grid.getDefaultOptions = function() {
        isFullGridSupport: isFullGridSupport()
    };
 };
+
+Object.defineProperty(Grid, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Grid.getDefaultOptions();
+   }
+});

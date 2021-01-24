@@ -351,3 +351,12 @@ export default class Container extends Control<IContainerOptions> {
       };
    }
 }
+
+Object.defineProperty(Container, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Container.getDefaultOptions();
+   }
+});

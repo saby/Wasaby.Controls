@@ -130,6 +130,15 @@ MonthView.getDefaultOptions = function() {
    return defaultOptions;
 };
 
+Object.defineProperty(MonthView, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return MonthView.getDefaultOptions();
+   }
+});
+
 MonthView.getOptionTypes = function() {
    return IMonth.getOptionTypes();
 };

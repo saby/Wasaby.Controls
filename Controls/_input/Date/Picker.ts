@@ -99,4 +99,13 @@ class Picker extends Control<IControlOptions> {
     static _theme: string[] = ['Controls/Classes', 'Controls/input'];
 }
 
+Object.defineProperty(Picker, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Picker.getDefaultOptions();
+   }
+});
+
 export default Picker;

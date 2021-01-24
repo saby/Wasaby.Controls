@@ -261,6 +261,15 @@ class ComboBox extends BaseDropdown {
    }
 }
 
+Object.defineProperty(ComboBox, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return ComboBox.getDefaultOptions();
+   }
+});
+
 export = ComboBox;
 /**
  * @event Происходит при изменении отображаемого значения контрола.

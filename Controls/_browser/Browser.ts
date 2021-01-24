@@ -847,3 +847,12 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         };
     }
 }
+
+Object.defineProperty(Browser, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Browser.getDefaultOptions();
+   }
+});
