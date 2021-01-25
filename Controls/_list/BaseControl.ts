@@ -410,8 +410,6 @@ const _private = {
                     }
                     let listModel = self._listViewModel;
 
-                    _private.executeAfterReloadCallbacks(self, list, cfg);
-
                     if (!self._shouldNotResetPagingCache) {
                         self._cachedPagingState = false;
                     }
@@ -2184,6 +2182,8 @@ const _private = {
     },
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
+        _private.executeAfterReloadCallbacks(this, items, this._options);
+
         if (!direction) {
             return this.isEditing() ? this._cancelEdit(true) : void 0;
         }
@@ -2196,9 +2196,6 @@ const _private = {
         _private.setHasMoreData(
             this._listViewModel, _private.hasMoreDataInAnyDirection(this, this._sourceController)
         );
-        if (this._options.serviceDataLoadCallback instanceof Function) {
-            this._options.serviceDataLoadCallback(this._items, items);
-        }
 
         if (
             this._loadingState === 'all' ||
@@ -3917,7 +3914,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (this._listViewModel) {
                     this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController))
                 }
-                _private.executeAfterReloadCallbacks(self, items, newOptions);
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
             }
