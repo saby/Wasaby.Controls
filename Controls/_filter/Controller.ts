@@ -34,9 +34,6 @@ export default class Container extends Control<IFilterContainerOptions, IFilterH
 
    protected _beforeMount(options: IFilterContainerOptions, context: object,
                           receivedState?: IFilterHistoryData | IFilterItem[]): Promise<void | IFilterHistoryData> {
-      this._dataLoadCallback = this._dataLoadCallback.bind(this);
-      this._dataLoadErrback = this._dataLoadErrback.bind(this);
-
       this._filterController = new FilterController({
          ...options,
          historySaveCallback: this._historySaveCallback.bind(this)
