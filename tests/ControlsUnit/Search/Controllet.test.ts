@@ -82,6 +82,30 @@ describe('Controls/search:Controller', () => {
             assert.isTrue(searchControllerUpdated);
         });
 
+        it('newOptions.searchValue is undefined', () => {
+            const source = new Memory();
+            const options = {
+                source,
+                keyProperty: 'id',
+                root: 'testRoot',
+                sourceController: 'sourceController'
+            };
+            let searchControllerUpdated = false;
+
+            const searchController = new Controller(options);
+            searchController._beforeMount(options, {dataOptions: {}});
+
+            searchController._searchController = {
+                update: () => {
+                    searchControllerUpdated = true;
+                }
+            };
+            searchController._searchValue = 'newValue';
+
+            searchController._beforeUpdate(options, {dataOptions: {}});
+            assert.isFalse(searchControllerUpdated);
+        });
+
         it('_searchValue not equal newOptions.searchValue', () => {
             const source = new Memory();
             const options = {
