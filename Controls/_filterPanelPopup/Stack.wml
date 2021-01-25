@@ -1,4 +1,6 @@
 <Controls.popupTemplate:Stack closeButtonViewMode="link"
-                              bodyContentTemplate="{{_options.bodyContentTemplate}}"
                               attr:class="controls-FilterViewPanel__popup-template_theme-{{_options.theme}}">
+    <ws:bodyContentTemplate>
+        <Controls.filterPanel:View source="{{_options.items}}"/>
+    </ws:bodyContentTemplate>
 </Controls.popupTemplate:Stack>

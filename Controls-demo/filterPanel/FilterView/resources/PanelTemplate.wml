@@ -1,5 +1,0 @@
-<Controls.filterPanelPopup:Stack>
-    <ws:bodyContentTemplate>
-        <Controls.filterPanel:View attr:class="controls-demo__filterButton" source="{{_options.items}}"/>
-    </ws:bodyContentTemplate>
-</Controls.filterPanelPopup:Stack>
