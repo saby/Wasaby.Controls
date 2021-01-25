@@ -219,7 +219,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
-        const sourceChanged = this._options.source !== newOptions.source;
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -233,7 +232,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilterAndFilterItems();
         }
 
-        if (sourceChanged) {
+        if (this._options.source !== newOptions.source) {
             this._source = newOptions.source;
         }
 
@@ -257,24 +256,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         const isChanged = sourceController.updateOptions(
            this._getSourceControllerOptions(newOptions as ISourceControllerOptions));
 
-        if (sourceChanged) {
-            this._loading = true;
-            methodResult = sourceController.reload()
-               .then((items) => {
-                   this._items = sourceController.getItems();
-                   this._loading = false;
-                   return items;
-               }, (error) => {
-                   this._processLoadError(error);
-                   return error;
-               })
-               .finally((result) => {
-                   this._afterSourceLoad(sourceController, newOptions);
-                   return result;
-               })
-               .then((result) => {
-                   return this._updateSearchController(newOptions).then(() => result);
-               });
+        if (isChanged) {
+            methodResult = this._reload(newOptions);
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
         }
@@ -462,6 +445,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _rootChanged(event: SyntheticEvent, root: Key): void {
+        if (this._options.root === undefined) {
+            this._root = root;
+            this._sourceController.setRoot(root);
+            this._reload(this._options);
+        }
         this._notify('rootChanged', [root]);
     }
 
@@ -774,6 +762,28 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(error);
         }
+    }
+
+    private _reload(options: IBrowserOptions): Promise<RecordSet> {
+        const sourceController = this._sourceController;
+
+        this._loading = true;
+        return sourceController.reload()
+            .then((items) => {
+                this._items = sourceController.getItems();
+                this._loading = false;
+                return items;
+            }, (error) => {
+                this._processLoadError(error);
+                return error;
+            })
+            .finally((result) => {
+                this._afterSourceLoad(sourceController, newOptions);
+                return result;
+            })
+            .then((result) => {
+                return this._updateSearchController(newOptions).then(() => result);
+            });
     }
 
     _afterSetItemsOnReloadCallback(): void {
