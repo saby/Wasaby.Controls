@@ -1,8 +1,8 @@
 import { TreeGridView } from 'Controls/treeGridNew';
 import { SyntheticEvent } from 'UI/Vdom';
-import SearchGridDataRow from 'Controls/_searchGrid/display/SearchGridDataRow';
+import SearchGridDataRow from 'Controls/_searchBreadcrumbsGrid/display/SearchGridDataRow';
 import { Model } from 'Types/entity';
-import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
+import BreadcrumbsItem from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItem';
 import 'Controls/decorator';
 
 export default class SearchView extends TreeGridView {
@@ -31,7 +31,7 @@ export default class SearchView extends TreeGridView {
    }
 
    protected _onItemMouseUp(e: SyntheticEvent, item: SearchGridDataRow<Model>): void {
-      if (item['[Controls/_display/BreadcrumbsItem]'] || item['[Controls/_display/SearchSeparator]']) {
+      if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]']) {
          e.stopPropagation();
          return;
       }
@@ -39,7 +39,7 @@ export default class SearchView extends TreeGridView {
    }
 
    protected _onItemMouseDown(e: SyntheticEvent, item: SearchGridDataRow<Model>): void {
-      if (item['[Controls/_display/BreadcrumbsItem]'] || item['[Controls/_display/SearchSeparator]']) {
+      if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]']) {
          e.stopPropagation();
          return;
       }
@@ -47,7 +47,7 @@ export default class SearchView extends TreeGridView {
    }
 
    protected _onItemClick(e: SyntheticEvent, item: SearchGridDataRow<Model>) {
-      if (item['[Controls/_display/BreadcrumbsItem]'] || item['[Controls/_display/SearchSeparator]']) {
+      if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]']) {
          e.stopPropagation();
          return;
       }

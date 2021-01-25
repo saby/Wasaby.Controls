@@ -11,7 +11,7 @@
                 <ws:partial template="{{ content.resolvedTemplate }}"
                             items="{{item.getContents()}}"
                             backgroundStyle="{{_options.backgroundStyle}}"
-                            breadCrumbsItemClickCallback="{{ _onBreadcrumbItemClick }}"s
+                            breadCrumbsItemClickCallback="{{ _onBreadcrumbItemClick }}"
                             keyProperty="{{item.getKeyProperty()}}"
                             displayProperty="{{item.getDisplayProperty()}}"
                             on:click="_onBreadcrumbClick(item)">

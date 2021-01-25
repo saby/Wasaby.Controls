@@ -28,8 +28,8 @@ export default class SearchGridDataRow<S extends Model> extends TreeGridDataRow<
 }
 
 Object.assign(SearchGridDataRow.prototype, {
-   '[Controls/searchGrid:SearchGridDataRow]': true,
-   _cellModule: 'Controls/searchGrid:SearchGridDataCell',
-   _moduleName: 'Controls/searchGrid:SearchGridDataRow',
+   '[Controls/searchBreadcrumbsGrid:SearchGridDataRow]': true,
+   _cellModule: 'Controls/searchBreadcrumbsGrid:SearchGridDataCell',
+   _moduleName: 'Controls/searchBreadcrumbsGrid:SearchGridDataRow',
    _instancePrefix: 'search-grid-row-'
 });

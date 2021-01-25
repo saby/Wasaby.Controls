@@ -1,4 +1,4 @@
-<Controls.searchGrid:View
+<Controls.searchBreadcrumbsGrid:View
         source="{{_viewSource}}"
         keyProperty="id"
         parentProperty="parent"

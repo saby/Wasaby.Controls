@@ -1,12 +1,12 @@
 import { assert } from 'chai';
 
-import Search from 'Controls/_display/itemsStrategy/Search';
+import Search from 'Controls/_searchBreadcrumbsGrid/display/strategies/Search';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
-import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
+import BreadcrumbsItem from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItem';
 import { TreeItem } from 'Controls/display';
 import Tree from 'Controls/_display/Tree';
 import { RecordSet } from 'Types/collection';
-import SearchSeparator from 'Controls/_searchGrid/display/SearchSeparator';
+import SearchSeparator from 'Controls/_searchBreadcrumbsGrid/display/SearchSeparator';
 
 describe('Controls/_display/itemsStrategy/Search', () => {
     class StringContents {

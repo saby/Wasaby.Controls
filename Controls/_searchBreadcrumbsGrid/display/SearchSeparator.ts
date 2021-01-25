@@ -1,7 +1,7 @@
+import { IItemTemplateParams } from "Controls/display";
 import { register } from "Types/di";
-import { IItemTemplateParams } from 'Controls/_display/grid/mixins/Row';
 import { OptionsToPropertyMixin } from 'Types/entity';
-import Collection from "../../_display/grid/Collection";
+import SearchGridCollection from './SearchGridCollection';
 
 export default class SearchSeparator extends OptionsToPropertyMixin {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
@@ -10,14 +10,14 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
 
-    protected _$owner: Collection;
+    protected _$owner: SearchGridCollection;
 
     getContents(): string {
         return 'search-separator';
     }
 
     getTemplate(): string {
-        return 'Controls/searchGrid:SearchSeparatorTemplate';
+        return 'Controls/searchBreadcrumbsGrid:SearchSeparatorTemplate';
     }
 
     isEditing(): boolean {
@@ -49,10 +49,10 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
 }
 
 Object.assign(SearchSeparator.prototype, {
-    '[Controls/_display/SearchSeparator]': true,
-    _moduleName: 'Controls/display:SearchSeparator',
+    '[Controls/_searchBreadcrumbsGrid/SearchSeparator]': true,
+    _moduleName: 'Controls/searchBreadcrumbsGrid:SearchSeparator',
     _$owner: undefined,
     _instancePrefix: 'search-separator-item-'
 });
 
-register('Controls/display:SearchSeparator', SearchSeparator, {instantiate: false});
+register('Controls/searchBreadcrumbsGrid:SearchSeparator', SearchSeparator, {instantiate: false});

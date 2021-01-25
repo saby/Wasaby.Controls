@@ -1,6 +1,6 @@
-import TreeGrid from 'Controls/_treeGridNew/TreeGrid';
+import {View as TreeGrid} from 'Controls/treeGridNew';
 import { TemplateFunction } from 'UI/Base';
-import SearchView from 'Controls/_searchGrid/SearchView';
+import SearchView from 'Controls/_searchBreadcrumbsGrid/SearchView';
 
 export default class Search extends TreeGrid {
    protected _viewName: TemplateFunction;
@@ -12,6 +12,6 @@ export default class Search extends TreeGrid {
    }
 
    protected _getModelConstructor(): string {
-      return 'Controls/searchGrid:SearchGridCollection';
+      return 'Controls/searchBreadcrumbsGrid:SearchGridCollection';
    }
 }

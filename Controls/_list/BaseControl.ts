@@ -1983,7 +1983,7 @@ const _private = {
      */
     getPlainItemContents(item: CollectionItem<Model>) {
         let contents = item.getContents();
-        if (item['[Controls/_display/BreadcrumbsItem]'] || item.breadCrumbs) {
+        if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item.breadCrumbs) {
             contents = contents[(contents as any).length - 1];
         }
         return contents;
@@ -2519,7 +2519,7 @@ const _private = {
             let onlyCrumbsInItems = true;
             self._listViewModel.each((item) => {
                 if (onlyCrumbsInItems) {
-                    onlyCrumbsInItems = item['[Controls/_display/BreadcrumbsItem]'];
+                    onlyCrumbsInItems = item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'];
                 }
             });
 

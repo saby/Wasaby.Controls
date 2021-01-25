@@ -6,7 +6,7 @@ export default class SearchGridDataCell<S extends Model> extends TreeGridDataCel
 }
 
 Object.assign(SearchGridDataCell.prototype, {
-   '[Controls/searchGrid:SearchGridDataCell]': true,
-   _moduleName: 'Controls/searchGrid:SearchGridDataCell',
+   '[Controls/searchBreadcrumbsGrid:SearchGridDataCell]': true,
+   _moduleName: 'Controls/searchBreadcrumbsGrid:SearchGridDataCell',
    _instancePrefix: 'search-grid-data-cell-'
 });

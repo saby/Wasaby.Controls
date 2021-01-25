@@ -1,40 +1,37 @@
-import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
-import TreeItem from './TreeItem';
-import Tree from './Tree';
 import {register} from 'Types/di';
-import TreeChildren from './TreeChildren';
 import { object } from 'Types/util';
 import { Model } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import DataRow from './grid/DataRow';
-import { IItemTemplateParams } from 'Controls/_display/grid/mixins/Row';
+import SearchGridDataRow from './SearchGridDataRow';
+import { GridDataRow, IItemTemplateParams, TreeChildren } from 'Controls/display';
+import SearchGridCollection from './SearchGridCollection';
 
-export interface IOptions<T extends Model> extends ICollectionItemOptions<T> {
-    owner?: Tree<T>;
-    last: TreeItem<T>;
+export interface IOptions<T extends Model> {
+    owner?: SearchGridCollection<T>;
+    last: SearchGridDataRow<T>;
 }
 
 /**
  * Хлебная крошка
- * @class Controls/_display/BreadcrumbsItem
+ * @class Controls/_searchBreadcrumbsGrid/BreadcrumbsItem
  * @extends Controls/_display/CollectionItem
  * @private
  * @author Мальцев А.А.
  */
-export default class BreadcrumbsItem<T extends Model = Model> extends DataRow<T> {
+export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRow<T> {
    readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
    readonly Markable: boolean = false;
 
-   protected _$owner: Tree<T>;
+   protected _$owner: SearchGridCollection<T>;
 
    /**
    * Последний элемент хлебной крошки
    */
-   protected _$last: TreeItem<T>;
+   protected _$last: SearchGridDataRow<T>;
 
    protected _$template: TemplateFunction;
 
-   protected get _first(): TreeItem<T> {
+   protected get _first(): SearchGridDataRow<T> {
       const root = this._$owner ? this._$owner.getRoot() : {};
       let current = this._$last;
 
@@ -80,11 +77,11 @@ export default class BreadcrumbsItem<T extends Model = Model> extends DataRow<T>
       return first ? first.getLevel() : 0;
    }
 
-   getLast(): TreeItem<T> {
+   getLast(): SearchGridDataRow<T> {
       return this._$last;
    }
 
-   getParent(): TreeItem<T> {
+   getParent(): SearchGridDataRow<T> {
       // Родителем хлебной крошки всегда является корневой узел, т.к. хлебная крошка это путь до корневого узла
       return this._$owner.getRoot();
    }
@@ -155,11 +152,11 @@ export default class BreadcrumbsItem<T extends Model = Model> extends DataRow<T>
 }
 
 Object.assign(BreadcrumbsItem.prototype, {
-   '[Controls/_display/BreadcrumbsItem]': true,
-   _moduleName: 'Controls/display:BreadcrumbsItem',
-   _instancePrefix: 'breadcrumbs-item-',
+   '[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]': true,
+   _moduleName: 'Controls/searchBreadcrumbsGrid:BreadcrumbsItem',
+   _instancePrefix: 'search-breadcrumbs-grid-item-',
    _$last: null,
-   _$template: 'Controls/searchGrid:SearchBreadcrumbsItemTemplate'
+   _$template: 'Controls/searchBreadcrumbsGrid:SearchBreadcrumbsItemTemplate'
 });
 
-register('Controls/display:BreadcrumbsItem', BreadcrumbsItem, {instantiate: false});
+register('Controls/searchBreadcrumbsGrid:BreadcrumbsItem', BreadcrumbsItem, {instantiate: false});
