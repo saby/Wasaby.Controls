@@ -90,7 +90,6 @@
     <ws:if data="{{ listModel.getCurrent().isGroup }}">
         <!-- Шаблон элемента -->
         <ws:partial template="{{groupTemplate}}"
-                    task1181007458="{{ task1181007458 }}"
                     itemData="{{listModel.getCurrent()}}"
                     attr:key="{{listModel.getCurrent().key}}"
                     backgroundStyle="{{backgroundStyle}}"
