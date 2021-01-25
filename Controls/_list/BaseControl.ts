@@ -5583,7 +5583,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
         if (_private.hasHoverFreezeController(this) && !this._itemActionsMenuId) {
-            _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemData);
+            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemIndex = (itemData.index !== undefined ? itemData.index : this._collection.getIndex(itemData)) + 1;
+            _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemKey, itemIndex);
         }
     },
 
@@ -5601,12 +5603,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (!itemData['[Controls/_display/GroupItem]'] && !itemData['[Controls/_display/SearchSeparator]']) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemIndex = (itemData.index !== undefined ? itemData.index : this._collection.getIndex(itemData)) + 1;
 
             if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
                 if (!_private.hasHoverFreezeController(this)) {
                     _private.initHoverFreezeController(this);
                 }
-                _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemData);
+                _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemKey, itemIndex);
             }
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
@@ -5627,7 +5630,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
         }
         if (hoverFreezeController) {
-            hoverFreezeController.setDelayedHoverItem(itemData);
+            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemIndex = (itemData.index !== undefined ? itemData.index : this._collection.getIndex(itemData)) + 1;
+            hoverFreezeController.setDelayedHoverItem(itemKey, itemIndex);
         }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
