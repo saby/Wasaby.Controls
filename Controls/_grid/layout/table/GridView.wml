@@ -20,6 +20,7 @@
                     multiSelectTpl="{{_options.multiSelectTpl}}"
                     itemActionsTemplate="{{_options.itemActionsTemplate}}"
                     itemActionsClass="{{_options.itemActionsClass}}"
+                    task1181007458="{{ _options.task1181007458 }}"
                     groupTemplate="{{_groupTemplate}}"
                     itemActionsPosition="{{_options.itemActionsPosition}}"
                     swipeTemplate="{{_options.swipeTemplate}}"
