@@ -517,7 +517,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
-        const isIosOptimizedMode = false; //this._isMobileIOS;
+        const isIosOptimizedMode = this._isMobileIOS;
 
         if (opts.position.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
