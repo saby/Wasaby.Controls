@@ -446,6 +446,36 @@ define(
                }
             });
          });
+
+         it('position setted in popupOptions', () => {
+            const dialogSizes = {
+               width: 200,
+               height: 100
+            };
+            const item = {
+               popupOptions: {
+                  left: 100,
+                  top: 100
+               },
+               sizes: {
+                  width: 50,
+                  height: 50
+               },
+               position: {},
+               dragged: false
+            };
+            const windowData = {
+               width: 1920,
+               height: 960,
+               left: 0,
+               top: 0,
+               leftScroll: 0
+            };
+            let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+            assert.equal(position.left, 100);
+            assert.equal(position.top, 100);
+         });
+
          it('restrictive container, maximize = true', () => {
 
             let item = {
@@ -490,6 +520,11 @@ define(
             };
             const HORIZONTAL_DIRECTION = DirectionUtil.HORIZONTAL_DIRECTION;
             const VERTICAL_DIRECTION = DirectionUtil.VERTICAL_DIRECTION;
+            it('widthout direction', () => {
+               let position = DialogStrategy.getPosition(windowData, dialogSizes, item);
+               assert.equal(position.left, 860);
+               assert.equal(position.top, 430);
+            });
             it('direction left top', () => {
                item.popupOptions.resizeDirection = {
                   horizontal: HORIZONTAL_DIRECTION.LEFT,
