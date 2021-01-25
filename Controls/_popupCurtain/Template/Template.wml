@@ -19,6 +19,7 @@
       bottomShadowVisibility="hidden"
       on:touchstart="_touchStartHandler()"
       on:touchmove="_touchMoveHandler()"
+      on:touchend="_touchEndHandler()"
       scrollbarVisible="{{ false }}">
       <div name="customContent">
          <ws:partial
