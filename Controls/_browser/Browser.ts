@@ -747,7 +747,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         this._path = data?.getMetaData().path ?? null;
 
-        if (this._searchController && this._searchController.isSearchInProgress()) {
+        if (this._searchController && this._searchController.isSearchInProcess()) {
             this._searchDataLoad(data, this._searchController.getSearchValue());
         }
 

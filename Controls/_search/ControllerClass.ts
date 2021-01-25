@@ -233,7 +233,7 @@ export default class ControllerClass {
       return this._searchValue;
    }
 
-   isSearchInProgress(): boolean {
+   isSearchInProcess(): boolean {
       return this._searchInProgress;
    }
 
