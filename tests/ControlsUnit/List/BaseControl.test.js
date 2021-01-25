@@ -1471,9 +1471,20 @@ define([
             assert.deepEqual(options, { bubbling: true });
          };
 
+         let ctrlKey = false;
+         function getEvent() {
+            return { nativeEvent: { ctrlKey }, isStopped: () => true, stopImmediatePropagation: () => {} }
+         }
+
          // Without marker
-         lists.BaseControl._private.enterHandler(baseControl);
+         lists.BaseControl._private.enterHandler(baseControl, getEvent());
          assert.isTrue(notified);
+
+         // With CtrlKey
+         ctrlKey = true;
+         notified = false;
+         lists.BaseControl._private.enterHandler(baseControl, getEvent());
+         assert.isFalse(notified);
       });
 
       it('enterHandler while loading', function() {
@@ -1482,6 +1493,7 @@ define([
             notified = false;
 
          function enterClick(markedItem) {
+            const event = { nativeEvent: { ctrlKey: false }, isStopped: () => true, stopImmediatePropagation: () => {} };
             lists.BaseControl._private.enterHandler(
             {
                _options: {useNewModel: false},
@@ -1492,7 +1504,7 @@ define([
                   notified = true;
                },
                _loadingIndicatorState: 'all'
-            });
+            }, event);
          }
 
          // Without marker
