@@ -576,6 +576,14 @@ export default class Lookup extends BaseLookupInput {
  * @demo Controls-demo/LookupNew/Input/ToolbarItems/Index
  */
 
+/**
+ * @event Происходит при клике по дополнительной команде в правой части поля ввода.
+ * @name Controls/_lookup/Lookup#toolbarItemClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Types/entity:Record} item Элемент, по которому производим клик.
+ * @param {Object} nativeEvent Объект нативного события браузера.
+ */
+
 Object.defineProperty(Lookup, 'defaultProps', {
    enumerable: true,
    configurable: true,
