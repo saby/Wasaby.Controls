@@ -4741,7 +4741,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }) : Promise.resolve();
 
         return cancelEditPromise.then(() => {
-            return _private.reload(this, this._options, sourceConfig).then(getData);
+            if (!this._destroyed) {
+                return _private.reload(this, this._options, sourceConfig).then(getData);
+            }
         });
     },
 
