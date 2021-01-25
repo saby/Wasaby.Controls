@@ -1,5 +1,5 @@
 <div class="controlsDemo-MonthView__wrapper controlsDemo_fixedWidth350">
-    <Controls.calendar:MonthView attr:class="controlsDemo_m3" bind:month="_month">
+    <Controls.calendar:MonthView newMode="{{ true }}" attr:class="controlsDemo_m3" bind:month="_month">
         <ws:dayTemplate>
             <ws:partial template="Controls/calendar:MonthViewDayTemplate" value="{{value}}">
                 <ws:contentTemplate>

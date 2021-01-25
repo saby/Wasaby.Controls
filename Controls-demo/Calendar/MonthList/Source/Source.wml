@@ -5,6 +5,7 @@
         <Controls.calendar:MonthList
                 name="monthList"
                 viewMode="month"
+                newMode="{{ true }}"
                 bind:position="_position"
                 source="{{_source}}"
                 dayTemplate="{{_dayTemplate}}">
