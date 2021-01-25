@@ -100,6 +100,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _viewMode: TViewMode = undefined;
     private _misspellValue: string = null;
     private _root: Key = null;
+    private _rootBeforeSearch: Key = null;
     private _path: RecordSet;
     private _deepReload: boolean = undefined;
     private _inputSearchValue: string = '';
@@ -241,6 +242,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         if (newOptions.root !== this._options.root) {
             this._root = newOptions.root;
+
+            if (this._searchController) {
+                this._searchController.setRoot(newOptions.root);
+            }
         }
 
         if (this._options.viewMode !== newOptions.viewMode) {
@@ -295,12 +300,18 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (updateResult instanceof Promise) {
                 this._loading = true;
                 updateResult
-                    .then((result) => {
-                        this._searchDataLoad(result, newOptions.searchValue);
-                    })
-                    .catch((error) => error);
+                   .then((result) => {
+                       this._searchDataLoad(result, newOptions.searchValue);
+                   })
+                   .catch((error) => {
+                       if (!error.isCancelled) {
+                           return error;
+                       }
+                   });
             } else if (updateResult) {
+                this._searchValue = newOptions.searchValue;
                 this._filterChanged(null, updateResult as QueryWhereExpression<unknown>);
+                this._setSearchValue(newOptions.searchValue);
             }
 
             return updateResult;
@@ -425,7 +436,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (!this._deepReload) {
                 this._deepReload = true;
             }
-        } else {
+        } else if (!this._options.hasOwnProperty('root')) {
             this._searchController?.setRoot(root);
             this._root = root;
         }
@@ -433,6 +444,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
         }
+        this._rootBeforeSearch = null;
     }
 
     private _isSearchViewMode(): boolean {
@@ -674,6 +686,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _searchReset(event: SyntheticEvent): void {
         this._getSearchController().then((searchController) => {
+            if (this._rootBeforeSearch) {
+                this._root = this._rootBeforeSearch;
+            }
             this._updateFilter(searchController);
             this._handleDataLoad(null);
         });
@@ -721,6 +736,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             const newRoot = Browser._getRoot(this._path, this._root, this._options.parentProperty);
 
             this._getSearchController().then((searchController) => {
+                this._rootBeforeSearch = this._root;
                 this._root = newRoot;
                 searchController.setRoot(newRoot);
                 this._notify('rootChanged', [newRoot]);

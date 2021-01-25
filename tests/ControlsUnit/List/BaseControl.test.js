@@ -8442,6 +8442,17 @@ define([
             lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
             assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
             assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
+
+            notifySpy.resetHistory();
+            lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+            assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+            baseControl._beforeUpdate(cfg);
+            notifySpy.resetHistory();
+            lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
+            assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+            assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          });
 
          it('spaceHandler and multiselection hidden', () => {

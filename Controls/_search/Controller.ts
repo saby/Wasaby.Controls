@@ -86,6 +86,7 @@ export default class Container extends Control<IContainerOptions> {
    private _searchValue: string = null;
    private _misspellValue: string = null;
    private _root: Key = null;
+   private _rootBeforeSearch: Key = null;
    private _notifiedMarkedKey: Key = null;
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
@@ -180,6 +181,7 @@ export default class Container extends Control<IContainerOptions> {
          const newRoot = Container._getRoot(this._path, this._root, this._options.parentProperty);
 
          this._getSearchController().then((searchController) => {
+            this._rootBeforeSearch = this._root;
             this._root = newRoot;
             searchController.setRoot(newRoot);
             this._notify('rootChanged', [newRoot]);
@@ -234,14 +236,17 @@ export default class Container extends Control<IContainerOptions> {
          }
          if (root !== dataRoot) {
             this._updateFilter(searchController);
-
             this._inputSearchValue = '';
          }
+         this._rootBeforeSearch = null;
       });
    }
 
    private _searchReset(event: SyntheticEvent): void {
       this._getSearchController().then((searchController) => {
+         if (this._rootBeforeSearch) {
+            this._root = this._rootBeforeSearch;
+         }
          this._updateFilter(searchController);
          this._handleDataLoad(null);
       });
