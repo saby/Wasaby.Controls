@@ -1,0 +1,43 @@
+.controls-Curtain__animation-position-bottom {
+   transition: bottom @animation-duration_curtain-controller;
+}
+
+.controls-Curtain__animation-position-top {
+   transition: top @animation-duration_curtain-controller;
+}
+
+.controls-Curtain {
+   display: flex;
+   flex-direction: column;
+   flex: 1;
+   height: 100%;
+}
+
+.controls-Curtain__box-shadow-theme_@{themeName} {
+   box-shadow: @box-shadow_curtain;
+}
+
+.controls-Curtain__position-bottom-theme_@{themeName} {
+   border-radius: @border-radius-position-bottom_curtain;
+}
+
+.controls-Curtain__position-top-theme_@{themeName} {
+   border-radius: @border-radius-position-top_curtain;
+}
+
+.controls-Curtain__contrastBackground-theme_@{themeName} {
+   background-color: @background-color_curtain;
+}
+
+.controls-Curtain__controller {
+   margin: auto;
+}
+
+.controls-Curtain__scrollContainer {
+   flex-grow: 1;
+}
+
+.controls-Curtain__customContentArea {
+   overflow: hidden;
+   height: 100%;
+}

@@ -1,0 +1,11 @@
+<Controls.dragnDrop:Container
+   name="dragNDrop"
+   on:dragmove="_dragMoveHandler()"
+   on:documentdragend="_documentDragEndHandler()">
+   <div
+      on:mousedown="_startDragNDrop()"
+      on:touchstart="_startDragNDrop()"
+      class="controls-CurtainController controls-CurtainController-theme_{{ _options.theme }}">
+      <div class="controls-CurtainController__line controls-CurtainController__line-theme_{{ _options.theme }}"></div>
+   </div>
+</Controls.dragnDrop:Container>

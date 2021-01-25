@@ -1,0 +1,37 @@
+<ws:template name="controller">
+   <Controls._popupCurtain.Controller
+      attr:class="controls-Curtain__controller"
+      on:dragMove="_dragMoveHandler()"
+      on:dragEnd="_dragEndHandler()"/>
+</ws:template>
+<div class="controls-Curtain controls-Curtain-theme_{{_options.theme}}
+            controls-Curtain__box-shadow-theme_{{_options.theme}}
+            controls-Curtain__position-{{_options.position}}-theme_{{_options.theme}}
+            {{ _options.contrastBackground ? 'controls-Curtain__contrastBackground-theme_' + _options.theme }}">
+   <ws:if data="{{ _options.showControlButton && _options.position === 'bottom' }}">
+      <ws:partial
+         template="controller"/>
+   </ws:if>
+   <Controls.scroll:Container
+      name="scrollContainer"
+      attr:class="controls-Curtain__scrollContainer"
+      topShadowVisibility="hidden"
+      bottomShadowVisibility="hidden"
+      on:touchstart="_touchStartHandler()"
+      on:touchmove="_touchMoveHandler()"
+      scrollbarVisible="{{ false }}">
+      <div name="customContent">
+         <ws:partial
+            template="{{ _options.bodyContentTemplate }}">
+            <ws:controllerTemplate>
+               <ws:partial
+                  template="controller"/>
+            </ws:controllerTemplate>
+         </ws:partial>
+      </div>
+   </Controls.scroll:Container>
+   <ws:if data="{{ _options.showControlButton && _options.position === 'top' }}">
+      <ws:partial
+         template="controller"/>
+   </ws:if>
+</div>
