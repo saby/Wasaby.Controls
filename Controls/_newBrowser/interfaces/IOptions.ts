@@ -3,6 +3,7 @@ import {IControlOptions} from 'UI/Base';
 import {IMasterOptions} from 'Controls/_newBrowser/interfaces/IMasterOptions';
 import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
+import {TKey} from 'Controls/_interface/IItems';
 
 /**
  * Интерфейс описывает структуру настроек компонента {@link Controls/newBrowser:Browser}
@@ -39,9 +40,15 @@ export interface IOptions extends IControlOptions, ISourceOptions {
     keyProperty?: string;
 
     /**
-     * Идентификатор папки, содержимое которой нужно отобразить в каталоге
+     * Идентификатор папки, содержимое которой нужно отобразить в detail-колонке
      */
-    root?: string;
+    root?: TKey;
+
+    /**
+     * Идентификатор папки, содержимое которой нужно отобразить в master-колонке.
+     * Если не задан, то используется значение из опции {@link root}
+     */
+    masterRoot?: TKey;
 
     /**
      * Уникальный идентификатор контрола, по которому будет сохраняться конфигурация в хранилище данных.
