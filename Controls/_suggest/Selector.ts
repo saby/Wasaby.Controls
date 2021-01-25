@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_suggest/Selector/Selector');
 import Merge = require('Core/core-merge');
 import {CrudWrapper} from 'Controls/dataSource';
@@ -60,7 +60,7 @@ var _private = {
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * 
+ *
  * @author Герасимов А.М.
  * @public
  */
@@ -77,7 +77,7 @@ var _private = {
  * @mixes Controls/_suggest/ISuggest
  * @mixes Controls/_interface/INavigation
  * @demo Controls-demo/Input/Search/Suggest/SuggestPG
- * 
+ *
  * @public
  */
 var Suggest = Control.extend({
@@ -128,7 +128,12 @@ var Suggest = Control.extend({
       if (this._options.suggestState !== newOptions.suggestState) {
          this._suggestState = newOptions.suggestState;
       }
-      if (newOptions.selectedKey && (newOptions.selectedKey !== this._options.selectedKey ||
+
+      if (newOptions.suggestTemplate !== this._options.suggestTemplate) {
+         this._suggestTemplate = _private.prepareSuggestTemplate(newOptions.displayProperty, newOptions.suggestTemplate);
+      }
+
+      if (newOptions.selectedKey !== undefined && (newOptions.selectedKey !== this._options.selectedKey ||
          newOptions.source !== this._options.source)) {
          var self = this;
          return _private.loadSelectedItem(this, newOptions).addCallback(function(items) {

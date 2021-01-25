@@ -1,9 +1,10 @@
 import {TemplateFunction} from 'UI/Base';
+import {IContrastBackground} from 'Controls/interface';
 
 export type TextAlign = 'left' | 'right' | 'center';
 export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
 
-export interface IBaseOptions {
+export interface IBaseOptions extends IContrastBackground {
     autoComplete?: AutoComplete;
     textAlign?: TextAlign;
     selectOnClick?: boolean;
@@ -15,6 +16,7 @@ export interface IBaseOptions {
     name?: string;
     inlineHeight?: string;
     fontSize?: string;
+    fontWeight?: string;
     fontColorStyle?: string;
     paste?: (value: string) => void;
 }
@@ -73,7 +75,7 @@ export interface IBase {
  * @demo Controls-demo/Input/SelectOnClick/Index
  */
 /**
- * @name Controls/_input/interface/IBase#selectOnClick
+ * @name Controls/_input/interface/IBase#spellCheck
  * @cfg {Boolean} Определяет наличие браузерной проверки правописания и грамматики в тексте.
  * @remark
  * * false - Отсутствует проверка правописания и грамматики.
@@ -114,7 +116,5 @@ export interface IBase {
 
 /**
  * @name Controls/_input/interface/IBase#contrastBackground
- * @cfg
- * @default true
  * @demo Controls-demo/Input/ContrastBackground/Index
  */

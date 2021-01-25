@@ -30,6 +30,8 @@
                theme="{{ theme }}"
                style="{{ style }}"
                cursor="{{ cursor }}"
+               itemActionsTemplate="{{ itemActionsTemplate }}"
+               itemActionsClass="{{ itemActionsClass }}"
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
                tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
@@ -42,7 +44,7 @@
                           key="{{ (item || itemData).key }}"
                           checkboxReadOnly="{{ checkboxReadOnly }}"/>
       <ws:multiSelectTemplate>
-         <ws:partial template="{{multiSelectTpl}}" attr:class="{{(item || itemData).getMultiSelectClasses(theme)}}">
+         <ws:partial template="{{multiSelectTpl}}">
             <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
          </ws:partial>
       </ws:multiSelectTemplate>
@@ -51,13 +53,6 @@
    <ws:if data="{{ gridColumn.shouldDisplayEditArrow() }}">
       <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
    </ws:if>
-
-   <div if="{{ gridColumn.shouldDisplayTag(tagStyle) }}" class="{{ gridColumn.getTagClasses(theme) }}">
-      <ws:partial template="{{ tagTemplate }}"
-                  tagStyle="{{ gridColumn.getTagStyle(tagStyle) }}"
-                  dispItem="{{ item || itemData }}"
-                  columnIndex="{{ gridColumn.getColumnIndex() }}"/>
-   </div>
 
    <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">
       <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
@@ -86,8 +81,9 @@
          <ws:for data="column in item.getColumns()">
             <Controls.scroll:StickyHeader position="topbottom"
                                           mode="stackable"
+                                          shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                           attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
-                                          attr:style="{{ column.getWrapperStyles() }}">
+                                          attr:style="{{ column.getWrapperStyles(containerSize) }}">
                <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
             </Controls.scroll:StickyHeader>
          </ws:for>

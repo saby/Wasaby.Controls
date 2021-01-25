@@ -1,122 +1,128 @@
-import Control = require('Core/Control');
-import template = require('wml!Controls/_filter/Controller');
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import * as template from 'wml!Controls/_filter/Controller';
 import {RecordSet} from 'Types/Collection';
-import FilterController from 'Controls/_filter/ControllerClass';
+import * as Deferred from 'Core/Deferred';
+import FilterController, {IFilterControllerOptions} from 'Controls/_filter/ControllerClass';
 import {IPrefetchHistoryParams} from './IPrefetch';
 import {IFilterItem} from './View/interface/IFilterView';
+import {SyntheticEvent} from 'UI/Vdom';
 
 export interface IFilterHistoryData {
    items: object[];
    prefetchParams?: IPrefetchHistoryParams;
 }
 
-function getCalculatedFilter(cfg) {
-    return new FilterController({}).getCalculatedFilter(cfg);
+export interface IFilterContainerOptions extends IControlOptions {
+   dataLoadCallback?: Function;
+   dataLoadErrback?: Function;
+   minSearchLength: number;
 }
 
-function updateFilterHistory(cfg) {
-    return new FilterController({}).saveFilterToHistory(cfg);
+export default class Container extends Control<IFilterContainerOptions, IFilterHistoryData | IFilterItem[]> {
+   protected _template: TemplateFunction = template;
+
+   protected _filterController: FilterController = null;
+   protected _filter: object = null;
+   protected _filterButtonItems: IFilterItem[] = null;
+   protected _fastFilterItems: IFilterItem[] = null;
+
+   resetPrefetch(): void {
+      this._filterController.resetPrefetch();
+      this._updateFilterAndFilterItems();
+      this._notify('filterChanged', [this._filter]);
+   }
+
+   protected _beforeMount(options: IFilterContainerOptions, context: object,
+                          receivedState?: IFilterHistoryData | IFilterItem[]): Promise<void | IFilterHistoryData> {
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
+      this._dataLoadErrback = this._dataLoadErrback.bind(this);
+
+      this._filterController = new FilterController({
+         ...options,
+         historySaveCallback: this._historySaveCallback.bind(this)
+      });
+
+      if (receivedState) {
+         this._filterController.setFilterItems(receivedState);
+      } else {
+         return this._filterController.loadFilterItemsFromHistory().then((historyItems) => {
+            this._filterController.setFilterItems(historyItems);
+            this._updateFilterAndFilterItems();
+         });
+      }
+   }
+
+   protected _beforeUpdate(newOptions: IFilterContainerOptions): void {
+      this._filterController.update({...newOptions,
+         historySaveCallback: this._historySaveCallback.bind(this)} as IFilterControllerOptions);
+      this._updateFilterAndFilterItems();
+   }
+
+   protected _beforeUnmount(): void {
+      this._filterController = null;
+   }
+
+   private _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
+      if (this._mounted) {
+         this?._notify('historySave', [historyData, items]);
+      }
+   }
+
+   protected _filterHistoryApply(event: SyntheticEvent, history: IFilterHistoryData | IFilterItem[]): void {
+      this._filterController.updateHistory(history);
+   }
+
+   protected _itemsChanged(event: SyntheticEvent, items: IFilterItem[]): void {
+      this._filterController.updateFilterItems(items);
+      this._updateFilterAndFilterItems();
+
+      this._notify('filterChanged', [this._filter]);
+   }
+
+   protected _filterChanged(event: SyntheticEvent, filter: object): void {
+      // Controller should stop bubbling of 'filterChanged' event, that container-control fired
+      event.stopPropagation();
+      this._filterController.setFilter(filter);
+      this._filter = this._filterController.getFilter();
+      this._notify('filterChanged', [this._filter]);
+   }
+
+   private _dataLoadCallback(items: RecordSet): void {
+      this._filterController.handleDataLoad(items);
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items);
+      }
+   }
+
+   private _dataLoadErrback(error: Error): void {
+      this._filterController.handleDataError();
+
+      if (this._options.dataLoadErrback) {
+         this._options.dataLoadErrback(error);
+      }
+   }
+
+   private _updateFilterAndFilterItems(): void {
+      this._filter = this._filterController.getFilter();
+      this._filterButtonItems = this._filterController.getFilterButtonItems();
+      this._fastFilterItems = this._filterController.getFastFilterItems();
+   }
+
+   static getDefaultOptions(): IFilterContainerOptions {
+      return {
+         minSearchLength: 3
+      };
+   }
+
+   static getCalculatedFilter(cfg: object): Deferred {
+      return new FilterController({}).getCalculatedFilter(cfg);
+   }
+
+   static updateFilterHistory(cfg: object): unknown {
+      return new FilterController({}).saveFilterToHistory(cfg);
+   }
 }
-
-const Container = Control.extend(/** @lends Controls/_filter/Container.prototype */{
-    _template: template,
-     _filterController: null,
-     _filter: null,
-     _filterButtonItems: null,
-     _fastFilterItems: null,
-
-     constructor(): void {
-        this._dataLoadCallback = this._dataLoadCallback.bind(this);
-        this._dataLoadErrback = this._dataLoadErrback.bind(this);
-        Container.superclass.constructor.apply(this, arguments);
-     },
-
-    resetPrefetch(): void {
-        this._filterController.resetPrefetch();
-        this._updateFilterAndFilterItems();
-        this._notify('filterChanged', [this._filter]);
-    },
-
-    _beforeMount(options, context, receivedState): Promise<IFilterHistoryData|{}> {
-        this._filterController = new FilterController({
-            ...options,
-            historySaveCallback: this._historySaveCallback.bind(this)
-        });
-
-        if (receivedState) {
-           this._filterController.setFilterItems(receivedState);
-        } else {
-            return this._filterController.loadFilterItemsFromHistory().then((historyItems) => {
-                this._filterController.setFilterItems(historyItems);
-                this._updateFilterAndFilterItems();
-            });
-        }
-    },
-
-    _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
-        if (this._mounted) {
-            this?._notify('historySave', [historyData, items]);
-        }
-    },
-     _beforeUpdate(newOptions): void {
-        this._filterController.update({...newOptions,
-            historySaveCallback: this._historySaveCallback.bind(this)});
-        this._updateFilterAndFilterItems();
-     },
-
-    _beforeUnmount(): void {
-        this._filterController = null;
-    },
-
-     _filterHistoryApply(event, history): void {
-         this._filterController.updateHistory(history);
-     },
-
-     _itemsChanged(event, items): void {
-         this._filterController.updateFilterItems(items);
-         this._updateFilterAndFilterItems();
-
-         this._notify('filterChanged', [this._filter]);
-     },
-
-     _filterChanged(event, filter) {
-        // Controller should stop bubbling of 'filterChanged' event, that container-control fired
-        event.stopPropagation();
-        this._filterController.setFilter(filter);
-        this._filter = this._filterController.getFilter();
-         this._notify('filterChanged', [this._filter]);
-     },
-
-     _dataLoadCallback(items: RecordSet): void {
-        this._filterController.handleDataLoad(items);
-
-        if (this._options.dataLoadCallback) {
-           this._options.dataLoadCallback(items);
-        }
-     },
-
-    _dataLoadErrback(error: Error): void {
-       this._filterController.handleDataError();
-
-        if (this._options.dataLoadErrback) {
-            this._options.dataLoadErrback(error);
-        }
-    },
-
-    _updateFilterAndFilterItems(): void {
-        this._filter = this._filterController.getFilter();
-        this._filterButtonItems = this._filterController.getFilterButtonItems();
-        this._fastFilterItems = this._filterController.getFastFilterItems();
-    }
-});
-
-Container.getDefaultOptions = () => ({
-    minSearchLength: 3
-});
-
-Container.getCalculatedFilter = getCalculatedFilter;
-Container.updateFilterHistory = updateFilterHistory;
-export = Container;
 
 /**
  * Контрол используют в качестве контроллера, который позволяет фильтровать данные в {@link Controls/list:View}.
@@ -130,7 +136,7 @@ export = Container;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления filterPopup}
  *
  * @class Controls/_filter/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/IFilterChanged
  * @mixes Controls/_filter/IPrefetch
  *
@@ -145,7 +151,7 @@ export = Container;
 * More information you can read <a href='/doc/platform/developmentapl/interface-development/controls/filter-search/'>here</a>.
 *
 * @class Controls/_filter/Controller
-* @extends Core/Control
+* @extends UI/Base:Control
 * @mixes Controls/_interface/IFilterChanged
 *
 * @public

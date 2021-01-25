@@ -30,7 +30,7 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_input.less переменные тем оформления}
  *
  * @class Controls/_input/DateTime
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/_input/interface/IDateTimeMask
  * @mixes Controls/interface/IInputTag

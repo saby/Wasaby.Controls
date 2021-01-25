@@ -2,6 +2,7 @@
  * Created by kraynovdo on 13.11.2017.
  */
 import {TNavigationPagingMode} from 'Controls/interface';
+import {IArrowState} from 'Controls/paging';
 
 /**
  *
@@ -9,21 +10,12 @@ import {TNavigationPagingMode} from 'Controls/interface';
  * @private
  */
 
-type IScrollpagingState = 'top' | 'bottom' | 'middle';
+type IScrollPagingState = 'top' | 'bottom' | 'middle' | 'none';
 
 interface IScrollParams {
     clientHeight: number;
     scrollTop: number;
     scrollHeight: number;
-}
-
-type TArrowStateVisibility = 'visible' | 'hidden' | 'readonly';
-
-interface IArrowState {
-    begin: TArrowStateVisibility;
-    prev: TArrowStateVisibility;
-    next: TArrowStateVisibility;
-    end: TArrowStateVisibility;
 }
 
 interface IPagingCfg {
@@ -36,11 +28,11 @@ interface IPagingCfg {
 }
 
 interface IScrollPagingOptions {
-    pagingMode: TNavigationPagingMode;
-    scrollParams: IScrollParams;
-    totalElementsCount: number;
-    loadedElementsCount: number;
-    showEndButton: boolean;
+    pagingMode?: TNavigationPagingMode;
+    scrollParams?: IScrollParams;
+    totalElementsCount?: number;
+    loadedElementsCount?: number;
+    showEndButton?: boolean;
 
     pagingCfgTrigger(cfg: IPagingCfg): void;
 }
@@ -57,7 +49,7 @@ interface IHasMoreData {
 }
 
 export default class ScrollPagingController {
-    protected _curState: IScrollpagingState = null;
+    protected _curState: IScrollPagingState = 'none';
     protected _options: IScrollPagingOptions = null;
     protected _pagingData: IPagingData = null;
     protected _numbersState: 'up' | 'down' = 'up';
@@ -83,7 +75,7 @@ export default class ScrollPagingController {
     viewportResize(clientHeight: number): void {
         const pagesCount = Math.round(this._pagingData.totalHeight / clientHeight);
         this._pagingData.pagesCount = pagesCount;
-        this._curState = null;
+        this._curState = 'none';
     }
 
     shiftToEdge(state: 'up' | 'down', hasMoreData: IHasMoreData): void {
@@ -271,7 +263,7 @@ export default class ScrollPagingController {
         this.updateStateByScrollParams(scrollParams, hasMoreData);
     }
 
-    protected destroy(): void {
+    destroy(): void {
         this._options = null;
     }
 

@@ -1,5 +1,5 @@
 // @ts-ignore
-import * as Control from 'Core/Control';
+import {Control} from 'UI/Base';
 // @ts-ignore
 import {StickyOpener} from 'Controls/popup';
 import IDropdownController, {IDropdownControllerOptions} from 'Controls/_dropdown/interface/IDropdownController';
@@ -20,7 +20,7 @@ import * as Merge from 'Core/core-merge';
  * Контроллер для выпадающих списков.
  *
  * @class Controls/_dropdown/_Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
  *
@@ -31,7 +31,7 @@ import * as Merge from 'Core/core-merge';
  * Controller for dropdown lists
  *
  * @class Controls/_dropdown/_Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_dropdown/interface/IDropdownController
  * @author Красильников А.С.
  *
@@ -81,6 +81,7 @@ export default class _Controller implements IDropdownController {
          keyProperty: this._options.keyProperty,
          filter,
          emptyText: this._options.emptyText,
+         emptyKey: this._options.emptyKey,
          selectedKeys: this._options.selectedKeys,
          selectedItemsChangedCallback: this._options.selectedItemsChangedCallback
       };
@@ -99,9 +100,10 @@ export default class _Controller implements IDropdownController {
       if (items) {
          this._selectedItems = items;
          this._updateSelectedItems(
-             this._options.emptyText,
              this._options.selectedKeys,
              this._options.keyProperty,
+             this._options.emptyText,
+             this._options.emptyKey,
              this._options.selectedItemsChangedCallback,
              items);
       }
@@ -112,8 +114,8 @@ export default class _Controller implements IDropdownController {
          this._setItems(items);
          sourceController.calculateState(this._items);
 
-         this._updateSelectedItems(this._options.emptyText, this._options.selectedKeys,
-             this._options.keyProperty, this._options.selectedItemsChangedCallback);
+         this._updateSelectedItems(this._options.selectedKeys, this._options.keyProperty,
+             this._options.emptyText, this._options.emptyKey, this._options.selectedItemsChangedCallback);
          if (this._options.dataLoadCallback) {
             this._options.dataLoadCallback(this._items);
          }
@@ -160,8 +162,9 @@ export default class _Controller implements IDropdownController {
             return this.reload();
          }
       } else if (newOptions.selectedKeys !== oldOptions.selectedKeys && this._items) {
-         this._updateSelectedItems(newOptions.emptyText, newOptions.selectedKeys,
-             newOptions.keyProperty, newOptions.selectedItemsChangedCallback);
+         this._updateSelectedItems(newOptions.selectedKeys, newOptions.keyProperty,
+             newOptions.emptyText, newOptions.emptyKey,
+             newOptions.selectedItemsChangedCallback);
       }
    }
 
@@ -237,6 +240,9 @@ export default class _Controller implements IDropdownController {
    }
 
    handleClose(): void {
+      if (this._options.searchParam) {
+         this._setItems(null);
+      }
       this._isOpened = false;
       this._menuSource = null;
    }
@@ -400,9 +406,10 @@ export default class _Controller implements IDropdownController {
       }
       this._setItems(items);
       this._updateSelectedItems(
-          options.emptyText,
           options.selectedKeys,
           options.keyProperty,
+          options.emptyText,
+          options.emptyKey,
           options.selectedItemsChangedCallback);
       return items;
    }
@@ -423,7 +430,7 @@ export default class _Controller implements IDropdownController {
       return item;
    }
 
-   private _updateSelectedItems(emptyText, selectedKeys, keyProperty, selectedItemsChangedCallback, items?) {
+   private _updateSelectedItems(selectedKeys, keyProperty, emptyText, emptyKey, selectedItemsChangedCallback, items?) {
       const selectedItems = [];
 
       const addToSelected = (key: string) => {
@@ -434,7 +441,7 @@ export default class _Controller implements IDropdownController {
          }
       };
 
-      if (!selectedKeys || !selectedKeys.length || selectedKeys[0] === null) {
+      if (!selectedKeys || !selectedKeys.length || selectedKeys[0] === emptyKey) {
          if (emptyText) {
             selectedItems.push(null);
          } else {
@@ -466,7 +473,7 @@ export default class _Controller implements IDropdownController {
       if (this._isHistoryMenu()) {
          // В историческом меню в emptyItem ключ пишется в поле copyOriginalId.
          // Поле keyProperty заполняется значением по умолчанию, которое может не совпадать с emptyKey.
-         if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty())) {
+         if (isEmptyItem(item, this._options.emptyText, item.getKeyProperty(), this._options.emptyKey)) {
             item.set(keyProperty, item.getKey());
          }
          return source.resetHistoryFields(item, keyProperty);
@@ -479,7 +486,7 @@ export default class _Controller implements IDropdownController {
       if (isHistorySource(this._source)) {
          // FIXME https://online.sbis.ru/opendoc.html?guid=300c6a3f-6870-492e-8308-34a457ad7b85
          if (this._options.emptyText) {
-            const item = this._items.getRecordById(null);
+            const item = this._items.getRecordById(this._options.emptyKey);
             if (item) {
                this._items.remove(item);
             }

@@ -7,7 +7,7 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
     readonly Markable: boolean = true;
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
         const topPadding = this._$owner.getTopPadding();
 
         let wrapperClasses = '';
@@ -36,21 +36,14 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
         return wrapperClasses;
     }
 
-    getContentClasses(theme: string,
-                      backgroundColorStyle: string,
-                      cursor: string = 'pointer',
-                      templateHighlightOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
-
-        let contentClasses = '';
-        if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this._$owner.isSelected()) {
-            contentClasses += ' controls-ListView__checkbox-onhover';
-        }
-
-        if (templateHighlightOnHover !== false) {
-            contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme}`;
-        }
-        return contentClasses;
+    getContentClasses(
+       theme: string,
+       backgroundColorStyle: string,
+       cursor: string = 'pointer',
+       templateHighlightOnHover: boolean = true
+    ): string {
+        // Навешиваем классы в Row::getMultiSelectClasses, т.к. если позиция custom, то мы не создадим CheckboxCell
+        return '';
     }
 
     getTemplate(multiSelectTemplate: TemplateFunction): TemplateFunction|string {
@@ -58,7 +51,7 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
     }
 
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
-        return markerPosition !== 'right' && marker !== false && this._$owner.isMarked();
+        return markerPosition !== 'right' && this._$owner.shouldDisplayMarker(marker);
     }
 
     shouldDisplayItemActions(): boolean {

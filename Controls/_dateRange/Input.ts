@@ -21,7 +21,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * * {@link /doc/platform/developmentapl/interface-development/controls/date-time/date/ руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dateRange.less переменные тем оформления}
  * @class Controls/_dateRange/Input
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IDateRange
@@ -31,6 +31,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/_interface/IOpenPopup
  * @mixes Controls/_interface/IDateRangeValidators
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  *
  * @public
  * @demo Controls-demo/dateRange/Input/Default/Index
@@ -40,12 +41,13 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
 /*
  * Control for entering date range.
  * @class Controls/_dateRange/Input
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag
  * @mixes Controls/_interface/IDateMask
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  *
  *
  * @public
@@ -106,7 +108,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
                 selectionType: this._options.selectionType,
                 calendarSource: this._options.calendarSource,
                 dayTemplate: this._options.dayTemplate,
-                quantum: this._options.quantum,
+                ranges: this._options.ranges,
                 headerType: 'input',
                 closeButtonEnabled: true,
                 rangeselect: true,

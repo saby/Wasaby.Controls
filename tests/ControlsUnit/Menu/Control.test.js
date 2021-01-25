@@ -101,6 +101,22 @@ define(
                   assert.isNotNull(menuControl._errorConfig);
                });
             });
+
+            it('dataLoadErrback', async () => {
+               let isDataLoadErrbackCalled = false;
+               const options = Clone(defaultOptions);
+               const menuControl = getMenu();
+               menuControl._options.dataLoadErrback = () => {
+                  isDataLoadErrbackCalled = true
+               }
+
+               options.source.query = () => Promise.reject(new Error());
+
+               await menuControl._loadItems(options).catch(() => {
+                  assert.isNotNull(menuControl._errorConfig);
+                  assert.isTrue(isDataLoadErrbackCalled);
+               });
+            });
          });
 
          describe('_beforeUpdate', () => {
@@ -119,12 +135,18 @@ define(
             it('searchValue is changed', async() => {
                let isClosed = false;
                let isViewModelCreated = false;
+               let isSelectionControllerUpdated = false;
                const menuControl = getMenu();
                const newMenuOptions = { ...defaultOptions, searchParam: 'title' };
 
                menuControl._closeSubMenu = () => { isClosed = true; };
                menuControl._createViewModel = () => {
                   isViewModelCreated = true;
+               };
+               menuControl._selectionController = {
+                  updateOptions: () => {
+                     isSelectionControllerUpdated = true;
+                  }
                };
                newMenuOptions.sourceController = {
                   getItems: () => 'test'
@@ -134,6 +156,7 @@ define(
                assert.isTrue(menuControl._notifyResizeAfterRender);
                assert.isTrue(isClosed);
                assert.isTrue(isViewModelCreated);
+               assert.isTrue(isSelectionControllerUpdated);
             });
          });
 
@@ -153,7 +176,8 @@ define(
 
             it('_loadItems return items', async() => {
                menuControl._listModel = {
-                  setMarkedKey: () => {}
+                  setMarkedKey: () => {},
+                  getItemBySourceKey: () => null
                };
                menuControl._loadItems = () => {
                   return new Promise((resolve) => {
@@ -507,6 +531,19 @@ define(
             initKeys = [2, 1];
             result = menuControl._isSelectedKeysChanged([1, 2], initKeys);
             assert.isFalse(result);
+         });
+
+         it('_getSelectedItems', () => {
+            const menuControl = getMenu({...defaultOptions, emptyKey: null, emptyText: 'emptyText'});
+            const emptyItem = {
+               key: null,
+               title: 'Not selected'
+            };
+            let itemsWithEmpty = Clone(defaultItems);
+            itemsWithEmpty.push(emptyItem);
+            menuControl._listModel = getListModel(itemsWithEmpty);
+            const result = menuControl._getSelectedItems();
+            assert.isNull(result[0].getKey());
          });
 
          it('setSubMenuPosition', function() {

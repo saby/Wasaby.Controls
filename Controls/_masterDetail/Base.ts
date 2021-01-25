@@ -22,7 +22,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
  * Контрол, который обеспечивает связь между двумя контролами для отображения подробной информации по выбранному элементу.
  * Подробное описание и инструкцию по настройке читайте <a href='/doc/platform/developmentapl/interface-development/controls/layout/master-detail/'>здесь</a>.
  * @class Controls/_masterDetail/Base
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/IPropStorage
  *
  * @author Авраменко А.С.
@@ -34,7 +34,7 @@ interface IMasterDetail extends IControlOptions, IPropStorageOptions {
  * Control that allows to implement the Master-Detail interface
  * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/master-detail/'>here</a>.
  * @class Controls/_masterDetail/Base
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @author Авраменко А.С.
  * @public
@@ -374,9 +374,12 @@ class Base extends Control<IMasterDetail> {
     protected _resizeHandler(): void {
         // TODO https://online.sbis.ru/doc/a88a5697-5ba7-4ee0-a93a-221cce572430
         // Не запускаем реакцию на ресайз, если контрол скрыт (к примеру лежит внутри скпытой области switchableArea) и когда нет движения границ
-        if (!this._container.closest('.ws-hidden') && this._options.propStorageId) {
-            this._containerWidth = null;
-            this._updateOffsetDebounced(this._options);
+        if (!this._container.closest('.ws-hidden')) {
+            if (this._options.propStorageId) {
+                this._containerWidth = null;
+                this._updateOffsetDebounced(this._options);
+            }
+
             // Нужно чтобы лисенеры, лежащие внутри нашего регистратора, реагировали на ресайз страницы.
             // Код можно будет убрать, если в регистраторах дадут возможность не стопать событие регистрации лисенера,
             // чтобы лисенер мог регистрироваться в 2х регистраторах.

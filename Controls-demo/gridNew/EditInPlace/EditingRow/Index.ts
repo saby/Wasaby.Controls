@@ -2,7 +2,6 @@ import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/gridNew/EditInPlace/EditingRow/EditingRow';
 import {Memory} from 'Types/source';
 import {getPorts} from '../../DemoHelpers/DataCatalog';
-import 'wml!Controls-demo/gridNew/EditInPlace/EditingRow/_rowEditor';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import * as cellTemplate from 'wml!Controls-demo/gridNew/EditInPlace/EditingRow/cellTemplate';
@@ -41,11 +40,9 @@ export default class extends Control {
         });
     }
 
-    protected _colspanCalculationCallback(item, column, columnIndex, isEditing) {
+    protected _colspanCallback(item, column, columnIndex, isEditing) {
         if (isEditing && columnIndex === 0) {
-            return {
-                colspan: 5
-            }
+            return 'end';
         }
     }
 
@@ -57,10 +54,10 @@ export default class extends Control {
                     rawData: {
                         id: ++this._fakeId,
                         name: '',
-                        invoice: 0,
-                        documentSign: 0,
-                        documentNum: 0,
-                        taxBase: 0,
+                        invoice: '0',
+                        documentSign: '0',
+                        documentNum: '0',
+                        taxBase: '0',
                         document: '',
                         documentDate: null,
                         serviceContract: null,

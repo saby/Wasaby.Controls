@@ -3,8 +3,26 @@ import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import BigSeparatorTemplate = require('wml!Controls/_toggle/BigSeparator/BigSeparator');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 
-export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions {
+/**
+ * @typedef TViewMode
+ * @variant ellipsis Иконка открытия отображатеся в виде троеточия
+ * @variant arrow Иконка открытия отображатеся в виде стрелки
+ */
+type TViewMode = 'ellipsis' | 'arrow';
 
+export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions {
+    /**
+     * Режим отображения иконки открытия.
+     * @default ellipsis
+     * @demo Controls-demo/toggle/BigSeparator/ViewMode/Index
+     */
+   viewMode?: TViewMode;
+    /**
+     * Определяет контрастность фона кнопки по отношению к ее окружению.
+     * @default true
+     * @demo Controls-demo/toggle/BigSeparator/ContrastBackground/Index
+     */
+    contrastBackground?: boolean;
 }
 
 /**
@@ -16,7 +34,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_toggle.less переменные тем оформления}
  *
  * @class Controls/_toggle/BigSeparator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Красильников А.С.
@@ -31,7 +49,7 @@ export interface IBigSeparatorOptions extends IControlOptions, ICheckableOptions
  * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>.
  *
  * @class Controls/_toggle/BigSeparator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Красильников А.С.
@@ -54,7 +72,8 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable {
    static getDefaultOptions(): object {
       return {
          value: false,
-         iconSize: 'm'
+         iconSize: 'm',
+         contrastBackground: true
       };
    }
 

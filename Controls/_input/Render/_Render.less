@@ -92,10 +92,6 @@
    align-items: center;
 }
 
-.controls-Render-fontsize-3xl {
-   font-weight: bold;
-}
-
 .controls-Render__placeholder_theme-@{themeName} {
    color: @placeholder-color_inputText;
 }
@@ -257,7 +253,7 @@
 }
 
 .controls-Render_borderRadius {
-   @variants: xs, s, m, l, xl, 2 xl, default;
+   @variants: xs, s, m, l, xl, 2xl, default;
    .for(@variants, {
       &-@{_item}_theme-@{themeName} {
          border-radius: ~"@{border-radius_@{_item}_inputText}";

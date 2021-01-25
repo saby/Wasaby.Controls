@@ -8,6 +8,7 @@ import ITagCell from './interface/ITagCell';
 import IItemActionsCell from './interface/IItemActionsCell';
 import ILadderContentCell from './interface/ILadderContentCell';
 import DataCellCompatibility from './compatibility/DataCell';
+import {ILadderConfig, TLadderElement} from 'Controls/_display/utils/GridLadderUtil';
 
 export interface IOptions<T> extends ICellOptions<T> {
 }
@@ -20,11 +21,14 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     DataCellCompatibility
 ) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
 
-    readonly Markable = true;
-    readonly TagCell = true;
-    readonly ItemActionsCell = true;
-    readonly LadderContentCell = true;
+    readonly Markable: boolean = true;
+    readonly TagCell: boolean = true;
+    readonly ItemActionsCell: boolean = true;
+    readonly LadderContentCell: boolean = true;
 
+    get ladder(): TLadderElement<ILadderConfig> {
+        return this.getOwner().getLadder();
+    }
     // region Аспект "Рендер"
     getDefaultDisplayValue(): T {
         const itemModel = this._$owner.getContents();
@@ -39,9 +43,9 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     // region Аспект "Маркер"
     shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         if (markerPosition === 'right') {
-            return marker !== false && this._$owner.isMarked() && this.isLastColumn();
+            return this._$owner.shouldDisplayMarker(marker) && this.isLastColumn();
         } else {
-            return marker !== false && this._$owner.isMarked() &&
+            return this._$owner.shouldDisplayMarker(marker) &&
                 this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
         }
     }

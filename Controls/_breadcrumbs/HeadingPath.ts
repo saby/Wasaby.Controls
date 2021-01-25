@@ -1,7 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import PrepareDataUtil from './PrepareDataUtil';
-import {ItemsUtil} from 'Controls/list';
 import {EventUtils} from 'UI/Events';
 import {applyHighlighter} from 'Controls/_breadcrumbs/resources/applyHighlighter';
 import template = require('wml!Controls/_breadcrumbs/HeadingPath/HeadingPath');
@@ -30,7 +29,7 @@ const SIZES = {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_breadcrumbs.less переменные тем оформления}
  *
  * @class Controls/_breadcrumbs/HeadingPath
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
@@ -45,7 +44,7 @@ const SIZES = {
  * Breadcrumbs with back button.
  *
  * @class Controls/_breadcrumbs/HeadingPath
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
@@ -186,7 +185,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
 
         if (options.items && options.items.length > 0) {
             const lastItem = options.items[options.items.length - 1];
-            this._backButtonCaption = ItemsUtil.getPropertyValue(lastItem, options.displayProperty);
+            this._backButtonCaption = lastItem.get(options.displayProperty);
             // containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
             if (options.items.length > 1) {
                 this._breadCrumbsItems = options.items.slice(0, options.items.length - 1);

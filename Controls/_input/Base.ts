@@ -52,12 +52,13 @@ const WIDTH_CURSOR: number = 1;
  * @extends UI/Base:Control
  * @implements Controls/interface:IHeight
  * @implements Controls/interface:IFontSize
+ * @implements Controls/interface:IFontWeight
  * @implements Controls/interface:IBorderStyle
  * @implements Controls/interface:IFontColorStyle
  * @implements Controls/interface:IValidationStatus
  * @implements Controls/input:IBase
  * @implements Controls/input:ITag
- * @implements Controls/_input/interface/IValueOptions
+ * @implements Controls/input:IValue
  * @implements Controls/input:IBorderVisibility
  * @implements Controls/input:IPadding
  * @implements Controls/input:ISelection

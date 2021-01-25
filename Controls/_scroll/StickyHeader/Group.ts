@@ -45,7 +45,7 @@ interface IStickyHeaderGroupOptions extends IControlOptions {
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_scroll.less переменные тем оформления}
  *
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @class Controls/_scroll/StickyHeader/Group
  * @author Красильников А.С.
  * @public
@@ -131,7 +131,8 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
         // https://online.sbis.ru/opendoc.html?guid=4e5cd2c6-a2ec-4619-b9c4-fafbb21fc4b8
         for (let id in this._headers) {
             const shadowVisibility = this._headers[id].inst.shadowVisibility;
-            if (shadowVisibility === SHADOW_VISIBILITY.visible || shadowVisibility === SHADOW_VISIBILITY.lastVisible) {
+            if (shadowVisibility === SHADOW_VISIBILITY.visible || shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                shadowVisibility === SHADOW_VISIBILITY.initial) {
                 return shadowVisibility;
             }
         }

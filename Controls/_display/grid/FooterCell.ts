@@ -15,34 +15,40 @@ export default class FooterCell<T> extends Cell<T, FooterRow<T>> {
         super(options);
     }
 
+    getInstanceId(): string {
+        return undefined;
+    }
+
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
-        let wrapperClasses = `controls-Grid__footer-cell`
-                          + ` controls-BaseControl__footer-content_theme-${theme}`
+        let wrapperClasses = 'controls-GridView__footer__cell'
+                          + ` controls-GridView__footer__cell_theme-${theme}`
                           + ` controls-background-${backgroundColorStyle}_theme-${theme}`;
 
-        if (this.isMultiSelectColumn()) {
-            wrapperClasses += ` controls-ListView__footer__paddingLeft_withCheckboxes_theme-${theme}`;
-        } else {
-            wrapperClasses += ` controls-ListView__footer__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
+        if (!this.getOwner().hasMultiSelectColumn() && this.isFirstColumn()) {
+            wrapperClasses += ` controls-GridView__footer__cell__paddingLeft_${this._$owner.getLeftPadding()}_theme-${theme}`;
         }
 
         if (this.isLastColumn()) {
-            wrapperClasses += ` controls-GridView__footer__cell__paddingRight_${this._$owner.getRightPadding()}_theme-${theme}`
+            wrapperClasses += ` controls-GridView__footer__cell__paddingRight_${this._$owner.getRightPadding()}_theme-${theme}`;
         }
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
         }
 
+        if (this.getOwner().getActionsTemplateConfig()?.itemActionsPosition === 'outside') {
+            wrapperClasses += ` controls-GridView__footer__itemActionsV_outside_theme-${theme}`;
+        }
+
         return wrapperClasses;
     }
 
-    getWrapperStyles(): string {
-        return `${this.getColspan()}`;
+    getWrapperStyles(containerSize?: number): string {
+        return `${this.getColspan()} ${(this.getColspan() && containerSize) ? `width:${containerSize}px;` : ''}`;
     }
 
     getContentClasses(theme: string): string {
-        return `controls-Grid__footer-cell__content`;
+        return 'controls-Grid__footer-cell__content';
     }
 
     getTemplate(): TemplateFunction|string {

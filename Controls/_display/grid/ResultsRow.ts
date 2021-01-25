@@ -4,7 +4,9 @@ import Collection from './Collection';
 import Row from './Row';
 import { IColumn } from 'Controls/grid';
 import { TColspanCallbackResult, TResultsColspanCallback } from './mixins/Grid';
-
+import ResultsCell from 'Controls/_display/grid/ResultsCell';
+import Cell from 'Controls/_display/grid/Cell';
+import ItemActionsCell from 'Controls/_display/grid/ItemActionsCell';
 
 export type TResultsPosition = 'top' | 'bottom';
 
@@ -52,6 +54,29 @@ export default class ResultsRow<T> extends Row<T> {
         }
         return undefined;
     }
+    protected _processStickyLadderCells(): void {
+        // todo Множественный stickyProperties можно поддержать здесь:
+        const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
+
+        if (stickyLadderCellsCount) {
+            this._$columnItems.splice(1, 0, new ResultsCell({
+                column: this._$columns[0],
+                ladderCell: true,
+                owner: this
+            }));
+        }
+
+        if (stickyLadderCellsCount === 2) {
+            this._$columnItems = ([
+                new ResultsCell({
+                    column: this._$columns[0],
+                    ladderCell: true,
+                    owner: this
+                })
+            ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
+        }
+    }
 
     protected _initializeColumns(): void {
         if (this._$columns) {
@@ -60,14 +85,21 @@ export default class ResultsRow<T> extends Row<T> {
             if (this._$resultsTemplate) {
                 this._$columnItems = [factory({
                     column: {
-                        resultTemplate: this._$resultsTemplate,
-                        colspan: this._$owner.getColumnsConfig().length
+                        resultTemplate: this._$resultsTemplate
                     },
+                    colspan: this._$owner.getColumnsConfig().length
                 })];
             } else {
                 this._$columnItems = this._prepareColumnItems(this._$columns, factory);
             }
 
+            this._processStickyLadderCells();
+            if (this._$columns && this.hasItemActionsSeparatedCell()) {
+                this._$columnItems.push(new ItemActionsCell({
+                    owner: this,
+                    column: {}
+                }));
+            }
             if (this._$owner.hasMultiSelectColumn()) {
                 this._$columnItems.unshift(factory({
                     column: {}

@@ -7,7 +7,7 @@ import {RecordSet} from 'Types/collection';
 import {SbisService} from 'Types/source';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {isLeftMouseButton} from 'Controls/popup';
-import {IItems, IHeight} from 'Controls/interface';
+import {IItems, IItemTemplateOptions} from 'Controls/interface';
 import {ITabsButtons, ITabsButtonsOptions} from './interface/ITabsButtons';
 import {constants} from 'Env/Env';
 import {adapter} from 'Types/entity';
@@ -15,8 +15,6 @@ import {factory} from 'Types/chain';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
-
-import {IItemTemplateOptions, IHeightOptions} from 'Controls/interface';
 
 interface ITabButtonItem {
     isMainTab?: boolean;
@@ -33,7 +31,7 @@ export interface ITabsTemplate {
  * @interface Controls/_tabs/ITabsTemplate
  * @public
  */
-export interface ITabsTemplateOptions extends IItemTemplateOptions, IHeightOptions {
+export interface ITabsTemplateOptions extends IItemTemplateOptions {
     leftTemplateProperty?: string;
     rightTemplateProperty?: string;
     tabSpaceTemplate?: TemplateFunction;
@@ -71,11 +69,10 @@ const isTemplateObject = (tmpl: any): boolean => {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_tabs.less переменные тем оформления}
  *
  * @class Controls/_tabs/Buttons
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface:ISingleSelectable
  * @mixes Controls/interface:ISource
  * @mixes Controls/interface:IItems
- * @mixes Controls/interface:IHeight
  * @mixes Controls/_tabs/interface/ITabsButtons
  * @mixes Controls/tabs:ITabsTemplateOptions
  *
@@ -85,10 +82,9 @@ const isTemplateObject = (tmpl: any): boolean => {
  * @cssModifier controls-Tabs__item-underline_theme-{{_options.theme}} Позволяет добавить горизонтальный разделитель к прикладному контенту, чтобы расположить его перед вкладками.
  */
 
-class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate, IHeight {
+class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems, ITabsTemplate {
     readonly '[Controls/_tabs/interface/ITabsButtons]': boolean = true;
     readonly '[Controls/_interface/IItems]': boolean = true;
-    readonly '[Controls/_interface/IHeight]': boolean = true;
     readonly '[Controls/_tabs/ITabsTemplate]': boolean = true;
 
     protected _template: TemplateFunction = TabButtonsTpl;
@@ -96,14 +92,12 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
     protected _itemsArray: ITabButtonItem[];
     private _itemsOrder: number[];
     private _lastRightOrder: number;
-    private _markerThickness: string;
     private _items: RecordSet;
     private _crudWrapper: CrudWrapper;
 
     protected _beforeMount(options: ITabsOptions,
                            context: object,
                            receivedState: IReceivedState): void | Promise<IReceivedState> {
-        this._markerThickness = TabsButtons._getMarkerThickness(options);
         if (receivedState) {
             this._prepareState(receivedState);
         } else if (options.items) {
@@ -129,10 +123,6 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         if (newOptions.items && newOptions.items !== this._options.items) {
             const itemsData = this._prepareItems(newOptions.items);
             this._prepareState(itemsData);
-        }
-        if (newOptions.markerThickness !== this._options.markerThickness
-            || newOptions.borderThickness !== this._options.borderThickness) {
-            this._markerThickness = TabsButtons._getMarkerThickness(newOptions);
         }
     }
 
@@ -290,11 +280,6 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         }
     }
 
-    static _getMarkerThickness(options: ITabsOptions): string {
-        //  TODO: will be fixed by https://online.sbis.ru/opendoc.html?guid=21dfec57-300d-42b7-aa76-4d13bea8d53f
-        return options.borderThickness ? options.borderThickness : options.markerThickness;
-    }
-
     static _checkHasFunction(receivedState: IReceivedState): boolean {
         // Функции, передаваемые с сервера на клиент в receivedState, не могут корректно десериализоваться.
         // Поэтому, если есть функции в receivedState, заново делаем запрос за данными.
@@ -363,7 +348,8 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
 /**
  * @name Controls/_tabs/ITabsTemplate#itemTemplate
  * @cfg {Function} Шаблон для рендеринга.
- * @default Base template 'Controls/tabs:buttonsItemTemplate'
+ * @default Controls/tabs:buttonsItemTemplate
+ * @demo Controls-demo/Tabs/Buttons/ItemTemplate/Index
  * @remark
  * Чтобы определить шаблон, следует вызвать базовый шаблон 'Controls/tabs:buttonsItemTemplate'.
  * Шаблон помещается в компонент с помощью тега ws:partial с атрибутом template.
@@ -373,7 +359,14 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  * <ul>
  * @example
  * Вкладки со стандартным шаблоном элемента (шаблоном по умолчанию).
+ * <pre class="brush: html">
+ * <Controls.tabs:Buttons
+ *          bind:selectedKey='SelectedKey1'
+ *          keyProperty="id"
+ *          items="{{_items1}}"/>
+ * </pre>
  *
+ * Вкладки с кастомным шаблоном элемента.
  * <pre class="brush: html; highlight: [6,7,8,9,10]">
  * <Controls.tabs:Buttons
  *     bind:selectedKey="SelectedKey3"
@@ -381,9 +374,11 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
  *     style="additional"
  *     source="{{_source3}}">
  *     <ws:itemTemplate>
- *         <ws:partial template="Controls/tabs:buttonsItemTemplate"
- *                     item="{{itemTemplate.item}}"
- *                     displayProperty="caption" />
+ *         <div>
+ *              <ws:partial template="Controls/tabs:buttonsItemTemplate"
+ *                          item="{{itemTemplate.item}}"
+ *                          displayProperty="caption" />
+ *         </div>
  *     </ws:itemTemplate>
  * </Controls.tabs:Buttons>
  * </pre>

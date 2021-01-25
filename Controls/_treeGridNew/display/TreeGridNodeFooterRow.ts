@@ -1,22 +1,40 @@
-import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
 import { TemplateFunction } from 'UI/Base';
 import { TreeItem } from 'Controls/display';
-import TreeGridNodeFooterCell from 'Controls/_treeGridNew/display/TreeGridNodeFooterCell';
+import { Model } from 'Types/entity';
+import TreeGridDataRow from './TreeGridDataRow';
+import Row from 'Controls/_display/grid/Row';
+import Cell from 'Controls/_display/grid/Cell';
 
-export default class TreeGridNodeFooterRow<S> extends TreeGridDataRow<S> {
+export default class TreeGridNodeFooterRow extends TreeGridDataRow<null> {
+    readonly '[Controls/treeGrid:TreeGridNodeFooterRow]': boolean;
     readonly Markable: boolean = false;
     readonly DraggableItem: boolean = false;
     readonly SelectableItem: boolean = false;
 
-    readonly '[Controls/treeGrid:TreeGridNodeFooterRow]': boolean;
+    // TODO нужно удалить, когда перепишем колспан для футеров узлов
+    // Храним колспан, чтобы правильно определять индекс столбца.
+    // Он задается на темплейте, поэтмоу в моделе мы о нем не знаем
+    private _colspan: boolean;
 
-    getNode(): TreeItem<S> {
+    getNode(): TreeItem<Model> {
         return this.getParent();
     }
 
-    getColumns(colspan: boolean|undefined): Array<TreeGridNodeFooterCell<S, TreeGridNodeFooterRow<S>>> {
+    // TODO нужно указывать тип TreeGridNodeFooterCell[], но тогда получается циклическая зависимость
+    getColumns(colspan?: boolean): any[] {
+        this._colspan = colspan;
         const columns = super.getColumns();
         return colspan !== false ? [columns[0]] : columns;
+    }
+
+    // TODO нужно удалить, когда перепишем колспан для футеров узлов
+    getColumnIndex(column: Cell<any, Row<any>>): number {
+        return this.getColumns(this._colspan).indexOf(column);
+    }
+
+    // TODO нужно удалить, когда перепишем колспан для футеров узлов
+    getColumnsCount(): number {
+        return this.getColumns(this._colspan).length;
     }
 
     hasMoreStorage(): boolean {
@@ -33,6 +51,21 @@ export default class TreeGridNodeFooterRow<S> extends TreeGridDataRow<S> {
 
     getItemClasses(): string {
         return 'controls-Grid__row controls-TreeGrid__nodeFooter';
+    }
+
+    getExpanderPaddingClasses(tmplExpanderSize?: string, theme: string = 'default'): string {
+        let classes = super.getExpanderPaddingClasses(tmplExpanderSize, theme);
+
+        classes = classes.replace(
+           `controls-TreeGrid__row-expanderPadding_theme-${theme}`,
+           `controls-TreeGrid__node-footer-expanderPadding_theme-${theme}`
+        );
+
+        return classes;
+    }
+
+    shouldDisplayVisibleFooter(content: TemplateFunction): boolean {
+        return this.hasMoreStorage() || !!content;
     }
 }
 

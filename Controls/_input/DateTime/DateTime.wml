@@ -8,6 +8,7 @@
                 size="{{ _options.size }}"
                 fontStyle="{{_options.fontStyle}}"
                 fontSize="{{_options.fontSize}}"
+                fontWeight="{{_options.fontWeight}}"
                 fontColorStyle="{{_options.fontColorStyle}}"
                 borderStyle="{{_options.borderStyle}}"
                 inlineHeight="{{_options.inlineHeight}}"

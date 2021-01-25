@@ -48,14 +48,15 @@ define(
             return combobox;
          };
          it('_setText', function() {
-            let combobox = getCombobox(config);
-            combobox._setText([itemsRecords.at(1)]);
+            const newConfig = {...config, emptyKey: null};
+            let combobox = getCombobox(newConfig);
+            combobox._setText(newConfig, [itemsRecords.at(1)]);
             assert.equal('Запись 2', combobox._value);
-            combobox._setText([]);
+            combobox._setText(newConfig, []);
             assert.strictEqual('', combobox._value);
             assert.strictEqual('This is placeholder', combobox._placeholder);
 
-            combobox._setText([new entity.Model({
+            combobox._setText(newConfig, [new entity.Model({
                rawData: { id: '1', title: 123 }
             })]);
             assert.strictEqual('123', combobox._value);
@@ -68,8 +69,9 @@ define(
                   rawData: [{ id: null, title: 'Не выбрано' }]
                });
             emptyConfig.emptyText = 'Не выбрано';
+            emptyConfig.emptyKey = null;
             let combobox = getCombobox(emptyConfig);
-            combobox._setText([emptyItems.at(0)]);
+            combobox._setText(emptyConfig, [emptyItems.at(0)]);
             assert.equal('', combobox._value);
             assert.equal('Не выбрано', combobox._placeholder);
          });

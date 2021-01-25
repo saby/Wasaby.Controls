@@ -30,24 +30,14 @@ describe('Controls/_listDragNDrop/Controller', () => {
       controller = new DndController(model, FlatStrategy);
    });
 
-   it('startDrag', () => {
-      const entity = new ItemsEntity( { items: [1] } );
-      const setDraggedItemsSpy = spy(controller, 'setDraggedItems');
-
-      controller.startDrag(model.getItemBySourceKey(1), entity);
-
-      assert.isTrue(setDraggedItemsSpy.withArgs(entity, model.getItemBySourceKey(1)).calledOnce,
-         'setDraggedItems не вызвался или вызвался с неверными параметрами');
-   });
-
-   describe('setDraggedItems', () => {
+   describe('startDrag', () => {
       it ('not pass draggedItem', () => {
          const modelSetDraggedItemsSpy = spy(model, 'setDraggedItems');
-         controller.setDraggedItems(new ItemsEntity({items: [1]}));
+         controller.startDrag(null, new ItemsEntity({items: [1]}));
          assert.isFalse(modelSetDraggedItemsSpy.called);
 
          const item = model.getItemBySourceKey(1);
-         controller.setDraggedItems(new ItemsEntity({items: [1]}), item);
+         controller.startDrag(item, new ItemsEntity({items: [1]}));
          assert.equal(controller.getDraggableItem(), item);
       });
 
@@ -62,7 +52,7 @@ describe('Controls/_listDragNDrop/Controller', () => {
             modelSetDraggedItemsCalled = true;
          };
 
-         controller.setDraggedItems(entity, draggedItem);
+         controller.startDrag(draggedItem, entity);
 
          assert.isTrue(modelSetDraggedItemsCalled);
          assert.equal(controller.getDragEntity(), entity);
@@ -84,7 +74,7 @@ describe('Controls/_listDragNDrop/Controller', () => {
             modelSetDraggedItemsCalled = true;
          };
 
-         controller.setDraggedItems(entity, draggedItem);
+         controller.startDrag(draggedItem, entity);
 
          assert.isTrue(modelSetDraggedItemsCalled);
       });
@@ -98,8 +88,9 @@ describe('Controls/_listDragNDrop/Controller', () => {
 
       const modelSetDragPositionSpy = spy(model, 'setDragPosition');
 
-      controller.setDragPosition(dragPosition);
+      const result = controller.setDragPosition(dragPosition);
 
+      assert.isTrue(result);
       assert.equal(controller.getDragPosition(), dragPosition);
       assert.isTrue(modelSetDragPositionSpy.withArgs(dragPosition).calledOnce,
          'setDragPosition не вызвался или вызвался с неверным параметром');

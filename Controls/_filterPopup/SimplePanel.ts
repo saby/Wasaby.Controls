@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
 import CoreClone = require('Core/core-clone');
 import ParallelDeferred = require('Core/ParallelDeferred');
@@ -88,7 +88,7 @@ var _private = {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления}
  *
  * @class Controls/_filterPopup/SimplePanel
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @public
  * @author Золотова Э.Е.
  * 
@@ -106,7 +106,7 @@ var _private = {
  * Control dropdown list for {@link Controls/filter:View}.
  *
  * @class Controls/_filterPopup/SimplePanel
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
  * 
  * @public

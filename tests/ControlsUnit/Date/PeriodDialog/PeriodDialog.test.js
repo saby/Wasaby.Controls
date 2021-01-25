@@ -129,7 +129,7 @@ define([
 
          [
             { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.range },
-            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.range, quantum: { months: [1], days: [1] } }
+            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.range, ranges: { months: [1], days: [1] } }
          ].forEach(function(options) {
             it(`should enable year and month modes if options are equals ${JSON.stringify(options)}.`, function () {
                const component = calendarTestUtils.createComponent(PeriodDialog.default, options);
@@ -143,7 +143,7 @@ define([
 
          [
             { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.single },
-            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.range, quantum: { days: [1] } }
+            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.range, ranges: { days: [1] } }
          ].forEach(function(options) {
             it(`should enable only month mode if options are equals ${JSON.stringify(options)}.`, function() {
                const component = calendarTestUtils.createComponent(PeriodDialog.default, options);
@@ -155,8 +155,8 @@ define([
          });
 
          [
-            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, quantum: { years: [1] } },
-            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, quantum: { months: [1] } }
+            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, ranges: { years: [1] } },
+            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, ranges: { months: [1] } }
          ].forEach(function(options) {
             it(`should enable only year mode if options are equals ${JSON.stringify(options)}.`, function() {
                const component = calendarTestUtils.createComponent(PeriodDialog.default, options);
@@ -177,8 +177,8 @@ define([
             tests: [
                { startValue: new Date(2019, 0, 1), endValue: new Date(2019, 0, 1) },
                { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.single },
-               { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, quantum: { days: [1] } },
-               { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, quantum: { weeks: [1] } }
+               { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, ranges: { days: [1] } },
+               { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, ranges: { weeks: [1] } }
             ]
          }].forEach(function(testGroup) {
             testGroup.tests.forEach(function(options) {

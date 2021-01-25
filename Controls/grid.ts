@@ -83,8 +83,11 @@ export {
     TCellAlign,
     TCellPaddingVariant,
     TCellVerticalAlign,
-    TOverflow
+    TOverflow,
+    IColumnSeparatorSizeConfig,
+    TColumnSeparatorSize
 } from './_grid/interface/IColumn';
+export { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
 
 export {IGridControl} from './_grid/interface/IGridControl';
 

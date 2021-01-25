@@ -3,6 +3,7 @@
             bind:editingObject="_editingObject"
             itemActions="{{_itemActions}}"
             source="{{_source}}"
+            itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
             on:itemClick="_handleItemClick()">
         <ws:captionColumnOptions
             width="50%"/>

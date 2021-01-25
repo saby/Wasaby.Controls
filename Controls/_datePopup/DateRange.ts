@@ -1,4 +1,4 @@
-import BaseControl = require('Core/Control');
+import {Control as BaseControl} from 'UI/Base';
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -15,8 +15,8 @@ const _private = {
     updateView: function (self, options, dontUpdateScroll) {
         self._rangeModel.update(options);
         self._monthSelectionEnabled = !options.readOnly && (options.selectionType === 'range' ||
-            (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.quantum) &&
-                options.quantum.months[0] === 1));
+            (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.ranges) &&
+                options.ranges.months[0] === 1));
         self._position = options.position;
     },
 
@@ -49,7 +49,7 @@ const _private = {
  * Component that allows you to select periods of multiple days.
  *
  * @class Controls/_datePopup/DateRange
- * @extends Core/Control
+ * @extends UI/Base:Control
  *
  * @author Красильников А.С.
  * @private

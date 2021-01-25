@@ -9,6 +9,7 @@ describe('Controls/scroll:ContainerBase', () => {
    };
 
    const contains: Function = () => false;
+   const classList = { contains: () => false };
 
    describe('_beforeMount', () => {
       it('should create models', () => {
@@ -29,13 +30,15 @@ describe('Controls/scroll:ContainerBase', () => {
          control._controlResizeHandler = () => {};
          control._children = {
             content: {
-               children: children,
                getBoundingClientRect: () => {}
+            },
+            userContent: {
+               children: children
             }
          };
          control._afterMount();
          sinon.assert.called(control._resizeObserver.observe);
-         assert.sameMembers(control._observedElements, children);
+         assert.isEmpty(control._observedElements);
          sinon.restore();
       });
    });
@@ -66,7 +69,14 @@ describe('Controls/scroll:ContainerBase', () => {
          control._state = {
          };
          control._children = {
-            content: content
+            content: content,
+            userContent: {
+               children: [{
+                  classList: {
+                     contains: () => true
+                  }
+               }]
+            }
          };
 
          sinon.stub(control, '_generateEvent');
@@ -119,15 +129,15 @@ describe('Controls/scroll:ContainerBase', () => {
       });
 
       it('should update observed containers', () => {
-         const children = [ { classList: {contains} }, { classList: {contains} } ];
+         const children = [ { classList: {contains: () => true} }, { classList: {contains} } ];
          control._beforeMount(options);
          control._resizeObserverSupported = true;
 
          sinon.stub(control._resizeObserver, 'observe');
          sinon.stub(control._resizeObserver, 'unobserve');
-         control._children.content.children = children;
+         control._children.userContent.children = children;
          control._observedElements = [children[0], 'children3'];
-
+         control._contentType = 'restricted';
          control._afterUpdate();
 
          assert.sameMembers(control._observedElements, children);
@@ -165,7 +175,14 @@ describe('Controls/scroll:ContainerBase', () => {
          };
 
          control._children = {
-            content: content
+            content: content,
+            userContent: {
+               children: [{
+                  classList: {
+                     contains: () => true
+                  }
+               }]
+            }
          };
 
          control._resizeObserver = {
@@ -220,6 +237,13 @@ describe('Controls/scroll:ContainerBase', () => {
          control._children = {
             content: {
                scrollTop: 0
+            },
+            userContent: {
+               children: [{
+                  classList: {
+                     contains: () => true
+                  }
+               }]
             }
          };
 
@@ -238,6 +262,13 @@ describe('Controls/scroll:ContainerBase', () => {
             content: {
                scrollTop: position,
                getBoundingClientRect: sinon.fake()
+            },
+            userContent: {
+               children: [{
+                  classList: {
+                     contains: () => true
+                  }
+               }]
             }
          };
          control._resizeObserver = {
@@ -411,6 +442,13 @@ describe('Controls/scroll:ContainerBase', () => {
                   scrollWidth: 200,
                   clientWidth: 100,
                   getBoundingClientRect: sinon.fake()
+               },
+               userContent: {
+                  children: [{
+                     classList: {
+                        contains: () => true
+                     }
+                  }]
                }
             };
             control._resizeObserver = {
@@ -465,11 +503,31 @@ describe('Controls/scroll:ContainerBase', () => {
    });
 
    describe('_updateState', () => {
+      it('scrollState and oldScrollState should be different', () => {
+         const component = new ContainerBase();
+         component._children = {
+            content: {
+               getBoundingClientRect: () => undefined,
+               scrollTop: 100
+            }
+         };
+         component._updateState({});
+         assert.notEqual(component._scrollModel.scrollTop, component._oldScrollState.scrollTop);
+         assert.isUndefined(component._oldScrollState.scrollTop);
+      });
+
       it('should not update state if unchanged state arrives', () => {
          const inst:ContainerBase = new ContainerBase();
          inst._children = {
             content: {
                scrollTop: 0
+            },
+            userContent: {
+               children: [{
+                  classList: {
+                     contains: () => true
+                  }
+               }]
             }
          };
          inst._resizeObserver = {
@@ -495,6 +553,13 @@ describe('Controls/scroll:ContainerBase', () => {
                getBoundingClientRect: () => {
                   return {};
                }
+            },
+            userContent: {
+               children: [{
+                  classList: {
+                     contains: () => true
+                  }
+               }]
             }
          };
          inst._resizeObserver = {
@@ -527,6 +592,13 @@ describe('Controls/scroll:ContainerBase', () => {
                clientWidth: 100,
                scrollWidth: 100,
                getBoundingClientRect: sinon.fake()
+            },
+            userContent: {
+               children: [{
+                  classList: {
+                     contains: () => true
+                  }
+               }]
             }
          };
           control._resizeObserver = {

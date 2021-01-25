@@ -15,15 +15,17 @@
     isActionCell Поле, для определения ячейки действий
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
-
-import {mixin} from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
-import {IColspanParams, IHeaderCell, IRowspanParams} from 'Controls/grid';
+import {IColspanParams, IColumn, IColumnSeparatorSizeConfig, IHeaderCell, TColumnSeparatorSize, IRowspanParams} from 'Controls/grid';
 import HeaderRow from './HeaderRow';
 import { IItemPadding } from '../Collection';
 import Cell, {IOptions as ICellOptions} from './Cell';
 
 export interface IOptions<T> extends ICellOptions<T> {
+    shadowVisibility?: string;
+    backgroundStyle?: string;
+    sorting?: string;
+    cellPadding?: IItemPadding;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:HeaderContent';
@@ -37,7 +39,16 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     protected _$cellPadding: IItemPadding;
     protected _$align?: string;
     protected _$valign?: string;
+    protected _$shadowVisibility?: string;
+    protected _$backgroundStyle?: string;
+    protected _$sorting?: string;
 
+    get shadowVisibility(): string {
+        return this._$shadowVisibility;
+    }
+    get backgroundStyle(): string {
+        return this._$backgroundStyle;
+    }
     constructor(options?: IOptions<T>) {
         super(options);
         if (!this.isCheckBoxCell()) {
@@ -147,12 +158,13 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {
         let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${style}`
                           + ` controls-Grid__header-cell_theme-${theme}`
-                          + ` ${this._getWrapperPaddingClasses(theme)}`;
+                          + ` ${this._getWrapperPaddingClasses(theme)}`
+                          + ` ${this._getColumnSeparatorClasses(theme)}`;
 
-        const isMultiHeader = this._$owner.isMultiline();
+        const isMultilineHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
 
-        if (isMultiHeader) {
+        if (isMultilineHeader) {
             wrapperClasses += ` controls-Grid__multi-header-cell_min-height_theme-${theme}`;
         } else {
             wrapperClasses += ` controls-Grid__header-cell_min-height_theme-${theme}`;
@@ -169,7 +181,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
             wrapperClasses += ` controls-Grid__header-cell__content_valign-${this._$valign}`;
         }
 
-        if (this._$owner.hasColumnScroll()){
+        if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
             wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
@@ -179,10 +191,11 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
 
     getContentClasses(theme: string): string {
-        const isMultiHeader = false;
+        const isMultiLineHeader = this._$owner.isMultiline();
         let contentClasses = 'controls-Grid__header-cell__content';
         contentClasses += ` controls-Grid__header-cell__content_theme-${theme}`;
-        if (isMultiHeader) {
+        contentClasses += this._getContentSeparatorClasses(theme);
+        if (isMultiLineHeader) {
             contentClasses += ` controls-Grid__row-multi-header__content_baseline_theme-${theme}`;
         } else {
             contentClasses += ` controls-Grid__row-header__content_baseline_theme-${theme}`;
@@ -190,7 +203,20 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         if (this._$align) {
             contentClasses += ` controls-Grid__header-cell_justify_content_${this._$align}`;
         }
+
         return contentClasses;
+    }
+
+    protected _getContentSeparatorClasses(theme: string): string {
+        let headerEndRow = this._$owner.getBounds().row.end;
+        const isMultiLineHeader = this._$owner.isMultiline();
+        let classes = '';
+        if (isMultiLineHeader) {
+            if (this._$column.endRow !== headerEndRow && this._$column.endRow - this._$column.startRow === 1) {
+                classes += ` controls-Grid__cell_header-content_border-bottom_theme-${theme}`;
+            }
+        }
+        return classes;
     }
 
     getTemplate(): TemplateFunction|string {
@@ -204,6 +230,15 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
     getSortingProperty(): string {
         return this._$column.sortingProperty;
+    }
+
+    setSorting(sorting: string): void {
+        this._$sorting = sorting;
+        this._nextVersion();
+    }
+
+    getSorting(): string {
+        return this._$sorting;
     }
 
     getAlign(): string {
@@ -224,6 +259,23 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
     // todo <<< END >>>
 
+    isLastColumn(): boolean {
+        const isMultilineHeader = this._$owner.isMultiline();
+        if (isMultilineHeader) {
+            let headerEndColumn = this._$owner.getBounds().column.end;
+            const currentEndColumn = this._getColspanParams().endColumn;
+            if (this._$owner.hasMultiSelectColumn()) {
+                headerEndColumn += 1;
+            }
+            if (this._$owner.hasItemActionsSeparatedCell()) {
+                headerEndColumn -= 1;
+            }
+            return currentEndColumn === headerEndColumn;
+        } else {
+            return super.isLastColumn();
+        }
+    }
+
     protected _getWrapperPaddingClasses(theme: string): string {
         let paddingClasses = '';
         const leftPadding = this._$owner.getLeftPadding();
@@ -236,8 +288,8 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         const cellRightPadding = cellPadding && cellPadding.right;
 
         // todo <<< START >>> need refactor css classes names
-        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding}` : (leftPadding === 'default' ? '' : leftPadding);
-        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding}` : (rightPadding === 'default' ? '' : rightPadding);
+        const compatibleLeftPadding = cellLeftPadding ? `_${cellLeftPadding.toLowerCase()}` : (leftPadding === 'default' ? '' : `_${leftPadding}`);
+        const compatibleRightPadding = cellRightPadding ? `_${cellRightPadding.toLowerCase()}` : (rightPadding === 'default' ? '' : `_${rightPadding}`);
         // todo <<< END >>>
 
         if (!isMultiSelectColumn) {
@@ -265,5 +317,8 @@ Object.assign(HeaderCell.prototype, {
     '[Controls/_display/grid/HeaderCell]': true,
     _moduleName: 'Controls/display:GridHeaderCell',
     _instancePrefix: 'grid-header-cell-',
-    _$cellPadding: null
+    _$cellPadding: null,
+    _$shadowVisibility: null,
+    _$backgroundStyle: null,
+    _$sorting: null
 });

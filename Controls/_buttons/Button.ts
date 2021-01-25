@@ -133,7 +133,7 @@ export function getDefaultOptions(): object {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_buttons.less переменные тем оформления}
  *
  * @class Controls/_buttons/Button
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface:IHref
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/ICaption
@@ -157,7 +157,7 @@ export function getDefaultOptions(): object {
  * <a href="/materials/Controls-demo/app/Controls-demo%2FButtons%2FStandart%2FIndex">Demo-example</a>.
  *
  * @class Controls/_buttons/Button
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface:IHref
  * @mixes Controls/_buttons/interface/IButton
  * @mixes Controls/_interface/ICaption
@@ -213,7 +213,7 @@ class Button extends Control<IButtonControlOptions> implements IHref, ICaption, 
         }
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/theme'];
 
     static getDefaultOptions(): object {
         return getDefaultOptions();

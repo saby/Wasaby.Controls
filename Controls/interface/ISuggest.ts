@@ -1,5 +1,6 @@
 /**
  * @typedef {Object} ISuggestTemplateProp
+ * @description Свойства объекта {@link suggestTemplate}.
  * @property {String} templateName Имя контрола, который будет отображаться в выпадающем блоке.
  * @property {Object} templateOptions Опции для контрола, который будет отображаться в выпадающем блоке.
  */
@@ -16,6 +17,7 @@ export interface ISuggestTemplateProp {
 
 /**
  * @typedef {Object} IEmptyTemplateProp
+ * @description Свойства объекта {@link emptyTemplate}.
  * @property {String} templateName Имя шаблона пустого автодополнения, которое будет отображаться, когда результат не найден.
  * @property {Object} templateOptions Параметры шаблона, которые указаны в поле templateName.
  */
@@ -32,6 +34,7 @@ export interface IEmptyTemplateProp {
 
 /**
  * @typedef {Object} ISuggestFooterTemplate
+ * @description Свойства объекта {@link footerTemplate}.
  * @property {String} templateName Имя шаблона, которое будет отображаться в нижней части автодополнения.
  * @property {Object} templateOptions Параметры шаблона, которые указаны в поле templateName.
  */
@@ -47,7 +50,7 @@ export interface ISuggestFooterTemplate {
 }
 
 /**
- * Интерфейс для автодополнения.
+ * Интерфейс для {@link /doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнения}.
  * @public
  * @author Герасимов А.М.
  */
@@ -61,7 +64,8 @@ export interface ISuggestFooterTemplate {
 interface ISuggest {
    readonly _options: {
       /**
-       * @cfg {ISuggestTemplateProp|null} Шаблон автодополнения, который отображает результаты поиска.
+       * @name Controls/interface/ISuggest#suggestTemplate
+       * @cfg {ISuggestTemplateProp|null} Шаблон {@link /doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнения}, который отображает результаты поиска.
        * @remark Корневым контролом автодополнения должен быть Controls/Container/Suggest/List, этому контролу можно передать в контентной опции контрол ({@link Controls/list:View} или {@link Controls/grid:View}), который отобразит список.
        * @remark Вы можете установить ширину окна с автодополнением, добавив собственный класс в suggestTemplate и установив минимальную ширину. По умолчанию ширина автодополнения равна ширине поля ввода.
        * @demo Controls-demo/Suggest_new/SearchInput/SuggestTemplate/SuggestTemplate
@@ -128,7 +132,8 @@ interface ISuggest {
       suggestTemplate: ISuggestTemplateProp | null;
 
       /**
-       * @cfg {IEmptyTemplateProp|null} Шаблон, который будет отображаться в автодополнении, если поисковой запрос не вернул результатов.
+       * @name Controls/interface/ISuggest#emptyTemplate
+       * @cfg {IEmptyTemplateProp|null} Шаблон, который будет отображаться в {@link /doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнении}, если поисковой запрос не вернул результатов.
        * @remark Если опция имеет значение null, то автодополнение не отобразится, если поисковой запрос не вернул результатов.
        * @demo Controls-demo/Suggest_new/SearchInput/EmptyTemplate/EmptyTemplate
        * @example
@@ -169,7 +174,8 @@ interface ISuggest {
       emptyTemplate: IEmptyTemplateProp | null;
 
       /**
-       * @cfg {ISuggestFooterTemplate} Шаблон подвала автодополнения.
+       * @name Controls/interface/ISuggest#footerTemplate
+       * @cfg {ISuggestFooterTemplate} Шаблон подвала {@link /doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнения}.
        * @demo Controls-demo/Suggest_new/SearchInput/FooterTemplate/FooterTemplate
        * @example
        * <pre class="brush: html">
@@ -179,7 +185,7 @@ interface ISuggest {
        *
        * <pre class="brush: js">
        * // myFooter.js
-       * define('myFooter', ['Core/Control'], function(Control) {
+       * define('myFooter', ['UI/Base:Control'], function(Control) {
        *    return Control.extend({
        *       _showTasksClick: function() {
        *          stackOpener.open();
@@ -210,7 +216,7 @@ interface ISuggest {
        *
        * <pre class="brush: js">
        * // myFooter.js
-       * define('myFooter', ['Core/Control'], function(Control) {
+       * define('myFooter', ['UI/Base:Control'], function(Control) {
        *    return Control.extend({
        *       _showTasksClick: function() {
        *          stackOpener.open();
@@ -229,7 +235,8 @@ interface ISuggest {
       footerTemplate: ISuggestFooterTemplate;
 
       /**
-       * @cfg {String} Уникальный идентификатор для сохранения истории выбора записей из автодополнения.
+       * @name Controls/interface/ISuggest#historyId
+       * @cfg {String} Уникальный идентификатор для сохранения истории выбора записей из {@link /doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнения}.
        * @remark Если элементы были ранее выбраны, автодополнение с этими элементами будет отображаться после того, как на поле ввода перейдет фокус.
        * @example
        * <pre class="brush: html">
@@ -250,7 +257,8 @@ interface ISuggest {
       historyId: string;
 
       /**
-       * @cfg {Boolean} Отобразить автодополнение, когда на поле ввода перейдет фокус.
+       * @name Controls/interface/ISuggest#autoDropDown
+       * @cfg {Boolean} Отобразить {@link /doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнение}, когда на поле ввода перейдет фокус.
        * @example
        * В этом примере автодополнение будет показано после фокусировки на поле ввода.
        * <pre class="brush: html">
@@ -271,12 +279,13 @@ interface ISuggest {
       autoDropDown: boolean;
 
       /**
-       * @cfg {Controls/popup:IStickyPopupOptions} Конфигурация всплывающего блока автодополнения.
+       * @name Controls/interface/ISuggest#suggestPopupOptions
+       * @cfg {Controls/popup:IStickyPopupOptions} Конфигурация всплывающего блока {@link /doc/platform/developmentapl/interface-development/controls/input/suggest/ автодополнения}.
        * @example
        * В этом примере автодополнение будет открыто вверх.
        * <pre class="brush: js">
        * // myModule.js
-       * define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
+       * define('myModule', ['UI/Base:Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
        *    return Control.extend({
        *       _template: template,
        *       _suggestPopupOptions: null,
@@ -310,7 +319,7 @@ interface ISuggest {
        * In this example, suggest will open up.
        * <pre class="brush: js">
        * // myModule.js
-       * define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
+       * define('myModule', ['UI/Base:Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
        *    return Control.extend({
        *       _template: template,
        *       _suggestPopupOptions: null,
@@ -340,6 +349,7 @@ interface ISuggest {
       suggestPopupOptions: object;
 
       /**
+       * @name Controls/interface/ISuggest#dataLoadCallback
        * @cfg {Function} Callback вызывающийся после того, как загружены данные.
        * @param {RecordSet} Загруженные данные.
        */

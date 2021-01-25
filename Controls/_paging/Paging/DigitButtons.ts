@@ -11,6 +11,7 @@ export interface IDigitButtonsOptions extends IControlOptions {
 }
 
 const SUR_STANDARD_ELEMENTS_STEP = 3;
+const MAX_NEIGHBORS_COUNT = 3;
 const SUR_NUMBERS_ELEMENTS_STEP = 1;
 const DOTS = '. . .';
 
@@ -23,7 +24,7 @@ interface ISurroundElements {
 
 class DigitButtons extends Control<IDigitButtonsOptions> {
     protected _template: TemplateFunction = dButtonsTemplate;
-    _digits: DigitElem[] | null = null;
+    protected _digits: DigitElem[];
 
     protected _beforeMount(newOptions: IDigitButtonsOptions): void {
         this._digits = DigitButtons._getDrawnDigits(newOptions.count, newOptions.selectedKey,
@@ -89,11 +90,11 @@ class DigitButtons extends Control<IDigitButtonsOptions> {
                     drawnDigits.push(1);
 
                     // если левая граничная цифра больше 3, надо рисовать многоточие (1 ... 4 5 6 [7])
-                    if (surElements.first > 3) {
+                    if (surElements.first > MAX_NEIGHBORS_COUNT) {
                         drawnDigits.push(DOTS);
                         // а если равно шагу, то надо рисовать предыдущий по правилу исключения,
                         // что многоточием не может заменяться одна цифра
-                    } else if (surElements.first === 3) {
+                    } else if (surElements.first === MAX_NEIGHBORS_COUNT) {
                         drawnDigits.push(2);
                     }
                 } else {

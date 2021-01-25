@@ -59,7 +59,7 @@ export default class GroupItem<T> extends mixin<
     }
 
     isSticked(): boolean {
-        return this._$owner.isStickyHeader();
+        return this._$owner.isStickyHeader() && !this.isHiddenGroup();
     }
 
     getStickyColumn(): GridLadderUtil.IStickyColumn {
@@ -73,6 +73,14 @@ export default class GroupItem<T> extends mixin<
     getItemClasses(): string {
         return 'controls-ListView__itemV controls-Grid__row controls-ListView__group' +
                 (this.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group');
+    }
+
+    getStickyHeaderMode(): string {
+        return 'replaceable';
+    }
+
+    getStickyHeaderPosition(): string {
+        return 'top';
     }
 
     _initializeColumns(): void {

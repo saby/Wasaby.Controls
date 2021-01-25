@@ -52,8 +52,8 @@ define([
 
          [
             { options: { selectionType: 'range' }, eq: true },
-            { options: { selectionType: 'quantum', quantum: { months: [1] } }, eq: true },
-            { options: { selectionType: 'quantum', quantum: { years: [1] } }, eq: false },
+            { options: { selectionType: 'quantum', ranges: { months: [1] } }, eq: true },
+            { options: { selectionType: 'quantum', ranges: { years: [1] } }, eq: false },
             { options: { selectionType: 'single' }, eq: false },
             { options: { readonly: false }, eq: false }
          ].forEach(function(test) {
@@ -75,7 +75,7 @@ define([
          });
          it('should not notify event if month selection disabled.', function() {
             const component = calendarTestUtils.createComponent(
-               DateRange, { month: year, selectionType: 'quantum', quantum: { days: [1] } });
+               DateRange, { month: year, selectionType: 'quantum', ranges: { days: [1] } });
             sandbox.stub(component, '_notify');
             component._monthCaptionClick(null, new Date(2019, 0), 3);
             sinon.assert.notCalled(component._notify);

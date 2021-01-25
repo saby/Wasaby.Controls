@@ -338,7 +338,12 @@ describe('Controls/suggest', () => {
       });
 
       it('Suggest::_searchErrback', () => {
-         const inputContainer = getComponentObject();
+         let isErrorCallbackCalled = false;
+         const inputContainer = getComponentObject({
+            searchErrorCallback: () => {
+               isErrorCallbackCalled = true;
+            }
+         });
          let isIndicatorVisible = true;
          inputContainer._forceUpdate = () => {};
          inputContainer._children = {};
@@ -351,6 +356,7 @@ describe('Controls/suggest', () => {
          inputContainer._loading = null;
          inputContainer._searchErrback({canceled: true});
          assert.isTrue(inputContainer._loading === null);
+         assert.isTrue(isErrorCallbackCalled);
 
          inputContainer._loading = true;
          inputContainer._searchErrback({canceled: true});
@@ -730,9 +736,11 @@ describe('Controls/suggest', () => {
 
          beforeEach(() => {
             inputContainer = getComponentObject();
-            getSearchControllerStub = sandbox.stub(inputContainer, '_getSearchController').callsFake(() => ({
-               reset: () => Promise.resolve(recordSet)
-            }));
+            getSearchControllerStub = sandbox.stub(inputContainer, '_getSearchController').callsFake(() => {
+               return Promise.resolve({
+                  reset: () => Promise.resolve(recordSet)
+               });
+            });
             setItemsSpy = sandbox.stub(inputContainer, '_setItems');
          });
 
@@ -785,6 +793,20 @@ describe('Controls/suggest', () => {
 
             assert.isFalse(setItemsSpy.called);
             assert.isTrue(closeSpy.calledOnce);
+         });
+
+         it('double called resetCallback should be caught on promise cancelled', async () => {
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => true);
+
+            inputContainer._options.historyId = undefined;
+            inputContainer._options.autoDropDown = true;
+
+            assert.doesNotThrow(async () => {
+               inputContainer._searchResetCallback();
+               await inputContainer._searchResetCallback();
+
+               assert.isTrue(setItemsSpy.withArgs(recordSet).calledOnce);
+            });
          });
       });
 
@@ -1101,6 +1123,31 @@ describe('Controls/suggest', () => {
             inputController._beforeUpdate(options);
 
             assert.ok(inputController._getSourceController().getState().source !== null);
+         });
+
+         it('value and suggestState are changed in options while loading', async () => {
+            let options = {
+               emptyTemplate: 'anyTpl',
+               footerTemplate: 'anyTp',
+               suggestState: false,
+               value: '',
+               trim: true,
+               searchParam: 'testSearchParam',
+               minSearchLength: 3,
+               source: new Memory()
+            };
+
+            const inputController = getComponentObject(options);
+            await inputController._beforeMount(options);
+            await inputController._getSearchResolver();
+
+            inputController._changeValueHandler({}, 'newValue');
+
+            options = {...options};
+            options.value = 'newValue';
+            options.suggestState = true;
+            inputController._beforeUpdate(options);
+            assert.ok(!inputController._searchResolverController._delayTimer);
          });
       });
 

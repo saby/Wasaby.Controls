@@ -1,6 +1,6 @@
 import { TemplateFunction } from 'UI/Base';
 import { create } from 'Types/di';
-import { IColumn, TColumns, IColspanParams } from 'Controls/_grid/interface/IColumn';
+import { IColumn, TColumns, IColspanParams, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
 import { IOptions as IBaseOptions } from '../../CollectionItem';
 import Collection from '../Collection';
 import Cell, { IOptions as ICellOptions } from '../Cell';
@@ -8,8 +8,10 @@ import { TResultsPosition } from '../ResultsRow';
 import StickyLadderCell from '../StickyLadderCell';
 import CheckboxCell from '../CheckboxCell';
 import {Model as EntityModel} from 'Types/entity';
-import { THeader } from '../../../_grid/interface/IHeaderCell';
+import {THeader} from '../../../_grid/interface/IHeaderCell';
 import {TColspanCallback, TColspanCallbackResult} from './Grid';
+import { ILadderConfig, IStickyLadderConfig, TLadderElement } from 'Controls/_display/utils/GridLadderUtil';
+import { isEqual } from 'Types/object';
 
 const DEFAULT_GRID_ROW_TEMPLATE = 'Controls/gridNew:ItemTemplate';
 
@@ -25,7 +27,8 @@ export interface IItemTemplateParams {
 
 export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
-    colspanCallback: TColspanCallback;
+    colspanCallback?: TColspanCallback;
+    columnSeparatorSize?: TColumnSeparatorSize;
 }
 
 export default abstract class Row<T> {
@@ -37,7 +40,10 @@ export default abstract class Row<T> {
     protected _$columns: TColumns;
     protected _$columnItems: Array<Cell<T, Row<T>>>;
     protected _$colspanCallback: TColspanCallback;
-    protected _$ladder: {};
+    protected _$ladder: TLadderElement<ILadderConfig>;
+    protected _$stickyLadder: TLadderElement<IStickyLadderConfig>;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
+    protected _$rowSeparatorSize: string;
 
     getDefaultTemplate(): string {
         return DEFAULT_GRID_ROW_TEMPLATE;
@@ -98,7 +104,9 @@ export default abstract class Row<T> {
     }
 
     getColumnIndex(column: Cell<T, Row<T>>): number {
-        return this.getColumns().indexOf(column);
+        return this.getColumns().findIndex((columnItem) => {
+            return columnItem.getColumnConfig() === column.getColumnConfig();
+        });
     }
 
     getTopPadding(): string {
@@ -149,6 +157,33 @@ export default abstract class Row<T> {
         return stickyProperties as string[];
     }
 
+    getMultiSelectClasses(
+       theme: string,
+       backgroundColorStyle: string,
+       cursor: string = 'pointer',
+       templateHighlightOnHover: boolean = true
+    ): string {
+        // TODO должно быть super.getMultiSelectPosition, но мы внутри миксина
+        const hoverBackgroundStyle = this.getHoverBackgroundStyle();
+
+        let contentClasses = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
+        contentClasses += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
+        contentClasses += `controls-CheckboxMarker_inList_theme-${theme} `;
+
+        if (this._$owner.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
+            contentClasses += 'controls-ListView__checkbox-onhover ';
+        }
+
+        if (templateHighlightOnHover !== false) {
+            contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
+        }
+
+        contentClasses += ` controls-GridView__checkbox_theme-${theme}`;
+        contentClasses += ` controls-GridView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
+
+        return contentClasses;
+    }
+
     shouldDrawLadderContent(ladderProperty: string, stickyProperty: string): boolean {
         const stickyLadder = this.getStickyLadder();
         const stickyProperties = this.getStickyLadderProperties(this._$columns[0]);
@@ -192,45 +227,49 @@ export default abstract class Row<T> {
         return ladderWrapperClasses;
     }
 
-    setLadder(ladder: {}): void {
-        if (this._$ladder !== ladder) {
-            this._$ladder = ladder;
-            this._reinitializeColumns();
-        }
-    }
-
     setColumns(newColumns: TColumns): void {
         if (this._$columns !== newColumns) {
             this._$columns = newColumns;
-            this._nextVersion();
             this._reinitializeColumns();
         }
     }
 
     setColspanCallback(colspanCallback: TColspanCallback): void {
         this._$colspanCallback = colspanCallback;
-        this._nextVersion();
         this._reinitializeColumns();
     }
 
-    getLadder(): {} {
-        let result;
-        if (this._$ladder && this._$ladder.ladder) {
-            result = this._$ladder.ladder[this._$owner.getIndex(this)];
+    updateLadder(newLadder: TLadderElement<ILadderConfig>, newStickyLadder: TLadderElement<IStickyLadderConfig>): void {
+        if (this._$ladder !== newLadder) {
+            const isLadderChanged = !isEqual(this._$ladder, newLadder);
+            const isStickyLadderChanged = !isEqual(this._$stickyLadder, newStickyLadder);
+
+            if (isLadderChanged || isStickyLadderChanged) {
+                this._$ladder = newLadder;
+                this._$stickyLadder = newStickyLadder;
+                this._reinitializeColumns();
+            }
         }
-        return result;
     }
 
-    getStickyLadder(): {} {
-        let result;
-        if (this._$ladder && this._$ladder.stickyLadder) {
-            result = this._$ladder.stickyLadder[this._$owner.getIndex(this)];
-        }
-        return result;
+    getLadder(): TLadderElement<ILadderConfig> {
+        return this._$ladder;
+    }
+
+    getStickyLadder(): TLadderElement<IStickyLadderConfig> {
+        return this._$stickyLadder;
     }
 
     editArrowIsVisible(item: EntityModel): boolean {
         return this._$owner.editArrowIsVisible(item);
+    }
+
+    getStickyHeaderMode(): string {
+        return 'stackable';
+    }
+
+    getStickyHeaderPosition(): string {
+        return 'topbottom';
     }
 
     protected _reinitializeColumns(): void {
@@ -264,58 +303,66 @@ export default abstract class Row<T> {
             }
             columnItems.push(factory({
                 column,
+                instanceId: `${this.key}_column_${columnIndex}`,
                 colspan: colspan as number,
-                isFixed: columnIndex < this.getStickyColumnsCount()
+                isFixed: columnIndex < this.getStickyColumnsCount(),
+                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex),
+                rowSeparatorSize: this._$rowSeparatorSize
             }));
         }
         return columnItems;
     }
 
-    protected _initializeColumns(): void {
-        if (this._$columns) {
-            const createMultiSelectColumn = this.hasMultiSelectColumn();
-            // todo Множественный stickyProperties можно поддержать здесь:
-            const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
-            const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
-                this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
-            const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
-                this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
-
-            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+    protected _processStickyLadderCells() {
+        // todo Множественный stickyProperties можно поддержать здесь:
+        const stickyLadderProperties = this.getStickyLadderProperties(this._$columns[0]);
+        const stickyLadderStyleForFirstProperty = stickyLadderProperties &&
+            this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[0]);
+        const stickyLadderStyleForSecondProperty = stickyLadderProperties && stickyLadderProperties.length === 2 &&
+            this._getStickyLadderStyle(this._$columns[0], stickyLadderProperties[1]);
 
 
-            if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
-                this._$columnItems[0].setHiddenForLadder(true);
-            }
+        if (stickyLadderStyleForSecondProperty || stickyLadderStyleForFirstProperty) {
+            this._$columnItems[0].setHiddenForLadder(true);
+        }
 
-            if (stickyLadderStyleForSecondProperty) {
-                this._$columnItems.splice(1, 0, new StickyLadderCell({
+        if (stickyLadderStyleForSecondProperty) {
+            this._$columnItems.splice(1, 0, new StickyLadderCell({
+                column: this._$columns[0],
+                owner: this,
+                instanceId: `${this.key}_column_secondSticky`,
+                wrapperStyle: stickyLadderStyleForSecondProperty,
+                contentStyle: `left: -${this._$columns[0].width}; right: 0;`,
+                stickyProperty: stickyLadderProperties[1],
+                stickyHeaderZIndex: 1
+            }));
+        }
+
+        if (stickyLadderStyleForFirstProperty) {
+            this._$columnItems = ([
+                new StickyLadderCell({
                     column: this._$columns[0],
                     owner: this,
-                    wrapperStyle: stickyLadderStyleForSecondProperty,
-                    contentStyle: `left: -${this._$columns[0].width}; right: 0;`,
-                    stickyProperty: stickyLadderProperties[1],
-                    stickyHeaderZIndex: 1
-                }));
-            }
+                    instanceId: `${this.key}_column_firstSticky`,
+                    wrapperStyle: stickyLadderStyleForFirstProperty,
+                    contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this._$columns[0].width};` : '',
+                    stickyProperty: stickyLadderProperties[0],
+                    stickyHeaderZIndex: 2
+                })
+            ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
+        }
 
-            if (stickyLadderStyleForFirstProperty) {
-                this._$columnItems = ([
-                    new StickyLadderCell({
-                        column: this._$columns[0],
-                        owner: this,
-                        wrapperStyle: stickyLadderStyleForFirstProperty,
-                        contentStyle: stickyLadderStyleForSecondProperty ? `left: 0; right: -${this._$columns[0].width};` : '',
-                        stickyProperty: stickyLadderProperties[0],
-                        stickyHeaderZIndex: 2
-                    })
-                ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
-            }
-
+    }
+    protected _initializeColumns(): void {
+        if (this._$columns) {
+            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+            const createMultiSelectColumn = this.hasMultiSelectColumn();
+            this._processStickyLadderCells();
             if (createMultiSelectColumn) {
                 this._$columnItems = ([
                     new CheckboxCell({
                         column: {} as IColumn,
+                        instanceId: `${this.key}_column_checkbox`,
                         owner: this,
                         isFixed: true
                     })
@@ -371,15 +418,64 @@ export default abstract class Row<T> {
         return this._$owner.getStickyColumnsCount();
     }
 
-    protected hasItemActionsSeparatedCell(): boolean {
+    hasItemActionsSeparatedCell(): boolean {
         return this._$owner.hasItemActionsSeparatedCell();
     }
 
+    getColumnSeparatorSize(): TColumnSeparatorSize {
+        return this._$columnSeparatorSize;
+    }
+
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        const changed = this._$columnSeparatorSize !== columnSeparatorSize;
+        this._$columnSeparatorSize = columnSeparatorSize;
+        if (changed && this._$columnItems) {
+            this._updateSeparatorSizeInColumns('Column');
+        }
+        this._nextVersion();
+    }
+
+    protected _updateSeparatorSizeInColumns(separatorName: 'Column' | 'Row'): void {
+        const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
+        this._$columnItems.forEach((cell, cellIndex) => {
+            const column = cell.getColumnConfig();
+            const columnIndex = cellIndex - multiSelectOffset;
+            cell[`set${separatorName}SeparatorSize`](
+                this[`_get${separatorName}SeparatorSizeForColumn`](column, columnIndex)
+            );
+        });
+    }
+
+    protected _getColumnSeparatorSizeForColumn(column: IColumn, columnIndex: number): TColumnSeparatorSize {
+        if (columnIndex > 0) {
+            const columns = this.getColumnsConfig();
+            const previousColumn = columns[columnIndex - 1];
+            return this._resolveColumnSeparatorSize(column, previousColumn);
+        }
+        return null;
+    }
+
+    protected _getRowSeparatorSizeForColumn(column: IColumn, columnIndex: number): string {
+        return this._$rowSeparatorSize;
+    }
+
+    protected _resolveColumnSeparatorSize(currentColumn: IColumn, previousColumn: IColumn): TColumnSeparatorSize {
+        let columnSeparatorSize: TColumnSeparatorSize = this.getColumnSeparatorSize();
+        if (currentColumn?.columnSeparatorSize?.hasOwnProperty('left')) {
+            columnSeparatorSize = currentColumn.columnSeparatorSize.left;
+        } else if (previousColumn?.columnSeparatorSize?.hasOwnProperty('right')) {
+            columnSeparatorSize = previousColumn.columnSeparatorSize.right;
+        }
+        return columnSeparatorSize;
+    }
+
     abstract getContents(): T;
+
     abstract getOwner(): Collection<T>;
     abstract getMultiSelectVisibility(): string;
     abstract getTemplate(): TemplateFunction | string;
     abstract isEditing(): boolean;
+    abstract isSelected(): boolean;
     protected abstract _getCursorClasses(cursor: string, clickable: boolean): string;
     protected abstract _nextVersion(): void;
 }
@@ -389,5 +485,6 @@ Object.assign(Row.prototype, {
     _cellModule: null,
     _$columns: null,
     _$colspanCallback: null,
-    _$columnItems: null
+    _$columnItems: null,
+    _$columnSeparatorSize: null
 });

@@ -1,29 +1,9 @@
 
-export interface IShowType {
-   /**
-    * Show only in Menu.
-    */
-   MENU: showType;
-   /**
-    * Show in Menu and Toolbar.
-    */
-   MENU_TOOLBAR: showType;
-   /**
-    * Show only in Toolbar
-    */
-   TOOLBAR: showType;
-}
-
 /**
- * @typedef {String} showType
- * @description
- * Позволяет настроить, какие опции записи будут показаны по ховеру, а какие - в доп.меню.
- * Влияет на порядок отображения опций записи по свайпу.
- * Экспортируемый enum: Controls/itemActions:TItemActionShowType
- * @variant MENU показывать опцию только в дополнительном меню
- * @variant MENU_TOOLBAR показывать опцию в дополнительном меню и тулбаре
- * @variant TOOLBAR показывать опцию только в тулбаре
- * <pre>
+ * Позволяет настроить, какие {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опции записи} будут показаны на панели, а какие — в меню. Влияет на порядок отображения опций записи по {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/swipe-mobile/ свайпу}.
+ * Подробнее о размещении опций записи читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/show-type/ здесь}.
+ * <pre class="brush: js">
+ * // TypeScript
  * import {showType} from 'Controls/toolbars';
  *  .....
  * this._defaultItems = [
@@ -43,9 +23,19 @@ export interface IShowType {
  *      }
  *  ];
  * </pre>
+ * @public
  */
 export enum showType {
+   /**
+    * Опция отображается в меню опций и в контекстном меню.
+    */
    MENU,
+   /**
+    * Опция отображается в меню опций и в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/menu-visibility/ контекстном меню}, а также на панели опций.
+    */
    MENU_TOOLBAR,
+   /**
+    * Опция отображается только на панели опций.
+    */
    TOOLBAR
 }

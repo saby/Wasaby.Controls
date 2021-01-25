@@ -1,0 +1,7 @@
+<ws:partial
+   template="Controls/listTemplates:ListItemTemplate"
+   scope="{{_options}}"
+   imagePosition="{{listCfg.imagePosition}}"
+   imageViewMode="{{listCfg.imageViewMode}}"
+   imageProperty="{{listCfg.imageProperty}}"
+/>

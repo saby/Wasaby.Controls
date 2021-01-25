@@ -11,7 +11,8 @@
                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                   on:arrowActivated="_notifyHandler('arrowActivated')"
                   on:itemClick="_notifyHandler('itemClick')"
-                  on:itemMouseDown="_notifyHandler('itemMouseDown')"/>
+                  on:itemMouseDown="_notifyHandler('itemMouseDown')"
+                  on:arrowClick="_notifyHandler('arrowClick')"/>
    </Controls.Container.Async>
    <ws:if data="{{_options.afterBreadCrumbsTemplate}}">
       <ws:partial attr:class="controls-Explorer__afterBreadCrumbsTemplate"  template="{{_options.afterBreadCrumbsTemplate}}"></ws:partial>
@@ -33,15 +34,13 @@
    </ws:if>
    <ws:else>
       <div class="controls-Explorer__PathWrapper">
-         <ws:partial template="headingPath"
-                     on:arrowClick="_notifyHandler('arrowClick')"/>
+         <ws:partial template="headingPath"/>
       </div>
    </ws:else>
 </ws:if>
 <ws:else>
    <ws:if data="{{_options.afterBreadCrumbsTemplate}}">
       <div class="controls-Explorer__PathWrapper">
-         <span/>
          <ws:partial attr:class="controls-Explorer__afterBreadCrumbsTemplate" template="{{_options.afterBreadCrumbsTemplate}}"></ws:partial>
       </div>
    </ws:if>

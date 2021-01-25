@@ -12,7 +12,7 @@ export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlO
 /**
  * Контрол представляет собой набор из нескольких взаимосвязанных между собой кнопок. Используется, когда необходимо выбрать один из нескольких параметров.
  * @class Controls/_toggle/ButtonGroup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISingleSelectable
  * @mixes Controls/_interface/IItems
  * 
@@ -29,7 +29,7 @@ class ButtonGroup extends Control<IButtonGroupOptions> {
         this._notify('selectedKeyChanged', [item.get(this._options.keyProperty)]);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes', 'Controls/theme'];
 
     static getDefaultOptions(): IButtonGroupOptions {
         return {

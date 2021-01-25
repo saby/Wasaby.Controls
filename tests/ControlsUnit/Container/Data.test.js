@@ -7,7 +7,7 @@ define(
       'Types/collection',
       'Application/Initializer',
       'Application/Env',
-      'Env/Config',
+      'EnvConfig/Config',
       'Controls/dataSource'
    ],
    function(lists, sourceLib, contexts, Deferred, collection, AppInit, AppEnv, Config, dataSourceLib) {
@@ -170,6 +170,28 @@ define(
             });
          });
 
+         it('_beforeUpdate filter changed, sourceController in options', async() => {
+            let filter = {};
+            let options = {
+               source,
+               keyProperty: 'id',
+               filter
+            };
+            const sourceController = new dataSourceLib.NewSourceController(options);
+            options = {...options, sourceController};
+            const data = getDataWithConfig(options);
+            await sourceController.reload();
+            await data._beforeMount(options);
+            data.saveOptions(options);
+
+            options = {...options};
+            filter = {...filter};
+            filter.test = '123';
+
+            data._beforeUpdate(options);
+            assert.deepEqual(options.filter, data._filter);
+         });
+
          it('_beforeMount with receivedState', function() {
             let data = getDataWithConfig({source: source, keyProperty: 'id'});
             let newSource = new sourceLib.Memory({
@@ -301,6 +323,35 @@ define(
             assert.isTrue(!mountResult);
             assert.isTrue(dataContainer._sourceController === sourceController, 'wrong sourceController after mount');
             assert.isTrue(dataContainer._items === sourceController.getItems(), 'wrong items after mount');
+            assert.isTrue(!dataContainer._errorRegister);
+         });
+
+         it('_beforeMount with sourceController and dataLoadCallback in options', async () => {
+            const memorySource = new sourceLib.Memory({
+               keyProperty: 'id',
+               data: sourceData
+            });
+            const items = new collection.RecordSet({
+               rawData: sourceData,
+               keyProperty: 'id'
+            });
+            const sourceController = new dataSourceLib.NewSourceController({
+               source: memorySource
+            });
+            sourceController.setItems(items);
+            let dataLoadCallbackItems;
+            const dataOptions = {
+               sourceController,
+               source: memorySource,
+               keyProperty: 'id',
+               dataLoadCallback: (loadedItems) => {
+                  dataLoadCallbackItems = loadedItems;
+               }
+            };
+            const dataContainer = getDataWithConfig(dataOptions);
+            await dataContainer._beforeMount(dataOptions);
+
+            assert.isTrue(dataLoadCallbackItems === items, 'wrong items in dataLoadCallback');
          });
 
          it('_itemsReadyCallbackHandler', async function() {
@@ -350,6 +401,17 @@ define(
                   done();
                });
             });
+         });
+
+         it('sourceController is null in _beforeUpdate', async function() {
+            let config = {source: source, keyProperty: 'id'};
+            const data = getDataWithConfig(config);
+            await data._beforeMount(config);
+
+            config = { ...config, sourceController: null };
+            data._beforeUpdate(config);
+            assert.isTrue(data._sourceController === null);
+
          });
 
          it('set source after mount', function(done) {

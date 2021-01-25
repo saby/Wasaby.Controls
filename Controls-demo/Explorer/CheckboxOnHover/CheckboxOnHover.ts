@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls-demo/Explorer/CheckboxOnHover/CheckboxOnHover');
 import {groupConstants as constView} from 'Controls/list';
 import ExplorerImages = require('Controls-demo/Explorer/ExplorerImages');

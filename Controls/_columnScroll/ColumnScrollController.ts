@@ -504,27 +504,24 @@ export default class ColumnScrollController {
 
     getSizes() {
         return {
-            // containerSize: this._containerSize,
+            containerSize: this._containerSize,
             // contentSize: this._contentSize,
             fixedColumnsWidth: this._fixedColumnsWidth,
             scrollableColumnsWidth: this._containerSize - this._fixedColumnsWidth,
             contentSizeForHScroll: this._contentSizeForHScroll,
             scrollWidth: this._scrollWidth
-        }
+        };
     }
 
     /**
      * TODO: Переписать, чтобы проскроливалось вначало или вконец без зазора, либо к элементу по центру.
      *  #rea_columnnScroll
+     * TODO: Отрефаткторить решение по доброске https://online.sbis.ru/opendoc.html?guid=bd2636ac-969f-4fda-be59-1b948deee523
      * @param element
      */
-    scrollToElementIfHidden(element: HTMLElement): void {
-        const column = element.closest(`.${JS_SELECTORS.SCROLLABLE_ELEMENT}`);
-        // Не скроллим к зафиксированным ячейкам.
-        if (!column) {
-            return;
-        }
-        this._scrollToColumnRect(column.getBoundingClientRect());
+    scrollToElementIfHidden(columnRect: DOMRect): void {
+
+        this._scrollToColumnRect(columnRect);
     }
 
     /**

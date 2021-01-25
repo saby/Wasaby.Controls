@@ -10,6 +10,8 @@
    <ws:partial template="{{_options.template}}"
                scope="{{_options.templateOptions}}"
                prefetchPromise="{{_options._prefetchPromise}}"
+               prefetchData="{{_options._prefetchData}}"
+               isPrefetchDataMode="{{_options._isPrefetchDataMode}}"
                attr:class="controls-Stack__content"
                stackMinimizedWidth="{{_options.stackMinimizedWidth}}"
                stackWidth="{{_options.stackWidth}}"

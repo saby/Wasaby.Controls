@@ -8,22 +8,29 @@ import {
     IVersionable
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
-import { IColumn, IColspanParams, IRowspanParams } from 'Controls/grid';
+import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
 import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
 import {IItemPadding} from 'Controls/_list/interface/IList';
 import Row from './Row';
 import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
+const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
+const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
+const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
     column: IColumn;
+    instanceId?: string;
     hiddenForLadder?: boolean;
     startColumn?: number;
     endColumn?: number;
     colspan?: number;
     isFixed?: boolean;
+    ladderCell?: boolean;
+    columnSeparatorSize?: string;
+    rowSeparatorSize?: string;
 }
 
 export default class Cell<T, TOwner extends Row<T>> extends mixin<
@@ -43,10 +50,12 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     protected _$hiddenForLadder: boolean;
     protected _$startColumn: number;
     protected _$endColumn: number;
+    protected _$instanceId: string;
     protected _$colspan: number;
     protected _$isFixed: boolean;
-
-    getInstanceId: () => string;
+    protected _$ladderCell: boolean;
+    protected _$columnSeparatorSize: TColumnSeparatorSize;
+    protected _$rowSeparatorSize: string;
 
     constructor(options?: IOptions<T>) {
         super();
@@ -55,6 +64,23 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
         return this._$column.template || DEFAULT_CELL_TEMPLATE;
+    }
+
+    hasCellContentRender(): boolean {
+        return Boolean(
+            this._$column.displayType ||
+            this._$column.textOverflow ||
+            this._$column.fontColorStyle ||
+            this._$column.fontSize
+        );
+    }
+
+    getCellContentRender(): string {
+        switch (this._$column.displayType) {
+            case 'money': return MONEY_RENDER;
+            case 'number': return NUMBER_RENDER;
+            default: return STRING_RENDER;
+        }
     }
 
     shouldDisplayItemActions(): boolean {
@@ -123,7 +149,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     // region Аспект "Стилевое оформление"
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
         const hasColumnScroll = this._$owner.hasColumnScroll();
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
 
         let wrapperClasses = '';
 
@@ -146,77 +172,30 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
         }
 
-        /*const checkBoxCell = current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0;
-        const classLists = createClassListCollection('base', 'padding', 'columnScroll', 'columnContent');
-        const backgroundStyle = current.backgroundStyle || current.style || 'default';
-        const isFullGridSupport = GridLayoutUtil.isFullGridSupport();
-
-        _private.prepareSeparatorClasses(current, classLists, theme);
-
-        if (current.isEditing()) {
-            classLists.base += ` controls-Grid__row-cell-background-editing_theme-${theme}`;
-        } else {
-            let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
-            classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
-        }
-
-        if (current.columnScroll && !current.isEditing()) {
-            classLists.columnScroll += _private.getBackgroundStyle({backgroundStyle, theme}, true);
-        }
-
-        // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-        if (checkBoxCell) {
-            classLists.base += ` controls-Grid__row-cell-checkbox_theme-${theme}`;
-            classLists.padding = createClassListCollection('top', 'bottom');
-            classLists.padding.top = `controls-Grid__row-checkboxCell_rowSpacingTop_${current.itemPadding.top}_theme-${theme}`;
-            classLists.padding.bottom =  `controls-Grid__row-cell_rowSpacingBottom_${current.itemPadding.bottom}_theme-${theme}`;
-        } else {
-            classLists.padding = _private.getPaddingCellClasses(current, theme);
-        }
-
-        if (current.dispItem.isMarked() && current.markerVisibility !== 'hidden') {
-            style = current.style || 'default';
-            classLists.marked = `controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
-
-            // при отсутствии поддержки grid (например в IE, Edge) фон выделенной записи оказывается прозрачным,
-            // нужно его принудительно установить как фон таблицы
-            if (!isFullGridSupport && !current.isEditing()) {
-                classLists.marked += _private.getBackgroundStyle({backgroundStyle, theme}, true);
-            }
-
-            if (current.columnIndex === 0) {
-                classLists.marked += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
-            }
-            if (current.columnIndex === current.getLastColumnIndex()) {
-                classLists.marked += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
-            }
-        } else if (current.columnIndex === current.getLastColumnIndex()) {
-            classLists.base += ` controls-Grid__row-cell__last controls-Grid__row-cell__last-${style}_theme-${theme}`;
-        }
-
-        if (!GridLayoutUtil.isFullGridSupport() && !(current.columns.length === (current.hasMultiSelect ? 2 : 1)) && self._options.fixIEAutoHeight) {
-            classLists.base += ' controls-Grid__row-cell__autoHeight';
-        }
-        return classLists;*/
         return wrapperClasses;
     }
 
     protected _getBackgroundColorColumnScrollClasses(backgroundColorStyle: string, theme: string): string {
-        if (backgroundColorStyle) {
-            return `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme}`
-        }
-
         // TODO: Брать от родителя
         // return options.backgroundStyle || options.style || 'default';
         return `controls-background-${'default'}_theme-${theme}`;
     }
-    _getBackgroundColorWrapperClasses(theme: string, templateHighlightOnHover?: boolean, backgroundColorStyle?: string, hoverBackgroundStyle?: string) {
+    protected _getBackgroundColorWrapperClasses(
+       theme: string,
+       templateHighlightOnHover?: boolean,
+       backgroundColorStyle?: string,
+       hoverBackgroundStyle?: string
+    ): string {
         let wrapperClasses = '';
         if (this._$owner.isEditing()) {
             const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
-            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+            wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme} `;
         } else if (templateHighlightOnHover !== false) {
-            wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme}`;
+            wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme} `;
+
+            if (backgroundColorStyle !== 'default') {
+                wrapperClasses += `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
+            }
             if (this._$owner.hasColumnScroll()) {
                 wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
             }
@@ -226,7 +205,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     // Only for partial grid support
     getRelativeCellWrapperClasses(theme: string): string {
-        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
+        const rowSeparatorSize = this._$rowSeparatorSize;
 
         // Единственная ячейка с данными сама формирует высоту строки и не нужно применять хак для растягивания контента ячеек по высоте ячеек.
         // Подробнее искать по #grid_relativeCell_td.
@@ -246,10 +225,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     getContentClasses(theme: string,
-                      backgroundColorStyle: string,
+                      backgroundColorStyle: string = this._$column.backgroundColorStyle,
                       cursor: string = 'pointer',
                       templateHighlightOnHover: boolean = true): string {
-        const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle() || 'default';
+        const hoverBackgroundStyle = this._$column.hoverBackgroundStyle || this._$owner.getHoverBackgroundStyle();
 
         let contentClasses = 'controls-Grid__row-cell__content';
 
@@ -294,6 +273,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return '';
     }
 
+    setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
+        this._$columnSeparatorSize = columnSeparatorSize;
+        this._nextVersion();
+    }
+
+    setRowSeparatorSize(rowSeparatorSize: string): void {
+        this._$rowSeparatorSize = rowSeparatorSize;
+        this._nextVersion();
+    }
+
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = '';
 
@@ -330,7 +319,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     protected _getWrapperSeparatorClasses(theme: string): string {
-        const rowSeparatorSize = this._$owner.getRowSeparatorSize();
+        const rowSeparatorSize = this._$rowSeparatorSize;
         let classes = '';
 
         if (rowSeparatorSize) {
@@ -342,15 +331,18 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
         }
 
-        /*if (current.columnIndex > current.hasMultiSelect ? 1 : 0) {
-            const columnSeparatorSize = _private.getSeparatorForColumn(current.columns, current.columnIndex, current.columnSeparatorSize);
-
-            if (columnSeparatorSize !== null) {
-                classLists.base += ' controls-Grid__row-cell_withColumnSeparator';
-                classLists.columnContent += ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
-            }
-        }*/
+        classes += this._getColumnSeparatorClasses(theme);
         return classes;
+    }
+
+    protected _getColumnSeparatorClasses(theme: string): string {
+        if (this.getColumnIndex() > (this._$owner.hasMultiSelectColumn() ? 1 : 0)) {
+            const columnSeparatorSize = typeof this._$columnSeparatorSize === 'string' ?
+                this._$columnSeparatorSize.toLowerCase() :
+                null;
+            return ` controls-Grid__columnSeparator_size-${columnSeparatorSize}_theme-${theme}`;
+        }
+        return '';
     }
 
     protected _getColumnScrollWrapperClasses(theme: string): string {
@@ -379,12 +371,13 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         // left <-> right
         const cellPadding = this._$column.cellPadding;
 
+        const isFirstColumnAfterCheckbox = this.getColumnIndex() === 1 && this._$owner.hasMultiSelectColumn();
         if (this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn()) {
             classes += ` controls-Grid__cell_spacingFirstCol_${leftPadding}_theme-${theme}`;
-        } else if (!this.isFirstColumn()) {
+        } else if (!this.isFirstColumn() && !isFirstColumnAfterCheckbox) {
             classes += ' controls-Grid__cell_spacingLeft';
             if (cellPadding?.left) {
-                classes += `_${cellPadding.left}`;
+                classes += `_${cellPadding.left.toLowerCase()}`;
             }
             classes += `_theme-${theme}`;
         }
@@ -392,7 +385,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         if (!this.isLastColumn()) {
             classes += ' controls-Grid__cell_spacingRight';
             if (cellPadding?.right) {
-                classes += `_${cellPadding.right}`;
+                classes += `_${cellPadding.right.toLowerCase()}`;
             }
             classes += `_theme-${theme}`;
         } else {
@@ -421,7 +414,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
     }
 
     isLastColumn(): boolean {
-        return this.getColumnIndex() === this._$owner.getColumnsCount() - 1;
+        let dataColumnsCount = this._$owner.getColumnsCount() - 1;
+        if (this._$owner.hasItemActionsSeparatedCell()) {
+            dataColumnsCount -= 1;
+        }
+        return this.getColumnIndex() === dataColumnsCount;
     }
 
     // endregion
@@ -466,6 +463,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return false;
     }
 
+    getInstanceId(): string {
+        return this._$instanceId || super.getInstanceId();
+    }
+
     // endregion
 }
 
@@ -479,5 +480,9 @@ Object.assign(Cell.prototype, {
     _$startColumn: null,
     _$endColumn: null,
     _$colspan: null,
-    _$isFixed: null
+    _$isFixed: null,
+    _$instanceId: null,
+    _$ladderCell: null,
+    _$columnSeparatorSize: null,
+    _$rowSeparatorSize: null
 });

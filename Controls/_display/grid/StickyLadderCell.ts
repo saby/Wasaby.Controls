@@ -2,6 +2,7 @@ import Cell, { IOptions as ICellOptions } from './Cell';
 import { OptionsToPropertyMixin }  from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 import DataRow from './DataRow';
+import DataCell from './DataCell';
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:StickyLadderColumnTemplate';
 
@@ -12,7 +13,9 @@ export interface IOptions<T> extends ICellOptions<T> {
     stickyHeaderZIndex: number;
 }
 
-export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Cell<T, TOwner> {
+export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends DataCell<T, TOwner> {
+    readonly Markable: boolean = false;
+
     protected _$wrapperStyle: string;
     protected _$contentStyle: string;
     protected _$stickyProperty: string;
@@ -29,9 +32,14 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Cell
         return wrapperClasses;
     }
 
-    getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+    getStickyContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
         let contentClasses = 'controls-Grid__row-main_ladderWrapper';
         return contentClasses;
+    }
+
+    getContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
+        let contentClasses = 'controls-Grid__row-main_ladderWrapper';
+        return '';
     }
 
     getOriginalContentClasses(theme: string, cursor: string = 'pointer', templateHighlightOnHover: boolean = true): string {
@@ -46,8 +54,12 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Cell
         return this._$wrapperStyle;
     }
 
-    getContentStyles(): string {
+    getStickyContentStyles(): string {
         return this._$contentStyle;
+    }
+
+    getContentStyles(): string {
+        return '';
     }
 
     getStickyProperty(): string {

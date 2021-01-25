@@ -1,9 +1,9 @@
 define('Controls-demo/List/Grid/ColumnScroll', [
-   'Core/Control',
+   'UI/Base',
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/Grid/ColumnScroll',
    'Types/source',
-   'Controls/Utils/Toolbar',
+   'Controls/toolbars',
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoBalancePrice',
    'wml!Controls-demo/List/Grid/DemoCostPrice',
@@ -12,7 +12,7 @@ define('Controls-demo/List/Grid/ColumnScroll', [
    'Controls/scroll',
    'Controls/grid',
    'wml!Controls-demo/List/Grid/Results'
-], function(BaseControl, GridData, template, source, Toolbar) {
+], function(Base, GridData, template, source, Toolbar) {
    'use strict';
    var
       columns = [
@@ -163,7 +163,7 @@ define('Controls-demo/List/Grid/ColumnScroll', [
          }
       ],
 
-      ModuleClass = BaseControl.extend({
+      ModuleClass = Base.Control.extend({
          _template: template,
          _viewSource: null,
          _gridHeader: null,

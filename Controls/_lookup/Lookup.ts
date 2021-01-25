@@ -34,7 +34,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  *
  *
  * @class Controls/_lookup/Lookup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/_interface/ISelectorDialog
@@ -52,14 +52,13 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IValueOptions
+ * @mixes Controls/input:IValue
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/input:IBorderVisibility
  * @mixes Controls/input:IPadding
  * 
  * @public
  * @author Герасимов А.М.
- * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 /*
  * “Lookup:Input” is an input field with auto-completion and the ability to select a value from the directory.
@@ -71,7 +70,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * If you need a choice of several directories, one value from each, then {@link Controls / lookup: MultipleInput} is suitable for you.
  *
  * @class Controls/_lookup/Lookup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
@@ -89,7 +88,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IValueOptions
+ * @mixes Controls/input:IValue
  * 
  * @public
  * @author Герасимов А.М.

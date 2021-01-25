@@ -541,7 +541,7 @@ export interface IBaseOpener {
  */
 
 /**
- * @typedef {Object} EventHandlers
+ * @typedef {Object} Controls/_popup/interface/IBaseOpener/EventHandlers
  * @description Функции обратного вызова позволяют подписаться на события всплывающего окна, открытого через статические методы.
  * Когда {@link /doc/platform/developmentapl/interface-development/controls/openers/ открывающий контрол} добавлен в шаблон, можно задать декларативную подписку на события.
  * @property {Function} onOpen Функция обратного вызова, которая вызывается при открытии всплывающего окна.
@@ -554,9 +554,11 @@ export interface IBaseOpener {
 
 /**
  * @name Controls/_popup/interface/IBaseOpener#dataLoaders
+ * @demo Controls-demo/Popup/Loader/Index
  * @cfg {DataLoader[]} Задает массив предзагрузчиков данных, необходимых для построения {@link template шаблона}.
  * Опция используется для ускорения открытия окна, за счет распараллеливания получения данных и построения верстки.
- * Полученные данные будут переданы в опцию prefetchPromise.
+ * Полученные данные будут переданы в опцию <b>prefetchData</b>.
+ * В рамках переходного этапа, для определения наличия предзагрузки данных используйте опцию <b>isPrefetchDataMode</b>. См. примеры.
  * @remark
  * **Обратите внимение: модуль загрузчика данных - синглтон.**
  * **Внимание. Функционал является экспериментальным и не должен использоваться повсеместно.**
@@ -637,8 +639,6 @@ export interface IBaseOpener {
  *  }
  * </pre>
  *
- * </pre>
- *
  * Описание шаблона окна
  *
  * <pre>
@@ -646,11 +646,22 @@ export interface IBaseOpener {
  *      ...
  *
  *      _beforeMount(options) {
- *          options.prefetchPromise.then((resultObject) => {
- *              this._preloadData = resultObject;
- *          });
+ *          if (!options.isPrefetchDataMode) {
+ *              // Если данные не предзагружаются, значит контрол строится по старой схеме.
+ *              // В этом случае в рамках совместимости этот контрол должен запросить данные самостоятельно.
+ *              options.source.query({}).then(data => {
+ *                  this._preloadData = data;
+ *              }
+ *          }
  *      }
- *      ...
+ *
+ *      _beforeUpdate(newOptions) {
+ *          if (newOptions.isPrefetchDataMode) {
+ *              if (newOptions.prefetchData !== this._options.prefetchData) {
+ *                  this._preloadData = newOptions.prefetchData['myLoaderKey'];
+ *              }
+ *          }
+ *      }
  *   }
  * </pre>
  *

@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import {EventUtils} from 'UI/Events';
 import {Logger} from 'UI/Utils';
@@ -34,7 +34,7 @@ var _private = {
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления}
  *
  * @class Controls/_filterPopup/Panel/Lookup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISuggest
@@ -50,7 +50,7 @@ var _private = {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IValueOptions
+ * @mixes Controls/input:IValue
  * @mixes Controls/_interface/ISelectorDialog
  * @public
  * @author Герасимов А.М.
@@ -64,7 +64,7 @@ var _private = {
  * If you want to make a dynamic placeholder of the input field, which will vary depending on the selected collection, use {@link Controls/lookup:PlaceholderChooser}.
  *
  * @class Controls/_filterPopup/Panel/Lookup
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ILookup
  * @mixes Controls/interface/ISelectedCollection
  * @mixes Controls/interface/ISelectorDialog
@@ -81,7 +81,7 @@ var _private = {
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IValueOptions
+ * @mixes Controls/input:IValue
  *
  * @public
  * @author Kapustin I.A.

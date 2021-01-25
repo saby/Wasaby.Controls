@@ -29,19 +29,27 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    private _rootId: CrudEntityKey;
    private _model: Tree<Model, TreeItem<Model>>;
    private _entryPath: IEntryPathItem[];
-   private _selectionType: 'node'|'leaf'|'all' = 'all';
+   private _selectionType: 'node'|'leaf'|'all'|'allBySelectAction' = 'all';
+   private _recursiveSelection: boolean;
+   private _rootChanged: boolean;
 
    constructor(options: ITreeSelectionStrategyOptions) {
       this.update(options);
+      this._rootChanged = false;
    }
 
    update(options: ITreeSelectionStrategyOptions): void {
+      if (this._rootId !== options.rootId) {
+         this._rootChanged = true;
+      }
+
       this._selectAncestors = options.selectAncestors;
       this._selectDescendants = options.selectDescendants;
       this._rootId = options.rootId;
       this._model = options.model;
       this._entryPath = options.entryPath;
       this._selectionType = options.selectionType;
+      this._recursiveSelection = options.recursiveSelection;
    }
 
    setEntryPath(entryPath: IEntryPathItem[]): void {
@@ -100,7 +108,8 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    selectAll(selection: ISelection): ISelection {
-      const newSelection = this.select(selection, this._rootId);
+      const initSelection = this._rootChanged ? {selected: [], excluded: []} : selection;
+      const newSelection = this.select(initSelection, this._rootId);
       this._removeChildes(newSelection, this._getRoot());
 
       if (!newSelection.excluded.includes(this._rootId)) {
@@ -124,12 +133,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
    }
 
    toggleAll(selection: ISelection, hasMoreData: boolean): ISelection {
-      const childrenIdsInRoot = this._getAllChildrenIds(this._getRoot());
-      const rootExcluded = selection.excluded.includes(this._rootId);
-      const oldExcludedKeys = selection.excluded.slice();
-      const oldSelectedKeys = selection.selected.slice();
-
       let cloneSelection = clone(selection);
+      const childrenIdsInRoot = this._getAllChildrenIds(this._getRoot());
+
+      if (this._rootChanged) {
+         this._removeIdsNotFromCurrentRoot(cloneSelection, childrenIdsInRoot);
+      }
+
+      const rootExcluded = cloneSelection.excluded.includes(this._rootId);
+      const oldExcludedKeys = cloneSelection.excluded.slice();
+      const oldSelectedKeys = cloneSelection.selected.slice();
+
       if (this._isAllSelected(cloneSelection, this._rootId)) {
          cloneSelection = this._unselectAllInRoot(cloneSelection);
 
@@ -204,9 +218,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const parentId = this._getKey(item.getParent());
          const isNode = this._isNode(item);
 
-         let isSelected = this._canBeSelected(item)
-            ? !selection.excluded.includes(key) && (selection.selected.includes(key) || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key)
-            : selection.selected.includes(key) || this._isAllSelected(selection, parentId) && !selection.excluded.includes(key) && this._canBeSelectedBySelectionType(item);
+         let isSelected = this._canBeSelected(item) && (!selection.excluded.includes(key) && (selection.selected.includes(key) || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key));
 
          if ((this._selectAncestors || searchValue) && isNode) {
             isSelected = this._getStateNode(item, isSelected, {
@@ -293,6 +305,24 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
       }
 
       return isAllSelected;
+   }
+
+   reset() {
+      this._rootChanged = false;
+   }
+
+   private _removeIdsNotFromCurrentRoot(selection: ISelection, childrenIdsInRoot: CrudEntityKey[]): void {
+      selection.selected.forEach((val, i) => {
+         if (!childrenIdsInRoot.includes(val)) {
+            selection.selected.splice(i, 1);
+         }
+      });
+
+      selection.excluded.forEach((val, i) => {
+         if (!childrenIdsInRoot.includes(val)) {
+            selection.excluded.splice(i, 1);
+         }
+      });
    }
 
    private _unselectParentNodes(selection: ISelection, item: TreeItem<Model>): void {
@@ -679,6 +709,16 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
 
    private _canBeSelectedBySelectionType(item: TreeItem<Model>): boolean {
       const isNode = this._isNode(item);
-      return item.isReadonlyCheckbox() || this._selectionType === 'all' || this._selectionType === 'node' && isNode || this._selectionType === 'leaf' && !isNode;
+
+      switch (this._selectionType) {
+         case 'all':
+         // allBySelectAction используется в lookupPopup и приходит к нам через scope, расцениваем ее как all
+         case 'allBySelectAction':
+            return true;
+         case 'leaf':
+            return !isNode || this._recursiveSelection && isNode;
+         case 'node':
+            return isNode;
+      }
    }
 }

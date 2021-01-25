@@ -3,6 +3,7 @@ import { SyntheticEvent } from 'UI/Vdom';
 import { ItemsEntity } from 'Controls/dragnDrop';
 import { ISelectionObject } from 'Controls/interface';
 import { CrudEntityKey } from 'Types/source';
+import { isEqual } from 'Types/object';
 
 type StrategyConstructor<P> = new (model: IDraggableCollection<P>, draggableItem: IDraggableItem) => IDragStrategy<P>;
 
@@ -31,39 +32,32 @@ export default class Controller<P> {
    /**
     * Запускает отображение в списке начала драг н дропа.
     * Позволяет отобразить перетаскиеваемый элемент особым образом, отличным от остальных элементов.
-    * @param draggableItem - ключ записи, за которую осуществляется перетаскивание
-    * @param entity - сущность перемещения, содержит весь список перемещаемых записей
+    * @param {IDraggableItem} draggableItem - запись, за которую осуществляется перетаскивание
+    * @param {ItemsEntity} entity - сущность перемещения, содержит весь список перемещаемых записей
     */
    startDrag(draggableItem: IDraggableItem, entity: ItemsEntity): void {
-      this.setDraggedItems(entity, draggableItem);
-      this._strategy = new this._strategyConstructor(this._model, draggableItem);
-   }
-
-   /**
-    * Отображает перетаскивание в списке.
-    * Позволяет отобразить перетаскиеваемые элементы особым образом, отличным от остальных элементов.
-    * @param entity - сущность перемещения, содержит весь список перемещаемых записей
-    * @param draggableItem - запись, за которую осуществляется перетаскивание
-    */
-   setDraggedItems(entity: ItemsEntity, draggableItem: IDraggableItem = null): void {
       this._entity = entity;
       if (draggableItem) {
          this._draggableItem = draggableItem;
          this._model.setDraggedItems(draggableItem, entity.getItems());
       }
+
+      this._strategy = new this._strategyConstructor(this._model, draggableItem);
    }
 
    /**
     * Отображает перетаскиваемые сущности в указанной позиции списка
-    * @param position - позиция в которой надо отобразить перемещаемые записи
+    * @param position Позиция в которой надо отобразить перемещаемые записи
+    * @return {boolean} Изменилась ли позиция
     */
-   setDragPosition(position: P): void {
-      if (this._dragPosition === position) {
-         return;
+   setDragPosition(position: P): boolean {
+      if (isEqual(this._dragPosition, position)) {
+         return false;
       }
 
       this._dragPosition = position;
       this._model.setDragPosition(position);
+      return true;
    }
 
    /**
@@ -110,6 +104,10 @@ export default class Controller<P> {
     * @param params
     */
    calculateDragPosition(params: IDragStrategyParams<P>): P {
+      if (!this._strategy) {
+         throw new Error('Strategy was not created. Should be called Controller::startDrag');
+      }
+
       return this._strategy.calculatePosition({ ...params, currentPosition: this._dragPosition });
    }
 

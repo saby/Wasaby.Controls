@@ -28,7 +28,7 @@ const MODERN_IE_VERSION = 11;
  *
  *
  * @class Controls/_heading/Back
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ICaption
  * @implements Controls/_buttons/interface/IClick
  * @implements Controls/_interface/ITooltip
@@ -48,7 +48,7 @@ const MODERN_IE_VERSION = 11;
  * <a href="/materials/Controls-demo/app/Controls-demo%2FHeaders%2FstandartDemoHeader">Demo-example</a>.
  *
  * @class Controls/_heading/Back
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/ITooltip

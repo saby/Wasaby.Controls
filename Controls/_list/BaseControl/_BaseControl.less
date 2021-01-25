@@ -8,6 +8,10 @@
    height: 1px;
 }
 
+.controls-BaseControl__viewContainer {
+   position: relative;
+}
+
 /*
 https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 */
@@ -110,6 +114,11 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
    z-index: 17;
 }
 
+.controls-BaseControl__loadingIndicator__state-attachToNull {
+   display: flex;
+   justify-content: center;
+}
+
 .controls-BaseControl__loadingIndicator__state-up {
    position: relative;
    pointer-events: none;
@@ -118,14 +127,12 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 // По стандарту индикатор загрузки данных вниз должен "прилипать" к нижней границе вьюпорта списка
 .controls-BaseControl__loadingIndicator__state-down {
    position: sticky;
-   bottom: 0;
    pointer-events: none;
 }
 
 // Поднимаем индикатор на высоту контейнера с пэйджингом
 .controls-BaseControl_withPaging__loadingIndicator__state-down_theme-@{themeName} {
    margin-bottom: -(@item_height_paging + @scrollpaging_offset-vertical_list);
-   bottom: @scrollpaging_offset-vertical_list;
 }
 
 // По стандарту индикатор загрузки данных вниз должен "прилипать" к нижней границе вьюпорта списка.
@@ -143,6 +150,7 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 
 .controls-BaseControl__loadingIndicator__state-down_theme-@{themeName} {
    padding-top: @continueSearch_padding-top_list;
+   bottom: @scrollpaging_offset-vertical_list;
 }
 
 .controls-BaseControl__loadingIndicator__state-up .controls-BaseControl__loadingIndicatorImg-wrapper_theme-@{themeName} {
@@ -201,10 +209,6 @@ https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
 .controls-BaseControl__footer-content_theme-@{themeName}::before {
    content: '\200b';
    font-size: @footer_font-size_list;
-}
-
-.controls-BaseControl__footerPaging_theme-@{themeName} {
-   background: @background-color_paging;
 }
 
 .controls-BaseControl__footerPaging_wrapper {

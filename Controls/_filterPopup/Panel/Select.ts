@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Select/Select');
 import itemTemplate = require('wml!Controls/_filterPopup/Panel/Select/ItemTemplate');
 import {object} from 'Types/util';
@@ -12,7 +12,7 @@ import {object} from 'Types/util';
     * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления}
     *
     * @class Controls/_filterPopup/Panel/Select
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @mixes Controls/_interface/ITextValue
     * @mixes Controls/_interface/IMultiSelectable
     * @mixes Controls/_interface/IItemTemplate
@@ -26,7 +26,7 @@ import {object} from 'Types/util';
     *
     * To work with single selectedKeys option you can use control with {@link Controls/source:SelectedKey}.
     * @class Controls/_filterPopup/Panel/Select
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * 
     * @mixes Controls/_interface/ITextValue
     * @mixes Controls/_interface/IMultiSelectable

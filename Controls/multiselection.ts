@@ -9,6 +9,7 @@ import { Controller as SelectionController } from 'Controls/_multiselection/Cont
 import { FlatSelectionStrategy } from 'Controls/_multiselection/SelectionStrategy/Flat';
 import { TreeSelectionStrategy } from 'Controls/_multiselection/SelectionStrategy/Tree';
 import { default as ISelectionStrategy } from 'Controls/_multiselection/SelectionStrategy/ISelectionStrategy';
+import { default as SingleSelection } from 'Controls/_multiselection/Adapters/SingleSelection';
 import {
    ISelectionItem,
    ISelectionModel,
@@ -28,5 +29,6 @@ export {
    FlatSelectionStrategy,
    IFlatSelectionStrategyOptions,
    TreeSelectionStrategy,
-   ITreeSelectionStrategyOptions
+   ITreeSelectionStrategyOptions,
+   SingleSelection
 };

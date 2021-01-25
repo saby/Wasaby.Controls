@@ -10,7 +10,7 @@ import {
     Model
 } from 'Types/entity';
 import {IList} from 'Types/collection';
-import {mixin} from 'Types/util';
+import {mixin, object} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
@@ -20,6 +20,7 @@ import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from 
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
+import Collection from 'Controls/_display/Collection';
 
 export interface IOptions<T extends Model = Model> {
     contents?: T;
@@ -33,7 +34,8 @@ export interface IOptions<T extends Model = Model> {
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
     multiSelectVisibility?: string;
-    checkboxState?: boolean|null;
+    multiSelectAccessibilityProperty?: string;
+    rowSeparatorSize?: string;
 }
 
 export interface ISerializableState<T extends Model = Model> extends IDefaultSerializableState {
@@ -87,7 +89,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Коллекция, которой принадлежит элемент
      */
-    protected _$owner: ICollection<T, CollectionItem<T>>;
+    protected _$owner: Collection;
 
     /**
      * Содержимое элемента коллекции
@@ -122,11 +124,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$rendered: boolean;
 
-    protected _$multiSelectVisibility: string;
+    protected _$multiSelectVisibility: string = 'hidden';
+
+    protected _$rowSeparatorSize: string;
 
     protected _$dragged: boolean;
 
-    protected _$checkboxState: boolean|null;
+    protected _$multiSelectAccessibilityProperty: string;
 
     protected _instancePrefix: string;
 
@@ -190,7 +194,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     /**
      * Возвращает коллекцию, которой принадлежит элемент
      */
-    getOwner(): ICollection<T, CollectionItem<T>> {
+    getOwner(): Collection {
         return this._$owner;
     }
 
@@ -198,7 +202,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * Устанавливает коллекцию, которой принадлежит элемент
      * @param owner Коллекция, которой принадлежит элемент
      */
-    setOwner(owner: ICollection<T, CollectionItem<T>>): void {
+    setOwner(owner: Collection): void {
         this._$owner = owner;
     }
 
@@ -285,17 +289,29 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion
 
-    // region CheckboxState
+    // region MultiSelectAccessibility
 
     isReadonlyCheckbox(): boolean {
-        return this._$checkboxState !== true;
+        return this._getMultiSelectAccessibility() !== true;
     }
 
     isVisibleCheckbox(): boolean {
-        return this._$checkboxState !== null;
+        return this._getMultiSelectAccessibility() !== null && !this.isAdd;
     }
 
-    // endregion CheckboxState
+    setMultiSelectAccessibilityProperty(property: string): void {
+        if (this._$multiSelectAccessibilityProperty !== property) {
+            this._$multiSelectAccessibilityProperty = property;
+            this._nextVersion();
+        }
+    }
+
+    protected _getMultiSelectAccessibility(): boolean|null {
+        const value = object.getPropertyValue<boolean|null>(this.getContents(), this._$multiSelectAccessibilityProperty);
+        return value === undefined ? true : value;
+    }
+
+    // endregion MultiSelectAccessibility
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();
@@ -321,7 +337,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             templateMarker &&
             this._$owner.getMarkerVisibility() !== 'hidden' &&
             this.isMarked() &&
-            !this.isEditing()
+            !this.getOwner().isEditing()
         );
     }
 
@@ -352,11 +368,13 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     getMultiSelectClasses(theme: string): string {
-        let classes = `js-controls-ListView__notEditable controls-ListView__checkbox_theme-${theme} `;
-        classes += `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`;
+        let classes = 'js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable ';
+        classes += 'js-controls-ListView__checkbox js-controls-ColumnScroll__notDraggable ';
+        classes += `controls-CheckboxMarker_inList_theme-${theme} controls-ListView__checkbox_theme-${theme} `;
+        classes += `controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme} `;
 
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
-            classes += ' controls-ListView__checkbox-onhover';
+            classes += 'controls-ListView__checkbox-onhover';
         }
         return classes;
     }
@@ -689,6 +707,16 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getMultiSelectPosition();
     }
 
+    setRowSeparatorSize(rowSeparatorSize: string): boolean {
+        const changed = this._$rowSeparatorSize !== rowSeparatorSize;
+        if (changed) {
+            this._$rowSeparatorSize = rowSeparatorSize;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
 
@@ -817,8 +845,9 @@ Object.assign(CollectionItem.prototype, {
     _$active: false,
     _$hovered: false,
     _$dragged: false,
-    _$checkboxState: true,
+    _$multiSelectAccessibilityProperty: '',
     _$multiSelectVisibility: null,
+    _$rowSeparatorSize: null,
     _contentsIndex: undefined,
     _version: 0,
     _counters: null

@@ -28,7 +28,7 @@ import {QueryWhereExpression} from 'Types/source';
  *
  * @deprecated
  * @class Controls/_search/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilterChanged
@@ -55,7 +55,7 @@ import {QueryWhereExpression} from 'Types/source';
  *
  * @deprecated
  * @class Controls/_search/Controller
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_interface/ISearch
  * @mixes Controls/_interface/ISource
  * @mixes Controls/_interface/IFilterChanged
@@ -86,6 +86,7 @@ export default class Container extends Control<IContainerOptions> {
    private _searchValue: string = null;
    private _misspellValue: string = null;
    private _root: Key = null;
+   private _rootBeforeSearch: Key = null;
    private _notifiedMarkedKey: Key = null;
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
@@ -109,6 +110,10 @@ export default class Container extends Control<IContainerOptions> {
          this._searchValue = searchController.getSearchValue();
       });
 
+      if (options.searchValue) {
+         this._inputSearchValue = options.searchValue;
+      }
+
       if (options.root !== undefined) {
          this._root = options.root;
       }
@@ -124,6 +129,10 @@ export default class Container extends Control<IContainerOptions> {
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
       const options = {...newOptions, ...context.dataOptions};
 
+      if (newOptions.root !== this._options.root) {
+         this._root = newOptions.root;
+      }
+
       if (this._searchController && options.sourceController) {
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
@@ -133,6 +142,14 @@ export default class Container extends Control<IContainerOptions> {
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
+         } else if (updateResult instanceof Promise) {
+            updateResult.catch((error: Error & {
+               isCancelled?: boolean;
+            }) => {
+               if (!error.isCancelled) {
+                  return error;
+               }
+            });
          }
       }
    }
@@ -164,6 +181,7 @@ export default class Container extends Control<IContainerOptions> {
          const newRoot = Container._getRoot(this._path, this._root, this._options.parentProperty);
 
          this._getSearchController().then((searchController) => {
+            this._rootBeforeSearch = this._root;
             this._root = newRoot;
             searchController.setRoot(newRoot);
             this._notify('rootChanged', [newRoot]);
@@ -182,7 +200,12 @@ export default class Container extends Control<IContainerOptions> {
             if (this._options.dataLoadCallback) {
                this._options.dataLoadCallback(result);
             }
-            sourceController.setItems(result);
+         }
+      }).catch((error: Error & {
+         isCancelled?: boolean;
+      }) => {
+         if (!error.isCancelled) {
+            return error;
          }
       });
    }
@@ -213,14 +236,17 @@ export default class Container extends Control<IContainerOptions> {
          }
          if (root !== dataRoot) {
             this._updateFilter(searchController);
-
             this._inputSearchValue = '';
          }
+         this._rootBeforeSearch = null;
       });
    }
 
    private _searchReset(event: SyntheticEvent): void {
       this._getSearchController().then((searchController) => {
+         if (this._rootBeforeSearch) {
+            this._root = this._rootBeforeSearch;
+         }
          this._updateFilter(searchController);
          this._handleDataLoad(null);
       });

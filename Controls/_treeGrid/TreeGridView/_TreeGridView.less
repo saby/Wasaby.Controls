@@ -73,7 +73,8 @@
    min-width: @expander_width_treeGrid;
 }
 
-.controls-TreeGridView__dragTargetNode_theme-@{themeName} {
+.controls-TreeGridView__dragTargetNode_theme-@{themeName}:after {
+   content: '\200b';
    border-top: @item_droppable_border_thickness_treeGrid solid @item_droppable_border_color_treeGrid;
    border-bottom: @item_droppable_border_thickness_treeGrid solid @item_droppable_border_color_treeGrid;
    position: absolute;
@@ -86,10 +87,12 @@
    //Will be deleted by task: https://online.sbis.ru/opendoc.html?guid=7503eaab-e38a-4c6e-8f0d-940646d8bd28
    z-index: 2;
 }
-.controls-TreeGridView__dragTargetNode_first_theme-@{themeName} {
+.controls-TreeGridView__dragTargetNode_first_theme-@{themeName}:after {
+   content: '\200b';
    border-left: @item_droppable_border_thickness_treeGrid solid @item_droppable_border_color_treeGrid;
 }
-.controls-TreeGridView__dragTargetNode_last_theme-@{themeName} {
+.controls-TreeGridView__dragTargetNode_last_theme-@{themeName}:after {
+   content: '\200b';
    border-right: @item_droppable_border_thickness_treeGrid solid @item_droppable_border_color_treeGrid;
 }
 .controls-TreeGrid__row-expanderPadding {
@@ -360,6 +363,7 @@
    position: absolute;
    left: 0;
    right: 0;
+   padding-right: @item_padding-right_default_list;
 }
 
 .controls-TreeGrid__row__searchBreadCrumbs .controls-itemActionsV__container {

@@ -16,8 +16,8 @@ export {default as IIconStyle, IIconStyleOptions} from './_interface/IIconStyle'
 export {default as ICaption, ICaptionOptions} from './_interface/ICaption';
 export {default as IIcon, IIconOptions} from './_interface/IIcon';
 export {default as IIconSize, IIconSizeOptions} from './_interface/IIconSize';
-export {default as IFontColorStyle, IFontColorStyleOptions} from './_interface/IFontColorStyle';
-export {default as IFontSize, IFontSizeOptions} from './_interface/IFontSize';
+export {default as IFontColorStyle, IFontColorStyleOptions, TFontColorStyle} from './_interface/IFontColorStyle';
+export {default as IFontSize, IFontSizeOptions, TFontSize} from './_interface/IFontSize';
 export {default as IFontWeight, IFontWeightOptions, TFontWeight} from './_interface/IFontWeight';
 export {default as IHeight, IHeightOptions} from './_interface/IHeight';
 export {default as ISingleSelectable, ISingleSelectableOptions, TSelectedKey} from './_interface/ISingleSelectable';
@@ -61,8 +61,7 @@ export {
     IBasePageSourceConfig,
     TNavigationPagingMode,
     TNavigationSource,
-    TNavigationDirection,
-    CursorDirection
+    TNavigationDirection
 } from './_interface/INavigation';
 export {default as IDisplayedRanges, IDisplayedRangesOptions, TDisplayedRangesItem} from './_interface/IDisplayedRanges';
 export {default as IOpenPopup} from './_interface/IOpenPopup';

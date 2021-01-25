@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_search/Misspell/Container');
 
 /**
@@ -10,7 +10,7 @@ import template = require('wml!Controls/_search/Misspell/Container');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_search.less переменные тем оформления}
  * 
  * @class Controls/_search/Misspell/Container
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @public
  * @author Крайнов Д.О.

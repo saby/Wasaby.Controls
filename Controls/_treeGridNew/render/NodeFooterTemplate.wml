@@ -1,6 +1,4 @@
-<!-- Не выводим подвал, если это не кнопка еще и при этом не был переопределен контент. -->
-<!-- В таком случае подвал просто не ожидается прикладным разработчиком. -->
-<ws:if data="{{ !(!item.getNode().hasMoreStorage() && !content) }}">
+<ws:if data="{{ item.shouldDisplayVisibleFooter(content) }}">
     <div class="{{item.getItemClasses({
         'highlightOnHover': highlightOnHover,
         'theme': theme,
@@ -9,7 +7,7 @@
         'clickable': clickable
     })}}" attr:key="{{item.key}}">
         <ws:for data="index,column in item.getColumns(colspan)">
-            <div class="{{ column.getContentClasses(theme, cursor, highlightOnHover) }} {{ cellClassName || '' }}" attr:key="{{item.key}}_column_{{index}}" style="{{ column.getColspan(colspan)  }}">
+            <div class="{{ column.getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover, colspan) }} {{ cellClassName || '' }}" attr:key="{{item.key}}_column_{{index}}" style="{{ column.getColspan(colspan)  }}">
                 <ws:if data="{{ index === 0 }}">
 <!--                Отступы для выравнивания с экспандером-->
                     <ws:if data="{{item.shouldDisplayExpanderBlock(column)}}">
@@ -18,15 +16,17 @@
                                 <div class="{{item.getLevelIndentClasses(expanderSize, levelIndentSize, theme)}}"></div>
                             </ws:for>
                         </ws:if>
-                        <ws:if data="{{item.shouldDisplayExpanderPadding(expanderIcon, expanderSize)}}">
+                        <ws:if data="{{item.shouldDisplayExpanderPadding(expanderIcon)}}">
                             <div class="{{item.getExpanderPaddingClasses(expanderSize)}}"></div>
                         </ws:if>
                     </ws:if>
 
-                    <ws:partial template="{{column.getTemplate(content)}}" item="{{item}}" itemData="{{item}}"/>
+                    <ws:partial template="{{column.getTemplate(content)}}" item="{{item.getNode()}}" itemData="{{item.getNode()}}"/>
                 </ws:if>
             </div>
         </ws:for>
     </div>
 </ws:if>
-
+<ws:else>
+   <div style="display: none"></div>
+</ws:else>

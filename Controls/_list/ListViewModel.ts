@@ -78,12 +78,15 @@ const _private = {
         return self.isEditing() ? undefined : self.getItemById(markedKey, self.getKeyProperty());
     },
 
-    getMultiSelectClassList(current, checkboxOnHover: boolean): string {
+    getMultiSelectClassList(current, checkboxOnHover: boolean, theme: string): string {
         const isSelected = current.isSelected();
         const checkboxVisible = isSelected !== false && isSelected !== undefined; // так как null - это тоже выбрано
 
         return CssClassList.add('js-controls-ListView__checkbox')
                            .add(EDIT_IN_PLACE_JS_SELECTORS.NOT_EDITABLE)
+                           .add('controls-List_DragNDrop__notDraggable')
+                           .add('js-controls-ColumnScroll__notDraggable')
+                           .add(`controls-CheckboxMarker_inList_theme-${theme}`)
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
                            .compile();
     },
@@ -158,9 +161,47 @@ const _private = {
         itemsModelCurrent.getSwipeAnimation = (): string => itemsModelCurrent.dispItem.getSwipeAnimation();
         itemsModelCurrent.isAdd = itemsModelCurrent.dispItem.isAdd;
         itemsModelCurrent.addPosition = itemsModelCurrent.dispItem.addPosition;
+
+        itemsModelCurrent.isSticked = () => itemsModelCurrent.isStickedMasterItem || itemsModelCurrent.isGroup;
+        itemsModelCurrent.isDragged = () => itemsModelCurrent.isDragging;
+        itemsModelCurrent.getWrapperClasses = this.getWrapperClasses.bind(itemsModelCurrent);
+        itemsModelCurrent.getContentClasses = () => {
+            return `${itemsModelCurrent.spacingClassList} ${itemsModelCurrent.isRightSwiped?.() ? 'controls-ListView__item_rightSwipeAnimation' : ''}`;
+        };
     },
     getSeparatorSizes(options: IListSeparatorOptions): IListSeparatorOptions['rowSeparatorSize'] {
         return options.rowSeparatorSize ? options.rowSeparatorSize.toLowerCase() : null;
+    },
+
+    getWrapperClasses(templateHighlightOnHover: boolean = true,
+                      theme?: string,
+                      cursor: string = 'pointer',
+                      backgroundColorStyle?: string,
+                      style: string = 'default'): string {
+        const hoverBackgroundStyle = this.hoverBackgroundStyle || style;
+        const editingBackgroundStyle = this.getEditingBackgroundStyle();
+        let wrapperClasses = `controls-ListView__itemV ${this.calcCursorClasses(cursor)}`;
+        wrapperClasses += ` controls-ListView__item_${style}`;
+        wrapperClasses += ` controls-ListView__item_${style}_theme-${theme}`;
+        wrapperClasses += ' controls-ListView__item_showActions';
+        wrapperClasses += ' js-controls-ItemActions__swipeMeasurementContainer';
+        wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}`;
+        if (templateHighlightOnHover && !this.isEditing()) {
+            wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}`;
+        }
+        if (this.isEditing()) {
+            wrapperClasses += ` controls-ListView__item_editing_theme-${theme} controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`;
+        }
+        if (this.isDragged()) {
+            wrapperClasses += ` controls-ListView__item_dragging_theme-${theme}`;
+        }
+        if (backgroundColorStyle) {
+            wrapperClasses += ` controls-ListView__item_background_${backgroundColorStyle}_theme-${theme}`;
+        }
+        if (templateHighlightOnHover && this.isActive()) {
+            wrapperClasses += ` controls-ListView__item_active_theme-${theme}`;
+        }
+        return wrapperClasses;
     }
 };
 
@@ -208,7 +249,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         const theme = this.getDisplay() ? this.getDisplay().getTheme() : self._options.theme;
         // New Model compatibility
         _private.addNewModelCompatibilityForItem(itemsModelCurrent);
-
         itemsModelCurrent.itemActionsPosition = this._options.itemActionsPosition;
         itemsModelCurrent._isSelected = itemsModelCurrent.dispItem.isMarked();
         itemsModelCurrent.searchValue = this._options.searchValue;
@@ -219,7 +259,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options.itemPadding);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ?
-            _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover') : '';
+            _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover', theme) : '';
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         // Из Controls/scroll:Container прилетает backgroundStyle='default', нужно применять его только если style тоже default
         itemsModelCurrent.backgroundStyle = this._options.style === 'default' && this._options.backgroundStyle ? this._options.backgroundStyle : this._options.style;
@@ -229,6 +269,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             itemsModelCurrent.isStickyHeader = this._options.stickyHeader;
             itemsModelCurrent.virtualScrollConfig = this._isSupportVirtualScroll();
         }
+        itemsModelCurrent.getEditingBackgroundStyle = () => {
+            const editingConfig = this.getEditingConfig();
+            if (editingConfig) {
+                return editingConfig.backgroundStyle || 'default';
+            }
+            return 'default';
+        };
 
         itemsModelCurrent.getMarkerClasses = (markerClassName = 'default'): string => {
             const style = this._options.style || 'default';
@@ -734,6 +781,13 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setMultiSelectPosition(position: 'default' | 'custom'): void {
         if (this._display) {
             this._display.setMultiSelectPosition(position);
+        }
+    },
+
+    // New Model compatibility
+    setMultiSelectAccessibilityProperty(property: string): void {
+        if (this._display) {
+            this._display.setMultiSelectAccessibilityProperty(property);
         }
     },
 

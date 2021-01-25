@@ -25,7 +25,7 @@ const maxPercentValue = 100;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_slider.less переменные тем оформления}
  *
  * @public
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
  * @author Красильников А.С.
@@ -37,7 +37,7 @@ const maxPercentValue = 100;
  *
  * <a href="/materials/Controls-demo/app/Controls-demo%2fSlider%2fBase%2fIndex">Demo-example</a>.
  * @public
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @class Controls/_slider/Base
  * @mixes Controls/_slider/interface/ISlider
  * @author Колесов В.А.
@@ -98,7 +98,9 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    }
 
    private _setValue(val: number): void {
-      this._notify('valueChanged', [val]);
+      if (this._value !== val) {
+         this._notify('valueChanged', [val]);
+      }
    }
 
    protected _beforeMount(options: ISliderBaseOptions): void {
@@ -133,8 +135,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
    protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
       if (!this._options.readOnly) {
-         this._value = this._getValue(event);
-         this._setValue(this._value);
+         const newValue = this._getValue(event);
+         this._setValue(newValue);
          this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
    }
@@ -144,8 +146,13 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
          const box = this._children.area.getBoundingClientRect();
          const target = this._options.direction === 'vertical' ? dragObject.position.y : dragObject.position.x;
          const ratio = this._getRatio(this._options.direction, target, box, window.pageXOffset, window.pageYOffset);
-         this._value = Utils.calcValue(this._options.minValue, this._options.maxValue, ratio, this._options.precision);
-         this._setValue(this._value);
+         const newValue = Utils.calcValue(
+             this._options.minValue,
+             this._options.maxValue,
+             ratio,
+             this._options.precision
+         );
+         this._setValue(newValue);
       }
    }
 

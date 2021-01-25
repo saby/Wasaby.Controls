@@ -1,6 +1,6 @@
 <Controls.list:BaseControl scope="{{_options}}"
                            moveMarkerOnScrollPaging="{{false}}"
-                           disableVirtualScroll="{{true}}"
+                           plainItemsContainer="{{false}}"
                            _keyDownHandler="{{_keyDownHandler}}"
                            name="baseControl">
     <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partial, потому что изменения только в замыкании функции-->

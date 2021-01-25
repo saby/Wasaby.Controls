@@ -5,6 +5,13 @@ import {generateData} from '../../../DemoHelpers/DataCatalog';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {CrudEntityKey} from 'Types/source';
 
+interface IArrowState {
+    begin: string;
+    prev: string;
+    next: string;
+    end: string;
+}
+
 interface IItem {
     title: string;
     id: number;
@@ -12,15 +19,17 @@ interface IItem {
     count: number;
 }
 
+const MAX_ELEMENTS_COUNT: number = 50;
+
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
     private _dataArray: unknown = generateData({
-        count: 50, beforeCreateItemCallback: (item: IItem) => {
+        count: MAX_ELEMENTS_COUNT, beforeCreateItemCallback: (item: IItem) => {
             item.title = `Запись с ключом ${item.id}.`;
         }
     });
-    private _arrowState: any;
+    private _arrowState: IArrowState;
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -58,7 +67,7 @@ export default class extends Control {
                 this._arrowState.end = 'visible';
                 break;
             case 'End':
-                this._children.list.scrollToItem(49, true, true);
+                this._children.list.scrollToItem(MAX_ELEMENTS_COUNT - 1, true, true);
                 this._arrowState.begin = 'visible';
                 this._arrowState.end = 'readonly';
                 break;

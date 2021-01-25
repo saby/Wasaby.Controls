@@ -29,7 +29,7 @@ let ManagerController;
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_loadingIndicator.less переменные тем оформления}
  *
  * @class Controls/LoadingIndicator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * 
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * @author Красильников А.С.
@@ -65,7 +65,7 @@ let ManagerController;
  *
  *
  * @class Controls/LoadingIndicator
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_LoadingIndicator/interface/ILoadingIndicator
  * 
  * @author Красильников А.С.
@@ -528,9 +528,6 @@ class LoadingIndicator extends Control<ILoadingIndicatorOptions> implements ILoa
         }
         if (this.small) {
             classList.push('controls-loading-indicator_small');
-            if (this.small !== 'yes') {
-                classList.push('controls-loading-indicator_sided controls-loading-indicator_sided-' + this.small);
-            }
         }
         if (this.overlay) {
             const overlayClassName = 'controls-loading-indicator_overlay-' + this._getOverlay(this.overlay);

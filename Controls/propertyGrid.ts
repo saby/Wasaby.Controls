@@ -10,6 +10,9 @@
  * @includes NumberEditor Controls/_propertyGrid/defaultEditors/Number
  * @includes BooleanGroupEditor Controls/_propertyGrid/extendedEditors/BooleanGroup
  * @includes FlatEnumEditor Controls/_propertyGrid/extendedEditors/FlatEnum
+ * @includes TimeIntervalEditor Controls/_propertyGrid/extendedEditors/TimeInterval
+ * @includes CheckboxGroupEditor Controls/_propertyGrid/extendedEditors/CheckboxGroup
+ * @includes DropdownEditor Controls/_propertyGrid/extendedEditors/Dropdown
  * @includes IPropertyGrid Controls/propertyGrid:GroupTemplate
  * @includes IEditor Controls/_propertyGrid/IEditor
  * @includes IProperty Controls/_propertyGrid/IProperty
@@ -28,6 +31,9 @@
  * @includes NumberEditor Controls/_propertyGrid/defaultEditors/Number
  * @includes BooleanGroupEditor Controls/_propertyGrid/extendedEditors/BooleanGroup
  * @includes FlatEnumEditor Controls/_propertyGrid/extendedEditors/FlatEnum
+ * @includes TimeIntervalEditor Controls/_propertyGrid/extendedEditors/TimeInterval
+ * @includes CheckboxGroupEditor Controls/_propertyGrid/extendedEditors/CheckboxGroup
+ * @includes DropdownEditor Controls/_propertyGrid/extendedEditors/Dropdown
  * @includes IPropertyGrid Controls/propertyGrid:GroupTemplate
  * @includes IEditor Controls/_propertyGrid/IEditor
  * @includes IProperty Controls/_propertyGrid/IProperty
@@ -44,6 +50,9 @@ import EnumEditor = require("Controls/_propertyGrid/defaultEditors/Enum");
 import NumberEditor = require("Controls/_propertyGrid/defaultEditors/Number");
 import BooleanGroupEditor = require("Controls/_propertyGrid/extendedEditors/BooleanGroup");
 import FlatEnumEditor = require("Controls/_propertyGrid/extendedEditors/FlatEnum");
+import {default as DropdownEditor} from 'Controls/_propertyGrid/extendedEditors/Dropdown';
+import {default as CheckboxGroupEditor} from 'Controls/_propertyGrid/extendedEditors/CheckboxGroup';
+import {default as TimeIntervalEditor} from 'Controls/_propertyGrid/extendedEditors/TimeInterval';
 
 import IPropertyGrid = require("Controls/_propertyGrid/IPropertyGrid");
 import IEditor = require("Controls/_propertyGrid/IEditor");
@@ -61,6 +70,9 @@ export {
     NumberEditor,
     BooleanGroupEditor,
     FlatEnumEditor,
+    TimeIntervalEditor,
+    CheckboxGroupEditor,
+    DropdownEditor,
     IPropertyGrid,
     IEditor,
     IProperty,

@@ -9,9 +9,9 @@ import fifthColumnTemplate = require('wml!Controls-demo/BreadCrumbs/Scenarios/Fi
 
 import * as MemorySourceFilter from 'Controls-demo/Utils/MemorySourceFilter';
 import {HierarchicalMemory} from 'Types/source';
-import {constants} from 'Env/Env';
 import {Memory} from 'Types/source';
 import {Model} from 'Types/entity';
+import { scenariosImages } from '../Scenarios/images/Images';
 
 class ScenarioSecond extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
@@ -202,7 +202,7 @@ class ScenarioSecond extends Control<IControlOptions> {
                 name: 'Белоконь Дарья',
                 phone: 6377,
                 position: 'Руководитель группы',
-                photo: constants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/Belokon.png',
+                photo: scenariosImages.Belokon,
                 employeeOwes: 2964.00,
                 orgOwes: 1962.00,
                 termInDays: 28,
@@ -275,7 +275,7 @@ class ScenarioSecond extends Control<IControlOptions> {
             }, {
                 id: 4,
                 name: 'Новикова Елена',
-                photo: constants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/NovikovaE.png',
+                photo: scenariosImages.NovikovaE,
                 position: 'Менеджер по работе с партнёрами',
                 phone: '5136',
                 parent: 3,
@@ -303,7 +303,7 @@ class ScenarioSecond extends Control<IControlOptions> {
             }, {
                 id: 9,
                 name: 'Новиков Дмитрий',
-                photo: constants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/Novikov2.png',
+                photo: scenariosImages.Novikov2,
                 position: 'Инженер-программист (ЭО)',
                 phone: '4357',
                 parent: 8,
@@ -321,7 +321,7 @@ class ScenarioSecond extends Control<IControlOptions> {
             }, {
                 id: 12,
                 name: 'Новикова Яна',
-                photo: constants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/NovikovaY.png',
+                photo: scenariosImages.NovikovaY,
                 position: 'Менеджер по продажам',
                 phone: '7435',
                 parent: 11,

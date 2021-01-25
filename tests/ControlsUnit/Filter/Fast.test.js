@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/filter',
+      'Controls/deprecatedFilter',
       'Types/source',
       'Core/core-clone',
       'Types/collection',
@@ -735,7 +735,8 @@ define(
                footerTemplate: 'footerTemplateText',
                emptyText: 'empty text',
                multiSelect: false,
-               selectorTemplate: 'selectorTemplate'
+               selectorTemplate: 'selectorTemplate',
+               navigation: 'navigation'
             };
             var result = filterMod.Fast._private.getItemPopupConfig(properties);
             const resultProps = {...properties};

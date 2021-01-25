@@ -1,4 +1,4 @@
-import BaseCollection, { ItemsFactory, IOptions as IBaseOptions } from '../Collection';
+import BaseCollection, { ItemsFactory, IOptions as IBaseOptions, IItemActionsTemplateConfig } from '../Collection';
 import GroupItem from './GroupItem';
 import * as GridLadderUtil from '../utils/GridLadderUtil';
 import { mixin } from 'Types/util';
@@ -23,7 +23,33 @@ export default class Collection<
 
     setMultiSelectVisibility(visibility: string): void {
         super.setMultiSelectVisibility(visibility);
+
+        if (this.getFooter()) {
+            this.getFooter().setMultiSelectVisibility(visibility);
+        }
+        if (this.getResults()) {
+            this.getResults().setMultiSelectVisibility(visibility);
+        }
+
+        if (this.getHeader()) {
+            this.getHeader().setMultiSelectVisibility(visibility);
+        }
+
         this._$colgroup?.reBuild();
+    }
+
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig) {
+        super.setActionsTemplateConfig(config);
+        if (this.getFooter()) {
+            this.getFooter().setActionsTemplateConfig(config);
+        }
+    }
+
+    setHasMoreData(hasMoreData: boolean): void {
+        super.setHasMoreData(hasMoreData);
+        if (this.getFooter()) {
+            this.getFooter().setHasMoreData(hasMoreData);
+        }
     }
 
     protected _reBuild(reset?: boolean): void {
@@ -56,6 +82,8 @@ export default class Collection<
         return function CollectionItemsFactory(options?: IRowOptions<S>): T {
             options.columns = this._$columns;
             options.colspanCallback = this._$colspanCallback;
+            options.columnSeparatorSize = this._$columnSeparatorSize;
+            options.rowSeparatorSize = this._$rowSeparatorSize;
             return superFactory.call(this, options);
         };
     }

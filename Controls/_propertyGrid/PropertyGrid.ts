@@ -35,7 +35,7 @@ type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_propertyGrid.less переменные тем оформления}
  *
  * @class Controls/_propertyGrid/PropertyGrid
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
  * @demo Controls-demo/PropertyGridNew/Group/Expander/Index
  *
@@ -48,7 +48,7 @@ type TPropertyGridCollection = PropertyGridCollection<PropertyGridCollectionItem
  * You can use the standard editors that are provided with the PropertyGrid or you can use custom editors.
  * By default the propertyGrid will autogenerate all the properties for a given object
  * @class Controls/_propertyGrid/PropertyGrid
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/_propertyGrid/IPropertyGrid
  *
  * @public
@@ -89,11 +89,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     }
 
     protected _beforeUpdate(newOptions: IPropertyGridOptions): void {
-        if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
-            this._listModel.setFilter(this._displayFilter.bind(this));
-        }
-
         if (newOptions.editingObject !== this._options.editingObject) {
             this._listModel.setEditingObject(newOptions.editingObject);
         }
@@ -108,6 +103,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             );
         } else if (newOptions.itemPadding !== this._options.itemPadding) {
             this._listModel.setItemPadding(newOptions.itemPadding);
+        }
+        if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
+            this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
+            this._listModel.setFilter(this._displayFilter.bind(this));
         }
     }
 
@@ -277,8 +276,6 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (!itemActions) {
             return;
         }
-
-        const editingConfig = listModel.getEditingConfig();
         this._itemActionsController.update({
             collection: listModel,
             itemActions,
@@ -291,10 +288,15 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     validate({item}: IPropertyGridValidatorArguments): Array<string | boolean> | boolean {
         const validators = item.getValidators();
         let validatorResult: boolean | string = true;
+        const validatorArgs = {
+            value: item.getPropertyValue(),
+            item: item.getContents(),
+            items: item.getOwner().getCollection()
+        };
         if (validators.length) {
             validators.some((validator) => {
                 if (typeof validator === 'function') {
-                    validatorResult = validator(item.getPropertyValue());
+                    validatorResult = validator(validatorArgs);
                     if (typeof validatorResult === 'string') {
                         return true;
                     }

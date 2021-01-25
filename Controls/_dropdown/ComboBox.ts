@@ -2,7 +2,7 @@ import rk = require('i18n!Controls');
 import {Control, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_dropdown/ComboBox/ComboBox');
 import * as Utils from 'Types/util';
-import {prepareEmpty, loadItems} from 'Controls/_dropdown/Util';
+import {prepareEmpty, loadItems, isEmptyItem} from 'Controls/_dropdown/Util';
 import {EventUtils} from 'UI/Events';
 import Controller from 'Controls/_dropdown/_Controller';
 import {BaseDropdown, DropdownReceivedState} from 'Controls/_dropdown/BaseDropdown';
@@ -35,7 +35,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_dropdownPopup.less переменные тем оформления dropdownPopup}
  *
  * @class Controls/_dropdown/ComboBox
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ISource
  * @implements Controls/_dropdown/interface/IBaseDropdown
  * @implements Controls/_menu/interface/IMenuBase
@@ -59,7 +59,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * The full list of options is displayed when you click on the control.
  * <a href="/materials/Controls-demo/app/Controls-demo%2FCombobox%2FComboboxVDom">Demo-example</a>.
  * @class Controls/_dropdown/ComboBox
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @implements Controls/_interface/ISource
  * @implements Controls/interface/IItemTemplate
  * @implements Controls/_interface/IFilterChanged
@@ -74,18 +74,21 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 class ComboBox extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _notifyHandler: Function = EventUtils.tmplNotify;
+   protected _controller: Controller;
    protected _borderStyle: string = '';
    protected _countItems: number;
    protected _readOnly: boolean;
    protected _selectedItem: Model;
+   protected _isEmptyItem: boolean;
+   protected _value: string;
+   protected _placeholder: string;
 
    _beforeMount(options: IComboboxOptions,
                 context: object,
-                receivedState: DropdownReceivedState): void | Promise<DropdownReceivedState> {
+                receivedState: DropdownReceivedState): Promise<void | DropdownReceivedState> {
       this._placeholder = options.placeholder;
       this._value = options.value;
       this._readOnly = options.readOnly;
-      this._setText = this._setText.bind(this);
       this._targetPoint = {
          vertical: 'bottom'
       };
@@ -124,7 +127,7 @@ class ComboBox extends BaseDropdown {
             close: this._onClose,
             open: this._onOpen,
             allowPin: false,
-            selectedItemsChangedCallback: this._setText,
+            selectedItemsChangedCallback: this._setText.bind(this, options),
             theme: options.theme,
             itemPadding: {
                right: 'menu-xs',
@@ -175,19 +178,20 @@ class ComboBox extends BaseDropdown {
 
    _selectedItemsChangedHandler(selectedItems): void {
       const key = getPropValue(selectedItems[0], this._options.keyProperty);
-      this._setText(selectedItems);
+      this._setText(this._options, selectedItems);
       this._notify('valueChanged', [this._value]);
       this._notify('selectedKeyChanged', [key]);
    }
 
-   _setText(selectedItems): void {
-      this._isEmptyItem = getPropValue(selectedItems[0], this._options.keyProperty) === null || selectedItems[0] === null;
+   _setText({emptyText, emptyKey, keyProperty, displayProperty, placeholder}: Partial<IComboboxOptions>,
+            selectedItems): void {
+      this._isEmptyItem = getPropValue(selectedItems[0], keyProperty) === emptyKey || selectedItems[0] === null;
       if (this._isEmptyItem) {
          this._value = '';
-         this._placeholder = prepareEmpty(this._options.emptyText);
+         this._placeholder = prepareEmpty(emptyText);
       } else {
-         this._value = String(getPropValue(selectedItems[0], this._options.displayProperty) || '');
-         this._placeholder = this._options.placeholder;
+         this._value = String(getPropValue(selectedItems[0], displayProperty) || '');
+         this._placeholder = placeholder;
       }
    }
 
@@ -251,7 +255,8 @@ class ComboBox extends BaseDropdown {
          inlineHeight: 'default',
          fontSize: 'm',
          fontColorStyle: 'default',
-         tooltip: ''
+         tooltip: '',
+         emptyKey: null
       };
    }
 }

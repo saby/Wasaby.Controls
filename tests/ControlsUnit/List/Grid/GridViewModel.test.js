@@ -790,7 +790,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._options.multiSelectVisibility = 'visible';
             let data = gridViewModel.getItemDataByItem(dummyDispitem);
 
-            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable ' +
+                'controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default ' +
+                'controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
          });
 
          it('getMultiSelectClassList hidden', function() {
@@ -806,14 +808,14 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel._options.multiSelectVisibility = 'onhover';
             gridViewModel.setSelectedItems([gridViewModel.getItemById(123, 'id')], true);
             let data = gridViewModel.getItemDataByItem(gridViewModel.getItemById('123', 'id'));
-            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
          });
 
          it('getMultiSelectClassList onhover unselected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
             let data = gridViewModel.getItemDataByItem(dummyDispitem);
-            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-ListView__checkbox-onhover controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
+            assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default controls-ListView__checkbox-onhover controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
          });
 
          it('getItemColumnCellClasses', function() {
@@ -2565,17 +2567,19 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
       describe('getitemDataByItem should resolve showEditArrow', () => {
          let gridViewModel;
          let contentsKey;
+         let editArrowCfg;
 
          beforeEach(() => {
             contentsKey = null;
-            gridViewModel = new gridMod.GridViewModel({
+            editArrowCfg = {
                ...cfg,
                showEditArrow: true,
                editArrowVisibilityCallback: function(contents) {
                   contentsKey = contents.getKey();
                   return false;
                }
-            });
+            };
+            gridViewModel = new gridMod.GridViewModel(editArrowCfg);
          });
 
          it('should resolve showEditArrow', () => {
@@ -2602,6 +2606,28 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             const data = gridViewModel.getItemDataByItem(dispItem);
             assert.equal(contentsKey, '123');
             assert.isFalse(data.showEditArrow);
+         });
+
+         it('should not call visibilityCallback for GroupItem', () => {
+            const item = {
+               '[Controls/_display/GroupItem]': true,
+               getContents: () => null
+            };
+            const spyEditArrowVisibilityCallback = sinon.spy(editArrowCfg, 'editArrowVisibilityCallback');
+            gridMod.GridViewModel._private.resolveEditArrowVisibility(item, editArrowCfg);
+            sinon.assert.notCalled(spyEditArrowVisibilityCallback);
+            spyEditArrowVisibilityCallback.restore();
+         });
+
+         it('should not call visibilityCallback for SearchSeparator', () => {
+            const item = {
+               '[Controls/_display/SearchSeparator]': true,
+               getContents: () => null
+            };
+            const spyEditArrowVisibilityCallback = sinon.spy(editArrowCfg, 'editArrowVisibilityCallback');
+            gridMod.GridViewModel._private.resolveEditArrowVisibility(item, editArrowCfg);
+            sinon.assert.notCalled(spyEditArrowVisibilityCallback);
+            spyEditArrowVisibilityCallback.restore();
          });
       });
 

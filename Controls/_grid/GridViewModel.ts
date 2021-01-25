@@ -37,6 +37,10 @@ import {IPreparedColumn, prepareColumns} from 'Controls/Utils/GridColumnsColspan
 const FIXED_HEADER_ZINDEX = 4;
 const STICKY_HEADER_ZINDEX = 3;
 
+const MONEY_RENDER = 'wml!Controls/_grid/layout/types/money';
+const NUMBER_RENDER = 'wml!Controls/_grid/layout/types/number';
+const STRING_RENDER = 'wml!Controls/_grid/layout/types/string';
+
 interface IGridSeparatorOptions {
     rowSeparatorSize?: null | 's' | 'l';
     columnSeparatorSize?: null | 's';
@@ -688,6 +692,9 @@ var
         },
         resolveEditArrowVisibility(item, options) {
             let contents = item.getContents();
+            if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/SearchSeparator]']) {
+                return;
+            }
             if (!options.editArrowVisibilityCallback) {
                 return options.showEditArrow;
             }
@@ -1685,6 +1692,25 @@ var
 
             current.isHovered = !!self._model.getHoveredItem() && self._model.getHoveredItem().getId() === current.key;
 
+            current.hasCellContentRender = (column) => {
+                return Boolean(
+                    column.displayType ||
+                    column.textOverflow ||
+                    column.fontColorStyle ||
+                    column.fontSize
+                );
+            };
+
+            current.getCellContentRender = (column) => {
+                const displayType = column.displayType;
+
+                switch (displayType) {
+                    case 'money': return MONEY_RENDER;
+                    case 'number': return NUMBER_RENDER;
+                    default: return STRING_RENDER;
+                }
+            };
+
             // current.index === -1 если записи ещё нет в проекции/рекордсете. такое возможно при добавлении по месту
             // лесенка не хранится для элементов вне текущего диапазона startIndex - stopIndex
             if (stickyColumn &&
@@ -1719,8 +1745,9 @@ var
 
             current.columnIndex = 0;
 
+            const origGetVersion = current.getVersion;
             current.getVersion = function() {
-                return self._calcItemVersion(current.item, current.key, current.index);
+                return origGetVersion() + self._calcItemVersion(current.item, current.key, current.index);
             };
 
             current.shouldDrawLadderContent = (stickyProperty: string, ladderProperty: string) => {
@@ -1829,6 +1856,8 @@ var
                            return _private.calcItemColumnVersion(self, current.getVersion(), this.columnIndex, this.index);
                         },
                         _preferVersionAPI: true,
+                        getCellContentRender: current.getCellContentRender,
+                        hasCellContentRender: current.hasCellContentRender,
                         gridCellStyles: '',
                         tableCellStyles: '',
                         getItemActionPositionClasses: current.getItemActionPositionClasses,

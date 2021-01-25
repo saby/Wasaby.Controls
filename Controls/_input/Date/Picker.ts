@@ -16,11 +16,12 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_datePicker.less переменные тем оформления dateRange}
  *
  * @class Controls/_input/Date/Picker
- * @extends Core/Control
+ * @extends UI/Base:Control
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/interface/IInputTag
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/interface/IInputPlaceholder
  * @mixes Controls/_input/interface/IValueValidators
@@ -49,7 +50,7 @@ class Picker extends Control<IControlOptions> {
                 dayTemplate: this._options.dayTemplate,
                 headerType: 'input',
                 closeButtonEnabled: true,
-                range: this._options.range,
+                ranges: this._options.ranges,
                 startValueValidators: this._options.valueValidators
             }
         };

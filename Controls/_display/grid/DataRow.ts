@@ -13,10 +13,10 @@ export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupp
     protected _$columnItems: Array<DataCell<T, this>>;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
-    readonly LadderSupport = true;
-    readonly Markable = true;
-    readonly SelectableItem = true;
-    readonly DraggableItem = true;
+    readonly LadderSupport: boolean = true;
+    readonly Markable: boolean = true;
+    readonly SelectableItem: boolean = true;
+    readonly DraggableItem: boolean = true;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -27,7 +27,7 @@ export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupp
         return templateFromProperty || userTemplate || this.getDefaultTemplate();
     }
 
-    _initializeColumns(): void {
+    protected _initializeColumns(): void {
         super._initializeColumns();
 
         if (this._$columns && this.hasItemActionsSeparatedCell()) {

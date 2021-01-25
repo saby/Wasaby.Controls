@@ -419,11 +419,15 @@ define(
             };
 
             // emptyText + selectedKeys = [null]
-            dropdownController._updateSelectedItems('123', [null], 'id', selectedItemsChangedCallback);
+            dropdownController._updateSelectedItems([null], 'id', '123', null, selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
 
             // emptyText + selectedKeys = []
-            dropdownController._updateSelectedItems('123', [], 'id', selectedItemsChangedCallback);
+            dropdownController._updateSelectedItems([], 'id', '123', null, selectedItemsChangedCallback);
+            assert.deepEqual(selectedItems, [null]);
+
+            // emptyText + selectedKeys = [] + emptyKey = 100
+            dropdownController._updateSelectedItems([], 'id', '123', 100, selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [null]);
 
             // selectedKeys = []
@@ -435,7 +439,7 @@ define(
                ]
             });
             dropdownController._items = newItems;
-            dropdownController._updateSelectedItems(undefined, [], 'id', selectedItemsChangedCallback);
+            dropdownController._updateSelectedItems([], 'id', undefined, null, selectedItemsChangedCallback);
             assert.deepEqual(selectedItems, [newItems.at(0)]);
          });
 

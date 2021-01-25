@@ -137,7 +137,7 @@ export default interface IDraggable {
  * @param {Array<String>} items Идентификаторы перемещаемых элементов.
  * @param {string|number} draggedKey Идентификатор элемента, за который начали drag-n-drop.
  * @remark Чтобы начать перемещение drag'n'drop из события, необходимо вернуть объект перемещения. Событие срабатывает у контейнера, в котором началось перемещение.
- * Отличается от события {@link /docs/js/Controls/tile/IDraggable/events/dragEnter/ dragEnter}, которое срабатывает у контейнера, в который была перемещена запись.
+ * Отличается от события {@link /docs/js/Controls/interface/IDraggable/events/dragEnter/ dragEnter}, которое срабатывает у контейнера, в который была перемещена запись.
  * @example
  * В следующем примере показано, как начать перемещение элементов с помощью drag'n'drop, если все элементы имеют одинаковый тип.
  * <pre class="brush: html; highlight: [5]">
@@ -153,7 +153,7 @@ export default interface IDraggable {
  * // JavaScript
  * _viewSource: null,
  * _dragStart: function(event, items) {
- *    var eventResult;
+ *    var eventResult = false;
  *    if (this._isSameTypes(items)) {
  *       eventResult = new ItemsEntity({
  *          items: items
@@ -190,7 +190,7 @@ export default interface IDraggable {
  *    Control.extend({
  *       ...
  *       _dragStart: function(event, items) {
- *          var eventResult;
+ *          var eventResult = false;
  *          if (this._isSameTypes(items)) {
  *             eventResult = new ItemsEntity({
  *                items: items
@@ -299,7 +299,7 @@ export default interface IDraggable {
  * @param {Controls/_dragnDrop/Entity/Items} entity Объект перемещения.
  * @returns {DragEnterResult}
  * @remark Событие позволяет перемещать элементы в текущий список из другого списка. Событие срабатывает у контейнера, в который была перемещена запись.
- * Отличается от события {@link /docs/js/Controls/tile/IDraggable/events/dragStart/?v=19.500 dragStart}, которое срабатывает у контейнера, из которого началось перемещение записи.
+ * Отличается от события {@link /docs/js/Controls/list/View/events/dragStart/?v=21.1000 dragStart}, которое срабатывает у контейнера, из которого началось перемещение записи.
  * @example
  * В следующем примере показано, как перемещать в список объекты определенного типа.
  * <pre class="brush: html; highlight: [4]">

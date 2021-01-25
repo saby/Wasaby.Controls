@@ -7,13 +7,14 @@
     }) }}">
     <ws:for data="gridColumn in item.getColumns()">
         <td attr:class="{{ gridColumn.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
-            attr:style="{{ gridColumn.getWrapperStyles() }}"
+            attr:style="{{ gridColumn.getWrapperStyles(containerSize) }}"
             attr:colspan="{{ gridColumn.getColspan() }}"
             attr:rowspan="{{ gridColumn.getRowspan() }}">
             <div class="{{ gridColumn.getRelativeCellWrapperClasses(theme) }}">
                 <div if="{{ gridColumn.Markable && gridColumn.shouldDisplayMarker(marker, markerPosition) }}"
                      attr:class="{{ gridColumn.getMarkerClasses(theme, style, markerPosition) }}"></div>
                 <ws:partial template="{{ gridColumn.getTemplate(multiSelectTpl) }}"
+                            scope="{{ gridColumn.getColumnConfig().templateOptions }}"
                             attr:key="{{ gridColumn.getInstanceId() }}"
                             gridColumn="{{ gridColumn }}"
                             column="{{ gridColumn.getColumnConfig() }}"
@@ -24,6 +25,8 @@
                             cursor="{{ cursor }}"
                             backgroundColorStyle="{{ backgroundColorStyle }}"
                             highlightOnHover="{{ highlightOnHover }}"
+                            itemActionsTemplate="{{ itemActionsTemplate }}"
+                            itemActionsClass="{{ itemActionsClass }}"
                             templateHighlightOnHover="{{ templateHighlightOnHover }}"
                             tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                             tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
@@ -36,7 +39,7 @@
                                         key="{{ (item || itemData).key }}"
                                         checkboxReadOnly="{{ checkboxReadOnly }}"/>
                     <ws:multiSelectTemplate>
-                        <ws:partial template="{{multiSelectTpl}}" attr:class="{{(item || itemData).getMultiSelectClasses(theme)}}">
+                        <ws:partial template="{{multiSelectTpl}}">
                             <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
                         </ws:partial>
                     </ws:multiSelectTemplate>

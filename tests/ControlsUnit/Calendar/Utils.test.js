@@ -94,47 +94,47 @@ define([
          const tests = [{
             baseDate: new Date(2018, 0, 15),
             date: new Date(2018, 0, 16),
-            quantum: {},
+            ranges: {},
             ret: [new Date(2018, 0, 15), new Date(2018, 0, 16)]
          }, {
             baseDate: new Date(2018, 0, 16),
             date: new Date(2018, 0, 15),
-            quantum: {},
+            ranges: {},
             ret: [new Date(2018, 0, 15), new Date(2018, 0, 16)]
          }, {
             baseDate: new Date(2018, 0, 15),
             date: new Date(2018, 0, 16),
-            quantum: {days: [1]},
+            ranges: { days: [1] },
             ret: [new Date(2018, 0, 15), new Date(2018, 0, 15)]
          }, {
             baseDate: new Date(2018, 0, 16),
             date: new Date(2018, 0, 15),
-            quantum: {days: [1]},
+            ranges: { days: [1] },
             ret: [new Date(2018, 0, 16), new Date(2018, 0, 16)]
          }, {
             baseDate: new Date(2018, 0, 16),
             date: new Date(2018, 0, 17),
-            quantum: {weeks: [1]},
+            ranges: { weeks: [1] },
             ret: [new Date(2018, 0, 15), new Date(2018, 0, 21)]
          }, {
             baseDate: new Date(2018, 0, 17),
             date: new Date(2018, 0, 16),
-            quantum: {weeks: [1]},
+            ranges: { weeks: [1] },
             ret: [new Date(2018, 0, 15), new Date(2018, 0, 21)]
          }, {
             baseDate: new Date(2018, 0, 16),
             date: new Date(2018, 0, 17),
-            quantum: {months: [1]},
+            ranges: { months: [1] },
             ret: [new Date(2018, 0, 1), new Date(2018, 0, 31)]
          }, {
             baseDate: new Date(2018, 0, 17),
             date: new Date(2018, 0, 16),
-            quantum: {months: [1]},
+            ranges: { months: [1] },
             ret: [new Date(2018, 0, 1), new Date(2018, 0, 31)]
          }];
          tests.forEach(function(test) {
-            it(`updateRangeByQuantum(${test.baseDate}, ${test.date}, ${test.quantum})`, function() {
-               assert.deepEqual(dateRange.Utils.updateRangeByQuantum(test.baseDate, test.date, test.quantum), test.ret);
+            it(`updateRangeByQuantum(${test.baseDate}, ${test.date}, ${test.ranges})`, function() {
+               assert.deepEqual(dateRange.Utils.updateRangeByQuantum(test.baseDate, test.date, test.ranges), test.ret);
             });
          });
       });

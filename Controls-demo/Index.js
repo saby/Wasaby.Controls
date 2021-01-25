@@ -2,13 +2,13 @@
  * Created by kraynovdo on 25.01.2018.
  */
 define('Controls-demo/Index', [
-   'Core/Control',
+   'UI/Base',
    'wml!Controls-demo/Index',
    'Application/Initializer',
    'Application/Env',
    'Core/Deferred',
    'Env/Env'
-], function (BaseControl,
+], function (Base,
              template,
              AppInit,
              AppEnv,
@@ -17,7 +17,7 @@ define('Controls-demo/Index', [
 ) {
    'use strict';
 
-   var ModuleClass = BaseControl.extend(
+   var ModuleClass = Base.Control.extend(
       {
          _template: template,
          _beforeMount: function() {

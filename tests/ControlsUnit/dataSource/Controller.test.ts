@@ -106,11 +106,11 @@ function getMemoryWithHierarchyItems(): Memory {
     });
 }
 
-function getPagingNavigation(hasMore: boolean = false): INavigationOptionValue<INavigationPageSourceConfig> {
+function getPagingNavigation(hasMore: boolean = false, pageSize: number = 1): INavigationOptionValue<INavigationPageSourceConfig> {
     return {
         source: 'page',
         sourceConfig: {
-            pageSize: 1,
+            pageSize,
             page: 0,
             hasMore
         }
@@ -249,6 +249,38 @@ describe('Controls/dataSource:SourceController', () => {
             await controller.load('down');
             ok(controller.getItems().getCount() === 4);
             ok(controller.getItems().at(2).get('title') === 'Aleksey');
+        });
+
+        it('load with root in arguments and deepReload, expandedItems in options',  async () => {
+            const controller = getController({
+                navigation: {
+                    source: 'page',
+                    sourceConfig: {
+                        pageSize: 2,
+                        hasMore: false
+                    }
+                },
+                source: new Memory({
+                    keyProperty: 'key',
+                    data: hierarchyItems,
+                    filter: filterByRoot
+                }),
+                parentProperty: 'parent',
+                deepReload: true,
+                expandedItems: [3]
+            });
+
+            await controller.load(null, 0);
+            ok(controller.getItems().getCount() === 2);
+        });
+
+        it('load with multiNavigation and without extendedItems',  async () => {
+            const pageSize = 3;
+            const navigation = getPagingNavigation(false, pageSize);
+            navigation.sourceConfig.multiNavigation = true;
+            const controller = getController({...getControllerOptions(), navigation});
+            const loadedItems = await controller.reload();
+            ok((loadedItems as RecordSet).getCount() === pageSize);
         });
     });
 

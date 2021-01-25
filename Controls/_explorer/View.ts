@@ -1,10 +1,9 @@
-import Control = require('Core/Control');
+import {Control} from 'UI/Base';
 import template = require('wml!Controls/_explorer/View/View');
 import cInstance = require('Core/core-instance');
 import {EventUtils} from 'UI/Events';
 import randomId = require('Core/helpers/Number/randomId');
 import {SearchGridViewModel, SearchView, TreeGridView, ViewModel as TreeGridViewModel} from 'Controls/treeGrid';
-import {factory} from 'Types/chain';
 import {constants} from 'Env/Env';
 import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
@@ -49,6 +48,8 @@ var
          setRoot: function(self, root, dataRoot = null) {
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
+            } else {
+               self._potentialMarkedKey = root;
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
@@ -377,7 +378,7 @@ var
     * @demo Controls-demo/Explorer/Search
     *
     * @class Controls/_explorer/View
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
@@ -413,7 +414,7 @@ var
     * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
     *
     * @class Controls/_explorer/View
-    * @extends Core/Control
+    * @extends UI/Base:Control
     * @implements Controls/_interface/IErrorController
     * @mixes Controls/_interface/ISource
     * @mixes Controls/interface/ITreeGridItemTemplate
@@ -517,6 +518,14 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
+
+         // Мы не должны ставить маркер до проваливания, т.к. это лишняя синхронизация.
+         // Но если отменили проваливание, то нужно поставить маркер.
+         if (this._potentialMarkedKey !== undefined && !isRootChanged) {
+            this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
+         }
+         this._potentialMarkedKey = undefined;
+
          const loadedBySourceController =
              cfg.sourceController &&
              ((isSearchViewMode && cfg.searchValue && cfg.searchValue !== this._options.searchValue) ||
@@ -739,7 +748,7 @@ var
       // todo removed or documented by task:
       // https://online.sbis.ru/opendoc.html?guid=24d045ac-851f-40ad-b2ba-ef7f6b0566ac
       toggleExpanded: function(id) {
-         this._children.treeControl.toggleExpanded(id);
+         return this._children.treeControl.toggleExpanded(id);
       },
 
       // region mover
@@ -836,6 +845,7 @@ var
     * @name Controls/_explorer/View#tileItemTemplate
     * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
     * @default undefined
+    * @markdown
     * @remark
     * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
     *

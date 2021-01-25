@@ -397,17 +397,8 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
             if (match.length >= linkMaxLenght) {
                 nodeToPush = match;
             } else if (link) {
-                const isEndingPartOfDomain = characterRegExp.test(ending) && link === simpleLinkPrefix;
-                if (isEndingPartOfDomain) {
-                    simpleLinkDomain += ending;
-                }
-                const wrongDomain = simpleLinkDomain && correctTopLevelDomainNames.indexOf(simpleLinkDomain) === -1;
-                hasAnyLink = hasAnyLink || !wrongDomain;
-                link = link + ending;
-                nodeToPush = wrongDomain ? match : createLinkNode(
-                    (simpleLinkPrefix ? 'http://' : '') + link,
-                    link
-                );
+               [hasAnyLink, nodeToPush] = normalizeLink(link, simpleLinkDomain, ending,
+                  simpleLinkPrefix, match, true);
             } else if (email) {
                 const isEndingPartOfEmail = characterRegExp.test(ending);
                 if (isEndingPartOfEmail) {
@@ -432,6 +423,68 @@ export function wrapLinksInString(stringNode: string, parentNode: any[]): any[]|
         }
     }
     return hasAnyLink ? result : stringNode;
+}
+
+/**
+ * Ищет в строке ссылки и возвращает массив найденных ссылок
+ * @param {string} string
+ * @return {string[]}
+ */
+export function getLinks(string: string): string[] {
+   const result: string[] = [];
+   let isCorrectLink: boolean = false;
+   let linkParseResult = linkParseRegExp.exec(string);
+
+   while (linkParseResult !== null) {
+      let [match, , , linkToCheck, linkPrefix, linkDomain, ending] = linkParseResult;
+      let linkToPush: string[] | string;
+
+      if (linkToCheck) {
+         [isCorrectLink, linkToPush] = normalizeLink(linkToCheck, linkDomain, ending,
+            linkPrefix, match, false);
+
+         if (isCorrectLink && typeof linkToPush === 'string') {
+            result.push(linkToPush);
+         }
+      }
+
+      linkParseResult = linkParseRegExp.exec(string);
+   }
+
+   return result;
+}
+
+/**
+ * Функция проверяет корректность параметров для формирования ссылки
+ * и формирует на их основе верную ссылку
+ * @param {string} linkToCheck
+ * @param {string} linkDomain
+ * @param {string} ending
+ * @param {string} linkPrefix
+ * @param {string} match
+ * @param {boolean} needToCreateLinkNode
+ * @return {boolean, string | string[]}
+ */
+export function normalizeLink(linkToCheck: string, linkDomain: string, ending: string,
+   linkPrefix: string, match: string, needToCreateLinkNode: boolean):
+   [boolean, string | string[]] {
+   const isEndingPartOfDomain = characterRegExp.test(ending) && linkToCheck === linkPrefix;
+   if (isEndingPartOfDomain) {
+      linkDomain += ending;
+   }
+   const isWrongDomain = linkDomain && correctTopLevelDomainNames.indexOf(linkDomain) === -1;
+   const isCorrectLink = !isWrongDomain;
+   linkToCheck = linkToCheck + ending;
+
+   if (needToCreateLinkNode) {
+      const result = isWrongDomain ? match : createLinkNode(
+         (linkPrefix ? 'http://' : '') + linkToCheck, linkToCheck);
+   
+      return [isCorrectLink, result];
+   }
+
+   const result = isWrongDomain ? match : linkPrefix ? 'http://' + linkToCheck : '' + linkToCheck;
+   return [isCorrectLink, result];
 }
 
 export function clearNeedDecorateGlobals() {

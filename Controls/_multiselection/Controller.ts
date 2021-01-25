@@ -13,6 +13,7 @@ import {
 } from './interface';
 import { CrudEntityKey } from 'Types/source';
 import clone = require('Core/core-clone');
+import { isEqual } from 'Types/object';
 
 /**
  * Контроллер множественного выбора
@@ -27,6 +28,8 @@ export class Controller {
    private _strategy: ISelectionStrategy;
    private _limit: number|undefined;
    private _searchValue: string;
+   private _filter: any;
+   private _filterChanged: boolean;
 
    private get _selection(): ISelection {
       return {
@@ -45,6 +48,7 @@ export class Controller {
       this._excludedKeys = options.excludedKeys.slice();
       this._strategy = options.strategy;
       this._searchValue = options.searchValue;
+      this._filter = options.filter;
    }
 
    /**
@@ -55,6 +59,11 @@ export class Controller {
    updateOptions(options: ISelectionControllerOptions): void {
       this._strategy.update(options.strategyOptions);
       this._searchValue = options.searchValue;
+
+      if (!isEqual(this._filter, options.filter)) {
+         this._filter = options.filter;
+         this._filterChanged = true;
+      }
 
       if (this._model !== options.model) {
          this._model = options.model;
@@ -75,6 +84,12 @@ export class Controller {
     * @void
     */
    setSelection(selection: ISelection): void {
+      // Если сбросили выбор, значит закончили "сессию" выбора и нас не интересует последнее изменение фильтра
+      if (!selection.selected.length && !selection.excluded.length) {
+         this._filterChanged = false;
+         this._strategy.reset();
+      }
+
       this._selection = selection;
       this._updateModel(selection);
    }
@@ -119,7 +134,7 @@ export class Controller {
 
    /**
     * Возвращает количество выбранных элементов
-    * @param {ISelection} selection Список выбранных записей, по которому посчитать кол-во выбранных элементов.
+    * @param {ISelection} selection Список выбранных записей, по которому посчитаем кол-во выбранных элементов.
     * Если не передан то будет считать по состоянию контроллера
     */
    getCountOfSelected(selection?: ISelection): number|null {
@@ -130,11 +145,12 @@ export class Controller {
     * Проверяет, что были выбраны все записи.
     * @param {boolean} [byEveryItem = true] true - проверять выбранность каждого элемента по отдельности.
     *  false - проверка происходит по наличию единого признака выбранности всех элементов.
+    * @param {ISelection} selection Список выбранных записей, по которому посчитаем признак isAllSelected.
     * @return {ISelection}
     */
-   isAllSelected(byEveryItem: boolean = true): boolean {
+   isAllSelected(byEveryItem: boolean = true, selection?: ISelection): boolean {
       return this._strategy.isAllSelected(
-         this._selection,
+         selection || this._selection,
          this._model.getHasMoreData(),
          this._model.getCount(),
          byEveryItem
@@ -179,7 +195,8 @@ export class Controller {
     * @return {ISelection}
     */
    selectAll(): ISelection {
-      return this._strategy.selectAll(this._selection, this._limit);
+      const initSelection = this._filterChanged ? {selected: [], excluded: []} : this._selection;
+      return this._strategy.selectAll(initSelection, this._limit);
    }
 
    /**
@@ -187,7 +204,8 @@ export class Controller {
     * @return {ISelection}
     */
    toggleAll(): ISelection {
-      return this._strategy.toggleAll(this._selection, this._model.getHasMoreData());
+      const initSelection = this._filterChanged ? {selected: [], excluded: []} : this._selection;
+      return this._strategy.toggleAll(initSelection, this._model.getHasMoreData());
    }
 
    /**
@@ -293,6 +311,7 @@ export class Controller {
       this._excludedKeys = null;
       this._limit = null;
       this._searchValue = null;
+      this._filter = null;
    }
 
    /**

@@ -24,11 +24,20 @@ type ValidResult = boolean|null|Promise<boolean>|string[];
  * @remark
  * Подробнее о работе с валидацией читайте {@link /doc/platform/developmentapl/interface-development/forms-and-validation/validation/ здесь}.
  * @class Controls/_validate/Container
- * @extends Core/Control
- * 
+ * @extends UI/Base:Control
+ *
  * @public
  * @author Красильников А.С.
  */
+
+/**
+ * @event Происходит после заверешения валидации контейнера.
+ * @name Controls/_validate/Container#validateFinished
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {null|Boolean|Array.<String>} validationResult Результат валидации.
+ * @see validate
+ */
+
 class ValidateContainer extends Control<IValidateContainerOptions> {
     _template: TemplateFunction = template;
     _isOpened: boolean = false;
@@ -81,6 +90,7 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
                 if (this._isOpened && isValid) {
                     this._forceCloseInfoBox();
                 }
+                this._notify('validateFinished', [validationResult]);
                 resolve(validationResult);
             });
         });
@@ -154,13 +164,14 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
             this._closeInfoBox();
         }
     }
-    protected _valueChangedHandler(event: Event, value: any): void {
+    protected _valueChangedHandler(event: Event, value: any, displayValue?: any): void {
         // We clean validation, if the value has changed.
         // But some controls notify valueChanged if the additional data has changed.
         // For example, input fields notify 'valueChanged' , when displayValue has changed, but value hasn't changed.
         if (this._currentValue !== value) {
             this._currentValue = value;
-            this._notify('valueChanged', [value]);
+            event.stopImmediatePropagation();
+            this._notify('valueChanged', [value, displayValue]);
             this._cleanValid();
         }
     }

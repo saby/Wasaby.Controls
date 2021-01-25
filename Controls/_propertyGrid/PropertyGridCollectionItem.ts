@@ -63,6 +63,10 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return '';
     }
 
+    getValidateTemplateOptions(): Record<string, any> {
+        return this.getEditorOptions().validateTemplateOptions || {};
+    }
+
     getValidators(): Function[] | null {
         return this.getEditorOptions().validators;
     }

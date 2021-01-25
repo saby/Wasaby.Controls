@@ -72,14 +72,14 @@ describe('Controls/search:ControllerClass', () => {
 
    let sourceController: SourceController;
    let controllerClass: ControllerClass;
-   let getFilterSpy: SinonSpy;
+   let loadSpy: SinonSpy;
 
    beforeEach(() => {
       sourceController = getSourceController({});
       controllerClass = getControllerClass({
          sourceController
       });
-      getFilterSpy = sandbox.spy(sourceController, 'setFilter');
+      loadSpy = sandbox.spy(sourceController, 'load');
    });
 
    afterEach(() => {
@@ -95,7 +95,7 @@ describe('Controls/search:ControllerClass', () => {
       };
       controllerClass.search('testValue');
 
-      assert.isTrue(getFilterSpy.withArgs(filter).called);
+      assert.isTrue(loadSpy.withArgs(undefined, undefined, filter).called);
    });
 
    describe('with hierarchy', () => {
@@ -104,8 +104,8 @@ describe('Controls/search:ControllerClass', () => {
             testParam: 'testValue',
             testParent: 'testRoot',
             payload: 'something',
-            'Разворот': 'С разворотом',
-            'usePages': 'full'
+            Разворот: 'С разворотом',
+            usePages: 'full'
          };
          controllerClass._options.parentProperty = 'testParent';
          controllerClass._root = 'testRoot';
@@ -113,11 +113,11 @@ describe('Controls/search:ControllerClass', () => {
 
          controllerClass.search('testValue');
 
-         assert.isTrue(getFilterSpy.withArgs(filter).called);
-         getFilterSpy.resetHistory();
+         assert.isTrue(loadSpy.withArgs(undefined, undefined, filter).called);
+         loadSpy.resetHistory();
 
          controllerClass.reset();
-         assert.isTrue(getFilterSpy.withArgs({
+         assert.isTrue(loadSpy.withArgs(undefined, undefined, {
             payload: 'something'
          }).called);
       });
@@ -132,11 +132,11 @@ describe('Controls/search:ControllerClass', () => {
 
          controllerClass.search('testValue');
 
-         assert.isTrue(getFilterSpy.withArgs(filter).called);
-         getFilterSpy.resetHistory();
+         assert.isTrue(loadSpy.withArgs(undefined, undefined, filter).called);
+         loadSpy.resetHistory();
 
          controllerClass.reset();
-         assert.isTrue(getFilterSpy.withArgs({
+         assert.isTrue(loadSpy.withArgs(undefined, undefined, {
             payload: 'something'
          }).called);
       });
@@ -149,11 +149,11 @@ describe('Controls/search:ControllerClass', () => {
       };
       controllerClass.search('testValue');
 
-      assert.isTrue(getFilterSpy.withArgs(filter).called);
+      assert.isTrue(loadSpy.withArgs(undefined, undefined, filter).called);
 
       controllerClass.reset();
 
-      assert.isTrue(getFilterSpy.withArgs({
+      assert.isTrue(loadSpy.withArgs(undefined, undefined, {
          payload: 'something'
       }).called);
    });
@@ -169,14 +169,14 @@ describe('Controls/search:ControllerClass', () => {
       };
       controllerClass.search('testValue');
 
-      assert.isTrue(getFilterSpy.withArgs(filter).called);
+      assert.isTrue(loadSpy.withArgs(undefined, undefined, filter).called);
 
       controllerClass.update({
          searchValue: 'updatedValue',
          root: 'newRoot'
       });
 
-      assert.isTrue(getFilterSpy.withArgs(updatedFilter).called);
+      assert.isTrue(loadSpy.withArgs(undefined, undefined, updatedFilter).called);
       assert.equal(controllerClass._root, 'newRoot');
    });
 
@@ -186,6 +186,7 @@ describe('Controls/search:ControllerClass', () => {
          const resetStub = sandbox.stub(controllerClass, 'reset');
 
          controllerClass._options.searchValue = null;
+         controllerClass._searchValue = null;
 
          controllerClass.update({
             searchValue: null
@@ -246,6 +247,21 @@ describe('Controls/search:ControllerClass', () => {
          assert.isTrue(searchStub.withArgs('test123').calledOnce);
          assert.equal(controllerClass._sourceController, sourceControllerMock);
          assert.isFalse(resetStub.called);
+      });
+
+      it('should call when searchValue not equal options.searchValue', () => {
+         const searchStub = sandbox.stub(controllerClass, 'search');
+         const resetStub = sandbox.stub(controllerClass, 'reset');
+
+         controllerClass._options.searchValue = '';
+         controllerClass._searchValue = 'searchValue';
+
+         controllerClass.update({
+            searchValue: ''
+         });
+
+         assert.isFalse(searchStub.called);
+         assert.isTrue(resetStub.called);
       });
    });
 });

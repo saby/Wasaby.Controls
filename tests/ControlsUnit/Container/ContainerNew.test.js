@@ -24,7 +24,7 @@ define(
 
             scroll._template = function(inst) {
                inst._options = {
-                  content: Content,
+                  userContent: Content,
                   theme: 'default'
                };
                var markup = templateFn.call(this, inst);
@@ -117,7 +117,8 @@ define(
                         result = res;
                      },
                      top: {
-                        isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined })
+                        isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined }),
+                        getVisibilityByInnerComponents: () => false
                      },
                      bottom: {
                         isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined })

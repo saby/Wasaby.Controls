@@ -12,7 +12,12 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     constructor: function (cfg) {
         TreeTileViewModel.superclass.constructor.apply(this, arguments);
-        this._tileModel = new TileViewModel(cfg);
+        /* itemsReadyCallback вызывается из itemsViewModel и вызовется из конструктора этой модели
+           т.к tileViewModel также наследник itemsViewModel, то callback вызовется дважды
+         */
+        const tileModelConfig = {...cfg};
+        tileModelConfig.itemsReadyCallback = null;
+        this._tileModel = new TileViewModel(tileModelConfig);
         this._onListChangeFn = function(event, changesType) {
             this._nextVersion();
             this._resetCacheOnChange(changesType);
@@ -259,18 +264,6 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     getItemsPaddingContainerClasses(): string {
         return this._tileModel.getItemsPaddingContainerClasses();
-    },
-    getActionsMenuConfig(
-        item: Model,
-        clickEvent: SyntheticEvent,
-        opener,
-        templateOptions,
-        isActionMenu: boolean,
-        isContextMenu: boolean
-    ): Record<string, any> {
-        const itemData = this.getItemDataByItem(item);
-        return this._tileModel.getActionsMenuConfig(itemData,
-            clickEvent, opener, templateOptions, isActionMenu, isContextMenu);
     },
 
     getRoundBorderClasses(): string {

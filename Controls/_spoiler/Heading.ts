@@ -25,17 +25,12 @@ type TCaptions = string | string[];
 type TView = 'expanded' | 'collapsed';
 type TIcon = 'ExpandLight' | 'CollapseLight';
 
-/**
- * Интерфейс опций контрола {@link Controls/spoiler:Heading}.
- * @interface Controls/_spoiler/IHeading
- * @public
- * @author Красильников А.С.
- */
+
 export interface IHeadingOptions extends IControlOptions, IExpandableOptions, IFontSizeOptions, ITooltipOptions,
     IFontWeightOptions, IFontColorStyleOptions {
     /**
-     * Заголовок.
-     * @type string | string[]
+     * @cfg {string | string[]} Заголовок.
+     * @name Controls/_spoiler/IHeading#captions
      * @remark
      * Изменяемый заголовок в зависимости от {@link Controls/_spoiler/Heading#expanded состояния развернутости}
      * настраивается через массив с парой заголовков.
@@ -50,13 +45,19 @@ export interface IHeadingOptions extends IControlOptions, IExpandableOptions, IF
      */
     captions: TCaptions;
     /**
-     * Позиция заголовка относительно контейнера.
+     * @name Controls/_spoiler/IHeading#captionPosition
+     * @cfg {string} Позиция заголовка относительно контейнера.
      * @default right
      * @demo Controls-demo/Spoiler/Heading/CaptionPosition/Index
      */
     captionPosition: 'left' | 'right';
 }
 
+/**
+ * Интерфейс опций контрола {@link Controls/spoiler:Heading}.
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IHeading extends IExpandable, IFontSize, ITooltip, IFontWeight, IFontColorStyle {
     readonly '[Controls/_spoiler/IHeading]': boolean;
 }
@@ -75,7 +76,6 @@ export interface IHeading extends IExpandable, IFontSize, ITooltip, IFontWeight,
  * @implements Controls/interface:IFontSize
  * @implements Controls/interface:ITooltip
  * @implements Controls/interface:IExpandable
- * @implements Controls/spoiler:IHeading
  *
  * @public
  * @author Красильников А.С.

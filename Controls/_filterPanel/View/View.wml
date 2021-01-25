@@ -5,20 +5,22 @@
             <div class="controls-FilterViewPanel__resetButton controls-FilterViewPanel__resetButton_theme-{{_options.theme}}"
                  on:click="_resetFilter()"> {{rk('Сбросить')}}
             </div>
-            <div class="controls-FilterViewPanel__applyButton controls-FilterViewPanel__applyButton_theme-{{_options.theme}}"
-                 on:click="_applyFilter()"> {{rk('Отобрать')}}
-            </div>
+            <ws:if data="{{_options.applyButtonCaption}}">
+               <div class="controls-FilterViewPanel__applyButton controls-FilterViewPanel__applyButton_theme-{{_options.theme}}"
+                    on:click="_applyFilter()"> {{rk(_options.applyButtonCaption)}}
+               </div>
+            </ws:if>
          </div>
       </Controls.scroll:StickyHeader>
       <Controls.propertyGrid:PropertyGrid
               editingObject="{{_editingObject}}"
-              source="{{_options.source}}"
+              source="{{_source}}"
               collapsedGroups="{{_collapsedGroups}}"
               on:editingObjectChanged="_editingObjectChanged()"
-              on:itemClick="_itemClick()"
+              on:groupClick="_groupClick()"
               attr:class="controls-FilterViewPanel__propertyGrid">
          <ws:groupTemplate>
-            <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate" groupItems="{{_groupItems}}"/>
+            <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate" resetCaption="{{_resetCaption}}" groupItems="{{_groupItems}}"/>
          </ws:groupTemplate>
       </Controls.propertyGrid:PropertyGrid>
    </Controls.scroll:Container>
