@@ -41,34 +41,52 @@ define([
             assert.strictEqual(component._index, component2._index - 1);
          });
 
-         // it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
-         //    const component = createComponent(StickyHeader, options);
-         //    component._container = {
-         //       closest: () => true
-         //    };
-         //    sinon.stub(component, '_createObserver');
-         //    component._canScroll = true;
-         //    component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
-         //    component._onScrollStateChanged('canScroll');
-         //    assert.isUndefined(component._observer);
-         //    component._container.closest = () => false;
-         //    component._resizeHandler();
-         //    sinon.assert.called(component._createObserver);
-         //    sinon.restore();
-         // });
-         //
-         // it('should create observer if scroll is appears', function () {
-         //    const component = createComponent(StickyHeader, options);
-         //    component._container = {
-         //       closest: () => false
-         //    };
-         //    sinon.stub(component, '_createObserver');
-         //    component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
-         //    assert.isUndefined(component._observer);
-         //    component._onScrollStateChanged('canScroll');
-         //    sinon.assert.called(component._createObserver);
-         //    sinon.restore();
-         // });
+         it('should not initialise observer if fixation disabled', function () {
+            const component = createComponent(StickyHeader, { enabled: false });
+            component._container = {
+               closest: () => true
+            };
+            sinon.stub(component, '_createObserver');
+            sinon.stub(component, '_updateComputedStyle');
+            component._canScroll = true;
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            component._onScrollStateChanged({ canVerticalScroll: true }, {});
+            assert.isUndefined(component._observer);
+            sinon.restore();
+         });
+
+         it('should not create a observer if the control was created invisible, and must create after it has become visible', function () {
+            const component = createComponent(StickyHeader, options);
+            component._container = {
+               closest: () => true
+            };
+            sinon.stub(component, '_createObserver');
+            sinon.stub(component, '_updateComputedStyle');
+            component._canScroll = true;
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            component._onScrollStateChanged({ canVerticalScroll: true }, {});
+            assert.isUndefined(component._observer);
+            component._container.closest = () => false;
+            component._resizeHandler();
+            sinon.assert.called(component._createObserver);
+            sinon.restore();
+         });
+
+         it('should create observer if scroll is appears', function () {
+            const component = createComponent(StickyHeader, options);
+            component._container = {
+               closest: (selector) => {
+                  return selector !== '.ws-hidden';
+               }
+            };
+            sinon.stub(component, '_createObserver');
+            sinon.stub(component, '_updateComputedStyle');
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), {preferSource: true}));
+            assert.isUndefined(component._observer);
+            component._onScrollStateChanged({ canVerticalScroll: true }, {});
+            sinon.assert.called(component._createObserver);
+            sinon.restore();
+         });
 
          // it('should not create a observer if there is no scroll, and must create scroll is appears', function () {
          //    const component = createComponent(StickyHeader, options);
@@ -106,6 +124,48 @@ define([
             assert.isUndefined(component._observeHandler);
             assert.isUndefined(component._observer);
             sandbox.restore();
+         });
+      });
+
+      describe('_beforeUpdate', function() {
+         it('should initialise observer after fixation enabled', function () {
+            const component = createComponent(StickyHeader, { enabled: false });
+            component._container = {
+               closest: (selector) => {
+                  return selector !== '.ws-hidden';
+               }
+            };
+            sinon.stub(component, '_createObserver');
+            sinon.stub(component, '_updateComputedStyle');
+            component._canScroll = true;
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), { preferSource: true }));
+
+            assert.isUndefined(component._observer);
+            component._options.enabled = true;
+            component._beforeUpdate(coreMerge({ enabled: false }, StickyHeader.getDefaultOptions(), { preferSource: true }));
+            assert.isUndefined(component._observer);
+            sinon.restore();
+         });
+      });
+
+      describe('_afterUpdate', function() {
+         it('should initialise observer after fixation enabled', function () {
+            const component = createComponent(StickyHeader, { enabled: false });
+            component._container = {
+               closest: (selector) => {
+                  return selector !== '.ws-hidden';
+               }
+            };
+            sinon.stub(component, '_createObserver');
+            sinon.stub(component, '_updateComputedStyle');
+            component._canScroll = true;
+            component._afterMount(coreMerge(options, StickyHeader.getDefaultOptions(), { preferSource: true }));
+
+            assert.isUndefined(component._observer);
+            component._options.enabled = true;
+            component._afterUpdate(coreMerge({ enabled: false }, StickyHeader.getDefaultOptions(), { preferSource: true }));
+            sinon.assert.called(component._createObserver);
+            sinon.restore();
          });
       });
 

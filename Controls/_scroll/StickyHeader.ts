@@ -37,6 +37,7 @@ export interface IStickyHeaderOptions extends IControlOptions {
     zIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
     backgroundStyle: string;
+    enabled: boolean;
 }
 
 interface IResizeObserver {
@@ -160,30 +161,30 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     private _initialized: boolean = false;
 
     protected _beforeMount(options: IStickyHeaderOptions, context): void {
-        if (!this._isStickySupport) {
-            return;
-        }
-
         this._observeHandler = this._observeHandler.bind(this);
         this._index = getNextId();
         this._scrollShadowPosition = context?.stickyHeader?.shadowPosition;
         if (options.shadowVisibility === SHADOW_VISIBILITY.initial) {
             this._initialShowShadow = true;
         }
-        this._updateStyles(options);
+
+        if (this._isStickySupport && options.enabled) {
+            this._updateStyles(options);
+        }
     }
 
-    protected _componentDidMount(): void {
-        if (!this._isStickySupport) {
+    protected _componentDidMount(options: IStickyHeaderOptions): void {
+        if (!this._isStickySupport || !options.enabled) {
             return;
         }
-        this._notify('stickyRegister', [{
-            id: this._index,
-            inst: this,
-            position: this._options.position,
-            mode: this._options.mode,
-            shadowVisibility: this._options.shadowVisibility
-        }, true], {bubbling: true});
+        this._register();
+    }
+
+    protected _afterMount(options: IStickyHeaderOptions): void {
+        if (!this._isStickySupport || !options.enabled) {
+            return;
+        }
+        this._init();
     }
 
     getHeaderContainer(): HTMLElement {
@@ -191,8 +192,11 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _beforeUpdate(options: IStickyHeaderOptions, context): void {
-        if (!this._isStickySupport) {
+        if (!this._isStickySupport || !options.enabled) {
             return;
+        }
+        if (options.enabled !== this._options.enabled && !options.enabled) {
+            this._release();
         }
         if (options.fixedZIndex !== this._options.fixedZIndex) {
             this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247);
@@ -203,16 +207,32 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         }
     }
 
-    protected _afterUpdate(options: IStickyHeaderOptions): void {
+    protected _afterUpdate(oldOptions: IStickyHeaderOptions): void {
+        if (oldOptions.enabled !== this._options.enabled && this._options.enabled) {
+            this._register();
+            this._init();
+        }
         this._updateComputedStyle();
     }
 
-    protected _afterMount(): void {
-        if (!this._isStickySupport) {
+    protected _beforeUnmount(): void {
+        if (!this._isStickySupport || !this._options.enabled) {
             return;
         }
-        const children = this._children;
+        this._release();
+    }
 
+    _register(): void {
+        this._notify('stickyRegister', [{
+            id: this._index,
+            inst: this,
+            position: this._options.position,
+            mode: this._options.mode,
+            shadowVisibility: this._options.shadowVisibility
+        }, true], {bubbling: true});
+    }
+
+    _init(): void {
         this._updateComputedStyle();
 
         // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
@@ -223,6 +243,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
 
+        const children = this._children;
         this._model = new Model({
             topTarget: children.observationTargetTop,
             bottomTarget: children.observationTargetBottom,
@@ -230,16 +251,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         });
 
         RegisterUtil(this, 'scrollStateChanged', this._onScrollStateChanged);
-
         RegisterUtil(this, 'controlResize', this._resizeHandler);
 
         this._initObserver();
     }
 
-    protected _beforeUnmount(): void {
-        if (!this._isStickySupport) {
-            return;
-        }
+    _release(): void {
         UnregisterUtil(this, 'controlResize');
         UnregisterUtil(this, 'scrollStateChanged');
         if (this._model) {
@@ -738,10 +755,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return {
             //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
             fixedZIndex: 2,
+            zIndex: undefined,
             shadowVisibility: SHADOW_VISIBILITY.visible,
             backgroundStyle: BACKGROUND_STYLE.DEFAULT,
             mode: MODE.replaceable,
-            position: POSITION.top
+            position: POSITION.top,
+            enabled: true
         };
     }
 
@@ -844,6 +863,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
  * @name Controls/_scroll/StickyHeader#zIndex
  * @cfg {Number} Определяет значение z-index на заголовке, когда он не зафиксирован
  * @default undefined
+ */
+
+/**
+ * @name Controls/_scroll/StickyHeader#enabled
+ * @cfg {Number} Определяет, будет ли включен механизм фиксации у заголовка
+ * @default true
+ * @example
+ * В данном примере показано, как можно включать и выключать фиксацию заголовка.
+ * WML:
+ * <Controls.scroll:StickyHeader enabled="{{_isEnabled}}">
+ *     <h2>Header</h2>
+ * </Controls.scroll:StickyHeader>
+ * @demo Controls-demo/Scroll/StickyHeader/Enabled/Index
  */
 
 /**
