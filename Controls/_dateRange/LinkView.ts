@@ -181,6 +181,7 @@ LinkView.EMPTY_CAPTIONS = IDateLinkView.EMPTY_CAPTIONS;
 LinkView.getDefaultOptions = () => {
    return {
       ...IDateLinkView.getDefaultOptions(),
+      emptyCaption: IDateLinkView.EMPTY_CAPTIONS.NOT_SPECIFIED,
       captionFormatter: dateControlsUtils.formatDateRangeCaption
    };
 };

@@ -5,6 +5,8 @@
          _options="{{_options}}"
          theme="{{_headerTheme}}"
          _today="{{ _today }}"
+         _resetButtonVisible="{{ _resetButtonVisible }}"
+         _resetButtonClickHandler="{{ _resetButtonClickHandler }}"
          rightFieldTemplate="{{ _options.rightFieldTemplate }}"
          _todayCalendarEnabled="{{_todayCalendarEnabled}}"
          _HEADER_TYPES="{{_HEADER_TYPES}}"

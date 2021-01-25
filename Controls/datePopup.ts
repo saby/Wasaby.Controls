@@ -199,6 +199,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
         this._updateTodayCalendarState();
 
+        this._updateResetButtonVisible(options);
+
         this._headerType = options.headerType;
     }
 
@@ -412,6 +414,17 @@ export default class DatePopup extends Control implements EventProxyMixin {
         });
     }
 
+    _resetButtonClickHandler(): void {
+        this.rangeChanged(this._options.resetValue[0], this._options.resetValue[1]);
+        this._resetButtonVisible = false;
+    }
+
+    _updateResetButtonVisible(options): void {
+        this._resetButtonVisible = options.resetButtonVisible &&
+            (!dateUtils.isDatesEqual(this._rangeModel.startValue, options.resetValue[0]) ||
+            !dateUtils.isDatesEqual(this._rangeModel.endValue, options.resetValue[1]));
+    }
+
     fixedPeriodClick(start: Date, end: Date): void {
         this.rangeChanged(start, end);
         this._monthRangeSelectionProcessing = false;
@@ -429,10 +442,11 @@ export default class DatePopup extends Control implements EventProxyMixin {
         this._headerRangeModel.startValue = start;
         this._headerRangeModel.endValue = end;
         this.updateYearsRangeModel(start, end);
+        this._updateResetButtonVisible(this._options);
     }
 
     updateYearsRangeModel(start: Date, end: Date): void {
-        if (dateUtils.isStartOfYear(start) || start === null && dateUtils.isEndOfYear(end) || end === null) {
+        if ((dateUtils.isStartOfYear(start) || start === null) && (dateUtils.isEndOfYear(end) || end === null)) {
             this._yearRangeModel.startValue = start;
             this._yearRangeModel.endValue = end;
         } else {
@@ -535,7 +549,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
             dayTemplate: MonthViewDayTemplate,
 
             startValueValidators: [],
-            endValueValidators: []
+            endValueValidators: [],
+            resetValue: [null, null]
         }, IRangeSelectable.getDefaultOptions());
     }
 

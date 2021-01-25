@@ -81,11 +81,11 @@
                     </ws:if>
                 </div>
             </ws:if>
-            <ws:if data="{{ _options.resetButtonVisible }}">
+            <ws:if data="{{ _resetButtonVisible }}">
                 <span class="controls-DateLinkView__resetButton controls-DateLinkView__resetButton_theme-{{_options.theme}}
                         controls-icon controls-icon_style-unaccented_theme-{{ _options.theme }}
                         controls-icon_size-s_theme-{{ _options.theme }} icon-Close"
-                      on:click="_resetButtonClick()"></span>
+                      on:click="_resetButtonClickHandler()"></span>
             </ws:if>
         </div>
     </ws:else>

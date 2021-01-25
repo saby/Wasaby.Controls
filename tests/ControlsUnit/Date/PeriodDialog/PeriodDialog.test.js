@@ -72,8 +72,8 @@ define([
             assert.isUndefined(component._rangeModel.endValue);
             assert.isUndefined(component._headerRangeModel.startValue);
             assert.isUndefined(component._headerRangeModel.endValue);
-            assert.isNull(component._yearRangeModel.startValue);
-            assert.isNull(component._yearRangeModel.endValue);
+            assert.isUndefined(component._yearRangeModel.startValue);
+            assert.isUndefined(component._yearRangeModel.endValue);
          });
 
          it('should create the correct range models when range passed.', function() {
@@ -82,15 +82,15 @@ define([
             assert(dateUtils.Base.isDatesEqual(component._rangeModel.endValue, end));
             assert(dateUtils.Base.isDatesEqual(component._headerRangeModel.startValue, start));
             assert(dateUtils.Base.isDatesEqual(component._headerRangeModel.endValue, end));
-            assert.isNull(component._yearRangeModel.startValue);
-            assert.isNull(component._yearRangeModel.endValue);
+            assert.isUndefined(component._yearRangeModel.startValue);
+            assert.isUndefined(component._yearRangeModel.endValue);
          });
 
          [{
             options: {},
             yearModel: {
-               startValue: null,
-               endValue: null
+               startValue: undefined,
+               endValue: undefined
             }
          }, {
             options: {
@@ -98,8 +98,8 @@ define([
                endValue: new Date(2020, 0, 0)
             },
             yearModel: {
-               startValue: null,
-               endValue: null
+               startValue: undefined,
+               endValue: undefined
             }
          }, {
             options: {
@@ -107,8 +107,8 @@ define([
                endValue: new Date(2019, 1, 10)
             },
             yearModel: {
-               startValue: null,
-               endValue: null
+               startValue: undefined,
+               endValue: undefined
             }
          }, {
             options: {

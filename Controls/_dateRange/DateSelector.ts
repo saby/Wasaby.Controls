@@ -116,6 +116,7 @@ export default class DateSelector extends BaseSelector<IControlOptions> {
    static getDefaultOptions(): object {
       return {
          ...ILinkView.getDefaultOptions(),
+         emptyCaption: ILinkView.EMPTY_CAPTIONS.NOT_SPECIFIED,
          captionFormatter: dateControlsUtils.formatDateRangeCaption
       };
    }

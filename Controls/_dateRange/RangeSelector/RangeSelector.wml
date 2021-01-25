@@ -6,7 +6,7 @@
          endValue="{{ _rangeModel.endValue }}"
          emptyCaption="{{ _emptyCaption }}"
          fontColorStyle="{{_options.fontColorStyle}}"
-         resetButtonVisible="{{ _options.resetButtonVisible }}"
+         resetButtonVisible="{{ _resetButtonVisible }}"
          on:resetButtonClick="_resetButtonClickHandler()"
          on:rangeChanged="_rangeChangedHandler()"
          on:linkClick="openPopup()"
