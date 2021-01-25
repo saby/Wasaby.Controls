@@ -317,14 +317,14 @@ export interface IFilterItem {
  */
 
 /**
- * @typedef {String} DetailPanelMode
+ * @typedef {String} detailPanelOpenMode
  * @variant stack Шаблон всплывающей панели откроется в стековой панели.
  * @variant sticky Шаблон всплывающей панели откроется в sticky панели.
  */
 
 /**
- * @name Controls/_filter/View/interface/IFilterItem#detailPanelMode
- * @cfg {DetailPanelMode} Режим открытия шаблона всплывающей панели, которая открывается после клика по кнопке.
+ * @name Controls/_filter/View/interface/IFilterItem#detailPanelOpenMode
+ * @cfg {detailPanelOpenMode} Режим открытия шаблона всплывающей панели, которая открывается после клика по кнопке.
  * @default sticky
  */
 

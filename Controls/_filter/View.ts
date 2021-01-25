@@ -885,7 +885,7 @@ var Filter = Control.extend({
 
     _getFilterPopupOpener(): StickyOpener|StackOpener {
         if (!this._filterPopupOpener) {
-            this._filterPopupOpener = this._options.detailPanelMode === 'stack' ? new StackOpener() : new StickyOpener();
+            this._filterPopupOpener = this._options.detailPanelOpenMode === 'stack' ? new StackOpener() : new StickyOpener();
         }
         return this._filterPopupOpener;
     },
@@ -1059,7 +1059,7 @@ Filter.getDefaultOptions = function() {
         panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
         itemTemplate: defaultItemTemplate,
-        detailPanelMode: 'sticky'
+        detailPanelOpenMode: 'sticky'
     };
 };
 

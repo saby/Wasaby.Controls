@@ -5,7 +5,7 @@
                 <Controls.filter:ViewContainer>
                     <Controls.filter:View source="{{_filterButtonData}}"
                                           alignment="left"
-                                          detailPanelMode="stack"
+                                          detailPanelOpenMode="stack"
                                           detailPanelTemplateName="Controls-demo/filterPanel/FilterView/resources/PanelTemplate" />
                 </Controls.filter:ViewContainer>
                 <Controls.list:Container>
