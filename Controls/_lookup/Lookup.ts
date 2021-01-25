@@ -572,7 +572,7 @@ export default class Lookup extends BaseLookupInput {
 
 /**
  * @name Controls/_lookup/Lookup#rightToolbarItems
- * @cfg {RecordSet} Набор записей для дополнительных команд в правой части поля ввода.
+ * @cfg {Controls/interface:IItems.typedef} Набор записей для дополнительных команд в правой части поля ввода.
  * @demo Controls-demo/LookupNew/Input/RightToolbarItems/Index
  */
 
