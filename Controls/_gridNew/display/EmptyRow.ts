@@ -6,7 +6,6 @@ import EmptyCell from './EmptyCell';
 import {IItemTemplateParams} from './mixins/Row';
 import {TColspanCallbackResult} from './mixins/Grid';
 
-
 export interface IOptions<T> extends IRowOptions<T> {
 }
 
@@ -36,10 +35,21 @@ export default class EmptyRow<T> extends Row<T> {
         const factory = this._getColumnsFactory();
 
         if (this._$emptyTemplate) {
+            const columns = this._$owner.getColumnsConfig();
+            let endColumn = columns.length + 1;
+
+            // todo Множественный stickyProperties можно поддержать здесь:
+            const stickyLadderProperties = this.getStickyLadderProperties(columns[0]);
+            const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
+
+            if (stickyLadderCellsCount) {
+                endColumn += stickyLadderCellsCount;
+            }
+
             this._$columnItems = this._prepareColumnItems([{
                 template: this._$emptyTemplate,
                 startColumn: 1,
-                endColumn: this._$owner.getColumnsConfig().length + 1
+                endColumn
             }], (options) => {
                 return factory({
                     ...options,
