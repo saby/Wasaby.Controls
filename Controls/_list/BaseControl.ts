@@ -3113,7 +3113,6 @@ const _private = {
 
     initHoverFreezeController(self): void {
         self._hoverFreezeController = new HoverFreeze({
-            collection: self._listViewModel,
             uniqueClass: _private.getViewUniqueClass(self),
             stylesContainer: self._children.itemActionsOutsideStyle as HTMLElement,
             viewContainer: self._container,

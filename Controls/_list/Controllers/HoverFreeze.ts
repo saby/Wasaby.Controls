@@ -1,8 +1,5 @@
-import {Model} from 'Types/entity';
 import {CrudEntityKey} from 'Types/source';
 import {SyntheticEvent} from 'UI/Vdom';
-
-import {Collection, CollectionItem} from 'Controls/display';
 
 const HOVER_FREEZE_TIMEOUT: number = 200;
 const HOVER_UNFREEZE_TIMEOUT: number = 50;
@@ -23,7 +20,6 @@ interface IMouseMoveArea {
 
 export interface IHoverFreezeOptions {
     uniqueClass: string;
-    collection: Collection<Model, CollectionItem>;
     stylesContainer: HTMLElement;
     viewContainer: HTMLElement;
     freezeHoverCallback: () => void;
