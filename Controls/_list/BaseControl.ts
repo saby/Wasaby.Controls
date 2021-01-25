@@ -5583,7 +5583,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
         if (_private.hasHoverFreezeController(this) && !this._itemActionsMenuId) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = (itemData.index !== undefined ? itemData.index : this._collection.getIndex(itemData)) + 1;
+            const itemIndex = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
             _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemKey, itemIndex);
         }
     },
@@ -5602,7 +5602,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (!itemData['[Controls/_display/GroupItem]'] && !itemData['[Controls/_display/SearchSeparator]']) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = (itemData.index !== undefined ? itemData.index : this._collection.getIndex(itemData)) + 1;
+            const itemIndex = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
 
             if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
                 if (!_private.hasHoverFreezeController(this)) {
@@ -5630,7 +5630,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (hoverFreezeController) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = (itemData.index !== undefined ? itemData.index : this._collection.getIndex(itemData)) + 1;
+            const itemIndex = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
             hoverFreezeController.setDelayedHoverItem(itemKey, itemIndex);
         }
     },
