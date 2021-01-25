@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/LookupNew/Input/RightToolbarItems/Index';
+import * as Template from 'wml!Controls-demo/LookupNew/Input/ToolbarItems/Index';
 import {COMPANIES} from 'Controls-demo/LookupNew/resources/DataStorage';
 import {showType} from 'Controls/toolbars';
 import {Memory} from 'Types/source';
@@ -13,7 +13,7 @@ export default class extends Control {
     });
     protected _selectedKeys: string[] = ['Ромашка, ООО'];
     protected _value: string = 'Ромашка, ООО';
-    protected _rightToolbarItems: RecordSet = new RecordSet({
+    protected _toolbarItems: RecordSet = new RecordSet({
         keyProperty: 'id',
         rawData: [
             {

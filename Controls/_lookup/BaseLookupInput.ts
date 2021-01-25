@@ -34,7 +34,7 @@ export interface ILookupInputOptions extends
     multiLine?: boolean;
     autoDropDown?: boolean;
     comment?: string;
-    rightToolbarItems?: RecordSet;
+    toolbarItems?: RecordSet;
 }
 
 export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOptions> {
