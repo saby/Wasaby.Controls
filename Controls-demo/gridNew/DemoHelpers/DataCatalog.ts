@@ -403,7 +403,7 @@ const getCountriesStats = () => {
             },
             {
                 displayProperty: 'country',
-                width: '300px'
+                width: '224px'
             },
             {
                 displayProperty: 'capital',
