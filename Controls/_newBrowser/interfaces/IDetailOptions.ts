@@ -1,5 +1,6 @@
 import {ICrudPlus} from 'Types/source';
 import {TemplateFunction} from 'UI/Base';
+import {IHeaderCell, IColumn} from 'Controls/grid';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
 /**
@@ -103,7 +104,19 @@ export interface IDetailOptions extends ISourceOptions {
      */
     gradientColorProperty?: string;
 
-    columns?: unknown;
+    /**
+     * Конфигурация колонок таблицы.
+     */
+    columns?: IColumn[];
+
+    /**
+     * Конфигурация заголовка таблицы.
+     */
+    header?: IHeaderCell;
+
+    expanderVisibility: unknown;
+
+    stickyColumnsCount: number;
 
     /**
      * Цвет фона detail-колонки
