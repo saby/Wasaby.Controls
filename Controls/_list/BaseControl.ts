@@ -2182,9 +2182,8 @@ const _private = {
     },
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
-        _private.executeAfterReloadCallbacks(this, items, this._options);
-
         if (!direction) {
+            _private.executeAfterReloadCallbacks(this, items, this._options);
             return this.isEditing() ? this._cancelEdit(true) : void 0;
         }
 
@@ -2196,6 +2195,9 @@ const _private = {
         _private.setHasMoreData(
             this._listViewModel, _private.hasMoreDataInAnyDirection(this, this._sourceController)
         );
+        if (this._options.serviceDataLoadCallback instanceof Function) {
+            this._options.serviceDataLoadCallback(this._items, items);
+        }
 
         if (
             this._loadingState === 'all' ||
