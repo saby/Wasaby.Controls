@@ -2,6 +2,7 @@ import TreeItem from './TreeItem';
 import BreadcrumbsItem from './BreadcrumbsItem';
 import Tree from './Tree';
 import {register} from 'Types/di';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> {
     source: TreeItem<T>;
@@ -16,7 +17,7 @@ export interface IOptions<T> {
  * @author Мальцев А.А.
  * @private
  */
-export default class TreeItemDecorator<T> extends TreeItem<T> {
+export default class TreeItemDecorator<T extends Model> extends TreeItem<T> {
     protected _$source: TreeItem<T>;
 
     constructor(options?: IOptions<T>) {
@@ -26,6 +27,12 @@ export default class TreeItemDecorator<T> extends TreeItem<T> {
         });
         this._$source = options?.source;
         this._$parent = options?.parent;
+
+        for(let property in this._$source) {
+            if(typeof this._$source[property] == "function") {
+                this[property] = this._$source[property].bind(this._$source)
+            }
+        }
     }
 
     getSource(): TreeItem<T> {

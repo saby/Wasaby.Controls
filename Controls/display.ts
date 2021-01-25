@@ -66,6 +66,7 @@ import {default as TreeItem} from './_display/TreeItem';
 export {TreeItem};
 import {IOptions as ITreeItemOptions} from './_display/TreeItem';
 export {ITreeItemOptions};
+export {TreeItemDecorator};
 
 export {ANIMATION_STATE} from './_display/interface/ICollection';
 export {IEditableCollection} from './_display/interface/IEditableCollection';
@@ -142,6 +143,7 @@ import * as VirtualScrollHideController from './_display/controllers/VirtualScro
 
 export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
+import TreeItemDecorator from './_display/TreeItemDecorator';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 export {MultiSelectAccessibility} from './_display/Collection';
@@ -182,3 +184,4 @@ register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate
 register('Controls/display:Tree', Tree, {instantiate: false});
 register('Controls/display:TreeChildren', TreeChildren, {instantiate: false});
 register('Controls/display:TreeItem', TreeItem, {instantiate: false});
+register('Controls/display:TreeItemDecorator', TreeItemDecorator, {instantiate: false});
