@@ -130,7 +130,8 @@ define(
          it('_beforeMount from options', function(done) {
             let view = getView(defaultConfig);
             let expectedDisplayText = {
-               state: {text: 'In any state', title: 'In any state', hasMoreText: ''}
+               state: {text: 'In any state', title: 'In any state', hasMoreText: ''},
+               document: {}
             };
             view._beforeMount(defaultConfig).addCallback(function() {
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
@@ -622,7 +623,9 @@ define(
                {name: 'responsible', value: 'test_extended', resetValue: '', textValue: 'test_extended', viewMode: 'extended', visibility: true},
                {name: 'frequent', value: 'test_frequent', textValue: 'test_frequent', resetValue: '', viewMode: 'frequent'}
             ];
-            let self = {};
+            let self = {
+               _displayText: {}
+            };
             filter.View._private.updateText(self, source, {});
             assert.strictEqual(self._filterText, 'Author: Ivanov K.K., test_extended');
          });
