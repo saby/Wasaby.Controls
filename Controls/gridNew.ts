@@ -86,6 +86,7 @@ import GridResultsCell, {IOptions as IGridResultsCellOptions} from 'Controls/_gr
 import GridFooterRow, {IOptions as IGridFooterRowOptions} from 'Controls/_gridNew/display/FooterRow';
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from 'Controls/_gridNew/display/FooterCell';
 import GridGroupItem, {IOptions as IGridGroupItemOptions} from 'Controls/_gridNew/display/GroupItem';
+import GridGroupCell, {IOptions as IGridGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
 
 register('Controls/gridNew:GridCollection', GridCollection, {instantiate: false});
 register('Controls/gridNew:GridRow', GridRow, {instantiate: false});
@@ -119,5 +120,6 @@ export {
     GridResultsCell, IGridResultsCellOptions,
     GridFooterRow, IGridFooterRowOptions,
     GridFooterCell, IGridFooterCellOptions,
-    GridGroupItem, IGridGroupItemOptions
+    GridGroupItem, IGridGroupItemOptions,
+    GridGroupCell, IGridGroupCellOptions
 }
