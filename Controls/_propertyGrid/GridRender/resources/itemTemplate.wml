@@ -14,7 +14,7 @@
                  style="{{getItemStyles(collectionItem, 1)}}">
 
                <Controls.input:Label caption="{{item.caption}}"
-                                     captionOptions="{{item.captionOptions}}"
+                                     scope="{{item.captionOptions}}"
                                      class="controls-PropertyGrid__gridLayout_editor-caption-baseline" />
         </div>
     </ws:if>

@@ -1,11 +1,12 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls-demo/PropertyGridNew/CaptionOptions/Index';
 import {getEditingObject} from 'Controls-demo/PropertyGridNew/resources/Data';
+import {IProperty} from 'Controls/propertyGrid';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _editingObject: object;
-    protected _source: object[];
+    protected _source: IProperty[];
 
     protected _beforeMount(): void {
         this._editingObject = getEditingObject();
