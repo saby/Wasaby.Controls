@@ -128,12 +128,13 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
       const options = {...newOptions, ...context.dataOptions};
-
+      const searchValueChanged = newOptions.searchValue !== undefined &&
+          (this._options.searchValue !== newOptions.searchValue || this._searchValue !== newOptions.searchValue);
       if (newOptions.root !== this._options.root) {
          this._root = newOptions.root;
       }
 
-      if (this._searchController && options.sourceController) {
+      if (this._searchController && options.sourceController && searchValueChanged) {
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
          }
