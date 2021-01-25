@@ -204,10 +204,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._updateState(newOptions);
     }
 
-    protected _afterUpdate(oldOptions?: IOptions, oldContext?: unknown): void {
-        return;
-    }
-
     protected _beforeUnmount(): void {
         this._detailDataSource.destroy();
         this._masterSourceController.destroy();
