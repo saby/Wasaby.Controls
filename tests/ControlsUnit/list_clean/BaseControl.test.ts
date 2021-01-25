@@ -1054,4 +1054,21 @@ describe('Controls/list_clean/BaseControl', () => {
             });
         });
     });
+
+    describe('reload', () => {
+
+        it('baseControl destroyed on reload', async () => {
+            const options = getBaseControlOptionsWithEmptyItems();
+            const baseControl = new BaseControl(options);
+            await baseControl._beforeMount(options);
+            baseControl.saveOptions(options);
+            const reloadPromise = baseControl.reload();
+            baseControl._beforeUnmount();
+            baseControl._destroyed = true;
+
+            const reloadPromiseResult = await reloadPromise;
+            assert.ok(!reloadPromiseResult, 'reload return wrong result');
+        });
+
+    });
 });
