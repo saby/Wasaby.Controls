@@ -1,6 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_dateRange/Weekday/Weekday';
-import {Utils as calendarUtils} from './Utils';
+import calendarUtils from './Utils';
 
 export default class Weekday extends Control {
     protected _template: TemplateFunction = template;
