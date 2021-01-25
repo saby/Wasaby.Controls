@@ -9,6 +9,11 @@ const HOVER_UNFREEZE_TIMEOUT: number = 50;
 
 const ITEM_ACTIONS_SELECTOR = '.controls-itemActionsV';
 
+interface IHoverFreezeItemData {
+    key: CrudEntityKey;
+    index: number;
+}
+
 interface IMouseMoveArea {
     top: number;
     right: number;
@@ -30,10 +35,10 @@ export interface IHoverFreezeOptions {
  * Контроллер, позволяющий "замораживать" текущее состояние hover с itemActionsPosition=outside для записи под курсором.
  */
 export default class HoverFreeze {
-    private _itemKey: CrudEntityKey = null;
-    private _delayedHoverItem: CollectionItem;
+    private _itemData: IHoverFreezeItemData = null;
+    private _delayedItemData: IHoverFreezeItemData = null;
+
     private _uniqueClass: string;
-    private _collection: Collection<Model, CollectionItem>;
     private _stylesContainer: HTMLElement;
     private _viewContainer: HTMLElement;
     private _freezeHoverCallback: () => void;
@@ -49,7 +54,6 @@ export default class HoverFreeze {
 
     updateOptions(options: IHoverFreezeOptions): void {
         this._uniqueClass = options.uniqueClass;
-        this._collection = options.collection;
         this._stylesContainer = options.stylesContainer;
         this._viewContainer = options.viewContainer;
         this._freezeHoverCallback = options.freezeHoverCallback;
@@ -62,32 +66,30 @@ export default class HoverFreeze {
      * Если возвращается null, значит ни один элемент не "заморожен"
      */
     getCurrentItemKey(): CrudEntityKey | null {
-        return this._itemKey;
+        return this._itemData ? this._itemData.key : null;
     }
 
-    startFreezeHoverTimeout(item?: CollectionItem): void {
-        const itemKey = item.getContents().getKey();
-        const itemIndex = (item.index !== undefined ? item.index : this._collection.getIndex(item)) + 1;
+    /**
+     * Запускает таймер заморозки записи.
+     * Таймер реально запускается только если
+     * сделали ховер по новой записи впервые или после "разморозки", или по текущей записи в "заморозке"
+     * @param itemKey
+     * @param itemIndex
+     */
+    startFreezeHoverTimeout(itemKey: CrudEntityKey, itemIndex: number): void {
         // если уже были таймеры разлипания/залипания, то глушим их
         this._clearUnfreezeHoverTimeout();
         this._clearFreezeHoverTimeout();
 
-        if (this._itemKey !== itemKey) {
+        if (this._itemData === null || this._itemData?.key === itemKey) {
             // Стартуем новый таймер залипания.
             this._itemFreezeHoverTimeout = setTimeout(() => {
-                // Если есть залипшая запись, то надо понять это та же запись, по которой мы сейчас сделали ховер
-                // или нет. Если нет, то всё надо сбросить.
-                if (this._itemKey !== null) {
-                    // Размораживаем текущую запись, т.к. она более не должна являться замороженной
-                    this.unfreezeHover();
-                }
-
-                // Далее, выставляем новую запись как залипшую:
+                // Выставляем новую запись как залипшую:
                 this._freezeHover(itemIndex);
                 // сохранили текущее наведённое значение
-                this._itemKey = itemKey;
+                this._setItemData(itemKey, itemIndex);
                 // Сбросили отложенный ховер
-                this._delayedHoverItem = null;
+                this._delayedItemData = null;
             }, HOVER_FREEZE_TIMEOUT);
         }
     }
@@ -104,12 +106,12 @@ export default class HoverFreeze {
         if (this._isCursorInsideOfMouseMoveArea(x, y)) {
             this._itemUnfreezeHoverTimeout = setTimeout(() => {
                 this.unfreezeHover();
-                if (this._delayedHoverItem) {
-                    this.startFreezeHoverTimeout(this._delayedHoverItem);
+                if (this._delayedItemData) {
+                    this.startFreezeHoverTimeout(this._delayedItemData.key, this._delayedItemData.index);
                 }
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
-            this._delayedHoverItem = null;
+            this._delayedItemData = null;
             this.unfreezeHover();
         }
     }
@@ -118,22 +120,23 @@ export default class HoverFreeze {
      * Устанавливает запись, на которой отложенно должен сработать таймаут "заморозки",
      * если задан таймаут "разморозки" и есть уже "замороженная" запись.
      * Используется при движении курсора мыши внутри записи.
-     * @param item
+     * @param itemKey
+     * @param itemIndex
      */
-    setDelayedHoverItem(item?: CollectionItem): void {
-        if (this._itemKey !== null && !!this._itemUnfreezeHoverTimeout) {
-            this._delayedHoverItem = item;
+    setDelayedHoverItem(itemKey: CrudEntityKey, itemIndex: number): void {
+        if (this._itemData !== null && !!this._itemUnfreezeHoverTimeout) {
+            this._setDelayedItemData(itemKey, itemIndex);
         }
     }
 
     /**
-     * Перезапускает таймаут "разморозки" ховера, если задан таймаут "разморозки"
-     * и есть уже "замороженная" запись.
+     * Перезапускает таймаут "разморозки" ховера,
+     * если задан таймаут "разморозки" и есть уже "замороженная" запись.
      * Используется при движении курсора мыши в области всего списка
      * @param event
      */
     restartUnfreezeHoverTimeout(event: SyntheticEvent): void {
-        if (this._itemKey !== null && !!this._itemUnfreezeHoverTimeout) {
+        if (this._itemData !== null && !!this._itemUnfreezeHoverTimeout) {
             this.startUnfreezeHoverTimeout(event);
         }
     }
@@ -143,13 +146,21 @@ export default class HoverFreeze {
      */
     unfreezeHover(): void {
         // Сбрасываем текущий ховер
-        this._itemKey = null;
+        this._itemData = null;
         this._moveArea = null;
         this._stylesContainer.innerHTML = '';
         this._clearUnfreezeHoverTimeout();
         if (this._freezeHoverCallback) {
             this._unFreezeHoverCallback();
         }
+    }
+
+    private _setItemData(key: CrudEntityKey, index: number): void {
+        this._itemData = { key, index };
+    }
+
+    private _setDelayedItemData(key: CrudEntityKey, index: number): void {
+        this._itemData = { key, index };
     }
 
     /**
