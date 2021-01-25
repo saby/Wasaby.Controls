@@ -24,6 +24,10 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
         return false;
     }
 
+    isActive(): boolean {
+        return false;
+    }
+
     isMarked(): boolean {
         return false;
     }

@@ -15,6 +15,12 @@ export default class SearchGridCollection<S extends Model = Model, T extends Sea
 
    protected _$searchBreadcrumbsItemTemplate: TemplateFunction;
 
+   constructor(options: any) {
+      super(options);
+      // TODO скорее нужно наследоваться от Grid, от дерева нам не нужна никакая логика
+      this._$filter = [];
+   }
+
    getSearchBreadcrumbsItemTemplate(): TemplateFunction {
       return this._$searchBreadcrumbsItemTemplate;
    }
