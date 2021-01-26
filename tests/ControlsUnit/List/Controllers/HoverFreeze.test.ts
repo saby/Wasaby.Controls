@@ -4,13 +4,12 @@ import {useFakeTimers} from 'sinon';
 import { SyntheticEvent } from 'UI/Vdom';
 
 import {IBaseCollection} from 'Controls/_display/interface';
-import {ICollectionItem} from 'Controls/_display/interface/ICollectionItem';
 
 import HoverFreeze, {IHoverFreezeOptions} from 'Controls/_list/Controllers/HoverFreeze';
 
 // const + 1
 const TEST_HOVER_FREEZE_TIMEOUT: number = 201;
-const TEST_HOVER_UNFREEZE_TIMEOUT: number = 51;
+const TEST_HOVER_UNFREEZE_TIMEOUT: number = 101;
 
 function createFakeMouseEvent(clientX: number, clientY: number): SyntheticEvent {
     return {
