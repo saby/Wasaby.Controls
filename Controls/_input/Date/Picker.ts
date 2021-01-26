@@ -17,7 +17,7 @@ import template = require('wml!Controls/_input/Date/Picker/Picker');
  *
  * @class Controls/_input/Date/Picker
  * @extends UI/Base:Control
- * @mixes Controls/interface/IInputDateTime
+ * @mixes Controls/_input/interface/IInputDateTime
  * @mixes Controls/_interface/IDateMask
  * @mixes Controls/_interface/IInputTag
  * @mixes Controls/_dateRange/interfaces/IDatePickerSelectors
