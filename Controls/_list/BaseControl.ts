@@ -3343,6 +3343,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const selection = {selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys};
                     selectionController.setSelection(selection);
                 }
+                if (newOptions.beforeMountCallback) {
+                    newOptions.beforeMountCallback({
+                        viewModel: this._listViewModel,
+                        markerController: _private.getMarkerController(this, newOptions)
+                    });
+                }
             }
             return res;
         });
@@ -4730,6 +4736,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._options.markerVisibility !== 'hidden') {
             _private.changeMarkedKey(this, key);
         }
+    },
+
+    getMarkerController(): MarkerController {
+        return _private.getMarkerController(this, this._options);
     },
 
     _onGroupClick(e, groupId, baseEvent, dispItem) {

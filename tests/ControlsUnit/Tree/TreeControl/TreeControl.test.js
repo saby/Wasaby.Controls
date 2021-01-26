@@ -2141,7 +2141,7 @@ define([
             keyProperty: 'id',
             parentProperty: 'Раздел',
             nodeProperty: 'Раздел@',
-            keyDownMode: 'leavesOnly',
+            markerMoveMode: 'leaves',
             expandedItems: [],
             markedKey: 4
          };
@@ -2156,6 +2156,10 @@ define([
             }
          };
          treeControl._children.baseControl.getViewModel().setItems(rs, cfg);
+         treeControl._beforeMountCallback({
+            viewModel: treeControl._children.baseControl.getViewModel(),
+            markerController: treeControl._children.baseControl.getMarkerController()
+         });
          treeControl._afterMount();
          assert.equal(treeControl._leafPosition, 'last');
          treeControl.goToPrev();

@@ -20,6 +20,7 @@ export default class extends Control {
             filter: () => true
         });
         this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
+        this._leafPositionCallback = this._leafPositionCallback.bind(this);
     }
     protected _itemsReadyCallback(items) {
         this._items = items;
@@ -30,7 +31,7 @@ export default class extends Control {
             this._markedKey = newMarkedKey;
         }
     }
-    protected _onLeafPositionChanged(e, newLeafPosition) {
+    protected _leafPositionCallback(newLeafPosition) {
         this._leafPosition = newLeafPosition;
     }
     protected _goToNext(): void {

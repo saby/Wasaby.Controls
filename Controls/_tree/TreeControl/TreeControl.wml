@@ -13,6 +13,7 @@
                            beforeReloadCallback="{{_options.parentProperty !== undefined ? _beforeReloadCallback}}"
                            beforeLoadToDirectionCallback="{{_beforeLoadToDirectionCallback}}"
                            afterReloadCallback="{{_afterReloadCallback}}"
+                           beforeMountCallback="{{_beforeMountCallback}}"
                            getHasMoreData="{{_getHasMoreData}}"
                            nodeConfig="{{_options.nodeConfig}}"
                            nodesSourceControllers="{{_nodesSourceControllers}}"
