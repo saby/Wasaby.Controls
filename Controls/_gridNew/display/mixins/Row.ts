@@ -241,7 +241,8 @@ export default abstract class Row<T> {
     setColumns(newColumns: TColumns): void {
         if (this._$columns !== newColumns) {
             this._$columns = newColumns;
-            this._reinitializeColumns();
+            this._$columnItems = null;
+            this._nextVersion();
         }
     }
 
