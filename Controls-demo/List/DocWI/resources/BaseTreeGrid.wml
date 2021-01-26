@@ -1,7 +1,0 @@
-<Controls.treeGrid:View
-        source="{{_viewSource}}"
-        keyProperty="id"
-        columns="{{_columns}}"
-        nodeProperty="type"
-        parentProperty="parent">
-</Controls.treeGrid:View>
