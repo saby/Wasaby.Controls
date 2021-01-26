@@ -131,6 +131,9 @@ var
          },
          serviceDataLoadCallback: function(self, oldData, newData) {
             self._breadCrumbsItems = calculatePath(newData).path;
+            self._dataRoot = self._breadCrumbsItems && self._breadCrumbsItems.length ?
+                _private.getDataRoot(self, self._options) :
+                self._dataRoot;
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
@@ -352,7 +355,7 @@ var
          updateRootOnViewModeChanged(self, viewMode: string, options): void {
             if (viewMode === 'search' && options.searchStartingWith === 'root') {
                const currentRoot = _private.getRoot(self, options.root);
-               const dataRoot = _private.getDataRoot(self, options);
+               const dataRoot = self._dataRoot !== undefined ? self._dataRoot : _private.getDataRoot(self, options);
 
                if (dataRoot !== currentRoot) {
                   _private.setRoot(self, dataRoot, dataRoot);
