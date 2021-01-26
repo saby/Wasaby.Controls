@@ -3,6 +3,34 @@ import {IBrowserViewConfig, ImageGradient, ImageViewMode} from 'Controls/_newBro
 import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 
+function isPlainObject(object: object): boolean {
+    return object && typeof object === 'object' && object.constructor === Object;
+}
+
+export function diff(oldObject: object, newObject: object): object {
+    const result = {};
+
+    Object
+        .keys(oldObject)
+        .forEach((key) => {
+            if (oldObject[key] === newObject[key]) {
+                return;
+            }
+
+            if (isPlainObject(oldObject[key]) && isPlainObject(newObject[key])) {
+                result[key] = diff(oldObject[key], newObject[key]);
+                return;
+            }
+
+            result[key] = {
+                old: oldObject[key],
+                new: newObject[key]
+            };
+        });
+
+    return result;
+}
+
 /**
  * Из метаданных RecordSet возвращает конфигурацию отображения списка
  * в detail-колонке
