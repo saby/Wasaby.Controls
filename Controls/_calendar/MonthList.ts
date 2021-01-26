@@ -48,6 +48,8 @@ const enum VIEW_MODE {
 }
 
 const SCALE_ROUNDING_ERROR_FIX = 1.5;
+
+const ENRICH_ITEMS_DELAY = 200;
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
  *
@@ -115,7 +117,7 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
 
         const normalizedPosition = this._normalizeDate(position, options.viewMode);
 
-        this._enrichItemsDebounced = debounce(this._enrichItems, 150);
+        this._enrichItemsDebounced = debounce(this._enrichItems, ENRICH_ITEMS_DELAY);
 
         this._updateItemTemplate(options);
         this._updateSource(options);
