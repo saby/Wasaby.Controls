@@ -37,6 +37,15 @@ import 'Controls/decorator';
  */
 
 /**
+ * @name Controls/_input/Area#leftFieldTemplate
+ * @private
+ */
+/**
+ * @name Controls/_input/Area#rightFieldTemplate
+ * @private
+ */
+
+/**
  * @name Controls/_input/Area#textAlign
  * @demo Controls-demo/Input/Area/TextAlign/Index
  */
