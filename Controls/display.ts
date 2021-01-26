@@ -50,7 +50,10 @@ import {
     ItemsFactory,
     IViewIterator
 } from './_display/Collection';
-export {Collection, ICollectionOptions, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory, IViewIterator};
+export {
+    Collection, ICollectionOptions, IEditingConfig,
+    IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory, IViewIterator
+};
 export {default as CollectionItem, IOptions as ICollectionItemOptions} from './_display/CollectionItem';
 import {default as Enum} from './_display/Enum';
 export {Enum};
@@ -110,13 +113,11 @@ import * as VirtualScrollHideController from './_display/controllers/VirtualScro
 
 export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
-import
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 export {MultiSelectAccessibility} from './_display/Collection';
 
 export { IItemPadding } from 'Controls/_display/Collection';
-export { IItemTemplateParams } from 'Controls/_display/grid/mixins/Row';
 
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_display/IItemsStrategy';
 export {IItemsStrategy, IItemsStrategyOptions};

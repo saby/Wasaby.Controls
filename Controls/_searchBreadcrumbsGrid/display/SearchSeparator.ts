@@ -1,5 +1,5 @@
-import { IItemTemplateParams } from "Controls/display";
-import { register } from "Types/di";
+import { IItemTemplateParams } from 'Controls/gridNew';
+import { register } from 'Types/di';
 import { OptionsToPropertyMixin } from 'Types/entity';
 import SearchGridCollection from './SearchGridCollection';
 
@@ -46,8 +46,8 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
         let classes = `controls-TreeGrid__row__searchSeparator_theme-${params.theme} `;
-        classes += `controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${params.theme} `
-        classes += 'js-controls-ListView__notEditable'
+        classes += `controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${params.theme} `;
+        classes += 'js-controls-ListView__notEditable';
         return classes;
     }
 

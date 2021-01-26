@@ -3,8 +3,9 @@ import { object } from 'Types/util';
 import { Model } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 import SearchGridDataRow from './SearchGridDataRow';
-import { GridDataRow, IItemTemplateParams, TreeChildren } from 'Controls/display';
+import { TreeChildren } from 'Controls/display';
 import SearchGridCollection from './SearchGridCollection';
+import { GridDataRow, IItemTemplateParams } from 'Controls/gridNew';
 
 export interface IOptions<T extends Model> {
     owner?: SearchGridCollection<T>;
