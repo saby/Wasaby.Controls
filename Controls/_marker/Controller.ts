@@ -211,18 +211,11 @@ export class Controller {
     *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
     */
    private _getKey(item: CollectionItem<Model>): CrudEntityKey {
-      let contents = item.getContents();
-      if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item.breadCrumbs) {
-         // tslint:disable-next-line
-         contents = contents[(contents as any).length - 1];
-      }
-
-      // Для GroupItem нет ключа, в contents хранится не Model
-      if (item['[Controls/_display/GroupItem]'] || item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]'] || item['[Controls/treeGrid:TreeGridNodeFooterRow]']) {
+      if (!item.Markable) {
          return null;
       }
 
-      return contents.getKey();
+      return item.getContents().getKey();
    }
 
    /**
@@ -272,12 +265,7 @@ export class Controller {
          return null;
       }
 
-      const firstItem = this._model.getFirstItem();
-      if (!firstItem) {
-         return null;
-      }
-
-      return firstItem.getKey();
+      return this._calculateNearbyByDirectionItemKey(0, true);
    }
 
    private _getMarkedKeyAfterRemove(removedIndex: number): CrudEntityKey {
