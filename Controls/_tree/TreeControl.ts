@@ -723,6 +723,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
         return afterUpdateResult;
     },
+    _beforeUnmount(): void {
+        this._clearTimeoutForExpandOnDrag();
+    },
 
     _initKeyProperty(options) {
         let keyProperty = options.keyProperty;
