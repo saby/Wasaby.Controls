@@ -3121,8 +3121,7 @@ const _private = {
     needHoverFreezeController(self): boolean {
         return !self.__error && self._listViewModel && self._options.itemActionsPosition === 'outside' &&
             (self._options.itemActions || self._options.itemActionsProperty) &&
-            (!self._dndListController || !self._dndListController.isDragging()) &&
-            (!self._editInPlaceController || !self._editInPlaceController.isEditing());
+            _private.isAllowedHoverFreeze(self);
     },
 
     initHoverFreezeController(self): void {
@@ -3133,13 +3132,11 @@ const _private = {
             measurableContainerSelector: LIST_MEASURABLE_CONTAINER_SELECTOR,
             freezeHoverCallback: () => {
                 _private.removeShowActionsClass(self);
-                self._notify('register', ['mousemove', self, self._onHoverFreezeMouseMove], {bubbling: true});
             },
             unFreezeHoverCallback: () => {
                 if (!self._itemActionsMenuId) {
                     _private.addShowActionsClass(self);
                 }
-                self._notify('unregister', ['mousemove', self], {bubbling: true});
             }
         });
     },
@@ -3148,8 +3145,13 @@ const _private = {
         return !!self._hoverFreezeController;
     },
 
-    getHoverFreezeController(self): HoverFreeze {
-        return self._hoverFreezeController;
+    /**
+     * Возвращает true если использовать "заморозку" разрешено
+     * @param self
+     */
+    isAllowedHoverFreeze(self): boolean {
+        return (!self._dndListController || !self._dndListController.isDragging()) &&
+            (!self._editInPlaceController || !self._editInPlaceController.isEditing());
     }
 };
 
@@ -5107,7 +5109,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beginEdit(options, shouldActivateInput: boolean = true) {
         _private.closeSwipe(this);
         if (_private.hasHoverFreezeController(this)) {
-            _private.getHoverFreezeController(this).unfreezeHover();
+            this._hoverFreezeController.unfreezeHover();
         }
         this.showIndicator();
         return this._getEditInPlaceController().edit(options).then((result) => {
@@ -5389,8 +5391,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
         } else if (eventName === 'menuOpened') {
-            if (_private.hasHoverFreezeController(this)) {
-                _private.getHoverFreezeController(this).unfreezeHover();
+            if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
+                this._hoverFreezeController.unfreezeHover();
             }
             _private.removeShowActionsClass(this);
             _private.getItemActionsController(this, this._options).deactivateSwipe(false);
@@ -5593,17 +5595,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
-        if (_private.hasHoverFreezeController(this) && !this._itemActionsMenuId) {
+        if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this) && !this._itemActionsMenuId) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
-            _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemKey, itemIndex);
-        }
-    },
-
-    // Использовать itemMouseMove тут нельзя, т.к. отслеживать перемещение мышки надо вне itemsContainer
-    _onHoverFreezeMouseMove(event: SyntheticEvent<any>): void {
-        if (_private.hasHoverFreezeController(this)) {
-            _private.getHoverFreezeController(this).restartUnfreezeHoverTimeout(event);
+            this._hoverFreezeController.startFreezeHoverTimeout(itemKey, itemIndex);
         }
     },
 
@@ -5620,7 +5615,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 if (!_private.hasHoverFreezeController(this)) {
                     _private.initHoverFreezeController(this);
                 }
-                _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemKey, itemIndex);
+                this._hoverFreezeController.startFreezeHoverTimeout(itemKey, itemIndex);
             }
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
@@ -5628,7 +5623,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
-        const hoverFreezeController = _private.getHoverFreezeController(this);
+        const hoverFreezeController = this._hoverFreezeController;
         if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
             !this._itemActionsMenuId &&
@@ -5651,9 +5646,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
         }
-        const hoverFreezeController = _private.getHoverFreezeController(this);
-        if (hoverFreezeController) {
-            hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
+        if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
+            this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
     },
     _sortingChanged(event, propName) {
@@ -6118,6 +6112,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _isPagingPadding(): boolean {
         return !(detection.isMobileIOS || !this._isPagingPaddingFromOptions());
+    },
+
+    /**
+     * Подписка на событие mouseMove внутри всего списка, а не только внутри item
+     * @param event
+     * @private
+     */
+    _onListMouseMove(event): void {
+        // Использовать itemMouseMove тут нельзя, т.к. отслеживать перемещение мышки надо вне itemsContainer
+        if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
+            this._hoverFreezeController.restartUnfreezeHoverTimeout(event);
+        }
     },
 
     _onMouseMove(event): void {
