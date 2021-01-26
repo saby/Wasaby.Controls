@@ -3092,14 +3092,14 @@ const _private = {
         }
     },
 
-    addShowActionsClass(self: typeof BaseControl): void {
+    addShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
         if (!detection.isMobilePlatform) {
             self._addShowActionsClass = true;
         }
     },
 
-    removeShowActionsClass(self: typeof BaseControl): void {
+    removeShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
         if (!detection.isMobilePlatform && self._options.itemActionsVisibility !== 'visible') {
             self._addShowActionsClass = false;
