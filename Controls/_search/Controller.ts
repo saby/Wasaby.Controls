@@ -143,6 +143,7 @@ export default class Container extends Control<IContainerOptions> {
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
+            this._setSearchValue(newOptions.searchValue);
          } else if (updateResult instanceof Promise) {
             updateResult.catch((error: Error & {
                isCancelled?: boolean;
@@ -153,10 +154,12 @@ export default class Container extends Control<IContainerOptions> {
             });
          }
       }
-      this._sourceController.updateOptions({
-         ...options,
-         dataLoadCallback: this._dataLoadCallback
-      });
+      if (newOptions.dataLoadCallback) {
+         this._sourceController.updateOptions({
+            ...options,
+            dataLoadCallback: this._dataLoadCallback
+         });
+      }
    }
 
    private _setSearchValue(value: string): void {

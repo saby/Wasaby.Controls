@@ -45,10 +45,28 @@ describe('Controls/search:Controller', () => {
             searchController._dataLoadCallback = () => {
                 callbackCalled = true;
             };
+            options.dataLoadCallback = () => {};
             searchController._sourceController = options.sourceController;
             searchController._beforeUpdate(options, {dataOptions: {}});
             await searchController._sourceController.load();
             assert.isTrue(callbackCalled);
+        });
+
+        it('_searchValue updated', () => {
+            let searchControllerUpdated = false;
+            const searchController = new Controller(options);
+            searchController._beforeMount(options, {dataOptions});
+
+            searchController._searchController = {
+                update: () => {
+                    searchControllerUpdated = true;
+                    return {};
+                }
+            };
+            options.searchValue = 'newValue';
+            searchController._searchValue = '';
+            searchController._beforeUpdate(options, {dataOptions: {}});
+            assert.equal(searchController._searchValue, 'newValue');
         });
 
         it('searchValue wasn\'t changed', () => {
