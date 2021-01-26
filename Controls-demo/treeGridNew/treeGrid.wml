@@ -11,6 +11,15 @@
     <div class="controlsDemo__cell">
         <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                  state="/Controls-demo/app/:app"
+                                 app="{{ 'Controls-demo/treeGridNew/BreakNodeLoading/Index' }}">
+            <a href="{{content.href}}">Загрузка узлов с приостановкой</a>
+        </Router.router:Reference>
+        <Controls-demo.treeGridNew.Base.Index/>
+    </div>
+
+    <div class="controlsDemo__cell">
+        <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
+                                 state="/Controls-demo/app/:app"
                                  app="{{ 'Controls-demo/treeGridNew/ItemTemplate/Index' }}">
             <a href="{{content.href}}">Настройка шаблона записи</a>
         </Router.router:Reference>

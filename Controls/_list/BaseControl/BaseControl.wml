@@ -95,7 +95,7 @@
     </ws:if>
 </ws:template>
 <ws:template name="viewTpl">
-    <div class="controls-BaseControl__viewContainer controls-ScrollController" name="viewContainer">
+    <div class="controls-BaseControl__viewContainer controls-ScrollController{{_loadingState==='all' ? ' controls-BaseControl_PointerEventsNone'}}" name="viewContainer">
         <ws:partial if="{{ _shouldDisplayMiddleLoadingIndicator() }}" template="loadingIndicator"/>
 
         <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTrigger ? ' display: none;'}}"></div>
