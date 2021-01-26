@@ -6,5 +6,6 @@
         nodeProperty="parent@"
         columns="{{ _columns }}"
         header="{{ _header }}"
+        multiSelectVisibility="visible"
         dedicatedItemProperty="{{_dedicatedItemProperty}}"
 />

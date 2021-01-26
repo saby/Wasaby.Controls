@@ -74,13 +74,22 @@ function getBreadCrumbsReference<S extends Model, T extends SearchGridDataRow<S>
     if (last && last !== root) {
         breadCrumbs = treeItemToBreadcrumbs.get(last);
         if (!breadCrumbs) {
-            breadCrumbs = new BreadcrumbsItem<S>({
-                contents: null,
-                last,
-                owner: display,
-                multiSelectVisibility: display?.getMultiSelectVisibility(),
-                template: display?.getSearchBreadcrumbsItemTemplate ? display.getSearchBreadcrumbsItemTemplate() : null
-            });
+            // TODO удалить првоерку, когда полностью перейдем на новую модель
+            if (display?.createBreadcrumbsItem) {
+                breadCrumbs = display?.createBreadcrumbsItem({
+                    contents: null,
+                    last,
+                    multiSelectVisibility: display?.getMultiSelectVisibility()
+                });
+            } else {
+                breadCrumbs = new BreadcrumbsItem<S>({
+                    contents: null,
+                    last,
+                    owner: display,
+                    multiSelectVisibility: display?.getMultiSelectVisibility()
+                });
+            }
+
             treeItemToBreadcrumbs.set(last, breadCrumbs);
         }
     } else if (last === root && breadcrumbsToData.size > 0) {

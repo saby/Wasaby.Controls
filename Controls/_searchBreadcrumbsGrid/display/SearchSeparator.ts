@@ -52,7 +52,9 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
     }
 
     getItemStyles(): string {
-        return 'grid-column: 1 / ' + (this._$owner.getColumnsConfig().length + 1);
+        const hasMultiSelect = this._$owner.hasMultiSelectColumn();
+        const offset = hasMultiSelect ? 2 : 1;
+        return `grid-column: ${offset} / ${(this._$owner.getColumnsConfig().length + offset)}`;
     }
 }
 

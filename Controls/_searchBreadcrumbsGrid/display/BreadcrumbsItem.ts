@@ -1,11 +1,11 @@
-import {register} from 'Types/di';
 import { object } from 'Types/util';
 import { Model } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 import SearchGridDataRow from './SearchGridDataRow';
 import { TreeChildren } from 'Controls/display';
 import SearchGridCollection from './SearchGridCollection';
-import { GridDataRow, IItemTemplateParams } from 'Controls/gridNew';
+import { GridDataRow, TColspanCallbackResult } from 'Controls/gridNew';
+import { IColumn } from 'Controls/grid';
 
 export interface IOptions<T extends Model> {
     owner?: SearchGridCollection<T>;
@@ -30,7 +30,7 @@ export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRo
    */
    protected _$last: SearchGridDataRow<T>;
 
-   protected _$template: TemplateFunction;
+   protected _$cellTemplate: TemplateFunction;
 
    protected get _first(): SearchGridDataRow<T> {
       const root = this._$owner ? this._$owner.getRoot() : {};
@@ -49,7 +49,7 @@ export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRo
 
    // region Public methods
 
-   getContents(): T {
+   getContents(): T[] {
      const root = this._$owner ? this._$owner.getRoot() : {};
      let current = this._$last;
      const contents = [];
@@ -95,53 +95,20 @@ export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRo
       return this.getLast().isHasChildren();
    }
 
-   getTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction | string): TemplateFunction | string {
-      return this._$template;
-   }
-
    getSearchValue(): string {
       return this.getOwner().getSearchValue();
    }
 
-   getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
-      return super.getItemClasses(params) + ' controls-TreeGrid__row__searchBreadCrumbs js-controls-ListView__notEditable';
+   getTemplate(): TemplateFunction | string {
+      return this.getDefaultTemplate();
    }
 
-   getWrapperClasses(
-      theme: string,
-      backgroundColorStyle: string,
-      style: string = 'default',
-      templateHighlightOnHover: boolean
-   ): string {
-      // let classes = 'controls-Grid__breadCrumbs ';
-      // // TODO {{ itemData.columnScroll && !isColumnScrollVisible ? 'controls-TreeGrid__breadCrumbs_colspaned' }}
-
-      const hoverBackgroundStyle = this._$owner.getHoverBackgroundStyle();
-      let classes = `controls-Grid__row-cell_default_min_height-theme-${theme} `
-
-      classes += `controls-Grid__row-cell controls-Grid__cell_default controls-Grid__row-cell_default_theme-${theme} `;
-      classes += `controls-Grid__row-cell_withRowSeparator_size-${this.getRowSeparatorSize()} controls-Grid__no-rowSeparator controls-Grid__cell_fit `;
-      classes += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme} controls-TreeGrid__row-cell_theme-${theme} `;
-      classes += `controls-TreeGrid__row-cell_default_theme-${theme} controls-TreeGrid__row-cell__item_theme-${theme} `;
-      classes += `controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${theme} `;
-      classes += 'controls-TreeGrid__row-cell__firstColumn__contentSpacing_null controls-TreeGrid__row ';
-      classes += 'js-controls-ItemActions__swipeMeasurementContainer';
-
-      return classes;
+   getCellTemplate(): TemplateFunction | string {
+      return this._$cellTemplate;
    }
 
-   getContentClasses(theme: string, style: string = 'default'): string {
-      let classes = `controls-Grid__row-cell__content_colspaned `;
-
-      classes += `controls-Grid__cell_spacingLastCol_${this._$owner.getRightPadding()}_theme-${theme} `;
-      classes += `controls-Grid__row-cell_rowSpacingTop_${this._$owner.getTopPadding()}_theme-${theme} `;
-      classes += `controls-Grid__row-cell_rowSpacingBottom_${this._$owner.getBottomPadding()}_theme-${theme} `;
-
-      return classes;
-   }
-
-   getItemStyles(): string {
-      return 'grid-column: 1 / ' + (this._$owner.getColumnsConfig().length + 1);
+   protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
+      return 'end';
    }
 
    protected _getMultiSelectAccessibility(): boolean|null {
@@ -156,8 +123,7 @@ Object.assign(BreadcrumbsItem.prototype, {
    '[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]': true,
    _moduleName: 'Controls/searchBreadcrumbsGrid:BreadcrumbsItem',
    _instancePrefix: 'search-breadcrumbs-grid-item-',
-   _$last: null,
-   _$template: 'Controls/searchBreadcrumbsGrid:SearchBreadcrumbsItemTemplate'
+   _cellModule: 'Controls/searchBreadcrumbsGrid:BreadcrumbsCell',
+   _$cellTemplate: 'Controls/searchBreadcrumbsGrid:SearchBreadcrumbsItemTemplate',
+   _$last: null
 });
-
-register('Controls/searchBreadcrumbsGrid:BreadcrumbsItem', BreadcrumbsItem, {instantiate: false});

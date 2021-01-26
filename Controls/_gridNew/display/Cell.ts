@@ -5,7 +5,8 @@ import {
     InstantiableMixin,
     VersionableMixin,
     IInstantiable,
-    IVersionable
+    IVersionable,
+    Model
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 
@@ -36,7 +37,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     rowSeparatorSize?: string;
 }
 
-export default class Cell<T, TOwner extends Row<T>> extends mixin<
+export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,

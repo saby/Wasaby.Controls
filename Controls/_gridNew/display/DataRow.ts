@@ -6,11 +6,12 @@ import Row, {IOptions as IRowOptions} from './Row';
 import DataCell from './DataCell';
 import ILadderSupport from './interface/ILadderSupport';
 import ItemActionsCell from './ItemActionsCell';
+import { Model } from 'Types/entity';
 
 export interface IOptions<T> extends IRowOptions<T> {
 }
 
-export default class DataRow<T> extends Row<T> implements IMarkable, ILadderSupport, ISelectableItem {
+export default class DataRow<T extends Model> extends Row<T> implements IMarkable, ILadderSupport, ISelectableItem {
     protected _$columnItems: Array<DataCell<T, this>>;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
