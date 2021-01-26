@@ -62,7 +62,9 @@ describe('Controls/list/HoverFreeze', () => {
                 querySelectorAll: () => ([
                     {
                         closest: () => ({
-                            offsetHeight: itemActionsHeight
+                            querySelector: () => ({
+                                offsetHeight: itemActionsHeight
+                            })
                         }),
                         getBoundingClientRect: () => hoverContainerRect
                     } as undefined as HTMLElement
