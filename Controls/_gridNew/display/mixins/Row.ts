@@ -375,7 +375,8 @@ export default abstract class Row<T> {
                         column: {} as IColumn,
                         instanceId: `${this.key}_column_checkbox`,
                         owner: this,
-                        isFixed: true
+                        isFixed: true,
+                        rowSeparatorSize: this._$rowSeparatorSize
                     })
                 ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
             }
