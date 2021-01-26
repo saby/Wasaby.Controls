@@ -107,4 +107,13 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
 
 }
 
+Object.defineProperty(ToolbarBox, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return ToolbarBox.getDefaultOptions();
+   }
+});
+
 export default ToolbarBox;

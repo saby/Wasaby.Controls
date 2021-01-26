@@ -3,7 +3,6 @@ import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplate, IPopupTemplateOptions} from './interface/IPopupTemplate';
-import {goUpByControlTree} from 'UI/Focus';
 
 export interface IDialogTemplateOptions extends IControlOptions, IPopupTemplateOptions {
    draggable?: boolean;
@@ -24,7 +23,7 @@ interface IDragObject {
  *
  * @class Controls/_popupTemplate/Dialog
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplate
@@ -88,6 +87,15 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         };
     }
 }
+
+Object.defineProperty(DialogTemplate, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return DialogTemplate.getDefaultOptions();
+   }
+});
 
 /**
  * @name Controls/_popupTemplate/Dialog#draggable

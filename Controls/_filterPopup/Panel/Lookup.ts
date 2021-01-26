@@ -137,6 +137,15 @@ Lookup.getDefaultOptions = function() {
    };
 };
 
+Object.defineProperty(Lookup, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Lookup.getDefaultOptions();
+   }
+});
+
 /**
  * @name Controls/_filterPopup/Panel/Lookup#caption
  * @cfg {String} Caption

@@ -3,7 +3,7 @@
  */
 define('Controls/Application',
    [
-      
+
       'wml!Controls/Application/Page',
       'Core/BodyClasses',
       'Env/Env',
@@ -72,7 +72,6 @@ define('Controls/Application',
       TimeTesterInv,
       AppPage) {
       'use strict';
-
       var _private;
 
       _private = {
@@ -473,6 +472,10 @@ define('Controls/Application',
             this._dragnDropController.updateDraggingTemplate(draggingTemplateOptions, draggingTemplate);
         },
 
+         _removeDraggingTemplate: function(event) {
+            this._dragnDropController.removeDraggingTemplate();
+        },
+
          _getResourceUrl: function(str) {
             return getResourceUrl(str);
          },
@@ -542,6 +545,15 @@ define('Controls/Application',
             pagingVisible: false
          };
       };
+
+      Object.defineProperty(Page, 'defaultProps', {
+         enumerable: true,
+         configurable: true,
+
+         get: function() {
+            return Page.getDefaultOptions();
+         }
+      });
 
       Page._theme = ['Controls/application'];
       Page._styles = ['Controls/dragnDrop'];

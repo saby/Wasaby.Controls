@@ -183,22 +183,30 @@ var _private = {
 
     updateText: function(self, items, configs, detailPanelHandler = false) {
         factory(items).each(function(item: IFilterItem) {
-            if (configs[item.name]) {
+            if (_private.isFrequentItem(item)) {
                 self._displayText[item.name] = {};
                 if (_private.isItemChanged(item)) {
-                    const nodeProperty = configs[item.name].nodeProperty;
-                    const selectedKeys = configs[item.name].multiSelect || nodeProperty ? item.value : [item.value];
+                    if (configs[item.name]) {
+                        const nodeProperty = configs[item.name].nodeProperty;
+                        const selectedKeys = configs[item.name].multiSelect || nodeProperty ? item.value : [item.value];
 
-                    // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
-                    const flatSelectedKeys = nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
-                    self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys, item);
-                    if (!self._displayText[item.name].text && detailPanelHandler) {
-                        // If method is called after selecting from detailPanel, then textValue will contains actual display value
-                        self._displayText[item.name].text = item.textValue && item.textValue.split(', ')[0];
-                        self._displayText[item.name].hasMoreText = _private.getHasMoreText(flatSelectedKeys);
-                    }
-                    if (item.textValue !== undefined && !detailPanelHandler) {
-                        item.textValue = self._displayText[item.name].title;
+                        // [ [selectedKeysList1], [selectedKeysList2] ] in hierarchy list
+                        const flatSelectedKeys = nodeProperty ? factory(selectedKeys).flatten().value() : selectedKeys;
+                        self._displayText[item.name] = _private.getFastText(configs[item.name], flatSelectedKeys, item);
+                        if (!self._displayText[item.name].text && detailPanelHandler) {
+                            // If method is called after selecting from detailPanel, then textValue will contains actual display value
+                            self._displayText[item.name].text = item.textValue && item.textValue.split(', ')[0];
+                            self._displayText[item.name].hasMoreText = _private.getHasMoreText(flatSelectedKeys);
+                        }
+                        if (item.textValue !== undefined && !detailPanelHandler) {
+                            item.textValue = self._displayText[item.name].title;
+                        }
+                    } else if (item.textValue) {
+                        /* Сюда мы попадем только в случае, когда фильтр выбрали с панели фильтров,
+                           но не открывали справочник и панель быстрых фильтров
+                        */
+                        const selectedKeys = item.editorOptions?.multiSelect ? item.value : [item.value];
+                        self._displayText[item.name] = _private.getFastText({}, selectedKeys, item);
                     }
                 }
             }
@@ -1054,6 +1062,15 @@ Filter.getDefaultOptions = function() {
         itemTemplate: defaultItemTemplate
     };
 };
+
+Object.defineProperty(Filter, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Filter.getDefaultOptions();
+   }
+});
 
 Filter._theme = ['Controls/filter'];
 

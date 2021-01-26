@@ -116,4 +116,13 @@ class TimeInterval extends Base {
     }
 }
 
+Object.defineProperty(TimeInterval, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return TimeInterval.getDefaultOptions();
+   }
+});
+
 export default TimeInterval;

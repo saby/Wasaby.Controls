@@ -23,14 +23,8 @@ export class DataSource {
         this.sourceController.destroy();
     }
 
-    setRoot(root: TKey, noLoad: boolean = false): Promise<RecordSet> {
+    setRoot(root: TKey): void {
         this.sourceController.setRoot(root);
-
-        if (noLoad) {
-            return Promise.resolve(undefined);
-        }
-
-        return this.loadData();
     }
 
     setItems(items: RecordSet): RecordSet {
@@ -50,7 +44,7 @@ export class DataSource {
             });
     }
 
-    private loadData(): Promise<RecordSet> {
+    loadData(): Promise<RecordSet> {
         return (this.sourceController.load() as Promise<RecordSet>)
             .catch((error) => {
                 Logger.error('Возникла ошибка при загрузке данных', this, error);

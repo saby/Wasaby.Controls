@@ -143,4 +143,14 @@ class Mask extends Base {
         return optionTypes;
     }
 }
+
+Object.defineProperty(Mask, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Mask.getDefaultOptions();
+   }
+});
+
 export default Mask;

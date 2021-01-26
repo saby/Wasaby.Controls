@@ -545,3 +545,12 @@ export default class DatePopup extends Control implements EventProxyMixin {
         }, IDateRangeSelectable.getOptionTypes());
     }
 }
+
+Object.defineProperty(DatePopup, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return DatePopup.getDefaultOptions();
+   }
+});

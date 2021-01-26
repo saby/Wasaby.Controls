@@ -1027,6 +1027,15 @@ TreeControl.getDefaultOptions = () => {
     };
 };
 
+Object.defineProperty(TreeControl, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return TreeControl.getDefaultOptions();
+   }
+});
+
 TreeControl._private = _private;
 
 export = TreeControl;

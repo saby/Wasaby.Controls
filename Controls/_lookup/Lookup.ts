@@ -92,7 +92,6 @@ export interface ILookupOptions extends ILookupInputOptions {
  * 
  * @public
  * @author Герасимов А.М.
- * @demo Controls-demo/Input/Lookup/LookupPropertyGrid
  */
 export default class Lookup extends BaseLookupInput {
    protected _listOfDependentOptions: string[] = ['multiSelect', 'multiLine', 'displayProperty', 'maxVisibleItems', 'readOnly', 'comment'];
@@ -565,8 +564,17 @@ export default class Lookup extends BaseLookupInput {
  * </pre>
  */
 
- /**
- * @name Controls/_lookup/Lookup#fontSize
- * @cfg
- * @demo Controls-demo/LookupNew/Input/FontSize/Index
- */
+/**
+* @name Controls/_lookup/Lookup#fontSize
+* @cfg
+* @demo Controls-demo/LookupNew/Input/FontSize/Index
+*/
+
+Object.defineProperty(Lookup, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Lookup.getDefaultOptions();
+   }
+});

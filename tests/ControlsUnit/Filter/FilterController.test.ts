@@ -297,7 +297,7 @@ describe('Controls/filter:ControllerClass', () => {
                 return historyItems;
             });
 
-            sandbox.replace(ControllerClass, '_deleteFromHistory', () => {
+            sandbox.replace(filterController, '_deleteFromHistory', () => {
                 historyItemDeleted = true;
             });
         });

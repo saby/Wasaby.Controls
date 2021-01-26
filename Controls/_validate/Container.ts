@@ -384,6 +384,15 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     }
 }
 
+Object.defineProperty(ValidateContainer, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return ValidateContainer.getDefaultOptions();
+   }
+});
+
 export default ValidateContainer;
 
 /**

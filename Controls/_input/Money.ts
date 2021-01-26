@@ -99,6 +99,15 @@ class Money extends Base implements INumberLength {
     }
 }
 
+Object.defineProperty(Money, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Money.getDefaultOptions();
+   }
+});
+
 // TODO: generics https://online.sbis.ru/opendoc.html?guid=ef345c4d-0aee-4ba6-b380-a8ca7e3a557f
 /**
  * @name Controls/_input/Money#value
