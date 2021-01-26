@@ -12,7 +12,7 @@
          <Controls.explorer:View
             scope="{{_masterExplorerOptions}}"
 
-            root="masterRoot"
+            root="{{masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
 
             markedKey="{{root}}"

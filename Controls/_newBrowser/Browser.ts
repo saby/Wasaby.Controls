@@ -5,13 +5,11 @@ import {TKey} from 'Controls/_interface/IItems';
 import {Control, TemplateFunction} from 'UI/Base';
 import {DataSource} from 'Controls/_newBrowser/DataSource';
 import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
-import {IControllerOptions} from 'Controls/_dataSource/Controller';
-import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 import {DetailViewMode} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 import {MasterVisibilityEnum} from 'Controls/_newBrowser/interfaces/IMasterOptions';
 import {IBrowserViewConfig, NodesPosition} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
-import {compileSourceOptions, getListConfiguration, ListConfig, TileConfig} from 'Controls/_newBrowser/utils';
+import {compileSourceOptions, diff, getListConfiguration, ListConfig, TileConfig} from 'Controls/_newBrowser/utils';
 //region templates import
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
@@ -100,12 +98,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * Идентификатор текущего корневого узла относительно которого
      * отображаются данные в master-колонке
      */
-    get masterRoot(): TKey {
-        return this._masterSourceController?.getRoot() || null;
-    }
+    masterRoot: TKey;
 
     //region source
-    protected _masterSourceController: SourceController;
+    /*protected _masterSourceController: SourceController;*/
 
     private _detailDataSource: DataSource;
 
@@ -170,18 +166,18 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         if (receivedState) {
             // Итемов master-списка может не быть если master-колонка скрыта
-            if (receivedState.masterItems) {
+            /*if (receivedState.masterItems) {
                 this._masterSourceController.setItems(receivedState.masterItems);
-            }
+            }*/
 
             this._detailDataSource.setItems(receivedState.detailItems);
             this._processItemsMetadata(receivedState.detailItems, options);
         } else {
             const detailDataPromise = this._detailDataSource.loadData();
             // Если master-колонка скрыта, то незачем запрашивать данные для неё
-            const masterDataPromise = this._masterVisibility === MasterVisibilityEnum.visible
+            const masterDataPromise = /*this._masterVisibility === MasterVisibilityEnum.visible
                 ? this._masterSourceController.load() as Promise<RecordSet>
-                : Promise.resolve(undefined);
+                :*/ Promise.resolve(undefined);
 
             result = Promise
                 .all([
@@ -206,7 +202,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
     protected _beforeUnmount(): void {
         this._detailDataSource.destroy();
-        this._masterSourceController.destroy();
+        /*this._masterSourceController.destroy();*/
     }
     //endregion
 
@@ -216,7 +212,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * которого пользователи могут либо отменить смену корня либо подменить корень,
      * в том числе и корень для master-списка.
      */
-    setRoot(root: TKey, noLoad: boolean = false): Promise<RecordSet> {
+    setRoot(root: TKey): Promise<RecordSet> {
         // Перед тем как менять root уведомим об этом пользователя.
         // Что бы он мог либо отменить обработку либо подменить root.
         return Promise.resolve(
@@ -248,7 +244,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
                 const masterRootChanged = hasRoots ? this.masterRoot !== newRoots.masterRoot : false;
 
                 this._detailDataSource.setRoot(newRoots.detailRoot);
-                this._masterSourceController.setRoot(newRoots.masterRoot);
+                /*this._masterSourceController.setRoot(newRoots.masterRoot);*/
+                this.masterRoot = newRoots.masterRoot;
 
                 // Уведомим об изменении root
                 if (detailRootChanged) {
@@ -345,6 +342,13 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         columnIndex?: number
     ): unknown {
         event.stopPropagation();
+
+        const isNode = item.get(this._detailSourceOptions.nodeProperty) !== null;
+        if (isNode) {
+            this.setRoot(item.get(this._detailSourceOptions.keyProperty)).then();
+            return false;
+        }
+
         // Перегенерим событие т.к. explorer его без bubbling шлет
         return this._notify('itemClick', [item, clickEvent, columnIndex]);
     }
@@ -357,16 +361,14 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * Обработчик события которое генерит detail-explorer когда в нем меняется root
      */
     protected _onDetailRootChanged(event: SyntheticEvent, root: TKey): void {
-        // Не загружаем данные т.к. список сам загрузит
-        this.setRoot(root, true).then();
+        this.setRoot(root).then();
     }
 
     /**
      * Обработчик события которое генерит master-explorer когда в нем меняется root
      */
     protected _onMasterRootChanged(event: SyntheticEvent, root: TKey): void {
-        // Не загружаем данные т.к. список сам загрузит
-        this.setRoot(root, true).then();
+        this.setRoot(root).then();
     }
 
     /**
@@ -392,6 +394,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      */
     private _updateState(options: IOptions = this._options): void {
         Browser.validateOptions(options);
+        // const changes = diff(this._options, options);
 
         // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие
         // об изменении значения, т.к. и так идет синхронизация опций
@@ -403,11 +406,13 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         //region update master fields
         // Если еще не создавался SourceController для master-колонки, то создадим
-        if (!this._masterSourceController) {
+        /*if (!this._masterSourceController) {
             this._masterSourceController = new SourceController(this._masterSourceOptions as IControllerOptions);
+            this._masterSourceController.master = true;
         } else {
             this._masterSourceController.setRoot(this._masterSourceOptions.root);
-        }
+        }*/
+        this.masterRoot = this._masterSourceOptions.root;
 
         // На основании полученного состояния соберем опции для master-списка
         this._masterExplorerOptions = this._buildMasterExplorerOption(options);
@@ -446,13 +451,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         const defaultCfg = {
             style: 'master',
             backgroundStyle: 'master',
-            expanderVisibility: undefined,
             viewMode: DetailViewMode.table,
 
             // Так же задаем source, т.к. без него подает ошибка при попытке раскрытия узлов
             // а список все равно в первую очередь смотрит на sourceController
-            ...this._masterSourceOptions,
-            sourceController: this._masterSourceController
+            ...this._masterSourceOptions/*,
+            sourceController: this._masterSourceController*/
         };
 
         if (options.master?.treeGridView) {
@@ -509,12 +513,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             ? MasterVisibilityEnum.visible
             : MasterVisibilityEnum.hidden;
 
-        if (
+        /*if (
             this._masterVisibility === MasterVisibilityEnum.visible
             && !this._masterSourceController.getItems()
         ) {
             this._masterSourceController.load().then();
-        }
+        }*/
     }
     //endregion
 
