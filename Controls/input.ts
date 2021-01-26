@@ -21,7 +21,7 @@ export {default as Number} from 'Controls/_input/Number';
 export {default as Mask} from 'Controls/_input/Mask';
 export {default as Phone} from 'Controls/_input/Phone';
 export {default as Password} from 'Controls/_input/Password';
-export {default as Label} from 'Controls/_input/Label';
+export {default as Label, ILabelOptions} from 'Controls/_input/Label';
 export {default as DateBase} from 'Controls/_input/DateTime';
 export {default as TimeInterval} from 'Controls/_input/TimeInterval';
 export {default as Money} from 'Controls/_input/Money';
