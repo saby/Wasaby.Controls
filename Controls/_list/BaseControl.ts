@@ -158,7 +158,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
 const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
-const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
+const LIST_MEASURABLE_CONTAINER_SELECTOR = 'js-controls-ListView__measurableContainer';
 const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
 interface IAnimationEvent extends Event {
@@ -2994,12 +2994,12 @@ const _private = {
      */
     getSwipeContainerSize(itemContainer: HTMLElement): {width: number, height: number} {
         const result: {width: number, height: number} = { width: 0, height: 0 };
-        if (itemContainer.classList.contains(SWIPE_MEASUREMENT_CONTAINER_SELECTOR)) {
+        if (itemContainer.classList.contains(LIST_MEASURABLE_CONTAINER_SELECTOR)) {
             result.width = itemContainer.clientWidth;
             result.height = itemContainer.clientHeight;
         } else {
             itemContainer
-                .querySelectorAll(`.${SWIPE_MEASUREMENT_CONTAINER_SELECTOR}`)
+                .querySelectorAll(`.${LIST_MEASURABLE_CONTAINER_SELECTOR}`)
                 .forEach((container) => {
                     result.width += container.clientWidth;
                     result.height = result.height || container.clientHeight;
@@ -3116,7 +3116,7 @@ const _private = {
             uniqueClass: _private.getViewUniqueClass(self),
             stylesContainer: self._children.itemActionsOutsideStyle as HTMLElement,
             viewContainer: self._container,
-            theme: self._options.theme,
+            measurableContainerSelector: LIST_MEASURABLE_CONTAINER_SELECTOR,
             freezeHoverCallback: () => {
                 _private.removeShowActionsClass(self);
                 self._notify('register', ['mousemove', self, self._onHoverFreezeMouseMove], {bubbling: true});
@@ -5583,7 +5583,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
         if (_private.hasHoverFreezeController(this) && !this._itemActionsMenuId) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
+            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
             _private.getHoverFreezeController(this).startFreezeHoverTimeout(itemKey, itemIndex);
         }
     },
@@ -5602,7 +5602,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (!itemData['[Controls/_display/GroupItem]'] && !itemData['[Controls/_display/SearchSeparator]']) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
+            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
 
             if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
                 if (!_private.hasHoverFreezeController(this)) {
@@ -5630,7 +5630,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         if (hoverFreezeController) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
-            const itemIndex = (itemData.index !== undefined ? itemData.index : this._listViewModel.getIndex(itemData)) + 1;
+            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
             hoverFreezeController.setDelayedHoverItem(itemKey, itemIndex);
         }
     },

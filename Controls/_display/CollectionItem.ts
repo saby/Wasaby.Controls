@@ -580,7 +580,6 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         wrapperClasses += ` controls-ListView__item_${style}`;
         wrapperClasses += ` controls-ListView__item_${style}_theme-${theme}`;
         wrapperClasses += ' controls-ListView__item_showActions';
-        wrapperClasses += ' js-controls-ItemActions__swipeMeasurementContainer';
         wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}`;
         if (templateHighlightOnHover && !this.isEditing()) {
             wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}`;
@@ -634,6 +633,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         const rowSeparatorSize = this.getRowSeparatorSize();
         let contentClasses = `controls-ListView__itemContent ${this._getSpacingClasses(theme, style)}`;
         contentClasses += ` controls-ListView__itemContent_${style}_theme-${theme}`;
+        contentClasses += ' js-controls-ListView__measurableContainer';
 
         if (rowSeparatorSize) {
             contentClasses += ` controls-ListView__rowSeparator_size-${rowSeparatorSize}_theme-${theme}`;

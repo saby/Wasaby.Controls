@@ -117,9 +117,9 @@ export default class Render extends Control<IRenderOptions> {
                 .closest('.controls-ListView__itemV');
 
         const swipeContainer =
-            itemContainer.classList.contains('js-controls-ItemActions__swipeMeasurementContainer')
+            itemContainer.classList.contains('js-controls-ListView__measurableContainer')
                 ? itemContainer
-                : itemContainer.querySelector('.js-controls-ItemActions__swipeMeasurementContainer');
+                : itemContainer.querySelector('.js-controls-ListView__measurableContainer');
 
         this._notify('itemSwipe', [item, e, swipeContainer?.clientWidth, swipeContainer?.clientHeight]);
     }

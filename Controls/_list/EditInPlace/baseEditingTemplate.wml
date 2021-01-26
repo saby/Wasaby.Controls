@@ -4,7 +4,7 @@
     </ws:if>
     <ws:else>
         <div attr:title="{{ value }}" class="controls-EditingTemplateText_theme-{{theme}}
-                {{enabled ? 'controls-EditingTemplateText_enabled_theme-' + theme}}
+                {{enabled ? 'controls-EditingTemplateText_enabled_theme-' + theme + ' js-controls-ListView_editable-hover'}}
                 controls-EditingTemplateText_size_{{size ? size : 'default'}}_theme-{{theme}}
                 controls-EditingTemplateText_style_{{style ? style : 'default'}}
                 {{itemData && itemData.isActive() ? 'controls-EditingTemplateText_active_theme-' + theme}}">

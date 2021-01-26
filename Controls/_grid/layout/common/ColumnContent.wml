@@ -39,7 +39,8 @@
 <div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_default_theme-{{_options.theme}}
             {{itemData.classList.padding.getAll()}} {{ itemData.classList.columnContent }} controls-Grid__row-cell_cursor-{{cursor || 'pointer'}}
             {{(itemData.column.backgroundColorStyle || backgroundColorStyle) ? 'controls-Grid__row-cell__content_background_' + (itemData.column.backgroundColorStyle || backgroundColorStyle) + '_theme-' + _options.theme}}
-            {{(itemData.column.hoverBackgroundStyle || itemData.hoverBackgroundStyle)  ? 'controls-Grid__item_background-hover_' + (itemData.column.hoverBackgroundStyle || itemData.hoverBackgroundStyle)  + '_theme-' + _options.theme}}">
+            {{(itemData.column.hoverBackgroundStyle || itemData.hoverBackgroundStyle)  ? 'controls-Grid__item_background-hover_' + (itemData.column.hoverBackgroundStyle || itemData.hoverBackgroundStyle)  + '_theme-' + _options.theme}}
+            js-controls-ListView_item-hover js-controls-ListView__measurableContainer">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
                 template="{{contentTemplate}}"

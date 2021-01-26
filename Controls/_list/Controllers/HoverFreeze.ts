@@ -4,7 +4,9 @@ import {SyntheticEvent} from 'UI/Vdom';
 const HOVER_FREEZE_TIMEOUT: number = 200;
 const HOVER_UNFREEZE_TIMEOUT: number = 50;
 
-const ITEM_ACTIONS_SELECTOR = '.controls-itemActionsV';
+const ITEM_HOVER_CONTAINER_SELECTOR = '.js-controls-ListView_item-hover';
+const EDITABLE_HOVER_CONTAINER_SELECTOR = '.js-controls-ListView_editable-hover';
+const ITEM_ACTIONS_CONTAINER_SELECTOR = '.js-controls-itemActions';
 
 interface IHoverFreezeItemData {
     key: CrudEntityKey;
@@ -24,7 +26,7 @@ export interface IHoverFreezeOptions {
     viewContainer: HTMLElement;
     freezeHoverCallback: () => void;
     unFreezeHoverCallback: () => void;
-    theme: string;
+    measurableContainerSelector: string;
 }
 
 /**
@@ -42,7 +44,7 @@ export default class HoverFreeze {
     private _moveArea: IMouseMoveArea;
     private _itemFreezeHoverTimeout: number;
     private _itemUnfreezeHoverTimeout: number;
-    private _theme: string;
+    private _measurableContainerSelector: string;
 
     constructor(options: IHoverFreezeOptions) {
         this.updateOptions(options);
@@ -54,7 +56,7 @@ export default class HoverFreeze {
         this._viewContainer = options.viewContainer;
         this._freezeHoverCallback = options.freezeHoverCallback;
         this._unFreezeHoverCallback = options.unFreezeHoverCallback;
-        this._theme = options.theme;
+        this._measurableContainerSelector = options.measurableContainerSelector;
     }
 
     /**
@@ -73,11 +75,11 @@ export default class HoverFreeze {
      * @param itemIndex
      */
     startFreezeHoverTimeout(itemKey: CrudEntityKey, itemIndex: number): void {
-        // если уже были таймеры разлипания/залипания, то глушим их
-        this._clearUnfreezeHoverTimeout();
-        this._clearFreezeHoverTimeout();
-
         if (this._itemData === null || this._itemData?.key === itemKey) {
+            // если уже были таймеры разлипания/залипания, то глушим их
+            this._clearUnfreezeHoverTimeout();
+            this._clearFreezeHoverTimeout();
+
             // Стартуем новый таймер залипания.
             this._itemFreezeHoverTimeout = setTimeout(() => {
                 // Выставляем новую запись как залипшую:
@@ -156,7 +158,7 @@ export default class HoverFreeze {
     }
 
     private _setDelayedItemData(key: CrudEntityKey, index: number): void {
-        this._itemData = { key, index };
+        this._delayedItemData = { key, index };
     }
 
     /**
@@ -194,20 +196,21 @@ export default class HoverFreeze {
      */
     private _freezeHover(index: number): void {
         this._clearFreezeHoverTimeout();
-        const hoveredContainers = this._getHoveredItemContainers(index);
+        const htmlNodeIndex = index + 1;
+        const hoveredContainers = this._getHoveredItemContainers(htmlNodeIndex);
 
-        // zero element in grid will be row itself; it doesn't have any background color
+        // zero element in grid will be row itself; it doesn't have any background color, then lets take the last one
         const hoverBackgroundColor = getComputedStyle(hoveredContainers[hoveredContainers.length - 1]).backgroundColor;
 
-        const hoveredEditingTemplateTextContainer = this._getEditingTemplateTextContainer(index);
+        const hoveredEditingTemplateTextContainer = this._getEditingTemplateTextContainer(htmlNodeIndex);
         const hoveredEditingTemplateTextBackground = hoveredEditingTemplateTextContainer ?
             getComputedStyle(hoveredEditingTemplateTextContainer).backgroundColor : null;
 
         this._moveArea = this._calculateMouseMoveArea(hoveredContainers);
-        this._stylesContainer.innerHTML = this._getItemActionsOutsideFreezeStyles(this._uniqueClass, index);
+        this._stylesContainer.innerHTML = this._getItemActionsOutsideFreezeStyles(this._uniqueClass, htmlNodeIndex);
         this._stylesContainer.innerHTML += this._getItemHoverFreezeStyles(
             this._uniqueClass,
-            index,
+            htmlNodeIndex,
             hoverBackgroundColor,
             hoveredEditingTemplateTextBackground);
         if (this._freezeHoverCallback) {
@@ -244,7 +247,7 @@ export default class HoverFreeze {
      */
     private _calculateMouseMoveArea(hoveredContainers: NodeListOf<HTMLElement>): IMouseMoveArea {
         const lastContainer = hoveredContainers[hoveredContainers.length - 1];
-        const itemActionsContainer = lastContainer.querySelector(ITEM_ACTIONS_SELECTOR);
+        const itemActionsContainer = lastContainer.querySelector(ITEM_ACTIONS_CONTAINER_SELECTOR);
         const resultRect = {
             bottom: null,
             left: null,
@@ -281,8 +284,7 @@ export default class HoverFreeze {
      * @private
      */
     private _getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
-        return `.${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell:not(.controls-Grid__row-ladder-cell),` +
-            ` .${uniqueClass} .controls-ListView__itemV:nth-child(${index})`;
+        return ` .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .${this._measurableContainerSelector}`;
     }
 
     /**
@@ -293,7 +295,7 @@ export default class HoverFreeze {
      * @private
      */
     private _getEditingTemplateTextSelector(uniqueClass: string, index: number): string {
-        return `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}):hover .controls-EditingTemplateText_enabled_theme-${this._theme}`;
+        return `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}):hover ${EDITABLE_HOVER_CONTAINER_SELECTOR}`;
     }
 
     /**
@@ -310,18 +312,16 @@ export default class HoverFreeze {
                                       hoveredEditingTemplateTextBackground: string): string {
         let styles = `
               .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})):hover,
-              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})):hover .controls-Grid__item_background-hover_default_theme-${this._theme},
-              .${uniqueClass} .controls-Grid__row:not(:nth-child(${index})):hover .controls-Grid__row-cell-background-hover-default_theme-${this._theme} {
+              .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})):hover ${ITEM_HOVER_CONTAINER_SELECTOR} {
                 background-color: inherit;
               }
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}),
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__item_background-hover_default_theme-${this._theme},
-              .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell-background-hover-default_theme-${this._theme} {
+              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${ITEM_HOVER_CONTAINER_SELECTOR} {
                 background-color: ${hoverBackgroundColor};
               }
               `;
         if (hoveredEditingTemplateTextBackground) {
-            styles += `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .controls-EditingTemplateText_enabled_theme-${this._theme} {
+            styles += `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${EDITABLE_HOVER_CONTAINER_SELECTOR} {
                 background-color: ${hoveredEditingTemplateTextBackground};
             }`;
         }
@@ -330,7 +330,7 @@ export default class HoverFreeze {
 
     private _getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
         return `
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .controls-itemActionsV_outside_theme-${this._theme} {
+              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${ITEM_ACTIONS_CONTAINER_SELECTOR} {
                  opacity: 1;
                  visibility: visible;
               }

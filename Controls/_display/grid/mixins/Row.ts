@@ -176,6 +176,7 @@ export default abstract class Row<T> {
 
         if (templateHighlightOnHover !== false) {
             contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
+            contentClasses += ' js-controls-ListView_item-hover';
         }
 
         contentClasses += ` controls-GridView__checkbox_theme-${theme}`;

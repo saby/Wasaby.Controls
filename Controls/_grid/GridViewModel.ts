@@ -362,6 +362,7 @@ var
             } else {
                 let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
                 classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
+                classLists.base += ' js-controls-ListView_item-hover';
             }
 
             if (current.columnScroll && !current.isEditing()) {
