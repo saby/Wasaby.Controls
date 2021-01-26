@@ -1141,7 +1141,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._currentItem = key;
         const newLeafPosition = this._getLeafPosition(this._currentItem);
         if (this._leafPosition !== newLeafPosition) {
-            this._notify('leafPositionChanged', [newLeafPosition]);
+            if (this._options.leafPositionCallback) {
+                this._options.leafPositionCallback(newLeafPosition);
+            }
             this._leafPosition = newLeafPosition;
         }
         this.setMarkedKey(this._currentItem);
