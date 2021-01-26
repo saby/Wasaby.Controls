@@ -470,4 +470,13 @@ class Field<Value, ModelOptions>
     }
 }
 
+Object.defineProperty(Field, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Field.getDefaultOptions();
+   }
+});
+
 export default Field;

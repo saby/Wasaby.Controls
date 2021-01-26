@@ -321,3 +321,12 @@ export default class Area extends Text<IAreaOptions> {
         return optionTypes;
     }
 }
+
+Object.defineProperty(Area, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Area.getDefaultOptions();
+   }
+});

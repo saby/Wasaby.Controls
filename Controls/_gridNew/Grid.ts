@@ -16,7 +16,7 @@ export default class Grid extends List {
     }
 
     _getModelConstructor() {
-        return 'Controls/display:GridCollection';
+        return 'Controls/gridNew:GridCollection';
     }
 }
 
@@ -29,3 +29,12 @@ Grid.getDefaultOptions = function() {
        isFullGridSupport: isFullGridSupport()
    };
 };
+
+Object.defineProperty(Grid, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Grid.getDefaultOptions();
+   }
+});

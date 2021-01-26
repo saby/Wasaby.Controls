@@ -422,6 +422,7 @@ describe('Controls/browser:Browser', () => {
            });
 
            assert.isTrue(notifyStub.withArgs('filterChanged', [{payload: 'something'}]).called);
+           assert.equal(browser._searchValue, '');
 
            notifyStub.restore();
        });
@@ -474,7 +475,9 @@ describe('Controls/browser:Browser', () => {
                 handleDataLoad: () => {}
             };
             browser._searchController = {
-                handleDataLoad: () => {}
+                handleDataLoad: () => {},
+                isSearchInProcess: () => true,
+                getSearchValue: () => 'searchValue'
             };
 
             browser._dataLoadCallback(null, 'down');
@@ -508,6 +511,7 @@ describe('Controls/browser:Browser', () => {
 
            assert.equal(browser._root, 'test123');
            assert.equal(browser._searchController._root, 'test123');
+           assert.isNull(browser._rootBeforeSearch);
        });
 
         it ('root is changed, shearchController is not created', async () => {
@@ -517,6 +521,17 @@ describe('Controls/browser:Browser', () => {
             browser._handleItemOpen('test123', undefined, 'test123');
 
             assert.equal(browser._root, 'test123');
+        });
+
+        it ('root is in options', async () => {
+            const options = {...getBrowserOptions(), root: 'testRoot'};
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+            browser._searchController = await browser._getSearchController();
+            browser._handleItemOpen('test123', undefined, 'test123');
+
+            assert.equal(browser._root, 'testRoot');
         });
     });
 

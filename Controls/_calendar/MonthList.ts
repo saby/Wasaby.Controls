@@ -602,6 +602,15 @@ class  ModuleComponent extends Control<IModuleComponentOptions> implements
     }
 }
 
+Object.defineProperty(ModuleComponent, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return ModuleComponent.getDefaultOptions();
+   }
+});
+
 export default ModuleComponent;
 
 /**

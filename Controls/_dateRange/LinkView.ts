@@ -179,6 +179,15 @@ LinkView.getDefaultOptions = () => {
    };
 };
 
+Object.defineProperty(LinkView, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return LinkView.getDefaultOptions();
+   }
+});
+
 LinkView.getOptionTypes = () => {
    return {
       ...IDateLinkView.getOptionTypes(),

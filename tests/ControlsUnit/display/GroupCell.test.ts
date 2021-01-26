@@ -3,8 +3,10 @@ import { assert } from 'chai';
 import { Model } from 'Types/entity';
 import { IColumn } from 'Controls/grid';
 
-import GroupCell from 'Controls/_display/grid/GroupCell';
-import GroupItem from 'Controls/_display/grid/GroupItem';
+import {
+    GridGroupCell as GroupCell,
+    GridGroupItem as GroupItem
+} from 'Controls/gridNew';
 
 describe('Controls/_display/GroupCell', () => {
     let columns: IColumn[];

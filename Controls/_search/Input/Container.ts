@@ -111,7 +111,9 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    }
 
    private _updateSearchData(inputSearchValue: string): void {
-      this._value = inputSearchValue;
+      if (this._value !== inputSearchValue) {
+         this._value = inputSearchValue;
+      }
       this._getSearchResolverController().setSearchStarted(true);
    }
 
@@ -195,3 +197,12 @@ export default class Container extends Control<ISearchInputContainerOptions> {
  * @name Controls/_search/Input/Container#searchReset
  * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  */
+
+Object.defineProperty(Container, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Container.getDefaultOptions();
+   }
+});

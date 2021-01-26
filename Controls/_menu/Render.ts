@@ -283,7 +283,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
     private _selectItem(collection: Collection<unknown>, key: number|string, state: boolean): void {
         const item = collection.getItemBySourceKey(key);
         if (item) {
-            item.setSelected(state, true);
+            item.setMarked(state, true);
             collection.nextVersion();
         }
     }
@@ -296,5 +296,14 @@ class MenuRender extends Control<IMenuRenderOptions> {
         };
     }
 }
+
+Object.defineProperty(MenuRender, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return MenuRender.getDefaultOptions();
+   }
+});
 
 export default MenuRender;

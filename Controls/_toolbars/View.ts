@@ -59,7 +59,6 @@ export interface IMenuOptions {
 
 /**
  * Интерфейс опций контрола {@link Controls/toolbars:View}.
- * @interface Controls/_toolbars/IToolbar
  * @public
  * @author Красильников А.С.
  */
@@ -124,6 +123,7 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  *
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
+ * @implements Controls/toolbars:IToolbarOptions
  * @implements Controls/interface/IItemTemplate
  * @public
  * @author Красильников А.С.
@@ -632,6 +632,15 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         };
     }
 }
+
+Object.defineProperty(Toolbar, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Toolbar.getDefaultOptions();
+   }
+});
 
 /**
  * @event Происходит при клике по элементу.

@@ -3,11 +3,11 @@ import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
 import {descriptor} from 'Types/entity';
 import ViewModel from './Number/ViewModel';
 import {INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
+import {IOnlyPositive, IOnlyPositiveOptions} from 'Controls/_input/interface/IOnlyPositive';
 
-interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions {
+interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions {
     value?: number | string | null;
     useGrouping?: boolean;
-    onlyPositive?: boolean;
     showEmptyDecimals?: boolean;
 }
 
@@ -23,7 +23,7 @@ interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions {
  * @class Controls/_input/Number
  * @extends Controls/_input/Base
  *
- * @mixes Controls/interface/IOnlyPositive
+ * @mixes Controls/_input/interface/IOnlyPositive
  * @mixes Controls/_interface/INumberFormat
  * @mixes Controls/_input/interface/INumberLength
  *
@@ -33,7 +33,8 @@ interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions {
  * @author Красильников А.С.
  */
 // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
-class NumberInput extends Base<INumberInputOptions> {
+class NumberInput extends Base<INumberInputOptions> implements IOnlyPositive {
+    readonly '[Controls/_input/interface/IOnlyPositive]': boolean = true;
     _defaultValue: number = 0;
     _inputMode: string = 'decimal';
     _controlName: string = 'Number';
@@ -104,6 +105,15 @@ class NumberInput extends Base<INumberInputOptions> {
         return optionTypes;
     }
 }
+
+Object.defineProperty(NumberInput, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return NumberInput.getDefaultOptions();
+   }
+});
 
 // TODO: generics https://online.sbis.ru/opendoc.html?guid=ef345c4d-0aee-4ba6-b380-a8ca7e3a557f
 /**

@@ -3,6 +3,7 @@
    width: @width_draggingTemplate;
    background: @background-color_draggingTemplate;
    border: @border-thickness_draggingTemplate solid @border-color_draggingTemplate;
+   border-radius: @border-radius_draggingTemplate;
    box-shadow: @box-shadow_draggingTemplate;
    pointer-events: none;
    position: relative; // Для позиционирования draggingTemplate-text::after
@@ -39,6 +40,7 @@
    position: absolute;
    right: 0;
    top: 0;
+   border-radius: 0 @border-radius_draggingTemplate @border-radius_draggingTemplate 0;
    .horizontal-gradient(fade(@background-color_draggingTemplate, 0%), @background-color_draggingTemplate, left);
 }
 

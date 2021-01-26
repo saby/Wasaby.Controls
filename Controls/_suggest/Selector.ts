@@ -173,6 +173,15 @@ Suggest.getDefaultOptions = function() {
    };
 };
 
+Object.defineProperty(Suggest, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Suggest.getDefaultOptions();
+   }
+});
+
 Suggest._theme = ['Controls/suggest'];
 Suggest._private = _private;
 

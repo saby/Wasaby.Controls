@@ -10,8 +10,13 @@
    <ws:master>
       <Controls.scroll:Container>
          <Controls.explorer:View
-            bind:root="root"
             scope="{{_masterExplorerOptions}}"
+
+            root="masterRoot"
+            on:rootChanged="_onMasterRootChanged()"
+
+            markedKey="{{root}}"
+            on:markedKeyChanged="_onMasterMarkedKeyChanged()"
          />
       </Controls.scroll:Container>
    </ws:master>
@@ -26,13 +31,14 @@
                root="{{root}}"
                on:rootChanged="_onDetailRootChanged()"
 
-               tileMode="static"
                tileSize="{{_tileCfg.imageSize}}"
 
                viewMode="{{viewMode}}"
                scope="{{_detailExplorerOptions}}"
-               backgroundStyle="transparent"
                breadcrumbsVisibility="{{_masterVisibility === _masterVisibilityEnum.hidden ? 'visible' : 'hidden'}}"
+
+               on:arrowClick="_onDetailArrowClick()"
+               on:itemClick="_onDetailItemClick()"
             >
                <ws:afterBreadCrumbsTemplate>
                   <ws:if data="{{_options.detail.afterBreadCrumbsTemplate}}">
@@ -47,43 +53,27 @@
                <ws:itemTemplate>
                   <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
                   <ws:if data="{{viewMode === _viewModeEnum.table || viewMode === 'search'}}">
-                     <Controls.grid:ItemTemplate
+                     <Controls.treeGrid:ItemTemplate
                         scope="{{itemTemplate}}"
                         listConfiguration="{{_listConfiguration}}"
                      />
                   </ws:if>
-                  <!-- Если передан кастомный шаблон отображения итема списка, то используем его -->
-                  <ws:else data="{{_options.detail.customItemTemplate}}">
-                     <ws:partial
-                        scope="{{itemTemplate}}"
-                        template="{{_options.detail.customItemTemplate}}"
-                        listConfiguration="{{_listConfiguration}}"
-                     />
-                  </ws:else>
-                  <!-- Если кастомный шаблон отображения итема списка не передан, то используем дефолтный -->
                   <ws:else>
                      <ws:partial
-                        listCfg="{{_listCfg}}"
                         scope="{{itemTemplate}}"
-                        template="wml!Controls/_newBrowser/templates/ListItemTemplate"
-                        captionTemplate="{{_options.detail.defaultItemTemplate.captionTemplate}}"
-                        contentTemplate="{{_options.detail.defaultItemTemplate.contentTemplate}}"
-                        footerTemplate="{{_options.detail.defaultItemTemplate.footerTemplate}}"
+                        template="{{_detailExplorerOptions.itemTemplate}}"
+                        listConfiguration="{{_listConfiguration}}"
+                        listCfg="{{_listCfg}}"
                      />
                   </ws:else>
                </ws:itemTemplate>
                <ws:tileItemTemplate>
                   <ws:if data="{{tileItemTemplate.itemData.dispItem}}">
                      <ws:partial
-                        template="{{_tileItemTemplate}}"
                         scope="{{tileItemTemplate}}"
-                        imageSize="{{_tileCfg.imageSize}}"
-                        imagePosition="{{_tileCfg.imagePosition}}"
-                        imageEffect="{{_tileCfg.getImageEffect(tileItemTemplate.itemData)}}"
-                        imageViewMode="{{_tileCfg.getImageViewMode(tileItemTemplate.itemData)}}"
-                        gradientColor="{{_tileCfg.getGradientColor(tileItemTemplate.itemData)}}"
-                        description="{{_tileCfg.getDescription(tileItemTemplate.itemData)}}"
-                        descriptionLines="{{_tileCfg.getDescriptionLines(tileItemTemplate.itemData)}}"
+                        template="{{_detailExplorerOptions.tileItemTemplate}}"
+                        listConfiguration="{{_listConfiguration}}"
+                        tileCfg="{{_tileCfg}}"
                      />
                   </ws:if>
                   <ws:else>

@@ -58,6 +58,16 @@ class NotificationSimple extends Control<INotificationSimpleOptions> implements 
 
     static _theme: string[] = ['Controls/popupTemplate', 'Controls/Classes'];
 }
+
+Object.defineProperty(NotificationSimple, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return NotificationSimple.getDefaultOptions();
+   }
+});
+
 /**
  * @name Controls/_popupTemplate/Notification/Simple#icon
  * @cfg {String} Устанавливает значок сообщения окна уведомления.

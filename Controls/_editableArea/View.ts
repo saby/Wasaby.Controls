@@ -188,4 +188,13 @@ View.getDefaultOptions = function () {
    };
 };
 
+Object.defineProperty(View, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return View.getDefaultOptions();
+   }
+});
+
 export default View;

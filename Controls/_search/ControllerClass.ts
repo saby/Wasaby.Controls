@@ -70,8 +70,9 @@ const SERVICE_FILTERS = {
 export default class ControllerClass {
    protected _options: ISearchControllerOptions = null;
 
-   protected _searchValue: string = '';
-   protected _sourceController: NewSourceController = null;
+   private _searchValue: string = '';
+   private _searchInProgress: boolean = false;
+   private _sourceController: NewSourceController = null;
    private _root: Key = null;
    private _path: RecordSet = null;
 
@@ -189,7 +190,7 @@ export default class ControllerClass {
       }
 
       if (options.hasOwnProperty('searchValue')) {
-         if (options.searchValue !== this._options.searchValue) {
+         if (options.searchValue !== this._options.searchValue || options.searchValue !== this._searchValue) {
             needLoad = true;
          }
       }
@@ -232,14 +233,24 @@ export default class ControllerClass {
       return this._searchValue;
    }
 
+   isSearchInProcess(): boolean {
+      return this._searchInProgress;
+   }
+
    private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error | RecordSet> {
-      return this._sourceController.load(undefined, undefined, filter).then((recordSet) => {
-         if (recordSet instanceof RecordSet) {
-            this._path = recordSet.getMetaData().path;
-            this._sourceController.setFilter(filter);
-            return recordSet as RecordSet;
-         }
-      });
+      this._searchStarted();
+      return this._sourceController
+          .load(undefined, undefined, filter)
+          .then((recordSet) => {
+             if (recordSet instanceof RecordSet) {
+                this._path = recordSet.getMetaData().path;
+                this._sourceController.setFilter(filter);
+                return recordSet as RecordSet;
+             }
+          })
+          .finally(() => {
+             this._searchEnded();
+          });
    }
 
    private _deleteRootFromFilter(filter: QueryWhereExpression<unknown>): void {
@@ -270,6 +281,14 @@ export default class ControllerClass {
      }
 
      return root;
+   }
+
+   private _searchStarted() {
+      this._searchInProgress = true;
+   }
+
+   private _searchEnded() {
+      this._searchInProgress = false;
    }
 }
 

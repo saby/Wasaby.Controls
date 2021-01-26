@@ -56,7 +56,8 @@
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
                             {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}
                             {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
-                            {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}"
+                            {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}
+                            {{!!itemData.isDragging ? ' controls-ListView__itemContent_dragging_theme-' + itemData.theme}}"
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
                 expanderTemplate="{{itemData.expanderTemplate}}"
                 itemData="{{currentColumn}}"
@@ -137,6 +138,10 @@
 
       <ws:if data="{{!itemData.columnScroll && itemData.isDrawActions(itemData, currentColumn, colspan || colspanCurrentNode)}}">
          <ws:partial template="itemActionsTemplateChooser"/>
+      </ws:if>
+
+      <ws:if data="{{ itemData.shouldDisplayDraggingCounter() }}">
+         <span class="controls-ListView__item-dragging-counter">{{(item || itemData).getDraggedItemsCount()}}</span>
       </ws:if>
 
    </ws:else>

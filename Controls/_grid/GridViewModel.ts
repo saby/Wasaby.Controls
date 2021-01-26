@@ -1640,11 +1640,8 @@ var
                 columns: this._columns
             });
 
-            // TODO: https://online.sbis.ru/opendoc.html?guid=1529db8e-7105-45cc-97bf-430b9cd44ef9
-            // начало
-            if (this._options.task1180722812 && current.isGroup && current.index === 0 && this.isStickyHeader() && this.getHasMoreData()) {
-                current.shadowVisibility = 'initial';
-            }
+            current.shouldDisplayDraggingCounter = () => current.isDragged() && current.getLastColumnIndex() === current.columnIndex
+               && current.getDraggedItemsCount() > 1 && !this._dragOutsideList;
 
             // конец
             current.showEditArrow = _private.resolveEditArrowVisibility(dispItem, this._options);
@@ -1692,7 +1689,8 @@ var
             controls-GridView__itemV_marker-${style}_rowSpacingBottom-${current.itemPadding.bottom}_theme-${current.theme}
             controls-GridView__itemV_marker-${style}_rowSpacingTop-${current.itemPadding.top}_theme-${current.theme}
             controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (current.itemPadding.top || 'l') + '_' + markerClassName)}
-            controls-ListView__itemV_marker-${current.markerPosition}`;
+            controls-ListView__itemV_marker-${current.markerPosition}
+            ${!!current.isDragging ? ' controls-ListView__itemContent_dragging_theme-' + current.theme : ''}`;
 
             if (current.hasMultiSelectColumn) {
                 current.columns = [{}].concat(this._columns);
@@ -2354,6 +2352,13 @@ var
         },
         setDragPosition(position: IDragPosition<CollectionItem<Model>>): void {
             this._model.setDragPosition(position);
+        },
+        setDragOutsideList(outside: boolean): void {
+            this._model.setDragOutsideList(outside);
+            if (this._dragOutsideList !== outside) {
+                this._dragOutsideList = outside;
+                this._nextModelVersion();
+            }
         },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();

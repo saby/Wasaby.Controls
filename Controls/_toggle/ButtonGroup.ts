@@ -38,4 +38,13 @@ class ButtonGroup extends Control<IButtonGroupOptions> {
     }
 }
 
+Object.defineProperty(ButtonGroup, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return ButtonGroup.getDefaultOptions();
+   }
+});
+
 export default ButtonGroup;

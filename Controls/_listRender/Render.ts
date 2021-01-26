@@ -232,3 +232,12 @@ export default class Render extends Control<IRenderOptions> {
         };
     }
 }
+
+Object.defineProperty(Render, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Render.getDefaultOptions();
+   }
+});

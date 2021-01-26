@@ -88,6 +88,7 @@ const _private = {
                            .add('js-controls-ColumnScroll__notDraggable')
                            .add(`controls-CheckboxMarker_inList_theme-${theme}`)
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
+                           .add(`controls-ListView__itemContent_dragging_theme-${theme}`, !!current.isDragging)
                            .compile();
     },
 
@@ -277,13 +278,16 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             return 'default';
         };
 
+        itemsModelCurrent.getDraggedItemsCount = () => this._dragEntity?.getItems()?.length || 0;
+
         itemsModelCurrent.getMarkerClasses = (markerClassName = 'default'): string => {
             const style = this._options.style || 'default';
             return `controls-ListView__itemV_marker
                     controls-ListView__itemV_marker_${style}_theme-${theme}
                     controls-ListView__itemV_marker_${style}_topPadding-${itemsModelCurrent.itemPadding.top}_theme-${theme}
                     controls-ListView__itemV_marker_${style}_bottomPadding-${itemsModelCurrent.itemPadding.bottom}_theme-${theme}x
-                    controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemsModelCurrent.itemPadding.top || 'l') + '_' + markerClassName)}`;
+                    controls-ListView__itemV_marker_${(markerClassName === 'default') ? 'default' : ('padding-' + (itemsModelCurrent.itemPadding.top || 'l') + '_' + markerClassName)}
+                    ${!!itemsModelCurrent.isDragging ? ' controls-ListView__itemContent_dragging_theme-' + itemsModelCurrent.theme : ''}`;
         };
 
         if (itemsModelCurrent.isGroup) {
@@ -539,6 +543,12 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._draggingItemData = null;
         this._dragTargetPosition = null;
         this._nextModelVersion(true);
+    },
+
+    setDragOutsideList(outside: boolean): void {
+        if (this.getDisplay()) {
+            this.getDisplay().setDragOutsideList(outside);
+        }
     },
 
     setDragEntity(entity: ItemsEntity): void {
