@@ -17,7 +17,7 @@ export default class SearchGridCollection<S extends Model = Model, T extends Sea
 
    constructor(options: any) {
       super(options);
-      // TODO скорее нужно наследоваться от Grid, от дерева нам не нужна никакая логика
+      // TODO в TreeGridCollection не нужно добавлять фильтр. Вообще от триГрида нам нужен только отступ слева, возможно стоит наследоваться от грида
       this._$filter = [];
    }
 
