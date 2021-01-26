@@ -51,7 +51,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/interface/IInputTag
+ * @mixes Controls/_interface/IInputTag
  * @mixes Controls/input:IValue
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/input:IBorderVisibility
@@ -87,7 +87,7 @@ export interface ILookupOptions extends ILookupInputOptions {
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/interface/IInputTag
+ * @mixes Controls/_interface/IInputTag
  * @mixes Controls/input:IValue
  *
  * @public
