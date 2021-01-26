@@ -47,7 +47,7 @@
     </ws:else>
 
     <!-- Стрелка редактирования. Если шаблон прикладной, то не показываем -->
-    <ws:if data="{{ !contentTemplate && (gridColumn || itemData).shouldDisplayEditArrow() }}">
+    <ws:if data="{{ !contentTemplate && (gridColumn || itemData).shouldDisplayEditArrow() && editArrowTemplate }}">
         <ws:partial template="{{ editArrowTemplate }}" item="{{ (gridColumn || itemData).getOwner() }}"/>
     </ws:if>
 

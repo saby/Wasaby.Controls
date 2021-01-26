@@ -30,7 +30,10 @@
                             templateHighlightOnHover="{{ templateHighlightOnHover }}"
                             tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
                             tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
-                            editArrowTemplate="{{ editArrowTemplate }}">
+                            editArrowTemplate="{{ editArrowTemplate }}"
+
+                            _onBreadcrumbClick="{{_onBreadcrumbClick}}"
+                            _onBreadcrumbItemClick="{{_onBreadcrumbItemClick}}">
                     <ws:ladderWrapper>
                         <ws:partial template="{{ladderWrapper.content}}"
                                     attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>

@@ -2520,7 +2520,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     getSearchValue(): string {
-        return this._$searchValue;
+        return this._$searchValue || '';
     }
 
     getItemBySourceKey(key: string|number): T {
