@@ -402,7 +402,6 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(toArrayKeys(res.get(false)), []);
       });
 
-/*
       it('search model', () => {
          const items = new RecordSet({
             rawData: [{
@@ -474,7 +473,6 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.deepEqual(res.get(null), []);
          assert.deepEqual(res.get(false), [searchModel.getItemBySourceKey(1), searchModel.getItemBySourceKey(11), searchModel.getItemBySourceKey(12)]);
       });
-*/
    });
 
    describe('getCount', () => {

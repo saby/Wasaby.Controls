@@ -1,4 +1,3 @@
-/*
 import { assert } from 'chai';
 
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
@@ -699,4 +698,3 @@ describe('Controls/_display/itemsStrategy/Search', () => {
         assert.isTrue(items[3].getParent().isRoot());
     });
 });
-*/

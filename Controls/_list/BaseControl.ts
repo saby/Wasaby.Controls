@@ -3390,8 +3390,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             self._groupingLoader = new GroupingLoader({});
         }
 
+        self._viewModelConstructor = newOptions.viewModelConstructor;
         if (!newOptions.useNewModel && newOptions.viewModelConstructor) {
-            self._viewModelConstructor = newOptions.viewModelConstructor;
             if (receivedData) {
                 viewModelConfig.items = receivedData;
             } else {
