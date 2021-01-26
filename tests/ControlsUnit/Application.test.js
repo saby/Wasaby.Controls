@@ -37,7 +37,7 @@ define([
             application._dragClass = 'ws-is-no-drag';
             application._touchController.getClass = getFalseTouch;
 
-            application._updateClasses();
+            application._updateTouchClass();
 
             assert.equal(application._touchClass, 'ws-is-no-touch');
             assert.equal(application._dragClass, 'ws-is-no-drag');
@@ -47,7 +47,7 @@ define([
             application._dragClass = 'ws-is-no-drag';
             application._touchController.getClass = getTrueTouch;
 
-            application._updateClasses();
+            application._updateTouchClass();
 
             assert.equal(application._touchClass, 'ws-is-touch');
             assert.equal(application._dragClass, 'ws-is-no-drag');
@@ -57,7 +57,7 @@ define([
             application._dragClass = 'ws-is-drag';
             application._touchController.getClass = getFalseTouch;
 
-            application._updateClasses();
+            application._updateTouchClass();
 
             assert.equal(application._touchClass, 'ws-is-no-touch');
             assert.equal(application._dragClass, 'ws-is-drag');
@@ -67,7 +67,7 @@ define([
             application._dragClass = 'ws-is-drag';
             application._touchController.getClass = getTrueTouch;
 
-            application._updateClasses();
+            application._updateTouchClass();
 
             assert.equal(application._touchClass, 'ws-is-touch');
             assert.equal(application._dragClass, 'ws-is-drag');
