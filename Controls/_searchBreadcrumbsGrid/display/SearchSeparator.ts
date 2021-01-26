@@ -40,6 +40,10 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
         return false;
     }
 
+    getLevel(): number {
+        return 0;
+    }
+
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
         let classes = `controls-TreeGrid__row__searchSeparator_theme-${params.theme} `;
         classes += `controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${params.theme} `

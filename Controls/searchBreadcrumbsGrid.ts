@@ -1,6 +1,7 @@
 import { register } from 'Types/di';
 import SearchGridCollection from 'Controls/_searchBreadcrumbsGrid/display/SearchGridCollection';
 import Search from 'Controls/_searchBreadcrumbsGrid/display/Search';
+import SearchStrategy from 'Controls/_searchBreadcrumbsGrid/display/strategies/Search';
 import SearchGridDataRow from 'Controls/_searchBreadcrumbsGrid/display/SearchGridDataRow';
 import SearchGridDataCell from 'Controls/_searchBreadcrumbsGrid/display/SearchGridDataCell';
 import BreadcrumbsItem from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItem';
@@ -16,6 +17,8 @@ export {
    SearchGridCollection,
    BreadcrumbsItem,
    SearchSeparator,
+   SearchStrategy,
+   Search,
    SearchBreadcrumbsItemTemplate,
    SearchSeparatorTemplate
 }
