@@ -67,6 +67,7 @@ define([
                 const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
                 const groupItem = collection.at(2);
                 const expandedState = groupItem.isExpanded();
+                let controlResizeNotified = false;
                 const clickEvent = {
                     target: {
                         closest: () => true
@@ -74,8 +75,14 @@ define([
                 };
                 ViewInstance._collapsedGroups = {};
                 ViewInstance._listModel = collection;
+                ViewInstance._notify = (eventName) => {
+                   if (eventName === 'controlResize') {
+                      controlResizeNotified = true;
+                   }
+                };
                 ViewInstance._groupClick(null, groupItem, clickEvent);
                 assert.isTrue(expandedState !== groupItem.isExpanded());
+                assert.isTrue(controlResizeNotified);
             });
         });
 
