@@ -247,7 +247,7 @@ export default class HoverFreeze {
      */
     private _calculateMouseMoveArea(hoveredContainers: NodeListOf<HTMLElement>): IMouseMoveArea {
         const lastContainer = hoveredContainers[hoveredContainers.length - 1];
-        const itemActionsContainer = lastContainer.parentNode.querySelector(ITEM_ACTIONS_CONTAINER_SELECTOR);
+        const itemActionsContainer = lastContainer.closest(ITEM_ACTIONS_CONTAINER_SELECTOR);
         const resultRect = {
             bottom: null,
             left: null,

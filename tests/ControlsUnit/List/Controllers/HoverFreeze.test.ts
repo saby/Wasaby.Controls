@@ -27,17 +27,8 @@ describe('Controls/list/HoverFreeze', () => {
     let itemActionsHeight: number;
     let clock: any;
     let hoverFreeze: HoverFreeze;
-    let key: string;
     let isFreezeHoverCallbackCalled: boolean;
     let isUnFreezeHoverCallbackCalled: boolean;
-
-    function createFakeItem(): ICollectionItem {
-        return {
-            getContents: () => ({
-                getKey: () => key
-            })
-        } as undefined as ICollectionItem;
-    }
 
     before(() => {
         const isNode = typeof document === 'undefined';
@@ -70,7 +61,7 @@ describe('Controls/list/HoverFreeze', () => {
                 } as undefined as HTMLElement),
                 querySelectorAll: () => ([
                     {
-                        querySelector: () => ({
+                        closest: () => ({
                             offsetHeight: itemActionsHeight
                         }),
                         getBoundingClientRect: () => hoverContainerRect
@@ -89,7 +80,6 @@ describe('Controls/list/HoverFreeze', () => {
             }
         };
         hoverFreeze =  new HoverFreeze(cfg);
-        key = 'key_1';
     });
 
     afterEach(() => {
@@ -97,23 +87,21 @@ describe('Controls/list/HoverFreeze', () => {
     });
 
     it('should start freeze timer', () => {
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
 
         // until timer stops it must not be frozen
-        assert.notEqual(hoverFreeze.getCurrentItemKey(), key);
+        assert.notEqual(hoverFreeze.getCurrentItemKey(), 'key_1');
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
-        assert.equal(hoverFreeze.getCurrentItemKey(), key);
+        assert.equal(hoverFreeze.getCurrentItemKey(), 'key_1');
     });
 
     it('should freeze only the last key', () => {
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT / 2);
-        key = 'key_2';
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_2', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT / 2);
-        key = 'key_3';
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
-        assert.notEqual(hoverFreeze.getCurrentItemKey(), key);
+        hoverFreeze.startFreezeHoverTimeout('key_3', 0);
+        assert.notEqual(hoverFreeze.getCurrentItemKey(), 'key_3');
 
         // until timer stops it must not be frozen
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
@@ -123,12 +111,12 @@ describe('Controls/list/HoverFreeze', () => {
     it('should start unfreeze timer when cursor position is in bottom of the moveArea', () => {
         // mouse cursor position is in bottom of the moveArea
         const event = createFakeMouseEvent(100, 80);
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
         hoverFreeze.startUnfreezeHoverTimeout(event);
 
         // until timer stops it must not be unfrozen
-        assert.equal(hoverFreeze.getCurrentItemKey(), key);
+        assert.equal(hoverFreeze.getCurrentItemKey(), 'key_1');
         clock.tick(TEST_HOVER_UNFREEZE_TIMEOUT);
         assert.equal(hoverFreeze.getCurrentItemKey(), null);
     });
@@ -136,7 +124,7 @@ describe('Controls/list/HoverFreeze', () => {
     it('should not start unfreeze timer when cursor position is under the moveArea', () => {
         // mouse cursor position is under the moveArea
         const event = createFakeMouseEvent(100, 100);
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
         hoverFreeze.startUnfreezeHoverTimeout(event);
 
@@ -149,7 +137,7 @@ describe('Controls/list/HoverFreeze', () => {
         const event1 = createFakeMouseEvent(80, 80);
         const event2 = createFakeMouseEvent(90, 80);
         const event3 = createFakeMouseEvent(100, 80);
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
         hoverFreeze.startUnfreezeHoverTimeout(event1);
         clock.tick(TEST_HOVER_UNFREEZE_TIMEOUT / 2);
@@ -158,20 +146,20 @@ describe('Controls/list/HoverFreeze', () => {
         hoverFreeze.startUnfreezeHoverTimeout(event3);
 
         // until timer stops it must not be unfrozen
-        assert.equal(hoverFreeze.getCurrentItemKey(), key);
+        assert.equal(hoverFreeze.getCurrentItemKey(), 'key_1');
         clock.tick(TEST_HOVER_UNFREEZE_TIMEOUT);
         assert.equal(hoverFreeze.getCurrentItemKey(), null);
     });
 
     it ('should call freezeHoverCallback', () => {
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         assert.isFalse(isFreezeHoverCallbackCalled);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
         assert.isTrue(isFreezeHoverCallbackCalled);
     });
 
     it ('should call unFreezeHoverCallback when cursor position is in bottom of the moveArea', () => {
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
 
         const event = createFakeMouseEvent(100, 80);
@@ -182,7 +170,7 @@ describe('Controls/list/HoverFreeze', () => {
     });
 
     it ('should call unFreezeHoverCallback when cursor position is under the moveArea', () => {
-        hoverFreeze.startFreezeHoverTimeout(createFakeItem());
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
 
         // mouse cursor position is under the moveArea
