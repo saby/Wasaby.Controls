@@ -58,7 +58,6 @@ const _private = {
         classList += ` controls-ListView__item_${style}-topPadding_${itemPadding.top}_theme-${theme}`;
         classList += ` controls-ListView__item_${style}-bottomPadding_${itemPadding.bottom}_theme-${theme}`;
         classList += ` controls-ListView__item-rightPadding_${itemPadding.right}_theme-${theme}`;
-        classList += ' js-controls-ListView__measurableContainer';
 
         if (multiSelectVisibility !== 'hidden' && multiSelectPosition !== 'custom') {
             classList += ' controls-ListView__itemContent_withCheckboxes' + `_theme-${theme}`;
@@ -185,6 +184,7 @@ const _private = {
         wrapperClasses += ` controls-ListView__item_${style}`;
         wrapperClasses += ` controls-ListView__item_${style}_theme-${theme}`;
         wrapperClasses += ' controls-ListView__item_showActions';
+        wrapperClasses += ' js-controls-ListView__measurableContainer';
         wrapperClasses += ` controls-ListView__item__${this.isMarked() ? '' : 'un'}marked_${style}_theme-${theme}`;
         if (templateHighlightOnHover && !this.isEditing()) {
             wrapperClasses += ` controls-ListView__item_highlightOnHover_${hoverBackgroundStyle}_theme_${theme}`;

@@ -247,7 +247,7 @@ export default class HoverFreeze {
      */
     private _calculateMouseMoveArea(hoveredContainers: NodeListOf<HTMLElement>): IMouseMoveArea {
         const lastContainer = hoveredContainers[hoveredContainers.length - 1];
-        const itemActionsContainer = lastContainer.querySelector(ITEM_ACTIONS_CONTAINER_SELECTOR);
+        const itemActionsContainer = lastContainer.parentNode.querySelector(ITEM_ACTIONS_CONTAINER_SELECTOR);
         const resultRect = {
             bottom: null,
             left: null,
@@ -284,7 +284,8 @@ export default class HoverFreeze {
      * @private
      */
     private _getItemHoveredContainerSelector(uniqueClass: string, index: number): string {
-        return ` .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .${this._measurableContainerSelector}`;
+        return ` .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .${this._measurableContainerSelector}, ` +
+               ` .${uniqueClass} .controls-ListView__itemV:nth-child(${index})`;
     }
 
     /**
