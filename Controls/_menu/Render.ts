@@ -109,8 +109,8 @@ class MenuRender extends Control<IMenuRenderOptions> {
             if (!this._isFixedItem(treeItem) && item.get('pinned') === true && !this.hasParent(item)) {
                 classes += ' controls-Menu__row_pinned controls-DropdownList__row_pinned';
             }
-            if (this._options.listModel.getLast() !== treeItem &&
-                !this._isGroupNext(treeItem) && !this._isHistorySeparatorVisible(treeItem)) {
+            if (this._options.listModel.getLast() !== treeItem && !this._isGroupNext(treeItem) &&
+                !(this._options.allowPin && this._isHistorySeparatorVisible(treeItem))) {
                 classes += ' controls-Menu__row-separator_theme-' + this._options.theme;
             }
         } else if (item) {
@@ -283,7 +283,7 @@ class MenuRender extends Control<IMenuRenderOptions> {
     private _selectItem(collection: Collection<unknown>, key: number|string, state: boolean): void {
         const item = collection.getItemBySourceKey(key);
         if (item) {
-            item.setSelected(state, true);
+            item.setMarked(state, true);
             collection.nextVersion();
         }
     }
@@ -296,5 +296,14 @@ class MenuRender extends Control<IMenuRenderOptions> {
         };
     }
 }
+
+Object.defineProperty(MenuRender, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return MenuRender.getDefaultOptions();
+   }
+});
 
 export default MenuRender;

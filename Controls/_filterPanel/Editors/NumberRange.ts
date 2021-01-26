@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import DateRangeTemplate = require('wml!Controls/_filterPanel/Editors/NumberRange');
+import {Container as ValidateContainer} from 'Controls/validate';
 
 interface INumberRangeOptions extends IControlOptions {
     propertyValue: number[];
@@ -60,6 +61,9 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     protected _template: TemplateFunction = DateRangeTemplate;
     protected _minValue: number|null = null;
     protected _maxValue: number|null = null;
+    protected _children: {
+        numberRangeValidate: ValidateContainer
+    };
 
     protected _beforeMount(options?: INumberRangeOptions): void {
         this._updateValues(options.propertyValue);
@@ -81,6 +85,7 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
 
     protected _handleInputCompleted(event: SyntheticEvent, value: number): void {
         this._notifyExtendedValue([this._minValue, this._maxValue]);
+        this._children.numberRangeValidate.validate();
     }
 
     private _updateValues(newValue: number[]): void {
@@ -91,9 +96,13 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     private _notifyExtendedValue(value: number[]): void {
         const extendedValue = {
             value,
-            textValue: this._getTextValue(value[0]) + ' - ' + this._getTextValue(value[1])
+            textValue: !this._isValueEmpty(value) && this._getTextValue(value[0]) + ' - ' + this._getTextValue(value[1])
         };
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
+    }
+
+    private _isValueEmpty(value: number[]): boolean {
+        return value[0] === null || value[1] === null;
     }
 
     private _getTextValue(value: number): string|number {

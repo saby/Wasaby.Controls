@@ -98,7 +98,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
-      this._errorRegister = new RegisterClass({register: 'dataError'});
+
+      if (!options.hasOwnProperty('sourceController')) {
+         this._errorRegister = new RegisterClass({register: 'dataError'});
+      }
 
       if (receivedState && options.source instanceof PrefetchProxy) {
          this._source = options.source.getOriginal();
@@ -116,6 +119,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._dataOptionsContext = this._createContext(controllerState);
 
       if (options.sourceController) {
+         if (!controllerState.dataLoadCallback && options.dataLoadCallback) {
+            options.dataLoadCallback(options.sourceController.getItems());
+         }
          this._setItemsAndUpdateContext();
       } else if (receivedState instanceof RecordSet && isNewEnvironment()) {
          if (options.source && options.dataLoadCallback) {
@@ -149,10 +155,12 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._sourceController = newOptions.sourceController;
       }
 
-      if (newOptions.sourceController) {
-         updateResult = this._updateWithSourceControllerInOptions(newOptions);
-      } else {
-         updateResult = this._updateWithoutSourceControllerInOptions(newOptions);
+      if (this._sourceController) {
+         if (newOptions.sourceController) {
+            updateResult = this._updateWithSourceControllerInOptions(newOptions);
+         } else {
+            updateResult = this._updateWithoutSourceControllerInOptions(newOptions);
+         }
       }
 
       return updateResult;
@@ -249,11 +257,15 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _registerHandler(event, registerType, component, callback, config): void {
-      this._errorRegister.register(event, registerType, component, callback, config);
+      if (this._errorRegister) {
+         this._errorRegister.register(event, registerType, component, callback, config);
+      }
    }
 
    _unregisterHandler(event, registerType, component, config): void {
-      this._errorRegister.unregister(event, component, config);
+      if (this._errorRegister) {
+         this._errorRegister.unregister(event, component, config);
+      }
    }
 
    _itemsReadyCallbackHandler(items): void {
@@ -280,6 +292,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
    // TODO сейчас есть подписка на itemsChanged из поиска. По хорошему не должно быть.
    _itemsChanged(event: SyntheticEvent, items: RecordSet): void {
+      this._sourceController.cancelLoading();
       this._items = this._sourceController.setItems(items);
       this._updateContext(this._sourceController.getState());
       event.stopPropagation();
@@ -316,7 +329,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _onDataError(event, errbackConfig): void {
-      this._errorRegister.start(errbackConfig);
+      if (this._errorRegister) {
+         this._errorRegister.start(errbackConfig);
+      }
    }
 
    static getDefaultOptions(): object {
@@ -325,6 +340,16 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       };
    }
 }
+
+
+Object.defineProperty(Data, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Data.getDefaultOptions();
+   }
+});
 
 
 /**

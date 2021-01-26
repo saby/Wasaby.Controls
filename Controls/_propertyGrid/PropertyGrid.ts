@@ -200,6 +200,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             displayItem.toggleExpanded();
             this._collapsedGroups[groupName] = !collapsed;
             this._listModel.setFilter(this._displayFilter.bind(this));
+            this._notify('controlResize', [], {bubbling: true});
         }
     }
 
@@ -324,3 +325,12 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     static getDefaultOptions(): object {
     }
 }
+
+Object.defineProperty(PropertyGridView, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return PropertyGridView.getDefaultOptions();
+   }
+});

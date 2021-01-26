@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 import { Model as EntityModel, Model } from 'Types/entity';
 
-import { GridCollection, GridDataCell, GridDataRow, TColspanCallback } from 'Controls/display';
+import { GridCollection, GridDataCell, GridDataRow, TColspanCallback } from 'Controls/gridNew';
 import { IColumn } from 'Controls/grid';
 
 describe('Controls/display/GridDataCell', () => {
@@ -84,6 +84,9 @@ describe('Controls/display/GridDataCell', () => {
             return new GridDataRow({
                 columns,
                 owner,
+                contents: {
+                    getKey: () => 1
+                },
                 colspanCallback: ((item: EntityModel, column: IColumn, columnIndex: number, isEditing: boolean) => {
                     return null; // number | 'end'
                 }) as TColspanCallback

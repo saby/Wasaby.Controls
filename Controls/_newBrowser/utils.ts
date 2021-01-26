@@ -1,15 +1,43 @@
 import {RecordSet} from 'Types/collection';
-import {IListConfiguration, ImageEffect} from 'Controls/_newBrowser/interfaces/IListConfiguration';
+import {IBrowserViewConfig, ImageGradient, ImageViewMode} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
 import {IOptions} from 'Controls/_newBrowser/interfaces/IOptions';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
+
+function isPlainObject(object: object): boolean {
+    return object && typeof object === 'object' && object.constructor === Object;
+}
+
+export function diff(oldObject: object, newObject: object): object {
+    const result = {};
+
+    Object
+        .keys(oldObject)
+        .forEach((key) => {
+            if (oldObject[key] === newObject[key]) {
+                return;
+            }
+
+            if (isPlainObject(oldObject[key]) && isPlainObject(newObject[key])) {
+                result[key] = diff(oldObject[key], newObject[key]);
+                return;
+            }
+
+            result[key] = {
+                old: oldObject[key],
+                new: newObject[key]
+            };
+        });
+
+    return result;
+}
 
 /**
  * Из метаданных RecordSet возвращает конфигурацию отображения списка
  * в detail-колонке
  */
-export function getListConfiguration(items: RecordSet): IListConfiguration {
-    // return items.getMetaData().listConfiguration;
-    return items.getMetaData().results.get('ConfigurationTemplate');
+export function getListConfiguration(items: RecordSet): IBrowserViewConfig {
+    const meta = items.getMetaData();
+    return meta.listConfiguration || meta.results?.get('ConfigurationTemplate');
 }
 
 /**
@@ -19,7 +47,7 @@ export function compileSourceOptions(options: IOptions, forDetail: boolean): ISo
     const specific = forDetail ? options.detail : options.master;
 
     return {
-        root: specific.root || options.root,
+        root: specific.root || (!forDetail ? options.masterRoot : null) || options.root,
         filter: specific.filter || options.filter,
         source: specific.source || options.source,
         columns: specific.columns || options.columns,
@@ -41,7 +69,7 @@ export class TileConfig {
     }
 
     constructor(
-        private cfg: IListConfiguration,
+        private cfg: IBrowserViewConfig,
         private browserOptions: IOptions
     ) {}
 
@@ -51,33 +79,37 @@ export class TileConfig {
 
     getDescriptionLines(itemData: any): string | number {
         const cfg = itemData.dispItem.isNode() ? this.cfg.tile.node : this.cfg.tile.leaf;
-        return cfg.countLines;
+        return cfg.descriptionLines;
     }
 
     /**
      * Возвразщает цвет градиента плитки на основании типа узла и данных узла
      */
     getGradientColor(itemData: any): string {
-        const photo = itemData.dispItem.isNode() ? this.cfg.tile.photoNode : this.cfg.tile.photoLeaf;
+        const imageGradient = itemData.dispItem.isNode()
+            ? this.cfg.tile.node.imageGradient
+            : this.cfg.tile.leaf.imageGradient;
 
-        if (photo.effect === ImageEffect.default) {
+        if (imageGradient === ImageGradient.none) {
             return null;
         }
 
-        if (photo.effect === ImageEffect.mono) {
+        if (imageGradient === ImageGradient.light) {
             return '#fff';
         }
 
-        // В режима ImageEffect.smart берем значение из поля записи
+        // В режима ImageGradient.custom берем значение из поля записи
         return itemData.item.get(this.browserOptions.detail.gradientColorProperty);
     }
 
     getImageEffect(itemData: any): string {
-        const photo = itemData.dispItem.isNode() ? this.cfg.tile.photoNode : this.cfg.tile.photoLeaf;
+        const imageGradient = itemData.dispItem.isNode()
+            ? this.cfg.tile.node.imageGradient
+            : this.cfg.tile.leaf.imageGradient;
 
         // В данное точке нет различия между ImageEffect.smart и ImageEffect.mono
         // Различия появляются при расчете цвета градиента
-        if (photo.effect === ImageEffect.smart || photo.effect === ImageEffect.mono) {
+        if (imageGradient === ImageGradient.custom || imageGradient === ImageGradient.light) {
             return 'gradient';
         }
 
@@ -85,7 +117,27 @@ export class TileConfig {
     }
 
     getImageViewMode(itemData: any): string {
-        const photo = itemData.dispItem.isNode() ? this.cfg.tile.photoNode : this.cfg.tile.photoLeaf;
-        return photo.viewMode;
+        return  itemData.dispItem.isNode()
+            ? this.cfg.tile.node.imageViewMode
+            : this.cfg.tile.leaf.imageViewMode;
     }
+}
+
+export class ListConfig {
+    get imagePosition(): string {
+        return this.cfg.list.list.imagePosition;
+    }
+
+    get imageProperty(): string {
+        return this.browserOptions.detail.imageProperty;
+    }
+
+    get imageViewMode(): string {
+        return ImageViewMode.rectangle;
+    }
+
+    constructor(
+        private cfg: IBrowserViewConfig,
+        private browserOptions: IOptions
+    ) {}
 }

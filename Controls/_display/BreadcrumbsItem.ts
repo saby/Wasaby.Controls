@@ -3,6 +3,7 @@ import TreeItem from './TreeItem';
 import Tree from './Tree';
 import {register} from 'Types/di';
 import TreeChildren from './TreeChildren';
+import { object } from 'Types/util';
 
 export interface IOptions<T> extends ICollectionItemOptions<T> {
     owner?: Tree<T>;
@@ -94,6 +95,11 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
      isHasChildren(): boolean {
          return this.getLast().isHasChildren();
      }
+
+   protected _getMultiSelectAccessibility(): boolean|null {
+      const value = object.getPropertyValue<boolean|null>(this.getLast().getContents(), this._$multiSelectAccessibilityProperty);
+      return value === undefined ? true : value;
+   }
 
     // endregion
 }

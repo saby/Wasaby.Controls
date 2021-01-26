@@ -164,6 +164,7 @@ class Paging extends Control<IPagingOptions> {
     }
 
     static _theme: string[] = ['Controls/paging'];
+
 }
 
 export default Paging;

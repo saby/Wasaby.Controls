@@ -15,3 +15,4 @@
  */
 
 export {default as Paging} from './_paging/Paging';
+export {IArrowState} from './_paging/Paging';

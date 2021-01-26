@@ -107,6 +107,16 @@ class StackTemplate extends Control<IStackTemplateOptions> implements IPopupTemp
         };
     }
 }
+
+Object.defineProperty(StackTemplate, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return StackTemplate.getDefaultOptions();
+   }
+});
+
 /**
  * @name Controls/_popupTemplate/Stack#maximizeButtonVisibility
  * @cfg {Boolean} Определяет, будет ли отображаться кнопка изменения размера.

@@ -212,4 +212,25 @@ describe('Controls/scroll:Container ShadowsModel', () => {
             assert.isTrue(shadows.hasVisibleShadow());
         });
     });
+    describe('_getShadowEnable', () => {
+        [{
+            visibilityByInnerComponents: true,
+            topShadowVisibility: 'hidden',
+            shadowVisible: false
+        }, {
+            visibilityByInnerComponents: false,
+            topShadowVisibility: 'visible',
+            shadowVisible: true
+        }].forEach((test) => {
+            it('should ignore visibilityByInnerComponents when shadowVisibility is not "auto"', () => {
+                const shadows = new ShadowsModel({
+                    topShadowVisibility: test.topShadowVisibility,
+                    scrollMode: SCROLL_MODE.VERTICAL
+                });
+                shadows.top._visibilityByInnerComponents = test.visibilityByInnerComponents;
+                const shadowVisible = shadows.top._getShadowEnable();
+                assert.equal(test.shadowVisible, shadowVisible);
+            });
+        });
+    });
 });

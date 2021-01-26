@@ -49,8 +49,8 @@ var _private = {
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IValueOptions
+ * @mixes Controls/_interface/IInputTag
+ * @mixes Controls/input:IValue
  * @mixes Controls/_interface/ISelectorDialog
  * @public
  * @author Герасимов А.М.
@@ -80,8 +80,8 @@ var _private = {
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
- * @mixes Controls/interface/IInputTag
- * @mixes Controls/_input/interface/IValueOptions
+ * @mixes Controls/_interface/IInputTag
+ * @mixes Controls/input:IValue
  *
  * @public
  * @author Kapustin I.A.
@@ -136,6 +136,15 @@ Lookup.getDefaultOptions = function() {
       lookupTemplateName: 'Controls/lookup:Input'
    };
 };
+
+Object.defineProperty(Lookup, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Lookup.getDefaultOptions();
+   }
+});
 
 /**
  * @name Controls/_filterPopup/Panel/Lookup#caption

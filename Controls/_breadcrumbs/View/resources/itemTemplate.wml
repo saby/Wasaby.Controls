@@ -7,9 +7,9 @@
         <span class="controls-BreadCrumbsView__arrow controls-BreadCrumbsView__arrow_theme-{{_options.theme}} icon-size icon-DayForwardBsLine{{!_options.readOnly ? ' controls-BreadCrumbsView__arrow_enabled controls-BreadCrumbsView__arrow_enabled_theme-' + _options.theme}}"></span>
     </ws:if>
     <span class="controls-BreadCrumbsView__titleWrapper"
-         title="{{itemData.getPropValue(itemData.item, displayProperty)}}">
+         title="{{itemData.item.get(displayProperty)}}">
         <span class="controls-BreadCrumbsView__title
         {{!_options.readOnly ? ' controls-BreadCrumbsView__title_enabled controls-BreadCrumbsView__title_enabled_theme-' + _options.theme}}">
-            <ws:if data="{{contentTemplate}}"><ws:partial template="{{contentTemplate}}" displayProperty="{{displayProperty}}" itemData="{{itemData}}"/></ws:if><ws:else>{{ itemData.getPropValue(itemData.item, displayProperty) }}</ws:else></span>
+            <ws:if data="{{contentTemplate}}"><ws:partial template="{{contentTemplate}}" displayProperty="{{displayProperty}}" itemData="{{itemData}}"/></ws:if><ws:else>{{ itemData.item.get(displayProperty) }}</ws:else></span>
     </span>
 </div>

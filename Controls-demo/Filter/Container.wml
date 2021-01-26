@@ -7,9 +7,9 @@
                         <Controls.deprecatedFilter:Fast attr:class="controls-demo__fastFilter"/>
                     </Controls.deprecatedFilter:FastContainer>
 
-                    <Controls.deprecatedFilter:ButtonContainer>
+                    <Controls.filter:ViewContainer>
                         <Controls.deprecatedFilter:Selector attr:class="controls-demo__filterButton" templateName="Controls-demo/Filter/Panel"/>
-                    </Controls.deprecatedFilter:ButtonContainer>
+                    </Controls.filter:ViewContainer>
                 </div>
                 <Controls.list:Container>
                     <Controls.list:View emptyTemplate="Не найдено">

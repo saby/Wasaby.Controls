@@ -119,4 +119,13 @@ class Text extends Base<ITextInputOptions> {
     }
 }
 
+Object.defineProperty(Text, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Text.getDefaultOptions();
+   }
+});
+
 export default Text;

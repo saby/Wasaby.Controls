@@ -2,8 +2,9 @@
  * Библиотека контролов, которые служат для отображения элемента коллекции или выбора элемента из выпадающего окна.
  * @library Controls/dropdown
  * @includes Button Controls/_dropdown/Button
- * @includes Input Controls/_dropdown/Input
+ * @includes Selector Controls/_dropdown/Selector
  * @includes Combobox Controls/_dropdown/ComboBox
+ * @includes Toggle Controls/_dropdown/Toggle
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
  * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
  * @includes GroupTemplate Controls/dropdown:GroupTemplate
@@ -19,7 +20,7 @@
  * dropdown library
  * @library Controls/dropdown
  * @includes Button Controls/_dropdown/Button
- * @includes Input Controls/_dropdown/Input
+ * @includes Selector Controls/_dropdown/Selector
  * @includes Combobox Controls/_dropdown/ComboBox
  * @includes ItemTemplate Controls/dropdown:ItemTemplate
  * @includes HeaderTemplate Controls/dropdown:HeaderTemplate
@@ -33,7 +34,6 @@
  */
 
 import {default as Button} from 'Controls/_dropdown/Button';
-import {default as Input} from 'Controls/_dropdown/Selector';
 import {default as _Controller} from 'Controls/_dropdown/_Controller';
 import Combobox = require('Controls/_dropdown/ComboBox');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
@@ -49,6 +49,7 @@ export {default as IGrouped, IGroupedOptions} from 'Controls/_dropdown/interface
 export {default as IDropdownSource} from 'Controls/_dropdown/interface/IDropdownSource';
 export {default as IBaseDropdown} from 'Controls/_dropdown/interface/IBaseDropdown';
 export {default as Selector} from 'Controls/_dropdown/Selector';
+export {default as Toggle} from 'Controls/_dropdown/Toggle';
 
 export {
     Button,

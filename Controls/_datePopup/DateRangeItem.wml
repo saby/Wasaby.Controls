@@ -44,6 +44,7 @@
                   month="{{_getMonth(date.getFullYear(), month)}}"
                   daysData="{{extData[month]}}"
                   dateConstructor="{{_options.dateConstructor}}"
+                  _date="{{_options._date}}"
 
                   startValue="{{_options.startValue}}"
                   endValue="{{_options.endValue}}"

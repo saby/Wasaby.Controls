@@ -573,6 +573,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             style += 'z-index: ' + fixedZIndex + ';';
         } else if (zIndex) {
             style += 'z-index: ' + zIndex + ';';
+        } else if (this._initialShowShadow) {
+            style += `z-index: ${fixedZIndex};`;
         }
 
         //убрать по https://online.sbis.ru/opendoc.html?guid=ede86ae9-556d-4bbe-8564-a511879c3274
@@ -857,3 +859,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
  * @param {Vdom/Vdom:SyntheticEvent} event Event descriptor.
  * @param {Controls/_scroll/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
  */
+
+Object.defineProperty(StickyHeader, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return StickyHeader.getDefaultOptions();
+   }
+});

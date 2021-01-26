@@ -1,72 +1,79 @@
 <Controls.masterDetail:Base
+   attr:class="controls-newBrowser"
+   masterVisibility="{{_masterVisibility}}"
    propStorageId="{{_basePropStorageId + 'masterWidth'}}"
    masterWidth="{{_options.master ? _options.master.width}}"
    masterMinWidth="{{_options.master ? _options.master.minWidth}}"
    masterMaxWidth="{{_options.master ? _options.master.maxWidth}}"
-   masterVisibility="{{!_options.master ? 'hidden' : _options.master.visibility}}"
 >
 
    <ws:master>
       <Controls.scroll:Container>
          <Controls.explorer:View
-            bind:root="masterRoot"
-            bind:markedKey="detailRoot"
             scope="{{_masterExplorerOptions}}"
+
+            root="{{masterRoot}}"
+            on:rootChanged="_onMasterRootChanged()"
+
+            markedKey="{{root}}"
+            on:markedKeyChanged="_onMasterMarkedKeyChanged()"
          />
       </Controls.scroll:Container>
    </ws:master>
 
    <ws:detail>
-      <div class="controls-Catalog__detail">
-
-         <div class="controls-Catalog__toolbar">
-            <Controls.search:InputContainer
-               searchDelay="{{300}}"
-               minSearchLength="{{3}}"
-               on:search="onSearch()"
-               on:searchReset="onSearchReset()"
-            >
-               <Controls.search:Input/>
-            </Controls.search:InputContainer>
-         </div>
-
-         <Controls.list:Container>
+      <div
+         class="controls-newBrowser__detail"
+         style="background-color: {{_options.detail.backgroundColor ? _options.detail.backgroundColor : '#ffffff'}};"
+      >
+         <Controls.scroll:Container>
             <Controls.explorer:View
-               bind:root="detailRoot"
-               viewMode="{{currentViewMode}}"
+               root="{{root}}"
+               on:rootChanged="_onDetailRootChanged()"
+
+               tileSize="{{_tileCfg.imageSize}}"
+
+               viewMode="{{viewMode}}"
                scope="{{_detailExplorerOptions}}"
-               sourceController="{{_detailSourceController}}"
-               on:itemClick="onDetailItemClick()"
-               backgroundStyle="gray"
+               breadcrumbsVisibility="{{_masterVisibility === _masterVisibilityEnum.hidden ? 'visible' : 'hidden'}}"
+
+               on:arrowClick="_onDetailArrowClick()"
+               on:itemClick="_onDetailItemClick()"
             >
+               <ws:afterBreadCrumbsTemplate>
+                  <ws:if data="{{_options.detail.afterBreadCrumbsTemplate}}">
+                     <div on:search="_onSearch()" on:searchReset="_onSearchReset()">
+                        <ws:partial template="{{_options.detail.afterBreadCrumbsTemplate}}"/>
+                     </div>
+                  </ws:if>
+                  <ws:else>
+                     <invisible-node/>
+                  </ws:else>
+               </ws:afterBreadCrumbsTemplate>
                <ws:itemTemplate>
-                  <ws:if data="{{currentViewMode === _viewModeEnum.table || currentViewMode === 'search'}}">
-                     <Controls.grid:ItemTemplate
+                  <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
+                  <ws:if data="{{viewMode === _viewModeEnum.table || viewMode === 'search'}}">
+                     <Controls.treeGrid:ItemTemplate
                         scope="{{itemTemplate}}"
+                        listConfiguration="{{_listConfiguration}}"
                      />
                   </ws:if>
                   <ws:else>
                      <ws:partial
                         scope="{{itemTemplate}}"
-                        template="{{_listItemTemplate}}"
-                        imageCfg="{{_imageItemTemplateCfg}}"
-                        itemContent="{{_options.detail.itemContent}}"
-                        itemFooter="{{_options.detail.itemFooter}}"
+                        template="{{_detailExplorerOptions.itemTemplate}}"
+                        listConfiguration="{{_listConfiguration}}"
+                        listCfg="{{_listCfg}}"
                      />
                   </ws:else>
                </ws:itemTemplate>
                <ws:tileItemTemplate>
                   <ws:if data="{{tileItemTemplate.itemData.dispItem}}">
                      <ws:partial
-                        template="{{_tileItemTemplate}}"
                         scope="{{tileItemTemplate}}"
-                        imageSize="{{_tileCfg.imageSize}}"
-                        imagePosition="{{_tileCfg.imagePosition}}"
-                        imageEffect="{{_tileCfg.getImageEffect(tileItemTemplate.itemData)}}"
-                        imageViewMode="{{_tileCfg.getImageViewMode(tileItemTemplate.itemData)}}"
-                        gradientColor="{{_tileCfg.getGradientColor(tileItemTemplate.itemData)}}"
-                        description="{{_tileCfg.getDescription(tileItemTemplate.itemData)}}"
-                        descriptionLines="{{_tileCfg.getDescriptionLines(tileItemTemplate.itemData)}}"
+                        template="{{_detailExplorerOptions.tileItemTemplate}}"
+                        listConfiguration="{{_listConfiguration}}"
+                        tileCfg="{{_tileCfg}}"
                      />
                   </ws:if>
                   <ws:else>
@@ -74,7 +81,8 @@
                   </ws:else>
                </ws:tileItemTemplate>
             </Controls.explorer:View>
-         </Controls.list:Container>
+         </Controls.scroll:Container>
+
       </div>
    </ws:detail>
 

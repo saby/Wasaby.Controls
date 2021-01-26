@@ -1,7 +1,6 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import {IBreadCrumbsOptions} from './interface/IBreadCrumbs';
 import PrepareDataUtil from './PrepareDataUtil';
-import {ItemsUtil} from 'Controls/list';
 import {EventUtils} from 'UI/Events';
 import {applyHighlighter} from 'Controls/_breadcrumbs/resources/applyHighlighter';
 import template = require('wml!Controls/_breadcrumbs/HeadingPath/HeadingPath');
@@ -186,7 +185,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
 
         if (options.items && options.items.length > 0) {
             const lastItem = options.items[options.items.length - 1];
-            this._backButtonCaption = ItemsUtil.getPropertyValue(lastItem, options.displayProperty);
+            this._backButtonCaption = lastItem.get(options.displayProperty);
             // containerWidth is equal to 0, if path is inside hidden node. (for example switchableArea)
             if (options.items.length > 1) {
                 this._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
@@ -215,6 +214,16 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         };
     }
 }
+
+Object.defineProperty(BreadCrumbsPath, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return BreadCrumbsPath.getDefaultOptions();
+   }
+});
+
 /**
  * @name Controls/_breadcrumbs/HeadingPath#backButtonIconStyle
  * @cfg {String} Стиль отображения иконки кнопки "Назад".

@@ -28,6 +28,7 @@ type TBeforeCallbackBaseResult = void | CONSTANTS.CANCEL | Promise<void | CONSTA
 
 /**
  * @typedef IBeginEditOptions
+ * @description Параметры начала редактирования.
  * @property {Types/entity:Model} [item=undefined] item Запись для которой запускается редактирования.
  */
 interface IBeginEditOptions {
@@ -51,6 +52,14 @@ type TBeforeBeginEditCallback = (options: IBeginEditOptions, isAdd: boolean) =>
  * @param isAdd Флаг, принимает значение true, если запись добавляется
  */
 type TBeforeEndEditCallback = (item: Model, willSave: boolean, isAdd: boolean) => TBeforeCallbackBaseResult;
+
+/**
+ * @typedef {String} TCommitStrategy
+ * @description Стратегия сохранения изменений.
+ * @variant all Безусловно обновить/сохранить запись в источнике данных.
+ * @variant hasChanges Обновить/сохранить запись в источнике данных только при наличии незафиксированных изменений.
+ * @default all
+ */
 
 /**
  * Интерфейс опций контроллера редактирования по месту.
@@ -135,38 +144,9 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
 
     constructor(options: IEditInPlaceOptions & IEditInPlaceCallbacks) {
         super();
-        if (options.task1180668135) {
-            this._onCollectionChange = this._onCollectionChange.bind(this);
-        }
         if (this._validateOptions(options)) {
             this._options = options;
             this._collectionEditor = new CollectionEditor(this._options);
-            if (options.task1180668135) {
-                this._options.collection.subscribe('onCollectionChange', this._onCollectionChange);
-            }
-        }
-    }
-
-    _onCollectionChange(event: EventObject,
-                        action: string,
-                        newItems,
-                        newItemsIndex: number,
-                        oldItems,
-                        oldItemsIndex: number): void {
-
-        if (this._options.task1180668135 && this.isEditing() && action === 'rs' && !newItems.properties) {
-            const editingCollectionItem = this._getEditingItem();
-            const editingItem = editingCollectionItem.contents;
-            const isAdd = editingCollectionItem.isAdd;
-            this._operationsPromises = {};
-
-            if (this._options.onBeforeEndEdit) {
-                this._options.onBeforeEndEdit(editingItem, false, isAdd, true);
-            }
-            this._collectionEditor.cancel();
-            if (this._options.onAfterEndEdit) {
-                this._options.onAfterEndEdit(editingCollectionItem, isAdd, false);
-            }
         }
     }
 
@@ -182,10 +162,6 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     updateOptions(newOptions: IEditInPlaceOptions): void {
         const combinedOptions = {...this._options, ...newOptions};
         if (this._validateOptions(combinedOptions)) {
-            if (this._options.task1180668135 && (this._options.collection !== combinedOptions.collection)) {
-                this._options.collection.unsubscribe('onCollectionChange', this._onCollectionChange);
-                combinedOptions.collection.subscribe('onCollectionChange', this._onCollectionChange);
-            }
             this._collectionEditor.updateOptions(this._options);
             this._options = combinedOptions;
         }
@@ -230,8 +206,8 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     /**
      * Начинать добавление переданного элемента. Если элемент не передан, ожидается что он будет возвращен из функции обратного вызова IEditInPlaceOptions.onBeforeBeginEdit.
      * @method
-     * @param {Types/entity:Model|undefined} item Элемент для добавления
-     * @param {TAddPosition} addPosition позиция добавляемого элемента
+     * @param {IBeginEditOptions} options Параметры начала редактирования.
+     * @param {TAddPosition} addPosition позиция добавляемого элемента.
      * @return {TAsyncOperationResult}
      *
      * @public
@@ -249,7 +225,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     /**
      * Запустить редактирование переданного элемента. Если элемент не передан, ожидается что он будет возвращен из функции обратного вызова IEditInPlaceOptions.onBeforeBeginEdit.
      * @method
-     * @param {Types/entity:Model|undefined} item Элемент для редактирования
+     * @param {IBeginEditOptions} options Параметры начала редактирования.
      * @return {TAsyncOperationResult}
      *
      * @public
@@ -264,6 +240,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     /**
      * Завершить редактирование элемента и сохранить изменения.
      * @method
+     * @param {TCommitStrategy} strategy Стратегия сохранения изменений.
      * @return {TAsyncOperationResult}
      *
      * @public

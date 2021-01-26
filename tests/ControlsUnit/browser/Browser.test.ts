@@ -86,19 +86,20 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(browser._viewMode === 'table');
             });
 
-            it('searchValue', async () => {
+            it('searchValue/inputSearchValue', async () => {
                 let options = getBrowserOptions();
                 const browser = getBrowser(options);
 
                 await browser._beforeMount(options);
                 assert.ok(browser._searchValue === '');
+                assert.ok(browser._inputSearchValue === '');
 
                 options = {...options};
                 options.searchValue = 'test';
                 await browser._beforeMount(options);
                 assert.ok(browser._searchValue === 'test');
+                assert.ok(browser._inputSearchValue === 'test');
             });
-
         });
 
         describe('searchController', () => {
@@ -154,6 +155,23 @@ describe('Controls/browser:Browser', () => {
                     assert.deepStrictEqual(browser._filter, expectedFilter);
                 });
 
+            });
+
+            describe('search', () => {
+                it('search query returns error', async () => {
+                    let dataErrorProcessed = false;
+                    const options = {...getBrowserOptions(), dataLoadErrback: () => {
+                            dataErrorProcessed = true;
+                        }
+                    };
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options, {});
+                    browser.saveOptions(options);
+                    options.source.query = () => Promise.reject(new Error());
+
+                    await browser._search({}, 'test');
+                    assert.isTrue(dataErrorProcessed);
+                });
             });
         });
 
@@ -404,6 +422,7 @@ describe('Controls/browser:Browser', () => {
            });
 
            assert.isTrue(notifyStub.withArgs('filterChanged', [{payload: 'something'}]).called);
+           assert.equal(browser._searchValue, '');
 
            notifyStub.restore();
        });
@@ -456,11 +475,28 @@ describe('Controls/browser:Browser', () => {
                 handleDataLoad: () => {}
             };
             browser._searchController = {
-                handleDataLoad: () => {}
+                handleDataLoad: () => {},
+                isSearchInProcess: () => true,
+                getSearchValue: () => 'searchValue'
             };
 
             browser._dataLoadCallback(null, 'down');
             assert.equal(actualDirection, 'down');
+        });
+
+        it('search view mode changed on dataLoadCallback', async () => {
+            let options = getBrowserOptions();
+            options.searchValue = 'Sash';
+            const browser = getBrowser(options);
+
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+
+            browser._viewMode = 'search';
+            browser._searchValue = '';
+
+            browser._dataLoadCallback(new RecordSet());
+            assert.isUndefined(browser._viewMode);
         });
     });
 
@@ -475,7 +511,28 @@ describe('Controls/browser:Browser', () => {
 
            assert.equal(browser._root, 'test123');
            assert.equal(browser._searchController._root, 'test123');
+           assert.isNull(browser._rootBeforeSearch);
        });
+
+        it ('root is changed, shearchController is not created', async () => {
+            const options = getBrowserOptions();
+            const browser = getBrowser(options);
+
+            browser._handleItemOpen('test123', undefined, 'test123');
+
+            assert.equal(browser._root, 'test123');
+        });
+
+        it ('root is in options', async () => {
+            const options = {...getBrowserOptions(), root: 'testRoot'};
+            const browser = getBrowser(options);
+            await browser._beforeMount(options);
+            browser.saveOptions(options);
+            browser._searchController = await browser._getSearchController();
+            browser._handleItemOpen('test123', undefined, 'test123');
+
+            assert.equal(browser._root, 'testRoot');
+        });
     });
 
     describe('_afterSearch', () => {
@@ -496,25 +553,6 @@ describe('Controls/browser:Browser', () => {
             assert.deepEqual(browser._filter, filter);
             assert.isTrue(notifyStub.calledWith('filterChanged', [filter]));
         });
-    });
-
-    it('_startSearch', async () => {
-        const searchController = getBrowser(getBrowserOptions());
-        let errorProcessed = false;
-        const error = new Error('error');
-        error.canceled = true;
-        searchController._getSearchController = () => {
-            return Promise.resolve({
-                search: () => {
-                    return Promise.resolve(error);
-                }
-            });
-        };
-        searchController._options.dataLoadErrback = () => {
-            errorProcessed = true;
-        };
-        await searchController._startSearch('testValue');
-        assert.isFalse(errorProcessed);
     });
 
 });

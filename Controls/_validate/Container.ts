@@ -164,13 +164,14 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
             this._closeInfoBox();
         }
     }
-    protected _valueChangedHandler(event: Event, value: any): void {
+    protected _valueChangedHandler(event: Event, value: any, displayValue?: any): void {
         // We clean validation, if the value has changed.
         // But some controls notify valueChanged if the additional data has changed.
         // For example, input fields notify 'valueChanged' , when displayValue has changed, but value hasn't changed.
         if (this._currentValue !== value) {
             this._currentValue = value;
-            this._notify('valueChanged', [value]);
+            event.stopImmediatePropagation();
+            this._notify('valueChanged', [value, displayValue]);
             this._cleanValid();
         }
     }
@@ -382,6 +383,15 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         };
     }
 }
+
+Object.defineProperty(ValidateContainer, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return ValidateContainer.getDefaultOptions();
+   }
+});
 
 export default ValidateContainer;
 
