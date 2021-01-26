@@ -7,6 +7,7 @@ define('Controls/Application',
       'wml!Controls/Application/Page',
       'Core/BodyClasses',
       'Env/Env',
+      'Env/Touch',
       'Env/Event',
       'UI/Base',
       'Controls/scroll',
@@ -15,10 +16,10 @@ define('Controls/Application',
       'Controls/event',
       'Controls/popup',
       'UI/HotKeys',
-      'Controls/Application/TouchDetectorController',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
       'Application/Page',
+      'Controls/context',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -59,6 +60,7 @@ define('Controls/Application',
       template,
       cBodyClasses,
       Env,
+      Touch,
       EnvEvent,
       UIBase,
       scroll,
@@ -67,10 +69,10 @@ define('Controls/Application',
       ControlsEvent,
       popup,
       HotKeys,
-      TouchDetector,
       dragnDrop,
       TimeTesterInv,
-      AppPage) {
+      AppPage,
+      cContext) {
       'use strict';
       var _private;
 
@@ -146,7 +148,6 @@ define('Controls/Application',
          },
          _mousemovePage: function(ev) {
             this._registers.mousemove.start(ev);
-            this._touchDetector.moveHandler();
             this._updateTouchClass();
          },
          _mouseupPage: function(ev) {
@@ -174,7 +175,6 @@ define('Controls/Application',
          },
 
          _touchStartPage: function() {
-            this._touchDetector.touchHandler();
             this._updateTouchClass();
          },
 
@@ -254,8 +254,8 @@ define('Controls/Application',
 
             // Данный метод вызывается до построения вёрстки, и при первой отрисовке еще нет _children (это нормально)
             // поэтому сами детектим touch с помощью compatibility
-            if (this._touchDetector) {
-               updated.touchClass = this._touchDetector.getClass();
+            if (this._touchController) {
+               updated.touchClass = this._touchController.getClass();
             } else {
                updated.touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
             }
@@ -449,8 +449,8 @@ define('Controls/Application',
          },
 
          _createTouchDetector: function() {
-            this._touchDetector = new TouchDetector();
-            this._touchObjectContext = this._touchDetector.createContext();
+            this._touchController = Touch.TouchDetect.getInstance();
+            this._touchObjectContext = new cContext.TouchContextField.create();
          },
 
          _createDragnDropController: function() {

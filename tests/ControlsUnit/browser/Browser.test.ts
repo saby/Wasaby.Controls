@@ -475,7 +475,9 @@ describe('Controls/browser:Browser', () => {
                 handleDataLoad: () => {}
             };
             browser._searchController = {
-                handleDataLoad: () => {}
+                handleDataLoad: () => {},
+                isSearchInProcess: () => true,
+                getSearchValue: () => 'searchValue'
             };
 
             browser._dataLoadCallback(null, 'down');

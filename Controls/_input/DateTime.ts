@@ -1,4 +1,4 @@
-﻿import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Date as WSDate, DateTime as WSDateTime, Time as WSTime} from 'Types/entity';
@@ -33,9 +33,9 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @extends UI/Base:Control
  * @mixes Controls/interface/IInputDateTime
  * @mixes Controls/_input/interface/IDateTimeMask
- * @mixes Controls/interface/IInputTag
+ * @mixes Controls/_interface/IInputTag
  * @mixes Controls/_input/interface/IBase
- * @mixes Controls/interface/IInputPlaceholder
+ * @mixes Controls/_interface/IInputPlaceholder
  * @mixes Controls/_input/interface/IValueValidators
  *
  * @ignoreOptions Controls/_input/interface/IBase#placeholder

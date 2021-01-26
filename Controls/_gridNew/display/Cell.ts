@@ -124,6 +124,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return `grid-column: ${colspanParams.startColumn} / ${colspanParams.endColumn};`;
     }
 
+    getRowSeparatorSize(): string {
+        return this._$rowSeparatorSize;
+    }
+
     getRowspan(): string {
         return '';
     }
