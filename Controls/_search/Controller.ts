@@ -267,7 +267,7 @@ export default class Container extends Control<IContainerOptions> {
          this._deepReload = undefined;
       }
 
-      if (data instanceof RecordSet && this._searchController.isSearchInProcess()) {
+      if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
          this._updateParams(this._searchController.getSearchValue());
          this._notify('filterChanged', [this._searchController.getFilter()]);
       }
