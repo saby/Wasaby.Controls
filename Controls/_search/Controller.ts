@@ -129,7 +129,7 @@ export default class Container extends Control<IContainerOptions> {
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
       const options = {...newOptions, ...context.dataOptions};
       const searchValueChanged = newOptions.searchValue !== undefined &&
-          (this._options.searchValue !== newOptions.searchValue || this._searchValue !== newOptions.searchValue);
+          (this._options.searchValue !== newOptions.searchValue && this._searchValue !== newOptions.searchValue);
       if (newOptions.root !== this._options.root) {
          this._root = newOptions.root;
       }
@@ -143,6 +143,7 @@ export default class Container extends Control<IContainerOptions> {
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
+            this._setSearchValue(newOptions.searchValue);
          } else if (updateResult instanceof Promise) {
             updateResult.catch((error: Error & {
                isCancelled?: boolean;
@@ -152,6 +153,12 @@ export default class Container extends Control<IContainerOptions> {
                }
             });
          }
+      }
+      if (newOptions.dataLoadCallback) {
+         this._sourceController.updateOptions({
+            ...options,
+            dataLoadCallback: this._dataLoadCallback
+         });
       }
    }
 
