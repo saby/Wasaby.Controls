@@ -329,8 +329,6 @@ define('Controls/Application',
             this.pageName = cfg.pageName || appData.pageName || '';
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
-
-
             // Чтобы при загрузке слоя совместимости, понять нужно ли грузить провайдеры(extensions, userInfo, rights),
             // положим опцию из Application в constants. Иначе придется использовать глобальную переменную.
             // TODO: Удалить этот код отсюда по задае:
@@ -344,6 +342,7 @@ define('Controls/Application',
                }
                /* eslint-enable */
             }
+            this._initBodyClasses();
             this._updateTouchClass();
             this._updateThemeClass(cfg);
             this._updateFromOptionsClass(cfg);
