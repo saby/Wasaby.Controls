@@ -129,7 +129,7 @@ export default class Container extends Control<IContainerOptions> {
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
       const options = {...newOptions, ...context.dataOptions};
       const searchValueChanged = newOptions.searchValue !== undefined &&
-          (this._options.searchValue !== newOptions.searchValue || this._searchValue !== newOptions.searchValue);
+          (this._options.searchValue !== newOptions.searchValue && this._searchValue !== newOptions.searchValue);
       if (newOptions.root !== this._options.root) {
          this._root = newOptions.root;
       }
@@ -153,6 +153,10 @@ export default class Container extends Control<IContainerOptions> {
             });
          }
       }
+      this._sourceController.updateOptions({
+         ...options,
+         dataLoadCallback: this._dataLoadCallback
+      });
    }
 
    private _setSearchValue(value: string): void {
