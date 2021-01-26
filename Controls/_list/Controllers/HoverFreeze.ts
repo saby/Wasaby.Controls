@@ -2,7 +2,7 @@ import {CrudEntityKey} from 'Types/source';
 import {SyntheticEvent} from 'UI/Vdom';
 
 const HOVER_FREEZE_TIMEOUT: number = 200;
-const HOVER_UNFREEZE_TIMEOUT: number = 50;
+const HOVER_UNFREEZE_TIMEOUT: number = 100;
 
 const ITEM_HOVER_CONTAINER_SELECTOR = '.js-controls-ListView_item-hover';
 const EDITABLE_HOVER_CONTAINER_SELECTOR = '.js-controls-ListView_editable-hover';
@@ -75,21 +75,7 @@ export default class HoverFreeze {
      * @param itemIndex
      */
     startFreezeHoverTimeout(itemKey: CrudEntityKey, itemIndex: number): void {
-        if (this._itemData === null || this._itemData?.key === itemKey) {
-            // если уже были таймеры разлипания/залипания, то глушим их
-            this._clearUnfreezeHoverTimeout();
-            this._clearFreezeHoverTimeout();
-
-            // Стартуем новый таймер залипания.
-            this._itemFreezeHoverTimeout = setTimeout(() => {
-                // Выставляем новую запись как залипшую:
-                this._freezeHover(itemIndex);
-                // сохранили текущее наведённое значение
-                this._setItemData(itemKey, itemIndex);
-                // Сбросили отложенный ховер
-                this._delayedItemData = null;
-            }, HOVER_FREEZE_TIMEOUT);
-        }
+        this._startFreezeHoverTimeout(itemKey, itemIndex, HOVER_FREEZE_TIMEOUT);
     }
 
     startUnfreezeHoverTimeout(event: SyntheticEvent): void {
@@ -105,7 +91,8 @@ export default class HoverFreeze {
             this._itemUnfreezeHoverTimeout = setTimeout(() => {
                 this.unfreezeHover();
                 if (this._delayedItemData) {
-                    this.startFreezeHoverTimeout(this._delayedItemData.key, this._delayedItemData.index);
+                    const timeout = HOVER_FREEZE_TIMEOUT - HOVER_UNFREEZE_TIMEOUT;
+                    this._startFreezeHoverTimeout(this._delayedItemData.key, this._delayedItemData.index, timeout);
                 }
             }, HOVER_UNFREEZE_TIMEOUT);
         } else {
@@ -153,6 +140,20 @@ export default class HoverFreeze {
         }
     }
 
+    private _startFreezeHoverTimeout(itemKey: CrudEntityKey, itemIndex: number, timeout: number): void {
+        if (this._itemData === null || this._itemData?.key === itemKey) {
+            // если уже были таймеры разлипания/залипания, то глушим их
+            this._clearUnfreezeHoverTimeout();
+            this._clearFreezeHoverTimeout();
+
+            // Стартуем новый таймер залипания.
+            this._itemFreezeHoverTimeout = setTimeout(() => {
+                // Выставляем новую запись как залипшую:
+                this._freezeHover(itemKey, itemIndex);
+            }, timeout);
+        }
+    }
+
     private _setItemData(key: CrudEntityKey, index: number): void {
         this._itemData = { key, index };
     }
@@ -191,12 +192,13 @@ export default class HoverFreeze {
 
     /**
      * Устанавливает необходимые CSS классы и выполняет _freezeHoverCallback
-     * @param index
+     * @param itemKey
+     * @param itemIndex
      * @private
      */
-    private _freezeHover(index: number): void {
+    private _freezeHover(itemKey: CrudEntityKey, itemIndex: number): void {
         this._clearFreezeHoverTimeout();
-        const htmlNodeIndex = index + 1;
+        const htmlNodeIndex = itemIndex + 1;
         const hoveredContainers = this._getHoveredItemContainers(htmlNodeIndex);
 
         // zero element in grid will be row itself; it doesn't have any background color, then lets take the last one
@@ -216,6 +218,10 @@ export default class HoverFreeze {
         if (this._freezeHoverCallback) {
             this._freezeHoverCallback();
         }
+        // сохранили текущее наведённое значение
+        this._setItemData(itemKey, itemIndex);
+        // Сбросили отложенный ховер
+        this._delayedItemData = null;
     }
 
     /**
