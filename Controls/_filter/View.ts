@@ -707,7 +707,7 @@ var Filter = Control.extend({
     _dateRangeItem: null,
     _hasResetValues: true,
     _dependenciesTimer: null,
-    _stickyOpener: null,
+    _filterPopupOpener: null,
     _stackOpener: null,
 
     _beforeMount: function(options, context, receivedState) {
@@ -782,8 +782,8 @@ var Filter = Control.extend({
         this._configs = null;
         this._displayText = null;
         UnregisterUtil(this, 'scroll');
-        if (this._stickyOpener) {
-            this._stickyOpener.destroy();
+        if (this._filterPopupOpener) {
+            this._filterPopupOpener.destroy();
         }
         if (this._stackOpener) {
             this._stackOpener.destroy();
@@ -881,14 +881,21 @@ var Filter = Control.extend({
                 onResult: this._resultHandler.bind(this)
             }
         };
-        this._getStickyOpener().open(Merge(popupOptions, panelPopupOptions));
+        this._getFilterPopupOpener().open(Merge(popupOptions, panelPopupOptions));
     },
 
     _handleScroll(): void {
-        const stickyOpener = this._getStickyOpener();
-        if (stickyOpener.isOpened()) {
-            stickyOpener.close();
+        const opener = this._getFilterPopupOpener();
+        if (opener.isOpened()) {
+            opener.close();
         }
+    },
+
+    _getFilterPopupOpener(): StickyOpener|StackOpener {
+        if (!this._filterPopupOpener) {
+            this._filterPopupOpener = this._options.detailPanelOpenMode === 'stack' ? new StackOpener() : new StickyOpener();
+        }
+        return this._filterPopupOpener;
     },
 
     _getStickyOpener(): StickyOpener {
@@ -931,7 +938,7 @@ var Filter = Control.extend({
             }
             _private.notifyChanges(this, this._source);
         }
-        this._getStickyOpener().close();
+        this._getFilterPopupOpener().close();
     },
 
     _onSelectorTemplateResult: function(items) {
@@ -976,9 +983,9 @@ var Filter = Control.extend({
     },
 
     _reset: function(event, item) {
-        const stickyOpener = this._getStickyOpener();
-        if (stickyOpener.isOpened()) {
-            stickyOpener.close();
+        const opener = this._getFilterPopupOpener();
+        if (opener.isOpened()) {
+            opener.close();
         }
         var newValue = object.getPropertyValue(item, 'resetValue');
         object.setPropertyValue(item, 'value', newValue);
@@ -1035,9 +1042,9 @@ var Filter = Control.extend({
     },
 
     _resetFilterText: function() {
-        const stickyOpener = this._getStickyOpener();
-        if (stickyOpener.isOpened()) {
-            stickyOpener.close();
+        const opener = this._getFilterPopupOpener();
+        if (opener.isOpened()) {
+            opener.close();
         }
         factory(this._source).each(function(item) {
             // Быстрые фильтры и фильтр выбора периода
@@ -1059,7 +1066,8 @@ Filter.getDefaultOptions = function() {
     return {
         panelTemplateName: 'Controls/filterPopup:SimplePanel',
         alignment: 'right',
-        itemTemplate: defaultItemTemplate
+        itemTemplate: defaultItemTemplate,
+        detailPanelOpenMode: 'sticky'
     };
 };
 
