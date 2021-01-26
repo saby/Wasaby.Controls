@@ -34,7 +34,7 @@ define([
          });
 
          it('ws-is-no-touch ws-is-no-drag ws-is-hover', function() {
-            application._dragClass = 'ws-is-no-drag';
+            application._bodyClasses.dragClass = 'ws-is-no-drag';
             application._touchController.getClass = getFalseTouch;
 
             application._updateTouchClass();
@@ -44,7 +44,7 @@ define([
             assert.equal(application._bodyClasses.hoverClass, 'ws-is-hover');
          });
          it('ws-is-touch ws-is-no-drag ws-is-no-hover', function() {
-            application._dragClass = 'ws-is-no-drag';
+            application._bodyClasses.dragClass = 'ws-is-no-drag';
             application._touchController.getClass = getTrueTouch;
 
             application._updateTouchClass();
@@ -54,7 +54,7 @@ define([
             assert.equal(application._bodyClasses.hoverClass, 'ws-is-no-hover');
          });
          it('ws-is-no-touch ws-is-drag ws-is-no-hover', function() {
-            application._dragClass = 'ws-is-drag';
+            application._bodyClasses.dragClass = 'ws-is-drag';
             application._touchController.getClass = getFalseTouch;
 
             application._updateTouchClass();
@@ -64,7 +64,7 @@ define([
             assert.equal(application._bodyClasses.hoverClass, 'ws-is-no-hover');
          });
          it('ws-is-touch ws-is-drag ws-is-no-hover', function() {
-            application._dragClass = 'ws-is-drag';
+            application._bodyClasses.dragClass = 'ws-is-drag';
             application._touchController.getClass = getTrueTouch;
 
             application._updateTouchClass();
