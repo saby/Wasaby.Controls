@@ -838,6 +838,10 @@ var
                 this._canShowRealGridWithColumnScroll = true;
             }
         },
+        _onEndScrollingByHScrollBar(e) {
+            e.stopPropagation();
+            _private.scrollToColumn(this);
+        },
         _startDragScrolling(e, startBy: 'mouse' | 'touch'): void {
             if (this._isColumnScrollVisible() && this._dragScrollController) {
                 let isGrabbing: boolean;
@@ -877,7 +881,9 @@ var
         },
         _stopDragScrolling(e, startBy: 'mouse' | 'touch') {
             if (this._isColumnScrollVisible() && this._dragScrollController) {
-                _private.scrollToColumn(this);
+                if (this._dragScrollController.isScrolled()) {
+                    _private.scrollToColumn(this);
+                }
                 if (startBy === 'mouse') {
                     this._dragScrollController.onViewMouseUp(e);
                 } else {
@@ -916,10 +922,6 @@ var
         },
         _onDragScrollOverlayMouseLeave(e) {
             this._dragScrollController?.onOverlayMouseLeave(e);
-        },
-        _onScrollWrapperMouseUp(e) {
-            e.stopPropagation();
-            _private.scrollToColumn(this);
         },
         _onItemSwipe(event, itemData) {
             const direction = event.nativeEvent.direction;

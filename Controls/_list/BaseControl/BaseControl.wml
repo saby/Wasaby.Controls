@@ -1,7 +1,15 @@
 <ws:template name="loadingIndicator">
-    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}" style="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}" name="{{indicatorName}}LoadingIndicator">
+    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}"
+         style="{{ _getLoadingIndicatorStyles(loadingIndicatorState) }}"
+         name="{{loadingIndicatorState}}LoadingIndicator">
+        <ws:partial template="wml!Controls/_list/LoadingIndicatorTemplate"/>
+    </div>
+</ws:template>
+
+<ws:template name="portionedSearch">
+    <div class="{{ _getLoadingIndicatorClasses(loadingIndicatorState) }}" name="LoadingIndicator">
         <ws:partial template="{{_options.loadingIndicatorTemplate}}"
-                    showLoadingIndicator="{{showLoadingIndicator || _showLoadingIndicatorImage}}"
+                    showLoadingIndicator="{{_showLoadingIndicator}}"
                     portionedSearchInProgress="{{_portionedSearchInProgress}}">
             <ws:contentTemplate>
                 <div class="controls-BaseControl__abortSearch controls-BaseControl__abortSearch_theme-{{_options.theme}}" on:click="_abortSearch()">{[Прервать поиск]}</div>
@@ -25,7 +33,7 @@
         <ws:if data="{{_options.navigation.viewConfig.totalInfo === 'extended'}}">
             <div class="controls-BaseControl_paging-label_theme-{{_options.theme}}">
                 <div>{{_pagingLabelData.firstItemNumber}} - {{_pagingLabelData.lastItemNumber}} {{rk('из')}} {{_pagingLabelData.totalItemsCount}}, {{rk('по')}} </div>
-                <Controls.dropdown:Input
+                <Controls.dropdown:Selector
                         attr:class="controls-BaseControl_paging-pageSizeChooser controls-BaseControl_paging-pageSizeChooser_theme-{{_options.theme}}"
                         keyProperty="id"
                         style="secondary"
@@ -34,7 +42,7 @@
                         selectedKeys="{{_selectedPageSizeKey}}"
                         on:selectedKeysChanged="_changePageSize()"
                         source="{{_pageSizeSource}}">
-                </Controls.dropdown:Input>
+                </Controls.dropdown:Selector>
             </div>
         </ws:if>
         <ws:else>
@@ -51,7 +59,6 @@
 </ws:template>
 
 <ws:template name="footerTemplateIf">
-    <ws:partial if="{{ _shouldShowLoadingIndicator('inFooter') }}" template="loadingIndicator"/>
     <ws:if data="{{_options.footerTemplate}}">
         <div class="controls-BaseControl__footer-content_theme-{{_options.theme}}">
             <ws:partial template="{{_options.footerTemplate}}"/>
@@ -88,11 +95,9 @@
     </ws:if>
 </ws:template>
 <ws:template name="viewTpl">
-    <div class="controls-ScrollController" name="viewContainer">
-        <!-- Ещё один индикатор - необходимая жертва для того, чтобы отобразить его вместо 1px и не задеть другие части системы -->
-        <ws:partial if="{{_shouldShowLoadingIndicator('attachToNull')}}"
-                    attr:style="{{_attachLoadTopTriggerToNull ? 'margin-bottom: -' + _attachedToNullLoadTopTriggerOffset + 'px;'}}"
-                    template="loadingIndicator" showLoadingIndicator="{{true}}" loadingIndicatorState="attachToNull"/>
+    <div class="controls-BaseControl__viewContainer controls-ScrollController" name="viewContainer">
+        <ws:partial if="{{ _shouldDisplayMiddleLoadingIndicator() }}" template="loadingIndicator"/>
+
         <div name="topVirtualScrollTrigger" style="position: relative; top: 0;{{_hideTopTrigger ? ' display: none;'}}"></div>
         <ws:partial
                 attr:class="controls-itemActionsV_menu-{{_itemActionsMenuId ? 'shown' : 'hidden'}}"
@@ -100,7 +105,7 @@
                 name="{{name}}"
                 template="{{ _options.content }}"
                 scope="{{_options}}"
-                loadingState="{{_showLoadingIndicatorImage ? _loadingIndicatorState}}"
+                loadingState="{{_showLoadingIndicator ? _loadingIndicatorState}}"
                 _needBottomPadding="{{_needBottomPadding}}"
                 needShowEmptyTemplate="{{ __needShowEmptyTemplate(_options.emptyTemplate, _listViewModel, _options.emptyTemplateColumns) }}"
                 listModel="{{_listViewModel}}"
@@ -133,7 +138,6 @@
                 on:itemsContainerReady="_itemsContainerReadyHandler()"
                 on:controlResize="_viewResize()"
                 on:doScroll="_stopBubblingEvent()"
-                on:updateShadowMode="_stopBubblingEvent()"
                 on:updatePlaceholdersSize="_stopBubblingEvent()"
                 on:saveScrollPosition="_stopBubblingEvent()"
                 on:restoreScrollPosition="_stopBubblingEvent()"
@@ -195,18 +199,15 @@
         </ws:if>
 
         <ws:if data="{{_listViewModel}}">
-
-            <ws:partial if="{{ _shouldShowLoadingIndicator('beforeEmptyTemplate') }}" template="loadingIndicator"/>
-
-            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="up" loadingIndicatorState="up" attr:style="display: none;"/>
+            <ws:partial template="loadingIndicator" loadingIndicatorState="up"/>
 
             <ws:partial template="fullView" name="listView"
                         attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
 
-            <ws:partial template="loadingIndicator" showLoadingIndicator="{{true}}" indicatorName="down" loadingIndicatorState="down" attr:style="display: none;"/>
+            <ws:partial template="loadingIndicator" loadingIndicatorState="down"/>
         </ws:if>
 
-        <ws:partial if="{{ _shouldShowLoadingIndicator('afterList') }}" template="loadingIndicator"/>
+        <ws:partial if="{{ _shouldDisplayPortionedSearch() }}" template="portionedSearch"/>
 
         <ws:if data="{{_showContinueSearchButtonDirection === 'down'}}">
             <ws:partial template="continueSearch"/>

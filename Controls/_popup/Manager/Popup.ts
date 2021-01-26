@@ -101,9 +101,13 @@ class Popup extends Control<IPopupControlOptions> {
     protected _beforeUpdate(options: IPopupControlOptions): void {
         this._stringTemplate = typeof options.template === 'string';
         if (options._prefetchPromise !== this._options._prefetchPromise) {
-            this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
-                this._prefetchData = data;
-            });
+            if (options._prefetchPromise) {
+                this._preparePrefetchData(options._prefetchPromise).then((data: IPrefetchData) => {
+                    this._prefetchData = data;
+                });
+            } else {
+                this._prefetchData = null;
+            }
         }
     }
 
@@ -120,32 +124,17 @@ class Popup extends Control<IPopupControlOptions> {
         this._isPrefetchDataMode = true;
         return prefetchPromise.then((prefetchPromiseData: IPrefetchPromises) => {
             const promiseArray = Object.values(prefetchPromiseData);
-            if (Promise.allSettled) {
-                return Promise.allSettled(promiseArray).then(
-                    (dataArray: Array<{status: string, value?: unknown, reason?: unknown}>) => {
-                        const keys = Object.keys(prefetchPromiseData);
-                        const data = {};
-                        let i = 0;
-                        for (const key of keys) {
-                            data[key] = dataArray[i].value || dataArray[i].reason;
-                            i++;
-                        }
-                        return data;
-                    });
-            } else {
-                // Для IE. Пока не долетел полифилл
-                // https://online.sbis.ru/opendoc.html?guid=7af4063f-b866-4b97-9485-0f820b023d9b
-                // После весь else можно удалить
-                return Promise.all(promiseArray).then((dataArray: unknown[]) => {
+            return Promise.allSettled(promiseArray).then(
+                (dataArray: Array<{status: string, value?: unknown, reason?: unknown}>) => {
                     const keys = Object.keys(prefetchPromiseData);
                     const data = {};
                     let i = 0;
                     for (const key of keys) {
-                        data[key] = dataArray[i++];
+                        const promiseResult = dataArray[i++];
+                        data[key] = promiseResult.value || promiseResult.reason;
                     }
                     return data;
                 });
-            }
         });
     }
 

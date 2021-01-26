@@ -5,16 +5,21 @@
  * @includes ListItemTemplate Controls/_newBrowser/templates/ListItemTemplate
  * @includes TileItemTemplate Controls/_newBrowser/templates/TileItemTemplate
  * @includes IOptions Controls/_newBrowser/interfaces/IOptions
- * @includes TileSize Controls/_newBrowser/interfaces/IListConfiguration
- * @includes ImageEffect Controls/_newBrowser/interfaces/IListConfiguration
- * @includes ItemViewMode Controls/_newBrowser/interfaces/IListConfiguration
- * @includes ImagePosition Controls/_newBrowser/interfaces/IListConfiguration
- * @includes ImageViewMode Controls/_newBrowser/interfaces/IListConfiguration
- * @includes BackgroundStyle Controls/_newBrowser/interfaces/IListConfiguration
- * @includes IListConfiguration Controls/_newBrowser/interfaces/IListConfiguration
+ * @includes TileSize Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes ITileConfig Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes IListConfig Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes ITableConfig Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes NodesPosition Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes ImageGradient Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes ImageViewMode Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes ListImagePosition Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes TileImagePosition Controls/_newBrowser/interfaces/IBrowserViewConfig
+ * @includes IBrowserViewConfig Controls/_newBrowser/interfaces/IBrowserViewConfig
  * @includes IMasterOptions Controls/_newBrowser/interfaces/IMasterOptions
  * @includes IDetailOptions Controls/_newBrowser/interfaces/IDetailOptions
- * @includes CatalogDetailViewMode Controls/_newBrowser/interfaces/IDetailOptions
+ * @includes DetailViewMode Controls/_newBrowser/interfaces/IDetailOptions
+ * @includes IRootsData Controls/_newBrowser/interfaces/IRootsData
+ * @includes BeforeChangeRootResult Controls/_newBrowser/interfaces/IRootsData
  * @author Уфимцев Д.Ю.
  */
 // tslint:disable-next-line:ban-ts-ignore
@@ -32,13 +37,17 @@ export {
 export {default as Browser} from 'Controls/_newBrowser/Browser';
 export {IOptions} from './_newBrowser/interfaces/IOptions';
 export {IMasterOptions} from './_newBrowser/interfaces/IMasterOptions';
-export {IDetailOptions, CatalogDetailViewMode} from './_newBrowser/interfaces/IDetailOptions';
+export {IDetailOptions, DetailViewMode} from './_newBrowser/interfaces/IDetailOptions';
+export {IRootsData, BeforeChangeRootResult} from './_newBrowser/interfaces/IRootsData';
 export {
     TileSize,
-    ImageEffect,
-    ItemViewMode,
-    ImagePosition,
+    ITileConfig,
+    IListConfig,
+    ITableConfig,
+    NodesPosition,
+    ImageGradient,
     ImageViewMode,
-    BackgroundStyle,
-    IListConfiguration
-} from './_newBrowser/interfaces/IListConfiguration';
+    ListImagePosition,
+    TileImagePosition,
+    IBrowserViewConfig
+} from './_newBrowser/interfaces/IBrowserViewConfig';

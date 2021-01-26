@@ -26,13 +26,7 @@
                         attr:class="{{ (item || itemData).getLadderWrapperClasses(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"/>
         </ws:ladderWrapper>
         <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
-                            key="{{ (item || itemData).key }}"
                             checkboxReadOnly="{{ checkboxReadOnly }}"/>
-        <ws:multiSelectTemplate>
-            <ws:partial template="{{multiSelectTpl}}">
-                <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
-            </ws:partial>
-        </ws:multiSelectTemplate>
     </ws:partial>
 
     <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">
@@ -46,6 +40,10 @@
                         itemActionsClass="{{ itemActionsClass }}"
                         highlightOnHover="{{ highlightOnHover }}"/>
         </ws:else>
+    </ws:if>
+
+    <ws:if data="{{ (item || itemData).Draggable && (item || itemData).shouldDisplayDraggingCounter() }}">
+        <span class="controls-ListView__item-dragging-counter">{{(item || itemData).getDraggedItemsCount()}}</span>
     </ws:if>
 </ws:template>
 

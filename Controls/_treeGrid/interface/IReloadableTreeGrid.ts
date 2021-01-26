@@ -14,7 +14,7 @@ export interface IReloadableTreeGrid {
  * @name Controls/_treeGrid/interface/IReloadableTreeGrid#reload
  * @function
  * @param {boolean} keepScroll Сохранить ли позицию скролла после перезагрузки.
- * @param {object} sourceConfig {@link Controls/_interface/INavigation/IBaseSourceConfig.typedef Конфигурация источника данных } для перезагрузки.
+ * @param {Controls/interface:INavigationOptionValue#sourceConfig} sourceConfig Конфигурация источника данных для перезагрузки.
  * @remark
  * Перезагрузка выполняется с сохранением раскрытых узлов.
  * При этом в поле фильтра, указанное в parentProperty будет отправлен массив раскрытых узлов.
@@ -23,7 +23,7 @@ export interface IReloadableTreeGrid {
  * Обратите внимание! При смене фильтра/навигации/source список раскрытых узлов сбрасывается.
  * @example
  * Пример списочного метода БЛ
- * <pre>
+ * <pre class="brush: python">
  * def Test.MultiRoot(ДопПоля, Фильтр, Сортировка, Навигация):
  *      rs = RecordSet(CurrentMethodResultFormat())
  *      if Навигация.Type() == NavigationType.ntMULTI_ROOT:

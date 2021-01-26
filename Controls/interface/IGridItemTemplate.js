@@ -22,6 +22,7 @@ define('Controls/interface/IGridItemTemplate', [
     * @name Controls/interface/IGridItemTemplate#itemTemplate
     * @cfg {String|Function} Пользовательский шаблон отображения элемента.
     * @default undefined
+    * @markdown
     * @remark
     * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/grid:ItemTemplate}. Шаблон Controls/grid:ItemTemplate поддерживает {@link Controls/grid:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
     *

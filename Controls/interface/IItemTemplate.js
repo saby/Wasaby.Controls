@@ -23,6 +23,7 @@ define('Controls/interface/IItemTemplate', [
     * @cfg {String|Function} Пользовательский шаблон отображения элемента.
     * @default undefined
     * @demo Controls-demo/list_new/ItemTemplate/CustomContent/Index
+    * @markdown
     * @remark
     * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/list:ItemTemplate}. Шаблон Controls/list:ItemTemplate поддерживает {@link Controls/list:ItemTemplate параметры}, с помощью которых можно изменить отображение элемента.
     *

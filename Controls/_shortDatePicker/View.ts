@@ -360,10 +360,9 @@ class View extends Control<IDateLitePopupOptions> {
 
         let fittingMode;
         if (!this._isExpandButtonVisible || !this._options.stickyPosition) {
+            this._isExpandedPopup = !this._isExpandedPopup;
             return;
         }
-
-        this._isExpandedPopup = !this._isExpandedPopup;
 
         if (this._isExpandedPopup) {
             fittingMode = 'fixed';

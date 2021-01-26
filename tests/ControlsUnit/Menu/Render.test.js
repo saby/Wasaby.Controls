@@ -159,14 +159,14 @@ define(
                assert.equal(renderOptions.listModel.getCollection().at(0).get('node'), false);
             });
 
-            it('check selected empty item', function() {
+            it('check marked empty item', function() {
                renderOptions.selectedKeys = [];
                menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
-               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isMarked());
 
                renderOptions.selectedKeys = [null];
                menuRender.addEmptyItem(renderOptions.listModel, renderOptions);
-               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isSelected());
+               assert.isTrue(renderOptions.listModel.getItemBySourceKey(null).isMarked());
             });
 
             it('check model', function() {
@@ -295,9 +295,17 @@ define(
                });
 
                it('history separator is visible', function() {
+                  menuRender._options.allowPin = true;
                   groupListModel.at(1).getContents().set('pinned', true);
                   let actualClasses = menuRender._getClassList(groupListModel.at(1));
                   assert.isTrue(actualClasses.indexOf(expectedClasses) === -1);
+               });
+
+               it('history separator is unvisible', function() {
+                  menuRender._options.allowPin = false;
+                  groupListModel.at(1).getContents().set('pinned', true);
+                  let actualClasses = menuRender._getClassList(groupListModel.at(1));
+                  assert.isFalse(actualClasses.indexOf(expectedClasses) === -1);
                });
             });
          });

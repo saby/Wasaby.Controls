@@ -352,7 +352,7 @@ function onCollectionChange<T>(
  * @param index Индекс измененного элемента.
  * @param [properties] Изменившиеся свойства
  */
-function onCollectionItemChange<T>(
+function onCollectionItemChange<T extends EntityModel>(
     event: EventObject,
     item: T,
     index: number,
@@ -622,6 +622,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _$multiSelectPosition: 'default' | 'custom';
 
+    /**
+     * Задает доступность чекбокса
+     * @protected
+     */
+    protected _$multiSelectAccessibilityProperty: string;
+
     protected _$leftPadding: string;
 
     protected _$rightPadding: string;
@@ -663,15 +669,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _$style: string;
 
     protected _$navigation: INavigationOptionValue;
-
-    /**
-     * Задает состояние чекбокса
-     * @variant true Чекбокс виден и включен
-     * @variant false Чекбокс виден и задизейблен
-     * @variant null Чекбокс скрыт
-     * @protected
-     */
-    protected _$multiSelectAccessibilityProperty: boolean|null;
 
     /**
      * @cfg {Boolean} Обеспечивать уникальность элементов (элементы с повторяющимися идентфикаторами будут
@@ -783,7 +780,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
-    private _wasNotifyAddEventOnStartDrag: boolean = false;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -926,6 +922,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             0
         );
         this._handleAfterCollectionChange();
+        this._nextVersion();
     }
 
     destroy(): void {
@@ -2299,21 +2296,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             targetIndex
         });
         this._reIndex();
-
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
-
-        if (!this.getItemBySourceKey(draggableItem.getContents().getKey())) {
-            this._wasNotifyAddEventOnStartDrag = true;
-            this._notifyBeforeCollectionChange();
-            this._notifyCollectionChange(
-                IObservable.ACTION_ADD,
-                [strategy.avatarItem],
-                targetIndex,
-                [],
-                0
-            );
-            this._notifyAfterCollectionChange();
-        }
     }
 
     setDragPosition(position: IDragPosition<T>): void {
@@ -2329,19 +2311,26 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     resetDraggedItems(): void {
         const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
         if (strategy) {
-            const avatarItem = strategy.avatarItem;
-            const avatarIndex = this.getIndex(strategy.avatarItem as T);
-
             this.removeStrategy(this._dragStrategy);
             this._reIndex();
             this._reFilter();
+        }
+    }
 
-            if (this._wasNotifyAddEventOnStartDrag) {
-                this._wasNotifyAddEventOnStartDrag = false;
-                this._notifyBeforeCollectionChange();
-                this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, [avatarItem], avatarIndex);
-                this._notifyAfterCollectionChange();
-            }
+    getDraggedItemsCount(): number {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
+        return strategy ? strategy.getDraggedItemsCount() : 0;
+    }
+
+    /**
+     * Устанавливает признак, что запись утащили за пределы списка
+     * @param outside
+     */
+    setDragOutsideList(outside: boolean): void {
+        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
+        if (strategy) {
+            strategy.avatarItem.setDragOutsideList(outside);
+            this._nextVersion();
         }
     }
 
@@ -2409,6 +2398,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._updateItemsMultiSelectVisibility(visibility);
     }
 
+    setMultiSelectAccessibilityProperty(property: string): void {
+        if (this._$multiSelectAccessibilityProperty === property) {
+            return;
+        }
+        this._$multiSelectAccessibilityProperty = property;
+        this._nextVersion();
+        this._updateItemsMultiSelectAccessibilityProperty(property);
+    }
+
     setMultiSelectPosition(position: 'default' | 'custom'): void {
         if (this._$multiSelectPosition === position) {
             return;
@@ -2423,8 +2421,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectVisibility(visibility: string): void {
         this.getViewIterator().each((item: CollectionItem<T>) => {
-            if (item.setMultiSelectVisibility) {
+            if (item.SelectableItem) {
                 item.setMultiSelectVisibility(visibility);
+            }
+        });
+    }
+
+    protected _updateItemsMultiSelectAccessibilityProperty(property: string): void {
+        this.getViewIterator().each((item: CollectionItem) => {
+            if (item.SelectableItem) {
+                item.setMultiSelectAccessibilityProperty(property);
             }
         });
     }
@@ -2725,71 +2731,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     setAddingItem(item: T): void {
-        const groupMethod = this.getGroup();
-        let groupsBefore;
-
-        if (groupMethod) {
-            groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
-        }
-
         this._prependStrategy(AddStrategy, {
             item,
             addPosition: item.addPosition,
             groupMethod: this.getGroup()
         }, GroupItemsStrategy);
-
-        const itemsForNotify = [item];
-        let addingIndex: number = this.getItems().indexOf(item);
-
-        if (groupMethod) {
-            const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
-
-            // Добавление элемента привело к добавлению группы.
-            // Необходимо уведомить о создании двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
-            if (groupsBefore.length < groupsAfter.length) {
-                const itemGroupId = groupMethod(item.contents);
-                addingIndex--;
-                itemsForNotify.splice(0, 0, groupsAfter.find((g) => g.contents === itemGroupId));
-            }
-        }
-
-        const session = this._startUpdateSession();
-        this._notifyCollectionChange(IObservable.ACTION_ADD, itemsForNotify, addingIndex, [], 0, session);
-        this._finishUpdateSession(session);
     }
 
     resetAddingItem(): void {
-        const addStrategy = this.getStrategyInstance(AddStrategy);
-
-        if (addStrategy) {
-            const groupMethod = this.getGroup();
-            const item = addStrategy?.getAddingItem();
-            let addingIndex: number = this.getItems().indexOf(item);
-            let groupsBefore;
-
-            if (groupMethod) {
-                groupsBefore = this.getStrategyInstance(GroupItemsStrategy).groups;
-            }
-
+        if (this.getStrategyInstance(AddStrategy)) {
             this.removeStrategy(AddStrategy);
-
-            const itemsForNotify = [item];
-
-            if (groupMethod) {
-                const groupsAfter = this.getStrategyInstance(GroupItemsStrategy).groups;
-
-                // Отмена добавления элемента привела к удалению его группы.
-                // Необходимо уведомить об удалении двух элементов: самой записи и ее группы(индекс группы на один меньше чем у записи).
-                if (groupsBefore.length > groupsAfter.length) {
-                    const itemGroupId = groupMethod(item.contents);
-                    addingIndex--;
-                    itemsForNotify.splice(0, 0, groupsBefore.find((g) => g.contents === itemGroupId));
-                }
-            }
-
-            const session = this._startUpdateSession();
-            this._notifyCollectionChange(IObservable.ACTION_REMOVE, [], 0, itemsForNotify, addingIndex);
-            this._finishUpdateSession(session);
         }
     }
 
@@ -2821,10 +2772,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options: strategyOptions
         });
 
+        const session = this._startUpdateSession();
         if (this._composer) {
             this._composer.prepend(strategy, strategyOptions, before);
-            this._reBuild(true);
+            this._reBuild();
         }
+        this._finishUpdateSession(session);
 
         this.nextVersion();
     }
@@ -3191,9 +3144,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return function CollectionItemsFactory(options?: ICollectionItemOptions<S>): T {
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
-            if (options.contents instanceof EntityModel && options.contents.has(this._$multiSelectAccessibilityProperty)) {
-                options.checkboxState = object.getPropertyValue<boolean|null>(options.contents, this._$multiSelectAccessibilityProperty);
-            }
+            options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
             return create(this._itemModule, options);
         };
     }

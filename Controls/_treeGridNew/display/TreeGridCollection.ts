@@ -2,15 +2,17 @@ import { mixin } from 'Types/util';
 import TreeGridDataRow, {IOptions as ITreeGridRowOptions} from './TreeGridDataRow';
 import {
     TreeItem,
-    GridGroupItem,
-    GridMixin,
     Tree,
     GridLadderUtil,
     ItemsFactory,
     itemsStrategy,
-    IGridCollectionOptions,
-    ITreeCollectionOptions
+    ITreeCollectionOptions, IItemActionsTemplateConfig
 } from 'Controls/display';
+import {
+    GridGroupItem,
+    GridMixin,
+    IGridCollectionOptions
+} from 'Controls/gridNew';
 import TreeGridFooterRow from './TreeGridFooterRow';
 import { Model } from 'Types/entity';
 import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
@@ -61,7 +63,27 @@ export default class TreeGridCollection<
 
     setMultiSelectVisibility(visibility: string): void {
         super.setMultiSelectVisibility(visibility);
+
+        if (this.getFooter()) {
+            this.getFooter().setMultiSelectVisibility(visibility);
+        }
+
+        if (this.getResults()) {
+            this.getResults().setMultiSelectVisibility(visibility);
+        }
+
+        if (this.getHeader()) {
+            this.getHeader().setMultiSelectVisibility(visibility);
+        }
+
         this._$colgroup?.reBuild();
+    }
+
+    setActionsTemplateConfig(config: IItemActionsTemplateConfig) {
+        super.setActionsTemplateConfig(config);
+        if (this.getFooter()) {
+            this.getFooter().setActionsTemplateConfig(config);
+        }
     }
 
     setHasMoreData(hasMoreData: boolean): void {

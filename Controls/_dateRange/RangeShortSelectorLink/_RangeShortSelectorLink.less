@@ -13,15 +13,13 @@
    height: 100%;
    width: 100%;
    display: inline-flex;
-   align-items: baseline;
+   align-items: center;
    justify-content: center;
 }
 
 .controls-RangeShortSelectorLink__clear_theme-@{themeName} {
-   font-size: @arrow_icon-size_dateRangeSelector;
-   width: @arrow_width_dateRangeSelector;
    color: @reset-button_icon-color_dateRangeSelector;
-   font-family: @icon_font-family_s;
+   width: @arrow_width_dateRangeSelector;
 }
 
 .controls-RangeShortSelectorLink__arrow-next_theme-@{themeName} {
@@ -76,13 +74,5 @@
 
 .controls-RangeShortSelectorLink__clear {
    cursor: pointer;
-   display: inline-block;
-   font-weight: normal;
    text-align: center;
-   align-self: baseline;
-   line-height: 100%;
-
-   &::before {
-      content: "\ea27";
-   }
 }

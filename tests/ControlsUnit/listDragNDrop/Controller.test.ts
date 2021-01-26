@@ -88,8 +88,9 @@ describe('Controls/_listDragNDrop/Controller', () => {
 
       const modelSetDragPositionSpy = spy(model, 'setDragPosition');
 
-      controller.setDragPosition(dragPosition);
+      const result = controller.setDragPosition(dragPosition);
 
+      assert.isTrue(result);
       assert.equal(controller.getDragPosition(), dragPosition);
       assert.isTrue(modelSetDragPositionSpy.withArgs(dragPosition).calledOnce,
          'setDragPosition не вызвался или вызвался с неверным параметром');

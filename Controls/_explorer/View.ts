@@ -48,6 +48,8 @@ var
          setRoot: function(self, root, dataRoot = null) {
             if (!self._options.hasOwnProperty('root')) {
                self._root = root;
+            } else {
+               self._potentialMarkedKey = root;
             }
             self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
@@ -129,6 +131,9 @@ var
          },
          serviceDataLoadCallback: function(self, oldData, newData) {
             self._breadCrumbsItems = calculatePath(newData).path;
+            self._dataRoot = self._breadCrumbsItems && self._breadCrumbsItems.length ?
+                _private.getDataRoot(self, self._options) :
+                self._dataRoot;
             _private.resolveItemsOnFirstLoad(self, self._itemsResolver, self._breadCrumbsItems);
             _private.updateSubscriptionOnBreadcrumbs(oldData, newData, self._updateHeadingPath);
          },
@@ -350,7 +355,7 @@ var
          updateRootOnViewModeChanged(self, viewMode: string, options): void {
             if (viewMode === 'search' && options.searchStartingWith === 'root') {
                const currentRoot = _private.getRoot(self, options.root);
-               const dataRoot = _private.getDataRoot(self, options);
+               const dataRoot = self._dataRoot !== undefined ? self._dataRoot : _private.getDataRoot(self, options);
 
                if (dataRoot !== currentRoot) {
                   _private.setRoot(self, dataRoot, dataRoot);
@@ -516,6 +521,14 @@ var
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
          const isSearchViewMode = cfg.viewMode === 'search';
          const isRootChanged = cfg.root !== this._options.root;
+
+         // Мы не должны ставить маркер до проваливания, т.к. это лишняя синхронизация.
+         // Но если отменили проваливание, то нужно поставить маркер.
+         if (this._potentialMarkedKey !== undefined && !isRootChanged) {
+            this._children.treeControl.setMarkedKey(this._potentialMarkedKey);
+         }
+         this._potentialMarkedKey = undefined;
+
          const loadedBySourceController =
              cfg.sourceController &&
              ((isSearchViewMode && cfg.searchValue && cfg.searchValue !== this._options.searchValue) ||
@@ -835,6 +848,7 @@ var
     * @name Controls/_explorer/View#tileItemTemplate
     * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
     * @default undefined
+    * @markdown
     * @remark
     * Позволяет установить пользовательский шаблон отображения элемента (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/tile:ItemTemplate}.
     *

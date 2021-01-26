@@ -10,7 +10,7 @@ import {
     Model
 } from 'Types/entity';
 import {IList} from 'Types/collection';
-import {mixin} from 'Types/util';
+import {mixin, object} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
 import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
@@ -34,7 +34,7 @@ export interface IOptions<T extends Model = Model> {
     isAdd?: boolean;
     addPosition?: 'top' | 'bottom';
     multiSelectVisibility?: string;
-    checkboxState?: boolean|null;
+    multiSelectAccessibilityProperty?: string;
     rowSeparatorSize?: string;
 }
 
@@ -130,7 +130,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     protected _$dragged: boolean;
 
-    protected _$checkboxState: boolean|null;
+    protected _dragOutsideList: boolean;
+
+    protected _$multiSelectAccessibilityProperty: string;
 
     protected _instancePrefix: string;
 
@@ -289,17 +291,29 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     // endregion
 
-    // region CheckboxState
+    // region MultiSelectAccessibility
 
     isReadonlyCheckbox(): boolean {
-        return this._$checkboxState !== true;
+        return this._getMultiSelectAccessibility() !== true;
     }
 
     isVisibleCheckbox(): boolean {
-        return this._$checkboxState !== null && !this.isAdd;
+        return this._getMultiSelectAccessibility() !== null && !this.isAdd;
     }
 
-    // endregion CheckboxState
+    setMultiSelectAccessibilityProperty(property: string): void {
+        if (this._$multiSelectAccessibilityProperty !== property) {
+            this._$multiSelectAccessibilityProperty = property;
+            this._nextVersion();
+        }
+    }
+
+    protected _getMultiSelectAccessibility(): boolean|null {
+        const value = object.getPropertyValue<boolean|null>(this.getContents(), this._$multiSelectAccessibilityProperty);
+        return value === undefined ? true : value;
+    }
+
+    // endregion MultiSelectAccessibility
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();
@@ -325,7 +339,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
             templateMarker &&
             this._$owner.getMarkerVisibility() !== 'hidden' &&
             this.isMarked() &&
-            !this.isEditing()
+            !this.getOwner().isEditing()
         );
     }
 
@@ -364,6 +378,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         if (this.getMultiSelectVisibility() === 'onhover' && !this.isSelected()) {
             classes += 'controls-ListView__checkbox-onhover';
         }
+
+        if (this.isDragged()) {
+            classes += ` controls-ListView__itemContent_dragging_theme-${theme}`;
+        }
+
         return classes;
     }
 
@@ -523,18 +542,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         this._$rendered = state;
     }
 
-    isDragged(): boolean {
-        return this._$dragged;
-    }
-
-    isSticked(): boolean {
-        return this.isMarked() && this._isSupportSticky(this.getOwner().getStyle());
-    }
-
-    protected _isSupportSticky(style: string = 'default'): boolean {
-        return this.getOwner().isStickyMarkedItem() !== false &&
-            (style === 'master');
-    }
+    // region Drag-n-drop
 
     setDragged(dragged: boolean, silent?: boolean): void {
         if (this._$dragged === dragged) {
@@ -545,6 +553,40 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         if (!silent) {
             this._notifyItemChangeToOwner('dragged');
         }
+    }
+
+    isDragged(): boolean {
+        return this._$dragged;
+    }
+
+    setDragOutsideList(outside: boolean): void {
+        if (this._dragOutsideList !== outside) {
+            this._dragOutsideList = outside;
+            this._nextVersion();
+        }
+    }
+
+    isDragOutsideList(): boolean {
+        return this._dragOutsideList;
+    }
+
+    shouldDisplayDraggingCounter(): boolean {
+        return this.isDragged() && !this.isDragOutsideList() && this.getDraggedItemsCount() > 1;
+    }
+
+    getDraggedItemsCount(): number {
+        return this.getOwner().getDraggedItemsCount();
+    }
+
+    // endregion Drag-n-drop
+
+    isSticked(): boolean {
+        return this.isMarked() && this._isSupportSticky(this.getOwner().getStyle());
+    }
+
+    protected _isSupportSticky(style: string = 'default'): boolean {
+        return this.getOwner().isStickyMarkedItem() !== false &&
+            (style === 'master');
     }
 
     /**
@@ -628,6 +670,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         if (isAnimatedForSelection) {
             contentClasses += ' controls-ListView__item_rightSwipeAnimation';
+        }
+        if (this.isDragged()) {
+            contentClasses += ` controls-ListView__itemContent_dragging_theme-${theme}`;
         }
         return contentClasses;
     }
@@ -833,7 +878,7 @@ Object.assign(CollectionItem.prototype, {
     _$active: false,
     _$hovered: false,
     _$dragged: false,
-    _$checkboxState: true,
+    _$multiSelectAccessibilityProperty: '',
     _$multiSelectVisibility: null,
     _$rowSeparatorSize: null,
     _contentsIndex: undefined,

@@ -61,6 +61,7 @@
                dateConstructor="{{_options.dateConstructor}}"
                ranges="{{_options.ranges}}"
                on:monthClick="_monthRangeMonthClick()"
+               _date="{{_options._date}}"
                on:fixedPeriodClick="_monthRangeFixedPeriodClick()">
                   <ws:dayTemplate>
                      <ws:partial
@@ -93,6 +94,7 @@
                ranges="{{_options.ranges}}"
                calendarSource="{{_options.calendarSource}}"
                dateConstructor="{{_options.dateConstructor}}"
+               _date="{{_options._date}}"
             >
                <ws:dayTemplate>
                   <ws:partial

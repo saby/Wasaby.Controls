@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/filter',
+      'Controls/deprecatedFilter',
       'Types/source',
       'Core/core-clone',
       'Types/collection',

@@ -12,7 +12,7 @@ import {TKeysSelection} from 'Controls/interface';
 
 import * as clone from 'Core/core-clone';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
-import {CrudWrapper} from '../_dataSource/CrudWrapper';
+import {CrudWrapper} from 'Controls/dataSource';
 import Utils = require('Types/util');
 import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';
@@ -72,6 +72,13 @@ export default class FilterControllerClass {
             this._filter = Prefetch.prepareFilter(this._filter, options.prefetchParams);
         }
         this._updateFilter(options);
+    }
+
+    private _getHistorySource(): any {
+        return getHistorySource({
+            historyId: this._options.historyId,
+            favorite: !!this._options.prefetchParams
+        });
     }
 
     setFilterItems(historyItems: THistoryData): void {
@@ -189,8 +196,7 @@ export default class FilterControllerClass {
 
     handleDataLoad(items: RecordSet): void {
         if (this._options.historyId && this._isFilterChanged) {
-            if (getHistorySource({ historyId: this._options.historyId,
-                                        favorite: !!this._options.prefetchParams }).historyReady()) {
+            if (this._getHistorySource().historyReady()) {
                 this._deleteCurrentFilterFromHistory();
             }
             this._addToHistory(
@@ -306,7 +312,7 @@ export default class FilterControllerClass {
         if (!historyId) {
             result = Promise.resolve([]);
         } else {
-            const source = getHistorySource({historyId});
+            const source = this._getHistorySource();
 
             if (!this._crudWrapper) {
                 this._crudWrapper = new CrudWrapper({
@@ -348,7 +354,7 @@ export default class FilterControllerClass {
         const history = this._getHistoryByItems(this._options.historyId, this._filterButtonItems);
 
         if (history) {
-            FilterControllerClass._deleteFromHistory(history.item, this._options.historyId);
+            this._deleteFromHistory(history.item, this._options.historyId);
         }
     }
 
@@ -385,7 +391,7 @@ export default class FilterControllerClass {
         let minimizedItemFromHistory;
         let minimizedItemFromOption;
 
-        const historySource = getHistorySource({historyId});
+        const historySource = this._getHistorySource();
         const historyItems = historySource.getItems();
         if (historyItems && historyItems.getCount()) {
             historyItems.each((item, index) => {
@@ -436,10 +442,10 @@ export default class FilterControllerClass {
                 }
             }
 
-            return getHistorySource({historyId}).update(historyData, meta);
+            return this._getHistorySource().update(historyData, meta);
         };
 
-        if (!getHistorySource({historyId}).historyReady()) {
+        if (!this._getHistorySource().historyReady()) {
             // Getting history before updating if it hasn’t already done
             return this._loadHistoryItems(historyId).then(() => {
                 return update();
@@ -517,7 +523,7 @@ export default class FilterControllerClass {
         }
 
         if (needDeleteFromHistory) {
-            FilterControllerClass._deleteFromHistory(history.item, options.historyId);
+            this._deleteFromHistory(history.item, options.historyId);
         }
 
         this._setFilter(filter);
@@ -704,6 +710,10 @@ export default class FilterControllerClass {
         this._filter = filter;
     }
 
+    private _deleteFromHistory(item: Model, historyId: string): void {
+        this._getHistorySource().destroy(item.getKey(), {$_history: true});
+    }
+
     private static _minimizeItem(item: IFilterItem): IFilterItem {
         const textValue = getPropValue(item, 'textValue');
         // Two case of saving filter in history
@@ -742,10 +752,6 @@ export default class FilterControllerClass {
             minimizedItem.viewMode = getPropValue(item, 'viewMode');
         }
         return minimizedItem;
-    }
-
-    private static _deleteFromHistory(item: Model, historyId: string): void {
-        getHistorySource({historyId}).destroy(item.getKey(), {$_history: true});
     }
 
     // Возвращает итемы смерженнные с историей.

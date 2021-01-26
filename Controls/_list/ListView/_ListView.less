@@ -320,7 +320,26 @@
 }
 
 .controls-ListView__item_dragging_theme-@{themeName} {
+   box-shadow: @item_dragging_box-shadow_list;
+}
+
+.controls-ListView__itemContent_dragging_theme-@{themeName} {
    opacity: @item_dragging_opacity_list;
+}
+
+.controls-ListView__item-dragging-counter {
+   position: absolute;
+   display: flex;
+   align-items: center;
+   right: @item_dragging_counter_right_list;
+   top: @item_dragging_counter_top_list;
+   height: @item_dragging_counter_height_list;
+   font-size: @item_dragging_counter_font-size_list;
+   color: @item_dragging_counter_color_list;
+   background-color: @item_dragging_counter_background-color_list;
+   border-radius: @item_dragging_counter_border-radius_list;
+   padding: @item_dragging_counter_padding_list;
+   z-index: 1;
 }
 
 .controls-BaseControl_showActions_visible {

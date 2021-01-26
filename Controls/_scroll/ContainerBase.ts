@@ -561,8 +561,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     _updateState(newState: IScrollState): boolean {
         if (!this._scrollModel) {
             this._createScrollModel();
+            this._oldScrollState = new ScrollModel(this._children.content, {});
+        } else {
+            this._oldScrollState = this._scrollModel.clone();
         }
-        this._oldScrollState = this._scrollModel.clone();
         const isScrollStateUpdated = this._scrollModel.updateState(newState);
         return isScrollStateUpdated;
     }

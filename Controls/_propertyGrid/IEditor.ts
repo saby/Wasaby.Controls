@@ -33,7 +33,7 @@ export default interface IEditor {
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.dropdown:Input on:selectedKeysChanged="_selectedKeysChanged()" selectedKeys="{{_options.propertyValue}}"/>
+ * <Controls.dropdown:Selector on:selectedKeysChanged="_selectedKeysChanged()" selectedKeys="{{_options.propertyValue}}"/>
  * </pre>
  * 
  * <pre class="brush: js">

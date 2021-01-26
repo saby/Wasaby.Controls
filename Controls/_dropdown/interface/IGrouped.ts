@@ -17,6 +17,7 @@ export interface IGroupedOptions {
     /**
      * @name Controls/_dropdown/interface/IGrouped#groupTemplate
      * @cfg {Function} Шаблон отображения заголовка группы.
+     * @markdown
      * @remark
      * Позволяет установить пользовательский шаблон отображения заголовка группы (**именно шаблон**, а не контрол!). При установке шаблона **ОБЯЗАТЕЛЕН** вызов базового шаблона {@link Controls/dropdown:GroupTemplate}. Шаблон Controls/dropdown:GroupTemplate поддерживает параметры, с помощью которых можно изменить отображение заголовка группы.
      * 
