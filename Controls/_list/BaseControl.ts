@@ -3106,6 +3106,14 @@ const _private = {
         }
     },
 
+    addHoverEnabledClass(self): void {
+        self._addHoverEnabledClass = true;
+    },
+
+    removeHoverEnabledClass(self): void {
+        self._addHoverEnabledClass = false;
+    },
+
     getViewUniqueClass(self): string {
         return `controls-BaseControl__View_${self._uniqueId}`;
     },
@@ -3131,10 +3139,12 @@ const _private = {
             viewContainer: self._container,
             measurableContainerSelector: LIST_MEASURABLE_CONTAINER_SELECTOR,
             freezeHoverCallback: () => {
+                _private.removeHoverEnabledClass(self);
                 _private.removeShowActionsClass(self);
             },
             unFreezeHoverCallback: () => {
                 if (!self._itemActionsMenuId) {
+                    _private.addHoverEnabledClass(self);
                     _private.addShowActionsClass(self);
                 }
             }
@@ -3281,6 +3291,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // По умолчанию считаем, что показывать экшны не надо, пока не будет установлено true
     _addShowActionsClass: false,
+
+    // По умолчанию считаем, что необходимо разрешить hover на списке
+    _addHoverEnabledClass: true,
 
     // Идентификатор текущего открытого popup
     _itemActionsMenuId: null,
@@ -5583,10 +5596,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
-    _getViewClasses(addShowActionsClass: boolean): string  {
+    _getViewClasses(addShowActionsClass: boolean, addHoverEnabledClass: boolean, uniqueId: string): string  {
         const classes: string[] = [];
         if (addShowActionsClass) {
             classes.push(`controls-BaseControl_showActions controls-BaseControl_showActions_${this._options.itemActionsVisibility}`);
+        }
+        if (addHoverEnabledClass) {
+            classes.push('controls-BaseControl_hover_enabled');
+        } else {
+            classes.push('controls-BaseControl_hover_disabled');
         }
         if (this._uniqueId) {
             classes.push(_private.getViewUniqueClass(this));

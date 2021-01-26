@@ -1,11 +1,15 @@
 import {CrudEntityKey} from 'Types/source';
 import {SyntheticEvent} from 'UI/Vdom';
 
+// Таймаут "заморозки"
 const HOVER_FREEZE_TIMEOUT: number = 200;
+
+// Таймер "разморозки" должен быть меньше, чем таймер "заморозки".
+// После выполнения таймера "разморозки" новая "заморозка" наступает
+// через HOVER_FREEZE_TIMEOUT - HOVER_UNFREEZE_TIMEOUT мс.
 const HOVER_UNFREEZE_TIMEOUT: number = 100;
 
 const ITEM_HOVER_CONTAINER_SELECTOR = '.js-controls-ListView_item-hover';
-const EDITABLE_HOVER_CONTAINER_SELECTOR = '.js-controls-ListView_editable-hover';
 const ITEM_ACTIONS_CONTAINER_SELECTOR = '.js-controls-itemActions';
 
 interface IHoverFreezeItemData {
@@ -204,17 +208,11 @@ export default class HoverFreeze {
         // zero element in grid will be row itself; it doesn't have any background color, then lets take the last one
         const hoverBackgroundColor = getComputedStyle(hoveredContainers[hoveredContainers.length - 1]).backgroundColor;
 
-        const hoveredEditingTemplateTextContainer = this._getEditingTemplateTextContainer(htmlNodeIndex);
-        const hoveredEditingTemplateTextBackground = hoveredEditingTemplateTextContainer ?
-            getComputedStyle(hoveredEditingTemplateTextContainer).backgroundColor : null;
-
         this._moveArea = this._calculateMouseMoveArea(hoveredContainers);
-        this._stylesContainer.innerHTML = this._getItemActionsOutsideFreezeStyles(this._uniqueClass, htmlNodeIndex);
         this._stylesContainer.innerHTML += this._getItemHoverFreezeStyles(
             this._uniqueClass,
             htmlNodeIndex,
-            hoverBackgroundColor,
-            hoveredEditingTemplateTextBackground);
+            hoverBackgroundColor);
         if (this._freezeHoverCallback) {
             this._freezeHoverCallback();
         }
@@ -222,17 +220,6 @@ export default class HoverFreeze {
         this._setItemData(itemKey, itemIndex);
         // Сбросили отложенный ховер
         this._delayedItemData = null;
-    }
-
-    /**
-     * Получает из DOM первый контейнер с редактируемым полем в текущей записи.
-     * Нам нужен только один контейнер, чтобы получить его фон
-     * @param index
-     * @private
-     */
-    private _getEditingTemplateTextContainer(index: number): HTMLElement {
-        const editingTemplateTextSelector = this._getEditingTemplateTextSelector(this._uniqueClass, index);
-        return this._viewContainer.querySelector(editingTemplateTextSelector);
     }
 
     /**
@@ -296,48 +283,20 @@ export default class HoverFreeze {
     }
 
     /**
-     * Селектор для редактируемых полей внутри выделенной строки.
-     * Позволяет выбрать фон для записи с редактируемыми полями, но которая ещё не переведена в режим редактирования.
-     * @param uniqueClass
-     * @param index
-     * @private
-     */
-    private _getEditingTemplateTextSelector(uniqueClass: string, index: number): string {
-        return `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}):hover ${EDITABLE_HOVER_CONTAINER_SELECTOR}`;
-    }
-
-    /**
      * Стили для отключения hover в строке плоского списка или в ячейках строки таблицы
      * @param uniqueClass
      * @param index
      * @param hoverBackgroundColor
-     * @param hoveredEditingTemplateTextBackground
      * @private
      */
     private _getItemHoverFreezeStyles(uniqueClass: string,
                                       index: number,
-                                      hoverBackgroundColor: string,
-                                      hoveredEditingTemplateTextBackground: string): string {
-        let styles = `
-              .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})):hover,
-              .${uniqueClass} .controls-ListView__itemV:not(:nth-child(${index})):hover ${ITEM_HOVER_CONTAINER_SELECTOR} {
-                background-color: inherit;
-              }
+                                      hoverBackgroundColor: string): string {
+        return `
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}),
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${ITEM_HOVER_CONTAINER_SELECTOR} {
                 background-color: ${hoverBackgroundColor};
               }
-              `;
-        if (hoveredEditingTemplateTextBackground) {
-            styles += `.${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${EDITABLE_HOVER_CONTAINER_SELECTOR} {
-                background-color: ${hoveredEditingTemplateTextBackground};
-            }`;
-        }
-        return styles;
-    }
-
-    private _getItemActionsOutsideFreezeStyles(uniqueClass: string, index: number): string {
-        return `
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${ITEM_ACTIONS_CONTAINER_SELECTOR} {
                  opacity: 1;
                  visibility: visible;

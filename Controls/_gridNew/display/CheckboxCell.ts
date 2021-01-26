@@ -26,7 +26,6 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
             wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
         } else if (templateHighlightOnHover !== false) {
             wrapperClasses += ` controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme}`;
-            wrapperClasses += ' js-controls-ListView_item-hover';
         }
 
         if (this._$owner.hasColumnScroll()) {

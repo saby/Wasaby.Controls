@@ -204,7 +204,7 @@
         <ws:if data="{{_listViewModel}}">
             <ws:partial template="loadingIndicator" loadingIndicatorState="up"/>
 
-            <ws:partial template="fullView" name="listView" attr:class="{{ _getViewClasses(_addShowActionsClass, _uniqueId) }}"/>
+            <ws:partial template="fullView" name="listView" attr:class="{{ _getViewClasses(_addShowActionsClass, _addHoverEnabledClass, _uniqueId) }}"/>
 
             <ws:partial template="loadingIndicator" loadingIndicatorState="down"/>
         </ws:if>
