@@ -1205,7 +1205,7 @@ define([
          assert.equal(loadMoreDirection, 'down');
       });
       describe('EditInPlace', function() {
-         it('cancelEdit on change root', function() {
+         it('cancelEdit on change root', async function() {
             var
                 cfg = {
                    columns: [],
@@ -1219,6 +1219,7 @@ define([
                 },
                treeControl = correctCreateTreeControl(cfg),
                cancelEditCalled = false;
+            treeControl = await correctCreateTreeControlAsync({...cfg, editingConfig: undefined});
             treeControl._children.baseControl.cancelEdit = function() {
                cancelEditCalled = true;
             };
@@ -1228,10 +1229,10 @@ define([
             treeControl.isEditing = () => true;
             treeControl._beforeUpdate(cfgClone);
             assert.isTrue(cancelEditCalled);
-
-            treeControl = correctCreateTreeControl({...cfg, editingConfig: undefined});
             cancelEditCalled = false;
+            treeControl.saveOptions(cfgClone);
 
+            treeControl.isEditing = () => false;
             cfgClone = {...cfg, editingConfig: undefined};
             cfgClone.root = 'test3';
             treeControl._beforeUpdate(cfgClone);
