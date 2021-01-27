@@ -15,6 +15,8 @@ export class DataSource {
         return this.sourceController.getRoot();
     }
 
+    searchValue: string;
+
     constructor(private sourceOptions: ISourceOptions) {
         this.sourceController = new SourceController(this.sourceOptions);
     }
@@ -33,7 +35,10 @@ export class DataSource {
 
     setSearchString(searchString: string): Promise<RecordSet> {
         return this.getSearchController()
-            .then((sc) => sc.search(searchString))
+            .then((sc) => {
+                this.searchValue = searchString;
+                return sc.search(searchString);
+            })
             .then((result) => {
                 if (!(result instanceof RecordSet)) {
                     return;
