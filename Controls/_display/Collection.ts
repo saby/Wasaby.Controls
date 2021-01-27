@@ -1349,68 +1349,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this.at(index - 1);
     }
 
-    /**
-     * Устанавливает текущим следующий элемент
-     * @return {Boolean} Есть ли следующий элемент
-     */
-    moveToNext(): boolean {
-        const oldCurrent = this.getCurrent();
-        const oldCurrentPosition = this.getCurrentPosition();
-        const hasNext = this._getCursorEnumerator().moveNext();
-        if (hasNext) {
-            this._notifyCurrentChange(
-                this.getCurrent(),
-                oldCurrent,
-                this.getCurrentPosition(),
-                oldCurrentPosition
-            );
-        }
-        return hasNext;
-    }
-
-    /**
-     * Устанавливает текущим предыдущий элемент
-     * @return {Boolean} Есть ли предыдущий элемент
-     */
-    moveToPrevious(): boolean {
-        const oldCurrent = this.getCurrent();
-        const oldCurrentPosition = this.getCurrentPosition();
-        const hasPrevious = this._getCursorEnumerator().movePrevious();
-        if (hasPrevious) {
-            this._notifyCurrentChange(
-                this.getCurrent(),
-                oldCurrent,
-                this.getCurrentPosition(),
-                oldCurrentPosition
-            );
-        }
-        return hasPrevious;
-    }
-
-    /**
-     * Устанавливает текущим первый элемент
-     * @return {Boolean} Есть ли первый элемент
-     */
-    moveToFirst(): boolean {
-        if (this.getCurrentPosition() === 0) {
-            return false;
-        }
-        this.setCurrentPosition(0);
-        return this._getCursorEnumerator().getPosition() === 0;
-    }
-
-    /**
-     * Устанавливает текущим последний элемент
-     * @return {Boolean} Есть ли последний элемент
-     */
-    moveToLast(): boolean {
-        const position = this.getCount() - 1;
-        if (this.getCurrentPosition() === position) {
-            return false;
-        }
-        this.setCurrentPosition(position);
-        return this.getCurrentPosition() === position;
-    }
+    // this._getCursorEnumerator().moveNext()
+    // this._notifyCurrentChange(
+    // this.setCurrentPosition()
+    // this.getCurrentPosition()
+    // setCurrent()
 
     /**
      * Возвращает индекс элемента в коллекции по его индексу в проекции

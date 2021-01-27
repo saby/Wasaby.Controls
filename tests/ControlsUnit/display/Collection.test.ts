@@ -2106,19 +2106,6 @@ describe('Controls/_display/Collection', () => {
             const handler = () => {
                 fired = true;
             };
-
-            display.subscribe('onCurrentChange', handler);
-
-            display.setEventRaising(true);
-            display.moveToNext();
-            assert.isTrue(fired);
-
-            fired = false;
-            display.setEventRaising(false);
-            display.moveToNext();
-            assert.isFalse(fired);
-
-            display.unsubscribe('onCurrentChange', handler);
         });
 
         it('should enable and disable onCollectionChange', () => {
@@ -2415,35 +2402,11 @@ describe('Controls/_display/Collection', () => {
         it('should return undefined by default', () => {
             assert.isUndefined(display.getCurrent());
         });
-
-        it('should change by item enumeration', () => {
-            let index = 0;
-            while (display.moveToNext()) {
-                assert.strictEqual(items[index], display.getCurrent().getContents());
-                index++;
-            }
-            assert.strictEqual(items[items.length - 1], display.getCurrent().getContents());
-        });
     });
 
     describe('.getCurrentPosition()', () => {
         it('should return -1 by default', () => {
             assert.strictEqual(-1, display.getCurrentPosition());
-        });
-
-        it('should change through navigation', () => {
-            let index = -1;
-            while (display.moveToNext()) {
-                index++;
-                assert.strictEqual(index, display.getCurrentPosition());
-            }
-            assert.strictEqual(items.length - 1, display.getCurrentPosition());
-
-            while (display.moveToPrevious()) {
-                index--;
-                assert.strictEqual(index, display.getCurrentPosition());
-            }
-            assert.strictEqual(0, display.getCurrentPosition());
         });
     });
 
@@ -2532,85 +2495,6 @@ describe('Controls/_display/Collection', () => {
             assert.equal(given.length, 2);
             assert.equal(given[0].newPosition, 0);
             assert.equal(given[1].newPosition, max);
-        });
-    });
-
-    describe('.moveToNext()', () => {
-        it('should change the current and the position', () => {
-            let position = -1;
-            while (display.moveToNext()) {
-                position++;
-                assert.strictEqual(position, display.getCurrentPosition());
-                assert.strictEqual(items[position], display.getCurrent().getContents());
-            }
-        });
-
-        it('should trigger "onCurrentChange" with valid arguments', (done) => {
-            let andDone = false;
-            const handler = (event, newCurrent, oldCurrent, newPosition, oldPosition) => {
-                try {
-                    assert.strictEqual(newPosition, oldPosition + 1, 'Invalid newPosition');
-                    if (oldCurrent) {
-                        assert.strictEqual(oldCurrent.getContents(), items[oldPosition], 'Invalid oldCurrent');
-                    }
-
-                    if (andDone) {
-                        done();
-                    }
-                } catch (err) {
-                    done(err);
-                }
-            };
-            display.subscribe('onCurrentChange', handler);
-
-            let position = -1;
-            while (display.moveToNext()) {
-                position++;
-                andDone = position === items.length - 2;
-            }
-
-            display.unsubscribe('onCurrentChange', handler);
-        });
-    });
-
-    describe('.moveToPrevious()', () => {
-        it('should change the current and the position', () => {
-            let position = items.length - 1;
-            display.setCurrentPosition(position);
-            while (display.moveToPrevious()) {
-                position--;
-                assert.strictEqual(position, display.getCurrentPosition());
-                assert.strictEqual(items[position], display.getCurrent().getContents());
-            }
-        });
-
-        it('should trigger "onCurrentChange" with valid arguments', (done) => {
-            let andDone = false;
-            const handler = (event, newCurrent, oldCurrent, newPosition, oldPosition) => {
-                try {
-                    assert.strictEqual(newPosition, oldPosition - 1, 'Invalid newPosition');
-                    if (oldCurrent) {
-                        assert.strictEqual(oldCurrent.getContents(), items[oldPosition], 'Invalid oldCurrent');
-                    }
-                    if (andDone) {
-                        done();
-                    }
-                } catch (err) {
-                    done(err);
-                }
-            };
-
-            let position = items.length - 1;
-            display.setCurrentPosition(position);
-
-            display.subscribe('onCurrentChange', handler);
-
-            while (display.moveToPrevious()) {
-                position--;
-                andDone = position === 1;
-            }
-
-            display.unsubscribe('onCurrentChange', handler);
         });
     });
 

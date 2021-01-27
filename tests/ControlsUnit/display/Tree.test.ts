@@ -798,107 +798,10 @@ describe('Controls/_display/Tree', () => {
         });
     });
 
-    describe('.moveToNext()', () => {
-        it('should move current through direct children of the root', () => {
-            assert.isTrue(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'A');
-
-            assert.isTrue(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'B');
-
-            assert.isTrue(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'C');
-
-            assert.isTrue(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'D');
-
-            assert.isFalse(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'D');
-        });
-
-        it('should move current through direct children of the given node', () => {
-            tree.setCurrentPosition(1);
-
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
-
-            assert.isTrue(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
-
-            assert.isTrue(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
-
-            assert.isFalse(tree.moveToNext());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
-        });
-
-        it('should notify onCurrentChange', () => {
-            let fired = false;
-            tree.subscribe('onCurrentChange', () => {
-                fired = true;
-            });
-            tree.moveToNext();
-
-            assert.isTrue(fired);
-        });
-    });
-
-    describe('.moveToPrevious()', () => {
-        it('should move current through direct children of the root', () => {
-            tree.setCurrentPosition(tree.getCount() - 1);
-            assert.strictEqual(tree.getCurrent().getContents().title, 'D');
-
-            assert.isTrue(tree.moveToPrevious());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'C');
-
-            assert.isTrue(tree.moveToPrevious());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'B');
-
-            assert.isTrue(tree.moveToPrevious());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'A');
-
-            assert.isFalse(tree.moveToPrevious());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'A');
-        });
-
-        it('should move current through direct children of the given node', () => {
-            tree.setCurrentPosition(3);
-
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
-
-            assert.isTrue(tree.moveToPrevious());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AB');
-
-            assert.isTrue(tree.moveToPrevious());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
-
-            assert.isFalse(tree.moveToPrevious());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AA');
-        });
-
-        it('should notify onCurrentChange', () => {
-            let fired = false;
-
-            tree.setCurrentPosition(3);
-            tree.subscribe('onCurrentChange', () => {
-                fired = true;
-            });
-            tree.moveToPrevious();
-
-            assert.isTrue(fired);
-        });
-    });
-
     describe('.moveToAbove()', () => {
         it('should keep current undefined', () => {
             assert.isFalse(tree.moveToAbove());
             assert.isUndefined(tree.getCurrent());
-        });
-
-        it('should not move if parent is the root', () => {
-            tree.moveToNext();
-            const current = tree.getCurrent();
-            assert.isFalse(tree.moveToAbove());
-            assert.strictEqual(tree.getCurrent(), current);
         });
 
         it('should move to the parent', () => {

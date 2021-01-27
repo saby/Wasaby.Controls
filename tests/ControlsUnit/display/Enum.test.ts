@@ -151,29 +151,6 @@ describe('Controls/_display/Enum', () => {
         });
     });
 
-    describe('.moveToNext()', () => {
-        it('should change current of the Enum', () => {
-            while (display.moveToNext()) {
-                const index = display.getCurrentPosition();
-                const item = display.getCurrent();
-                assert.strictEqual(collection.get(), index);
-                assert.strictEqual(collection.getAsValue(), item.getContents());
-            }
-        });
-    });
-
-    describe('.moveToPrevious()', () => {
-        it('should change current of the Enum', () => {
-            display.moveToLast();
-            while (display.moveToPrevious()) {
-                const index = display.getCurrentPosition();
-                const item = display.getCurrent();
-                assert.strictEqual(collection.get(), index);
-                assert.strictEqual(collection.getAsValue(), item.getContents());
-            }
-        });
-    });
-
     describe('.getIndexBySourceItem()', () => {
         it('should return value index', () => {
             for (let index = 0; index < dict.length; index++) {
