@@ -95,10 +95,6 @@ export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRo
       return this.getLast().isHasChildren();
    }
 
-   getSearchValue(): string {
-      return this.getOwner().getSearchValue();
-   }
-
    getTemplate(): TemplateFunction | string {
       return this.getDefaultTemplate();
    }

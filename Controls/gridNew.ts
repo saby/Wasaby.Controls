@@ -33,6 +33,7 @@ import * as ItemActionsCellContent from 'wml!Controls/_gridNew/Render/ItemAction
 import * as MoneyTypeRender from 'wml!Controls/_gridNew/Render/types/money';
 import * as NumberTypeRender from 'wml!Controls/_gridNew/Render/types/number';
 import * as StringTypeRender from 'wml!Controls/_gridNew/Render/types/string';
+import * as SearchTypeRender from 'wml!Controls/_gridNew/Render/types/search';
 
 import SortingButton from 'Controls/_gridNew/SortingButton';
 import {register} from 'Types/di';
@@ -54,6 +55,7 @@ export {
     MoneyTypeRender,
     NumberTypeRender,
     StringTypeRender,
+    SearchTypeRender,
     TableTemplate,
     SortingButton
 };

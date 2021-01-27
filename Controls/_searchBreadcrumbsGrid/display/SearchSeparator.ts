@@ -16,6 +16,10 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
         return 'search-separator';
     }
 
+    getUid(): string {
+        return 'search-separator';
+    }
+
     getTemplate(): string {
         return 'Controls/searchBreadcrumbsGrid:SearchSeparatorTemplate';
     }
@@ -52,9 +56,13 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
     }
 
     getItemStyles(): string {
-        const hasMultiSelect = this._$owner.hasMultiSelectColumn();
-        const offset = hasMultiSelect ? 2 : 1;
-        return `grid-column: ${offset} / ${(this._$owner.getColumnsConfig().length + offset)}`;
+        if (this._$owner['[Controls/_display/grid/mixins/Grid]']) {
+            const hasMultiSelect = this._$owner.hasMultiSelectColumn();
+            const offset = hasMultiSelect ? 2 : 1;
+            return `grid-column: ${offset} / ${(this._$owner.getColumnsConfig().length + offset)}`;
+        } else {
+            return '';
+        }
     }
 }
 

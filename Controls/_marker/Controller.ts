@@ -125,7 +125,7 @@ export class Controller {
       // Когда элементы скрываются, например при сворачивании группы, у них сохраняется свое состояние.
       // После скрытия элементов маркер переставляется или сбрасывается,
       // поэтому на скрытых элементах нужно сбросить состояние marked
-      removedItems.forEach((item) => item.setMarked(false, true));
+      removedItems.forEach((item) => item.Markable && item.setMarked(false, true));
 
       let markedKeyAfterRemove = this._getMarkedKeyAfterRemove(removedItemsIndex);
 
@@ -199,7 +199,7 @@ export class Controller {
     * @void
     */
    destroy(): void {
-      this._model.each((it) => it.setMarked(false, true));
+      this._model.each((it) => it.Markable && it.setMarked(false, true));
       this._markedKey = null;
       this._markerVisibility = null;
       this._model = null;

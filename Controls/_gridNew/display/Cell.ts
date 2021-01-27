@@ -22,6 +22,7 @@ const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
 const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
 const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
+const SEARCH_RENDER = 'Controls/gridNew:SearchTypeRender';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
@@ -75,11 +76,16 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
             this._$column.displayType ||
             this._$column.textOverflow ||
             this._$column.fontColorStyle ||
-            this._$column.fontSize
+            this._$column.fontSize ||
+            this.getSearchValue()
         );
     }
 
     getCellContentRender(): string {
+        if (this.getSearchValue()) {
+            return SEARCH_RENDER;
+        }
+
         switch (this._$column.displayType) {
             case 'money': return MONEY_RENDER;
             case 'number': return NUMBER_RENDER;
@@ -100,6 +106,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
     getOwner(): TOwner {
         return this._$owner;
+    }
+
+    getSearchValue(): string {
+        return this.getOwner().getSearchValue();
     }
 
     // region Аспект "Объединение колонок"

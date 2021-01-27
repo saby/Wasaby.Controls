@@ -2450,7 +2450,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     setMarkedKey(key: string|number, status: boolean): void {
         const item = this.getItemBySourceKey(key);
-        if (item) {
+        if (item && item.Markable) {
             item.setMarked(status);
         }
     }

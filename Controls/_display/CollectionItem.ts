@@ -289,6 +289,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
     }
 
+    getSearchValue(): string {
+        return this.getOwner().getSearchValue();
+    }
+
     // endregion
 
     // region MultiSelectAccessibility
