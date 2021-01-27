@@ -226,7 +226,6 @@ define('Controls/Application',
             }
          },
          _updateFromOptionsClass: function(options) {
-            this._bodyClasses.fromOptions = options.bodyClass || '';
             this._updateBodyClasses({
                fromOptions: options.bodyClass || ''
             });
