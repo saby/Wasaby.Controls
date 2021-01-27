@@ -199,6 +199,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme} `;
         } else if (templateHighlightOnHover !== false) {
             wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme} `;
+            wrapperClasses += 'js-controls-ListView_item-hover ';
 
             if (backgroundColorStyle !== 'default') {
                 wrapperClasses += `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
@@ -277,6 +278,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         if (this.getOwner().isDragged()) {
             contentClasses += ` controls-ListView__itemContent_dragging_theme-${theme}`;
         }
+
+        contentClasses += ' js-controls-ListView__measurableContainer';
 
         return contentClasses;
     }
