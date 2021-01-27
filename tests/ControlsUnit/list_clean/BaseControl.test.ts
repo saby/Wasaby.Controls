@@ -1071,6 +1071,32 @@ describe('Controls/list_clean/BaseControl', () => {
                 assert.isFalse(baseControl._resetScrollAfterReload);
             });
 
+            it('_beforeMount without source and sourceController, then _beforeUpdate with sourceController', async () => {
+                let baseControlOptions = getBaseControlOptionsWithEmptyItems();
+                let afterReloadCallbackCalled = false;
+                baseControlOptions.afterReloadCallback = () => {
+                    afterReloadCallbackCalled = true;
+                };
+                baseControlOptions.source = null;
+                baseControlOptions.sourceController = null;
+
+                const baseControl = new BaseControl(baseControlOptions);
+                await baseControl._beforeMount(baseControlOptions);
+                baseControl.saveOptions(baseControlOptions);
+
+                assert.isFalse(afterReloadCallbackCalled);
+
+                baseControlOptions = {...baseControlOptions};
+                baseControlOptions.source = new Memory();
+                baseControlOptions.sourceController = new NewSourceController(baseControlOptions);
+
+                await baseControl._beforeUpdate(baseControlOptions);
+                baseControl._updateInProgress = false;
+                baseControl.saveOptions(baseControlOptions);
+                await baseControl.reload();
+                assert.isTrue(afterReloadCallbackCalled);
+            });
+
         });
 
         it('should immediately resolve promise if commit edit called without eipController', () => {
