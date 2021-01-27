@@ -2,6 +2,7 @@ import {Model} from 'Types/entity';
 
 export interface IEditableListOption {
     editingConfig?: {
+        initialAdd?: boolean;
         editOnClick?: boolean;
         sequentialEditing?: boolean;
         addPosition?: 'top' | 'bottom';

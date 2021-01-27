@@ -3298,11 +3298,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadTriggerVisibility = {};
 
         if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
-            if (typeof newOptions.preventServerSideColumnScroll === 'boolean') {
-                this._useServerSideColumnScroll = !newOptions.preventServerSideColumnScroll;
-            } else {
-                this._useServerSideColumnScroll = true;
-            }
+            const shouldPrevent = newOptions.preventServerSideColumnScroll;
+            this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
         }
 
         if (newOptions.sourceController) {
@@ -3322,8 +3319,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
             return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
         })).then((res) => {
-            const editingConfig = this._getEditingConfig(newOptions);
-            return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
+            return this._tryStartInitialEditing(this._getEditingConfig(newOptions)) || res;
         }).then((res) => {
             const needInitModelState =
                 this._listViewModel &&
@@ -5045,12 +5041,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._commitEdit();
     },
 
-    _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
-        const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
-        if (isAdd) {
-            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
-        } else {
-            return this._beginEdit({ item: editingConfig.item });
+    _tryStartInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
+        const hasItems = !!(this._loadedItems && this._loadedItems.getCount() || this._items && this._items.getCount());
+
+        if (editingConfig.initialAdd && !!this._sourceController && !hasItems) {
+            return this._beginAdd({}, editingConfig.addPosition);
+        } else if (editingConfig.item) {
+            const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
+            if (isAdd) {
+                return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
+            } else {
+                return this._beginEdit({ item: editingConfig.item });
+            }
         }
     },
 
@@ -5218,6 +5220,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
 
         return {
+            initialAdd: !!editingConfig.initialAdd,
             editOnClick: !!editingConfig.editOnClick,
             sequentialEditing: editingConfig.sequentialEditing !== false,
             addPosition,
