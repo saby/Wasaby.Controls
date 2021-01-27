@@ -132,12 +132,14 @@ define('Controls-demo/Popup/Edit/Opener',
                    }
                });
             } else {
-                record = this._baseRecord.clone();
-                record.set('id', this._addRecordCount);
-                record.set('name', '');
-                this._addRecordCount++;
-                RecordSynchronizer.addRecord(record, {at: this._addPosition}, this._items);
-                this._isRemoveRecord = true;
+               if (!this._cancelEdit) {
+                   record = this._baseRecord.clone();
+                   record.set('id', this._addRecordCount);
+                   record.set('name', '');
+                   this._addRecordCount++;
+                   RecordSynchronizer.addRecord(record, {at: this._addPosition}, this._items);
+                   this._isRemoveRecord = true;
+               }
                 this._children.EditOpener.open({record: record});
             }
          },
