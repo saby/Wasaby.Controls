@@ -1,10 +1,10 @@
 import {EventUtils} from 'UI/Events';
-import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
+import {default as Base, IBaseInputOptions, IBaseFieldTemplate} from 'Controls/_input/Base';
 import * as ViewModel from 'Controls/_input/Mask/ViewModel';
 import {descriptor} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
-
+=
 // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 
 const regExpQuantifiers: RegExp = /\\({.*?}|.)/;
@@ -34,7 +34,7 @@ const regExpQuantifiers: RegExp = /\\({.*?}|.)/;
  * @demo Controls-demo/Input/Masks/Index
  */
 
-class Mask extends Base {
+class Mask extends Base<IBaseFieldTemplate> {
     protected _viewModel: ViewModel;
     protected _defaultValue: string = '';
     protected _notifyHandler: Function = EventUtils.tmplNotify;

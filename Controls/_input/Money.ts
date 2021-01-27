@@ -1,4 +1,4 @@
-import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
+import {default as Base, IBaseInputOptions, IBaseFieldTemplate} from 'Controls/_input/Base';
 import readOnlyFieldTemplate = require('wml!Controls/_input/Money/ReadOnly');
 
 import {descriptor} from 'Types/entity';
@@ -6,7 +6,7 @@ import ViewModel from './Number/ViewModel';
 import {INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
 import {IOnlyPositive, IOnlyPositiveOptions} from 'Controls/_input/interface/IOnlyPositive';
 
-interface IMoneyOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions {}
+interface IMoneyOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions, IBaseFieldTemplate {}
 
 /**
  * Поле ввода числовых значений. Отличается от {@link Controls/input:Number} отображением введенного значения, согласно стандарту денежных полей ввода.

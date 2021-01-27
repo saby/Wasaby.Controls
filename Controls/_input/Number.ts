@@ -1,11 +1,11 @@
 import {Logger} from 'UI/Utils';
-import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
+import {default as Base, IBaseInputOptions, IBaseFieldTemplate} from 'Controls/_input/Base';
 import {descriptor} from 'Types/entity';
 import ViewModel from './Number/ViewModel';
 import {INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
 import {IOnlyPositive, IOnlyPositiveOptions} from 'Controls/_input/interface/IOnlyPositive';
 
-interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions {
+interface INumberInputOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions, IBaseFieldTemplate {
     value?: number | string | null;
     useGrouping?: boolean;
     showEmptyDecimals?: boolean;

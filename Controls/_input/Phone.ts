@@ -1,4 +1,4 @@
-import {default as Base, IBaseInputOptions} from 'Controls/_input/Base';
+import {default as Base, IBaseInputOptions, IBaseFieldTemplate} from 'Controls/_input/Base';
 import * as ViewModel from 'Controls/_input/Phone/ViewModel';
 
 /**
@@ -36,7 +36,7 @@ import * as ViewModel from 'Controls/_input/Phone/ViewModel';
  *
  * @author Красильников А.С.
  */
-class Phone extends Base {
+class Phone extends Base<IBaseFieldTemplate> {
     protected _defaultValue: string = '';
     protected _inputMode: string = 'tel';
     protected _controlName: string = 'Phone';

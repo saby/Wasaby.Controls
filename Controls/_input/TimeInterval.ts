@@ -1,4 +1,4 @@
-import Base from 'Controls/_input/Base';
+import {default as Base, IBaseFieldTemplate} from 'Controls/_input/Base';
 
 import {descriptor, TimeInterval} from 'Types/entity';
 import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval/ViewModel';
@@ -30,7 +30,7 @@ type IOptions = IModelOptions;
  */
 // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 
-class TimeInterval extends Base {
+class TimeInterval extends Base<IBaseFieldTemplate> {
     protected _autoWidth: boolean = true;
     protected _controlName: string = 'TimeInterval';
 
