@@ -276,7 +276,7 @@ define(
                popupOptions;
             view._filterPopupOpener = { open: (options) => {popupOptions = options;}, isOpened: () => {return false;} };
             view._container = {};
-            view._options.detailPanelTemplateName = 'detailPanelTemplateName.wml';
+            view._detailPanelTemplateName = 'detailPanelTemplateName.wml';
             view._source = defaultConfig.source;
 
             view.openDetailPanel();
