@@ -50,7 +50,7 @@ var _private = {
  * @extends UI/Base:Control
  * @mixes Controls/_calendar/interfaces/IMonth
  * @mixes Controls/_interface/IDayTemplate
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Calendar/MonthView/LongCellName/LongCellName
@@ -123,7 +123,8 @@ var defaultOptions = {
    dayTemplate: dayTemplate,
    dayHeaderTemplate: dayHeaderTemplate,
    captionTemplate: captionTemplate,
-   dateConstructor: WSDate
+   dateConstructor: WSDate,
+   newMode: true
 };
 
 MonthView.getDefaultOptions = function() {

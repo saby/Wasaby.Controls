@@ -1740,6 +1740,7 @@ var
             }
 
             if (current.isGroup) {
+                current.task1181007458 = self._options.task1181007458;
                 current.groupPaddingClasses = _private.getGroupPaddingClasses(current, current.theme);
                 current.shouldFixGroupOnColumn = (columnAlignGroup: number, textVisible: boolean) => {
                     return textVisible !== false &&

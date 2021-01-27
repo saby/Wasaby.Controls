@@ -1650,7 +1650,9 @@ const _private = {
                     } else {
                         self._shouldDrawFooter = false;
                     }
-                } else if (moreMetaCount === false) {
+                } else if (moreMetaCount) {
+                    _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
                     self._shouldDrawFooter = false;
                 }
             }
@@ -4345,6 +4347,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
 
+        this._unregisterMouseMove();
+        this._unregisterMouseUp();
+
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
@@ -4866,8 +4871,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    isLoading(): boolean {
+        return this._sourceController && this._sourceController.isLoading();
+    },
+
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
+        if (this.isLoading()) {
+            return;
+        }
         if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
             // Если нажали на чекбокс, то это не считается нажатием на элемент. В этом случае работает событие checkboxClick
             // Если на mouseUp, предшествующий этому клику, еще работало перетаскивание, то мы не должны нотифаить itemClick
@@ -5431,6 +5443,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
+        if (this.isLoading()) {
+            return;
+        }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
@@ -5458,6 +5473,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseUp(e, itemData, domEvent): void {
+        if (this.isLoading()) {
+            return;
+        }
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.

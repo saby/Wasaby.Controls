@@ -202,5 +202,17 @@
   "--width_s_ArrowButton": "24px",
   "--height_s_ArrowButton": "24px",
   "--width_l_ArrowButton": "28px",
-  "--height_l_ArrowButton": "28px"
+  "--height_l_ArrowButton": "28px",
+  "--inline_height_tumbler": "var(--inline_height_m)",
+  "--background-color_tumbler": "#f2f2f2",
+  "--border-radius_tumbler-button": "10px",
+  "--border-radius_tumbler": "12px",
+  "--inline_height_tumbler-button": "var(--inline_height_s)",
+  "--button_offset_tumbler": "2px",
+  "--padding-horizontal_tumbler": "var(--offset_m)",
+  "--readonly_text-color_tumbler": "var(--readonly_color)",
+  "--selected_text-color_tumbler": "var(--text_color)",
+  "--unselected_text-color_tumbler": "var(--label_text-color)",
+  "--selected_background-color_tumbler": "var(--background-color)",
+  "--unselected_background-color_tumbler": "#f2f2f2"
 }

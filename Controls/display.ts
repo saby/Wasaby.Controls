@@ -114,7 +114,6 @@ import * as VirtualScrollHideController from './_display/controllers/VirtualScro
 
 export { VirtualScrollHideController };
 import {IDragPosition} from './_display/interface/IDragPosition';
-import
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 export {MultiSelectAccessibility} from './_display/Collection';

@@ -98,6 +98,15 @@ describe('Controls/search:ControllerClass', () => {
       assert.isTrue(loadSpy.withArgs(undefined, undefined, filter).called);
    });
 
+   it('getFilter', () => {
+      const resultFilter = {
+         testParam: 'testSearchValue',
+         payload: 'something'
+      };
+      controllerClass._searchValue = 'testSearchValue';
+      assert.deepEqual(controllerClass.getFilter(), resultFilter);
+   });
+
    describe('with hierarchy', () => {
       it('default search case and reset', () => {
          const filter: QueryWhereExpression<unknown> = {
@@ -139,6 +148,20 @@ describe('Controls/search:ControllerClass', () => {
          assert.isTrue(loadSpy.withArgs(undefined, undefined, {
             payload: 'something'
          }).called);
+      });
+
+      it('getFilter', () => {
+         const resultFilter = {
+            testParam: 'testSearchValue',
+            Разворот: 'С разворотом',
+            usePages: 'full',
+            payload: 'something',
+            testParentProeprty: 'testRoot'
+         };
+         controllerClass._root = 'testRoot';
+         controllerClass._searchValue = 'testSearchValue';
+         controllerClass._options.parentProperty = 'testParentProeprty';
+         assert.deepEqual(controllerClass.getFilter(), resultFilter);
       });
    });
 
