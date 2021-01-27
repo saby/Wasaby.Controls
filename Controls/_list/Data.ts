@@ -264,6 +264,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    _rootChanged(event, root): void {
       if (this._options.root === undefined) {
          this._sourceController.setRoot(root);
+         this._sourceController.setExpandedItems([]);
          this._reload(this._options);
       }
       this._notify('rootChanged', [root]);

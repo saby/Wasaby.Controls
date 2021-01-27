@@ -454,6 +454,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (this._options.root === undefined) {
             this._root = root;
             this._sourceController.setRoot(root);
+            this._sourceController.setExpandedItems([]);
             this._reload(this._options);
         }
         this._notify('rootChanged', [root]);
