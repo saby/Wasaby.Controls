@@ -137,6 +137,7 @@ export default class HoverFreeze {
         this._itemData = null;
         this._moveArea = null;
         this._stylesContainer.innerHTML = '';
+        this._clearFreezeHoverTimeout();
         this._clearUnfreezeHoverTimeout();
         if (this._freezeHoverCallback) {
             this._unFreezeHoverCallback();
