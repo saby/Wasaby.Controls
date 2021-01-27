@@ -60,13 +60,13 @@ define('Controls-demo/Index', [
          },
 
          _prepareLinks: function() {
-            const fontsArray = [
+            var fontsArray = [
                Env.constants.tensorFont,
                Env.constants.tensorFontBold,
                Env.constants.cbucIcons,
                Env.constants.cbucIcons24
             ];
-            const links = [];
+            var links = [];
             for (let i = 0; i < fontsArray.length; i++) {
                links.push({
                   rel: 'preload', as: 'font', href: fontsArray[i],
