@@ -35,18 +35,36 @@ var
       },
       DEFAULT_VIEW_MODE = 'table',
       VIEW_NAMES = {
+         search: SearchView,
+         tile: null,
+         table: TreeGridView,
+         list: ListView
+      },
+      VIEW_MODEL_CONSTRUCTORS = {
+         search: SearchGridViewModel,
+         tile: null,
+         table: TreeGridViewModel,
+         list: TreeGridViewModel
+      },
+      USE_NEW_MODEL_VALUES = {
+         search: false,
+         tile: false,
+         table: false,
+         list: false
+      },
+      VIEW_NAMES_NEW = {
          search: SearchViewNew,
          tile: null,
          table: TreeGridViewNew,
          list: ListView
       },
-      VIEW_MODEL_CONSTRUCTORS = {
+      VIEW_MODEL_CONSTRUCTORS_NEW = {
          search: 'Controls/searchBreadcrumbsGrid:SearchGridCollection',
          tile: null,
          table: 'Controls/treeGrid:TreeGridCollection',
          list: 'Controls/treeGrid:TreeGridCollection'
       },
-      NEW_MODEL_VALUES = {
+      USE_NEW_MODEL_VALUES_NEW = {
          search: true,
          tile: false,
          table: true,
@@ -197,9 +215,15 @@ var
          },
 
          setViewConfig: function (self, viewMode) {
-            self._viewName = VIEW_NAMES[viewMode];
-            self._useNewModel = NEW_MODEL_VALUES[viewMode];
-            self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+            // if (self._options.useNewModel) {
+               self._viewName = VIEW_NAMES_NEW[viewMode];
+               self._useNewModel = USE_NEW_MODEL_VALUES_NEW[viewMode];
+               self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS_NEW[viewMode];
+/*            } else {
+               self._viewName = VIEW_NAMES[viewMode];
+               self._useNewModel = USE_NEW_MODEL_VALUES[viewMode];
+               self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+            }*/
          },
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;
