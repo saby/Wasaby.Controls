@@ -24,7 +24,7 @@
    <ws:detail>
       <div
          class="controls-newBrowser__detail"
-         style="background-color: {{_options.detail.backgroundColor ? _options.detail.backgroundColor : '#ffffff'}};"
+         style="background-color: {{_detailBgColor}};"
       >
          <Controls.scroll:Container>
             <Controls.explorer:View

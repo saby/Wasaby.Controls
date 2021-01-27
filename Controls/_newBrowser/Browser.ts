@@ -141,6 +141,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * по которому хранится конфигурация в хранилище данных.
      */
     protected _basePropStorageId: string;
+
+    protected _detailBgColor: string = '#ffffff';
     //endregion
 
     //region private fields
@@ -243,7 +245,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             });
     }
 
-    private _setViewMode(value: DetailViewMode): void {
+    private _setViewMode(value: DetailViewMode, options: IOptions = this._options): void {
         let result = value;
 
         // Если задан пользовательский вид отображения, то всегда используем его.
@@ -261,7 +263,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._viewMode = result;
 
         // Обновим видимость мастера, т.к. она зависит от viewMode
-        this._updateMasterVisibility();
+        this._updateMasterVisibility(options);
+        this._updateDetailBgColor(options);
 
         // Уведомляем о том, что изменился режим отображения списка в detail-колонке
         this._notify('viewModeChanged', [result]);
@@ -298,7 +301,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         // Если не в режиме поиска, то нужно применить viewMode из конфига
         if (this.viewMode !== DetailViewMode.search) {
-            this._setViewMode(cfg.settings.clientViewMode);
+            this._setViewMode(cfg.settings.clientViewMode, options);
             this._updateMasterVisibility(options);
         }
     }
@@ -376,6 +379,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         // об изменении значения, т.к. и так идет синхронизация опций
         this._userViewMode = options.userViewMode;
         this._updateMasterVisibility(options);
+        this._updateDetailBgColor(options);
 
         this._detailSourceOptions = compileSourceOptions(options, true);
         this._masterSourceOptions = compileSourceOptions(options, false);
@@ -447,7 +451,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             ...this._detailSourceOptions,
 
             // Наш sourceController для того что-бы контролировать загрузку данных
-            sourceController: this._detailDataSource.sourceController
+            sourceController: this._detailDataSource.sourceController,
+            // Что бы подсвечивалась поисковая фраза
+            searchValue: this._detailDataSource.searchValue
         };
 
         // Если кастомный шаблон отображения итема списка не задан, то используем наш дефолтный
@@ -465,9 +471,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      */
     private _updateMasterVisibility(options: IOptions = this._options): void {
         // По умолчанию вычисляем видимость мастера на основании опций
-        this._masterVisibility = !options.master
-            ? MasterVisibilityEnum.hidden
-            : options.master.visibility;
+        this._masterVisibility = options.master?.visibility || MasterVisibilityEnum.hidden;
 
         // Если данных о конфигурации представления не достаточно или мы находимся в режиме поиска
         // то оставляем видимость, которая вычислилась на основании опций
@@ -481,6 +485,15 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._masterVisibility = nodesPosition === NodesPosition.left
             ? MasterVisibilityEnum.visible
             : MasterVisibilityEnum.hidden;
+    }
+
+    private _updateDetailBgColor(options: IOptions = this._options): void {
+        // Для таблицы и режима поиска (по сути та же таблица) фон должен быть белый
+        if (this.viewMode === DetailViewMode.search || this.viewMode === DetailViewMode.table) {
+            this._detailBgColor = '#ffffff';
+        } else {
+            this._detailBgColor = options.detail.backgroundColor || '#ffffff';
+        }
     }
     //endregion
 
