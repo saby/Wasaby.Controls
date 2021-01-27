@@ -255,6 +255,9 @@ export default class HoverFreeze {
         hoveredContainers.forEach((container) => {
             const containerRect = container.getBoundingClientRect();
             const bottom = containerRect.top + containerRect.height + itemActionsHeight;
+            if (containerRect.height === 0 || containerRect.width === 0) {
+                return;
+            }
             if (resultRect.top === null) {
                 resultRect.top = containerRect.top;
             }
