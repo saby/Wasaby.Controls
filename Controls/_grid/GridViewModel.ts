@@ -1695,6 +1695,7 @@ var
             }
 
             if (current.isGroup) {
+                current.task1181007458 = self._options.task1181007458;
                 current.groupPaddingClasses = _private.getGroupPaddingClasses(current, current.theme);
                 current.shouldFixGroupOnColumn = (columnAlignGroup?: number) => {
                     return columnAlignGroup !== undefined && columnAlignGroup < current.columns.length - (current.hasMultiSelectColumn ? 1 : 0);
