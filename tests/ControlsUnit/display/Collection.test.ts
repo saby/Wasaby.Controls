@@ -2398,12 +2398,6 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
-    describe('.getCurrent()', () => {
-        it('should return undefined by default', () => {
-            assert.isUndefined(display.getCurrent());
-        });
-    });
-
     describe('.getSelectedItems()', () => {
         it('should return one selected item', () => {
             display.at(0).setSelected(true);
