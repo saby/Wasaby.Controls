@@ -136,6 +136,9 @@ define('Controls-demo/Popup/Edit/Opener',
                    record = this._baseRecord.clone();
                    record.set('id', this._addRecordCount);
                    record.set('name', '');
+                   record.set('price', 0);
+                   record.set('balance', 0);
+                   record.set('costPrice', 0);
                    this._addRecordCount++;
                    RecordSynchronizer.addRecord(record, {at: this._addPosition}, this._items);
                    this._isRemoveRecord = true;
