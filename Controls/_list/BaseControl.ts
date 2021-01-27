@@ -1649,7 +1649,9 @@ const _private = {
                     } else {
                         self._shouldDrawFooter = false;
                     }
-                } else if (moreMetaCount === false) {
+                } else if (moreMetaCount) {
+                    _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
                     self._shouldDrawFooter = false;
                 }
             }
@@ -4279,6 +4281,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
+
+        this._unregisterMouseMove();
+        this._unregisterMouseUp();
 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
