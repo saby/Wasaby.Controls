@@ -1640,7 +1640,9 @@ const _private = {
                     } else {
                         self._shouldDrawFooter = false;
                     }
-                } else if (moreMetaCount === false) {
+                } else if (moreMetaCount) {
+                    _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
                     self._shouldDrawFooter = false;
                 }
             }
