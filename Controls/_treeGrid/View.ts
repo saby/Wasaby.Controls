@@ -162,3 +162,9 @@ export default class Tree extends Grid/** @lends Controls/TreeGrid */ {
  * @name Controls/_treeGrid/View#root
  * @cfg {Number|String} Идентификатор корневого узла.
  */
+/**
+ * @name Controls/_treeGrid/View#markerMoveMode
+ * @cfg {String} режим перемещения маркера по кнопкам вверх/вниз.
+ * @variant all - маркер движется по всем записям.
+ * @variant leaves - маркер движется по листьям. Узлы раскрываются до ближайшего листа.
+ */
