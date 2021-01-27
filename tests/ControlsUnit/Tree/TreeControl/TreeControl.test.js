@@ -1524,7 +1524,8 @@ define([
                getViewModel: function() {
                   return treeGridViewModel;
                },
-               setMarkedKey(key) { treeGridViewModel._model._markedKey = key; }
+               setMarkedKey(key) { treeGridViewModel._model._markedKey = key; },
+               isLoading: () => false
             }
          };
 
@@ -1587,7 +1588,8 @@ define([
                },
                setMarkedKey(key) {
                   assert.equal(key, expectedMarkedKey);
-               }
+               },
+               isLoading: () => false
             }
          };
 
