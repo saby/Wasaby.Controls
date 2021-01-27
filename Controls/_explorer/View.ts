@@ -20,6 +20,7 @@ import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 import {calculatePath} from 'Controls/dataSource';
 import { SearchView as SearchViewNew } from 'Controls/searchBreadcrumbsGrid';
+import { TreeGridView as TreeGridViewNew } from 'Controls/treeGridNew';
 
 var
       HOT_KEYS = {
@@ -36,20 +37,20 @@ var
       VIEW_NAMES = {
          search: SearchViewNew,
          tile: null,
-         table: TreeGridView,
+         table: TreeGridViewNew,
          list: ListView
       },
       VIEW_MODEL_CONSTRUCTORS = {
          search: 'Controls/searchBreadcrumbsGrid:SearchGridCollection',
          tile: null,
-         table: TreeGridViewModel,
-         list: TreeGridViewModel
+         table: 'Controls/treeGrid:TreeGridCollection',
+         list: 'Controls/treeGrid:TreeGridCollection'
       },
       NEW_MODEL_VALUES = {
          search: true,
          tile: false,
-         table: false,
-         list: false
+         table: true,
+         list: true
       },
       _private = {
          setRoot: function(self, root, dataRoot = null) {

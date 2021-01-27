@@ -49,8 +49,10 @@ export default class SearchSeparator extends OptionsToPropertyMixin {
     }
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
-        let classes = `controls-TreeGrid__row__searchSeparator_theme-${params.theme} `;
-        classes += `controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${params.theme} `;
+        let classes = `controls-ListView__itemV controls-TreeGrid__row__searchSeparator_theme-${params.theme} `;
+        if (this._$owner['[Controls/_display/grid/mixins/Grid]'] && !this._$owner.hasMultiSelectColumn()) {
+            classes += `controls-Grid__cell_spacingFirstCol_${this._$owner.getLeftPadding()}_theme-${params.theme} `;
+        }
         classes += 'js-controls-ListView__notEditable';
         return classes;
     }

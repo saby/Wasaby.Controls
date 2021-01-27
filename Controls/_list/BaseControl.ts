@@ -3816,7 +3816,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (oldViewModelConstructorChanged) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
-            const items = this._loadedBySourceController ? newOptions.sourceController.getItems() : this._listViewModel.getItems();
+            const items = this._loadedBySourceController
+               ? newOptions.sourceController.getItems()
+               : this._options.useNewModel ? this._listViewModel.getCollection() : this._listViewModel.getItems();
             this._listViewModel.destroy();
 
             if (newOptions.useNewModel) {

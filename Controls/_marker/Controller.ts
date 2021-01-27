@@ -205,17 +205,8 @@ export class Controller {
       this._model = null;
    }
 
-   /**
-    * @private
-    * TODO нужно выпилить этот метод при переписывании моделей. item.getContents() должен возвращать Record
-    *  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
-    */
    private _getKey(item: CollectionItem<Model>): CrudEntityKey {
-      if (!item.Markable) {
-         return null;
-      }
-
-      return item.getContents().getKey();
+      return item.Markable ? item.getContents().getKey() : null;
    }
 
    /**
