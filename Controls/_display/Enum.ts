@@ -15,7 +15,7 @@ interface IOptions<S, T> extends ICollectionOptions<S, T> {
 }
 
 function onSourceChange(event: EventObject, index: number): void {
-    this.setCurrentPosition(this.getIndexBySourceIndex(index));
+
 }
 
 /**

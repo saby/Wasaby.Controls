@@ -54,13 +54,6 @@ define([
                 const resultDisplay = ViewInstance._displayFilter(collapsedItem.getContents());
                 assert.isFalse(resultDisplay);
             });
-            it('filtered groupItem', () => {
-                const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
-                collection.moveToFirst();
-                const group = collection.getCurrent();
-                const resultDisplay = ViewInstance._displayFilter(group.getContents());
-                assert.isTrue(resultDisplay);
-            });
         });
         describe('groupClick', () => {
             it('toggle expand state on group item', () => {
