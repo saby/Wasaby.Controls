@@ -11,7 +11,7 @@ export default class extends Control {
     protected _expandedItems = [];
     protected _items: RecordSet;
     protected _markedKey = null;
-    protected _leafPosition: string = 'first';
+    protected _markedLeaf: string = 'first';
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
@@ -20,7 +20,7 @@ export default class extends Control {
             filter: () => true
         });
         this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
-        this._leafPositionCallback = this._leafPositionCallback.bind(this);
+        this._markedLeafChangeCallback = this._markedLeafChangeCallback.bind(this);
     }
     protected _itemsReadyCallback(items) {
         this._items = items;
@@ -31,8 +31,8 @@ export default class extends Control {
             this._markedKey = newMarkedKey;
         }
     }
-    protected _leafPositionCallback(newLeafPosition) {
-        this._leafPosition = newLeafPosition;
+    protected _markedLeafChangeCallback(markedLeaf) {
+        this._markedLeaf = markedLeaf;
     }
     protected _goToNext(): void {
         this._children.tree.goToNext();

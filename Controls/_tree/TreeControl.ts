@@ -588,7 +588,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _editingItem: null,
     _currentItem: null,
     _tempItem: null,
-    _leafPosition: '',
+    _markedLeaf: '',
 
     _itemOnWhichStartCountDown: null,
     _timeoutForExpandOnDrag: null,
@@ -624,14 +624,14 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         this._currentItem = this._tempItem;
                         this._doAfterItemExpanded = (itemKey) => {
                             this._doAfterItemExpanded = null;
-                            this._applyLeafPosition(itemKey, viewModel, markerController);
+                            this._applyMarkedLeaf(itemKey, viewModel, markerController);
                         };
                         this._expandedItemsToNotify = this._expandToFirstLeaf(this._tempItem, viewModel.getItems(), viewModel);
                         if (this._expandedItemsToNotify) {
                             viewModel.setExpandedItems(this._expandedItemsToNotify);
                         }
                     } else {
-                        this._applyLeafPosition(current.getKey(), viewModel, markerController);
+                        this._applyMarkedLeaf(current.getKey(), viewModel, markerController);
                     }
                 }
             };
@@ -704,7 +704,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         if (this._options.markedKey !== newOptions.markedKey) {
             if (newOptions.markerMoveMode === 'leaves') {
-                this._applyLeafPosition(newOptions.markedKey, viewModel, this._children.baseControl.getMarkerController());
+                this._applyMarkedLeaf(newOptions.markedKey, viewModel, this._children.baseControl.getMarkerController());
             }
         }
         if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
@@ -1070,7 +1070,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             return expanded;
         }
     },
-    _getLeafPosition(key: CrudEntityKey, model): 'first' | 'last' | 'middle' {
+    _getMarkedLeaf(key: CrudEntityKey, model): 'first' | 'last' | 'middle' {
         const index = model.getIndexByKey(key);
         if (index === model.getCount() - 1) {
             return 'last';
@@ -1109,7 +1109,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                     }
                 }
             } else {
-                this._applyLeafPosition(this._tempItem, model, markerController);
+                this._applyMarkedLeaf(this._tempItem, model, markerController);
             }
         } else {
             this._tempItem = null;
@@ -1142,20 +1142,20 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 }
             } else {
                 this._tempItem = itemKey;
-                this._applyLeafPosition(this._tempItem, model, markerController);
+                this._applyMarkedLeaf(this._tempItem, model, markerController);
             }
         } else {
             this._tempItem = null;
         }
     },
-    _applyLeafPosition(key: CrudEntityKey, model, markerController): void {
+    _applyMarkedLeaf(key: CrudEntityKey, model, markerController): void {
         this._currentItem = key;
-        const newLeafPosition = this._getLeafPosition(this._currentItem, model);
-        if (this._leafPosition !== newLeafPosition) {
-            if (this._options.leafPositionCallback) {
-                this._options.leafPositionCallback(newLeafPosition);
+        const newMarkedLeaf = this._getMarkedLeaf(this._currentItem, model);
+        if (this._markedLeaf !== newMarkedLeaf) {
+            if (this._options.markedLeafChangeCallback) {
+                this._options.markedLeafChangeCallback(newMarkedLeaf);
             }
-            this._leafPosition = newLeafPosition;
+            this._markedLeaf = newMarkedLeaf;
         }
 
         markerController.setMarkedKey(this._currentItem);

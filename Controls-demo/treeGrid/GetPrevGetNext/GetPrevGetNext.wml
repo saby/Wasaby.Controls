@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth300 controlsDemo_wrapper-treeGrid-base-treeView">
     <div class='controlsDemo__button_wrapper'>
-        <button attr:disabled="{{_leafPosition === 'first'}}" on:click="_goToPrev()">Предыдущая</button>
-        <button attr:disabled="{{_leafPosition === 'last'}}" on:click="_goToNext()">Следующая</button>
+        <button attr:disabled="{{_markedLeaf === 'first'}}" on:click="_goToPrev()">Предыдущая</button>
+        <button attr:disabled="{{_markedLeaf === 'last'}}" on:click="_goToNext()">Следующая</button>
     </div>
     <Controls.scroll:Container>
         <Controls.treeGrid:View
@@ -11,7 +11,7 @@
                 markerMoveMode="leaves"
                 bind:expandedItems="_expandedItems"
                 on:markedKeyChanged="_onMarkedKeyChanged()"
-                leafPositionCallback="{{_leafPositionCallback}}"
+                markedLeafChangeCallback="{{_markedLeafChangeCallback}}"
                 markedKey="{{_markedKey}}"
                 expandByItemClick="{{true}}"
                 source="{{_viewSource}}"

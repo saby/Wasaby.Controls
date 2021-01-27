@@ -2161,23 +2161,23 @@ define([
             markerController: treeControl._children.baseControl.getMarkerController()
          });
          treeControl._afterMount();
-         assert.equal(treeControl._leafPosition, 'last');
+         assert.equal(treeControl._markedLeaf, 'last');
          treeControl.goToPrev();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._leafPosition, 'middle');
+         assert.equal(treeControl._markedLeaf, 'middle');
          treeControl.goToPrev();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._leafPosition, 'first');
+         assert.equal(treeControl._markedLeaf, 'first');
          treeControl.goToNext();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._leafPosition, 'middle');
+         assert.equal(treeControl._markedLeaf, 'middle');
          treeControl.goToNext();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._leafPosition, 'last');
+         assert.equal(treeControl._markedLeaf, 'last');
       });
    });
 });
