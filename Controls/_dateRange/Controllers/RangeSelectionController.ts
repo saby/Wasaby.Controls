@@ -33,9 +33,6 @@ var _private = {
     */
    stopRangeSelection: function(self, item) {
       var range = self._getDisplayedRangeEdges(item);
-      if (self._startValue === range[0] && self._endValue === range[1]) {
-         return;
-      }
       self._notify('beforeSelectionEnded', [range[0], range[1]]);
       self._selectionProcessing = false;
       self._selectionBaseValue = null;
