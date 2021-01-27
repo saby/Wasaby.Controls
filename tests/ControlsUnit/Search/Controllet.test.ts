@@ -67,6 +67,7 @@ describe('Controls/search:Controller', () => {
             searchController._searchValue = '';
             searchController._beforeUpdate(options, {dataOptions: {}});
             assert.equal(searchController._searchValue, 'newValue');
+            assert.equal(searchController._inputSearchValue, 'newValue');
         });
 
         it('searchValue wasn\'t changed', () => {
