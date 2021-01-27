@@ -46,7 +46,8 @@ function getBrowserOptions(): object {
             data: browserData
         }),
         searchParam: 'name',
-        filter: {}
+        filter: {},
+        keyProperty: 'id'
     };
 }
 
@@ -320,7 +321,7 @@ describe('Controls/browser:Browser', () => {
             const browserItems = browser._items;
 
             await browser._beforeUpdate(options);
-            assert.ok(browser._items !== browserItems);
+            assert.ok(browser._items.at(0).get('title') === 'Интерфейсный фреймворк');
         });
 
         it('source returns error, then _beforeUpdate', async () => {
@@ -540,18 +541,21 @@ describe('Controls/browser:Browser', () => {
             const filter = {
                 title: 'test'
             };
-            const options = getBrowserOptions();
+            const resultFilter = {
+                title: 'test',
+                testSearchParam: 'testSearchValue'
+            };
+            const options = {...getBrowserOptions(), searchParam: 'testSearchParam', searchValue: 'testSearchValue', filter};
             const browser = getBrowser(options);
             const sandbox = sinon.createSandbox();
             const notifyStub = sandbox.stub(browser, '_notify');
             await browser._beforeMount(options);
+            browser.saveOptions(options);
+            await browser._getSearchController();
 
-            browser._sourceController.getState = () => { return {filter}; };
-            browser._itemsChanged = () => {};
-
-            browser._afterSearch(null, 'test');
-            assert.deepEqual(browser._filter, filter);
-            assert.isTrue(notifyStub.calledWith('filterChanged', [filter]));
+            browser._afterSearch(new RecordSet(), 'test');
+            assert.deepEqual(browser._filter, resultFilter);
+            assert.isTrue(notifyStub.calledWith('filterChanged', [resultFilter]));
         });
     });
 

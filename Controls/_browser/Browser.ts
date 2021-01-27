@@ -680,8 +680,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _searchReset(event: SyntheticEvent): void {
         this._getSearchController().then((searchController) => {
-            if (this._rootBeforeSearch) {
+            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
                 this._root = this._rootBeforeSearch;
+                this._rootBeforeSearch = null;
+                searchController.setRoot(this._root);
+                this._notify('rootChanged', [this._root]);
             }
             this._updateFilter(searchController);
         });
@@ -696,7 +699,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _afterSearch(recordSet: RecordSet, value: string): void {
         this._updateParams(value);
         this._afterSourceLoad(this._sourceController, this._options);
-        this._filterChanged(null, this._sourceController.getFilter());
+        this._filterChanged(null, this._searchController.getFilter());
 
         const switchedStr = getSwitcherStrFromData(recordSet);
         this._misspellValue = switchedStr;
@@ -725,13 +728,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _updateRootAfterSearch(): void {
         if (this._options.startingWith === 'root') {
             const newRoot = Browser._getRoot(this._path, this._root, this._options.parentProperty);
-
-            this._getSearchController().then((searchController) => {
-                this._rootBeforeSearch = this._root;
-                this._root = newRoot;
-                searchController.setRoot(newRoot);
-                this._notify('rootChanged', [newRoot]);
-            });
+            this._rootBeforeSearch = this._root;
+            this._root = newRoot;
+            this._searchController.setRoot(newRoot);
+            this._notify('rootChanged', [newRoot]);
         }
     }
 
@@ -745,10 +745,16 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._deepReload = undefined;
         }
 
-        this._path = data?.getMetaData().path ?? null;
-
         if (this._searchController && this._searchController.isSearchInProcess()) {
             this._searchDataLoad(data, this._searchController.getSearchValue());
+        }
+
+        this._path = data?.getMetaData().path ?? null;
+
+        if (this._options.searchParam) {
+            if (!this._isSearchViewMode()) {
+                this._getSearchController().then((searchController) => searchController.setPath(this._path));
+            }
         }
 
         if (this._isSearchViewMode() && !this._searchValue) {
