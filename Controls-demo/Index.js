@@ -67,7 +67,7 @@ define('Controls-demo/Index', [
                Env.constants.cbucIcons24
             ];
             var links = [];
-            for (let i = 0; i < fontsArray.length; i++) {
+            for (var i = 0; i < fontsArray.length; i++) {
                links.push({
                   rel: 'preload', as: 'font', href: fontsArray[i],
                   type: 'font/woff2', crossorigin: 'anonymous'
