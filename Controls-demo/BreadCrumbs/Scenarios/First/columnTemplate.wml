@@ -1,23 +1,23 @@
-<ws:partial template="Controls/gridNew::ColumnTemplate"
+<ws:partial template="Controls/gridNew:ColumnTemplate"
             attr:class="controls-Grid__row-cell__content_baseline_L"
             itemData="{{itemData}}">
    <ws:contentTemplate>
       <div class="demo-PersonInfo">
-         <ws:if data="{{itemData.dispItem.isNode()}}">
-            <span class="demo-PersonInfo__department">{{itemData.item.department}}</span>
-            <span if="{{itemData.item.head}}" class="demo-PersonInfo__head">{{itemData.item.head}}</span>
+         <ws:if data="{{item.isNode()}}">
+            <span class="demo-PersonInfo__department">{{item.item.department}}</span>
+            <span if="{{itemData.item.head}}" class="demo-PersonInfo__head">{{item.item.head}}</span>
             <span if="{{itemData.item.icon}}" class="{{itemData.item.icon}}"> </span>
-            <span if="{{itemData.item.countOfEmployees}}" class="demo-PersonInfo__countOfEmployees">({{itemData.item.countOfEmployees}})</span>
+            <span if="{{itemData.item.countOfEmployees}}" class="demo-PersonInfo__countOfEmployees">({{item.item.countOfEmployees}})</span>
          </ws:if>
          <ws:else>
-               <img class="demo-PersonInfo__photo" src="{{itemData.item['photo']}}"/>
+               <img class="demo-PersonInfo__photo" src="{{item.item['photo']}}"/>
                <div class="demo-PersonInfo__row">
                   <div>
-                     <span class="demo-PersonInfo__name">{{itemData.item.name}}</span>
-                     <span if="{{itemData.item.phone}}" class="demo-PersonInfo__phone">{{itemData.item.phone}}</span>
+                     <span class="demo-PersonInfo__name">{{item.item.name}}</span>
+                     <span if="{{itemData.item.phone}}" class="demo-PersonInfo__phone">{{item.item.phone}}</span>
                   </div>
                   <div>
-                     <span class="demo-PersonInfo__position">{{itemData.item.position}}</span>
+                     <span class="demo-PersonInfo__position">{{item.item.position}}</span>
                   </div>
                </div>
          </ws:else>
