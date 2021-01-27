@@ -100,6 +100,14 @@ export default {
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Text that is used if the period is not selected.
              */
+
+            /*
+             * @name Controls/_dateRange/interfaces/ILinkView#resetValue
+             * @cfg {Array<Date>} Значение периода по умолчанию
+             * @remark Опция указывается в виде массива из дат, где первый элемент это начало периода, а второй - конец.
+             * При использовании опции, рядом с контролом появится крестик, нажав на который, пользователь перейдет к
+             * периоду, указанному в resetValue.
+             */
         };
     },
 

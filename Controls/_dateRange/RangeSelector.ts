@@ -73,8 +73,7 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     }
 
     _updateResetButtonVisible(options): void {
-        this._resetButtonVisible = options.resetButtonVisible &&
-            (!dateUtils.isDatesEqual(this._startValue, options.resetValue[0]) ||
+        this._resetButtonVisible = options.resetValue && (!dateUtils.isDatesEqual(this._startValue, options.resetValue[0]) ||
                 !dateUtils.isDatesEqual(this._endValue, options.resetValue[1]));
     }
 
@@ -132,7 +131,6 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
                 headerType: 'link',
-                resetButtonVisible: this._options.resetButtonVisible,
                 resetValue: this._options.resetValue,
                 rightFieldTemplate: this._options.rightFieldTemplate,
                 calendarSource: this._options.calendarSource,
@@ -170,7 +168,6 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     static getDefaultOptions(): object {
         return {
             minRange: 'day',
-            resetValue: [null, null],
             ...ILinkView.getDefaultOptions(),
             ...IDateRangeSelectable.getDefaultOptions(),
             captionFormatter: dateControlsUtils.formatDateRangeCaption

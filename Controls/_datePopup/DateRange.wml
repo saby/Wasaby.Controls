@@ -74,6 +74,7 @@
                              month="{{ monthTemplate.date }}"
                              daysData="{{extData[monthTemplate.date.getMonth()]}}"
                              dateConstructor="{{_options.dateConstructor}}"
+                             _date="{{ _options._date }}"
 
                              startValue="{{_options.startValue}}"
                              endValue="{{_options.endValue}}"

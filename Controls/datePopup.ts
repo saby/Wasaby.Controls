@@ -96,7 +96,7 @@ export default class DatePopup extends Control implements EventProxyMixin {
     _headerTmpl: TemplateFunction = headerTmpl;
     _dayTmpl: TemplateFunction = dayTmpl;
     _defaultDayTemplate: TemplateFunction = MonthViewDayTemplate;
-    protected _today: number = new Date().getDate();
+    protected _today: number;
 
     _rangeModel: object = null;
     _headerRangeModel: object = null;
@@ -136,7 +136,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
             (dateUtils.isValidDate(options.startValue) ?
                 options.startValue :
                 new Date()));
-
+        // Опция _date используется только на демках для тестирования. В заголовке у нас указывается сегодняшний день.
+        this._today = options._date ? options._date.getDate() : new Date().getDate();
         this._rangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
         this._rangeModel.update(options);
 
@@ -420,7 +421,7 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     _updateResetButtonVisible(options): void {
-        this._resetButtonVisible = options.resetButtonVisible &&
+        this._resetButtonVisible = options.resetValue &&
             (!dateUtils.isDatesEqual(this._rangeModel.startValue, options.resetValue[0]) ||
             !dateUtils.isDatesEqual(this._rangeModel.endValue, options.resetValue[1]));
     }
