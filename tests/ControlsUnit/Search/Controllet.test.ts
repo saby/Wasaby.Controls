@@ -136,6 +136,21 @@ describe('Controls/search:Controller', () => {
             searchController._beforeUpdate(options, {dataOptions});
             assert.isFalse(searchControllerUpdated);
         });
+
+        it('_beforeUpdate without sourceController', () => {
+            let errorCatched = false;
+
+            const searchController = new Controller(options);
+            searchController._beforeMount(options, {dataOptions});
+            searchController._sourceController = null;
+            try {
+                searchController._beforeUpdate(options, {dataOptions});
+            } catch {
+                errorCatched = true;
+            }
+
+            assert.isFalse(errorCatched);
+        });
     });
 
     describe('_itemOpenHandler', () => {
