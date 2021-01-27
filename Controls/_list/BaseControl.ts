@@ -2189,6 +2189,13 @@ const _private = {
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
         if (!direction) {
+            if (this._sourceController && this._options.dataLoadCallback) {
+                const sourceControllerDataLoadCallback = this._sourceController.getState().dataLoadCallback;
+
+                if (sourceControllerDataLoadCallback !== this._options.dataLoadCallback) {
+                    this._options.dataLoadCallback(items, direction);
+                }
+            }
             _private.executeAfterReloadCallbacks(this, items, this._options);
             return this.isEditing() ? this._cancelEdit(true) : void 0;
         }
