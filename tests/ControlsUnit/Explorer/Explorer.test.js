@@ -271,6 +271,7 @@ define([
          assert.isFalse(clearSelectionCalled);
       });
 
+/*
       it('setViewMode', function() {
          var
             cfg = {
@@ -371,6 +372,7 @@ define([
                assert.equal(instance._breadCrumbsItems, null);
             });
       });
+*/
 
       it('toggleExpanded', function() {
          var
@@ -447,6 +449,7 @@ define([
          instance._dataLoadErrback({});
          assert.isTrue(itemsPromiseResolved);
       });
+/*
       describe('_beforeUpdate', function() {
          it('collapses and expands items as needed', () => {
             const cfg = { viewMode: 'tree', root: null };
@@ -533,6 +536,7 @@ define([
             assert.strictEqual(instance._viewMode, 'tile');
          });
       });
+*/
 
       it('_onBreadCrumbsClick', function() {
          var
