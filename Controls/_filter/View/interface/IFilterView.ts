@@ -325,14 +325,15 @@ export interface IFilterItem {
 /**
  * @name Controls/_filter/View/interface/IFilterItem#detailPanelOpenMode
  * @cfg {detailPanelOpenMode} Режим открытия шаблона всплывающей панели, которая открывается после клика по кнопке.
+ * @remark
+ * При указании detailPanelOpenMode равным 'stack', в качестве опции detailPanelTemplateName будет передано значение {@link Controls/filterPanelPopup:Stack}.
  * @example
  * Пример настройки параметров для открытия контрола панели фильтров {@link Controls/filterPanel:View} в стековом окне.
  * <pre class="brush: html">
  * <!-- MyModule.wml -->
  * <Controls.filter:View
  *    source="{{_source}}"
- *    detailPanelOpenMode="stack"
- *    detailPanelTemplateName="Controls/filterPanelPopup:Stack"/>
+ *    detailPanelOpenMode="stack"/>
  * </pre>
  * @demo Controls-demo/filterPanel/FilterView/Index
  * @default sticky

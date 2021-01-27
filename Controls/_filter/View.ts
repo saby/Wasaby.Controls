@@ -27,6 +27,8 @@ import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import Store from 'Controls/Store';
 
 const DEFAULT_FILTER_NAME = 'all_frequent';
+const FILTER_PANEL_POPUP_STACK = 'Controls/filterPanelPopup:Stack';
+const FILTER_PANEL_POPUP = 'Controls/filterPanelPopup';
 var _private = {
     getItemByName: function(items, name) {
         var result;
@@ -637,11 +639,12 @@ var _private = {
 
     _loadDependencies: function(): Promise<unknown> {
         try {
-            const detailPanelTemplateName = this._options.detailPanelTemplateName;
+            const popupLibrary = this._options.detailPanelOpenMode === 'stack' ? FILTER_PANEL_POPUP : 'Controls/filterPopup';
+            const detailPanelTemplateName = this._detailPanelTemplateName;
 
             if (!this._loadOperationsPanelPromise) {
                 this._loadOperationsPanelPromise = Promise.all([
-                   import('Controls/filterPopup'),
+                   import(popupLibrary),
                     // load потому-что в detailPanelTemplateName могут
                     // передаваться значения вида Controls/filter:Popup, что не поддерживает import()
                     (typeof detailPanelTemplateName === 'string') ?
@@ -709,6 +712,7 @@ var Filter = Control.extend({
     _dependenciesTimer: null,
     _filterPopupOpener: null,
     _stackOpener: null,
+    _detailPanelTemplateName: null,
 
     _beforeMount: function(options, context, receivedState) {
         this._configs = {};
@@ -725,6 +729,7 @@ var Filter = Control.extend({
             resultDef = _private.reload(this, true, options.panelTemplateName);
         }
         this._hasSelectorTemplate = _private.hasSelectorTemplate(this._source);
+        this._detailPanelTemplateName = this._getDetailPanelTemplateName(options.detailPanelTemplateName, options.detailPanelOpenMode);
         return resultDef;
     },
 
@@ -752,6 +757,7 @@ var Filter = Control.extend({
             const self = this;
             let resultDef;
             _private.resolveItems(this, newOptions.source);
+            this._detailPanelTemplateName = this._getDetailPanelTemplateName(newOptions.detailPanelTemplateName, newOptions.detailPanelOpenMode);
             if (_private.isNeedReload(this._options.source, newOptions.source, this._configs) || _private.isNeedHistoryReload(this._configs)) {
                 _private.clearConfigs(this._source, this._configs);
                 resultDef = _private.reload(this, null, newOptions.panelTemplateName, true).addCallback(() => {
@@ -795,7 +801,7 @@ var Filter = Control.extend({
     },
 
     openDetailPanel: function() {
-        if (this._options.detailPanelTemplateName) {
+        if (this._detailPanelTemplateName) {
             let panelItems = converterFilterItems.convertToDetailPanelItems(this._source);
             let popupOptions =  {
                 fittingMode: {
@@ -813,13 +819,17 @@ var Filter = Control.extend({
                 };
             }
             popupOptions = Merge(popupOptions, this._options.detailPanelPopupOptions || {});
-            popupOptions.template = this._options.detailPanelTemplateName;
+            popupOptions.template = this._detailPanelTemplateName;
             popupOptions.className = 'controls-FilterButton-popup-orientation-' + (this._options.alignment === 'right' ? 'left' : 'right');
             popupOptions.templateOptions = this._options.detailPanelTemplateOptions || {};
             this._open(panelItems, popupOptions);
         } else {
             this._openPanel();
         }
+    },
+
+    _getDetailPanelTemplateName(detailPanelTemplateName: string, detailPanelOpenMode: string): string {
+        return detailPanelOpenMode === 'stack' ? FILTER_PANEL_POPUP_STACK : detailPanelTemplateName;
     },
 
     _openPanel(event: SyntheticEvent<'click'>, name?: string) {
