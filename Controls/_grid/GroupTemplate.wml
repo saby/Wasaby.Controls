@@ -42,6 +42,7 @@
 </ws:template>
 <ws:template name="groupRightStickyTemplate">
       <Controls.scroll:StickyHeader
+        task1181007458="{{ itemData.task1181007458 }}"
         backgroundStyle="{{itemData.backgroundStyle}}"
         attr:class="controls-ListView__stickyGroup_{{itemData.style}} controls-ListView__groupContent"
         fixedZIndex="{{4}}">
@@ -58,6 +59,7 @@
 </ws:template>
 <ws:template name="groupContentStickyWrapper">
 <Controls.scroll:StickyHeader
+        task1181007458="{{ itemData.task1181007458 }}"
         backgroundStyle="{{itemData.backgroundStyle}}"
         attr:class="controls-ListView__stickyGroup_{{itemData.style}} controls-ListView__groupContent
                {{ expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '' }}
