@@ -271,22 +271,21 @@ const _private = {
         const nodeKey = dispItem.getContents().getId();
 
         self._children.baseControl.showIndicator();
-        return baseSourceController.load('down', nodeKey).addCallbacks((list) => {
-            listViewModel.setHasMoreStorage(
-                _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
-            );
-            if (self._options.dataLoadCallback) {
-                self._options.dataLoadCallback(list);
-            }
-            self._children.baseControl.stopBatchAdding();
-        }, (error) => {
-            if (typeof self._options.dataLoadErrback === 'function') {
-                self._options.dataLoadErrback(error);
-            }
-            _private.processError(self, error);
-        }).addCallback(() => {
-            self._children.baseControl.hideIndicator();
-        });
+        return baseSourceController.load('down', nodeKey)
+            .then((list) => {
+                listViewModel.setHasMoreStorage(
+                    _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
+                );
+                self._children.baseControl.stopBatchAdding();
+                return list;
+            })
+            .catch((error) => {
+                _private.processError(self, error);
+                return error;
+            })
+            .finally(() => {
+                self._children.baseControl.hideIndicator();
+            });
     },
     isExpandAll: function(expandedItems) {
         return expandedItems instanceof Array && expandedItems[0] === null;
@@ -747,11 +746,17 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return _private.toggleExpanded(this, item);
     },
     _onExpanderMouseDown(e, key, dispItem) {
+        if (this._children.baseControl.isLoading()) {
+            return;
+        }
         if (MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
             this._mouseDownExpanderKey = key;
         }
     },
     _onExpanderMouseUp: function(e, key, itemData) {
+        if (this._children.baseControl.isLoading()) {
+            return;
+        }
         if (this._mouseDownExpanderKey === key && MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
             const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
             _private.toggleExpanded(this, dispItem);

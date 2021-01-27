@@ -105,12 +105,9 @@
 </ws:template>
 
 <ws:if data="{{_options.searchParam}}">
-   <ws:partial template="{{'Controls/list:DataContainer'}}"
-               scope="{{_options}}">
-      <ws:partial template="{{'Controls/search:Controller'}}">
-         <ws:partial template="{{'Controls/list:Container'}}">
-            <ws:partial template="menuPopup" filter="{{content.filter}}"/>
-         </ws:partial>
+   <ws:partial template="{{'Controls/browser:Browser'}}" scope="{{_options}}">
+      <ws:partial template="{{'Controls/list:Container'}}">
+         <ws:partial template="menuPopup" filter="{{content.filter}}"/>
       </ws:partial>
    </ws:partial>
 </ws:if>
