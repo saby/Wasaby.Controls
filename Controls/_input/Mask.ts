@@ -4,7 +4,7 @@ import * as ViewModel from 'Controls/_input/Mask/ViewModel';
 import {descriptor} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {spaceToLongSpace} from 'Controls/_input/Mask/Space';
-=
+
 // TODO: https://online.sbis.ru/doc/f654ff87-5fa9-4c80-a16e-fee7f1d89d0f
 
 const regExpQuantifiers: RegExp = /\\({.*?}|.)/;
