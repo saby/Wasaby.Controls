@@ -3372,7 +3372,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
-        const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
@@ -3448,12 +3447,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 return Promise.resolve();
             }
-            if (receivedError) {
-                if (newOptions.dataLoadErrback instanceof Function) {
-                    newOptions.dataLoadErrback(receivedError);
+                if (receivedState.errorConfig) {
+                    return Promise.resolve(_private.showError(self, receivedState.errorConfig));
+                } else if (self._sourceController && self._sourceController.getLoadError()) {
+                    return _private.processError(self, {error: self._sourceController.getLoadError()})
+                        .then((errorConfig) => {
+                            return getState(errorConfig);
+                        });
                 }
-                return Promise.resolve(_private.showError(self, receivedError));
-            }
             } else {
                 _private.createScrollController(self, newOptions);
                 return Promise.resolve();
