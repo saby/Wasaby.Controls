@@ -4,8 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {
     ControllerClass as SearchController,
-    getSwitcherStrFromData,
-    SearchResolver as SearchResolverController
+    getSwitcherStrFromData
 } from 'Controls/search';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
 import {IFilterControllerOptions, IFilterHistoryData} from 'Controls/_filter/ControllerClass';
@@ -37,6 +36,7 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
+import {descriptor} from 'Types/entity';
 
 type Key = string|number|null;
 
@@ -121,8 +121,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _source: ICrudPlus | ICrud & ICrudPlus & IData;
     private _sourceController: SourceController = null;
-    private _searchResolverController: SearchResolverController = null;
     private _operationsController: OperationsController = null;
+    private _searchControllerCreatePromise: Promise<SearchController> = null;
     private _searchController: SearchController = null;
     private _filterController: FilterController = null;
 
@@ -326,9 +326,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _beforeUnmount(): void {
-        if (this._searchResolverController) {
-            this._searchResolverController.clearTimer();
-        }
         if (this._operationsController) {
             this._operationsController.destroy();
             this._operationsController = null;
@@ -395,12 +392,15 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _getSearchController(options?: IBrowserOptions): Promise<SearchController> {
         if (!this._searchController) {
-            return import('Controls/search').then((result) => {
-                this._searchController = new result.ControllerClass(
-                   this._getSearchControllerOptions(options ?? this._options));
+            if (!this._searchControllerCreatePromise) {
+                this._searchControllerCreatePromise = import('Controls/search').then((result) => {
+                    this._searchController = new result.ControllerClass(
+                        this._getSearchControllerOptions(options ?? this._options));
 
-                return this._searchController;
-            });
+                    return this._searchController;
+                });
+            }
+            return this._searchControllerCreatePromise;
         }
 
         return Promise.resolve(this._searchController);
