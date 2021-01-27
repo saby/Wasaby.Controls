@@ -1471,9 +1471,20 @@ define([
             assert.deepEqual(options, { bubbling: true });
          };
 
+         let ctrlKey = false;
+         function getEvent() {
+            return { nativeEvent: { ctrlKey }, isStopped: () => true, stopImmediatePropagation: () => {} }
+         }
+
          // Without marker
-         lists.BaseControl._private.enterHandler(baseControl);
+         lists.BaseControl._private.enterHandler(baseControl, getEvent());
          assert.isTrue(notified);
+
+         // With CtrlKey
+         ctrlKey = true;
+         notified = false;
+         lists.BaseControl._private.enterHandler(baseControl, getEvent());
+         assert.isFalse(notified);
       });
 
       it('enterHandler while loading', function() {
@@ -1482,6 +1493,7 @@ define([
             notified = false;
 
          function enterClick(markedItem) {
+            const event = { nativeEvent: { ctrlKey: false }, isStopped: () => true, stopImmediatePropagation: () => {} };
             lists.BaseControl._private.enterHandler(
             {
                _options: {useNewModel: false},
@@ -1492,7 +1504,7 @@ define([
                   notified = true;
                },
                _loadingIndicatorState: 'all'
-            });
+            }, event);
          }
 
          // Without marker
@@ -1835,10 +1847,10 @@ define([
          assert.equal(ctrl._loadingState, 'down', 'Wrong loading state');
 
          // картинка должнa появляться через 2000 мс, проверим, что её нет сразу
-         assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
+         assert.isFalse(!!ctrl._showLoadingIndicator, 'Wrong loading indicator image state');
 
          // искуственно покажем картинку
-         ctrl._showLoadingIndicatorImage = true;
+         ctrl._showLoadingIndicator = true;
 
          lists.BaseControl._private.hideIndicator(ctrl);
          lists.BaseControl._private.showIndicator(ctrl);
@@ -1848,7 +1860,7 @@ define([
          lists.BaseControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
-         assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
+         assert.isFalse(!!ctrl._showLoadingIndicator, 'Wrong loading indicator image state');
          assert.isFalse(!!ctrl._loadingIndicatorTimer);
       });
 
@@ -4499,6 +4511,7 @@ define([
              it('_onItemSwipe() animated item null', () => {
                  return initTest({
                      multiSelectVisibility: 'visible',
+                     selectedKeysCount: null,
                      selectedKeys: [1],
                      excludedKeys: [],
                      itemActions: [
@@ -6399,92 +6412,109 @@ define([
           assert.equal(fakeBaseControl._loadingIndicatorContainerHeight, 200);
        });
 
-      it('_shouldDisplayTopLoadingIndicator', () => {
-         const baseControl = new lists.BaseControl();
+      describe('loading indicators', () => {
+          let baseControl,  testCases;
 
-         const testCases = [
-            ['up', true, true],
-            ['up', false, true],
-            ['down', true, false],
-            ['down', false, false],
-            ['all', true, false],
-            ['all', false, false]
-         ];
+          const getErrorMsg = (index, caseData) => `Test case ${index} failed. Expected ${caseData[4]}. ` +
+              `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]},
+              _loadToDirectionInProgress: ${caseData[2]}, _showLoadingIndicator: ${caseData[3]} }.`;
 
-         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
-             `Wrong return value of _shouldDisplayTopLoadingIndicator. Expected ${caseData[2]}. ` +
-             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+          const checkCase = (index, caseData, method) => {
+             baseControl._loadingIndicatorState = caseData[0];
+             baseControl.__needShowEmptyTemplate = () => caseData[1];
+             baseControl._loadToDirectionInProgress = caseData[2];
+             baseControl._showLoadingIndicator = caseData[3];
+             assert.equal(method.apply(baseControl), caseData[4], getErrorMsg(index, caseData));
+          };
 
-         testCases.forEach((caseData, index) => {
-            baseControl._loadingIndicatorState = caseData[0];
-            baseControl.__needShowEmptyTemplate = () => caseData[1];
-            assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
-         });
+          beforeEach(() => {
+             testCases = [];
+             baseControl = new lists.BaseControl();
+          });
 
-         baseControl._loadingIndicatorState = 'all';
-         baseControl.__needShowEmptyTemplate = () => false;
-         baseControl._children = {
-            listView: {
-               isColumnScrollVisible: () => true
-            }
-         };
-         assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
-      });
+          it('_shouldDisplayTopLoadingIndicator', () => {
+             // indicatorState, __needShowEmptyTemplate, _loadToDirectionInProgress, _showLoadingIndicator, expected
+             testCases = [
+                ['up',   true,  true,  true,  true],
+                ['up',   false, true,  false, false],
+                ['up',   false, false, true,  true],
+                ['up',   false, false, true,  true],
 
-      it('_shouldDisplayMiddleLoadingIndicator', () => {
-         const baseControl = new lists.BaseControl();
+                ['down', true,  true,  true,  false],
+                ['down', false, true,  false, false],
+                ['down', false, false, true,  false],
+                ['down', false, false, true,  false],
 
-         const testCases = [
-            ['up', true, false],
-            ['up', false, false],
-            ['down', true,  false],
-            ['down', false, false],
-            ['all', true,   true],
-            ['all', false,  true]
-         ];
+                ['all',  true,  true,  true,  false],
+                ['all',  false, true,  false, false],
+                ['all',  false, false, true,  false],
+                ['all',  false, false, true,  false],
+             ];
 
-         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
-             `Wrong return value _shouldDisplayMiddleLoadingIndicator. Expected ${caseData[2]}. ` +
-             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+             testCases.forEach((caseData, index) => {
+                checkCase(index, caseData, baseControl._shouldDisplayTopLoadingIndicator);
+             });
 
-         testCases.forEach((caseData, index) => {
-            baseControl._loadingIndicatorState = caseData[0];
-            baseControl.__needShowEmptyTemplate = () => caseData[1];
-            assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
-         });
+             baseControl._loadingIndicatorState = 'all';
+             baseControl.__needShowEmptyTemplate = () => false;
+             baseControl._children = {
+                listView: {
+                   isColumnScrollVisible: () => true
+                }
+             };
+             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+          });
 
-         baseControl._loadingIndicatorState = 'all';
-         baseControl.__needShowEmptyTemplate = () => false;
-         baseControl._children = {
-            listView: {
-               isColumnScrollVisible: () => true
-            }
-         };
-         assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), false);
-      });
+          it('_shouldDisplayMiddleLoadingIndicator', () => {
+             testCases = [
+                ['up',   true,  undefined,  true,  false],
+                ['up',   false, undefined, false, false],
+                ['down', true,  undefined,  true,  false],
+                ['down', false, undefined, false, false],
+                ['all',  true,  undefined,  true, true],
+                ['all',  false, undefined,  true, true],
+                ['all',  true,  undefined, false, false],
+                ['all',  false, undefined, false, false]
+             ];
 
-      it('_shouldDisplayBottomLoadingIndicator', () => {
-         const baseControl = new lists.BaseControl();
+             testCases.forEach((caseData, index) => {
+                checkCase(index, caseData, baseControl._shouldDisplayMiddleLoadingIndicator);
+             });
 
-         const testCases = [
-            ['up', true,     false],
-            ['up', false,    false],
-            ['down', true,   true],
-            ['down', false,  true],
-            ['all', true,    false],
-            ['all', false,   false],
-         ];
+             baseControl._loadingIndicatorState = 'all';
+             baseControl.__needShowEmptyTemplate = () => false;
+             baseControl._children = {
+                listView: {
+                   isColumnScrollVisible: () => true
+                }
+             };
+             assert.equal(baseControl._shouldDisplayMiddleLoadingIndicator(), false);
+          });
 
-         const getErrorMsg = (index, caseData) => `Test case ${index} failed. ` +
-             `Wrong return value _shouldDisplayBottomLoadingIndicator. Expected ${caseData[2]}. ` +
-             `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]} }.`;
+          it('_shouldDisplayBottomLoadingIndicator', () => {
+             // indicatorState, __needShowEmptyTemplate, _loadToDirectionInProgress, _showLoadingIndicator, expected
+             testCases = [
+                ['up',   true,  true,  true,  false],
+                ['up',   false, true,  false, false],
+                ['up',   false, false, true,  false],
+                ['up',   false, false, true,  false],
 
-         testCases.forEach((caseData, index) => {
-            baseControl._loadingIndicatorState = caseData[0];
-            baseControl.__needShowEmptyTemplate = () => caseData[1];
-            assert.equal(baseControl._shouldDisplayBottomLoadingIndicator(), caseData[2], getErrorMsg(index, caseData));
-         });
-      });
+                ['down', true,  true,  true,  true],
+                ['down', false, true,  false, false],
+                ['down', false, false, true,  true],
+                ['down', false, false, true,  true],
+
+                ['all',  true,  true,  true,  false],
+                ['all',  false, true,  false, false],
+                ['all',  false, false, true,  false],
+                ['all',  false, false, true,  false],
+             ];
+
+             testCases.forEach((caseData, index) => {
+                checkCase(index, caseData, baseControl._shouldDisplayBottomLoadingIndicator);
+             });
+          });
+       });
 
       describe('navigation', function() {
          it('Navigation demand', async function() {
@@ -7706,6 +7736,73 @@ define([
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
             assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
          });
+
+         it('loadToDirection, drag all items', () => {
+            const self = {
+               _sourceController: {
+                  hasMoreData: () => true,
+                  isLoading: () => false
+               },
+               _loadedItems: new collection.RecordSet(),
+               _options: {
+                  navigation: {}
+               }
+            };
+            let isLoadStarted = false;
+
+            // navigation.view !== 'infinity'
+            sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+            sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+            sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+               isLoadStarted = true;
+            });
+
+            self._dndListController = {isDragging: () => true};
+            self._selectionController = {isAllSelected: () => true};
+
+            lists.BaseControl._private.loadToDirectionIfNeed(self);
+            assert.isFalse(isLoadStarted);
+            sandbox.restore();
+         });
+
+         it('loadToDirection, is dragging', () => {
+            baseControl._sourceController = {
+               hasMoreData: () => true,
+               isLoading: () => false
+            };
+            baseControl._loadedItems = new collection.RecordSet();
+            let isLoadStarted = false;
+
+            // navigation.view !== 'infinity'
+            sandbox.replace(lists.BaseControl._private, 'needScrollCalculation', () => false);
+            sandbox.replace(lists.BaseControl._private, 'setHasMoreData', () => null);
+            sandbox.replace(lists.BaseControl._private, 'loadToDirection', () => {
+               isLoadStarted = true;
+            });
+
+            baseControl._dndListController = {isDragging: () => true};
+
+            lists.BaseControl._private.loadToDirectionIfNeed(baseControl);
+            assert.isFalse(isLoadStarted);
+
+            baseControl._dndListController = {
+               endDrag: () => undefined,
+               getDragPosition: () => {
+                  return {
+                     dispItem: {
+                        getContents: () => {}
+                     }
+                  };
+               },
+               getDraggableItem: () => undefined
+            };
+
+            const spy = sinon.spy(baseControl, 'checkTriggerVisibilityAfterRedraw');
+            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            assert.isTrue(spy.called);
+
+            sandbox.restore();
+         });
       });
 
       // region Move
@@ -8357,6 +8454,17 @@ define([
             lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
             assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[1], [1], []]).calledOnce);
             assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
+
+            notifySpy.resetHistory();
+            lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+            assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+
+            baseControl._beforeUpdate(cfg);
+            notifySpy.resetHistory();
+            lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
+            assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+            assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
          });
 
          it('spaceHandler and multiselection hidden', () => {

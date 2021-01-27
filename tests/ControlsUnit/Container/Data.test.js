@@ -411,6 +411,18 @@ define(
             config = { ...config, sourceController: null };
             data._beforeUpdate(config);
             assert.isTrue(data._sourceController === null);
+         });
+
+         it('sourceController is null on _beforeMount and _beforeUpdate', async function() {
+            let config = {source: source, keyProperty: 'id', sourceController: null};
+            const data = getDataWithConfig(config);
+
+            await data._beforeMount(config);
+            assert.ok(data._sourceController);
+
+            config = { ...config, sourceController: null };
+            await data._beforeUpdate(config);
+            assert.ok(data._sourceController);
 
          });
 

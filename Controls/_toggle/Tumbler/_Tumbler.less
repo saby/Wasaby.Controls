@@ -1,0 +1,54 @@
+.controls-Tumbler {
+   display: inline-block;
+}
+
+.controls-Tumbler__wrapper {
+   display: inline-flex;
+   align-items: center;
+   height: var(--inline_height_tumbler);
+   border-radius: var(--border-radius_tumbler);
+   background-color: var(--background-color_tumbler);
+   padding-left: var(--button_offset_tumbler);
+}
+
+.controls-Tumbler__button {
+   white-space: nowrap;
+   margin-right: var(--button_offset_tumbler);
+   align-items: center;
+   padding: 0 var(--padding-horizontal_tumbler);
+   border-radius: var(--border-radius_tumbler-button);
+   height: var(--inline_height_tumbler-button);
+   display: flex;
+   flex-shrink: 1;
+   width: auto;
+}
+
+.controls-Tumbler__button-selected {
+   background: var(--selected_background-color_tumbler);
+   color: var(--selected_text-color_tumbler);
+   //transition: background 0.2s ease;
+}
+
+.controls-Tumbler__button-unselected {
+   color: var(--unselected_text-color_tumbler);
+   background: var(--unselected_background-color_tumbler);
+}
+
+.controls-Tumbler__button-enabled {
+   cursor: pointer;
+}
+
+.controls-Tumbler__button-disabled {
+   cursor: default;
+   color: var(--readonly_text-color_tumbler);
+}
+
+.controls-Tumbler__button-selected-disabled {
+   background: var(--selected_background-color_tumbler);
+}
+
+.ws-is-hover {
+   .controls-Tumbler__button-unselected:hover {
+      text-decoration: underline;
+   }
+}

@@ -86,6 +86,7 @@ export default class Container extends Control<IContainerOptions> {
    private _searchValue: string = null;
    private _misspellValue: string = null;
    private _root: Key = null;
+   private _rootBeforeSearch: Key = null;
    private _notifiedMarkedKey: Key = null;
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
@@ -127,12 +128,13 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _beforeUpdate(newOptions: IContainerOptions, context: typeof DataOptions): void {
       const options = {...newOptions, ...context.dataOptions};
-
+      const searchValueChanged = newOptions.searchValue !== undefined &&
+          (this._options.searchValue !== newOptions.searchValue && this._searchValue !== newOptions.searchValue);
       if (newOptions.root !== this._options.root) {
          this._root = newOptions.root;
       }
 
-      if (this._searchController && options.sourceController) {
+      if (this._searchController && options.sourceController && searchValueChanged) {
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
          }
@@ -141,6 +143,7 @@ export default class Container extends Control<IContainerOptions> {
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
+            this._setSearchValue(newOptions.searchValue);
          } else if (updateResult instanceof Promise) {
             updateResult.catch((error: Error & {
                isCancelled?: boolean;
@@ -150,6 +153,12 @@ export default class Container extends Control<IContainerOptions> {
                }
             });
          }
+      }
+      if (newOptions.dataLoadCallback) {
+         this._sourceController.updateOptions({
+            ...options,
+            dataLoadCallback: this._dataLoadCallback
+         });
       }
    }
 
@@ -178,34 +187,23 @@ export default class Container extends Control<IContainerOptions> {
    private _updateRootAfterSearch(): void {
       if (this._options.startingWith === 'root') {
          const newRoot = Container._getRoot(this._path, this._root, this._options.parentProperty);
-
-         this._getSearchController().then((searchController) => {
-            this._root = newRoot;
-            searchController.setRoot(newRoot);
-            this._notify('rootChanged', [newRoot]);
-         });
+         this._rootBeforeSearch = this._root;
+         this._root = newRoot;
+         this._searchController.setRoot(newRoot);
+         this._notify('rootChanged', [newRoot]);
       }
    }
 
    protected _search(event: SyntheticEvent, validatedValue: string): void {
       this._inputSearchValue = validatedValue;
-      this._startSearch(validatedValue, this._options).then((result) => {
-         if (result instanceof RecordSet) {
-            const sourceController = this._sourceController;
-            this._updateParams(validatedValue);
-            this._handleDataLoad(result);
-            this._notify('filterChanged', [sourceController.getFilter()]);
-            if (this._options.dataLoadCallback) {
-               this._options.dataLoadCallback(result);
-            }
-         }
-      }).catch((error: Error & {
-         isCancelled?: boolean;
-      }) => {
-         if (!error.isCancelled) {
-            return error;
-         }
-      });
+      this._startSearch(validatedValue, this._options)
+          .catch((error: Error & {
+             isCancelled?: boolean;
+          }) => {
+             if (!error.isCancelled) {
+                return error;
+             }
+          });
    }
 
    private _isSearchViewMode(): boolean {
@@ -213,35 +211,36 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    private _itemOpenHandler(root: Key, items: RecordSet, dataRoot: Key = null): void {
-      this._getSearchController().then((searchController) => {
-         if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
-            this._notifiedMarkedKey = root;
+      if (this._isSearchViewMode() && this._options.searchNavigationMode === 'expand') {
+         this._notifiedMarkedKey = root;
 
-            const expandedItems = Container._prepareExpandedItems(
-               searchController.getRoot(),
-               root,
-               items,
-               this._options.parentProperty);
+         const expandedItems = Container._prepareExpandedItems(
+             this._searchController.getRoot(),
+             root,
+             items,
+             this._options.parentProperty);
 
-            this._notify('expandedItemsChanged', [expandedItems]);
+         this._notify('expandedItemsChanged', [expandedItems]);
 
-            if (!this._deepReload) {
-               this._deepReload = true;
-            }
-         } else {
-            searchController.setRoot(root);
-            this._root = root;
+         if (!this._deepReload) {
+            this._deepReload = true;
          }
-         if (root !== dataRoot) {
-            this._updateFilter(searchController);
-
-            this._inputSearchValue = '';
-         }
-      });
+      } else if (!this._options.hasOwnProperty('root')) {
+         this._searchController?.setRoot(root);
+         this._root = root;
+      }
+      if (root !== dataRoot && this._searchController) {
+         this._updateFilter(this._searchController);
+         this._inputSearchValue = '';
+      }
+      this._rootBeforeSearch = null;
    }
 
    private _searchReset(event: SyntheticEvent): void {
       this._getSearchController().then((searchController) => {
+         if (this._rootBeforeSearch) {
+            this._root = this._rootBeforeSearch;
+         }
          this._updateFilter(searchController);
          this._handleDataLoad(null);
       });
@@ -275,7 +274,16 @@ export default class Container extends Control<IContainerOptions> {
          this._deepReload = undefined;
       }
 
+      if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
+         this._updateParams(this._searchController.getSearchValue());
+         this._notify('filterChanged', [this._searchController.getFilter()]);
+      }
+
       this._path = data?.getMetaData().path ?? null;
+
+      if (!this._isSearchViewMode()) {
+         this._getSearchController().then((searchController) => searchController.setPath(this._path));
+      }
 
       if (this._isSearchViewMode() && !this._searchValue) {
          this._updateViewMode(this._previousViewMode);

@@ -70,8 +70,9 @@ const SERVICE_FILTERS = {
 export default class ControllerClass {
    protected _options: ISearchControllerOptions = null;
 
-   protected _searchValue: string = '';
-   protected _sourceController: NewSourceController = null;
+   private _searchValue: string = '';
+   private _searchInProgress: boolean = false;
+   private _sourceController: NewSourceController = null;
    private _root: Key = null;
    private _path: RecordSet = null;
 
@@ -101,20 +102,8 @@ export default class ControllerClass {
    reset(dontLoad: boolean): QueryWhereExpression<unknown>;
    reset(dontLoad?: boolean): Promise<RecordSet | Error> | QueryWhereExpression<unknown> {
       this._checkSourceController();
-
-      const filter = {...this._sourceController.getFilter()};
-      delete filter[this._options.searchParam];
       this._searchValue = '';
-
-      if (this._options.parentProperty) {
-         for (const i in SERVICE_FILTERS.HIERARCHY) {
-            if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
-               delete filter[i];
-            }
-         }
-
-         this._deleteRootFromFilter(filter);
-      }
+      const filter = this._getFilter(this._searchValue);
 
       if (!dontLoad) {
          return this._updateFilterAndLoad(filter);
@@ -129,29 +118,8 @@ export default class ControllerClass {
     */
    search(value: string): Promise<RecordSet | Error> {
       this._checkSourceController();
-
-      const filter: QueryWhereExpression<unknown> = {...this._sourceController.getFilter()};
-
-      filter[this._options.searchParam] = this._searchValue = this._trim(value);
-
-      if (this._root !== undefined && this._options.parentProperty) {
-         if (this._options.startingWith === 'current') {
-            filter[this._options.parentProperty] = this._root;
-         } else {
-             const root = ControllerClass._getRoot(this._path, this._root, this._options.parentProperty);
-             if (root !== undefined) {
-                 filter[this._options.parentProperty] = root;
-             } else {
-                 delete filter[this._options.parentProperty];
-             }
-         }
-      }
-
-      if (this._options.parentProperty) {
-         Object.assign(filter, SERVICE_FILTERS.HIERARCHY);
-      }
-
-      return this._updateFilterAndLoad(filter);
+      this._searchValue = this._trim(value);
+      return this._updateFilterAndLoad(this._getFilter(this._searchValue));
    }
 
    /**
@@ -189,7 +157,7 @@ export default class ControllerClass {
       }
 
       if (options.hasOwnProperty('searchValue')) {
-         if (options.searchValue !== this._options.searchValue) {
+         if (options.searchValue !== this._options.searchValue || options.searchValue !== this._searchValue) {
             needLoad = true;
          }
       }
@@ -232,14 +200,80 @@ export default class ControllerClass {
       return this._searchValue;
    }
 
-   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error | RecordSet> {
-      return this._sourceController.load(undefined, undefined, filter).then((recordSet) => {
-         if (recordSet instanceof RecordSet) {
-            this._path = recordSet.getMetaData().path;
-            this._sourceController.setFilter(filter);
-            return recordSet as RecordSet;
+   isSearchInProcess(): boolean {
+      return this._searchInProgress;
+   }
+
+   getFilter(): QueryWhereExpression<unknown> {
+      return this._getFilter(this._searchValue);
+   }
+
+   setPath(path: RecordSet): void {
+      this._path = path;
+   }
+
+   private _getFilter(searchValue: string): QueryWhereExpression<unknown> {
+      if (searchValue) {
+         return this._getFilterWithSearchValue();
+      } else {
+         return this._getFilterWithoutSearchValue();
+      }
+   }
+
+   private _getFilterWithSearchValue(): QueryWhereExpression<unknown> {
+      const filter = {...this._sourceController.getFilter()};
+      filter[this._options.searchParam] = this._searchValue;
+
+      if (this._root !== undefined && this._options.parentProperty) {
+         if (this._options.startingWith === 'current') {
+            filter[this._options.parentProperty] = this._root;
+         } else {
+            const root = ControllerClass._getRoot(this._path, this._root, this._options.parentProperty);
+            if (root !== undefined) {
+               filter[this._options.parentProperty] = root;
+            } else {
+               delete filter[this._options.parentProperty];
+            }
          }
-      });
+      }
+
+      if (this._options.parentProperty) {
+         Object.assign(filter, SERVICE_FILTERS.HIERARCHY);
+      }
+      return filter;
+   }
+
+   private _getFilterWithoutSearchValue(): QueryWhereExpression<unknown> {
+      const filter = {...this._sourceController.getFilter()};
+      delete filter[this._options.searchParam];
+
+      if (this._options.parentProperty) {
+         for (const i in SERVICE_FILTERS.HIERARCHY) {
+            if (SERVICE_FILTERS.HIERARCHY.hasOwnProperty(i)) {
+               delete filter[i];
+            }
+         }
+
+         this._deleteRootFromFilter(filter);
+      }
+
+      return filter;
+   }
+
+   private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error | RecordSet> {
+      this._searchStarted();
+      return this._sourceController
+          .load(undefined, undefined, filter)
+          .then((recordSet) => {
+             if (recordSet instanceof RecordSet) {
+                this._path = recordSet.getMetaData().path;
+                this._sourceController.setFilter(filter);
+                return recordSet as RecordSet;
+             }
+          })
+          .finally(() => {
+             this._searchEnded();
+          });
    }
 
    private _deleteRootFromFilter(filter: QueryWhereExpression<unknown>): void {
@@ -270,6 +304,14 @@ export default class ControllerClass {
      }
 
      return root;
+   }
+
+   private _searchStarted() {
+      this._searchInProgress = true;
+   }
+
+   private _searchEnded() {
+      this._searchInProgress = false;
    }
 }
 

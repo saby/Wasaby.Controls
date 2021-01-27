@@ -189,6 +189,8 @@ class WrapURLs extends Control<IWrapURLsOptions, void> {
         return parsedText;
     }
 
+    static _theme: string[] = ['Controls/application'];
+
     static getOptionTypes() {
         return {
             newTab: descriptor(Boolean),

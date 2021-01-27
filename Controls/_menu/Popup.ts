@@ -13,8 +13,12 @@ import {TSelectedKeys} from 'Controls/interface';
 import {CollectionItem} from 'Controls/display';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 
-const SEARCH_DEPS = ['Controls/list:DataContainer', 'Controls/search:Controller', 'Controls/list:Container',
-    'Controls/search:Input', 'Controls/search:InputContainer'];
+const SEARCH_DEPS = [
+    'Controls/browser:Browser',
+    'Controls/list:Container',
+    'Controls/search:Input',
+    'Controls/search:InputContainer'
+];
 
 /**
  * Базовый шаблон для {@link Controls/menu:Control}, отображаемого в прилипающем блоке.

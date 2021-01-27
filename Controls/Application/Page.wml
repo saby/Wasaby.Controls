@@ -35,6 +35,7 @@
                   on:pageScrolled="_popupEventHandler('pageScrolled')"
 
                   on:_updateDraggingTemplate="_updateDraggingTemplate()"
+                  on:_removeDraggingTemplate="_removeDraggingTemplate()"
                   on:_documentDragStart="_documentDragStart()"
                   on:_documentDragEnd="_documentDragEnd()">
          <ws:bodyContent>

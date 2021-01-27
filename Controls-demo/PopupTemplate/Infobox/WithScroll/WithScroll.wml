@@ -1,0 +1,14 @@
+<div>
+    <div class="controlsDemo__flexRow controlsDemo__flex_ai-baseline">
+        <div class="controlsDemo__wrapper__horizontal">Нажмите на иконку</div>
+        <Controls.buttons:Button
+                name="dialogButton"
+                viewMode="linkButton"
+                fontColorStyle="link"
+                icon="icon-EmptyMessage"
+                iconSize="m"
+                iconStyle="secondary"
+                on:click="_openSticky()"
+        />
+    </div>
+</div>

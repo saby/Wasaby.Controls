@@ -533,6 +533,42 @@ define(
             assert.isFalse(result);
          });
 
+         it('_getSelectedItems', () => {
+            const menuControl = getMenu({...defaultOptions, emptyKey: null, emptyText: 'emptyText'});
+            const emptyItem = {
+               key: null,
+               title: 'Not selected'
+            };
+            let itemsWithEmpty = Clone(defaultItems);
+            itemsWithEmpty.push(emptyItem);
+            menuControl._listModel = getListModel(itemsWithEmpty);
+            const result = menuControl._getSelectedItems();
+            assert.isNull(result[0].getKey());
+         });
+
+         it('_getMarkedKey', function() {
+            let menuControl = getMenu();
+            menuControl._listModel = getListModel(
+               [{ key: 1, title: 'Россия' },
+                  { key: 2, title: 'США', pinned: true }]
+            );
+
+            // empty item
+            let result = menuControl._getMarkedKey([], 'emptyKey', true);
+            assert.equal(result, 'emptyKey');
+
+            // fixed item
+            result = menuControl._getMarkedKey([2], 'emptyKey', true);
+            assert.equal(result, 2);
+
+            // single selection
+            result = menuControl._getMarkedKey([1, 2], 'emptyKey');
+            assert.equal(result, 1);
+
+            result = menuControl._getMarkedKey([], 'emptyKey');
+            assert.equal(result, 'emptyKey');
+         });
+
          it('setSubMenuPosition', function() {
             let menuControl = getMenu();
             menuControl._openSubMenuEvent = {

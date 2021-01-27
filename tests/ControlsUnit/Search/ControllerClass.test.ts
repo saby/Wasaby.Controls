@@ -98,6 +98,15 @@ describe('Controls/search:ControllerClass', () => {
       assert.isTrue(loadSpy.withArgs(undefined, undefined, filter).called);
    });
 
+   it('getFilter', () => {
+      const resultFilter = {
+         testParam: 'testSearchValue',
+         payload: 'something'
+      };
+      controllerClass._searchValue = 'testSearchValue';
+      assert.deepEqual(controllerClass.getFilter(), resultFilter);
+   });
+
    describe('with hierarchy', () => {
       it('default search case and reset', () => {
          const filter: QueryWhereExpression<unknown> = {
@@ -139,6 +148,20 @@ describe('Controls/search:ControllerClass', () => {
          assert.isTrue(loadSpy.withArgs(undefined, undefined, {
             payload: 'something'
          }).called);
+      });
+
+      it('getFilter', () => {
+         const resultFilter = {
+            testParam: 'testSearchValue',
+            Разворот: 'С разворотом',
+            usePages: 'full',
+            payload: 'something',
+            testParentProeprty: 'testRoot'
+         };
+         controllerClass._root = 'testRoot';
+         controllerClass._searchValue = 'testSearchValue';
+         controllerClass._options.parentProperty = 'testParentProeprty';
+         assert.deepEqual(controllerClass.getFilter(), resultFilter);
       });
    });
 
@@ -186,6 +209,7 @@ describe('Controls/search:ControllerClass', () => {
          const resetStub = sandbox.stub(controllerClass, 'reset');
 
          controllerClass._options.searchValue = null;
+         controllerClass._searchValue = null;
 
          controllerClass.update({
             searchValue: null
@@ -246,6 +270,21 @@ describe('Controls/search:ControllerClass', () => {
          assert.isTrue(searchStub.withArgs('test123').calledOnce);
          assert.equal(controllerClass._sourceController, sourceControllerMock);
          assert.isFalse(resetStub.called);
+      });
+
+      it('should call when searchValue not equal options.searchValue', () => {
+         const searchStub = sandbox.stub(controllerClass, 'search');
+         const resetStub = sandbox.stub(controllerClass, 'reset');
+
+         controllerClass._options.searchValue = '';
+         controllerClass._searchValue = 'searchValue';
+
+         controllerClass.update({
+            searchValue: ''
+         });
+
+         assert.isFalse(searchStub.called);
+         assert.isTrue(resetStub.called);
       });
    });
 });
