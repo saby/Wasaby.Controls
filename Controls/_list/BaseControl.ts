@@ -2193,7 +2193,7 @@ const _private = {
                 const sourceControllerDataLoadCallback = this._sourceController.getState().dataLoadCallback;
 
                 if (sourceControllerDataLoadCallback !== this._options.dataLoadCallback) {
-                    this._options.dataLoadCallback(items, direction);
+                    Logger.error('BaseControl: для корректной работы опцию dataLoadCallback необходимо задавать на Layout/browser:Browser (Controls/list:DataContainer)');
                 }
             }
             _private.executeAfterReloadCallbacks(this, items, this._options);
