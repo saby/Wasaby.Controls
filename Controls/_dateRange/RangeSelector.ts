@@ -73,9 +73,14 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     }
 
     _updateResetButtonVisible(options): void {
-        this._resetButtonVisible = (!dateUtils.isDatesEqual(this._startValue, options.resetStartValue) ||
-            this._startValue === options.resetStartValue) || (!dateUtils.isDatesEqual(this._endValue, options.resetEndValue)
-        || this._endValue === options.resetEndValue);
+        const hasResetStartValue = options.resetStartValue || options.resetStartValue === null;
+        const hasResetEndValue = options.resetEndValue || options.resetEndValue === null;
+        this._resetButtonVisible = (hasResetStartValue &&
+            (!dateUtils.isDatesEqual(this._startValue, options.resetStartValue) ||
+            this._startValue !== options.resetStartValue)) ||
+            (hasResetEndValue &&
+                (!dateUtils.isDatesEqual(this._endValue, options.resetEndValue)
+        || this._endValue !== options.resetEndValue));
     }
 
     _updateValues(options): void {
