@@ -21,6 +21,7 @@ define('Controls-demo/Popup/Edit/Opener',
          _cancelEdit: false,
          _openRecordByNewKey: false,
          _initializingDelayedCreate: false,
+          _isRemoveRecord: false,
 
          _beforeMount: function(opt, context) {
             this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -101,7 +102,7 @@ define('Controls-demo/Popup/Edit/Opener',
             };
 
             var meta = {
-               record: record,
+               record: record
             };
 
             if (this._openRecordByNewKey) {
@@ -114,6 +115,7 @@ define('Controls-demo/Popup/Edit/Opener',
          _addRecord: function() {
             var record;
             var initializingWay;
+            this._isRemoveRecord = false;
             if (this._initializingDelayedCreate) {
                initializingWay = 'delayedCreate';
                record = this._items.at(0).clone();
@@ -122,14 +124,22 @@ define('Controls-demo/Popup/Edit/Opener',
                record.set('price', -10000);
                record.set('balance', -10000);
                record.set('costPrice', -10000);
-            }
 
-            this._children.EditOpener.open(null, {
-               templateOptions: {
-                  record: record,
-                  initializingWay: initializingWay
-               }
-            });
+                this._children.EditOpener.open(null, {
+                    templateOptions: {
+                        record: record,
+                        initializingWay: initializingWay
+                    }
+                });
+            } else {
+               record = this._baseRecord.clone();
+               record.set('id', this._addRecordCount);
+               record.set('name', '');
+               this._addRecordCount++;
+               RecordSynchronizer.addRecord(record, {}, this._items);
+               this._isRemoveRecord = true;
+               this._children.EditOpener.open({record: record});
+            }
          },
 
          _openHandler: function(event) {
@@ -138,6 +148,11 @@ define('Controls-demo/Popup/Edit/Opener',
 
          _closeHandler: function(event) {
             this._eventText = event.type;
+            if (this._isRemoveRecord) {
+                this._isRemoveRecord = false;
+                this._addRecordCount--;
+                RecordSynchronizer.deleteRecord(this._items, this._addRecordCount);
+            }
          },
 
          _resultHandler: function(event) {
@@ -150,6 +165,9 @@ define('Controls-demo/Popup/Edit/Opener',
                return 'cancel';
             }
 
+            if (action === 'update') {
+               this._isRemoveRecord = false;
+            }
             if (additionaData && additionaData.isNewRecord) {
                additionaData.at = this._addPosition;
             }
@@ -167,7 +185,7 @@ define('Controls-demo/Popup/Edit/Opener',
                cloneRecord.set('id', i);
                cloneRecord.set('name', 'Созданная запись ' + i);
                addRecords.push(cloneRecord);
-            };
+            }
             this._addRecordCount += 10;
             RecordSynchronizer.addRecord(addRecords, {}, this._items);
          },
