@@ -19,7 +19,7 @@ const _private = {
         if (self._position !== options.position) {
             self._position = options.position;
             self._monthsPosition = new Date(self._position.getFullYear(), 0);
-            this._markedKey = _private.dateToId(self._position);
+            this._markedKey = self._dateToId(self._position);
         }
         if (self._position?.getFullYear() !== self._monthsPosition?.getFullYear()) {
             const newPosition = new Date(self._monthsPosition.getFullYear(), 0);
@@ -29,10 +29,6 @@ const _private = {
 
     notifyPositionChanged: function(self, position) {
         self._notify('positionChanged', [position]);
-    },
-
-    dateToId: function(date: Date): string {
-        return formatDate(date, 'YYYY-MM-DD');
     }
 };
 /**
@@ -71,7 +67,7 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _afterMount: function(options) {
-        this._markedKey = _private.dateToId(this._position);
+        this._markedKey = this._dateToId(this._position);
     },
 
     _beforeUpdate: function (options) {
@@ -95,6 +91,10 @@ var Component = BaseControl.extend([EventProxy], {
             }
             this._notify('fixedPeriodClick', [startValue, endValue]);
         }
+    },
+
+    _dateToId: function(date: Date): string {
+        return formatDate(date, 'YYYY-MM-DD');
     },
 
     /**
@@ -142,7 +142,7 @@ var Component = BaseControl.extend([EventProxy], {
     _onPositionChanged: function(e: Event, position: Date) {
         this._position = position;
         _private.notifyPositionChanged(this, position);
-        this._markedKey = _private.dateToId(position);
+        this._markedKey = this._dateToId(position);
         if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
             this._monthsPosition = new Date(position.getFullYear(), 0);
         }

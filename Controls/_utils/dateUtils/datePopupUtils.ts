@@ -15,8 +15,8 @@ export function getCommonOptions(self: Control<IControlOptions, unknown>): objec
 export function getTemplateOptions(self: Control<IControlOptions, unknown>): object {
     return {
         ...this.getCommonTemplateOptions(self),
-        startValue: self.rangeModel?.startValue || self._startValue,
-        endValue: self.rangeModel?.endValue || self._endValue
+        startValue: self.rangeModel?.startValue || self._startValue || self._options.value,
+        endValue: self.rangeModel?.endValue || self._endValue || self._options.value
     };
 }
 

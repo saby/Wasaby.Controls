@@ -38,7 +38,7 @@
                <ws:partial template="Controls/calendar:MonthListMonthTemplate">
                   <ws:bodyTemplate>
                         <div class="controls-PeriodDialog-DateRangeItem__months-btn controls-PeriodDialog-DateRangeItem__months-btn_theme-{{_options.theme}}"
-                             on:click="_scrollToMonth(monthTemplate.date.getFullYear(), monthTemplate.date.getMonth())">
+                             on:click="_scrollToMonth(monthTemplate.date.getFullYear(), monthTemplate.date.getMonth())" data-date="{{ _dateToId(monthTemplate.date) }}">
                            {{ _formatMonth(monthTemplate.date.getMonth()) }}
                         </div>
                   </ws:bodyTemplate>
