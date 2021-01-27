@@ -1,9 +1,7 @@
 <div class="controlsDemo__wrapper controlsDemo__maxWidth600">
-    <Controls.scroll:Container attr:class="controlsDemo__height300">
-        <Controls.grid:View
-                keyProperty="id"
-                source="{{_viewSource}}"
-                columns="{{_columns}}"
-                resultsPosition="bottom"/>
-    </Controls.scroll:Container>
+    <Controls.grid:View
+            keyProperty="id"
+            source="{{_viewSource}}"
+            columns="{{_columns}}"
+            resultsPosition="bottom"/>
 </div>
