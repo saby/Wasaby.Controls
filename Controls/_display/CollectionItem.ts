@@ -21,6 +21,7 @@ import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
 import Collection from 'Controls/_display/Collection';
+import {TItemKey} from 'Controls/_display/interface';
 
 export interface IOptions<T extends Model = Model> {
     contents?: T;
@@ -152,6 +153,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     readonly isAdd: boolean;
 
     readonly addPosition: 'top' | 'bottom';
+
+    getKey(): TItemKey {
+        return this._$contents?.getKey();
+    }
 
     constructor(options?: IOptions<T>) {
         super();
