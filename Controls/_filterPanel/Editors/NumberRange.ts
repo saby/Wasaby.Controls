@@ -84,8 +84,10 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     }
 
     protected _handleInputCompleted(event: SyntheticEvent, value: number): void {
-        this._notifyExtendedValue([this._minValue, this._maxValue]);
-        this._children.numberRangeValidate.validate();
+        if (this._minValue && this._maxValue) {
+            this._notifyExtendedValue([this._minValue, this._maxValue]);
+            this._children.numberRangeValidate.validate();
+        }
     }
 
     private _updateValues(newValue: number[]): void {
