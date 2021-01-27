@@ -10,7 +10,7 @@ export interface IPropertyGridColumnOptions {
     compatibleWidth: string;
 }
 export interface IPropertyGridOptions extends IControlOptions {
-    editingObject: Object | Model | Record<string, unknown>;
+    editingObject: Model | Record<string, any>;
     source: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
     groupTemplate?: Function;
     collapsedGroups?: Array<string|number>;
