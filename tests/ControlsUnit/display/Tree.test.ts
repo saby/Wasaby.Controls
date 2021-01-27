@@ -798,68 +798,6 @@ describe('Controls/_display/Tree', () => {
         });
     });
 
-    describe('.moveToAbove()', () => {
-        it('should keep current undefined', () => {
-            assert.isFalse(tree.moveToAbove());
-            assert.isUndefined(tree.getCurrent());
-        });
-
-        it('should move to the parent', () => {
-            tree.setCurrentPosition(4);
-
-            assert.isTrue(tree.moveToAbove());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'AC');
-
-            assert.isTrue(tree.moveToAbove());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'A');
-
-            assert.isFalse(tree.moveToAbove());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'A');
-        });
-    });
-
-    describe('.moveToBelow()', () => {
-        it('should keep current undefined', () => {
-            assert.isFalse(tree.moveToBelow());
-            assert.isUndefined(tree.getCurrent());
-        });
-
-        it('should not move if current is not a node', () => {
-            tree.setCurrentPosition(tree.getCount() - 1);
-            const current = tree.getCurrent();
-            assert.isFalse(current.isNode());
-            assert.isFalse(tree.moveToBelow());
-            assert.strictEqual(tree.getCurrent(), current);
-        });
-
-        it('should not move if current has no children', () => {
-            tree.setCurrentPosition(11);
-            assert.strictEqual(tree.getCurrent().getContents().title, 'C');
-
-            const current = tree.getCurrent();
-            assert.strictEqual(tree.getChildren(current).getCount(), 0);
-            assert.isFalse(tree.moveToBelow());
-            assert.strictEqual(tree.getCurrent(), current);
-        });
-
-        it('should move to the first child', () => {
-            tree.setCurrentPosition(7);
-            assert.strictEqual(tree.getCurrent().getContents().title, 'B');
-
-            assert.isTrue(tree.moveToBelow());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'BA');
-
-            assert.isTrue(tree.moveToBelow());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'BAA');
-
-            assert.isTrue(tree.moveToBelow());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'BAAA');
-
-            assert.isFalse(tree.moveToBelow());
-            assert.strictEqual(tree.getCurrent().getContents().title, 'BAAA');
-        });
-    });
-
     describe('.setSort', () => {
         it('should sort put folders before leafs', () => {
             const items = [

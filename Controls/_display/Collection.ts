@@ -737,11 +737,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _sortMap: number[] = [];
 
     /**
-     * Служебный энумератор для организации курсора
-     */
-    protected _cursorEnumerator: CollectionEnumerator<T>;
-
-    /**
      * Служебный энумератор для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
      */
     protected _utilityEnumerator: CollectionEnumerator<T>;
@@ -933,7 +928,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._sortMap = [];
         this._itemToUid = null;
         this._itemsUid = null;
-        this._cursorEnumerator = null;
         this._utilityEnumerator = null;
         this._userStrategies = null;
 
@@ -1201,66 +1195,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     // region Navigation
 
     /**
-     * Возвращает текущий элемент
-     * @return {Controls/_display/CollectionItem}
-     */
-    getCurrent(): T {
-        return this._getCursorEnumerator().getCurrent();
-    }
-
-    /**
-     * Устанавливает текущий элемент
-     * @param {Controls/_display/CollectionItem} item Новый текущий элемент
-     * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
-     */
-    setCurrent(item: T, silent?: boolean): void {
-        const oldCurrent = this.getCurrent();
-        if (oldCurrent !== item) {
-            const enumerator = this._getCursorEnumerator();
-            const oldPosition = this.getCurrentPosition();
-            enumerator.setCurrent(item);
-
-            if (!silent) {
-                this._notifyCurrentChange(
-                    this.getCurrent(),
-                    oldCurrent,
-                    enumerator.getPosition(),
-                    oldPosition
-                );
-            }
-        }
-    }
-
-    /**
-     * Возвращает позицию текущего элемента
-     * @return {Number}
-     */
-    getCurrentPosition(): number {
-        return this._getCursorEnumerator().getPosition();
-    }
-
-    /**
-     * Устанавливает позицию текущего элемента
-     * @param {Number} position Позиция текущего элемента. Значение -1 указывает, что текущий элемент не выбран.
-     * @param {Boolean} [silent=false] Не генерировать событие onCurrentChange
-     */
-    setCurrentPosition(position: number, silent?: boolean): void {
-        const oldPosition = this.getCurrentPosition();
-        if (position !== oldPosition) {
-            const oldCurrent = this.getCurrent();
-            this._getCursorEnumerator().setPosition(position);
-            if (!silent) {
-                this._notifyCurrentChange(
-                    this.getCurrent(),
-                    oldCurrent,
-                    position,
-                    oldPosition
-                );
-            }
-        }
-    }
-
-    /**
      * Возвращает первый элемент
      * @return {Controls/_display/CollectionItem}
      */
@@ -1348,12 +1282,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     getPrevByIndex(index: number): T {
         return this.at(index - 1);
     }
-
-    // this._getCursorEnumerator().moveNext()
-    // this._notifyCurrentChange(
-    // this.setCurrentPosition()
-    // this.getCurrentPosition()
-    // setCurrent()
 
     /**
      * Возвращает индекс элемента в коллекции по его индексу в проекции
@@ -3170,14 +3098,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     /**
-     * Возвращает служебный энумератор для организации курсора
-     * @protected
-     */
-    protected _getCursorEnumerator(): CollectionEnumerator<T> {
-        return this._cursorEnumerator || (this._cursorEnumerator = this._getEnumerator());
-    }
-
-    /**
      * Возвращает служебный энумератор для для поиска по свойствам и поиска следующего или предыдущего элемента
      * относительно заданного
      * @protected
@@ -3300,7 +3220,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
      * @protected
      */
     protected _reIndex(): void {
-        this._getCursorEnumerator().reIndex();
         this._getUtilityEnumerator().reIndex();
     }
 
@@ -3712,34 +3631,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     /**
-     * Генерирует событие об изменении текущего элемента проекции коллекции
-     * @param newCurrent Новый текущий элемент
-     * @param oldCurrent Старый текущий элемент
-     * @param newPosition Новая позиция
-     * @param oldPosition Старая позиция
-     * @protected
-     */
-    protected _notifyCurrentChange(
-        newCurrent: T,
-        oldCurrent: T,
-        newPosition: number,
-        oldPosition: number
-    ): void {
-        if (!this.isEventRaising()) {
-            return;
-        }
-
-        this._removeFromQueue('onCurrentChange');
-        this._notify(
-            'onCurrentChange',
-            newCurrent,
-            oldCurrent,
-            newPosition,
-            oldPosition
-        );
-    }
-
-    /**
      * Нотифицирует событие change для измененных элементов
      * @param changed Измененные элементы исходной коллекции.
      * @param index Индекс исходной коллекции, в котором находятся элементы.
@@ -3920,7 +3811,6 @@ Object.assign(Collection.prototype, {
     _composer: null,
     _sourceCollectionSynchronized: true,
     _sourceCollectionDelayedCallbacks: null,
-    _cursorEnumerator: null,
     _utilityEnumerator: null,
     _onCollectionChange: null,
     _onCollectionItemChange: null,
