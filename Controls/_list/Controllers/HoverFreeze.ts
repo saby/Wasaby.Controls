@@ -9,7 +9,6 @@ const HOVER_FREEZE_TIMEOUT: number = 200;
 // через HOVER_FREEZE_TIMEOUT - HOVER_UNFREEZE_TIMEOUT мс.
 const HOVER_UNFREEZE_TIMEOUT: number = 100;
 
-const ITEM_HOVER_CONTAINER_SELECTOR = '.js-controls-ListView_item-hover';
 const ITEM_ACTIONS_CONTAINER_SELECTOR = '.js-controls-itemActions';
 
 interface IHoverFreezeItemData {
@@ -270,9 +269,11 @@ export default class HoverFreeze {
     }
 
     /**
-     * Селектор для выбора строки или ячеек
+     * Селектор для выбора строки или ячеек.
      * Необходим для определения реального размера строки в таблицах и в списках.
-     * Также необходим для выбора фона строки под курсором
+     * Также необходим для выбора фона строки под курсором.
+     * Тут нужно именно два селектора, т.к. в списках фон берётся из свойств самой записи,
+     * а в гридах - из cell (ячейка) и item (контент ячейки)
      * @param uniqueClass
      * @param index
      * @private
@@ -283,7 +284,9 @@ export default class HoverFreeze {
     }
 
     /**
-     * Стили для отключения hover в строке плоского списка или в ячейках строки таблицы
+     * Стили для включения hover и показа itemactions в строке плоского списка или в ячейках строки таблицы.
+     * Тут для установки фона нужно перебить два селектора, т.к. в списках фон берётся из свойств самой записи,
+     * а в гридах - из cell (ячейка) и item (контент ячейки)
      * @param uniqueClass
      * @param index
      * @param hoverBackgroundColor
@@ -294,10 +297,11 @@ export default class HoverFreeze {
                                       hoverBackgroundColor: string): string {
         return `
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}),
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${ITEM_HOVER_CONTAINER_SELECTOR} {
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell__content,
+              .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell {
                 background-color: ${hoverBackgroundColor};
               }
-              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) ${ITEM_ACTIONS_CONTAINER_SELECTOR} {
+              .${uniqueClass} .controls-ListView__itemV:nth-child(${index}) .controls-itemActionsV {
                  opacity: 1;
                  visibility: visible;
               }
