@@ -3883,6 +3883,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._options.sourceController !== newOptions.sourceController) {
                 this._sourceController = newOptions.sourceController;
+                this._sourceController.setDataLoadCallback(this._dataLoadCallback);
             }
 
             if (newOptions.loading) {
