@@ -744,11 +744,17 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return _private.toggleExpanded(this, item);
     },
     _onExpanderMouseDown(e, key, dispItem) {
+        if (this._children.baseControl.isLoading()) {
+            return;
+        }
         if (MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
             this._mouseDownExpanderKey = key;
         }
     },
     _onExpanderMouseUp: function(e, key, itemData) {
+        if (this._children.baseControl.isLoading()) {
+            return;
+        }
         if (this._mouseDownExpanderKey === key && MouseUp.isButton(e.nativeEvent, MouseButtons.Left)) {
             const dispItem = this._options.useNewModel ? itemData : itemData.dispItem;
             _private.toggleExpanded(this, dispItem);
