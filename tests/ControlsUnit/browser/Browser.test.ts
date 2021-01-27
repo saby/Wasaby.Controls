@@ -173,6 +173,20 @@ describe('Controls/browser:Browser', () => {
                     await browser._search({}, 'test');
                     assert.isTrue(dataErrorProcessed);
                 });
+
+                it('double search call will create searchController once', async () => {
+                    const browserOptions = getBrowserOptions();
+                    const browser = getBrowser(browserOptions);
+                    await browser._beforeMount(browserOptions);
+                    browser.saveOptions(browserOptions);
+
+                    const searchControllerCreatedPromise1 = browser._getSearchController(browserOptions);
+                    const searchControllerCreatedPromise2 = browser._getSearchController(browserOptions);
+
+                    const searchController1 = await searchControllerCreatedPromise1;
+                    const searchController2 = await searchControllerCreatedPromise2;
+                    assert.isTrue(searchController1 === searchController2);
+                });
             });
         });
 
