@@ -4541,7 +4541,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
-         // Предполагаем, что контейнер содержит класс js-controls-ItemActions__swipeMeasurementContainer
+         // Предполагаем, что контейнер содержит класс js-controls-ListView__measurableContainer
          it('should correctly calculate row size for list', () => {
             // fake HTMLElement
             const fakeElement = {
@@ -4557,7 +4557,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей таблицы при отображении опций свайпа
-         // Предполагаем, что сам контейнер не содержит класс js-controls-ItemActions__swipeMeasurementContainer,
+         // Предполагаем, что сам контейнер не содержит класс js-controls-ListView__measurableContainer,
          // а его потомки содержат
          it('should correctly calculate row size for grid', () => {
             // fake HTMLElement
@@ -6591,7 +6591,10 @@ define([
             };
             const instance = correctCreateBaseControl(cfg);
             const enterItemData = {
-               item: {}
+               item: {},
+               getContents: () => ({
+                  getKey: () => null
+               })
             };
             const enterNativeEvent = {};
             let called = false;
@@ -7138,7 +7141,12 @@ define([
                const dragObject = {
                   entity: {}
                };
-               const itemData = { item: {} };
+               const itemData = {
+                  item: {},
+                  getContents: () => ({
+                     getKey: () => null
+                  })
+               };
                baseControl._listViewModel.setDragItemData = () => {};
                baseControl._listViewModel.getItemDataByItem = () => { return { item: {} };};
                baseControl._dndListController = {
