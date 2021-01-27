@@ -15,6 +15,7 @@
    height: @image_height_draggingTemplate;
    border-radius: @image_border-radius_draggingTemplate;
    margin: @image_padding_draggingTemplate;
+   opacity: @opacity_draggingTemplate;
    display: flex;
    align-items: center;
    justify-content: center;
@@ -25,10 +26,15 @@
    .icon-size(@image_placeholder_icon-size_draggingTemplate);
 }
 
+.controls-DragNDrop__draggingTemplate-image {
+   opacity: @opacity_draggingTemplate;
+}
+
 .controls-DragNDrop__draggingTemplate-text {
    flex-shrink: 1;
    width: 100%;
    margin: @content_padding_draggingTemplate;
+   opacity: @opacity_draggingTemplate;
    overflow: hidden;
 }
 
