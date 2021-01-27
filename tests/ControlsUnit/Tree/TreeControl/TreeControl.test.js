@@ -1260,7 +1260,7 @@ define([
             sorting: [{'test': 'ASC'}],
             parentProperty: 'parent',
             uniqueKeys: true,
-            source: new sourceLib.Memory();
+            source: new sourceLib.Memory()
          };
          options.sourceController = new dataSource.NewSourceController({...options});
          var
