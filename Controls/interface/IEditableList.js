@@ -24,7 +24,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} Controls/interface/IEditableList/ItemEditOptions
-    * @property {Types/entity:Model} [options.item] Запись списка, которая будет запущена на редактирование. 
+    * @property {Types/entity:Model} [options.item] Запись списка, которая будет запущена на редактирование.
     * Если из обработчика события {@link beforeBeginEdit} также будет возвращена запись, то именно она будет запущена на редактирование вместо первоначальной.
     */
 
@@ -47,6 +47,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} Controls/interface/IEditableList/EditingConfig
+    * @property {Boolean} [autoAddOnInit=false] Если передано значение "true", при построении списка автомати начнется рдобавление по месту, при условии, что список пустой.
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
     * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже существующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
@@ -58,7 +59,7 @@ define('Controls/interface/IEditableList', [
     * В корне списка, в группе (когда включена группировка) или в рамках узла (для иерархических списков).
     * Если в контроле включена {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировка} элементов, тогда в модели нового элемента необходимо задать поле с группой.
     * @property {Types/entity:Model} [item=undefined] Элемент, который будет запущен на редактирование при первой отрисовке контрола.
-    * 
+    *
     * Элемент необязательно должен присутствовать в {@link Types/source:DataSet}, который получен от источника данных.
     * Если переданный элемент присутствует в Types/source:DataSet, то будет запущено ее редактирование, а иначе — запустится добавление этого элемента.
     * После редактирования добавляемый элемент сохранится в источнике данных.
@@ -130,6 +131,7 @@ define('Controls/interface/IEditableList', [
 
    /*
     * @typedef {Object} Controls/interface/IEditableList/EditingConfig
+    * @property {Boolean} [autoAddOnInit=false] If true, auto adding will start on initializing if list is empty.
     * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
     * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
     * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
@@ -541,7 +543,7 @@ define('Controls/interface/IEditableList', [
     * @returns {Core/Deferred}
     * @remark
     * Перед запуском редактирования по месту происходит событие {@link beforeBeginEdit}, а после запуска — {@link afterBeginEdit}.
-    * 
+    *
     * Используйте этот метод в ситуациях, когда вы хотите начать редактирование из нестандартного места, например, из {@link /doc/platform/developmentapl/interface-development/controls/list/actions/operations/ панели действий элемента}.
     * @example
     * В следующем примере показано, как начать редактирование элемента.
@@ -597,21 +599,21 @@ define('Controls/interface/IEditableList', [
     * @returns {Core/Deferred}
     * @remark
     * Перед запуском добавления по месту происходит событие {@link Controls/interface/IEditableList#beforeBeginEdit beforeBeginEdit}, а после запуска — {@link Controls/interface/IEditableList#afterBeginEdit afterBeginEdit}.
-    * 
+    *
     * Вы можете задать позицию, в которой отображается шаблон редактирования строки. Для этого в опции {@link editingConfig} установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}. Шаблон редактирования строки может отображаться в начале и в конце списка, группы (если включена {@link Controls/interface/IGroupedList#groupProperty группировка}) или узла (для иерархических списков).
-    * 
+    *
     * В случае, когда метод beginAdd вызван без аргументов, добавляемая запись будет создана при помощи установленного на списке источника данных путем вызова у него метода {@link Types/source:ICrud#create create}.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
     * @demo Controls-demo/list_new/EditInPlace/AddItemInBegin/Index Шаблон редактирования строки отображается в начале списка.
     * @demo Controls-demo/list_new/EditInPlace/AddItemInEnd/Index Шаблон редактирования строки отображается в конце списка.
     * @example
     * В следующем примере показано, как начать добавление элемента.
-    * 
+    *
     * <pre class="brush: html">
     * <!-- WML -->
     * <Controls.list:View name="list" />
     * </pre>
-    * 
+    *
     * <pre class="brush: js">
     * // JavaScript
     * foo: function() {

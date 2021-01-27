@@ -3,7 +3,7 @@
         <div class="controls-text-label_theme-{{_options.theme}}">В пустом списке доступно автодобавление "из коробки".</div>
 
         <Controls.list:View keyProperty="id" source="{{_emptyViewSource}}">
-            <ws:editingConfig initialAdd="{{ true }}" editOnClick="{{true}}" toolbarVisibility="{{ true }}"/>
+            <ws:editingConfig autoAddOnInit="{{ true }}" editOnClick="{{true}}" toolbarVisibility="{{ true }}"/>
             <ws:itemTemplate>
                 <ws:partial template="Controls/list:ItemTemplate">
                     <ws:contentTemplate>
@@ -23,7 +23,7 @@
         <div class="controls-text-label_theme-{{_options.theme}}">Если в списке есть записи, добавление не запустится.</div>
 
         <Controls.list:View keyProperty="id" source="{{_viewSource}}">
-            <ws:editingConfig initialAdd="{{ true }}" editOnClick="{{true}}" toolbarVisibility="{{ true }}"/>
+            <ws:editingConfig autoAddOnInit="{{ true }}" editOnClick="{{true}}" toolbarVisibility="{{ true }}"/>
             <ws:itemTemplate>
                 <ws:partial template="Controls/list:ItemTemplate">
                     <ws:contentTemplate>

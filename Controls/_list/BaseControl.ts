@@ -5044,11 +5044,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _tryStartInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
         const hasItems = !!(this._loadedItems && this._loadedItems.getCount() || this._items && this._items.getCount());
 
-        if (editingConfig.initialAdd && !!this._sourceController && !hasItems) {
+        if (editingConfig.autoAddOnInit && !!this._sourceController && !hasItems) {
             return this._beginAdd({}, editingConfig.addPosition);
         } else if (editingConfig.item) {
-            const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
-            if (isAdd) {
+            if (!this._items.getRecordById(editingConfig.item.getKey())) {
                 return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
             } else {
                 return this._beginEdit({ item: editingConfig.item });
@@ -5220,7 +5219,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
 
         return {
-            initialAdd: !!editingConfig.initialAdd,
+            autoAddOnInit: !!editingConfig.autoAddOnInit,
             editOnClick: !!editingConfig.editOnClick,
             sequentialEditing: editingConfig.sequentialEditing !== false,
             addPosition,

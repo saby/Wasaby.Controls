@@ -4,7 +4,7 @@ import {Memory} from 'Types/source';
 import {getFewCategories as getData} from '../../DemoHelpers/DataCatalog';
 
 interface IEditCfg {
-    initialAdd?: boolean;
+    autoAddOnInit?: boolean;
     toolbarVisibility?: boolean;
     item?: unknown;
     editOnClick?: boolean;
@@ -31,7 +31,7 @@ export default class extends Control {
 
         return this._viewSource.read(1).then((res) => {
             this._editingConfig = {
-                initialAdd: true,
+                autoAddOnInit: true,
                 toolbarVisibility: true,
                 item: res,
                 editOnClick: true
