@@ -737,6 +737,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _sortMap: number[] = [];
 
     /**
+     * Служебный энумератор для организации курсора
+     */
+    protected _cursorEnumerator: CollectionEnumerator<T>;
+
+    /**
      * Служебный энумератор для поиска по свойствам и поиска следующего или предыдущего элемента относительно заданного
      */
     protected _utilityEnumerator: CollectionEnumerator<T>;
@@ -928,6 +933,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._sortMap = [];
         this._itemToUid = null;
         this._itemsUid = null;
+        this._cursorEnumerator = null;
         this._utilityEnumerator = null;
         this._userStrategies = null;
 
@@ -3095,6 +3101,14 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             filterMap,
             sortMap
         });
+    }
+
+    /**
+     * Возвращает служебный энумератор для организации курсора
+     * @protected
+     */
+    protected _getCursorEnumerator(): CollectionEnumerator<T> {
+        return this._cursorEnumerator || (this._cursorEnumerator = this._getEnumerator());
     }
 
     /**
