@@ -149,25 +149,4 @@ describe('Controls/_display/Enum', () => {
             assert.equal(holeyDisplay.getIndexBySourceIndex(4), 1);
         });
     });
-
-    describe('.subscribe()', () => {
-        it('should trigger "onCurrentChange" if current of the Enum changed', () => {
-            const given: any = {};
-            const handler = (event, newCurrent, oldCurrent, newPosition, oldPosition) => {
-                given.newCurrent = newCurrent;
-                given.oldCurrent = oldCurrent;
-                given.newPosition = newPosition;
-                given.oldPosition = oldPosition;
-            };
-
-            display.subscribe('onCurrentChange', handler);
-            collection.set(0);
-            display.unsubscribe('onCurrentChange', handler);
-
-            assert.strictEqual(given.newCurrent.getContents(), collection.getAsValue());
-            assert.strictEqual(given.oldCurrent, undefined);
-            assert.strictEqual(given.newPosition, collection.get());
-            assert.strictEqual(given.oldPosition, -1);
-        });
-    });
 });
