@@ -57,7 +57,7 @@ export class BaseText extends Base<IBaseTextInputOptions>{
     private _syncBeforeMount(options: IBaseTextInputOptions): void {
         super._beforeMount(options);
 
-        Text._validateConstraint(options.constraint);
+        BaseText._validateConstraint(options.constraint);
     }
 
     private _loadConverterPunycode(): Promise<void> {
