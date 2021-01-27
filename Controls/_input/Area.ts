@@ -29,20 +29,15 @@ import 'Controls/decorator';
  * @extends Controls/input:Text
  * @mixes Controls/input:INewLineKey
  * @mixes Controls/_input/interface/IArea
+ *
+ * @ignoreOptions Controls/_input/Base#leftFieldTemplate
+ * @ignoreOptions Controls/_input/Base#rightFieldTemplate
+ *
  * @public
  *
  * @demo Controls-demo/Input/Area/MinMaxLines/Index
  *
  * @author Красильников А.С.
- */
-
-/**
- * @name Controls/_input/Area#leftFieldTemplate
- * @private
- */
-/**
- * @name Controls/_input/Area#rightFieldTemplate
- * @private
  */
 
 /**
