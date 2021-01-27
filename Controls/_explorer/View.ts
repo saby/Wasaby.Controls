@@ -305,6 +305,8 @@ var
                import('Controls/tile').then((tile) => {
                   VIEW_NAMES.tile = tile.TreeView;
                   VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+                  VIEW_NAMES_NEW.tile = tile.TreeView;
+                  VIEW_MODEL_CONSTRUCTORS_NEW.tile = tile.TreeViewModel;
                   resolve(tile);
                }).catch((err) => {
                   Logger.error('Controls/_explorer/View: ' + err.message, self, err);
