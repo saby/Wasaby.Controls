@@ -102,11 +102,21 @@ export default {
              */
 
             /*
-             * @name Controls/_dateRange/interfaces/ILinkView#resetValue
-             * @cfg {Array<Date>} Значение периода по умолчанию
-             * @remark Опция указывается в виде массива из дат, где первый элемент это начало периода, а второй - конец.
+             * @name Controls/_dateRange/interfaces/ILinkView#resetStartValue
+             * @cfg {Date} Дата начала периода по умолчанию
              * При использовании опции, рядом с контролом появится крестик, нажав на который, пользователь перейдет к
-             * периоду, указанному в resetValue.
+             * периоду, указанному в resetStartValue и resetEndValue. Если задана только resetEndValue - resetStartValue
+             * будет установлен как null.
+             * @see Controls/_dateRange/interfaces/ILinkView#resetEndValue
+             */
+
+            /*
+             * @name Controls/_dateRange/interfaces/ILinkView#resetEndValue
+             * @cfg {Date} Дата конца периода по умолчанию
+             * При использовании опции, рядом с контролом появится крестик, нажав на который, пользователь перейдет к
+             * периоду, указанному в resetStartValue и resetEndValue. Если задана только resetStartValue - resetEndValue
+             * будет установлен как null.
+             * @see Controls/_dateRange/interfaces/ILinkView#resetStartValue
              */
         };
     },

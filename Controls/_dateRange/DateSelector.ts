@@ -52,13 +52,11 @@ export default class DateSelector extends BaseSelector<IControlOptions> {
 
    _beforeMount(options?: IControlOptions): Promise<void> | void {
       this._updateValues(options);
-      this._updateResetButtonVisible(options);
       super._beforeMount(options);
    }
 
    protected _beforeUpdate(options): void {
       this._updateValues(options);
-      this._updateResetButtonVisible(options);
       super._beforeUpdate(options);
    }
 
@@ -77,7 +75,6 @@ export default class DateSelector extends BaseSelector<IControlOptions> {
          templateOptions: {
             ...PopupUtil.getTemplateOptions(this),
             headerType: 'link',
-            resetValue: this._options.resetValue,
             rightFieldTemplate: this._options.rightFieldTemplate,
             calendarSource: this._options.calendarSource,
             dayTemplate: this._options.dayTemplate,
@@ -103,11 +100,6 @@ export default class DateSelector extends BaseSelector<IControlOptions> {
 
    protected _rangeChangedHandler(event: SyntheticEvent, value: Date): void {
       this._notify('valueChanged', [value]);
-   }
-
-   private _updateResetButtonVisible(options): void {
-      this._resetButtonVisible = options.resetValue && (!dateUtils.isDatesEqual(this._startValue, options.resetValue[0]) ||
-          !dateUtils.isDatesEqual(this._endValue, options.resetValue[1]));
    }
 
    shiftBack(): void {

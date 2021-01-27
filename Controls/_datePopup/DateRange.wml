@@ -26,7 +26,7 @@
                <ws:if data="{{ monthHeaderTemplate.date.getMonth() === 0 }}">
                   <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn
                            controls-PeriodDialog-DateRangeItem__months-nextyearBtn_theme-{{_options.theme}}"
-                       on:click="_scrollToMonth(monthHeaderTemplate.date.getFullYear(), 0)">
+                       on:click="_scrollToMonth(monthHeaderTemplate.date.getFullYear(), 0)" data-date="{{ _dateToId(monthHeaderTemplate.date) }}">
                      {{monthHeaderTemplate.date.getFullYear()}}
                   </div>
                </ws:if>

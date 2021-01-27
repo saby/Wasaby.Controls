@@ -73,8 +73,9 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     }
 
     _updateResetButtonVisible(options): void {
-        this._resetButtonVisible = options.resetValue && (!dateUtils.isDatesEqual(this._startValue, options.resetValue[0]) ||
-                !dateUtils.isDatesEqual(this._endValue, options.resetValue[1]));
+        this._resetButtonVisible = (!dateUtils.isDatesEqual(this._startValue, options.resetStartValue) ||
+            this._startValue === options.resetStartValue) || (!dateUtils.isDatesEqual(this._endValue, options.resetEndValue)
+        || this._endValue === options.resetEndValue);
     }
 
     _updateValues(options): void {
@@ -131,7 +132,8 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
                 headerType: 'link',
-                resetValue: this._options.resetValue,
+                resetStartValue: this._options.resetStartValue,
+                resetEndValue: this._options.resetEndValue,
                 rightFieldTemplate: this._options.rightFieldTemplate,
                 calendarSource: this._options.calendarSource,
                 dayTemplate: this._options.dayTemplate,
@@ -149,7 +151,7 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
     }
 
     _resetButtonClickHandler(): void {
-        this._rangeModel.setRange(this._options.resetValue[0], this._options.resetValue[1]);
+        this._rangeModel.setRange(this._options.resetStartValue || null, this._options.resetEndValue || null);
     }
 
     _mouseEnterHandler(): void {

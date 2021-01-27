@@ -416,14 +416,15 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     _resetButtonClickHandler(): void {
-        this.rangeChanged(this._options.resetValue[0], this._options.resetValue[1]);
+        this.rangeChanged(this._options.resetStartValue || null, this._options.resetEndValue || null);
         this._resetButtonVisible = false;
     }
 
     _updateResetButtonVisible(options): void {
-        this._resetButtonVisible = options.resetValue &&
-            (!dateUtils.isDatesEqual(this._rangeModel.startValue, options.resetValue[0]) ||
-            !dateUtils.isDatesEqual(this._rangeModel.endValue, options.resetValue[1]));
+        this._resetButtonVisible = (!dateUtils.isDatesEqual(this._rangeModel.startValue, options.resetStartValue) ||
+            this._rangeModel.startValue === options.resetStartValue) ||
+            (!dateUtils.isDatesEqual(this._rangeModel.endValue, options.resetEndValue)
+            || this._rangeModel.startValue === options.resetEndValue);
     }
 
     fixedPeriodClick(start: Date, end: Date): void {
@@ -550,8 +551,7 @@ export default class DatePopup extends Control implements EventProxyMixin {
             dayTemplate: MonthViewDayTemplate,
 
             startValueValidators: [],
-            endValueValidators: [],
-            resetValue: [null, null]
+            endValueValidators: []
         }, IRangeSelectable.getDefaultOptions());
     }
 
