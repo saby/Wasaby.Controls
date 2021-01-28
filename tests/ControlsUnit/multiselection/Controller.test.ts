@@ -271,6 +271,18 @@ describe('Controls/_multiselection/Controller', () => {
    });
 
    describe('getSelectedItems', () => {
+      beforeEach(() => {
+         model.setItems(new RecordSet({
+            rawData: [
+               { id: 1 },
+               { id: 2 },
+               { id: 3 },
+               { id: 4 }
+            ],
+            keyProperty: 'id'
+         }), {});
+      });
+
       it('should return one selected item', () => {
          model.at(0).setSelected(true);
          const items = controller.getSelectedItems();
