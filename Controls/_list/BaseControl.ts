@@ -641,7 +641,7 @@ const _private = {
     },
 
     scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean, skippedItemsCount: number) {
-        const scrollCallback = (index) => {
+        const scrollCallback = (index, result) => {
             // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
             // реальную запись и скролим именно к ней.
             // Сам контейнер же берем учитывая количество пропущенных элементов при поиске первой записи.
@@ -662,13 +662,13 @@ const _private = {
                     itemContainer, toBottom, force
                 }], {bubbling: true});
             }
+            if (result) {
+                _private.handleScrollControllerResult(self, result);
+            }
         };
         return new Promise((resolve) => {
             self._scrollController ?
-                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                    if (result) {
-                        _private.handleScrollControllerResult(self, result);
-                    }
+                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
                     resolve();
                 }) : resolve();
         });
