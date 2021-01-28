@@ -51,10 +51,10 @@ var
             } else {
                self._potentialMarkedKey = root;
             }
-            self._notify('rootChanged', [root], {bubbling: !!self._options.sourceController});
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root, self._items, dataRoot);
             }
+            self._notify('rootChanged', [root], {bubbling: !!self._options.sourceController});
             self._forceUpdate();
          },
          setRestoredKeyObject: function(self, root) {

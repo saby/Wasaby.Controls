@@ -3103,7 +3103,8 @@ define([
                isStopped: () => stopPropagationCalled,
                stopPropagation: function() {
                   stopPropagationCalled = true;
-               }
+               },
+               isBubbling: () => false
             };
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), {
                target: { closest: () => null }
@@ -7245,7 +7246,8 @@ define([
 
                const e = {
                   isStopped: () => isStopped,
-                  stopPropagation() { isStopped = true; }
+                  stopPropagation() { isStopped = true; },
+                  isBubbling: () => false
                };
 
                const originalEvent = {
