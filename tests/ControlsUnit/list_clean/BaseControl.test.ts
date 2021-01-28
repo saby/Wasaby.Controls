@@ -901,6 +901,22 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._initKeyProperty(baseControlOptions);
             assert.isFalse(!!baseControl._keyProperty);
         });
+
+        it('_beforeMount returns errorConfig', async () => {
+            const baseControlOptions = {...getBaseControlOptionsWithEmptyItems(),
+                sourceController: new NewSourceController({
+                    source: new Memory({
+                        keyProperty: 'keyProperty',
+                        data: []
+                    }),
+                    keyProperty: 'id'
+                })
+            };
+            const baseControl = new BaseControl(baseControlOptions);
+            baseControlOptions.sourceController._loadError = new Error('test error');
+            const receivedState = await baseControl._beforeMount(baseControlOptions);
+            assert.ok(receivedState.hasOwnProperty('errorConfig'));
+        });
     });
 
     describe('Edit in place', () => {
