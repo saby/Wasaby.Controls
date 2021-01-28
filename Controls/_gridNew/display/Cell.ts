@@ -211,7 +211,9 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
                 wrapperClasses += ` controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme}`;
             }
 
-            wrapperClasses += ` controls-background-${backgroundColorStyle || style || 'default'}_theme-${theme}`;
+            if (backgroundColorStyle) {
+                wrapperClasses += ` controls-background-${backgroundColorStyle}_theme-${theme}`;
+            }
         }
         return wrapperClasses;
     }

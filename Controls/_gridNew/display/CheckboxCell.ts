@@ -32,7 +32,9 @@ export default class CheckboxCell<T, TOwner extends DataRow<T>> extends Cell<T, 
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
         }
 
-        wrapperClasses += ` controls-background-${backgroundColorStyle || style || 'default'}_theme-${theme}`;
+        if (backgroundColorStyle) {
+            wrapperClasses += ` controls-background-${backgroundColorStyle}_theme-${theme}`;
+        }
 
         return wrapperClasses;
     }

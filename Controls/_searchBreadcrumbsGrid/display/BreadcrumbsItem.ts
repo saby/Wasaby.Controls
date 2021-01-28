@@ -96,7 +96,13 @@ export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRo
    }
 
    getTemplate(): TemplateFunction | string {
-      return this.getDefaultTemplate();
+      // В старой поисковой модели в menu хлебные крошки отрисовывают с помощью itemTemplate,
+      // у себы мы рисуем хлебные крошки с помощью searchBreadCrumbsItemTemplate
+      if (this._$owner['[Controls/_display/Search]']) {
+         return super.getTemplate.apply(this, arguments);
+      } else {
+         return this.getDefaultTemplate();
+      }
    }
 
    getCellTemplate(): TemplateFunction | string {

@@ -32,7 +32,7 @@ export default class Search<S extends Model, T extends TreeItem<S> = TreeItem<S>
 }
 
 Object.assign(Search.prototype, {
-    _moduleName: 'Controls/searchBreadcrumbsGrid:Search',
     '[Controls/_display/Search]': true,
+    _moduleName: 'Controls/searchBreadcrumbsGrid:Search',
     _$dedicatedItemProperty: undefined
 });
