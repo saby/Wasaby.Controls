@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/searchGrid/Base/Base';
+import * as Template from 'wml!Controls-demo/searchBreadcrumbsGrid/Base/Base';
 import {Memory} from 'Types/source';
 import { Gadgets } from 'Controls-demo/Explorer_new/DataHelpers/DataCatalog';
 

@@ -551,8 +551,10 @@ define([
             instance.saveOptions(cfg2);
             assert.strictEqual(instance._viewMode, 'tree');
 
-            explorerMod.View._private.itemsSetCallback(instance);
-            assert.strictEqual(instance._viewMode, 'tile');
+            return setTimeout(() => {
+               explorerMod.View._private.itemsSetCallback(instance);
+               assert.strictEqual(instance._viewMode, 'tile');
+            }, 1);
          });
       });
 

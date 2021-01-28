@@ -1,6 +1,5 @@
 import { assert } from 'chai';
-import { BreadcrumbsItem } from 'Controls/display';
-import SearchStrategy from 'Controls/_display/itemsStrategy/Search';
+import { BreadcrumbsItem, Search } from 'Controls/display';
 
 
 describe('Controls/_display/Search', () => {
@@ -43,7 +42,7 @@ describe('Controls/_display/Search', () => {
                 pid: '+',
                 node: true
             }];
-            const search = new SearchStrategy({
+            const search = new Search({
                 collection: items,
                 root: {id: '+'},
                 keyProperty: 'id',
@@ -91,7 +90,7 @@ describe('Controls/_display/Search', () => {
                 id: 'AABa',
                 pid: 'AAB'
             }];
-            const search = new SearchStrategy({
+            const search = new Search({
                 collection: items,
                 root: {id: '+'},
                 unique: true,

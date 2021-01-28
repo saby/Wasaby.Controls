@@ -298,7 +298,7 @@ export default class SearchStrategy<S extends Model, T extends TreeItem<S> = Tre
         items.forEach((item, index) => {
             let resultItem = item;
 
-            if (item['[Controls/_display/TreeItem]']) {
+            if (item && item['[Controls/_display/TreeItem]']) {
                 if (item.isNode()) {
                     // Check if there is a special item within the breadcrumbs
                     if (
@@ -321,7 +321,7 @@ export default class SearchStrategy<S extends Model, T extends TreeItem<S> = Tre
 
                     // Look at the next item after current node
                     const next = items[index + 1];
-                    const nextIsTreeItem = next['[Controls/_display/TreeItem]'];
+                    const nextIsTreeItem = next && next['[Controls/_display/TreeItem]'];
 
                     // Check that the next tree item is a node with bigger level.
                     // If it's not that means we've reached the end of current breadcrumbs.
