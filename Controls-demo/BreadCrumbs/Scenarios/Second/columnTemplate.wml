@@ -3,9 +3,9 @@
             itemData="{{itemData}}">
    <ws:contentTemplate>
       <ws:if data="{{!item.isNode()}}">
-         <Controls.decorator:Money value="{{item.item[itemData.getDisplayProperty()]}}"
+         <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
                                    useGrouping="{{true}}"/>
-         <span if="{{itemData.getColumnIndex() === 2}}">шт</span>
+         <span if="{{itemData.columnIndex === 2}}">шт</span>
       </ws:if>
    </ws:contentTemplate>
 </ws:partial>

@@ -2,9 +2,9 @@
             attr:class="controls-Grid__row-cell__content_baseline_L"
             itemData="{{itemData}}">
    <ws:contentTemplate>
-      <Controls.decorator:Money value="{{item[itemData.getDisplayProperty()]}}"
+      <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
                                 fontColorStyle="{{itemData.getDisplayProperty() !== 'sum' ? 'unaccented' : 'default'}}"
                                 useGrouping="{{true}}"/>
-      <span if="{{!item.isNode() && itemData.getColumnIndex() === 1}}">шт</span>
+      <span if="{{!itemData.dispItem.isNode() && itemData.columnIndex === 1}}">шт</span>
    </ws:contentTemplate>
 </ws:partial>
