@@ -3,7 +3,6 @@ import {descriptor} from 'Types/entity';
 import * as ViewModel from 'Controls/_input/Password/ViewModel';
 import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IBaseFieldTemplate} from 'Controls/_input/interface/IBase';
 
 /**
  * Поле ввода пароля.
@@ -39,7 +38,7 @@ import {IBaseFieldTemplate} from 'Controls/_input/interface/IBase';
  *
  * @author Красильников А.С.
  */
-class Password extends Base<IBaseFieldTemplate> {
+class Password extends Base {
     protected _defaultValue: string = '';
     private _passwordVisible: boolean = false;
     protected _controlName: string = 'Password';
