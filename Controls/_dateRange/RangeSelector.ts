@@ -137,6 +137,7 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
             templateOptions: {
                 ...PopupUtil.getDateRangeTemplateOptions(this),
                 headerType: 'link',
+                _date: this._options._date,
                 resetStartValue: this._options.resetStartValue,
                 resetEndValue: this._options.resetEndValue,
                 rightFieldTemplate: this._options.rightFieldTemplate,
