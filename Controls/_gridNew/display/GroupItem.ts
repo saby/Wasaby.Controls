@@ -12,6 +12,7 @@ import Row from './Row';
 import Cell from './Cell';
 import Collection from './Collection';
 import GroupCell from './GroupCell';
+import {IColumn} from 'Controls/grid';
 
 const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupContent';
 
@@ -106,6 +107,7 @@ export default class GroupItem<T> extends mixin<
             columns.push(new GroupCell({
                 owner: this,
                 columns: this._$columns,
+                colspan: this._$columns.length,
                 column: { template: this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE }
             }));
 

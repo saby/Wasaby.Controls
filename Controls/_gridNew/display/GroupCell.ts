@@ -9,6 +9,7 @@ export interface IOptions<T> {
     owner: GroupItem<T>;
     column: IColumn;
     columns: IColumn[];
+    colspan: number;
 }
 
 export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
