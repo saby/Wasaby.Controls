@@ -213,6 +213,5 @@
   "--readonly_text-color_tumbler": "var(--readonly_color)",
   "--selected_text-color_tumbler": "var(--text_color)",
   "--unselected_text-color_tumbler": "var(--label_text-color)",
-  "--selected_background-color_tumbler": "var(--background-color)",
-  "--unselected_background-color_tumbler": "#f2f2f2"
+  "--selected_background-color_tumbler": "var(--background-color)"
 }
