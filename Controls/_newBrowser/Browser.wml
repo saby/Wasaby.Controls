@@ -68,17 +68,12 @@
                   </ws:else>
                </ws:itemTemplate>
                <ws:tileItemTemplate>
-                  <ws:if data="{{tileItemTemplate.itemData.dispItem}}">
-                     <ws:partial
-                        scope="{{tileItemTemplate}}"
-                        template="{{_detailExplorerOptions.tileItemTemplate}}"
-                        listConfiguration="{{_listConfiguration}}"
-                        tileCfg="{{_tileCfg}}"
-                     />
-                  </ws:if>
-                  <ws:else>
-                     <invisible-node/>
-                  </ws:else>
+                  <ws:partial
+                     scope="{{tileItemTemplate}}"
+                     template="{{_detailExplorerOptions.tileItemTemplate}}"
+                     listConfiguration="{{_listConfiguration}}"
+                     tileCfg="{{_tileCfg}}"
+                  />
                </ws:tileItemTemplate>
             </Controls.explorer:View>
          </Controls.scroll:Container>
