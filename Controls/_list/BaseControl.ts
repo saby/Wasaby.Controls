@@ -11,10 +11,10 @@ import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {ICrud, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
+import {Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {debounce, throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
-import {Model, relation} from 'Types/entity';
+import {Guid, Model} from 'Types/entity';
 import {IHashMap} from 'Types/declarations';
 
 import {SyntheticEvent} from 'Vdom/Vdom';
@@ -39,8 +39,8 @@ import {getDimensions as uDimension} from 'Controls/sizeUtils';
 import { getItemsHeightsData } from 'Controls/_list/ScrollContainer/GetHeights';
 import {
     Collection,
-    CollectionItem,
-    GroupItem, IEditableCollectionItem,
+    CollectionItem, ICollectionItem,
+    IEditableCollectionItem,
     TItemKey,
     TreeItem
 } from 'Controls/display';
@@ -60,6 +60,7 @@ import ScrollPagingController from 'Controls/_list/Controllers/ScrollPaging';
 import PortionedSearch from 'Controls/_list/Controllers/PortionedSearch';
 import GroupingLoader from 'Controls/_list/Controllers/GroupingLoader';
 import * as GroupingController from 'Controls/_list/Controllers/Grouping';
+import HoverFreeze from 'Controls/_list/Controllers/HoverFreeze';
 import {ISwipeEvent} from 'Controls/listRender';
 
 import {
@@ -157,7 +158,7 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
  * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
  */
 const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
-const SWIPE_MEASUREMENT_CONTAINER_SELECTOR = 'js-controls-ItemActions__swipeMeasurementContainer';
+const LIST_MEASURABLE_CONTAINER_SELECTOR = 'js-controls-ListView__measurableContainer';
 const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
 interface IAnimationEvent extends Event {
@@ -202,6 +203,7 @@ interface IIndicatorConfig {
     loadingIndicatorState: LoadingState;
     theme: string;
     isPortionedSearchInProgress: boolean;
+    attachLoadTopTriggerToNull: boolean;
 }
 
 /**
@@ -2318,11 +2320,14 @@ const _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IIndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull}: IIndicatorConfig
     ): string {
+        const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
+           ? 'attachToNull'
+           : loadingIndicatorState;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}_theme-${theme}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                 !hasItems && loadingIndicatorState === 'down')
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
@@ -3009,12 +3014,12 @@ const _private = {
      */
     getSwipeContainerSize(itemContainer: HTMLElement): {width: number, height: number} {
         const result: {width: number, height: number} = { width: 0, height: 0 };
-        if (itemContainer.classList.contains(SWIPE_MEASUREMENT_CONTAINER_SELECTOR)) {
+        if (itemContainer.classList.contains(LIST_MEASURABLE_CONTAINER_SELECTOR)) {
             result.width = itemContainer.clientWidth;
             result.height = itemContainer.clientHeight;
         } else {
             itemContainer
-                .querySelectorAll(`.${SWIPE_MEASUREMENT_CONTAINER_SELECTOR}`)
+                .querySelectorAll(`.${LIST_MEASURABLE_CONTAINER_SELECTOR}`)
                 .forEach((container) => {
                     result.width += container.clientWidth;
                     result.height = result.height || container.clientHeight;
@@ -3093,18 +3098,76 @@ const _private = {
         }
     },
 
-    addShowActionsClass(self) {
+    addShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
         if (!detection.isMobilePlatform) {
             self._addShowActionsClass = true;
         }
     },
 
-    removeShowActionsClass(self) {
+    removeShowActionsClass(self): void {
         // В тач-интерфейсе не нужен класс, задающий видимость itemActions. Это провоцирует лишнюю синхронизацию
         if (!detection.isMobilePlatform && self._options.itemActionsVisibility !== 'visible') {
             self._addShowActionsClass = false;
         }
+    },
+
+    addHoverEnabledClass(self): void {
+        self._addHoverEnabledClass = true;
+    },
+
+    removeHoverEnabledClass(self): void {
+        self._addHoverEnabledClass = false;
+    },
+
+    getViewUniqueClass(self): string {
+        return `controls-BaseControl__View_${self._uniqueId}`;
+    },
+
+    /**
+     * Контроллер "заморозки" записей не нужен, если:
+     * или есть ошибки или не инициализирована коллекция
+     * или операции над записью показаны внутри записи
+     * или itemActions не установлены.
+     * Также, нельзя запускать "заморозку" во время редактирования или DnD записей.
+     * @param self
+     */
+    needHoverFreezeController(self): boolean {
+        return !self.__error && self._listViewModel && self._options.itemActionsPosition === 'outside' &&
+            (self._options.itemActions || self._options.itemActionsProperty) &&
+            _private.isAllowedHoverFreeze(self);
+    },
+
+    initHoverFreezeController(self): void {
+        self._hoverFreezeController = new HoverFreeze({
+            uniqueClass: _private.getViewUniqueClass(self),
+            stylesContainer: self._children.itemActionsOutsideStyle as HTMLElement,
+            viewContainer: self._container,
+            measurableContainerSelector: LIST_MEASURABLE_CONTAINER_SELECTOR,
+            freezeHoverCallback: () => {
+                _private.removeHoverEnabledClass(self);
+                _private.removeShowActionsClass(self);
+            },
+            unFreezeHoverCallback: () => {
+                if (!self._itemActionsMenuId) {
+                    _private.addHoverEnabledClass(self);
+                    _private.addShowActionsClass(self);
+                }
+            }
+        });
+    },
+
+    hasHoverFreezeController(self): boolean {
+        return !!self._hoverFreezeController;
+    },
+
+    /**
+     * Возвращает true если использовать "заморозку" разрешено
+     * @param self
+     */
+    isAllowedHoverFreeze(self): boolean {
+        return (!self._dndListController || !self._dndListController.isDragging()) &&
+            (!self._editInPlaceController || !self._editInPlaceController.isEditing());
     }
 };
 
@@ -3235,6 +3298,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // По умолчанию считаем, что показывать экшны не надо, пока не будет установлено true
     _addShowActionsClass: false,
 
+    // По умолчанию считаем, что необходимо разрешить hover на списке
+    _addHoverEnabledClass: true,
+
     // Идентификатор текущего открытого popup
     _itemActionsMenuId: null,
 
@@ -3270,6 +3336,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _useServerSideColumnScroll: false,
 
+    _uniqueId: null,
+
     constructor(options) {
         BaseControl.superclass.constructor.apply(this, arguments);
         options = options || {};
@@ -3289,6 +3357,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beforeMount(newOptions, context, receivedState: IReceivedState = {}) {
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         this._dataLoadCallback = _private.dataLoadCallback.bind(this);
+        this._uniqueId = Guid.create();
 
         _private.checkDeprecated(newOptions);
         this._initKeyProperty(newOptions);
@@ -3372,7 +3441,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
-        const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
@@ -3448,12 +3516,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 return Promise.resolve();
             }
-            if (receivedError) {
-                if (newOptions.dataLoadErrback instanceof Function) {
-                    newOptions.dataLoadErrback(receivedError);
+                if (receivedState.errorConfig) {
+                    return Promise.resolve(_private.showError(self, receivedState.errorConfig));
+                } else if (self._sourceController && self._sourceController.getLoadError()) {
+                    return _private.processError(self, {error: self._sourceController.getLoadError()})
+                        .then((errorConfig) => {
+                            return getState(errorConfig);
+                        });
                 }
-                return Promise.resolve(_private.showError(self, receivedError));
-            }
             } else {
                 _private.createScrollController(self, newOptions);
                 return Promise.resolve();
@@ -5069,6 +5139,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _beginEdit(options, shouldActivateInput: boolean = true) {
         _private.closeSwipe(this);
+        if (_private.hasHoverFreezeController(this)) {
+            this._hoverFreezeController.unfreezeHover();
+        }
         this.showIndicator();
         return this._getEditInPlaceController().edit(options).then((result) => {
             if (shouldActivateInput && !(result && result.canceled)) {
@@ -5349,6 +5422,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 _private.handleItemActionClick(this, action, clickEvent, item, true);
             }
         } else if (eventName === 'menuOpened') {
+            if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
+                this._hoverFreezeController.unfreezeHover();
+            }
             _private.removeShowActionsClass(this);
             _private.getItemActionsController(this, this._options).deactivateSwipe(false);
         }
@@ -5544,19 +5620,56 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _getViewClasses(addShowActionsClass: boolean, addHoverEnabledClass: boolean, uniqueId: string): string  {
+        const classes: string[] = [];
+        if (addShowActionsClass) {
+            classes.push(`controls-BaseControl_showActions controls-BaseControl_showActions_${this._options.itemActionsVisibility}`);
+        }
+        if (addHoverEnabledClass) {
+            classes.push('controls-BaseControl_hover_enabled');
+        } else {
+            classes.push('controls-BaseControl_hover_disabled');
+        }
+        if (this._uniqueId) {
+            classes.push(_private.getViewUniqueClass(this));
+        }
+        return classes.join(' ');
+    },
+
+    _onItemActionsMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>): void {
+        if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this) && !this._itemActionsMenuId) {
+            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
+            this._hoverFreezeController.startFreezeHoverTimeout(itemKey, itemIndex);
+        }
+    },
+
     _itemMouseEnter(event: SyntheticEvent<MouseEvent>, itemData: CollectionItem<Model>, nativeEvent: Event): void {
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(itemData);
+        }
+        if (!itemData['[Controls/_display/GroupItem]'] && !itemData['[Controls/_display/SearchSeparator]']) {
+            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
+
+            if (_private.needHoverFreezeController(this) && !this._itemActionsMenuId) {
+                if (!_private.hasHoverFreezeController(this)) {
+                    _private.initHoverFreezeController(this);
+                }
+                this._hoverFreezeController.startFreezeHoverTimeout(itemKey, itemIndex);
+            }
         }
         this._notify('itemMouseEnter', [itemData.item, nativeEvent]);
     },
 
     _itemMouseMove(event, itemData, nativeEvent) {
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
+        const hoverFreezeController = this._hoverFreezeController;
         if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
-            !this._itemActionsMenuId) {
+            !this._itemActionsMenuId &&
+            (!hoverFreezeController || hoverFreezeController.getCurrentItemKey() === null)) {
             _private.addShowActionsClass(this);
         }
 
@@ -5564,11 +5677,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._dndListController && this._dndListController.isDragging()) {
             this._notify('draggingItemMouseMove', [itemData, nativeEvent]);
         }
+        if (hoverFreezeController) {
+            const itemKey = _private.getPlainItemContents(itemData).getKey();
+            const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
+            hoverFreezeController.setDelayedHoverItem(itemKey, itemIndex);
+        }
     },
     _itemMouseLeave(event, itemData, nativeEvent) {
         this._notify('itemMouseLeave', [itemData.item, nativeEvent]);
         if (this._dndListController) {
             this._unprocessedDragEnteredItem = null;
+        }
+        if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
+            this._hoverFreezeController.startUnfreezeHoverTimeout(nativeEvent);
         }
     },
     _sortingChanged(event, propName) {
@@ -5940,8 +6061,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _shouldDisplayTopLoadingIndicator(): boolean {
         return this._loadToDirectionInProgress
-           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up'
-           :  this._loadingIndicatorState === 'up';
+           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull
+           :  this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull;
     },
 
     _shouldDisplayMiddleLoadingIndicator(): boolean {
@@ -5955,7 +6076,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const shouldDisplayDownIndicator = this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
         return this._loadToDirectionInProgress
            ? this._showLoadingIndicator && shouldDisplayDownIndicator
-           :  shouldDisplayDownIndicator
+           :  shouldDisplayDownIndicator;
     },
 
     _shouldDisplayPortionedSearch(): boolean {
@@ -5970,7 +6091,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             hasPaging: !!this._pagingVisible,
             loadingIndicatorState: indicatorState,
             theme: this._options.theme,
-            isPortionedSearchInProgress: !!this._portionedSearchInProgress
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress,
+            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull
         });
     },
 
@@ -6033,6 +6155,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _isPagingPadding(): boolean {
         return !(detection.isMobileIOS || !this._isPagingPaddingFromOptions());
+    },
+
+    /**
+     * Подписка на событие mouseMove внутри всего списка, а не только внутри item
+     * @param event
+     * @private
+     */
+    _onListMouseMove(event): void {
+        // Использовать itemMouseMove тут нельзя, т.к. отслеживать перемещение мышки надо вне itemsContainer
+        if (_private.hasHoverFreezeController(this) && _private.isAllowedHoverFreeze(this)) {
+            this._hoverFreezeController.restartUnfreezeHoverTimeout(event);
+        }
     },
 
     _onMouseMove(event): void {

@@ -277,6 +277,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             contentClasses += ` controls-ListView__itemContent_dragging_theme-${theme}`;
         }
 
+        contentClasses += ' js-controls-ListView__measurableContainer';
+
         return contentClasses;
     }
 

@@ -4541,7 +4541,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
-         // Предполагаем, что контейнер содержит класс js-controls-ItemActions__swipeMeasurementContainer
+         // Предполагаем, что контейнер содержит класс js-controls-ListView__measurableContainer
          it('should correctly calculate row size for list', () => {
             // fake HTMLElement
             const fakeElement = {
@@ -4557,7 +4557,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей таблицы при отображении опций свайпа
-         // Предполагаем, что сам контейнер не содержит класс js-controls-ItemActions__swipeMeasurementContainer,
+         // Предполагаем, что сам контейнер не содержит класс js-controls-ListView__measurableContainer,
          // а его потомки содержат
          it('should correctly calculate row size for grid', () => {
             // fake HTMLElement
@@ -6416,12 +6416,12 @@ define([
           let baseControl,  testCases;
 
           const getErrorMsg = (index, caseData) => `Test case ${index} failed. Expected ${caseData[4]}. ` +
-              `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]},
+              `Params: { _loadingIndicatorState: ${caseData[0]}, _attachLoadTopTriggerToNull: ${caseData[1]},
               _loadToDirectionInProgress: ${caseData[2]}, _showLoadingIndicator: ${caseData[3]} }.`;
 
           const checkCase = (index, caseData, method) => {
              baseControl._loadingIndicatorState = caseData[0];
-             baseControl.__needShowEmptyTemplate = () => caseData[1];
+             baseControl._attachLoadTopTriggerToNull = caseData[1];
              baseControl._loadToDirectionInProgress = caseData[2];
              baseControl._showLoadingIndicator = caseData[3];
              assert.equal(method.apply(baseControl), caseData[4], getErrorMsg(index, caseData));
@@ -6433,19 +6433,19 @@ define([
           });
 
           it('_shouldDisplayTopLoadingIndicator', () => {
-             // indicatorState, __needShowEmptyTemplate, _loadToDirectionInProgress, _showLoadingIndicator, expected
+             // indicatorState, _attachLoadTopTriggerToNull, _loadToDirectionInProgress, _showLoadingIndicator, expected
              testCases = [
                 ['up',   true,  true,  true,  true],
-                ['up',   false, true,  false, false],
+                ['up',   true,  true,  false, true],
                 ['up',   false, false, true,  true],
                 ['up',   false, false, true,  true],
 
-                ['down', true,  true,  true,  false],
+                ['down', true,  true,  true,  true],
                 ['down', false, true,  false, false],
                 ['down', false, false, true,  false],
                 ['down', false, false, true,  false],
 
-                ['all',  true,  true,  true,  false],
+                ['all',  true,  true,  true,  true],
                 ['all',  false, true,  false, false],
                 ['all',  false, false, true,  false],
                 ['all',  false, false, true,  false],
@@ -6591,7 +6591,10 @@ define([
             };
             const instance = correctCreateBaseControl(cfg);
             const enterItemData = {
-               item: {}
+               item: {},
+               getContents: () => ({
+                  getKey: () => null
+               })
             };
             const enterNativeEvent = {};
             let called = false;
@@ -7138,7 +7141,12 @@ define([
                const dragObject = {
                   entity: {}
                };
-               const itemData = { item: {} };
+               const itemData = {
+                  item: {},
+                  getContents: () => ({
+                     getKey: () => null
+                  })
+               };
                baseControl._listViewModel.setDragItemData = () => {};
                baseControl._listViewModel.getItemDataByItem = () => { return { item: {} };};
                baseControl._dndListController = {

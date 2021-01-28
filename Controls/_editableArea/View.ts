@@ -3,7 +3,6 @@ import Deferred = require('Core/Deferred');
 import {editing as constEditing} from 'Controls/list';
 import template = require('wml!Controls/_editableArea/View');
 import buttonsTemplate = require('Controls/_editableArea/Templates/Buttons');
-import {autoEdit, toolbarVisible, backgroundStyleClass} from './ActualAPI';
 
 'use strict';
 var
@@ -96,9 +95,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    _isStartEditing: false,
 
    _beforeMount: function (newOptions) {
-      this._isEditing = autoEdit(newOptions.autoEdit, newOptions.editWhenFirstRendered);
-      this._toolbarVisible = toolbarVisible(newOptions.toolbarVisible, newOptions.toolbarVisibility);
-      this._backgroundStyleClass = backgroundStyleClass(newOptions.theme, newOptions.backgroundStyle, newOptions.style);
+      this._isEditing = newOptions.autoEdit;
       this._editObject = newOptions.editObject;
    },
    /* В режиме редактирования создается клон, и ссылка остается на старый объект. Поэтому при изменении опций копируем ссылку
@@ -107,8 +104,6 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       if (newOptions.editObject !== this._options.editObject) {
          this._editObject = newOptions.editObject;
       }
-      this._toolbarVisible = toolbarVisible(newOptions.toolbarVisible, newOptions.toolbarVisibility);
-      this._backgroundStyleClass = backgroundStyleClass(newOptions.theme, newOptions.backgroundStyle, newOptions.style);
    },
    _afterUpdate: function () {
       if (this._isStartEditing) {
@@ -124,7 +119,7 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
    },
 
    _onDeactivatedHandler: function () {
-      if (!this._options.readOnly && this._isEditing && !this._toolbarVisible) {
+      if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisible) {
          this.commitEdit();
       }
    },

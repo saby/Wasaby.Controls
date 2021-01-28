@@ -191,8 +191,11 @@
     <div class="controls-BaseControl"
          on:sortingChanged="_sortingChanged()"
          on:mouseenter="_mouseEnter()"
-         on:mouseleave="_mouseLeave()">
+         on:mouseleave="_mouseLeave()"
+         on:mouseMove="_onListMouseMove()">
         <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
+
+        <style name="itemActionsOutsideStyle" data-vdom-ignore="true"></style>
 
         <ws:if data="{{_showContinueSearchButtonDirection === 'up'}}">
             <ws:partial template="continueSearch"/>
@@ -201,8 +204,7 @@
         <ws:if data="{{_listViewModel}}">
             <ws:partial template="loadingIndicator" loadingIndicatorState="up"/>
 
-            <ws:partial template="fullView" name="listView"
-                        attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
+            <ws:partial template="fullView" name="listView" attr:class="{{ _getViewClasses(_addShowActionsClass, _addHoverEnabledClass, _uniqueId) }}"/>
 
             <ws:partial template="loadingIndicator" loadingIndicatorState="down"/>
         </ws:if>
