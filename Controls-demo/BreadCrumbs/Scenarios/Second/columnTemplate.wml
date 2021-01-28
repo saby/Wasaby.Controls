@@ -2,7 +2,7 @@
             attr:class="controls-Grid__row-cell__content_baseline_L"
             itemData="{{itemData}}">
    <ws:contentTemplate>
-      <ws:if data="{{!itemData.item.isNode()}}">
+      <ws:if data="{{!itemData.dispItem.isNode()}}">
          <Controls.decorator:Money value="{{itemData.item[itemData.column.displayProperty]}}"
                                    useGrouping="{{true}}"/>
          <span if="{{itemData.columnIndex === 2}}">шт</span>
