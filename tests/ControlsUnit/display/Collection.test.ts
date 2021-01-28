@@ -2417,44 +2417,6 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
-    describe('.setSelectedItemsAll()', () => {
-        it('should set true for all item', () => {
-            display.setSelectedItemsAll(true);
-            display.each((item) => {
-                assert.strictEqual(item.isSelected(), true);
-            });
-        });
-
-        it('should set false for all item', () => {
-            display.setSelectedItemsAll(false);
-            display.each((item) => {
-                assert.strictEqual(item.isSelected(), false);
-            });
-        });
-
-        it('should selected a filtered item', () => {
-            display.setFilter(() => {
-                return false;
-            });
-            display.setSelectedItemsAll(true);
-            display.setFilter(() => {
-                return true;
-            });
-            display.each((item) => {
-                assert.strictEqual(item.isSelected(), true);
-            });
-        });
-
-        it('should fired the one event onchange', () => {
-            let i = 0;
-            display.subscribe('onCollectionChange', () => {
-                i++;
-            });
-            display.setSelectedItemsAll(true);
-            assert.strictEqual(i, 8);
-        });
-    });
-
     describe('.setSelectedItems()', () => {
         it('should selected was given items', () => {
             display.setSelectedItems(
@@ -2471,22 +2433,6 @@ describe('Controls/_display/Collection', () => {
             });
         });
 
-        it('should deselect was given items', () => {
-            display.setSelectedItemsAll(true);
-            display.setSelectedItems(
-                [display.at(0), display.at(1)],
-                false
-            );
-            const deselect = [display.at(0), display.at(1)];
-            display.each((item) => {
-                if (deselect.indexOf(item) !== -1) {
-                    assert.isFalse(item.isSelected());
-                } else {
-                    assert.isTrue(item.isSelected());
-                }
-            });
-        });
-
         it('set selected silent', () => {
             const notifyLaterSpy = spy(display, '_notifyLater');
 
@@ -2497,31 +2443,6 @@ describe('Controls/_display/Collection', () => {
             );
 
             assert.isFalse(notifyLaterSpy.called);
-        });
-    });
-
-    describe('.invertSelectedItemsAll()', () => {
-        it('should invert selection', () => {
-            display.at(0).setSelected(true);
-            display.at(1).setSelected(false);
-            display.at(2).setSelected(true);
-            display.invertSelectedItemsAll();
-            assert.strictEqual(display.at(0).isSelected(), false);
-            assert.strictEqual(display.at(1).isSelected(), true);
-            assert.strictEqual(display.at(2).isSelected(), false);
-        });
-
-        it('should invert selection for a filtered items', () => {
-            display.setFilter(() => {
-                return false;
-            });
-            display.invertSelectedItemsAll();
-            display.setFilter(() => {
-                return true;
-            });
-            display.each((item) => {
-                assert.strictEqual(item.isSelected(), true);
-            });
         });
     });
 

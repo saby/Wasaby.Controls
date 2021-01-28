@@ -2116,36 +2116,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._setSelectedItems(items, selected, silent);
     }
 
-    /**
-     * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и
-     * группировки).
-     * @param {Boolean} selected Элемент выбран.
-     * @return {Array}
-     */
-    setSelectedItemsAll(selected: boolean): void {
-        this._setSelectedItems(this._getItems(), selected);
-    }
-
-    /**
-     * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и
-     * группировки).
-     */
-    invertSelectedItemsAll(): void {
-        const items = this._getItems();
-        for (let i = items.length - 1; i >= 0; i--) {
-            items[i].setSelected(!items[i].isSelected(), true);
-        }
-        this._notifyBeforeCollectionChange();
-        this._notifyCollectionChange(
-            IObservable.ACTION_RESET,
-            items,
-            0,
-            items,
-            0
-        );
-        this._notifyAfterCollectionChange();
-    }
-
     // endregion
 
     // region Drag-N-Drop
