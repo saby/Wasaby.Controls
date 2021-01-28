@@ -50,11 +50,14 @@ export default class TreeGridCollection<
         super(options);
         GridMixin.call(this, options);
 
-        // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую коллекцию TreeGrid.
-        //  Если сразу в Tree положим, то все разломаем
-        this.addFilter(
-            (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
-        );
+        // Для поисковой модели этот фильтр не нужен, т.к. он будет скрывать дочерние элементы хлебной крошки
+        if (options.addTreeFilter !== false) {
+            // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую коллекцию TreeGrid.
+            //  Если сразу в Tree положим, то все разломаем
+            this.addFilter(
+               (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
+            );
+        }
     }
 
     // TODO duplicate code with GridCollection. Нужно придумать как от него избавиться.

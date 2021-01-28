@@ -17,9 +17,7 @@ export default class SearchGridCollection<S extends Model = Model, T extends Sea
    protected _$searchBreadcrumbsItemTemplate: TemplateFunction;
 
    constructor(options: any) {
-      super(options);
-      // TODO в TreeGridCollection не нужно добавлять фильтр. Вообще от триГрида нам нужен только отступ слева, возможно стоит наследоваться от грида
-      this._$filter = [];
+      super({ ...options, addTreeFilter: false });
    }
 
    getSearchBreadcrumbsItemTemplate(): TemplateFunction {
