@@ -510,8 +510,13 @@ export default class Controller {
                 })
                 .catch((error) => {
                     if (!error.isCanceled && !error.canceled) {
+                        // Если упала ошибка при загрузке в каком-то направлении,
+                        // то контроллер навигации сбрасывать нельзя,
+                        // Т.к. в этом направлении могут продолжить загрухзку
+                        if (!direction) {
+                            this._navigationController = null;
+                        }
                         this._loadPromise = null;
-                        this._navigationController = null;
                         this._processQueryError(error);
                     }
                     return error;
@@ -581,7 +586,7 @@ export default class Controller {
         direction: Direction): LoadPromiseResult {
         // dataLoadCallback не надо вызывать если загружают узел,
         // определяем это по тому, что переданный ключ в метод load не соответствует текущему корню
-        const needCallDataLoadCallback = key === this._root || direction;
+        const loadedInCurrentRoot = key === this._root;
 
         let methodResult;
         let dataLoadCallbackResult;
@@ -589,14 +594,12 @@ export default class Controller {
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
         this._loadError = null;
 
-        if (needCallDataLoadCallback) {
-            if (this._dataLoadCallback) {
-                dataLoadCallbackResult = this._dataLoadCallback(result, direction);
-            }
+        if (loadedInCurrentRoot && this._dataLoadCallback) {
+            dataLoadCallbackResult = this._dataLoadCallback(result, direction);
+        }
 
-            if (this._dataLoadCallbackFromOptions) {
-                this._dataLoadCallbackFromOptions(result, direction);
-            }
+        if ((loadedInCurrentRoot || direction) && this._dataLoadCallbackFromOptions) {
+            this._dataLoadCallbackFromOptions(result, direction);
         }
 
         if (dataLoadCallbackResult instanceof Promise) {
