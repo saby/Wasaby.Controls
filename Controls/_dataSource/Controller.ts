@@ -24,6 +24,7 @@ import {isEqual} from 'Types/object';
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
+import {error} from "../dataSource";
 
 export interface IControllerState {
     keyProperty: string;
@@ -624,6 +625,9 @@ export default class Controller {
             this._options.dataLoadErrback(queryError);
         }
         this._loadError = queryError;
+        // Выводим ошибку в консоль, иначе из-за того, что она произошла в Promise,
+        // у которого есть обработка ошибок через catch, никто о ней не узнает
+        Logger.error('dataSource/Controller load error', this, queryError);
         return queryError;
     }
 
