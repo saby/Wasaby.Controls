@@ -184,11 +184,22 @@ define('Controls/Application',
             } else {
                this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
             }
-
             this._hoverClass = _private.isHover(this._touchClass, this._dragClass) ? 'ws-is-hover' : 'ws-is-no-hover';
          },
          _updateThemeClass: function(cfg) {
             this._themeClass = 'Application-body_theme-' + cfg.theme;
+         },
+         _updateIsAdaptiveClass: function(cfg) {
+            if (cfg.isAdaptive !== this._options.isAdaptive) {
+               var meta = document.getElementsByTagName('head')[0].querySelector('meta[name="viewport"]');
+               if (!meta) {
+                  meta = document.createElement('meta');
+                  meta.name = 'viewport';
+                  document.getElementsByTagName('head')[0].appendChild(meta);
+               }
+               meta.setAttribute('content', cfg.isAdaptive ? 'width=device-width, initial-scale=1' : 'width=1024');
+               this._isAdaptiveClass = cfg.isAdaptive ? 'ws-is-adaptive' : '';
+            }
          },
 
          _dragStartHandler: function() {
@@ -259,7 +270,6 @@ define('Controls/Application',
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
 
-
             // Чтобы при загрузке слоя совместимости, понять нужно ли грузить провайдеры(extensions, userInfo, rights),
             // положим опцию из Application в constants. Иначе придется использовать глобальную переменную.
             // TODO: Удалить этот код отсюда по задае:
@@ -275,6 +285,7 @@ define('Controls/Application',
             }
             this._updateClasses();
             this._updateThemeClass(cfg);
+            this._updateIsAdaptiveClass(cfg);
 
             SettingsController.setController(cfg.settingsController);
 
@@ -326,6 +337,7 @@ define('Controls/Application',
             }
             this._updateClasses();
             this._updateThemeClass(cfg);
+            this._updateIsAdaptiveClass(cfg);
          },
 
          _afterUpdate: function(oldOptions) {
