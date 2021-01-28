@@ -46,7 +46,7 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
     }
 
     get key(): TItemKey {
-        return this.getLast()?.getContents()?.getKey();
+        return this.getLast().getContents().getKey();
     }
 
     constructor(options?: IOptions<T>) {
