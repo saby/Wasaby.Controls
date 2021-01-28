@@ -684,7 +684,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _getSelectedItems(): object[] {
-        const selectedItems = this._listModel.getSelectedItems().map((item) => {
+        const selectedItems = this._getSelectionController().getSelectedItems().map((item) => {
             return item.getContents();
         }).reverse();
         if (!selectedItems.length && this._options.emptyText) {

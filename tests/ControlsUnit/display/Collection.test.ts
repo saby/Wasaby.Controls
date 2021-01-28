@@ -2398,54 +2398,6 @@ describe('Controls/_display/Collection', () => {
         });
     });
 
-    describe('.getSelectedItems()', () => {
-        it('should return one selected item', () => {
-            display.at(0).setSelected(true);
-            const items = display.getSelectedItems();
-            assert.strictEqual(items[0], display.at(0));
-            assert.strictEqual(items.length, 1);
-        });
-
-        it('should return two selected items', () => {
-            display.at(0).setSelected(true);
-            display.at(1).setSelected(true);
-            const items = display.getSelectedItems();
-            for (let i = 0; i < items.length; i++) {
-                assert.notEqual(display.getIndex(items[i]), -1);
-            }
-            assert.strictEqual(items.length, 2);
-        });
-    });
-
-    describe('.setSelectedItems()', () => {
-        it('should selected was given items', () => {
-            display.setSelectedItems(
-                [display.at(0), display.at(1)],
-                true
-            );
-            const selected = [display.at(0), display.at(1)];
-            display.each((item) => {
-                if (selected.indexOf(item) !== -1) {
-                    assert.isTrue(item.isSelected());
-                } else {
-                    assert.isFalse(item.isSelected());
-                }
-            });
-        });
-
-        it('set selected silent', () => {
-            const notifyLaterSpy = spy(display, '_notifyLater');
-
-            display.setSelectedItems(
-               [display.at(0), display.at(1)],
-               true,
-               true
-            );
-
-            assert.isFalse(notifyLaterSpy.called);
-        });
-    });
-
     describe('.subscribe()', () => {
         const outsideItems = [1, 3];
         const getItems = () => [1, 2, 3, 4];

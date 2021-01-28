@@ -806,7 +806,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          it('getMultiSelectClassList onhover selected', function() {
             let gridViewModel = new gridMod.GridViewModel(cfg);
             gridViewModel._options.multiSelectVisibility = 'onhover';
-            gridViewModel.setSelectedItems([gridViewModel.getItemById(123, 'id')], true);
+            gridViewModel.getItemById(123, 'id').setSelected(true);
             let data = gridViewModel.getItemDataByItem(gridViewModel.getItemById('123', 'id'));
             assert.equal(data.multiSelectClassList, 'js-controls-ListView__checkbox js-controls-ListView__notEditable controls-List_DragNDrop__notDraggable js-controls-ColumnScroll__notDraggable controls-CheckboxMarker_inList_theme-default controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default');
          });
@@ -1081,7 +1081,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
                gridViewModel = new gridMod.GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setActiveItem', 'appendItems', 'prependItems',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'setSelectedItems', 'getCurrentIndex',
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getCurrentIndex',
                   'createItem', 'mergeItems', 'toggleGroup', 'getMarkedKey','getStartIndex',
                   'getActiveItem', 'destroy', 'nextModelVersion', 'isEditing'],
                callStackMethods = [];
