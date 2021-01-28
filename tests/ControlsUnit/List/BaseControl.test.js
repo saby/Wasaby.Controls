@@ -3368,7 +3368,7 @@ define([
                };
                let beginEditStarted = false;
 
-               ctrl.beginEdit = () => {
+               ctrl._beginEdit = () => {
                   beginEditStarted = true;
                   return Promise.resolve();
                };

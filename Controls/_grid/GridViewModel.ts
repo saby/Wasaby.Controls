@@ -355,13 +355,15 @@ var
                 classLists.base += ' controls-Grid__cell_fit';
             }
 
-            if (current.isEditing()) {
-                const editingBackgroundStyle = current.editingBackgroundStyle || 'default';
-                classLists.base += ` controls-Grid__row-cell-editing_theme-${theme}`;
-                classLists.base += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
-            } else {
-                let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
-                classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
+            if (self.getEditingConfig()?.mode !== 'cell') {
+                if (current.isEditing()) {
+                    const editingBackgroundStyle = current.editingBackgroundStyle || 'default';
+                    classLists.base += ` controls-Grid__row-cell-editing_theme-${theme}`;
+                    classLists.base += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme}`;
+                } else {
+                    let backgroundHoverStyle = current.hoverBackgroundStyle || 'default';
+                    classLists.base += ` controls-Grid__row-cell-background-hover-${backgroundHoverStyle}_theme-${theme}`;
+                }
             }
 
             if (current.columnScroll && !current.isEditing()) {
@@ -1673,14 +1675,22 @@ var
 
             current.markerPosition = this._options.markerPosition || 'left';
             current.shouldDisplayMarker = (columnIndex): boolean => {
-                const isShouldDisplayMarker = (current.markerVisibility !== 'hidden' &&
-                    !current.isEditing() &&
-                    current.isMarked());
-                if (current.markerPosition === 'right') {
-                    return isShouldDisplayMarker && columnIndex === current.columns.length - 1;
-                } else {
-                    return isShouldDisplayMarker && columnIndex === 0;
+                const isShouldDisplayMarker = (current.markerVisibility !== 'hidden' && current.isMarked());
+                if (isShouldDisplayMarker) {
+                    if (current.isEditing() && (
+                        self.getEditingConfig()?.mode !== 'cell' || (
+                            self.getDisplay().find((cItem) => cItem.isEditing()).getEditingColumnIndex() === 0
+                        ))
+                    ) {
+                        return false;
+                    }
+                    if (current.markerPosition === 'right') {
+                        return isShouldDisplayMarker && columnIndex === current.columns.length - 1;
+                    } else {
+                        return isShouldDisplayMarker && columnIndex === 0;
+                    }
                 }
+                return false;
             };
 
             current.getMarkerClasses = (markerClassName = 'default') => `controls-GridView__itemV_marker controls-GridView__itemV_marker_theme-${current.theme}
@@ -1855,7 +1865,6 @@ var
                         columnIndex: current.columnIndex,
                         key: current.key,
                         getPropValue: current.getPropValue,
-                        isEditing: current.isEditing,
                         isActive: current.isActive,
                         showEditArrow: current.showEditArrow,
                         itemPadding: current.itemPadding,
@@ -1879,6 +1888,39 @@ var
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
 
+                currentColumn.isSingleCellEditingMode = self.getEditingConfig()?.mode === 'cell';
+
+                currentColumn.isEditing = () => {
+                    if (currentColumn.isSingleCellEditingMode) {
+                        if (!current.isEditing()) {
+                            return false
+                        }
+                        if (!current.dispItem.isAdd) {
+                            return current.dispItem.getEditingColumnIndex() === (currentColumn.columnIndex - +self._hasMultiSelectColumn())
+                        }
+                        const firstEditableColumn = self._options.columns.find((c) => c.editable !== false);
+                        return currentColumn.columnIndex === self._options.columns.indexOf(firstEditableColumn);
+                    } else {
+                        return current.isEditing();
+                    }
+                };
+
+                currentColumn.getEditingClassList = (tmplIsEditable) => {
+                  let classList = '';
+                  if (self.getEditingConfig()?.mode === 'cell') {
+                      classList += `controls-Grid__row-cell_editing-mode-single-cell_theme-${current.theme}`;
+                      if (currentColumn.isEditing()) {
+                          classList += ` controls-Grid__row-cell_single-cell_editing_theme-${current.theme}`;
+                      } else {
+                          if (currentColumn.column.editable !== false && tmplIsEditable !== false) {
+                              classList += ` controls-Grid__row-cell_single-cell_editable_theme-${current.theme}`;
+                          } else {
+                              classList += ` js-controls-ListView__notEditable controls-Grid__row-cell_single-cell_not-editable_theme-${current.theme}`;
+                          }
+                      }
+                  }
+                  return classList;
+                };
 
                 currentColumn.getColspanedPaddingClassList = (columnData, isColspaned) => {
                     /**
@@ -2178,6 +2220,13 @@ var
 
                 if (this._options.rowSeparatorSize) {
                     version = 'WITH_SEPARATOR_' + version;
+                }
+            }
+
+            if (this.isEditing() && this.getEditingConfig()?.mode === 'cell') {
+                const collectionItem = this.getDisplay().getItemBySourceKey(key);
+                if (collectionItem.isEditing()) {
+                    version = `EDITING-COLUMN_${collectionItem.getEditingColumnIndex()}_${version}`;
                 }
             }
 

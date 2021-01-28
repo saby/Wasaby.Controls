@@ -304,6 +304,10 @@ var ListView = BaseControl.extend(
                 return true;
             }
             return false;
+        },
+
+        _onEditingItemClick(e): void {
+            e.stopPropagation();
         }
     });
 
