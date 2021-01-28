@@ -191,8 +191,8 @@ define('Controls/Application',
          _updateThemeClass: function(cfg) {
             this._themeClass = 'Application-body_theme-' + cfg.theme;
          },
-         _updateIsAdaptiveClass: function(cfg) {
-            if (cfg.isAdaptive !== this._options.isAdaptive) {
+         _initIsAdaptiveClass: function(cfg) {
+            if (cfg.isAdaptive) {
                var HeadAPI = aPage.Head.getInstance();
                var tagId = HeadAPI.getTag('meta', { name: 'viewport', content: 'width=1024' });
                if (tagId && !(tagId instanceof Array)) {
@@ -200,9 +200,11 @@ define('Controls/Application',
                }
                HeadAPI.createTag('meta', {
                   name: 'viewport',
-                  content: cfg.isAdaptive ? 'width=device-width, initial-scale=1' : 'width=1024'
+                  content: 'width=device-width, initial-scale=1'
                });
-               this._isAdaptiveClass = cfg.isAdaptive ? 'ws-is-adaptive' : '';
+               this._isAdaptiveClass = 'ws-is-adaptive';
+            } else {
+               this._isAdaptiveClass = '';
             }
          },
 
@@ -289,7 +291,7 @@ define('Controls/Application',
             }
             this._updateClasses();
             this._updateThemeClass(cfg);
-            this._updateIsAdaptiveClass(cfg);
+            this._initIsAdaptiveClass(cfg);
 
             SettingsController.setController(cfg.settingsController);
 
@@ -341,7 +343,6 @@ define('Controls/Application',
             }
             this._updateClasses();
             this._updateThemeClass(cfg);
-            this._updateIsAdaptiveClass(cfg);
          },
 
          _afterUpdate: function(oldOptions) {
