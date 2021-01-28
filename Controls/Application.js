@@ -19,6 +19,7 @@ define('Controls/Application',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
       'Controls/context',
+      'Application/Page',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -70,7 +71,8 @@ define('Controls/Application',
       HotKeys,
       dragnDrop,
       TimeTesterInv,
-      cContext) {
+      cContext,
+      aPage) {
       'use strict';
 
       var _private;
@@ -191,13 +193,15 @@ define('Controls/Application',
          },
          _updateIsAdaptiveClass: function(cfg) {
             if (cfg.isAdaptive !== this._options.isAdaptive) {
-               var meta = document.getElementsByTagName('head')[0].querySelector('meta[name="viewport"]');
-               if (!meta) {
-                  meta = document.createElement('meta');
-                  meta.name = 'viewport';
-                  document.getElementsByTagName('head')[0].appendChild(meta);
+               var HeadAPI = aPage.Head.getInstance();
+               var tagId = HeadAPI.getTag('meta', { name: 'viewport', content: 'width=1024' });
+               if (tagId && !(tagId instanceof Array)) {
+                  HeadAPI.deleteTag(tagId);
                }
-               meta.setAttribute('content', cfg.isAdaptive ? 'width=device-width, initial-scale=1' : 'width=1024');
+               HeadAPI.createTag('meta', {
+                  name: 'viewport',
+                  content: cfg.isAdaptive ? 'width=device-width, initial-scale=1' : 'width=1024'
+               });
                this._isAdaptiveClass = cfg.isAdaptive ? 'ws-is-adaptive' : '';
             }
          },
@@ -409,11 +413,11 @@ define('Controls/Application',
 
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
             this._dragnDropController.updateDraggingTemplate(draggingTemplateOptions, draggingTemplate);
-        },
+         },
 
          _removeDraggingTemplate: function(event) {
             this._dragnDropController.removeDraggingTemplate();
-        },
+         },
 
          _getResourceUrl: function(str) {
             return getResourceUrl(str);
