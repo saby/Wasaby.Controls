@@ -1,0 +1,5 @@
+<ws:partial
+   template="{{template}}"
+   scope="{{templateOptions}}"
+   prefetchPromise="{{ _options._prefetchPromise }}"
+   slidingPanelPosition="{{slidingPanelPosition}}"/>

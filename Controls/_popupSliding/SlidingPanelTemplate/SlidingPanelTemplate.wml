@@ -1,20 +1,21 @@
 <ws:template name="controller">
-   <Controls._popupCurtain.Controller
-      attr:class="controls-Curtain__controller"
+   <Controls._popupSliding.ControllerButton
+      attr:class="controls-SlidingPanel__controller"
       on:dragMove="_dragMoveHandler()"
       on:dragEnd="_dragEndHandler()"/>
 </ws:template>
-<div class="controls-Curtain controls-Curtain-theme_{{_options.theme}}
-            controls-Curtain__box-shadow-theme_{{_options.theme}}
-            controls-Curtain__position-{{_options.position}}-theme_{{_options.theme}}
-            {{ _options.contrastBackground ? 'controls-Curtain__contrastBackground-theme_' + _options.theme }}">
-   <ws:if data="{{ _options.showControlButton && _options.position === 'bottom' }}">
+<div class="controls-SlidingPanel controls-SlidingPanel-theme_{{_options.theme}}
+            controls-SlidingPanel__box-shadow-theme_{{_options.theme}}
+            controls-SlidingPanel__position-{{_position}}-theme_{{_options.theme}}
+            {{ _options.contrastBackground ? 'controls-SlidingPanel__contrastBackground-theme_' + _options.theme }}">
+   <ws:if data="{{ _options.controlButtonVisibility && _position === 'bottom' }}">
       <ws:partial
          template="controller"/>
    </ws:if>
    <Controls.scroll:Container
       name="scrollContainer"
-      attr:class="controls-Curtain__scrollContainer"
+      attr:class="controls-SlidingPanel__scrollContainer
+                  controls-SlidingPanel__scroll-{{ _scrollAvailable ? 'available' : 'disabled' }}"
       topShadowVisibility="hidden"
       bottomShadowVisibility="hidden"
       on:touchstart="_touchStartHandler()"
@@ -31,7 +32,7 @@
          </ws:partial>
       </div>
    </Controls.scroll:Container>
-   <ws:if data="{{ _options.showControlButton && _options.position === 'top' }}">
+   <ws:if data="{{ _options.controlButtonVisibility && _position === 'top' }}">
       <ws:partial
          template="controller"/>
    </ws:if>

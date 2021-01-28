@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_popupCurtain/Controller/Controller';
+import * as template from 'wml!Controls/_popupSliding/ControllerButton/ControllerButton';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IDragObject} from 'Controls/_dragnDrop/Container';
+import {IDragObject} from 'Controls/dragnDrop';
 
 export default class Template extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -20,5 +20,5 @@ export default class Template extends Control<IControlOptions> {
         this._notify('dragMove', [dragObject]);
     }
 
-    static _theme: string[] = ['Controls/popupCurtain'];
+    static _theme: string[] = ['Controls/popupSliding'];
 }

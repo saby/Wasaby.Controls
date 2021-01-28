@@ -38,7 +38,7 @@ export {default as StackOpener} from './_popup/PopupHelper/Stack';
 export {default as StickyOpener} from './_popup/PopupHelper/Sticky';
 export {default as DialogOpener} from './_popup/PopupHelper/Dialog';
 export {default as NotificationOpener} from './_popup/PopupHelper/Notification';
-export {default as CurtainOpener} from './_popup/PopupHelper/Curtain';
+export {default as SlidingPanelOpener} from './_popup/PopupHelper/SlidingPanel';
 
 export {default as IPopup, IPopupOptions, IPopupItem, IPopupSizes, IPopupPosition, IEventHandlers, IPopupItemInfo} from './_popup/interface/IPopup';
 export {IBasePopupOptions, IBaseOpener} from './_popup/interface/IBaseOpener';
@@ -51,7 +51,12 @@ export {IPreviewerOptions, IPreviewer} from './_popup/interface/IPreviewer';
 export {IInfoBoxOptions, IInfoBox} from './_popup/interface/IInfoBox';
 export {IInfoBoxPopupOptions, IInfoBoxOpener} from './_popup/interface/IInfoBoxOpener';
 export {IEditOptions, IEditOpener} from './_popup/interface/IEdit';
-export {ICurtainPopupOptions} from './_popup/interface/ICurtain';
+export {
+    ISlidingPanelPopupOptions,
+    ISlidingPanel,
+    ISlidingPanelPosition,
+    SLIDING_PANEL_POSITION
+} from './_popup/interface/ISlidingPanel';
 
 export {isVDOMTemplate} from './_popup/utils/isVdomTemplate';
 

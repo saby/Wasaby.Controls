@@ -1,23 +1,40 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_popupCurtain/Template/Template';
+import {Control, TemplateFunction} from 'UI/Base';
+import * as template from 'wml!Controls/_popupSliding/SlidingPanelTemplate/SlidingPanelTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject} from 'Controls/dragnDrop';
-import {ICurtainTemplateOptions} from 'Controls/_popupCurtain/interface/ICurtainTemplate';
+import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISlidingPanelTemplate';
 
 /**
  * Интерфейс для шаблона попапа-шторки.
  *
- * @interface Controls/_popupCurtain/Template
+ * @interface Controls/_popupSliding/SlidingPanelTemplate
  * @implements Controls/_interface/IContrastBackground
  * @public
  * @author Красильников А.С.
  */
-export default class Template extends Control<ICurtainTemplateOptions> {
+export default class SlidingPanelTemplate extends Control<ISlidingPanelTemplateOptions> {
     protected _template: TemplateFunction = template;
     protected _dragStartScrollHeight: number;
     protected _touchDragOffset: IDragObject['offset'];
-    protected _showScrollContainer: boolean;
-    protected _currentTouchYPosition: number = null;
+    private _currentTouchYPosition: number = null;
+    protected _scrollAvailable: boolean = false;
+    protected _position: string = 'bottom';
+
+    protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
+        this._scrollAvailable = this._isScrollAvailable(options);
+        this._position = options.slidingPanelPosition?.position;
+    }
+
+    protected _beforeUpdate(options: ISlidingPanelTemplateOptions): void {
+        if (options.slidingPanelPosition !== this._options.slidingPanelPosition) {
+            this._scrollAvailable = this._isScrollAvailable(options);
+            this._position = options.slidingPanelPosition?.position;
+        }
+    }
+
+    protected _isScrollAvailable({slidingPanelPosition}: ISlidingPanelTemplateOptions): boolean {
+        return slidingPanelPosition.height === slidingPanelPosition.maxHeight;
+    }
 
     protected _dragEndHandler(): void {
         this._notifyDragEnd();
@@ -25,6 +42,12 @@ export default class Template extends Control<ICurtainTemplateOptions> {
 
     protected _dragMoveHandler(event: SyntheticEvent<Event>, dragObject: IDragObject): void {
         this._notifyDragStart(dragObject.offset);
+    }
+
+    protected _getScrollAvailableHeight(): number {
+        const curtainHeight = this._container.clientHeight;
+        const controllerHeight = this._container.querySelector('.controls-SlidingPanel__controller')?.clientHeight || 0;
+        return curtainHeight - controllerHeight;
     }
 
     /**
@@ -42,8 +65,12 @@ export default class Template extends Control<ICurtainTemplateOptions> {
      * @private
      */
     protected _touchMoveHandler(event: SyntheticEvent<TouchEvent>): void {
+        if (this._scrollAvailable && this._getScrollTop() !== 0) {
+            return;
+        }
         const currentTouchY = event.nativeEvent.changedTouches[0].clientY;
         const offsetY = currentTouchY - this._currentTouchYPosition;
+
         this._currentTouchYPosition = currentTouchY;
 
         // Аналогичный drag'n'drop функционал. Собираем общий offset относительно начальной точки тача.
@@ -67,15 +94,16 @@ export default class Template extends Control<ICurtainTemplateOptions> {
     }
 
     private _notifyDragStart(offset: IDragObject['offset']): void {
+
         /* Запоминаем высоту скролла, чтобы при увеличении проверять на то,
            что не увеличим шторку больше, чем есть контента */
         if (!this._dragStartScrollHeight) {
-            this._dragStartScrollHeight =
-                this._container.querySelector('.controls-Curtain__scrollContainer').clientHeight;
+            this._dragStartScrollHeight = this._getScrollAvailableHeight();
         }
         this._notify('popupDragStart', [
             this._getDragOffsetWithOverflowChecking(offset)
         ], {bubbling: true});
+
     }
 
     protected _notifyDragEnd(): void {
@@ -88,10 +116,10 @@ export default class Template extends Control<ICurtainTemplateOptions> {
         const contentHeight = this._children.customContent.clientHeight;
 
         // В зависимости от позиции высоту шторки увеличивает либо положительный, либо отрицательный сдвиг по оси "y"
-        const realHeightOffset = this._options.position === 'top' ? offsetY : -offsetY;
+        const realHeightOffset = this._position === 'top' ? offsetY : -offsetY;
         const scrollContentOffset = contentHeight - this._dragStartScrollHeight;
         if (realHeightOffset > scrollContentOffset) {
-            offsetY = this._options.position === 'top' ? scrollContentOffset : -scrollContentOffset;
+            offsetY = this._position === 'top' ? scrollContentOffset : -scrollContentOffset;
         }
         return {
             x: dragOffset.x,
@@ -99,12 +127,21 @@ export default class Template extends Control<ICurtainTemplateOptions> {
         };
     }
 
-    static _theme: string[] = ['Controls/popupCurtain'];
-    static getDefaultOptions(): ICurtainTemplateOptions {
+    /**
+     * Получение текущего положения скролла
+     * @return {number}
+     * @private
+     */
+    private _getScrollTop(): number {
+        const scrollableContainer = this._container.querySelector('.controls-Scroll__content');
+        return scrollableContainer && scrollableContainer.scrollTop;
+    }
+
+    static _theme: string[] = ['Controls/popupSliding'];
+    static getDefaultOptions(): Partial<ISlidingPanelTemplateOptions> {
         return {
-            showControlButton: true,
-            contrastBackground: true,
-            position: 'bottom'
+            controlButtonVisibility: true,
+            contrastBackground: true
         };
     }
 }

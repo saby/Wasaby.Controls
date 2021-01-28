@@ -5,7 +5,7 @@
    <div
       on:mousedown="_startDragNDrop()"
       on:touchstart="_startDragNDrop()"
-      class="controls-CurtainController controls-CurtainController-theme_{{ _options.theme }}">
-      <div class="controls-CurtainController__line controls-CurtainController__line-theme_{{ _options.theme }}"></div>
+      class="controls-SlidingPanelController controls-SlidingPanelController-theme_{{ _options.theme }}">
+      <div class="controls-SlidingPanelController__line controls-SlidingPanelController__line-theme_{{ _options.theme }}"></div>
    </div>
 </Controls.dragnDrop:Container>

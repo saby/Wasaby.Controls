@@ -1,24 +1,25 @@
 import {default as BaseController, IDragOffset} from 'Controls/_popupTemplate/BaseController';
-import {IPopupItem, ICurtainPopupOptions, Controller as PopupController} from 'Controls/popup';
-import CurtainStrategy from './Strategy';
+import {IPopupItem, ISlidingPanelPopupOptions, Controller as PopupController, ISlidingPanelPosition} from 'Controls/popup';
+import * as PopupContent from 'wml!Controls/_popupSliding/SlidingPanelContent';
+import SlidingPanelStrategy from './Strategy';
 
-interface ICurtainItem extends IPopupItem {
-    popupOptions: ICurtainPopupOptions;
+interface ISlidingPanelItem extends IPopupItem {
+    popupOptions: ISlidingPanelPopupOptions;
     dragStartHeight: number;
 }
 
 /**
- * Curtain Popup Controller
- * @class Controls/_popupCurtain/Opener/Controller
+ * SlidingPanel Popup Controller
+ * @class Controls/_popupSliding/Opener/Controller
  *
  * @private
  * @extends Controls/_popupTemplate/BaseController
  */
 class Controller extends BaseController {
-    TYPE: string = 'Curtain';
+    TYPE: string = 'SlidingPanel';
     private _destroyPromiseResolvers: Record<string, Function> = {};
 
-    elementCreated(item: ICurtainItem, container: HTMLDivElement): boolean {
+    elementCreated(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
 
         // После создания запускаем анимацию изменив позицию
         const popupOptions = item.popupOptions;
@@ -26,7 +27,7 @@ class Controller extends BaseController {
         return true;
     }
 
-    elementDestroyed({popupOptions, position, id}: ICurtainItem): Promise<null> {
+    elementDestroyed({popupOptions, position, id}: ISlidingPanelItem): Promise<null> {
         // Запускаем анимацию закрытия и откладываем удаление до её окончания
         position[popupOptions.position] = -position.height;
         return new Promise((resolve) => {
@@ -43,20 +44,22 @@ class Controller extends BaseController {
         return true;
     }
 
-    getDefaultConfig(item: ICurtainItem): void|Promise<void> {
+    getDefaultConfig(item: ISlidingPanelItem): void|Promise<void> {
         const popupOptions = item.popupOptions;
-        const animationClass = ` controls-Curtain__animation-position-${popupOptions.position}`;
+        const animationClass = ` controls-SlidingPanel__animation-position-${popupOptions.position}`;
         let className = item.popupOptions.className || '';
 
-        item.position = CurtainStrategy.getPosition(item);
+        item.position = SlidingPanelStrategy.getPosition(item);
 
         if (!className.includes(animationClass)) {
             className += animationClass;
         }
         item.popupOptions.className = className;
+        item.popupOptions.content = PopupContent;
+        item.popupOptions.slidingPanelPosition = this._getPopupTemplatePosition(item);
     }
 
-    popupDragStart(item: ICurtainItem, container: HTMLDivElement, offset: IDragOffset): void {
+    popupDragStart(item: ISlidingPanelItem, container: HTMLDivElement, offset: IDragOffset): void {
         const position = item.position;
         const isFirstDrag = !item.dragStartHeight;
 
@@ -66,7 +69,7 @@ class Controller extends BaseController {
 
         const {minHeight, maxHeight: optsMaxHeight, position: positionOption} = item.popupOptions;
         const heightOffset = positionOption === 'top' ? offset.y : -offset.y;
-        const workspaceHeight = document.body.clientHeight;
+        const workspaceHeight = window.innerHeight;
         const maxHeight = optsMaxHeight > workspaceHeight ? workspaceHeight : optsMaxHeight;
         const newHeight = item.dragStartHeight + heightOffset;
         if (newHeight < minHeight) {
@@ -81,10 +84,27 @@ class Controller extends BaseController {
         } else {
             position.height = newHeight;
         }
+        item.popupOptions.slidingPanelPosition = this._getPopupTemplatePosition(item);
     }
 
-    popupDragEnd(item: ICurtainItem): void {
+    popupDragEnd(item: ISlidingPanelItem): void {
         item.dragStartHeight = null;
+    }
+
+    /**
+     * Определяет опцию slidingPanelPosition для шаблона попапа
+     * @param {IPopupPosition | undefined} position
+     * @param {ISlidingPanelPopupOptions} popupOptions
+     * @return {ISlidingPanelPosition}
+     * @private
+     */
+    private _getPopupTemplatePosition({position, popupOptions}: ISlidingPanelItem): ISlidingPanelPosition {
+        return {
+            minHeight: position.minHeight,
+            maxHeight: position.maxHeight,
+            height: position.height,
+            position: popupOptions.position || 'bottom'
+        };
     }
 }
 

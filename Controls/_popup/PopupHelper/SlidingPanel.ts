@@ -1,13 +1,10 @@
 import Base from 'Controls/_popup/PopupHelper/Base';
 import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
-import {ICurtainPopupOptions} from 'Controls/_popup/interface/ICurtain';
-import {IStickyPopupOptions} from 'Controls/_popup/interface/ISticky';
-import {Logger} from 'UI/Utils';
+import {ISlidingPanelPopupOptions} from 'Controls/_popup/interface/ISlidingPanel';
+const POPUP_CONTROLLER = 'Controls/popupSliding:Controller';
 
-const POPUP_CONTROLLER = 'Controls/popupCurtain:Controller';
-
-class CurtainStaticMethods extends BaseOpener {
-    static openPopup(config: IStickyPopupOptions, popupController: string = POPUP_CONTROLLER): Promise<string> {
+class SlidingPanelOpener extends BaseOpener {
+    static openPopup(config: ISlidingPanelPopupOptions, popupController: string = POPUP_CONTROLLER): Promise<string> {
         return new Promise((resolve) => {
             BaseOpener.requireModules(config, popupController).then((result: ILoadDependencies) => {
                 BaseOpener.showDialog(result.template, config, result.controller).then((popupId: string) => {
@@ -30,18 +27,18 @@ class CurtainStaticMethods extends BaseOpener {
  * @public
  */
 
-export default class Curtain extends Base {
-    _opener: typeof CurtainStaticMethods = CurtainStaticMethods;
+export default class SlidingPanel extends Base {
+    private _opener = SlidingPanelOpener;
 
     /**
      * Метод для открытия шторки.
-     * @function Controls/_popup/PopupHelper/Curtain#open
+     * @function Controls/_popup/PopupHelper/SlidingPanel#open
      * @param {PopupOptions} popupOptions Конфигурация шторки.
      * @example
      * <pre class="brush: js">
-     * import {CurtainOpener} from 'Controls/popup';
+     * import {SlidingPanelOpener} from 'Controls/popup';
      *
-     * this._curtain = new CurtainOpener();
+     * this._curtain = new SlidingPanelOpener();
      *
      * openStack() {
      *     this._curtain.open({
@@ -55,20 +52,20 @@ export default class Curtain extends Base {
      * @see isOpened
      */
 
-    open(popupOptions: ICurtainPopupOptions): void {
+    open(popupOptions: ISlidingPanelPopupOptions): void {
         return super.open(popupOptions, POPUP_CONTROLLER);
     }
 }
 
 /**
  * Метод для закрытия стекового окна.
- * @name Controls/_popup/PopupHelper/Curtain#close
+ * @name Controls/_popup/PopupHelper/SlidingPanel#close
  * @function
  * @example
  * <pre class="brush: js">
- * import {CurtainOpener} from 'Controls/popup';
+ * import {SlidingPanelOpener} from 'Controls/popup';
  *
- * this._curtain = new CurtainOpener();
+ * this._curtain = new SlidingPanelOpener();
  *
  * closeStack() {
  *     this._curtain.close();
@@ -81,13 +78,13 @@ export default class Curtain extends Base {
 
 /**
  * Разрушает экземпляр класса
- * @name Controls/_popup/PopupHelper/Curtain#destroy
+ * @name Controls/_popup/PopupHelper/SlidingPanel#destroy
  * @function
  * @example
  * <pre class="brush: js">
- * import {CurtainOpener} from 'Controls/popup';
+ * import {SlidingPanelOpener} from 'Controls/popup';
  *
- * this._curtain = new CurtainOpener();
+ * this._curtain = new SlidingPanelOpener();
  *
  * _beforeUnmount() {
  *     this._curtain.destroy();
@@ -100,7 +97,7 @@ export default class Curtain extends Base {
  */
 
 /**
- * @name Controls/_popup/PopupHelper/Curtain#isOpened
+ * @name Controls/_popup/PopupHelper/SlidingPanel#isOpened
  * @description Возвращает информацию о том, открыта ли шторка.
  * @function
  * @see open
