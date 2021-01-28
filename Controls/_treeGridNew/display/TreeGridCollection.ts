@@ -25,13 +25,13 @@ export interface IOptions<S extends Model, T extends TreeGridDataRow<S>>
  * @param {TreeItem<T>} item
  */
 function itemIsVisible<T extends Model>(item: TreeItem<T>): boolean  {
-    if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/BreadcrumbsItem]']) {
+    if (item['[Controls/_display/GroupItem]'] || item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]']) {
         return true;
     }
 
     const parent = item.getParent();
     // корневой узел не может быть свернут
-    if (!parent || parent['[Controls/_display/BreadcrumbsItem]'] || parent.isRoot()) {
+    if (!parent || parent['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || parent.isRoot()) {
         return true;
     } else if (!parent.isExpanded()) {
         return false;
@@ -50,11 +50,14 @@ export default class TreeGridCollection<
         super(options);
         GridMixin.call(this, options);
 
-        // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую коллекцию TreeGrid.
-        //  Если сразу в Tree положим, то все разломаем
-        this.addFilter(
-            (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
-        );
+        // Для поисковой модели этот фильтр не нужен, т.к. он будет скрывать дочерние элементы хлебной крошки
+        if (options.addTreeFilter !== false) {
+            // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новую коллекцию TreeGrid.
+            //  Если сразу в Tree положим, то все разломаем
+            this.addFilter(
+               (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
+            );
+        }
     }
 
     // TODO duplicate code with GridCollection. Нужно придумать как от него избавиться.

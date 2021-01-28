@@ -1,12 +1,10 @@
 import { assert } from 'chai';
 
-import Search from 'Controls/_display/itemsStrategy/Search';
 import IItemsStrategy from 'Controls/_display/IItemsStrategy';
-import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { TreeItem } from 'Controls/display';
 import Tree from 'Controls/_display/Tree';
 import { RecordSet } from 'Types/collection';
-import SearchSeparator from 'Controls/_display/SearchSeparator';
+import { SearchStrategy as Search, BreadcrumbsItem, SearchSeparator } from 'Controls/searchBreadcrumbsGrid';
 
 describe('Controls/_display/itemsStrategy/Search', () => {
     class StringContents {
@@ -55,8 +53,6 @@ describe('Controls/_display/itemsStrategy/Search', () => {
         let result: string;
         if (contents instanceof Array) {
             result = `#${contents.join(',')}`;
-        } else if(contents === undefined) {
-            result = '{}';
         } else {
             result = contents;
         }
@@ -159,7 +155,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 '#A,AA,AAD',
                 '#B',
                 '#C',
-                '{}',
+                'search-separator',
                 'd',
                 'e'
             ];
@@ -284,7 +280,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
 
             const result = strategy.items.map((item) => stringifyResult(item.getContents())  + ':' + item.getLevel());
 
-            assert.deepEqual(result, ['#A,AA:0', 'AAa:1', '{}:0', 'b:0']);
+            assert.deepEqual(result, ['#A,AA:0', 'AAa:1', 'search-separator:0', 'b:0']);
         });
 
         it('return breadcrumbs as 1st level parent for leaves', () => {
@@ -591,7 +587,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 '#A,AA,AAD',
                 '#B',
                 '#C',
-                '{}',
+                'search-separator',
                 'd',
                 'e'
             ];
@@ -631,7 +627,7 @@ describe('Controls/_display/itemsStrategy/Search', () => {
                 '#A,AA,AAD',
                 '#B',
                 '#C',
-                '{}',
+                'search-separator',
                 'd',
                 'e'
             ];

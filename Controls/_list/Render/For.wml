@@ -19,6 +19,9 @@
            attr:key="{{ keyPrefix }}-{{ item.key }}"
            attr:class="{{ collection.getViewIterator().isItemAtIndexHidden(index) ? 'controls-ListView__hiddenContainer' }}"
 
+           _onBreadcrumbClick="{{_onBreadcrumbClick}}"
+           _onBreadcrumbItemClick="{{_onBreadcrumbItemClick}}"
+
            on:contextmenu="_onItemContextMenu(item)"
            on:swipe="_onItemSwipe(item)"
            on:longtap="_onItemLongTap(item)"

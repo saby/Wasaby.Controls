@@ -290,6 +290,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
     }
 
+    getSearchValue(): string {
+        return this.getOwner().getSearchValue();
+    }
+
     // endregion
 
     // region MultiSelectAccessibility
@@ -318,6 +322,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();
+    }
+
+    getKeyProperty(): string {
+        return this.getOwner().getKeyProperty();
     }
 
     isMarked(): boolean {

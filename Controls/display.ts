@@ -50,10 +50,11 @@ import {
     ItemsFactory,
     IViewIterator
 } from './_display/Collection';
-export {Collection, ICollectionOptions, IEditingConfig, IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory, IViewIterator};
+export {
+    Collection, ICollectionOptions, IEditingConfig,
+    IItemActionsTemplateConfig, ISwipeConfig, ItemsFactory, IViewIterator
+};
 export {default as CollectionItem, IOptions as ICollectionItemOptions} from './_display/CollectionItem';
-import BreadcrumbsItem from './_display/BreadcrumbsItem';
-export {BreadcrumbsItem};
 import {default as Enum} from './_display/Enum';
 export {Enum};
 import {default as Flags} from './_display/Flags';
@@ -65,8 +66,6 @@ export {GroupItem};
 import * as itemsStrategy from './_display/itemsStrategy';
 export {itemsStrategy};
 export {default as Ladder} from './_display/Ladder';
-import {default as Search} from './_display/Search';
-export {Search};
 import {default as Tree} from './_display/Tree';
 export {Tree};
 import {default as TreeItem} from './_display/TreeItem';
@@ -120,6 +119,9 @@ export {MultiSelectAccessibility} from './_display/Collection';
 
 export { IItemPadding } from 'Controls/_display/Collection';
 
+import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_display/IItemsStrategy';
+export {IItemsStrategy, IItemsStrategyOptions};
+
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
 register('Controls/display:ColumnsCollection', ColumnsCollection, {instantiate: false});
@@ -129,7 +131,6 @@ register('Controls/display:Flags', Flags, {instantiate: false});
 register('Controls/display:FlagsItem', FlagsItem, {instantiate: false});
 
 register('Controls/display:GroupItem', GroupItem, {instantiate: false});
-register('Controls/display:Search', Search, {instantiate: false});
 register('Controls/display:TileCollection', TileCollection, {instantiate: false});
 register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate: false});
 register('Controls/display:Tree', Tree, {instantiate: false});

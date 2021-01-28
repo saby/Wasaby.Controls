@@ -35,7 +35,6 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
-import SearchSeparator from "./SearchSeparator";
 import {INavigationOptionValue} from 'Controls/interface';
 
 // tslint:disable-next-line:ban-comma-operator
@@ -2298,7 +2297,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectVisibility(visibility: string): void {
         this.getViewIterator().each((item: CollectionItem<T>) => {
-            if (item.SelectableItem) {
+            // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
+            // тоже должны перерисоваться при изменении видимости чекбоксов
+            if (item.setMultiSelectVisibility) {
                 item.setMultiSelectVisibility(visibility);
             }
         });
@@ -2306,7 +2307,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectAccessibilityProperty(property: string): void {
         this.getViewIterator().each((item: CollectionItem) => {
-            if (item.SelectableItem) {
+            if (item.setMultiSelectAccessibilityProperty) {
                 item.setMultiSelectAccessibilityProperty(property);
             }
         });
@@ -2328,7 +2329,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     setMarkedKey(key: string|number, status: boolean): void {
         const item = this.getItemBySourceKey(key);
-        if (item) {
+        if (item && item.Markable) {
             item.setMarked(status);
         }
     }
@@ -2398,7 +2399,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     getSearchValue(): string {
-        return this._$searchValue;
+        return this._$searchValue || '';
     }
 
     getItemBySourceKey(key: string|number): T {
@@ -3339,7 +3340,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 prevGroupIndex = index;
                 prevGroupPosition = position;
                 prevGroupHasMembers = false;
-            } else if (!(item instanceof SearchSeparator)) {
+            } else if (!(item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]'])) {
                 // Check item match
                 match = isMatch(item, index, position);
                 changed = applyMatch(match, index) || changed;
