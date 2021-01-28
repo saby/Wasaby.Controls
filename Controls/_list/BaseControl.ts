@@ -5124,10 +5124,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (editingConfig.autoAddOnInit && !!this._sourceController && !hasItems) {
             return this._beginAdd({}, editingConfig.addPosition);
-        } else if (!this._items.getRecordById(editingConfig.item.getKey())) {
-            return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
-        } else {
-            return this._beginEdit({ item: editingConfig.item });
+        } else if (editingConfig.item) {
+            if (!this._items.getRecordById(editingConfig.item.getKey())) {
+                return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
+            } else {
+                return this._beginEdit({ item: editingConfig.item });
+            }
         }
     },
 
