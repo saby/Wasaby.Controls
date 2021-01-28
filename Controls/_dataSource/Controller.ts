@@ -24,7 +24,6 @@ import {isEqual} from 'Types/object';
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
-import {error} from "../dataSource";
 
 export interface IControllerState {
     keyProperty: string;
