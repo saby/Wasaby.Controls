@@ -442,7 +442,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
         }
-        this._rootBeforeSearch = null;
     }
 
     private _isSearchViewMode(): boolean {
@@ -761,6 +760,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateViewMode(this._previousViewMode);
             this._previousViewMode = null;
             this._misspellValue = '';
+            this._rootBeforeSearch = null;
         }
     }
 

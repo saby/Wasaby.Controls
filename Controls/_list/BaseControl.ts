@@ -3349,6 +3349,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const selection = {selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys};
                     selectionController.setSelection(selection);
                 }
+                if (newOptions.beforeMountCallback) {
+                    newOptions.beforeMountCallback({
+                        viewModel: this._listViewModel,
+                        markerController: _private.getMarkerController(this, newOptions)
+                    });
+                }
             }
             return res;
         });
@@ -4743,6 +4749,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    getMarkerController(): MarkerController {
+        return _private.getMarkerController(this, this._options);
+    },
+
     _onGroupClick(e, groupId, baseEvent, dispItem) {
         const collapseGroupAfterEndEdit = (collection) => {
             const display = this._options.useNewModel ? collection : collection.getDisplay();
@@ -5536,7 +5546,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
-        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
+        const handlerResult = this._options._keyDownHandler && this._options._keyDownHandler(event);
+        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (handlerResult !== false)) {
             const key = event.nativeEvent.keyCode;
             const dontStop = key === 17 // Ctrl
                 || key === 33 // PageUp
