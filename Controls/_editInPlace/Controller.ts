@@ -268,7 +268,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
      *
      * @remark Запуск редактирования может быть отменен. Для этого из функции обратного вызова IEditInPlaceOptions.onBeforeBeginEdit необхобимо вернуть константу отмены.
      */
-    edit(userOptions: IBeginEditUserOptions = {}, options: { columnIndex?: number }): TAsyncOperationResult {
+    edit(userOptions: IBeginEditUserOptions = {}, options: { columnIndex?: number } = {}): TAsyncOperationResult {
         return this._endPreviousAndBeginEdit(userOptions, options);
     }
 
