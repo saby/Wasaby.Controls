@@ -135,7 +135,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._itemOpenHandler = this._itemOpenHandler.bind(this);
         this._dataLoadCallback = this._dataLoadCallback.bind(this);
         this._dataLoadErrback = this._dataLoadErrback.bind(this);
-        this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
         this._filterController = new FilterController(this._getFilterControllerOptions(options));
@@ -445,11 +444,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _rootChanged(event: SyntheticEvent, root: Key): void {
-        if (this._options.root === undefined && this._sourceController.getRoot() !== root) {
+        if (this._options.root === undefined) {
             this._root = root;
-            this._sourceController.setRoot(root);
-            this._sourceController.setExpandedItems([]);
-            this._reload(this._options);
         }
         this._notify('rootChanged', [root]);
     }
@@ -615,7 +611,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             source: this._source,
             navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
             dataLoadErrback: this._dataLoadErrback,
-            dataLoadCallback: this._dataLoadCallback
+            dataLoadCallback: this._dataLoadCallback,
+            root: this._root
         };
     }
 
@@ -789,13 +786,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             .then((result) => {
                 return this._updateSearchController(newOptions).then(() => result);
             });
-    }
-
-    _afterSetItemsOnReloadCallback(): void {
-        if (this._notifiedMarkedKey !== undefined) {
-            this._notify('markedKeyChanged', [this._notifiedMarkedKey]);
-            this._notifiedMarkedKey = undefined;
-        }
     }
 
     _misspellCaptionClick(): void {

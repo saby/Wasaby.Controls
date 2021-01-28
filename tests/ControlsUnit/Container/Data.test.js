@@ -482,10 +482,7 @@ define(
                data._beforeMount(config).addCallback(function() {
                   data._filterChanged(null, {test1: 'test1'});
                   assert.isTrue(config.source === data._dataOptionsContext.source);
-
-                  // TODO тест для совместимости, чтоб ничего не разломать
-                  const filter = data._sourceController.getState().filter;
-                  assert.deepEqual(filter, {test1: 'test1'});
+                  assert.deepEqual(data._filter, {test1: 'test1'});
                   resolve();
                });
             });

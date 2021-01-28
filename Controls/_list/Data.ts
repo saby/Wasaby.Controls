@@ -11,7 +11,7 @@ import {
 } from 'Controls/dataSource';
 import {ISourceControllerState} from 'Controls/dataSource';
 import {ContextOptions} from 'Controls/context';
-import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions} from 'Controls/interface';
+import {ISourceOptions, IHierarchyOptions, IFilterOptions, INavigationOptions, ISortingOptions, TKey} from 'Controls/interface';
 import {SyntheticEvent} from 'UI/Vdom';
 import {isEqual} from 'Types/object';
 
@@ -23,7 +23,7 @@ export interface IDataOptions extends IControlOptions,
     ISortingOptions {
    dataLoadErrback?: Function;
    dataLoadCallback?: Function;
-   root?: string|number|null;
+   root?: TKey;
    groupProperty?: string;
    groupingKeyCallback?: Function;
    groupHistoryId?: string;
@@ -86,6 +86,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    private _source: ICrudPlus | ICrud & ICrudPlus & IData;
    private _dataOptionsContext: typeof ContextOptions;
    private _sourceControllerState: ISourceControllerState;
+   private _root: TKey = null;
 
    private _items: RecordSet;
    private _filter: QueryWhereExpression<unknown>;
@@ -107,6 +108,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._source = options.source.getOriginal();
       } else {
          this._source = options.source;
+      }
+      if (options.root !== undefined) {
+         this._root = options.root;
       }
       this._sourceController =
           options.sourceController ||
@@ -168,27 +172,25 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _updateWithoutSourceControllerInOptions(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
-      const sourceChanged = this._options.source !== newOptions.source;
-
-      if (sourceChanged) {
+      if (this._options.source !== newOptions.source) {
          this._source = newOptions.source;
+      }
+
+      if (this._options.root !== newOptions.root) {
+         this._root = newOptions.root;
+      }
+
+      if (!isEqual(this._options.filter, newOptions.filter)) {
+         this._filter = newOptions.filter;
       }
 
       const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
 
-      // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
       if (isChanged) {
-         this._filter = newOptions.filter;
-      }
-
-      if (isChanged && !newOptions.sourceController) {
          return this._reload(this._options);
       } else if (isChanged) {
-         const controllerState = this._sourceController.getState();
-
-         // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-         this._filter = controllerState.filter;
-         this._updateContext(controllerState);
+         this._filter = this._sourceController.getFilter();
+         this._updateContext(this._sourceController.getState());
       }
    }
 
@@ -212,7 +214,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       return {
          ...options,
          source: this._source,
-         navigationParamsChangedCallback: this._notifyNavigationParamsChanged
+         navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
+         filter: this._filter || options.filter,
+         root: this._root
       } as ISourceControllerOptions;
    }
 
@@ -257,16 +261,12 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _filterChanged(event, filter): void {
-      // TODO filter надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-      this._filter = this._sourceController.setFilter(filter);
-      this._updateContext(this._sourceController.getState());
+      this._filter = filter;
    }
 
    _rootChanged(event, root): void {
-      if (this._options.root === undefined &&  this._sourceController.getRoot() !== root) {
-         this._sourceController.setRoot(root);
-         this._sourceController.setExpandedItems([]);
-         this._reload(this._options);
+      if (this._options.root === undefined) {
+         this._root = root;
       }
       this._notify('rootChanged', [root]);
    }

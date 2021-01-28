@@ -447,9 +447,6 @@ const _private = {
                     } else {
                         _private.initializeModel(self, cfg, list)
                     }
-                    if (cfg.afterSetItemsOnReloadCallback instanceof Function) {
-                        cfg.afterSetItemsOnReloadCallback();
-                    }
                     _private.prepareFooter(self, self._options, self._sourceController);
                     _private.resolveIndicatorStateAfterReload(self, list, navigation);
 
