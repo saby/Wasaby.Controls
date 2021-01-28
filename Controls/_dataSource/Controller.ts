@@ -109,6 +109,7 @@ export default class Controller {
     private _filter: QueryWhereExpression<unknown>;
     private _items: RecordSet;
     private _loadPromise: CancelablePromise<RecordSet|Error>;
+    private _loadError: Error;
 
     private _dataLoadCallback: Function;
     // Необходимо для совместимости в случае, если dataLoadCallback задают на списке, а где-то сверху есть dataContainer
@@ -184,6 +185,10 @@ export default class Controller {
 
     getItems(): RecordSet {
         return this._items;
+    }
+
+    getLoadError(): Error {
+        return this._loadError;
     }
 
     setFilter(filter: QueryWhereExpression<unknown>): QueryWhereExpression<unknown> {
@@ -582,6 +587,7 @@ export default class Controller {
         let dataLoadCallbackResult;
 
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        this._loadError = null;
 
         if (needCallDataLoadCallback) {
             if (this._dataLoadCallback) {
@@ -605,12 +611,13 @@ export default class Controller {
     }
 
     private _processQueryError(
-        result: LoadResult
-    ): LoadResult {
+        queryError: Error
+    ): Error {
         if (this._options.dataLoadErrback) {
-            this._options.dataLoadErrback(result);
+            this._options.dataLoadErrback(queryError);
         }
-        return result;
+        this._loadError = queryError;
+        return queryError;
     }
 
     private _subscribeItemsCollectionChangeEvent(items: RecordSet): void {
