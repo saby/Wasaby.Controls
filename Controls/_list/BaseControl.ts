@@ -203,6 +203,7 @@ interface IIndicatorConfig {
     loadingIndicatorState: LoadingState;
     theme: string;
     isPortionedSearchInProgress: boolean;
+    attachLoadTopTriggerToNull: boolean;
 }
 
 /**
@@ -2319,11 +2320,14 @@ const _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IIndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull}: IIndicatorConfig
     ): string {
+        const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
+           ? 'attachToNull'
+           : loadingIndicatorState;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}_theme-${theme}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                 !hasItems && loadingIndicatorState === 'down')
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
@@ -6057,8 +6061,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _shouldDisplayTopLoadingIndicator(): boolean {
         return this._loadToDirectionInProgress
-           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up'
-           :  this._loadingIndicatorState === 'up';
+           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull
+           :  this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull;
     },
 
     _shouldDisplayMiddleLoadingIndicator(): boolean {
@@ -6072,7 +6076,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const shouldDisplayDownIndicator = this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
         return this._loadToDirectionInProgress
            ? this._showLoadingIndicator && shouldDisplayDownIndicator
-           :  shouldDisplayDownIndicator
+           :  shouldDisplayDownIndicator;
     },
 
     _shouldDisplayPortionedSearch(): boolean {
@@ -6087,7 +6091,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             hasPaging: !!this._pagingVisible,
             loadingIndicatorState: indicatorState,
             theme: this._options.theme,
-            isPortionedSearchInProgress: !!this._portionedSearchInProgress
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress,
+            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull
         });
     },
 
