@@ -5,8 +5,9 @@ import {descriptor} from 'Types/entity';
 import ViewModel from './Number/ViewModel';
 import {INumberLength, INumberLengthOptions} from 'Controls/_input/interface/INumberLength';
 import {IOnlyPositive, IOnlyPositiveOptions} from 'Controls/_input/interface/IOnlyPositive';
+import {IBaseFieldTemplate} from 'Controls/_input/interface/IBase';
 
-interface IMoneyOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions {}
+interface IMoneyOptions extends IBaseInputOptions, INumberLengthOptions, IOnlyPositiveOptions, IBaseFieldTemplate {}
 
 /**
  * Поле ввода числовых значений. Отличается от {@link Controls/input:Number} отображением введенного значения, согласно стандарту денежных полей ввода.
