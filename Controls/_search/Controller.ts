@@ -188,10 +188,14 @@ export default class Container extends Control<IContainerOptions> {
    private _updateRootAfterSearch(): void {
       if (this._options.startingWith === 'root') {
          const newRoot = Container._getRoot(this._path, this._root, this._options.parentProperty);
-         this._rootBeforeSearch = this._root;
-         this._root = newRoot;
-         this._searchController.setRoot(newRoot);
-         this._notify('rootChanged', [newRoot]);
+
+         if (newRoot !== this._root) {
+            this._rootBeforeSearch = this._root;
+            this._root = newRoot;
+            this._searchController.setRoot(newRoot);
+            this._sourceController.setRoot(newRoot);
+            this._notify('rootChanged', [newRoot]);
+         }
       }
    }
 

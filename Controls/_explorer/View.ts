@@ -77,10 +77,10 @@ var
             } else {
                self._potentialMarkedKey = root;
             }
-            self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root, self._items, dataRoot);
             }
+            self._notify('rootChanged', [root]);
             self._forceUpdate();
          },
          setRestoredKeyObject: function(self, root) {
