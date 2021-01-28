@@ -21,6 +21,7 @@ import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
 import {IItemPadding} from '../_list/interface/IList';
 import Collection from 'Controls/_display/Collection';
+import {TItemKey} from 'Controls/_display/interface';
 
 export interface IOptions<T extends Model = Model> {
     contents?: T;

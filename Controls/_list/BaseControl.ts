@@ -642,16 +642,9 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean, skippedItemsCount: number) {
+    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean) {
         const scrollCallback = (index) => {
-            // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
-            // реальную запись и скролим именно к ней.
-            // Сам контейнер же берем учитывая количество пропущенных элементов при поиске первой записи.
-            // Ошибка: https://online.sbis.ru/opendoc.html?guid=98a3d6ac-68e3-427d-943f-b6b692800217
-            // Задача на рефакторинг: https://online.sbis.ru/opendoc.html?guid=1f9d8be3-2cec-4e3e-aace-9067b120248a
-            if (skippedItemsCount) {
-                index -= skippedItemsCount;
-            }
+
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
             // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
             // логического родителя, который отрисовывает все элементы
@@ -3414,6 +3407,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const selection = {selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys};
                     selectionController.setSelection(selection);
                 }
+                if (newOptions.beforeMountCallback) {
+                    newOptions.beforeMountCallback({
+                        viewModel: this._listViewModel,
+                        markerController: _private.getMarkerController(this, newOptions)
+                    });
+                }
             }
             return res;
         });
@@ -4567,29 +4566,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         });
     },
-    _findFirstItem(collection: any): { key: CrudEntityKey, skippedItemsCount: number } {
-        let item = null;
-        let itemContents = null;
-        let key = null;
-        let index = 0;
-        let skippedItemsCount = 0;
-        while (index < collection.getCount()) {
-            item = collection.at(index);
-            if (item) {
-                itemContents = item.getContents();
-                if (itemContents && itemContents.getKey) {
-                    key = itemContents.getKey();
-                    break;
-                }
-            }
-            skippedItemsCount++;
-            index++;
-        }
-        return {
-            key,
-            skippedItemsCount
-        };
-    },
+
     _scrollToFirstItemIfNeed(): void {
         if (this._needScrollToFirstItem) {
             this._needScrollToFirstItem = false;
@@ -4597,13 +4574,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._jumpToEndOnDrawItems) {
                 return;
             }
-            // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
-            // реальную запись и скролим именно к ней.
-            // Ошибка: https://online.sbis.ru/opendoc.html?guid=98a3d6ac-68e3-427d-943f-b6b692800217
-            // Задача на рефакторинг: https://online.sbis.ru/opendoc.html?guid=1f9d8be3-2cec-4e3e-aace-9067b120248a
-            const firstItem = this._findFirstItem(this.getViewModel());
-            if (firstItem && firstItem.key !== null) {
-                _private.scrollToItem(this, firstItem.key, false, true, firstItem.skippedItemsCount);
+            const firstItem = this.getViewModel().at(0);
+            const firstItemKey = firstItem && firstItem.key !== undefined ? firstItem.key : null;
+            if (firstItemKey !== null) {
+                _private.scrollToItem(this, firstItemKey, false, true);
             }
         }
     },
@@ -4806,6 +4780,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._options.markerVisibility !== 'hidden') {
             _private.changeMarkedKey(this, key);
         }
+    },
+
+    getMarkerController(): MarkerController {
+        return _private.getMarkerController(this, this._options);
     },
 
     _onGroupClick(e, groupId, baseEvent, dispItem) {
@@ -5607,7 +5585,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
-        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
+        const handlerResult = this._options._keyDownHandler && this._options._keyDownHandler(event);
+        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (handlerResult !== false)) {
             const key = event.nativeEvent.keyCode;
             const dontStop = key === 17 // Ctrl
                 || key === 33 // PageUp

@@ -156,6 +156,15 @@ class DialogController extends BaseController {
         return false;
     }
 
+    resizeInner(item: IDialogItem, container: HTMLDivElement): boolean {
+        /* Если задан resizeDirection не перепозиционируем,
+           т.к. это опция отвечает как раз за ресайз без изменения позиции */
+        if (item.popupOptions?.resizeDirection) {
+            return false;
+        }
+        return super.resizeInner(item, container);
+    }
+
     pageScrolled(): boolean {
         // Don't respond to page scrolling. The popup should remain where it originally positioned.
         return false;
@@ -258,9 +267,6 @@ class DialogController extends BaseController {
             defaultCoordinate = 0;
             item.position.invisible = true;
         }
-        // Get top and left coordinate from propStorageId
-        item.position[verticalPositionProperty] = item.popupOptions[verticalPositionProperty] || defaultCoordinate;
-        item.position[horizontalPositionProperty] = item.popupOptions[horizontalPositionProperty] || defaultCoordinate;
     }
 
     _hasMaximizePopup(): boolean {

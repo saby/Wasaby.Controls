@@ -29,7 +29,7 @@ export function getPositionProperties(
     }
 ): IDialogPopupOptions['resizeDirection'] {
     return {
-        horizontal: DIRECTION_TO_POSITION_MAP[direction.horizontal] || HORIZONTAL_DIRECTION.RIGHT,
-        vertical: DIRECTION_TO_POSITION_MAP[direction.vertical] || VERTICAL_DIRECTION.BOTTOM
+        horizontal: DIRECTION_TO_POSITION_MAP[direction.horizontal] || HORIZONTAL_DIRECTION.LEFT,
+        vertical: DIRECTION_TO_POSITION_MAP[direction.vertical] || VERTICAL_DIRECTION.TOP
     };
 }
