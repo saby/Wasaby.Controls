@@ -135,6 +135,7 @@ export default class Container extends Control<IContainerOptions> {
       }
 
       if (this._searchController && options.sourceController && searchValueChanged) {
+         this._inputSearchValue = newOptions.searchValue;
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
          }
@@ -154,7 +155,7 @@ export default class Container extends Control<IContainerOptions> {
             });
          }
       }
-      if (newOptions.dataLoadCallback) {
+      if (newOptions.dataLoadCallback && this._sourceController) {
          this._sourceController.updateOptions({
             ...options,
             dataLoadCallback: this._dataLoadCallback

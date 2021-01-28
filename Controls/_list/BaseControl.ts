@@ -202,6 +202,7 @@ interface IIndicatorConfig {
     loadingIndicatorState: LoadingState;
     theme: string;
     isPortionedSearchInProgress: boolean;
+    attachLoadTopTriggerToNull: boolean;
 }
 
 /**
@@ -1653,7 +1654,9 @@ const _private = {
                     } else {
                         self._shouldDrawFooter = false;
                     }
-                } else if (moreMetaCount === false) {
+                } else if (moreMetaCount) {
+                    _private.prepareFooter(self, self._options, self._sourceController);
+                } else {
                     self._shouldDrawFooter = false;
                 }
             }
@@ -2320,11 +2323,14 @@ const _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IIndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull}: IIndicatorConfig
     ): string {
+        const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
+           ? 'attachToNull'
+           : loadingIndicatorState;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}_theme-${theme}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                 !hasItems && loadingIndicatorState === 'down')
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
@@ -3374,7 +3380,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
-        const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
@@ -3450,12 +3455,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 return Promise.resolve();
             }
-            if (receivedError) {
-                if (newOptions.dataLoadErrback instanceof Function) {
-                    newOptions.dataLoadErrback(receivedError);
+                if (receivedState.errorConfig) {
+                    return Promise.resolve(_private.showError(self, receivedState.errorConfig));
+                } else if (self._sourceController && self._sourceController.getLoadError()) {
+                    return _private.processError(self, {error: self._sourceController.getLoadError()})
+                        .then((errorConfig) => {
+                            return getState(errorConfig);
+                        });
                 }
-                return Promise.resolve(_private.showError(self, receivedError));
-            }
             } else {
                 _private.createScrollController(self, newOptions);
                 return Promise.resolve();
@@ -3899,6 +3906,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             if (this._options.sourceController !== newOptions.sourceController) {
                 this._sourceController = newOptions.sourceController;
+                this._sourceController.setDataLoadCallback(this._dataLoadCallback);
             }
 
             if (newOptions.loading) {
@@ -4820,8 +4828,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    isLoading(): boolean {
+        return this._sourceController && this._sourceController.isLoading();
+    },
+
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
+        if (this.isLoading()) {
+            return;
+        }
         if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
             // Если нажали на чекбокс, то это не считается нажатием на элемент. В этом случае работает событие checkboxClick
             // Если на mouseUp, предшествующий этому клику, еще работало перетаскивание, то мы не должны нотифаить itemClick
@@ -5379,6 +5394,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
+        if (this.isLoading()) {
+            return;
+        }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
@@ -5406,6 +5424,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseUp(e, itemData, domEvent): void {
+        if (this.isLoading()) {
+            return;
+        }
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
         // Маркер должен ставиться именно по событию mouseUp, т.к. есть сценарии при которых блок над которым произошло
         // событие mouseDown и блок над которым произошло событие mouseUp - это разные блоки.
@@ -5940,8 +5961,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _shouldDisplayTopLoadingIndicator(): boolean {
         return this._loadToDirectionInProgress
-           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up'
-           :  this._loadingIndicatorState === 'up';
+           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull
+           :  this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull;
     },
 
     _shouldDisplayMiddleLoadingIndicator(): boolean {
@@ -5955,7 +5976,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const shouldDisplayDownIndicator = this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
         return this._loadToDirectionInProgress
            ? this._showLoadingIndicator && shouldDisplayDownIndicator
-           :  shouldDisplayDownIndicator
+           :  shouldDisplayDownIndicator;
     },
 
     _shouldDisplayPortionedSearch(): boolean {
@@ -5970,7 +5991,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             hasPaging: !!this._pagingVisible,
             loadingIndicatorState: indicatorState,
             theme: this._options.theme,
-            isPortionedSearchInProgress: !!this._portionedSearchInProgress
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress,
+            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull
         });
     },
 

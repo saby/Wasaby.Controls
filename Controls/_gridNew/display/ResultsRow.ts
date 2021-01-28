@@ -31,7 +31,7 @@ export default class ResultsRow<T> extends Row<T> {
     }
 
     isSticked(): boolean {
-        return this.isStickyHeader() && this.getResultsPosition() === 'top';
+        return this.isStickyHeader();
     }
 
     getItemClasses(): string {

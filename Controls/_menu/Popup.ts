@@ -168,10 +168,11 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     }
 
     private _prepareHeaderConfig(options: IMenuPopupOptions): void {
-        if (options.searchParam) {
-            this._headerTemplate = searchHeaderTemplate;
-        } else if (options.headerContentTemplate) {
+        if (options.headerContentTemplate) {
             this._headerTemplate = options.headerContentTemplate;
+        } else if (options.searchParam) {
+            this._headerTemplate = searchHeaderTemplate;
+            this._headingIcon = options.headingIcon;
         } else if (options.showHeader && options.headerTemplate !== null || options.headerTemplate) {
             if (options.headConfig) {
                 this._headingCaption = options.headConfig.caption;

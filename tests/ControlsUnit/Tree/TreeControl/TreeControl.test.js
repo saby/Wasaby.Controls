@@ -1249,26 +1249,28 @@ define([
       });
 
       it('TreeControl._private.loadMore', async function () {
+         let dataLoadCallbackCalled = false;
+         const options = {
+            filter: {
+               testParam: 11101989
+            },
+            dataLoadCallback: function () {
+               dataLoadCallbackCalled = true;
+            },
+            sorting: [{'test': 'ASC'}],
+            parentProperty: 'parent',
+            uniqueKeys: true,
+            source: new sourceLib.Memory()
+         };
+         options.sourceController = new dataSource.NewSourceController({...options});
          var
              setHasMoreCalled = false,
-             mergeItemsCalled = false,
              isIndicatorHasBeenShown = false,
              isIndicatorHasBeenHidden = false,
-             dataLoadCallbackCalled = false,
              loadNodeId,
              loadMoreDirection,
              mockedTreeControlInstance = {
-                _options: {
-                   filter: {
-                      testParam: 11101989
-                   },
-                   dataLoadCallback: function () {
-                      dataLoadCallbackCalled = true;
-                   },
-                   sorting: [{'test': 'ASC'}],
-                   parentProperty: 'parent',
-                   uniqueKeys: true
-                },
+                _options: options,
                 _children: {
                    baseControl: {
                       getViewModel: function () {
@@ -1291,7 +1293,7 @@ define([
                             load: (direction, key) => {
                                loadNodeId = key;
                                loadMoreDirection = direction;
-                               return Promise.resolve(new collection.RecordSet());
+                               return options.sourceController.load(direction, key);
                             }
                          };
                       }
@@ -1524,7 +1526,8 @@ define([
                getViewModel: function() {
                   return treeGridViewModel;
                },
-               setMarkedKey(key) { treeGridViewModel._model._markedKey = key; }
+               setMarkedKey(key) { treeGridViewModel._model._markedKey = key; },
+               isLoading: () => false
             }
          };
 
@@ -1587,7 +1590,8 @@ define([
                },
                setMarkedKey(key) {
                   assert.equal(key, expectedMarkedKey);
-               }
+               },
+               isLoading: () => false
             }
          };
 
