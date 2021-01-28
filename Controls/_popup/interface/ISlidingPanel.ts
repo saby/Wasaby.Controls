@@ -70,3 +70,31 @@ export interface ISlidingPanel {
  * @variant bottom
  * @default bottom
  */
+
+/**
+ * @typedef {Object} Controls/_popup/interface/ISlidingPanel/DialogSizes
+ * @description Размеры попапа на настольном копьютере и планшете.
+ * @property {Number} minHeight Минимально допустимая высота шторки. С такой высотой она открывается.
+ * @property {Number} maxHeight Максимально допустимая высота шторки.
+ */
+
+/**
+ * @typedef {Object} Controls/_popup/interface/ISlidingPanel/SlidingPanelSizes
+ * @description Размеры шторки.(на мобильном устройстве)
+ * @property {Number} minHeight Минимально допустимая высота шторки. С такой высотой она открывается.
+ * @property {Number} maxHeight Максимально допустимая высота шторки.
+ */
+
+/**
+ * @typedef {Object} Controls/_popup/interface/ISlidingPanel/PopupOptions
+ * @description Конфигурация шторки.
+ * @property {Boolean} [modal=false] Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
+ * @property {String} className Имена классов, которые будут применены к корневой ноде всплывающего окна.
+ * @property {function|String} template Шаблон всплывающего окна.
+ * @property {function|String} templateOptions Опции для контрола, переданного в {@link template}.
+ * @property {String} position Определяет с какой стороны отображается попап.
+ * @property {Controls/_popup/interface/ISlidingPanel/SlidingPanelSizes.typedef} slidingPanelSizes Конфигурация размеров шторки на мобильном устройстве
+ * @property {Controls/_popup/interface/ISlidingPanel/DialogSizes.typedef} dialogSizes Конфигурация размеров попапа на настольном копьютере и планшете
+ * @property {Node} opener Логический инициатор открытия всплывающего окна. Читайте подробнее {@link /doc/platform/developmentapl/interface-development/ui-library/focus/index/#control-opener здесь}.
+ * @property {Controls/_popup/interface/IBaseOpener/EventHandlers.typedef} eventHandlers Функции обратного вызова на события стековой панели.
+ */
