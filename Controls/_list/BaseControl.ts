@@ -643,7 +643,7 @@ const _private = {
     },
 
     scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean) {
-        const scrollCallback = (index) => {
+        const scrollCallback = (index, result) => {
 
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
             // TODO Убрать работу с DOM, сделать через получение контейнера по его id из _children
@@ -657,13 +657,13 @@ const _private = {
                     itemContainer, toBottom, force
                 }], {bubbling: true});
             }
+            if (result) {
+                _private.handleScrollControllerResult(self, result);
+            }
         };
         return new Promise((resolve) => {
             self._scrollController ?
-                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                    if (result) {
-                        _private.handleScrollControllerResult(self, result);
-                    }
+                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
                     resolve();
                 }) : resolve();
         });

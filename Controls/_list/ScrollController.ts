@@ -269,7 +269,7 @@ export default class ScrollController {
                             && !this._virtualScroll.rangeChanged) {
                     this._fakeScroll = true;
                     scrollCallback(index);
-                    resolve(null);
+                    resolve();
                 } else if (force || this._virtualScroll.rangeChanged) {
                     this._inertialScrolling.callAfterScrollStopped(() => {
                         if (this._virtualScroll && this._virtualScroll.rangeChanged) {
@@ -278,8 +278,8 @@ export default class ScrollController {
                             // Для этого используем _scrollToItemAfterRender.
                             // https://online.sbis.ru/opendoc.html?guid=2a97761f-e25a-4a10-9735-ded67e36e527
                             this._continueScrollToItem = () => {
-                                this.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                                    resolve(result);
+                                this.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
+                                    resolve();
                                 });
                             };
                         } else {
@@ -300,14 +300,14 @@ export default class ScrollController {
                                     // _completeScrollToItem
                                     this._completeScrollToItem = () => {
                                         this._fakeScroll = true;
-                                        scrollCallback(index);
-                                        this.savePlaceholders(rangeShiftResult.placeholders);
-                                        resolve({
+                                        scrollCallback(index, {
                                             placeholders: rangeShiftResult.placeholders,
-                                            shadowVisibility: this._calcShadowVisibility(
+                                                shadowVisibility: this._calcShadowVisibility(
                                                 this._options.collection,
                                                 rangeShiftResult.range)
                                         });
+                                        this.savePlaceholders(rangeShiftResult.placeholders);
+                                        resolve();
                                     };
                                 }
                             };
@@ -317,11 +317,11 @@ export default class ScrollController {
                         }
                     });
                 } else {
-                    resolve(null);
+                    resolve();
                 }
             });
         } else {
-            return Promise.resolve(null);
+            return Promise.resolve();
         }
     }
 
