@@ -531,7 +531,7 @@ var Explorer = Control.extend({
      };
 
      this._itemsPromise = new Promise((res) => { this._itemsResolver = res; });
-     if (!cfg.source) {
+     if (!cfg.source || (cfg.sourceController && cfg.sourceController.getLoadError())) {
         this._resolveItemsPromise();
      }
      const root = _private.getRoot(this, cfg.root);

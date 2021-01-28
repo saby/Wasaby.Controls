@@ -7,6 +7,7 @@ export interface IEditableListOption {
         addPosition?: 'top' | 'bottom';
         item?: Model;
         autoAdd?: boolean;
+        autoAddOnInit?: boolean;
         autoAddByApplyButton?: boolean;
         toolbarVisibility?: boolean;
         backgroundStyle?: string;
