@@ -8,7 +8,7 @@ import * as ViewModel from 'Controls/_input/Base/ViewModel';
 import * as unEscapeASCII from 'Core/helpers/String/unEscapeASCII';
 import {hasHorizontalScroll} from 'Controls/scroll';
 import {processKeydownEvent} from 'Controls/_input/resources/Util';
-import {IBaseFieldTemplate, IBaseOptions} from 'Controls/_input/interface/IBase';
+import {IBaseOptions} from 'Controls/_input/interface/IBase';
 import template = require('wml!Controls/_input/Base/Base');
 import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
@@ -35,7 +35,6 @@ interface IFieldTemplate {
     };
 }
 export interface IBaseInputOptions extends IBaseOptions, IControlOptions {}
-export {IBaseFieldTemplate};
 /**
  * @type {Number} The width of the cursor in the field measured in pixels.
  * @private

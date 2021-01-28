@@ -1,5 +1,5 @@
-import {IBaseFieldTemplate} from 'Controls/_input/Base';
 import {BaseText, IBaseTextInputOptions} from 'Controls/_input/BaseText';
+import {IBaseFieldTemplate} from 'Controls/_input/interface/IBase';
 
 interface ITextInputOptions extends IBaseTextInputOptions, IBaseFieldTemplate {}
 

@@ -6,7 +6,7 @@ import {ITextOptions} from 'Controls/_input/interface/IText';
 
 export interface IBaseTextInputOptions extends ITextOptions, IBaseInputOptions {}
 
-export class BaseText extends Base<IBaseTextInputOptions>{
+export class BaseText extends Base<IBaseTextInputOptions> {
     _defaultValue: string = '';
     _punycodeToUnicode: Function;
     protected _controlName: string = 'Text';

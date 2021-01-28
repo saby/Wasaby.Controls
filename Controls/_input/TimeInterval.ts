@@ -1,7 +1,8 @@
-import {default as Base, IBaseFieldTemplate} from 'Controls/_input/Base';
+import {default as Base} from 'Controls/_input/Base';
 
 import {descriptor, TimeInterval} from 'Types/entity';
 import {IOptions as IModelOptions, ViewModel} from 'Controls/_input/TimeInterval/ViewModel';
+import {IBaseFieldTemplate} from 'Controls/_input/interface/IBase';
 
 type IOptions = IModelOptions;
 
