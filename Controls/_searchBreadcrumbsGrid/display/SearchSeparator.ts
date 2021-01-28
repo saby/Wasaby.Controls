@@ -2,6 +2,7 @@ import { GridRow, TColspanCallbackResult } from 'Controls/gridNew';
 import { register } from 'Types/di';
 import SearchGridCollection from './SearchGridCollection';
 import { IColumn } from 'Controls/_grid/interface/IColumn';
+import { TemplateFunction } from 'UI/Base';
 
 export default class SearchSeparator extends GridRow<string> {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
@@ -45,6 +46,17 @@ export default class SearchSeparator extends GridRow<string> {
 
     isVisibleCheckbox(): boolean {
         return false;
+    }
+
+    getTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction|string): TemplateFunction | string {
+        // В старой поисковой модели в menu сепаратор отрисовывают с помощью itemTemplate,
+        // у себы мы рисуем сепаратор с помощью своего темплейта
+        if (this._$owner['[Controls/_display/Search]']) {
+            const templateFromProperty = itemTemplateProperty ? this.getContents().get(itemTemplateProperty) : '';
+            return templateFromProperty || userTemplate || this.getDefaultTemplate();
+        } else {
+            return this.getDefaultTemplate();
+        }
     }
 
     protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
