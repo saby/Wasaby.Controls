@@ -134,13 +134,15 @@ class DialogStrategy {
             position[verticalPositionProperty] = this._getVerticalPostion(
                 windowData,
                 height || containerSizes.height,
-                popupOptions
+                popupOptions,
+                verticalPositionProperty
             );
         }
         position[horizontalPositionProperty] = this._getHorizontalPosition(
             windowData,
             width || containerSizes.width,
-            popupOptions
+            popupOptions,
+            horizontalPositionProperty
         );
         return position;
     }
@@ -232,15 +234,22 @@ class DialogStrategy {
      * @param windowData
      * @param width
      * @param popupOptions
-     * @param horizontalCoordName
+     * @param horizontalPositionProperty
      * @return {number}
      * @private
      */
     private _getHorizontalPosition(
         windowData: IPopupPosition,
         width: number,
-        popupOptions: IDialogPopupOptions
+        popupOptions: IDialogPopupOptions,
+        horizontalPositionProperty: string
     ): number {
+        // Position from prop storage
+        const optionsPosition = popupOptions[horizontalPositionProperty];
+        if (popupOptions[horizontalPositionProperty]) {
+            return optionsPosition;
+        }
+
         const wWidth = windowData.width;
         const windowOffset = (windowData.leftScroll + windowData.left) || 0;
         if (popupOptions.maximize) {
@@ -252,8 +261,15 @@ class DialogStrategy {
     private _getVerticalPostion(
         windowData: IPopupPosition,
         height: number,
-        popupOptions: IDialogPopupOptions
+        popupOptions: IDialogPopupOptions,
+        verticalPositionProperty: string
     ): number {
+        // Position from prop storage
+        const optionsPosition = popupOptions[verticalPositionProperty];
+        if (popupOptions[verticalPositionProperty]) {
+            return optionsPosition;
+        }
+
         if (popupOptions.maximize) {
             return 0;
         }
