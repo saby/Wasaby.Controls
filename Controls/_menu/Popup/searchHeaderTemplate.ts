@@ -6,7 +6,8 @@ import template = require('wml!Controls/_menu/Popup/searchHeaderTemplate');
  * @class Controls/_menu/Popup/searchHeaderTemplate
  * @extends UI/_base/Control
  * @private
- * 
+ * @demo Controls-demo/dropdown_new/Search/SearchWidth/Index
+ *
  * @author Герасимов А.М.
  */
 
