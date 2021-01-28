@@ -1,21 +1,34 @@
 import { TemplateFunction } from 'UI/Base';
 
+type TSlidingPanelPosition = 'top' | 'bottom';
+
 export interface ISlidingPanelPopupOptions {
+    slidingPanelSizes: ISlidingPanelSizes;
+    dialogSizes: IDialogSizes;
     modal?: boolean;
+    position?: TSlidingPanelPosition;
+    slidingPanelPosition?: ISlidingPanelPosition;
+    content?: TemplateFunction;
+}
+
+export interface ISlidingPanelSizes {
     maxHeight?: number;
     minHeight?: number;
+}
+
+export interface IDialogSizes {
+    minHeight?: number;
+    maxHeight?: number;
     minWidth?: number;
     maxWidth?: number;
     width?: number;
-    position?: 'top' | 'bottom';
-    slidingPanelPosition?: ISlidingPanelPosition;
-    content?: TemplateFunction;
+    height?: number;
 }
 
 export interface ISlidingPanelPosition {
     minHeight: number;
     maxHeight: number;
-    position: string;
+    position: TSlidingPanelPosition;
     height: number;
 }
 

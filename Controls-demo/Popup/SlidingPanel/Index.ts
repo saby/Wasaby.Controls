@@ -13,8 +13,17 @@ class Index extends Control<IControlOptions> {
         this._dialogOpener.open({
             template: 'Controls-demo/Popup/SlidingPanel/PopupTemplate',
             position: 'bottom',
-            minHeight: 300,
-            maxHeight: 700
+            slidingPanelSizes: {
+                minHeight: 300,
+                maxHeight: 700
+            },
+            dialogSizes: {
+                width: 900
+            },
+            templateOptions: {
+                closeButtonVisibility: true,
+                controlButtonVisibility: true
+            }
         });
     }
     static _theme: string[] = ['Controls/Classes'];

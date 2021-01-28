@@ -1,6 +1,9 @@
 import Base from 'Controls/_popup/PopupHelper/Base';
 import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
 import {ISlidingPanelPopupOptions} from 'Controls/_popup/interface/ISlidingPanel';
+import StackOpener from 'Controls/_popup/PopupHelper/Stack';
+import {detection} from 'Env/Env';
+
 const POPUP_CONTROLLER = 'Controls/popupSliding:Controller';
 
 class SlidingPanelOpener extends BaseOpener {
@@ -28,7 +31,8 @@ class SlidingPanelOpener extends BaseOpener {
  */
 
 export default class SlidingPanel extends Base {
-    private _opener = SlidingPanelOpener;
+    private _opener: Function = SlidingPanelOpener;
+    private _desktopOpener: StackOpener;
 
     /**
      * Метод для открытия шторки.
@@ -52,8 +56,55 @@ export default class SlidingPanel extends Base {
      * @see isOpened
      */
 
-    open(popupOptions: ISlidingPanelPopupOptions): void {
-        return super.open(popupOptions, POPUP_CONTROLLER);
+    open(popupOptions: ISlidingPanelPopupOptions): unknown {
+        const adaptivePopupOptions = this._getPopupOptionsWidthSizes(popupOptions);
+        return this._callMethodAdaptive('open', adaptivePopupOptions, detection.isPhone ? POPUP_CONTROLLER : undefined);
+    }
+
+    close(...args: unknown[]): void {
+        return this._callMethodAdaptive('close', ...args) as void;
+    }
+
+    destroy(...args: unknown[]): void {
+        return this._callMethodAdaptive('destroy', ...args) as void;
+    }
+
+    isOpened(...args: unknown[]): boolean {
+        return this._callMethodAdaptive('isOpened', ...args) as boolean;
+    }
+
+    /**
+     * Выполняет метод для десктопного или мобильного опенера,
+     * в зависимости от того, на каком устройстве открывают попап.
+     * @param {string} methodName
+     * @param args
+     * @return {unknown}
+     * @private
+     */
+    private _callMethodAdaptive(methodName: string, ...args: unknown[]): unknown {
+        if (detection.isPhone) {
+            return super[methodName](...args);
+        } else {
+            return this._getDesktopOpener()[methodName](...args);
+        }
+    }
+
+    private _getDesktopOpener(): StackOpener {
+        if (!this._desktopOpener) {
+            this._desktopOpener = new StackOpener();
+        }
+        return this._desktopOpener;
+    }
+
+    /**
+     * Получаем конфиг для открытия панели, в зависимости от того на каком устройстве открываем
+     * @param {ISlidingPanelPopupOptions} popupOptions
+     * @return {ISlidingPanelPopupOptions}
+     * @private
+     */
+    private _getPopupOptionsWidthSizes(popupOptions: ISlidingPanelPopupOptions): ISlidingPanelPopupOptions {
+        const sizes = detection.isPhone ? popupOptions.slidingPanelSizes : popupOptions.dialogSizes;
+        return Object.assign({}, sizes, popupOptions);
     }
 }
 

@@ -6,4 +6,3 @@
  */
 export {default as Controller} from 'Controls/_popupSliding/Controller';
 export {default as Template} from 'Controls/_popupSliding/Template';
-export {default as _SlidingPanelTemplate} from 'Controls/_popupSliding/SlidingPanelTemplate';

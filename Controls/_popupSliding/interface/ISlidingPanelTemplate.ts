@@ -2,11 +2,9 @@ import {TemplateFunction, IControlOptions} from 'UI/Base';
 import {ISlidingPanelPosition} from 'Controls/popup';
 
 export interface ISlidingPanelTemplateOptions extends IControlOptions {
-    contrastBackground: boolean;
     controlButtonVisibility: boolean;
     bodyContentTemplate?: string | TemplateFunction;
     slidingPanelPosition: ISlidingPanelPosition;
-    closeButtonVisibility?: boolean;
 }
 
 /**

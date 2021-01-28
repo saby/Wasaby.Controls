@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_popupSliding/SlidingPanelTemplate/SlidingPanelTemplate';
+import * as template from 'wml!Controls/_popupSliding/Template/SlidingPanel/SlidingPanel';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject} from 'Controls/dragnDrop';
 import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISlidingPanelTemplate';
@@ -7,18 +7,17 @@ import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISl
 /**
  * Интерфейс для шаблона попапа-шторки.
  *
- * @interface Controls/_popupSliding/SlidingPanelTemplate
- * @implements Controls/_interface/IContrastBackground
+ * @interface Controls/_popupSliding/Template/SlidingPanel
  * @public
  * @author Красильников А.С.
  */
-export default class SlidingPanelTemplate extends Control<ISlidingPanelTemplateOptions> {
+export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> {
     protected _template: TemplateFunction = template;
     protected _dragStartScrollHeight: number;
     protected _touchDragOffset: IDragObject['offset'];
-    private _currentTouchYPosition: number = null;
     protected _scrollAvailable: boolean = false;
     protected _position: string = 'bottom';
+    private _currentTouchYPosition: number = null;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
         this._scrollAvailable = this._isScrollAvailable(options);
@@ -45,7 +44,7 @@ export default class SlidingPanelTemplate extends Control<ISlidingPanelTemplateO
     }
 
     protected _getScrollAvailableHeight(): number {
-        const curtainHeight = this._container.clientHeight;
+        const curtainHeight = this._options.slidingPanelPosition.height;
         const controllerHeight = this._container.querySelector('.controls-SlidingPanel__controller')?.clientHeight || 0;
         return curtainHeight - controllerHeight;
     }
@@ -140,8 +139,7 @@ export default class SlidingPanelTemplate extends Control<ISlidingPanelTemplateO
     static _theme: string[] = ['Controls/popupSliding'];
     static getDefaultOptions(): Partial<ISlidingPanelTemplateOptions> {
         return {
-            controlButtonVisibility: true,
-            contrastBackground: true
+            controlButtonVisibility: true
         };
     }
 }

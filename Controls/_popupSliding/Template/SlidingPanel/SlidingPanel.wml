@@ -1,0 +1,30 @@
+<ws:template name="controller">
+   <Controls._popupSliding.ControllerButton
+      attr:class="controls-SlidingPanel__controller"
+      on:dragMove="_dragMoveHandler()"
+      on:dragEnd="_dragEndHandler()"/>
+</ws:template>
+<div class="controls-SlidingPanel">
+   <div class="controls-SlidingPanel__content controls-SlidingPanel__content-theme_{{_options.theme}}
+            controls-SlidingPanel__box-shadow-theme_{{_options.theme}}
+            controls-SlidingPanel__position-{{_position}}-theme_{{_options.theme}}">
+      <ws:if data="{{ _options.controlButtonVisibility && _position === 'bottom' }}">
+         <ws:partial
+            template="controller"/>
+      </ws:if>
+      <div
+         name="customContent"
+         attr:class="controls-SlidingPanel__customContent
+                  controls-SlidingPanel__customContent-scroll-{{ _scrollAvailable ? 'available' : 'disabled' }}"
+         on:touchstart="_touchStartHandler()"
+         on:touchmove="_touchMoveHandler()"
+         on:touchend="_touchEndHandler()">
+         <ws:partial
+            template="{{ _options.bodyContentTemplate }}"/>
+      </div>
+      <ws:if data="{{ _options.controlButtonVisibility && _position === 'top' }}">
+         <ws:partial
+            template="controller"/>
+      </ws:if>
+   </div>
+</div>
