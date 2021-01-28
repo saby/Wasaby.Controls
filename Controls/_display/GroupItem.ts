@@ -39,10 +39,6 @@ export default class GroupItem<T> extends mixin<
         return this._$contents;
     }
 
-    getKey(): T {
-        return this.key;
-    }
-
     isHiddenGroup(): boolean {
         return this._$contents === 'CONTROLS_HIDDEN_GROUP';
     }

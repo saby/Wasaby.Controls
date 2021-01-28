@@ -4500,7 +4500,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             const firstDispItem = this.getViewModel().at(0);
             const firstItem = firstDispItem && firstDispItem.getContents();
-            const firstItemKey = firstItem && firstItem.getKey ? firstItem.getKey() : null;
+            const firstItemKey = firstItem && firstItem.key ? firstItem.key : null;
             if (firstItemKey !== null) {
                 _private.scrollToItem(this, firstItemKey, false, true);
             }

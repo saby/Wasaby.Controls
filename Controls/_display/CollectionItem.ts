@@ -154,8 +154,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     readonly addPosition: 'top' | 'bottom';
 
-    getKey(): TItemKey {
-        return this._$contents?.getKey();
+    get key(): TItemKey {
+        return this._$contents && this._$contents.getKey && this._$contents.getKey();
     }
 
     constructor(options?: IOptions<T>) {
