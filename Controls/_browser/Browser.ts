@@ -442,7 +442,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
         }
-        this._rootBeforeSearch = null;
+        if (!this._isSearchViewMode()) {
+            this._rootBeforeSearch = null;
+        }
     }
 
     private _isSearchViewMode(): boolean {
