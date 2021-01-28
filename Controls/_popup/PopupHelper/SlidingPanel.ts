@@ -37,7 +37,7 @@ export default class SlidingPanel extends Base {
     /**
      * Метод для открытия шторки.
      * @function Controls/_popup/PopupHelper/SlidingPanel#open
-     * @param {PopupOptions} popupOptions Конфигурация шторки.
+     * @param {Controls/_popup/interface/ISlidingPanel/PopupOptions.typedef} popupOptions Конфигурация шторки.
      * @example
      * <pre class="brush: js">
      * import {SlidingPanelOpener} from 'Controls/popup';
