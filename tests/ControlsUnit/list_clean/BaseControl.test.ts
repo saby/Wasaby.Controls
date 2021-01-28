@@ -1045,6 +1045,26 @@ describe('Controls/list_clean/BaseControl', () => {
 
         describe('_beforeUpdate sourceController', () => {
 
+            it('sourceController load error', async () => {
+                let sourceControllerOptions = getBaseControlOptionsWithEmptyItems();
+                const sourceController = new NewSourceController(sourceControllerOptions);
+                let baseControlOptions = {...sourceControllerOptions, sourceController};
+                const baseControl = new BaseControl(baseControlOptions);
+                await sourceController.reload();
+                await baseControl._beforeMount(baseControlOptions);
+                baseControl.saveOptions(baseControlOptions);
+
+                sourceControllerOptions = {...sourceControllerOptions};
+                sourceControllerOptions.source = new Memory();
+                sourceControllerOptions.source.query = () => Promise.reject(new Error());
+                sourceController.updateOptions(sourceControllerOptions);
+                await sourceController.reload().catch(() => {});
+                baseControlOptions.source = new Memory();
+                assert.doesNotThrow(() => {
+                    baseControl._beforeUpdate(baseControlOptions);
+                });
+            });
+
             it('_beforeUpdate while source controller is loading', async () => {
                 let baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 let loadStarted = false;
