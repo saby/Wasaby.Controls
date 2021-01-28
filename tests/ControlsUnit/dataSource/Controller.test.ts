@@ -312,6 +312,9 @@ describe('Controls/dataSource:SourceController', () => {
             });
             await controller.load(null, 'testRoot');
             ok(!dataLoadCallbackCalled);
+
+            await controller.load('down', 'testRoot');
+            ok(!dataLoadCallbackCalled);
         });
     });
 
