@@ -139,7 +139,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
             let parentLevel = 0;
             if (parent instanceof TreeItem) {
                 parentLevel = parent.getLevel();
-            } else if (parent['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]']) {
+            } else if (parent['[Controls/_display/BreadcrumbsItem]']) {
                 parentLevel = parent.getLevel();
             }
             return parentLevel + 1;

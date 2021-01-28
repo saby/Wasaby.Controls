@@ -14,12 +14,12 @@ export interface IOptions<T extends Model> {
 
 /**
  * Хлебная крошка
- * @class Controls/_searchBreadcrumbsGrid/BreadcrumbsItem
+ * @class Controls/_searchBreadcrumbsGrid/BreadcrumbsItemRow
  * @extends Controls/_display/CollectionItem
  * @private
  * @author Мальцев А.А.
  */
-export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRow<T> {
+export default class BreadcrumbsItemRow<T extends Model = Model> extends GridDataRow<T> {
    readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
    readonly Markable: boolean = false;
 
@@ -121,11 +121,12 @@ export default class BreadcrumbsItem<T extends Model = Model> extends GridDataRo
    // endregion
 }
 
-Object.assign(BreadcrumbsItem.prototype, {
-   '[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]': true,
-   _moduleName: 'Controls/searchBreadcrumbsGrid:BreadcrumbsItem',
-   _instancePrefix: 'search-breadcrumbs-grid-item-',
-   _cellModule: 'Controls/searchBreadcrumbsGrid:BreadcrumbsCell',
+Object.assign(BreadcrumbsItemRow.prototype, {
+   '[Controls/_searchBreadcrumbsGrid/BreadcrumbsItemRow]': true,
+   '[Controls/_display/BreadcrumbsItem]': true,
+   _moduleName: 'Controls/searchBreadcrumbsGrid:BreadcrumbsItemRow',
+   _instancePrefix: 'search-breadcrumbs-grid-row-',
+   _cellModule: 'Controls/searchBreadcrumbsGrid:BreadcrumbsItemCell',
    _$cellTemplate: 'Controls/searchBreadcrumbsGrid:SearchBreadcrumbsItemTemplate',
    _$last: null
 });

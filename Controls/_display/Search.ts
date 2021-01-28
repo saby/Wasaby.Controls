@@ -1,6 +1,8 @@
-import SearchStrategy from './strategies/Search';
-import { itemsStrategy, Tree, TreeItem } from 'Controls/display';
+import SearchStrategy from './itemsStrategy/Search';
 import { Model } from 'Types/entity';
+import TreeItem from './TreeItem';
+import Tree from './Tree';
+import { Composer } from 'Controls/_display/itemsStrategy';
 
 export interface IOptions<S, T> {
     dedicatedItemProperty?: string;
@@ -21,10 +23,13 @@ export default class Search<S extends Model, T extends TreeItem<S> = TreeItem<S>
      */
     protected _$dedicatedItemProperty: string;
 
-    protected _createComposer(): itemsStrategy.Composer<S, T> {
+    protected _createComposer(): Composer<S, T> {
         const composer = super._createComposer();
         composer.append(SearchStrategy, {
-            dedicatedItemProperty: this._$dedicatedItemProperty
+            dedicatedItemProperty: this._$dedicatedItemProperty,
+            searchSeparatorModule: 'Controls/display:SearchSeparator',
+            breadcrumbsItemModule: 'Controls/display:BreadcrumbsItem',
+            treeItemDecoratorModule: 'Controls/display:TreeItemDecorator'
         });
 
         return composer;
@@ -33,6 +38,6 @@ export default class Search<S extends Model, T extends TreeItem<S> = TreeItem<S>
 
 Object.assign(Search.prototype, {
     '[Controls/_display/Search]': true,
-    _moduleName: 'Controls/searchBreadcrumbsGrid:Search',
+    _moduleName: 'Controls/display:Search',
     _$dedicatedItemProperty: undefined
 });

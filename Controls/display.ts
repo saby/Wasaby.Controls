@@ -66,6 +66,8 @@ export {GroupItem};
 import * as itemsStrategy from './_display/itemsStrategy';
 export {itemsStrategy};
 export {default as Ladder} from './_display/Ladder';
+import {default as Search} from './_display/Search';
+export {Search};
 import {default as Tree} from './_display/Tree';
 export {Tree};
 import {default as TreeItem} from './_display/TreeItem';
@@ -80,6 +82,8 @@ export {default as IMarkable} from './_display/interface/IMarkable';
 export {default as ISelectableItem} from './_display/interface/ISelectableItem';
 
 import {default as CollectionItem} from 'Controls/_display/CollectionItem';
+import BreadcrumbsItem from './_display/BreadcrumbsItem';
+export {BreadcrumbsItem};
 
 export {ANIMATION_STATE} from './_display/interface/ICollection';
 export {IEditableCollection} from './_display/interface/IEditableCollection';
@@ -120,6 +124,7 @@ export {MultiSelectAccessibility} from './_display/Collection';
 export { IItemPadding } from 'Controls/_display/Collection';
 
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_display/IItemsStrategy';
+import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
 export {IItemsStrategy, IItemsStrategyOptions};
 
 register('Controls/display:Collection', Collection, {instantiate: false});
@@ -136,3 +141,4 @@ register('Controls/display:TileCollectionItem', TileCollectionItem, {instantiate
 register('Controls/display:Tree', Tree, {instantiate: false});
 register('Controls/display:TreeChildren', TreeChildren, {instantiate: false});
 register('Controls/display:TreeItem', TreeItem, {instantiate: false});
+register('Controls/display:TreeItemDecorator', TreeItemDecorator, {instantiate: false});

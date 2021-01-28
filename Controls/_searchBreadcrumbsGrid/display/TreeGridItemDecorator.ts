@@ -1,23 +1,21 @@
-import BreadcrumbsItem from './BreadcrumbsItem';
+import BreadcrumbsItemRow from './BreadcrumbsItemRow';
 import SearchGridDataRow from './SearchGridDataRow';
-import SearchGridCollection from './SearchGridCollection';
-import {register} from 'Types/di';
 import { Model } from 'Types/entity';
 
 export interface IOptions<T extends Model> {
     source: SearchGridDataRow<T>;
-    parent?: SearchGridDataRow<T> | BreadcrumbsItem<T>;
+    parent?: SearchGridDataRow<T> | BreadcrumbsItemRow<T>;
     multiSelectVisibility: string;
 }
 
 /**
  * Tree item which is just a decorator for another one
- * @class Controls/_display/TreeItemDecorator
- * @extends Controls/_display/SearchGridDataRow
- * @author Мальцев А.А.
+ * @class Controls/_searchBreadcrumbsGrid/TreeGridItemDecorator
+ * @extends Controls/_searchBreadcrumbsGrid/SearchGridDataRow
+ * @author Панихин К.А.
  * @private
  */
-export default class TreeItemDecorator<T extends Model> extends SearchGridDataRow<T> {
+export default class TreeGridItemDecorator<T extends Model> extends SearchGridDataRow<T> {
     protected _$source: SearchGridDataRow<T>;
 
     constructor(options?: IOptions<T>) {
@@ -43,10 +41,9 @@ export default class TreeItemDecorator<T extends Model> extends SearchGridDataRo
     }
 }
 
-Object.assign(TreeItemDecorator.prototype, {
+Object.assign(TreeGridItemDecorator.prototype, {
+    '[Controls/_searchBreadcrumbsGrid/TreeGridItemDecorator]': true,
     '[Controls/_display/TreeItemDecorator]': true,
-    _moduleName: 'Controls/display:TreeItemDecorator',
+    _moduleName: 'Controls/searchBreadcrumbsGrid:TreeGridItemDecorator',
     _$source: undefined
 });
-
-register('Controls/display:TreeItemDecorator', TreeItemDecorator, {instantiate: false});

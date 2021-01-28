@@ -2,9 +2,8 @@ import { TreeGridCollection } from 'Controls/treeGridNew';
 import { Model } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 import SearchGridDataRow from './SearchGridDataRow';
-import SearchStrategy from './strategies/Search';
 import { itemsStrategy } from 'Controls/display';
-import BreadcrumbsItem from '../display/BreadcrumbsItem';
+import BreadcrumbsItemRow from './BreadcrumbsItemRow';
 
 export default class SearchGridCollection<S extends Model = Model, T extends SearchGridDataRow<S> = SearchGridDataRow<S>> extends TreeGridCollection<S, T> {
    /**
@@ -16,46 +15,37 @@ export default class SearchGridCollection<S extends Model = Model, T extends Sea
 
    protected _$searchBreadcrumbsItemTemplate: TemplateFunction;
 
-   constructor(options: any) {
-      super({ ...options, addTreeFilter: false });
-   }
-
    getSearchBreadcrumbsItemTemplate(): TemplateFunction {
       return this._$searchBreadcrumbsItemTemplate;
    }
 
-   createBreadcrumbsItem(options: object): BreadcrumbsItem {
-      // Хлебную крошку нужно создавать с помощью ItemsFactory, чтобы были прокинуты все нужные параметры.
-      // Но ItemsFactory создает элемент из _itemModule. Это значение мы может определить только таким способом.
-      // Переопределить метод getItemsFactory нельзя, т.к. мы тогда потеряем цепочку сбора всех параметров.
-
-      const currentModuleName = this._itemModule;
-      this._itemModule = 'Controls/searchBreadcrumbsGrid:BreadcrumbsItem';
+   createBreadcrumbsItem(options: object): BreadcrumbsItemRow {
+      options.itemModule = 'Controls/searchBreadcrumbsGrid:BreadcrumbsItemRow';
       const item = this.createItem({
          ...options,
          owner: this,
          cellTemplate: this.getSearchBreadcrumbsItemTemplate()
       });
-      this._itemModule = currentModuleName;
       return item;
    }
 
-   createSearchSeparator(options: object): BreadcrumbsItem {
-      const currentModuleName = this._itemModule;
-      this._itemModule = 'Controls/searchBreadcrumbsGrid:SearchSeparator';
+   createSearchSeparator(options: object): BreadcrumbsItemRow {
+      options.itemModule = 'Controls/searchBreadcrumbsGrid:SearchSeparatorRow';
       const item = this.createItem({
          ...options,
          owner: this
       });
-      this._itemModule = currentModuleName;
       return item;
    }
 
    protected _createComposer(): itemsStrategy.Composer<S, T> {
       const composer = super._createComposer();
 
-      composer.append(SearchStrategy, {
-         dedicatedItemProperty: this._$dedicatedItemProperty
+      composer.append(itemsStrategy.Search, {
+         dedicatedItemProperty: this._$dedicatedItemProperty,
+         searchSeparatorModule: 'Controls/searchBreadcrumbsGrid:SearchSeparatorRow',
+         breadcrumbsItemModule: 'Controls/searchBreadcrumbsGrid:BreadcrumbsItemRow',
+         treeItemDecoratorModule: 'Controls/searchBreadcrumbsGrid:TreeGridItemDecorator'
       });
 
       return composer;

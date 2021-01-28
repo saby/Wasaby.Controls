@@ -2,7 +2,7 @@ import { TreeGridView } from 'Controls/treeGridNew';
 import { SyntheticEvent } from 'UI/Vdom';
 import SearchGridDataRow from 'Controls/_searchBreadcrumbsGrid/display/SearchGridDataRow';
 import { Model } from 'Types/entity';
-import BreadcrumbsItem from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItem';
+import BreadcrumbsItemRow from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItemRow';
 import 'Controls/decorator';
 
 export default class SearchView extends TreeGridView {
@@ -13,7 +13,7 @@ export default class SearchView extends TreeGridView {
       return super._beforeMount(options);
    }
 
-   protected _onBreadcrumbClick(e: SyntheticEvent, item: BreadcrumbsItem<Array<Model>>): void {
+   protected _onBreadcrumbClick(e: SyntheticEvent, item: BreadcrumbsItemRow<Array<Model>>): void {
       if (!this._itemClickNotifiedByPathClick) {
          const lastBreadcrumbItem = item.getContents()[item.getContents().length - 1];
          if (lastBreadcrumbItem) {
@@ -31,7 +31,7 @@ export default class SearchView extends TreeGridView {
    }
 
    protected _onItemMouseUp(e: SyntheticEvent, item: SearchGridDataRow<Model>): void {
-      if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]']) {
+      if (item['[Controls/_display/BreadcrumbsItem]'] || item['[Controls/_display/SearchSeparator]']) {
          e.stopPropagation();
          return;
       }
@@ -39,7 +39,7 @@ export default class SearchView extends TreeGridView {
    }
 
    protected _onItemMouseDown(e: SyntheticEvent, item: SearchGridDataRow<Model>): void {
-      if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]']) {
+      if (item['[Controls/_display/BreadcrumbsItem]'] || item['[Controls/_display/SearchSeparator]']) {
          e.stopPropagation();
          return;
       }
@@ -47,7 +47,7 @@ export default class SearchView extends TreeGridView {
    }
 
    protected _onItemClick(e: SyntheticEvent, item: SearchGridDataRow<Model>) {
-      if (item['[Controls/_searchBreadcrumbsGrid/BreadcrumbsItem]'] || item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]']) {
+      if (item['[Controls/_display/BreadcrumbsItem]'] || item['[Controls/_display/SearchSeparator]']) {
          e.stopPropagation();
          return;
       }

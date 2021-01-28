@@ -24,6 +24,7 @@ import Collection from 'Controls/_display/Collection';
 import {TItemKey} from 'Controls/_display/interface';
 
 export interface IOptions<T extends Model = Model> {
+    itemModule: string;
     contents?: T;
     selected?: boolean;
     marked?: boolean;

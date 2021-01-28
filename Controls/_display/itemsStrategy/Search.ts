@@ -1,12 +1,13 @@
-import SearchGridDataRow from '../SearchGridDataRow';
-import SearchGridCollection from '../SearchGridCollection';
-import TreeItemDecorator from '../TreeItemDecorator';
-import BreadcrumbsItem from '../BreadcrumbsItem';
-import SearchSeparator from '../SearchSeparator';
 import { DestroyableMixin, SerializableMixin, ISerializableState, Model } from 'Types/entity';
 import {mixin, object} from 'Types/util';
 import {Map} from 'Types/shim';
-import { IItemsStrategy, IItemsStrategyOptions, TreeItem } from 'Controls/display';
+import { create } from 'Types/di';
+import SearchSeparator from '../SearchSeparator';
+import BreadcrumbsItem from '../BreadcrumbsItem';
+import Search from '../Search';
+import TreeItemDecorator from '../TreeItemDecorator';
+import TreeItem from '../TreeItem';
+import IItemsStrategy, {IOptions as IItemsStrategyOptions} from '../IItemsStrategy';
 
 const FORGET_TIMEOUT = 1000;
 let lastTimeForget = 0;
@@ -19,17 +20,25 @@ interface IOptions<S, T> {
     dedicatedItemProperty?: string;
 
     source: IItemsStrategy<S, T>;
+
+    searchSeparatorModule: string;
+    breadcrumbsItemModule: string;
+    treeItemDecoratorModule: string;
 }
 
-interface ISortOptions<S extends Model, T extends SearchGridDataRow<S>> {
+interface ISortOptions<S extends Model, T extends TreeItem<S>> {
     treeItemToDecorator: Map<T, TreeItemDecorator<S>>;
-    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator>;
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>;
     dedicatedItemProperty: string;
-    display: SearchGridCollection<S, T>;
+    display: Search<S, T>;
+
+    searchSeparatorModule: string;
+    breadcrumbsItemModule: string;
+    treeItemDecoratorModule: string;
 }
 
-interface IBreadCrumbsReference<S extends Model, T extends SearchGridDataRow<S>> {
-    breadCrumbs: BreadcrumbsItem<S> | SearchSeparator;
+interface IBreadCrumbsReference<S extends Model, T extends TreeItem<S>> {
+    breadCrumbs: BreadcrumbsItem<S> | SearchSeparator<S>;
     last: T;
     itsNew: boolean;
 }
@@ -38,7 +47,7 @@ interface IBreadCrumbsReference<S extends Model, T extends SearchGridDataRow<S>>
  * Returns nearest parent node for given tree item. It could be item itself.
  * @param item Started node or leaf to go from
  */
-function getNearestNode<S extends Model, T extends SearchGridDataRow<S>>(item: T): T {
+function getNearestNode<S extends Model, T extends TreeItem<S>>(item: T): T {
     if (!item || !item.isNode) {
         return item;
     }
@@ -62,11 +71,11 @@ function getNearestNode<S extends Model, T extends SearchGridDataRow<S>>(item: T
  * @param breadcrumbsToData Breadcrumbs to data map
  * @param display Related display
  */
-function getBreadCrumbsReference<S extends Model, T extends SearchGridDataRow<S>>(
+function getBreadCrumbsReference<S extends Model, T extends TreeItem<S>>(
     item: T,
-    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator>,
-    breadcrumbsToData: Map<BreadcrumbsItem<S> | SearchSeparator, T[]>,
-    display: SearchGridCollection<S, T>
+    treeItemToBreadcrumbs: Map<T, BreadcrumbsItem<S> | SearchSeparator<S>>,
+    breadcrumbsToData: Map<BreadcrumbsItem<S> | SearchSeparator<S>, T[]>,
+    display: Search<S, T>
 ): IBreadCrumbsReference<S, T> {
     let breadCrumbs;
     const last = getNearestNode(item);
@@ -100,7 +109,7 @@ function getBreadCrumbsReference<S extends Model, T extends SearchGridDataRow<S>
             if (display?.createSearchSeparator) {
                 breadCrumbs = display.createSearchSeparator({});
             } else {
-                breadCrumbs = new SearchSeparator({owner: display});
+                breadCrumbs = new SearchSeparator({owner: display, source: item});
             }
             treeItemToBreadcrumbs.set(item, breadCrumbs);
         }
@@ -120,7 +129,7 @@ function getBreadCrumbsReference<S extends Model, T extends SearchGridDataRow<S>
  * @author Мальцев А.А.
  * @private
  */
-export default class SearchStrategy<S extends Model, T extends SearchGridDataRow<S> = SearchGridDataRow<S>> extends mixin<
+export default class SearchStrategy<S extends Model, T extends TreeItem<S> = TreeItem<S>> extends mixin<
     DestroyableMixin,
     SerializableMixin
     >(
@@ -133,7 +142,7 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
     protected _options: IOptions<S, T>;
 
     /**
-     * Map from leaf to its decorator: SearchGridDataRow -> TreeItemDecorator
+     * Map from leaf to its decorator: TreeItem -> TreeItemDecorator
      */
     protected _treeItemToDecorator: Map<T, TreeItemDecorator<S>> = new Map<T, TreeItemDecorator<S>>();
 
@@ -204,7 +213,7 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
     getCollectionIndex(index: number): number {
         const items = this._getItems();
         const mappedItem = items[index];
-        const item = mappedItem instanceof TreeItemDecorator ? mappedItem.getSource() : mappedItem;
+        const item = mappedItem['[Controls/_display/TreeItemDecorator]'] ? mappedItem.getSource() : mappedItem;
         const sourceIndex = this.source.items.indexOf(item as T);
 
         return sourceIndex >= 0 ? this.source.getCollectionIndex(sourceIndex) : -1;
@@ -233,7 +242,10 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
             dedicatedItemProperty: this._options.dedicatedItemProperty || '',
             treeItemToDecorator: this._treeItemToDecorator,
             treeItemToBreadcrumbs: this._treeItemToBreadcrumbs,
-            display: this.options.display as SearchGridCollection<S, T>
+            display: this.options.display as Search<S, T>,
+            searchSeparatorModule: this._options.searchSeparatorModule,
+            breadcrumbsItemModule: this._options.breadcrumbsItemModule,
+            treeItemDecoratorModule: this._options.treeItemDecoratorModule
         });
     }
 
@@ -246,17 +258,17 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
      * @param items Display items
      * @param options Options
      */
-    static sortItems<S extends Model, T extends SearchGridDataRow<S> = SearchGridDataRow<S>>(
+    static sortItems<S extends Model, T extends TreeItem<S> = TreeItem<S>>(
         items: T[],
         options: ISortOptions<S, T>
-    ): Array<T | BreadcrumbsItem<S> | SearchSeparator> {
+    ): Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> {
         const {
             dedicatedItemProperty,
             display,
             treeItemToDecorator,
             treeItemToBreadcrumbs
         }: ISortOptions<S, T> = options;
-        const breadcrumbsToData = new Map<BreadcrumbsItem<S> | SearchSeparator, T[]>();
+        const breadcrumbsToData = new Map<BreadcrumbsItem<S> | SearchSeparator<S>, T[]>();
         const sortedItems = [];
 
         /**
@@ -286,7 +298,7 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
         items.forEach((item, index) => {
             let resultItem = item;
 
-            if (item instanceof TreeItem) {
+            if (item['[Controls/_display/TreeItem]']) {
                 if (item.isNode()) {
                     // Check if there is a special item within the breadcrumbs
                     if (
@@ -309,7 +321,7 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
 
                     // Look at the next item after current node
                     const next = items[index + 1];
-                    const nextIsTreeItem = next instanceof TreeItem;
+                    const nextIsTreeItem = next['[Controls/_display/TreeItem]'];
 
                     // Check that the next tree item is a node with bigger level.
                     // If it's not that means we've reached the end of current breadcrumbs.
@@ -362,10 +374,10 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
                         if (itsDescendant) {
                             parent = item.getParent();
                         } else {
-                            parent = currentBreadcrumbs instanceof SearchSeparator ? display?.getRoot() : currentBreadcrumbs;
+                            parent = currentBreadcrumbs['[Controls/_display/SearchSeparator]'] ? display?.getRoot() : currentBreadcrumbs;
                         }
 
-                        decoratedItem = new TreeItemDecorator({
+                        decoratedItem = create(options.treeItemDecoratorModule, {
                             source: item,
                             parent,
                             multiSelectVisibility: display?.getMultiSelectVisibility()
@@ -404,7 +416,7 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
             // Forget unused breadcrumbs
             const breadcrumbsToDelete = [];
             treeItemToBreadcrumbs.forEach((value, key) => {
-                if (items.indexOf(key) === -1 && !(value instanceof SearchSeparator)) {
+                if (items.indexOf(key) === -1 && !(value['[Controls/_display/SearchSeparator]'])) {
                     breadcrumbsToDelete.push(key);
                 }
             });
@@ -412,9 +424,9 @@ export default class SearchStrategy<S extends Model, T extends SearchGridDataRow
         }
 
         // Expand breadcrumbs into flat array
-        const resultItems: Array<T | BreadcrumbsItem<S> | SearchSeparator> = [];
+        const resultItems: Array<T | BreadcrumbsItem<S> | SearchSeparator<S>> = [];
         sortedItems.forEach((item) => {
-            if (item instanceof BreadcrumbsItem || item instanceof SearchSeparator) {
+            if (item['[Controls/_display/BreadcrumbsItem]'] || item['[Controls/_display/SearchSeparator]']) {
                 resultItems.push(item);
                 const data = breadcrumbsToData.get(item);
                 if (data) {

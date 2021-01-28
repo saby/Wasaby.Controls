@@ -4,7 +4,9 @@ import IItemsStrategy from 'Controls/_display/IItemsStrategy';
 import { TreeItem } from 'Controls/display';
 import Tree from 'Controls/_display/Tree';
 import { RecordSet } from 'Types/collection';
-import { SearchStrategy as Search, BreadcrumbsItem, SearchSeparator } from 'Controls/searchBreadcrumbsGrid';
+import { Search } from 'Controls/_display/itemsStrategy';
+import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
+import SearchSeparator from 'Controls/_display/SearchSeparator';
 
 describe('Controls/_display/itemsStrategy/Search', () => {
     class StringContents {

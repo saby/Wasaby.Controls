@@ -1,9 +1,9 @@
 import { GridDataCell } from 'Controls/gridNew';
 import { Model } from 'Types/entity';
-import BreadcrumbsItem from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItem';
+import BreadcrumbsItemRow from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItemRow';
 import { TemplateFunction } from 'UI/Base';
 
-export default class BreadcrumbsCell<S extends Model, TOwner extends BreadcrumbsItem<S>> extends GridDataCell<any, any> {
+export default class BreadcrumbsItemCell<S extends Model, TOwner extends BreadcrumbsItemRow<S>> extends GridDataCell<any, any> {
    getTemplate(): TemplateFunction|string {
       return this.getOwner().getCellTemplate();
    }
@@ -44,8 +44,8 @@ export default class BreadcrumbsCell<S extends Model, TOwner extends Breadcrumbs
    }
 }
 
-Object.assign(BreadcrumbsCell.prototype, {
-   '[Controls/_searchBreadcrumbsGrid/BreadcrumbsCell]': true,
-   _moduleName: 'Controls/searchBreadcrumbsGrid:BreadcrumbsCell',
+Object.assign(BreadcrumbsItemCell.prototype, {
+   '[Controls/_searchBreadcrumbsGrid/BreadcrumbsItemCell]': true,
+   _moduleName: 'Controls/searchBreadcrumbsGrid:BreadcrumbsItemCell',
    _instancePrefix: 'search-breadcrumbs-grid-cell-'
 });

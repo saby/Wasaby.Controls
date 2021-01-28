@@ -3023,7 +3023,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
-            return create(this._itemModule, options);
+            return create(options.itemModule || this._itemModule, options);
         };
     }
 
@@ -3340,7 +3340,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 prevGroupIndex = index;
                 prevGroupPosition = position;
                 prevGroupHasMembers = false;
-            } else if (!(item['[Controls/_searchBreadcrumbsGrid/SearchSeparator]'])) {
+            } else if (!(item['[Controls/_display/SearchSeparator]'])) {
                 // Check item match
                 match = isMatch(item, index, position);
                 changed = applyMatch(match, index) || changed;

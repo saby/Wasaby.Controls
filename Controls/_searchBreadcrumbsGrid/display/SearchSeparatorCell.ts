@@ -1,7 +1,7 @@
 import { GridCell } from 'Controls/gridNew';
-import SearchSeparator from 'Controls/_searchBreadcrumbsGrid/display/SearchSeparator';
+import SearchSeparatorRow from 'Controls/_searchBreadcrumbsGrid/display/SearchSeparatorRow';
 
-export default class SearchSeparatorCell extends GridCell<string, SearchSeparator> {
+export default class SearchSeparatorCell extends GridCell<string, SearchSeparatorRow> {
    getTemplate(): string {
       return 'Controls/searchBreadcrumbsGrid:SearchSeparatorTemplate';
    }
