@@ -515,7 +515,7 @@ const _private = {
         }
 
         if (options.serviceDataLoadCallback instanceof Function) {
-            options.serviceDataLoadCallback(self._items, loadedList);
+            options.serviceDataLoadCallback(this._items, loadedList);
         }
     },
 
@@ -2203,6 +2203,7 @@ const _private = {
         _private.setHasMoreData(
             this._listViewModel, _private.hasMoreDataInAnyDirection(this, this._sourceController)
         );
+
         if (this._options.serviceDataLoadCallback instanceof Function) {
             this._options.serviceDataLoadCallback(this._items, items);
         }
@@ -3824,11 +3825,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const sourceChanged = newOptions.source !== this._options.source;
         const recreateSource = navigationChanged || resetPaging || sortingChanged;
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
+        const rootChanged = this._options.root !== newOptions.root;
+        const needReloadByOptions = sourceChanged || filterChanged || sortingChanged || recreateSource;
         let isItemsResetFromSourceController = false;
         const self = this;
 
         // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
-        if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
+        if (needReloadByOptions) {
             if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
                 self._hideTopTrigger = true;
             }
@@ -3836,7 +3839,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
-            (sourceChanged || searchValueChanged && newOptions.searchValue);
+            (needReloadByOptions || searchValueChanged && newOptions.searchValue || rootChanged);
 
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
@@ -4116,42 +4119,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
 
-        if (needReload) {
-            if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
-                _private.needAttachLoadTopTriggerToNull(this)) {
-                    this._hideTopTrigger = true;
-            }
-            this._scrollPagingCtr = null;
-            _private.resetPagingNavigation(this, newOptions.navigation);
-            _private.closeActionsMenu(this);
-            if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
-                return this._prepareGroups(newOptions, (collapsedGroups) => {
-                    return _private.reload(self, newOptions).addCallback(() => {
-                        if (!this._destroyed) {
-                            this._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                            this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                            _private.updateInitializedItemActions(this, newOptions);
-                            this._listViewModel.setSearchValue(newOptions.searchValue);
-                            if (!this._scrollController) {
-                                _private.createScrollController(this, newOptions);
-                            }
-                        }
-                    });
-                });
-            } else {
-                // return result here is for unit tests
-                return _private.reload(self, newOptions).addCallback(() => {
-                    if (!this._destroyed) {
-                        this._needBottomPadding = _private.needBottomPadding(newOptions, this._listViewModel);
-                        _private.updateInitializedItemActions(this, newOptions);
-                        this._listViewModel.setSearchValue(newOptions.searchValue);
-                        if (!this._scrollController) {
-                            _private.createScrollController(this, newOptions);
-                        }
-                    }
-                });
-            }
-        } else {
+        if (!needReload) {
             _private.doAfterUpdate(self, () => {
                 if (this._listViewModel) {
                     this._listViewModel.setSearchValue(newOptions.searchValue);
@@ -4914,6 +4882,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (e.isStopped()) {
             this._savedItemClickArgs = [item, originalEvent, columnIndex];
         } else {
+            if (e.isBubbling()) {
+                e.stopPropagation();
+            }
             const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], {bubbling: true});
             if (eventResult !== false) {
                 this._notify('itemActivate', [item, originalEvent], {bubbling: true});
@@ -5772,7 +5743,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _applyPagingNavigationState(params): void {
-        const options = {...this._options};
         const newNavigation = cClone(this._options.navigation);
         if (params.pageSize) {
             newNavigation.sourceConfig.pageSize = params.pageSize;
@@ -5783,11 +5753,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             newNavigation.sourceConfig.pageSize = this._currentPageSize;
         }
 
-        options.navigation = newNavigation;
-
         const updateData = () => {
-            this._sourceController.updateOptions(options);
-            const result = _private.reload(this, this._options);
+            const result = _private.reload(this, this._options, newNavigation.sourceConfig);
             this._shouldRestoreScrollPosition = true;
             return result;
         };

@@ -273,9 +273,8 @@ const _private = {
         self._children.baseControl.showIndicator();
         return baseSourceController.load('down', nodeKey)
             .then((list) => {
-                listViewModel.setHasMoreStorage(
-                    _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
-                );
+                const expandedItems = _private.getExpandedItems(self, self._options, listViewModel.getCollection());
+                listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(baseSourceController, expandedItems));
                 self._children.baseControl.stopBatchAdding();
                 return list;
             })
@@ -351,16 +350,8 @@ const _private = {
             if (isDeepReload && modelExpandedItems.length && loadedList) {
                 const sourceController = baseControl.getSourceController();
                 const hasMore = {};
-                const expandedItems = modelExpandedItems.slice();
+                const expandedItems = _private.getExpandedItems(self, options, loadedList);
                 let hasMoreData: unknown;
-
-                if (_private.isExpandAll(modelExpandedItems) && options.nodeProperty) {
-                    loadedList.each((item) => {
-                        if (item.get(options.nodeProperty)) {
-                            expandedItems.push(item.get(self._keyProperty));
-                        }
-                    });
-                }
 
                 expandedItems.forEach((key) => {
                     hasMoreData = sourceController.hasMoreData('down', key);
@@ -555,6 +546,25 @@ const _private = {
         }
 
         return target;
+    },
+
+    getExpandedItems(self, options, items): TKey[] {
+        const listViewModel = self._children.baseControl.getViewModel();
+        const modelExpandedItems = listViewModel.getExpandedItems();
+        let expandedItems;
+
+        if (_private.isExpandAll(modelExpandedItems) && options.nodeProperty) {
+            expandedItems = [];
+            items.each((item) => {
+                if (item.get(options.nodeProperty)) {
+                    expandedItems.push(item.get(self._keyProperty));
+                }
+            });
+        } else {
+            expandedItems = modelExpandedItems.slice();
+        }
+
+        return expandedItems;
     }
 };
 
@@ -636,7 +646,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const sourceControllerRoot = sourceController.getState().root;
 
             this._root = newOptions.root;
-            this._updatedRoot = true;
+            viewModel.setRoot(this._root);
+
+            if (this._options.itemsSetCallback) {
+                this._options.itemsSetCallback(sourceController.getItems());
+            }
+
+            // При смене корне, не надо запрашивать все открытые папки,
+            // т.к. их может не быть и мы загрузим много лишних данных.
+            // Так же учитываем, что вместе со сменой root могут поменять и expandedItems - тогда не надо их сбрасывать.
+            if (isEqual(newOptions.expandedItems, this._options.expandedItems)) {
+                this._needResetExpandedItems = true;
+            }
 
             if (sourceControllerRoot === undefined || sourceControllerRoot !== newOptions.root) {
                 updateSourceController = true;
@@ -697,30 +718,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
     },
     _afterUpdate: function(oldOptions) {
-        let afterUpdateResult;
-
-        if (this._updatedRoot) {
-            const sourceController = this._options.sourceController;
-            const isSourceControllerLoadingNewData = sourceController && sourceController.isLoading();
-            this._updatedRoot = false;
-            // При смене корне, не надо запрашивать все открытые папки,
-            // т.к. их может не быть и мы загрузим много лишних данных.
-            // Так же учитываем, что вместе со сменой root могут поменять и expandedItems - тогда не надо их сбрасывать.
-            if (isEqual(oldOptions.expandedItems, this._options.expandedItems)) {
-                this._needResetExpandedItems = true;
-            }
-            // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
-            if (isEqual(this._options.filter, oldOptions.filter) &&
-                this._options.source === oldOptions.source &&
-                !isSourceControllerLoadingNewData) {
-                afterUpdateResult = this._children.baseControl.reload();
-            }
-        }
         if (oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
-
-        return afterUpdateResult;
     },
     _beforeUnmount(): void {
         this._clearTimeoutForExpandOnDrag();

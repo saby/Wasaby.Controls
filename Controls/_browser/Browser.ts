@@ -224,7 +224,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
-        const sourceChanged = this._options.source !== newOptions.source;
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -238,7 +237,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilterAndFilterItems();
         }
 
-        if (sourceChanged) {
+        if (this._options.source !== newOptions.source) {
             this._source = newOptions.source;
         }
 
@@ -262,23 +261,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         const isChanged = sourceController.updateOptions(
            this._getSourceControllerOptions(newOptions as ISourceControllerOptions));
 
-        if (sourceChanged) {
-            this._loading = true;
-            methodResult = sourceController.reload()
-               .then((items) => {
-                   this._items = sourceController.getItems();
-
-                   this._afterSourceLoad(sourceController, newOptions);
-
-                   this._loading = false;
-                   return items;
-               }, (error) => {
-                   this._processLoadError(error);
-                   return error;
-               })
-               .then((result) => {
-                   return this._updateSearchController(newOptions).then(() => result);
-               });
+        if (isChanged) {
+            methodResult = this._reload(newOptions);
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
         }
@@ -442,7 +426,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
         }
-        this._rootBeforeSearch = null;
     }
 
     private _isSearchViewMode(): boolean {
@@ -467,6 +450,12 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _rootChanged(event: SyntheticEvent, root: Key): void {
+        if (this._options.root === undefined && this._sourceController.getRoot() !== root) {
+            this._root = root;
+            this._sourceController.setRoot(root);
+            this._sourceController.setExpandedItems([]);
+            this._reload(this._options);
+        }
         this._notify('rootChanged', [root]);
     }
 
@@ -728,10 +717,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _updateRootAfterSearch(): void {
         if (this._options.startingWith === 'root') {
             const newRoot = Browser._getRoot(this._path, this._root, this._options.parentProperty);
-            this._rootBeforeSearch = this._root;
-            this._root = newRoot;
-            this._searchController.setRoot(newRoot);
-            this._notify('rootChanged', [newRoot]);
+
+            if (newRoot !== this._root) {
+                this._rootBeforeSearch = this._root;
+                this._root = newRoot;
+                this._searchController.setRoot(newRoot);
+                this._sourceController.setRoot(newRoot);
+                this._notify('rootChanged', [newRoot]);
+            }
         }
     }
 
@@ -761,6 +754,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateViewMode(this._previousViewMode);
             this._previousViewMode = null;
             this._misspellValue = '';
+            this._rootBeforeSearch = null;
         }
     }
 
@@ -778,6 +772,27 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(error);
         }
+    }
+
+    private _reload(options: IBrowserOptions): Promise<RecordSet> {
+        const sourceController = this._sourceController;
+
+        this._loading = true;
+        return sourceController.reload()
+            .then((items) => {
+                this._items = sourceController.getItems();
+
+                this._afterSourceLoad(sourceController, options);
+
+                this._loading = false;
+                return items;
+            }, (error) => {
+                this._processLoadError(error);
+                return error;
+            })
+            .then((result) => {
+                return this._updateSearchController(options).then(() => result);
+            });
     }
 
     _afterSetItemsOnReloadCallback(): void {

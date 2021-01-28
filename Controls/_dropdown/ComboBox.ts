@@ -48,6 +48,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/_interface/IFontColorStyle
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IHeight
+ * @implements Controls/_input/interface/IBorderVisibility
  *
  * @public
  * @author Золотова Э.Е.
@@ -256,7 +257,8 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder {
          fontSize: 'm',
          fontColorStyle: 'default',
          tooltip: '',
-         emptyKey: null
+         emptyKey: null,
+         borderVisibility: 'visible'
       };
    }
 }
