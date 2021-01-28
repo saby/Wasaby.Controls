@@ -94,8 +94,14 @@ function getBreadCrumbsReference<S extends Model, T extends SearchGridDataRow<S>
         }
     } else if (last === root && breadcrumbsToData.size > 0) {
         breadCrumbs = treeItemToBreadcrumbs.get(last);
+
         if (!breadCrumbs) {
-            breadCrumbs = new SearchSeparator({owner: display});
+            // TODO удалить првоерку, когда полностью перейдем на новую модель
+            if (display?.createSearchSeparator) {
+                breadCrumbs = display.createSearchSeparator({});
+            } else {
+                breadCrumbs = new SearchSeparator({owner: display});
+            }
             treeItemToBreadcrumbs.set(item, breadCrumbs);
         }
     }

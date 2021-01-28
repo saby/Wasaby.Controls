@@ -2080,7 +2080,7 @@ define([
             keyProperty: 'id'
          }), cfg);
 
-         tree.TreeControl._private.applyReloadedNodes(treeGridViewModel, 0, 'id', 'Раздел@', newItems);
+         tree.TreeControl._private.applyReloadedNodes({_options: {}}, treeGridViewModel, 0, 'id', 'Раздел@', newItems);
          treeGridViewModel.getItems().merge(newItems, {remove: false, inject: true}); // эмуляция работы sourceController'a
          assert.equal(treeGridViewModel.getItems().getCount(), 3);
          assert.deepEqual(treeGridViewModel.getItems().at(0).getRawData(), {id: 0, 'Раздел@': false, "Раздел": null});

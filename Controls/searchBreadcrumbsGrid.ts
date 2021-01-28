@@ -7,6 +7,7 @@ import SearchGridDataCell from 'Controls/_searchBreadcrumbsGrid/display/SearchGr
 import BreadcrumbsItem from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItem';
 import BreadcrumbsCell from 'Controls/_searchBreadcrumbsGrid/display/BreadcrumbsCell';
 import SearchSeparator from 'Controls/_searchBreadcrumbsGrid/display/SearchSeparator';
+import SearchSeparatorCell from 'Controls/_searchBreadcrumbsGrid/display/SearchSeparatorCell';
 import SearchView from 'Controls/_searchBreadcrumbsGrid/SearchView';
 import View from 'Controls/_searchBreadcrumbsGrid/Search';
 import * as SearchBreadcrumbsItemTemplate from 'wml!Controls/_searchBreadcrumbsGrid/render/Item';
@@ -30,3 +31,5 @@ register('Controls/searchBreadcrumbsGrid:SearchGridDataCell', SearchGridDataCell
 register('Controls/searchBreadcrumbsGrid:Search', Search, {instantiate: false});
 register('Controls/searchBreadcrumbsGrid:BreadcrumbsItem', BreadcrumbsItem, {instantiate: false});
 register('Controls/searchBreadcrumbsGrid:BreadcrumbsCell', BreadcrumbsCell, {instantiate: false});
+register('Controls/searchBreadcrumbsGrid:SearchSeparator', SearchSeparator, {instantiate: false});
+register('Controls/searchBreadcrumbsGrid:SearchSeparatorCell', SearchSeparatorCell, {instantiate: false});

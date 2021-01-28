@@ -42,6 +42,17 @@ export default class SearchGridCollection<S extends Model = Model, T extends Sea
       return item;
    }
 
+   createSearchSeparator(options: object): BreadcrumbsItem {
+      const currentModuleName = this._itemModule;
+      this._itemModule = 'Controls/searchBreadcrumbsGrid:SearchSeparator';
+      const item = this.createItem({
+         ...options,
+         owner: this
+      });
+      this._itemModule = currentModuleName;
+      return item;
+   }
+
    protected _createComposer(): itemsStrategy.Composer<S, T> {
       const composer = super._createComposer();
 

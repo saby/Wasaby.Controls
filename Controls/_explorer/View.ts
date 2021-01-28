@@ -215,15 +215,15 @@ var
          },
 
          setViewConfig: function (self, viewMode) {
-            // if (self._options.useNewModel) {
+            if (self._options.useNewModel) {
                self._viewName = VIEW_NAMES_NEW[viewMode];
                self._useNewModel = USE_NEW_MODEL_VALUES_NEW[viewMode];
                self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS_NEW[viewMode];
-/*            } else {
+            } else {
                self._viewName = VIEW_NAMES[viewMode];
                self._useNewModel = USE_NEW_MODEL_VALUES[viewMode];
                self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
-            }*/
+            }
          },
          setViewModeSync: function(self, viewMode, cfg): void {
             self._viewMode = viewMode;

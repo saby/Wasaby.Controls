@@ -225,7 +225,7 @@ const _private = {
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
-        const items = viewModel.getItems();
+        const items = self._options.useNewModel ? viewModel.getCollection() : viewModel.getItems();
         const dispItem = viewModel.getItemBySourceKey(nodeKey);
         const loadedChildren = dispItem && (self._options.useNewModel ?
             viewModel.getChildren(dispItem, items).getCount() :
@@ -453,7 +453,7 @@ const _private = {
             nodes.concat(_private.getReloadableNodes(viewModel, key, self._keyProperty, nodeProperty));
 
         return baseSourceController.load(undefined, key, filter).addCallback((result) => {
-            _private.applyReloadedNodes(viewModel, key, self._keyProperty, nodeProperty, result);
+            _private.applyReloadedNodes(self, viewModel, key, self._keyProperty, nodeProperty, result);
             viewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
             );
@@ -469,9 +469,9 @@ const _private = {
         return nodes;
     },
 
-    applyReloadedNodes: function(viewModel, nodeKey, keyProp, nodeProp, newItems) {
+    applyReloadedNodes: function(self, viewModel, nodeKey, keyProp, nodeProp, newItems) {
         var itemsToRemove = [];
-        var items = viewModel.getItems();
+        var items = self._options.useNewModel ? viewModel.getCollection() : viewModel.getItems();
         var checkItemForRemove = function(item) {
             if (newItems.getIndexByValue(keyProp, item.get(keyProp)) === -1) {
                 itemsToRemove.push(item);

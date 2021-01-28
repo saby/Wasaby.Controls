@@ -2420,7 +2420,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectVisibility(visibility: string): void {
         this.getViewIterator().each((item: CollectionItem<T>) => {
-            if (item.SelectableItem) {
+            // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
+            // тоже должны перерисоваться при изменении видимости чекбоксов
+            if (item.setMultiSelectVisibility) {
                 item.setMultiSelectVisibility(visibility);
             }
         });
@@ -2428,7 +2430,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectAccessibilityProperty(property: string): void {
         this.getViewIterator().each((item: CollectionItem) => {
-            if (item.SelectableItem) {
+            if (item.setMultiSelectAccessibilityProperty) {
                 item.setMultiSelectAccessibilityProperty(property);
             }
         });
