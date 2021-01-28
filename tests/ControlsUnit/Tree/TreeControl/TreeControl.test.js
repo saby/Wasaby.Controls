@@ -1264,7 +1264,7 @@ define([
          };
          options.sourceController = new dataSource.NewSourceController({...options});
          var
-             setHasMoreCalled = false,
+             hasMore = false,
              isIndicatorHasBeenShown = false,
              isIndicatorHasBeenHidden = false,
              loadNodeId,
@@ -1275,10 +1275,11 @@ define([
                    baseControl: {
                       getViewModel: function () {
                          return {
-                            setHasMoreStorage: function () {
-                               setHasMoreCalled = true;
+                            setHasMoreStorage: function (hasMoreStorage) {
+                               hasMore = hasMoreStorage;
                             },
-                            getExpandedItems: () => []
+                            getExpandedItems: () => [1],
+                            getCollection: () => new collection.RecordSet()
                          };
                       },
                       showIndicator() {
@@ -1294,7 +1295,8 @@ define([
                                loadNodeId = key;
                                loadMoreDirection = direction;
                                return options.sourceController.load(direction, key);
-                            }
+                            },
+                            hasMoreData: () => true
                          };
                       }
                    }
@@ -1315,7 +1317,7 @@ define([
                 testParam: 11101989
              }, mockedTreeControlInstance._options.filter,
              'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
-         assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
+         assert.deepEqual(hasMore, {1: true});
          assert.isTrue(dataLoadCallbackCalled, 'Invalid call "dataLoadCallbackCalled" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(isIndicatorHasBeenShown);
          assert.isTrue(isIndicatorHasBeenHidden);
