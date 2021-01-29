@@ -9,12 +9,12 @@ const HOVER_FREEZE_TIMEOUT: number = 200;
 // через HOVER_FREEZE_TIMEOUT - HOVER_UNFREEZE_TIMEOUT мс.
 const HOVER_UNFREEZE_TIMEOUT: number = 100;
 
-// 60 Было установлено опытным путём при приёмке
-const HOVER_RIGHT_BOTTOM_ANGLE_CONST: number = 60;
+// Установлено опытным путём
+const HOVER_RIGHT_BOTTOM_ANGLE_CONST: number = 120;
 
 // Корректировка левого угла треугольника
 // Увеличивает вероятность опадания в зону перемещения курсора
-const HOVER_LEFT_ANGLE_CORRECTION_CONST: number = 60;
+const HOVER_LEFT_ANGLE_CORRECTION_CONST: number = 10;
 
 interface IHoverFreezeItemData {
     key: CrudEntityKey;

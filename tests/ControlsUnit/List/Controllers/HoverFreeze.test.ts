@@ -135,7 +135,7 @@ describe('Controls/list/HoverFreeze', () => {
 
     it('should restart unfreeze timer', () => {
         // mouse cursor is moving right inside of the moveArea
-        const event1 = createFakeMouseEvent(80, 80);
+        const event1 = createFakeMouseEvent(80, 60);
         const event2 = createFakeMouseEvent(90, 80);
         const event3 = createFakeMouseEvent(100, 80);
         hoverFreeze.startFreezeHoverTimeout('key_1', 0);
@@ -177,6 +177,18 @@ describe('Controls/list/HoverFreeze', () => {
         // mouse cursor position is under the moveArea
         const event = createFakeMouseEvent(100, 100);
         hoverFreeze.startUnfreezeHoverTimeout(event);
+        assert.isTrue(isUnFreezeHoverCallbackCalled);
+    });
+
+    it ('should call unFreezeHoverCallback when cursor position is under the moveArea', () => {
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+
+        // mouse cursor position is under the moveArea
+        const event1 = createFakeMouseEvent(100, 80);
+        const event2 = createFakeMouseEvent(45, 60);
+        hoverFreeze.startUnfreezeHoverTimeout(event1);
+        hoverFreeze.startUnfreezeHoverTimeout(event2);
         assert.isTrue(isUnFreezeHoverCallbackCalled);
     });
 });
