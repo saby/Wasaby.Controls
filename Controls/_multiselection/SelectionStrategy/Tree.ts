@@ -605,7 +605,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                selectedChildrenCount = null;
             }
 
-            if (selectedChildrenCount !== null) {
+            if (selectedChildrenCount !== null && this._canBeSelected(childItem)) {
                childId = this._getKey(childItem);
 
                if (!selection.excluded.includes(childId)) {
