@@ -12,7 +12,7 @@ export default class SearchGridDataRow<S extends Model> extends TreeGridDataRow<
       let classes = super.getWrapperClasses(templateHighlightOnHover, theme, cursor, backgroundColorStyle, style);
 
       if (this.getLevel() === 1 && this.isNode() !== null) {
-         classes += 'controls-TreeGrid__row-rootLeaf';
+         classes += ' controls-TreeGrid__row-rootLeaf';
       }
 
       return classes;

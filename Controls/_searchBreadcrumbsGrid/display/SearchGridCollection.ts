@@ -15,7 +15,7 @@ export default class SearchGridCollection<S extends Model = Model, T extends Sea
 
    protected _$searchBreadcrumbsItemTemplate: TemplateFunction;
 
-   getSearchBreadcrumbsItemTemplate(): TemplateFunction {
+   getSearchBreadcrumbsItemTemplate(): TemplateFunction|string {
       return this._$searchBreadcrumbsItemTemplate;
    }
 

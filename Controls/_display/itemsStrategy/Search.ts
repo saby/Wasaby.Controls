@@ -83,7 +83,7 @@ function getBreadCrumbsReference<S extends Model, T extends TreeItem<S>>(
     if (last && last !== root) {
         breadCrumbs = treeItemToBreadcrumbs.get(last);
         if (!breadCrumbs) {
-            // TODO удалить првоерку, когда полностью перейдем на новую модель
+            // TODO удалить првоерку, когда полностью перейдем на новую модель https://online.sbis.ru/opendoc.html?guid=378971cd-b6a3-44ad-a264-745bd5a7f443
             if (display?.createBreadcrumbsItem) {
                 breadCrumbs = display?.createBreadcrumbsItem({
                     contents: null,
@@ -105,7 +105,7 @@ function getBreadCrumbsReference<S extends Model, T extends TreeItem<S>>(
         breadCrumbs = treeItemToBreadcrumbs.get(last);
 
         if (!breadCrumbs) {
-            // TODO удалить првоерку, когда полностью перейдем на новую модель
+            // TODO удалить првоерку, когда полностью перейдем на новую модель https://online.sbis.ru/opendoc.html?guid=378971cd-b6a3-44ad-a264-745bd5a7f443
             if (display?.createSearchSeparator) {
                 breadCrumbs = display.createSearchSeparator({});
             } else {
