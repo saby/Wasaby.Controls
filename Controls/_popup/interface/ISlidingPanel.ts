@@ -43,25 +43,6 @@ export interface ISlidingPanel {
     readonly '[Controls/_popup/interface/ISlidingPanel]': boolean;
 }
 
-/**
- * @name Controls/_popup/interface/ISlidingPanel#modal
- * @cfg {Boolean} Определяет, будет ли открываемое окно блокировать работу пользователя с родительским приложением.
- * @default false
- */
-
-/**
- * @name Controls/_popup/interface/ISlidingPanel#minHeight
- * @cfg {Number} Минимальная высота шторки.
- * С такой высотой шторка открывается, при свайпе пниз на минимальной высоте шторка закрывается.
- * @default false
- */
-
-/**
- * @name Controls/_popup/interface/ISlidingPanel#maxHeight
- * @cfg {Number} Максимальная высота шторки.
- * Следует задавать, если на вашем макете шторка может разворачиваться только на определенную высоту.
- * По умолчанию шторка может разворачиваться на всю высоту экрана.
- */
 
 /**
  * @name Controls/_popup/interface/ISlidingPanel#position
@@ -74,8 +55,12 @@ export interface ISlidingPanel {
 /**
  * @typedef {Object} Controls/_popup/interface/ISlidingPanel/DialogSizes
  * @description Размеры попапа на настольном копьютере и планшете.
- * @property {Number} minHeight Минимально допустимая высота шторки. С такой высотой она открывается.
- * @property {Number} maxHeight Максимально допустимая высота шторки.
+ * @property {Number} minHeight Минимальная высота попапа.
+ * @property {Number} maxHeight Максимальная высота попапа.
+ * @property {Number} height Текущая высота попапа.
+ * @property {Number} maxWidth Максимальная ширина попапа.
+ * @property {Number} minWidth Минимальная ширина попапа.
+ * @property {Number} width Текущая ширина попапа.
  */
 
 /**

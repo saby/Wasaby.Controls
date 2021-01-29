@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupSliding/Template/SlidingPanel/SlidingPanel';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IDragObject} from 'Controls/dragnDrop';
+import {IDragObject, Container} from 'Controls/dragnDrop';
 import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISlidingPanelTemplate';
 
 /**
@@ -17,7 +17,13 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     protected _touchDragOffset: IDragObject['offset'];
     protected _scrollAvailable: boolean = false;
     protected _position: string = 'bottom';
+    protected _children: {
+        dragNDrop: Container;
+        customContent: Element;
+        customContentWrapper: Element;
+    };
     private _currentTouchYPosition: number = null;
+    private _scrollState: object = null;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
         this._scrollAvailable = this._isScrollAvailable(options);
@@ -43,10 +49,16 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         this._notifyDragStart(dragObject.offset);
     }
 
+    protected _startDragNDrop(event: SyntheticEvent<MouseEvent>): void {
+        this._children.dragNDrop.startDragNDrop(null, event);
+    }
+
+    protected _scrollStateChanged(event: SyntheticEvent<MouseEvent>, scrollState: object) {
+        this._scrollState = scrollState;
+    }
+
     protected _getScrollAvailableHeight(): number {
-        const curtainHeight = this._options.slidingPanelPosition.height;
-        const controllerHeight = this._container.querySelector('.controls-SlidingPanel__controller')?.clientHeight || 0;
-        return curtainHeight - controllerHeight;
+        return this._children.customContentWrapper.clientHeight;
     }
 
     /**
@@ -132,8 +144,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
      * @private
      */
     private _getScrollTop(): number {
-        const scrollableContainer = this._container.querySelector('.controls-Scroll__content');
-        return scrollableContainer && scrollableContainer.scrollTop;
+        return this._scrollState?.scrollTop || 0;
     }
 
     static _theme: string[] = ['Controls/popupSliding'];

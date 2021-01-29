@@ -1,3 +1,0 @@
-<Controls.Container.Async
-   templateName="{{ _dialogTemplate }}"
-   templateOptions="{{ _options }}"/>

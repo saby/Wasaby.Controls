@@ -1,8 +1,6 @@
 <Controls.popupSliding:Template
    slidingPanelPosition="{{ _options.slidingPanelPosition }}"
-   position="{{ _options.position }}"
-   controlButtonVisibility="{{ _options.controlButtonVisibility }}"
-   closeButtonVisibility="{{ _options.closeButtonVisibility }}">
+   controlButtonVisibility="{{ true }}">
    <ws:bodyContentTemplate>
       <Controls.scroll:Container
          attr:style="height: 100%;"

@@ -42,10 +42,10 @@ export default class SlidingPanel extends Base {
      * <pre class="brush: js">
      * import {SlidingPanelOpener} from 'Controls/popup';
      *
-     * this._curtain = new SlidingPanelOpener();
+     * this._slidingPanel = new SlidingPanelOpener();
      *
      * openStack() {
-     *     this._curtain.open({
+     *     this._slidingPanel.open({
      *         template: 'Example/MyStackTemplate',
      *         opener: this._children.myButton
      *     });
@@ -104,7 +104,13 @@ export default class SlidingPanel extends Base {
      */
     private _getPopupOptionsWidthSizes(popupOptions: ISlidingPanelPopupOptions): ISlidingPanelPopupOptions {
         const sizes = detection.isPhone ? popupOptions.slidingPanelSizes : popupOptions.dialogSizes;
-        return Object.assign({}, sizes, popupOptions);
+        return Object.assign(
+            {
+                position: 'bottom'
+            },
+            sizes,
+            popupOptions
+        );
     }
 }
 
@@ -116,10 +122,10 @@ export default class SlidingPanel extends Base {
  * <pre class="brush: js">
  * import {SlidingPanelOpener} from 'Controls/popup';
  *
- * this._curtain = new SlidingPanelOpener();
+ * this._slidingPanel = new SlidingPanelOpener();
  *
  * closeStack() {
- *     this._curtain.close();
+ *     this._slidingPanel.close();
  * }
  * </pre>
  * @see open
@@ -135,11 +141,11 @@ export default class SlidingPanel extends Base {
  * <pre class="brush: js">
  * import {SlidingPanelOpener} from 'Controls/popup';
  *
- * this._curtain = new SlidingPanelOpener();
+ * this._slidingPanel = new SlidingPanelOpener();
  *
  * _beforeUnmount() {
- *     this._curtain.destroy();
- *     this._curtain = null;
+ *     this._slidingPanel.destroy();
+ *     this._slidingPanel = null;
  * }
  * </pre>
  * @see open

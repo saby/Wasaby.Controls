@@ -14,11 +14,17 @@ class Strategy {
      */
     getPosition({position: popupPosition = {}, popupOptions}: ISlidingPanelItem): IPopupPosition {
         // Если у попапа
-        const {position, maxHeight: optionsMaxHeight, minHeight: optionsMinHeight} = popupOptions;
+        const {
+            position,
+            slidingPanelSizes: {
+                maxHeight: optionsMaxHeight,
+                minHeight: optionsMinHeight
+            } = {}
+        } = popupOptions;
         const maxHeight = this._getHeightWithoutOverflow(optionsMaxHeight, this._getWindowHeight());
         const minHeight = this._getHeightWithoutOverflow(optionsMinHeight, maxHeight);
-        const initialHeight = popupPosition.height && this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
-        const height = initialHeight ? initialHeight : minHeight;
+        const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
+        const height = initialHeight || minHeight;
         return {
             left: 0,
             right: 0,
@@ -40,6 +46,9 @@ class Strategy {
      * @private
      */
     private _getHeightWithoutOverflow(height: number, maxHeight: number): number {
+        if (!height) {
+            return height;
+        }
         return maxHeight > height ? height : maxHeight;
     }
 

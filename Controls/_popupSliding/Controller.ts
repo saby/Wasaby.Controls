@@ -47,13 +47,11 @@ class Controller extends BaseController {
     getDefaultConfig(item: ISlidingPanelItem): void|Promise<void> {
         const popupOptions = item.popupOptions;
         const animationClass = ` controls-SlidingPanel__animation-position-${popupOptions.position}`;
-        let className = item.popupOptions.className || '';
+        let className = item.popupOptions.className + animationClass;
+        className += animationClass;
 
         item.position = SlidingPanelStrategy.getPosition(item);
 
-        if (!className.includes(animationClass)) {
-            className += animationClass;
-        }
         item.popupOptions.className = className;
         item.popupOptions.content = PopupContent;
         item.popupOptions.slidingPanelPosition = this._getPopupTemplatePosition(item);
@@ -67,7 +65,10 @@ class Controller extends BaseController {
             item.dragStartHeight = position.height;
         }
 
-        const {minHeight, maxHeight: optsMaxHeight, position: positionOption} = item.popupOptions;
+        const {
+            slidingPanelSizes: {minHeight, maxHeight: optsMaxHeight} = {},
+            position: positionOption
+        } = item.popupOptions;
         const heightOffset = positionOption === 'top' ? offset.y : -offset.y;
         const workspaceHeight = window.innerHeight;
         const maxHeight = optsMaxHeight > workspaceHeight ? workspaceHeight : optsMaxHeight;
@@ -103,7 +104,7 @@ class Controller extends BaseController {
             minHeight: position.minHeight,
             maxHeight: position.maxHeight,
             height: position.height,
-            position: popupOptions.position || 'bottom'
+            position: popupOptions.position
         };
     }
 }

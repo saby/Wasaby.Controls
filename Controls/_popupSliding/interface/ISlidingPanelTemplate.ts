@@ -29,8 +29,3 @@ export interface ISlidingPanelTemplate {
  * @name Controls/_popupSliding/interface/ISlidingPanelTemplate#bodyContentTemplate
  * @cfg {string|TemplateFunction} Пользовательский контент шторки.
  */
-
-/**
- * @name Controls/_popupSliding/interface/ISlidingPanelTemplate#closeButtonVisibility
- * @cfg {Boolean} Определяет, будет ли отображаться кнопка закрытия.
- */

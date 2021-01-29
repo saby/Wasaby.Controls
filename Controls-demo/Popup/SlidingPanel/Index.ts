@@ -1,28 +1,37 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import controlTemplate = require('wml!Controls-demo/Popup/SlidingPanel/Index/Index');
 import {SlidingPanelOpener} from 'Controls/popup';
+import {Memory} from 'Types/source';
 
 class Index extends Control<IControlOptions> {
     protected _template: TemplateFunction = controlTemplate;
+    protected _minHeight: number = 300;
+    protected _maxHeight: number = 700;
+    protected _position: string[] = ['bottom'];
+    protected _desktopWidth: number = 900;
+    protected _positionSource: Memory = new Memory({
+        keyProperty: 'id',
+        data: [
+            {id: 'top'},
+            {id: 'bottom'}
+        ]
+    });
     private _dialogOpener: SlidingPanelOpener;
 
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
         this._dialogOpener = new SlidingPanelOpener();
     }
-    protected _openCurtainHandler(event: Event, isInsideRestrictive: boolean): void {
+    protected _openSlidingPanelHandler(event: Event, isInsideRestrictive: boolean): void {
         this._dialogOpener.open({
             template: 'Controls-demo/Popup/SlidingPanel/PopupTemplate',
-            position: 'bottom',
+            opener: this,
+            position: this._position[0],
             slidingPanelSizes: {
-                minHeight: 300,
-                maxHeight: 700
+                minHeight: this._minHeight,
+                maxHeight: this._maxHeight
             },
             dialogSizes: {
-                width: 900
-            },
-            templateOptions: {
-                closeButtonVisibility: true,
-                controlButtonVisibility: true
+                width: this._desktopWidth
             }
         });
     }

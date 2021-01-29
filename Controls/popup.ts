@@ -53,9 +53,7 @@ export {IInfoBoxPopupOptions, IInfoBoxOpener} from './_popup/interface/IInfoBoxO
 export {IEditOptions, IEditOpener} from './_popup/interface/IEdit';
 export {
     ISlidingPanelPopupOptions,
-    ISlidingPanel,
-    ISlidingPanelPosition,
-    SLIDING_PANEL_POSITION
+    ISlidingPanelPosition
 } from './_popup/interface/ISlidingPanel';
 
 export {isVDOMTemplate} from './_popup/utils/isVdomTemplate';
