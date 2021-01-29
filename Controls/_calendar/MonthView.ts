@@ -53,7 +53,7 @@ var _private = {
  *
  * @public
  * @author Красильников А.С.
- * @demo Controls-demo/Calendar/MonthView/LongCellName/LongCellName
+ * @demo Controls-demo/Date/MonthView
  * @demo Controls-demo/Calendar/MonthView/NewMode/Index
  *
  */

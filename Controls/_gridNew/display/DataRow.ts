@@ -19,6 +19,7 @@ export default class DataRow<T extends Model> extends Row<T> implements IMarkabl
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly DraggableItem: boolean = true;
+    private _$editingColumnIndex: number;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -41,9 +42,16 @@ export default class DataRow<T extends Model> extends Row<T> implements IMarkabl
         }
     }
 
-    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
-        super.setEditing(editing, editingContents, silent);
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean, columnIndex?: number): void {
+        super.setEditing(editing, editingContents, silent, columnIndex);
+        if (typeof columnIndex === 'number' && this._$editingColumnIndex !== columnIndex) {
+            this._$editingColumnIndex = columnIndex;
+        }
         this._reinitializeColumns();
+    }
+
+    getEditingColumnIndex(): number {
+        return this._$editingColumnIndex;
     }
 }
 
@@ -51,5 +59,6 @@ Object.assign(DataRow.prototype, {
     '[Controls/_display/grid/DataRow]': true,
     _moduleName: 'Controls/gridNew:GridDataRow',
     _cellModule: 'Controls/gridNew:GridDataCell',
-    _instancePrefix: 'grid-data-row-'
+    _instancePrefix: 'grid-data-row-',
+    _$editingColumnIndex: null
 });

@@ -206,6 +206,16 @@ interface IIndicatorConfig {
     attachLoadTopTriggerToNull: boolean;
 }
 
+interface IBeginEditOptions {
+    shouldActivateInput?: boolean;
+    columnIndex?: number;
+}
+
+interface IBeginAddOptions {
+    shouldActivateInput?: boolean;
+    addPosition?: 'top' | 'bottom';
+}
+
 /**
  * Удаляет оригинал ошибки из ICrudResult перед вызовом сриализатора состояния,
  * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
@@ -2601,7 +2611,7 @@ const _private = {
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
-                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, false); });
                 }
             }
         }
@@ -2873,7 +2883,13 @@ const _private = {
      * @private
      */
     initVisibleItemActions(self, options: IList): void {
-        if (options.itemActionsVisibility === 'visible') {
+        if (self._getEditingConfig(options)?.mode === 'cell') {
+            self._itemActionsVisibility = 'onhovercell';
+        } else {
+            self._itemActionsVisibility = options.itemActionsVisibility;
+        }
+
+        if (self._itemActionsVisibility === 'visible') {
             _private.addShowActionsClass(this);
             _private.updateItemActions(self, options);
         }
@@ -3825,6 +3841,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let isItemsResetFromSourceController = false;
         const self = this;
+
+        const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
+        // todo При отказе от старой - выпилить проверку "useNewModel".
+        if (emptyTemplateChanged && newOptions.useNewModel) {
+            this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
+        }
 
         // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
         if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
@@ -4887,14 +4909,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const canEditByClick = !this._options.readOnly && this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
         if (canEditByClick) {
             e.stopPropagation();
-            this.beginEdit({ item }).then((result) => {
+            this._beginEdit({ item }, { columnIndex }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
                 return result;
             });
         } else if (this._editInPlaceController) {
-            this.commitEdit();
+            this._commitEdit();
         }
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
@@ -4934,6 +4956,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return new EditInPlaceController({
+            mode: this._getEditingConfig().mode,
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
@@ -5090,18 +5113,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return _private.isEditing(this);
     },
 
-    beginEdit(options) {
+    beginEdit(userOptions) {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
-        return this._beginEdit(options);
+        return this._beginEdit(userOptions);
     },
 
-    beginAdd(options) {
+    beginAdd(userOptions) {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
-        return this._beginAdd(options, this._getEditingConfig().addPosition);
+        return this._beginAdd(userOptions, { addPosition: this._getEditingConfig().addPosition });
     },
 
     cancelEdit() {
@@ -5125,20 +5148,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             return this._beginAdd({}, editingConfig.addPosition);
         } else if (editingConfig.item) {
             if (!this._items.getRecordById(editingConfig.item.getKey())) {
-                return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
+                return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
             } else {
                 return this._beginEdit({ item: editingConfig.item });
             }
         }
     },
 
-    _beginEdit(options, shouldActivateInput: boolean = true) {
+    _beginEdit(userOptions, {shouldActivateInput = true, columnIndex}: IBeginEditOptions = {}) {
         _private.closeSwipe(this);
         if (_private.hasHoverFreezeController(this)) {
             this._hoverFreezeController.unfreezeHover();
         }
         this.showIndicator();
-        return this._getEditInPlaceController().edit(options).then((result) => {
+        return this._getEditInPlaceController().edit(userOptions, { columnIndex }).then((result) => {
             if (shouldActivateInput && !(result && result.canceled)) {
                 this._editInPlaceInputHelper.shouldActivate();
             }
@@ -5148,7 +5171,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _beginAdd(options, addPosition, shouldActivateInput: boolean = true) {
+    _beginAdd(options, {shouldActivateInput = true, addPosition = 'bottom'}: IBeginAddOptions = {}) {
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().add(options, addPosition).then((addResult) => {
@@ -5202,7 +5225,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             const editingConfig = this._getEditingConfig();
             if (editingConfig.autoAddByApplyButton && collectionItem.isAdd) {
-                return this._beginAdd({}, editingConfig.addPosition);
+                return this._beginAdd({}, { addPosition: editingConfig.addPosition });
             } else {
                 return result;
             }
@@ -5219,8 +5242,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return Promise.resolve();
             }
             const collection = this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay();
+            const columnIndex = this._getEditingConfig()?.mode === 'cell' ? collection.find((cItem) => cItem.isEditing()).getEditingColumnIndex() : undefined;
             this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, collection.getIndexBySourceItem(item));
-            return this._beginEdit({ item }, false);
+            return this._beginEdit({ item }, { shouldActivateInput: false, columnIndex });
         };
 
         switch (nativeEvent.keyCode) {
@@ -5277,7 +5301,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (shouldEdit) {
                 return this._beginEdit({ item });
             } else if (shouldAdd) {
-                return this._beginAdd({}, this._getEditingConfig().addPosition);
+                return this._beginAdd({}, { addPosition: this._getEditingConfig().addPosition });
             }
         });
     },
@@ -5299,12 +5323,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
 
         return {
-            autoAddOnInit: !!editingConfig.autoAddOnInit,
+            mode: editingConfig.mode || 'row',
             editOnClick: !!editingConfig.editOnClick,
             sequentialEditing: editingConfig.sequentialEditing !== false,
             addPosition,
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,
+            autoAddOnInit: !!editingConfig.autoAddOnInit,
             autoAddByApplyButton: editingConfig.autoAddByApplyButton === false ? false : !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd),
             toolbarVisibility: !!editingConfig.toolbarVisibility
         };

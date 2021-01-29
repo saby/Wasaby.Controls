@@ -181,7 +181,7 @@ export default abstract class Row<T> {
             contentClasses += 'controls-ListView__checkbox-onhover ';
         }
 
-        if (templateHighlightOnHover !== false) {
+        if (templateHighlightOnHover !== false && this.getEditingConfig()?.mode !== 'cell') {
             contentClasses += `controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme} `;
         }
 
@@ -451,6 +451,10 @@ export default abstract class Row<T> {
         this._nextVersion();
     }
 
+    getEditingConfig() {
+        return this.getOwner().getEditingConfig();
+    }
+
     protected _updateSeparatorSizeInColumns(separatorName: 'Column' | 'Row'): void {
         const multiSelectOffset = this.hasMultiSelectColumn() ? 1 : 0;
         this._$columnItems.forEach((cell, cellIndex) => {
@@ -503,5 +507,6 @@ Object.assign(Row.prototype, {
     _$columns: null,
     _$colspanCallback: null,
     _$columnItems: null,
-    _$columnSeparatorSize: null
+    _$columnSeparatorSize: null,
+    _$editingColumnIndex: null
 });

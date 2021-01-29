@@ -85,6 +85,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly DraggableItem: boolean = true;
+    private _$editingColumnIndex: number;
 
     getInstanceId: () => string;
 
@@ -400,16 +401,30 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this._$editing;
     }
 
-    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
+    // TODO: Убрать columnIndex.
+    //  Расположение индекса редактируемой колонки на элементе плоского списка - временное решение, до отказа от
+    //  старых списков. Контроллер редактирования работает только с новой коллекцией и новыми item'ами, а
+    //  функционал редактирования отдельных ячеек требуется поддержать в том числе и в старых таблицах.
+    //  Такое решение оптимальнее, чем давать контроллеру редактирования старую модель, т.к. при переходе
+    //  достаточно будет почистить пару мест в CollectionItem, а не вычищать целый контроллер.
+    //  https://online.sbis.ru/opendoc.html?guid=b13d5312-a8f5-4cea-b88f-8c4c043e4a77
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean, columnIndex?: number): void {
         if (this._$editing === editing && this._$editingContents === editingContents) {
             return;
         }
         this._$editing = editing;
+        if (typeof columnIndex === 'number' && this._$editingColumnIndex !== columnIndex) {
+            this._$editingColumnIndex = columnIndex;
+        }
         this._setEditingContents(editingContents);
         this._nextVersion();
         if (!silent) {
             this._notifyItemChangeToOwner('editing');
         }
+    }
+
+    getEditingColumnIndex(): number {
+        return this._$editingColumnIndex;
     }
 
     acceptChanges(): void {
@@ -893,5 +908,6 @@ Object.assign(CollectionItem.prototype, {
     _$rowSeparatorSize: null,
     _contentsIndex: undefined,
     _version: 0,
-    _counters: null
+    _counters: null,
+    _$editingColumnIndex: null
 });
