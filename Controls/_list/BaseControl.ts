@@ -5528,7 +5528,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.reload(this, this._options).then(() => {
                 this._expanded = true;
             });
-        } else if (this._expanded) {
+        } else {
             this._sourceController.updateOptions(this._options);
             _private.reload(this, this._options).then(() => {
                 this._expanded = false;
