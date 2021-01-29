@@ -9,14 +9,24 @@ const HOVER_FREEZE_TIMEOUT: number = 200;
 // через HOVER_FREEZE_TIMEOUT - HOVER_UNFREEZE_TIMEOUT мс.
 const HOVER_UNFREEZE_TIMEOUT: number = 100;
 
-const ITEM_ACTIONS_CONTAINER_SELECTOR = '.js-controls-itemActions';
+// 60 Было установлено опытным путём при приёмке
+const HOVER_RIGHT_BOTTOM_ANGLE_CONST: number = 60;
+
+// Корректировка левого угла треугольника
+// Увеличивает вероятность опадания в зону перемещения курсора
+const HOVER_LEFT_ANGLE_CORRECTION_CONST: number = 60;
 
 interface IHoverFreezeItemData {
     key: CrudEntityKey;
     index: number;
 }
 
-interface IMouseMoveArea {
+interface IPoint {
+    x: number;
+    y: number;
+}
+
+interface IItemAreaRect {
     top: number;
     right: number;
     bottom: number;
@@ -44,10 +54,11 @@ export default class HoverFreeze {
     private _viewContainer: HTMLElement;
     private _freezeHoverCallback: () => void;
     private _unFreezeHoverCallback: () => void;
-    private _moveArea: IMouseMoveArea;
+    private _itemAreaRect: IItemAreaRect;
     private _itemFreezeHoverTimeout: number;
     private _itemUnfreezeHoverTimeout: number;
     private _measurableContainerSelector: string;
+    private _mouseLeavePoint: IPoint;
 
     constructor(options: IHoverFreezeOptions) {
         this.updateOptions(options);
@@ -135,7 +146,8 @@ export default class HoverFreeze {
     unfreezeHover(): void {
         // Сбрасываем текущий ховер
         this._itemData = null;
-        this._moveArea = null;
+        this._mouseLeavePoint = null;
+        this._itemAreaRect = null;
         this._stylesContainer.innerHTML = '';
         this._clearFreezeHoverTimeout();
         this._clearUnfreezeHoverTimeout();
@@ -149,6 +161,8 @@ export default class HoverFreeze {
             // если уже были таймеры разлипания/залипания, то глушим их
             this._clearUnfreezeHoverTimeout();
             this._clearFreezeHoverTimeout();
+
+            this._mouseLeavePoint = null;
 
             // Стартуем новый таймер залипания.
             this._itemFreezeHoverTimeout = setTimeout(() => {
@@ -173,11 +187,30 @@ export default class HoverFreeze {
      * @private
      */
     private _isCursorInsideOfMouseMoveArea(x: number, y: number): boolean {
-        if (!this._moveArea) {
+        if (!this._itemAreaRect) {
             return false;
         }
-        return x < this._moveArea.right && x > this._moveArea.left &&
-            y < this._moveArea.bottom && y > this._moveArea.top;
+        const cursorPoint = { x, y };
+        if (!this._mouseLeavePoint) {
+            this._mouseLeavePoint = HoverFreeze._createPoint(
+                cursorPoint.x - HOVER_LEFT_ANGLE_CORRECTION_CONST,
+                this._itemAreaRect.bottom
+            );
+        }
+        const pointRight = HoverFreeze._createPoint(this._itemAreaRect.right, this._itemAreaRect.bottom);
+        const pointBottom = HoverFreeze._createPoint(
+            this._itemAreaRect.right, this._itemAreaRect.bottom + HOVER_RIGHT_BOTTOM_ANGLE_CONST);
+
+        // Вычисляем векторные произведения для трёх треугольников.
+        const firstSegment = HoverFreeze._calculateVectorProduct(this._mouseLeavePoint, pointRight, cursorPoint);
+        const secondSegment = HoverFreeze._calculateVectorProduct(pointRight, pointBottom, cursorPoint);
+        const thirdSegment = HoverFreeze._calculateVectorProduct(pointBottom, this._mouseLeavePoint, cursorPoint);
+
+        // Сразу после спуска в область перемещения пересечение с курсором будет в точке 0
+        const hasNegatives = (firstSegment < 0) || (secondSegment < 0) || (thirdSegment < 0);
+        const hasPositives = (firstSegment > 0) || (secondSegment > 0) || (thirdSegment > 0);
+
+        return !(hasNegatives && hasPositives);
     }
 
     private _clearFreezeHoverTimeout(): void {
@@ -208,8 +241,8 @@ export default class HoverFreeze {
         // zero element in grid will be row itself; it doesn't have any background color, then lets take the last one
         const hoverBackgroundColor = getComputedStyle(hoveredContainers[hoveredContainers.length - 1]).backgroundColor;
 
-        this._moveArea = this._calculateMouseMoveArea(hoveredContainers);
-        this._stylesContainer.innerHTML += this._getItemHoverFreezeStyles(
+        this._itemAreaRect = this._calculateItemAreaRect(hoveredContainers);
+        this._stylesContainer.innerHTML += HoverFreeze._getItemHoverFreezeStyles(
             this._uniqueClass,
             htmlNodeIndex,
             hoverBackgroundColor);
@@ -238,23 +271,16 @@ export default class HoverFreeze {
      * @param hoveredContainers
      * @private
      */
-    private _calculateMouseMoveArea(hoveredContainers: NodeListOf<HTMLElement>): IMouseMoveArea {
-        const lastContainer = hoveredContainers[hoveredContainers.length - 1];
-        const itemActionsContainer = lastContainer.closest('.controls-ListView__itemV')
-            .querySelector(ITEM_ACTIONS_CONTAINER_SELECTOR);
+    private _calculateItemAreaRect(hoveredContainers: NodeListOf<HTMLElement>): IItemAreaRect {
         const resultRect = {
             bottom: null,
             left: null,
             right: null,
             top: null
         };
-        let itemActionsHeight = 0;
-        if (itemActionsContainer) {
-            itemActionsHeight = (itemActionsContainer as HTMLElement).offsetHeight;
-        }
         hoveredContainers.forEach((container) => {
             const containerRect = container.getBoundingClientRect();
-            const bottom = containerRect.top + containerRect.height + itemActionsHeight;
+            const bottom = containerRect.top + containerRect.height;
             if (containerRect.height === 0 || containerRect.width === 0) {
                 return;
             }
@@ -297,9 +323,9 @@ export default class HoverFreeze {
      * @param hoverBackgroundColor
      * @private
      */
-    private _getItemHoverFreezeStyles(uniqueClass: string,
-                                      index: number,
-                                      hoverBackgroundColor: string): string {
+    private static _getItemHoverFreezeStyles(uniqueClass: string,
+                                             index: number,
+                                             hoverBackgroundColor: string): string {
         return `
               .${uniqueClass} .controls-ListView__itemV:nth-child(${index}),
               .${uniqueClass} .controls-Grid__row:nth-child(${index}) .controls-Grid__row-cell__content,
@@ -311,5 +337,20 @@ export default class HoverFreeze {
                  visibility: visible;
               }
               `;
+    }
+
+    private static _createPoint(x: number, y: number): IPoint {
+        return { x, y };
+    }
+
+    /**
+     * Вычисляет векторное произведение для треугольника по заданным вершинам
+     * @param a
+     * @param b
+     * @param c
+     * @private
+     */
+    private static _calculateVectorProduct(a: IPoint, b: IPoint, c: IPoint): number {
+        return (c.x - b.x) * (a.y - b.y) - (a.x - b.x) * (c.y - b.y);
     }
 }
