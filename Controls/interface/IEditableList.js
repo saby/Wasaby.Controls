@@ -49,12 +49,14 @@ define('Controls/interface/IEditableList', [
     * @typedef {Enum} Controls/interface/IEditableList/TEditingMode
     * @variant row Редактирование всей строки.
     * @variant cell Редактирование отдельной ячейки.
+    * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
     */
 
    /*
     * @typedef {Enum} Controls/interface/IEditableList/TEditingMode
     * @variant row Editing of whole row.
     * @variant cell Editing of separated cell.
+    * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
     */
 
    /**
