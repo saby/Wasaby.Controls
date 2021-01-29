@@ -772,6 +772,8 @@ const _private = {
 
         if (_private.isDemandNavigation(options.navigation) && _private.hasMoreData(self, sourceController, 'down')) {
             self._shouldDrawFooter = (options.groupingKeyCallback || options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
+        } else if (_private.isCutNavigation(options.navigation)) {
+            self._shouldDrawCut = true;
         } else {
             self._shouldDrawFooter = false;
         }
@@ -1014,6 +1016,10 @@ const _private = {
 
     isInfinityNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation && navigation.view === 'infinity';
+    },
+
+    isCutNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
+        return navigation && navigation.view === 'cut';
     },
 
     needShowShadowByNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>, itemsCount: number): boolean {
@@ -3216,6 +3222,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _loadMoreCaption: null,
     _shouldDrawFooter: false,
+    _shouldDrawCut: false,
+
+    _expanded: false,
+    _cutSize: 'm',
 
     _loader: null,
     _loadingState: null,
@@ -5510,6 +5520,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onLoadMoreClick() {
         _private.loadToDirectionIfNeed(this, 'down');
+    },
+
+    _onCutClick() {
+        if (!this._expanded) {
+            this._sourceController.updateOptions({...this._options, navigation: undefined});
+            _private.reload(this, this._options).then(() => {
+                this._expanded = true;
+            });
+        } else if (this._expanded) {
+            this._sourceController.updateOptions(this._options);
+            _private.reload(this, this._options).then(() => {
+                this._expanded = false;
+            });
+        }
     },
 
     _continueSearch(): void {
