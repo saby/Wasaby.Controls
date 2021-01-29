@@ -2080,74 +2080,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     // endregion
 
-    // region Multiselectable
-
-    /**
-     * Возвращает массив выбранных элементов (без учета сортировки, фильтрации и группировки).
-     * @return {Array.<Controls/_display/CollectionItem>}
-     */
-    getSelectedItems(): T[] {
-        const items = this._getItems();
-        const result = [];
-        for (let i = items.length - 1; i >= 0; i--) {
-            if (items[i].isSelected()) {
-                result.push(items[i]);
-            }
-        }
-        return result;
-    }
-
-    /**
-     * Устанавливает признак, что элемент выбран, переданным элементам.
-     * @remark Метод зависит от фильтра проекции.
-     * @param {Array} items Массив элементов коллекции
-     * @param {Boolean} selected Элемент выбран.
-     * @param {Boolean} [silent=false] Не уведомлять о изменении
-     * @example
-     * <pre>
-     *      var list = new List({...}),
-     *          display = new CollectionDisplay({
-     *              collection: list
-     *          });
-     *     display.setSelectedItems([list.at(0), list.at(1)], true) //установит признак двум элементам;
-     * </pre>
-     */
-    setSelectedItems(items: T[], selected: boolean|null, silent: boolean = false): void {
-        this._setSelectedItems(items, selected, silent);
-    }
-
-    /**
-     * Устанавливает признак, что элемент выбран, всем элементам проекции (без учета сортировки, фильтрации и
-     * группировки).
-     * @param {Boolean} selected Элемент выбран.
-     * @return {Array}
-     */
-    setSelectedItemsAll(selected: boolean): void {
-        this._setSelectedItems(this._getItems(), selected);
-    }
-
-    /**
-     * Инвертирует признак, что элемент выбран, у всех элементов проекции (без учета сортировки, фильтрации и
-     * группировки).
-     */
-    invertSelectedItemsAll(): void {
-        const items = this._getItems();
-        for (let i = items.length - 1; i >= 0; i--) {
-            items[i].setSelected(!items[i].isSelected(), true);
-        }
-        this._notifyBeforeCollectionChange();
-        this._notifyCollectionChange(
-            IObservable.ACTION_RESET,
-            items,
-            0,
-            items,
-            0
-        );
-        this._notifyAfterCollectionChange();
-    }
-
-    // endregion
-
     // region Drag-N-Drop
 
     getItemsDragNDrop(): boolean {
@@ -2904,35 +2836,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             oldItems,
             oldItemsIndex
         );
-    }
-
-    /**
-     * Устанавливает признак, переданным, элементам проекции.
-     * @param selecItems массив элементов проекции
-     * @param selected Элемент выбран.
-     * @param {Boolean} silent Не уведомлять о изменении
-     */
-    protected _setSelectedItems(selecItems: T[], selected: boolean|null, silent: boolean = false): void {
-        const items = [];
-        for (let i = selecItems.length - 1; i >= 0; i--) {
-            if (selecItems[i].isSelected() !== selected) {
-                selecItems[i].setSelected(selected, silent);
-                items.push(selecItems[i]);
-            }
-        }
-        if (items.length > 0 && !silent) {
-            items.properties = 'selected';
-            const index = this.getIndex(items[0]);
-            this._notifyBeforeCollectionChange();
-            this._notifyCollectionChange(
-                IObservable.ACTION_CHANGE,
-                items,
-                index,
-                items,
-                index
-            );
-            this._notifyAfterCollectionChange();
-        }
     }
 
     // endregion
