@@ -22,7 +22,7 @@ const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
 const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
 const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
-const SEARCH_RENDER = 'Controls/gridNew:SearchTypeRender';
+const STRING_SEARCH_RENDER = 'Controls/gridNew:StringSearchTypeRender';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
@@ -83,7 +83,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
     getCellContentRender(): string {
         if (this.getSearchValue()) {
-            return SEARCH_RENDER;
+            return STRING_SEARCH_RENDER;
         }
 
         switch (this._$column.displayType) {
