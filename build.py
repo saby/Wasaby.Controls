@@ -1,6 +1,6 @@
 """SDK modules builder"""
 import shutil
-import os
+import os, sys
 import logging
 
 
