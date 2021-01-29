@@ -11,8 +11,7 @@ export const enum POSITION {
 export const enum SHADOW_VISIBILITY {
     visible = 'visible',
     hidden = 'hidden',
-    lastVisible = 'lastVisible',
-    initial = 'initial'
+    lastVisible = 'lastVisible'
 }
 
 /**
