@@ -30,7 +30,7 @@ describe('Controls/_searchBreadcrumbsGrid/display/BreadcrumbsItemRow', () => {
    describe('getLevel', () => {
       it('getLevel', () => {
          const item = searchGridCollection.at(0);
-         assert.equal(item.getLevel(), 0);
+         assert.equal(item.getLevel(), 1);
       });
    });
 

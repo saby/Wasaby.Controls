@@ -22,16 +22,16 @@ describe('Controls/_searchBreadcrumbsGrid/display/SearchGridDataRow', () => {
 
    describe('getWrapperClasses', () => {
       it('getWrapperClasses', () => {
-         const item = searchGridCollection.at(1);
+         const item = searchGridCollection.at(5);
          const classes = item.getWrapperClasses();
-         assert.isTrue(classes.includes('controls-TreeGrid__row-rootLeaf'));
+         assert.isFalse(classes.includes('controls-TreeGrid__row-rootLeaf'));
       });
    });
 
    describe('getLevelIndentClasses', () => {
       it('getLevelIndentClasses', () => {
          const item = searchGridCollection.at(1);
-         assert.equal(item.getLevelIndentClasses(), 'controls-TreeGrid__row-levelPadding_size_search_theme-default');
+         assert.equal(item.getLevelIndentClasses(), 'controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_default_theme-default');
       });
    });
 });
