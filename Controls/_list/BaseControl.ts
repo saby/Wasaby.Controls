@@ -3822,6 +3822,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let isItemsResetFromSourceController = false;
         const self = this;
 
+        const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
+        // todo При отказе от старой - выпилить проверку "useNewModel".
+        if (emptyTemplateChanged && newOptions.useNewModel) {
+            this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
+        }
+
         // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
         if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
             if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {

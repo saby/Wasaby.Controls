@@ -94,7 +94,6 @@ export interface IOptions {
     editArrowVisibilityCallback?: TEditArrowVisibilityCallback;
     columnScroll?: boolean;
     stickyColumnsCount?: number;
-    emptyTemplate?: TemplateFunction;
     sorting?: Array<{[p: string]: string}>;
     emptyTemplateColumns?: IEmptyTemplateColumn[];
     columnSeparatorSize?: TColumnSeparatorSize;
@@ -152,11 +151,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
 
         if (this._$emptyTemplate || this._$emptyTemplateColumns) {
-            this._$emptyGridRow = new EmptyRow<S>({
-                owner: this,
-                emptyTemplate: this._$emptyTemplate,
-                emptyTemplateColumns: this._$emptyTemplateColumns
-            });
+            this._initializeEmptyRow();
         }
         if (supportLadder) {
             this._updateItemsLadder();
@@ -303,6 +298,14 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             if (item.LadderSupport) {
                 item.setColumnSeparatorSize(columnSeparatorSize);
             }
+        });
+    }
+
+    protected _initializeEmptyRow(): void {
+        this._$emptyGridRow = new EmptyRow<S>({
+            owner: this,
+            emptyTemplate: this._$emptyTemplate,
+            emptyTemplateColumns: this._$emptyTemplateColumns
         });
     }
 
@@ -484,7 +487,6 @@ Object.assign(Grid.prototype, {
     _$resultsTemplate: null,
     _$columnScroll: false,
     _$stickyColumnsCount: 1,
-    _$emptyTemplate: null,
     _$sorting: null,
     _$emptyTemplateColumns: null
 });
