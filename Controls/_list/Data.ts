@@ -173,6 +173,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _updateWithoutSourceControllerInOptions(newOptions: IDataOptions): void|Promise<RecordSet|Error> {
+      let filterChanged;
+
       if (this._options.source !== newOptions.source) {
          this._source = newOptions.source;
       }
@@ -183,13 +185,14 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       if (!isEqual(this._options.filter, newOptions.filter)) {
          this._filter = newOptions.filter;
+         filterChanged = true;
       }
 
       const isChanged = this._sourceController.updateOptions(this._getSourceControllerOptions(newOptions));
 
       if (isChanged) {
          return this._reload(this._options);
-      } else if (isChanged) {
+      } else if (filterChanged) {
          this._filter = this._sourceController.getFilter();
          this._updateContext(this._sourceController.getState());
       }

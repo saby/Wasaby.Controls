@@ -683,7 +683,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             viewModel.setRoot(this._root);
 
             if (this._options.itemsSetCallback) {
-                this._options.itemsSetCallback(sourceController.getItems());
+                this._options.itemsSetCallback(sourceController.getItems(), newOptions);
             }
 
             // При смене корне, не надо запрашивать все открытые папки,

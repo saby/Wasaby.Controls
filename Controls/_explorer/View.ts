@@ -191,9 +191,10 @@ var
             self._options.itemsReadyCallback(items);
          }
       },
-      itemsSetCallback: function(self) {
+      itemsSetCallback: function(self, items, newOptions) {
          if (self._isGoingBack) {
-            const curRoot = _private.getRoot(self, self._options.root);
+            const options = newOptions || self._options;
+            const curRoot = _private.getRoot(self, options.root);
             if (self._restoredMarkedKeys[curRoot]) {
                const { markedKey } = self._restoredMarkedKeys[curRoot];
                self._children.treeControl.setMarkedKey(markedKey);
