@@ -783,10 +783,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
-    setSelectedItems(items: Model[], selected: boolean|null): void {
-        this._display.setSelectedItems(items, selected);
-    },
-
     // New Model compatibility
     setMultiSelectPosition(position: 'default' | 'custom'): void {
         if (this._display) {

@@ -138,10 +138,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._filterController = new FilterController({
-            ...options,
-            historySaveCallback: this._historySaveCallback.bind(this)
-        } as IFilterControllerOptions);
+        this._filterController = new FilterController(this._getFilterControllerOptions(options));
 
         this._filter = options.filter || {};
         this._groupHistoryId = options.groupHistoryId;
@@ -163,9 +160,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._inputSearchValue = this._searchValue = options.searchValue;
         }
 
-        const controllerState = this._getSourceController(
-           this._getSourceControllerOptions(options as ISourceControllerOptions)).getState();
-        this._dataOptionsContext = this._createContext(controllerState);
+        const sourceController = this._getSourceController(options);
+        this._dataOptionsContext = this._createContext(sourceController.getState());
 
         this._previousViewMode = this._viewMode = options.viewMode;
         this._updateViewMode(options.viewMode);
@@ -179,20 +175,21 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 }
             }
         } else {
-            return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
-                this._setFilterItems(filterItems as IFilterItem[]);
+            return this._filterController.loadFilterItemsFromHistory()
+                .then((filterItems) => {
+                    this._setFilterItems(filterItems as IFilterItem[]);
 
-                return this._loadItems(options, this._getSourceController(options).getState()).then((items) => {
-                    this._defineShadowVisibility(items);
-                    return {
-                        filterItems,
-                        items
-                    };
-                }, (error) => {
-                    this._processLoadError(error);
-                    return error;
-                });
-            }, (error) => error);
+                    return this._loadItems(options, sourceController.getState())
+                        .then((items) => {
+                            this._defineShadowVisibility(items);
+                            return { filterItems, items };
+                        })
+                        .catch((error) => {
+                            this._updateContext(sourceController.getState());
+                            return error;
+                        });
+                })
+                .catch((error) => error);
         }
     }
 

@@ -2338,10 +2338,6 @@ var
             this._nextModelVersion();
         },
 
-        setSelectedItems(items: Model[], selected: boolean|null): void {
-            this._model.setSelectedItems(items, selected);
-        },
-
         setDraggedItems(draggableItem: CollectionItem<Model>, draggedItemsKeys: Array<number|string>): void {
             this._model.setDraggedItems(draggableItem, draggedItemsKeys);
             // Если есть прилипающая колонка, то нужно пересчитать футер,

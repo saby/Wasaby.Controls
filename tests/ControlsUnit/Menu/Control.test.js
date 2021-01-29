@@ -192,6 +192,22 @@ define(
                await menuControl._beforeMount(menuOptions);
                assert.isNotNull(menuControl._markerController);
             });
+
+            it('sourceController don`t return items', () => {
+               let isErrorProcessed = false;
+               menuControl._listModel = {
+                  setMarkedKey: () => {},
+                  getItemBySourceKey: () => null
+               };
+               menuOptions.sourceController = {
+                  getLoadError: () => new Error('error')
+               };
+               menuControl._processError = () => {
+                  isErrorProcessed = true;
+               };
+               menuControl._beforeMount(menuOptions);
+               assert.isTrue(isErrorProcessed);
+            });
          });
 
          describe('getCollection', function() {
