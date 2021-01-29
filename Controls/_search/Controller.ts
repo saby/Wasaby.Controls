@@ -87,7 +87,7 @@ export default class Container extends Control<IContainerOptions> {
    private _misspellValue: string = null;
    private _root: Key = null;
    private _rootBeforeSearch: Key = null;
-   private _notifiedMarkedKey: Key = null;
+   private _notifiedMarkedKey: Key;
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
    private _inputSearchValue: string = '';

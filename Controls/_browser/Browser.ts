@@ -95,7 +95,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _isAllSelected: boolean = false;
 
     private _listMarkedKey: Key = null;
-    private _notifiedMarkedKey: Key = null;
+    private _notifiedMarkedKey: Key;
     private _misspellValue: string = null;
     private _root: Key = null;
     private _rootBeforeSearch: Key = null;
