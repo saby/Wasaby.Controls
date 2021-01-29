@@ -3,6 +3,8 @@ import shutil
 import os, sys
 import logging
 
+def printer():
+    print('tester wasaby')
 
 def build():
     """Build interface modules"""
@@ -24,3 +26,4 @@ def build():
 
 if __name__ == '__main__':
     build()
+    printer()
