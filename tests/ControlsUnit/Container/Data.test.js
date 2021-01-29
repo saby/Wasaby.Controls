@@ -526,6 +526,7 @@ define(
                const soruceControllerState = data._sourceController.getState();
                assert.ok(soruceControllerState.source);
                assert.equal(soruceControllerState.source, source);
+               assert.equal(data._dataOptionsContext.source, source);
                assert.isTrue(dataLoadErrbackCalled);
                done();
             });
