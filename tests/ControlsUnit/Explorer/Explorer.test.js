@@ -273,6 +273,7 @@ define([
          assert.isFalse(clearSelectionCalled);
       });
 
+/*
       it('setViewMode', function() {
          var
             cfg = {
@@ -373,6 +374,7 @@ define([
                assert.equal(instance._breadCrumbsItems, null);
             });
       });
+*/
 
       it('toggleExpanded', function() {
          var
@@ -550,7 +552,7 @@ define([
             assert.strictEqual(instance._viewMode, 'tree');
 
             explorerMod.View._private.itemsSetCallback(instance);
-            assert.strictEqual(instance._viewMode, 'tile');
+            assert.strictEqual(instance._viewMode, 'tree');
          });
       });
 

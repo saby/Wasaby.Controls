@@ -24,6 +24,7 @@ import Collection from 'Controls/_display/Collection';
 import {TItemKey} from 'Controls/_display/interface';
 
 export interface IOptions<T extends Model = Model> {
+    itemModule: string;
     contents?: T;
     selected?: boolean;
     marked?: boolean;
@@ -291,6 +292,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
     }
 
+    getSearchValue(): string {
+        return this.getOwner().getSearchValue();
+    }
+
     // endregion
 
     // region MultiSelectAccessibility
@@ -319,6 +324,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();
+    }
+
+    getKeyProperty(): string {
+        return this.getOwner().getKeyProperty();
     }
 
     isMarked(): boolean {
