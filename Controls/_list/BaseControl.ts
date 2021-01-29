@@ -2597,7 +2597,7 @@ const _private = {
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
-                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, false); });
                 }
             }
         }
