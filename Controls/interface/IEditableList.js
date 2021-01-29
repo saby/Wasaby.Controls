@@ -54,7 +54,7 @@ define('Controls/interface/IEditableList', [
    /*
     * @typedef {Enum} Controls/interface/IEditableList/TEditingMode
     * @variant row Editing of whole row.
-    * @variant cell Editing od separated cell.
+    * @variant cell Editing of separated cell.
     */
 
    /**

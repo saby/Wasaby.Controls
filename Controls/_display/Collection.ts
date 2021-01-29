@@ -186,6 +186,15 @@ export interface ISwipeConfig {
  * @variant row - Редактирование всей строки таблицы
  * @variant cell - Редактирование отдельных ячеек таблицы
  * @default row
+ * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
+ */
+
+/*
+ * @typedef {String} TEditingMode
+ * @variant row - Editing of whole row.
+ * @variant cell - Editing of separated cell.
+ * @default row
+ * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
  */
 type TEditingMode = 'cell' | 'row';
 
