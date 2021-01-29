@@ -194,10 +194,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
        hoverBackgroundStyle?: string
     ): string {
         let wrapperClasses = '';
-        if (this._$owner.isEditing()) {
+        const isSingleCellEditableMode = this._$owner.getEditingConfig()?.mode === 'cell';
+        if (this._$owner.isEditing() && !isSingleCellEditableMode) {
             const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
             wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme} `;
-        } else if (templateHighlightOnHover !== false) {
+        } else if (!isSingleCellEditableMode && templateHighlightOnHover !== false) {
             wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme} `;
 
             if (backgroundColorStyle !== 'default') {
@@ -269,7 +270,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             contentClasses += ` controls-Grid__row-cell__content_background_${backgroundColorStyle}_theme-${theme}`;
         }
 
-        if (templateHighlightOnHover !== false) {
+        if (templateHighlightOnHover !== false && this._$owner.getEditingConfig()?.mode !== 'cell') {
             contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme}`;
         }
 
@@ -302,6 +303,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         const topPadding = this._$owner.getTopPadding();
         const bottomPadding = this._$owner.getBottomPadding();
         const isEditing = this._$owner.isEditing();
+        const isSingleCellEditing = this._$owner.getEditingConfig()?.mode === 'cell';
         const isDragged = this._$owner.isDragged();
         const preparedStyle = style;
         const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
@@ -309,7 +311,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
         classes += ` controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
 
-        if (isEditing) {
+        if (isEditing && !isSingleCellEditing) {
             classes += ` controls-ListView__item_editing_theme-${theme}`;
             classes += ` controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`;
         }

@@ -30,6 +30,31 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     get ladder(): TLadderElement<ILadderConfig> {
         return this.getOwner().getLadder();
     }
+
+    getContentClasses(theme: string,
+                      backgroundColorStyle: string = this._$column.backgroundColorStyle,
+                      cursor: string = 'pointer',
+                      templateHighlightOnHover: boolean = true,
+                      tmplIsEditable: boolean = true): string {
+        let classes = super.getContentClasses(theme, backgroundColorStyle, cursor, templateHighlightOnHover);
+
+        if (this._$owner.getEditingConfig()?.mode === 'cell') {
+            classes += ` controls-Grid__row-cell_editing-mode-single-cell_theme-${theme}`;
+
+            if (this.isEditing()) {
+                classes += ` controls-Grid__row-cell_single-cell_editing_theme-${theme}`;
+            } else {
+                if (this.getColumnConfig().editable !== false && tmplIsEditable !== false) {
+                    classes += ` controls-Grid__row-cell_single-cell_editable_theme-${theme}`;
+                } else {
+                    classes += ` js-controls-ListView__notEditable controls-Grid__row-cell_single-cell_not-editable_theme-${theme}`;
+                }
+            }
+        }
+
+        return classes;
+    }
+
     // region Аспект "Рендер"
     getDefaultDisplayValue(): T {
         const itemModel = this._$owner.getContents();
@@ -81,6 +106,18 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
      */
     getTagClasses(theme: string): string {
         return `controls-Grid__cell_tag_theme-${theme}`;
+    }
+
+    // endregion
+
+    // region Аспект "Редактирование по месту"
+
+    isEditing(): boolean {
+        if (this.getOwner().getEditingConfig()?.mode === 'cell') {
+            return this.getOwner().isEditing() && this.getOwner().getEditingColumnIndex() === this.getOwner().getColumnIndex(this);
+        } else {
+            return this.getOwner().isEditing();
+        }
     }
 
     // endregion
