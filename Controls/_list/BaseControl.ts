@@ -671,7 +671,7 @@ const _private = {
             const forceScroll = force === true || force === 'adaptive' && !!result;
             if (itemContainer) {
                 self._notify('scrollToElement', [{
-                    itemContainer, toBottom, forceScroll
+                    itemContainer, toBottom, force: forceScroll
                 }], {bubbling: true});
             }
             if (result) {
