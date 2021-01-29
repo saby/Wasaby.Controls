@@ -98,7 +98,12 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._stack = new StackOpener();
 
         if (options.sourceController) {
-            return this._setItems(options.sourceController.getItems(), options);
+            const error = options.sourceController.getLoadError();
+            if (error) {
+                this._processError(error);
+            } else {
+                return this._setItems(options.sourceController.getItems(), options);
+            }
         } else if (options.source) {
             return this._loadItems(options).then((items) => {
                 this._setItems(items, options);
