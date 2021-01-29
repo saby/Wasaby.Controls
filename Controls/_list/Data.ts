@@ -267,6 +267,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    _rootChanged(event, root): void {
       if (this._options.root === undefined) {
          this._root = root;
+         // root - не реактивное состояние, надо позвать forceUpdate
+         this._forceUpdate();
       }
       this._notify('rootChanged', [root]);
    }

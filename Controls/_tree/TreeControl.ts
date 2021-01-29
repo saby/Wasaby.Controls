@@ -702,10 +702,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         }
 
-        if (this._options.deepReload !== newOptions.deepReload) {
-            updateSourceController = true;
-        }
-
         if (searchValueChanged && newOptions.searchValue && !_private.isDeepReload(this, newOptions)) {
             _private.resetExpandedItems(this);
         }
@@ -717,7 +713,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
-            updateSourceController = true;
+            if (sourceController) {
+                sourceController.setExpandedItems(newOptions.expandedItems);
+            }
         }
         if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
             viewModel.setCollapsedItems(newOptions.collapsedItems);
