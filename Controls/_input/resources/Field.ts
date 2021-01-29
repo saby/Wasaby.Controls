@@ -360,10 +360,11 @@ class Field<Value, ModelOptions>
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
-        const constants = {t: 84, pause: 19};
+        const T_KEY_CODE = 84;
+        const PAUSE_KEY_CODE = 19;
         if (
-            event.nativeEvent.altKey && event.nativeEvent.keyCode === constants.t ||
-            event.nativeEvent.keyCode === constants.pause
+            event.nativeEvent.altKey && event.nativeEvent.keyCode === T_KEY_CODE ||
+            event.nativeEvent.keyCode === PAUSE_KEY_CODE
         ) {
             transliterateInput(this._model.value, this._getFieldSelection()).then((value) => {
                 this._updateField(value, this._getFieldSelection());
