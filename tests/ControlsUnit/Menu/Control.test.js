@@ -435,7 +435,8 @@ define(
                menuControl._context = {
                   isTouch: { isTouch: false }
                };
-               handleStub = sandbox.stub(menuControl, '_startOpeningTimeout');
+               const menuHoverController = menuControl._getMenuHoverController();
+               handleStub = sandbox.stub(menuHoverController, 'startOpeningTimeout');
             });
 
             it('on groupItem', function() {
@@ -569,31 +570,6 @@ define(
             assert.equal(result, 'emptyKey');
          });
 
-         it('setSubMenuPosition', function() {
-            let menuControl = getMenu();
-            menuControl._openSubMenuEvent = {
-               clientX: 25
-            };
-
-            menuControl._subMenu = {
-               getBoundingClientRect: () => ({
-                  left: 10,
-                  top: 10,
-                  height: 200,
-                  width: 100
-               })
-            };
-
-            menuControl._setSubMenuPosition();
-            assert.deepEqual(menuControl._subMenuPosition, {
-
-               // т.к. left < clientX, прибавляем ширину к left
-               left: 110,
-               top: 10,
-               height: 200
-            });
-         });
-
          describe('_updateSwipeItem', function() {
             let menuControl = getMenu();
             menuControl._listModel = getListModel();
@@ -628,9 +604,9 @@ define(
 
                menuControl._subMenu = true;
                menuControl._setSubMenuPosition = function() {};
-               menuControl._getMenuController = () => {
+               menuControl._getMenuHoverController = () => {
                   return {
-                     isMouseInOpenedItemAreaCheck: () => isMouseInArea
+                     isNeedKeepMenOpened: () => isMouseInArea
                   };
                };
             });
@@ -666,19 +642,17 @@ define(
             menuControl._children = {
                Sticky: { close: () => { isClosed = true; } }
             };
-            menuControl._getMenuController = () => {
+            menuControl._getMenuHoverController = () => {
                return {
-                  isMouseInOpenedItemAreaCheck: () => false
+                  isNeedKeepMenOpened: () => false
                };
             };
-            menuControl._setSubMenuPosition = function() {};
-            menuControl._subDropdownItem = true;
             menuControl._footerMouseEnter(event);
             assert.isTrue(isClosed);
 
-            menuControl._getMenuController = () => {
+            menuControl._getMenuHoverController = () => {
                return {
-                  isMouseInOpenedItemAreaCheck: () => true
+                  isNeedKeepMenOpened: () => true
                };
             };
             menuControl._subDropdownItem = true;
@@ -913,13 +887,14 @@ define(
          // });
 
          describe('_subMenuResult', function() {
-            let menuControl, stubClose, eventResult, nativeEvent, sandbox;
+            let menuControl, stubClose, eventResult, nativeEvent, sandbox, menuHoverController;
             beforeEach(() => {
                menuControl = getMenu();
                menuControl._notify = (event, data) => {
                   eventResult = data[0];
                   nativeEvent = data[1];
                };
+               menuHoverController = menuControl._getMenuHoverController();
                sandbox = sinon.createSandbox();
                stubClose = sandbox.stub(menuControl, '_closeSubMenu');
             });
@@ -930,7 +905,7 @@ define(
             it('menuOpened event', function() {
                const data = { container: 'subMenu' };
                menuControl._subMenuResult('click', 'menuOpened', data);
-               assert.deepEqual(menuControl._subMenu, data);
+               assert.deepEqual(menuHoverController._subMenu, data);
             });
             it('pinClick event', function() {
                menuControl._subMenuResult('click', 'pinClick', { item: 'item1' });
