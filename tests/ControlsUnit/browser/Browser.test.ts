@@ -101,6 +101,14 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(browser._searchValue === 'test');
                 assert.ok(browser._inputSearchValue === 'test');
             });
+
+            it('source returns error', async () => {
+                let options = getBrowserOptions();
+                options.source.query = () => Promise.reject(new Error('source error'));
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                assert.ok(browser._dataOptionsContext.source === options.source);
+            });
         });
 
         describe('searchController', () => {
