@@ -547,6 +547,37 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          assert.equal(count, 7);
          assert.equal(countWithDescAndAnc, 7);
       });
+
+      it('with readonly items', () => {
+         const data = ListData.getItems();
+         data[3].checkboxState = false;
+
+         const model = new Tree({
+            collection: new RecordSet({
+               keyProperty: ListData.KEY_PROPERTY,
+               rawData: data
+            }),
+            root: new Model({ rawData: { id: null }, keyProperty: ListData.KEY_PROPERTY }),
+            keyProperty: ListData.KEY_PROPERTY,
+            parentProperty: ListData.PARENT_PROPERTY,
+            nodeProperty: ListData.NODE_PROPERTY,
+            hasChildrenProperty: ListData.HAS_CHILDREN_PROPERTY,
+            multiSelectAccessibilityProperty: 'checkboxState'
+         });
+
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model: model,
+            selectionType: 'leaf',
+            recursiveSelection: true
+         });
+
+         const selection = { selected: [null], excluded: [null] };
+         const res = strategy.getCount(selection, false);
+         assert.equal(res, 6);
+      });
    });
 
    describe('cases of go inside node and out it', () => {
