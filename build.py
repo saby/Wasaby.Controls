@@ -5,6 +5,7 @@ import logging
 
 def printer():
     print('tester wasaby')
+    print('shmester wasaby')
 
 def build():
     """Build interface modules"""
