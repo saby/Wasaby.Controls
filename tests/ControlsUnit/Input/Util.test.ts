@@ -114,18 +114,18 @@ describe('Controls/input:__Util', () => {
     });
     describe('.transliterateInput()', () => {
         const cases = [
-            {testName: 'Курсор в конце строки (русская локализация в приложении)', value: 'Hello', selection: {start: 5, end: 5}, locale: 'ru-Ru', expected: 'Руддщ'},
-            {testName: 'Курсор в конце строки (английская локализация в приложении)', value: 'Hello', selection: {start: 5, end: 5}, locale: 'en-En', expected: 'Руддщ'},
-            {testName: 'Выделен текст (русская локализация в приложении)', value: 'Hello', selection: {start: 1, end: 3}, locale: 'ru-RU', expected: 'Hудlo'},
-            {testName: 'Выделен текст (английская локализация в приложении)', value: 'Hello', selection: {start: 1, end: 3}, locale: 'en-En', expected: 'Hудlo'},
-            {testName: 'Выделен весь текст (русская локализация в приложении)', value: 'Hello', selection: {start: 1, end: 3}, locale: 'ru-RU', expected: 'Hудlo'},
-            {testName: 'Выделен весь текст (английская локализация в приложении)', value: 'Hello', selection: {start: 1, end: 3}, locale: 'en-En', expected: 'Hудlo'}
+            {testName: 'Курсор в конце строки (текст не совпадает с транслитерацией)', value: 'Hello', selection: {start: 5, end: 5}, locale: 'ru-Ru', expected: 'Руддщ'},
+            {testName: 'Курсор в конце строки (текст совпадает с транслитерацией)', value: 'Hello', selection: {start: 5, end: 5}, locale: 'en-En', expected: 'Руддщ'},
+            {testName: 'Выделен текст (текст не совпадает с транслитерацией)', value: 'Hello', selection: {start: 1, end: 3}, locale: 'ru-RU', expected: 'Hудlo'},
+            {testName: 'Выделен текст (текст совпадает с транслитерацией)', value: 'Hello', selection: {start: 1, end: 3}, locale: 'en-En', expected: 'Hудlo'},
+            {testName: 'Выделен весь текст (текст не совпадает с транслитерацией)', value: 'Hello', selection: {start: 0, end: 5}, locale: 'ru-RU', expected: 'Руддщ'},
+            {testName: 'Выделен весь текст (текст совпадает с транслитерацией)', value: 'Hello', selection: {start: 0, end: 5}, locale: 'en-En', expected: 'Руддщ'}
         ];
         cases.forEach((item) => {
             const i18 = sinon.createSandbox();
             it(item.testName, (done) => {
                 i18.replaceGetter(i18Controller, 'currentLocale', () => item.locale);
-                return transliterateInput(item.value, item.selection).then((value) => {
+                transliterateInput(item.value, item.selection).then((value) => {
                     assert.equal(value, item.expected);
                     i18.restore();
                     done();

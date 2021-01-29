@@ -123,7 +123,7 @@ export function transliterateSelectedText(
     value: string,
     selection?: ISelection
 ): string {
-    if (selection.start !== selection.end) {
+    if (selection && selection.start !== selection.end) {
         return value.slice(0, selection.start) +
             revertedText +
             value.slice(selection.end, value.length);

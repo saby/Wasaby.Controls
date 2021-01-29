@@ -362,9 +362,8 @@ class Field<Value, ModelOptions>
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
 
         if (
-            event.nativeEvent.altKey && event.nativeEvent.key === 't' ||
-            event.nativeEvent.altKey && event.nativeEvent.key === 'е' ||
-            event.nativeEvent.key === 'Pause'
+            event.nativeEvent.altKey && event.nativeEvent.keyCode === 84 ||
+            event.nativeEvent.keyCode === 19
         ) {
             transliterateInput(this._getField().value, this._getFieldSelection()).then((value) => {
                 this._updateField(value, this._getFieldSelection());
