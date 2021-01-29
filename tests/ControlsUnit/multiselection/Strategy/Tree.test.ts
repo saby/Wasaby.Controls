@@ -347,9 +347,14 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
       it('selected all, but one', () => {
          const selection = { selected: [null], excluded: [null, 2] };
-         const res = strategy.getSelectionForModel(selection);
-         assert.deepEqual(toArrayKeys(res.get(true)), [1, 5, 6, 7] );
+         let res = strategy.getSelectionForModel(selection);
+         assert.deepEqual(toArrayKeys(res.get(true)), [1, 3, 4, 5, 6, 7] );
          assert.deepEqual(toArrayKeys(res.get(null)), []);
+         assert.deepEqual(toArrayKeys(res.get(false)), [2]);
+
+         res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
+         assert.deepEqual(toArrayKeys(res.get(true)), [5, 6, 7] );
+         assert.deepEqual(toArrayKeys(res.get(null)), [1]);
          assert.deepEqual(toArrayKeys(res.get(false)), [2, 3, 4]);
       });
 
@@ -382,10 +387,15 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
 
       it('selected node use selectAll and go to parent node', () => {
          const selection = {selected: [1], excluded: [1]};
-         const res = strategy.getSelectionForModel(selection);
-         assert.deepEqual(toArrayKeys(res.get(true)), [1, 2, 5] );
+         let res = strategyWithDescendantsAndAncestors.getSelectionForModel(selection);
+         assert.deepEqual(toArrayKeys(res.get(true)), [1, 2, 3, 4, 5] );
          assert.deepEqual(toArrayKeys(res.get(null)), []);
-         assert.deepEqual(toArrayKeys(res.get(false)), [3, 4, 6, 7] );
+         assert.deepEqual(toArrayKeys(res.get(false)), [6, 7] );
+
+         res = strategy.getSelectionForModel(selection);
+         assert.deepEqual(toArrayKeys(res.get(true)), [] );
+         assert.deepEqual(toArrayKeys(res.get(null)), []);
+         assert.deepEqual(toArrayKeys(res.get(false)), [1, 2, 3, 4, 5, 6, 7] );
       });
 
       it('with group and search value', () => {
