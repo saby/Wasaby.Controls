@@ -628,6 +628,16 @@ var
             }
         },
 
+        _onEditingItemClick(e, dispItem, nativeEvent): void {
+            e.stopImmediatePropagation();
+            if (this._listModel.getEditingConfig()?.mode === 'cell') {
+                const columnIndex = this._getCellIndexByEventTarget(nativeEvent);
+                if (dispItem.getEditingColumnIndex() !== columnIndex) {
+                    this._notify('itemClick', [dispItem.getContents(), nativeEvent, columnIndex]);
+                }
+            }
+        },
+
         _onEditArrowClick(e, item): void {
             this._notify('editArrowClick', [item]);
 
