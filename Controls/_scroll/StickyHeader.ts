@@ -749,7 +749,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             backgroundStyle: descriptor(String),
             mode: descriptor(String).oneOf([
                 MODE.replaceable,
-                MODE.stackable
+                MODE.stackable,
+                MODE.notsticky
             ]),
             position: descriptor(String).oneOf([
                 'top',
