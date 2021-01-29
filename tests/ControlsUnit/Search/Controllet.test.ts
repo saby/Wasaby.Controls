@@ -72,6 +72,7 @@ describe('Controls/search:Controller', () => {
 
         it('searchValue wasn\'t changed', () => {
             let searchControllerUpdated = false;
+            let sourceControllerOption = null;
             const searchController = new Controller(options);
 
             searchController._options = options;
@@ -80,10 +81,20 @@ describe('Controls/search:Controller', () => {
                     searchControllerUpdated = true;
                 }
             };
+
+            options.viewMode = 'searchViewMode';
+            options.dataLoadCallback = () => {};
+            searchController._sourceController = new NewSourceController({
+                source: options.source,
+                viewMode: 'sourceViewMode'
+            });
+            searchController._sourceController.updateOptions = (options) => {
+                sourceControllerOption = options.viewMode;
+            };
             searchController._searchValue = 'testValue';
-            searchController._sourceController = options.sourceController;
             searchController._beforeUpdate(options, {dataOptions: {}});
             assert.isFalse(searchControllerUpdated);
+            assert.equal(sourceControllerOption, 'sourceViewMode');
         });
 
         it('searchValue was changed', () => {

@@ -157,7 +157,7 @@ export default class Container extends Control<IContainerOptions> {
       }
       if (newOptions.dataLoadCallback && this._sourceController) {
          this._sourceController.updateOptions({
-            ...options,
+            ...this._sourceController.getOptions(),
             dataLoadCallback: this._dataLoadCallback
          });
       }
