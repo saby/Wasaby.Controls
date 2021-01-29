@@ -5773,7 +5773,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         const updateData = () => {
-            const result = _private.reload(this, this._options, newNavigation.sourceConfig);
+            this._sourceController.setNavigation(newNavigation);
+            const result = _private.reload(this, this._options);
             this._shouldRestoreScrollPosition = true;
             return result;
         };

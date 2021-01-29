@@ -118,6 +118,7 @@ export default class Controller {
     private _crudWrapper: CrudWrapper;
     private _navigationController: NavigationController;
     private _navigationParamsChangedCallback: Function;
+    private _navigation: INavigationOptionValue<INavigationSourceConfig>;
 
     private _parentProperty: string;
     private _root: TKey = null;
@@ -128,6 +129,7 @@ export default class Controller {
     constructor(cfg: IControllerOptions) {
         this._options = cfg;
         this.setFilter(cfg.filter);
+        this.setNavigation(cfg.navigation);
 
         if (cfg.root !== undefined) {
             this.setRoot(cfg.root);
@@ -177,7 +179,7 @@ export default class Controller {
     setItems(items: RecordSet): RecordSet {
         if (this._hasNavigationBySource()) {
             this._destroyNavigationController();
-            this._getNavigationController(this._options).updateQueryProperties(items, this._root);
+            this._getNavigationController(this._navigation).updateQueryProperties(items, this._root);
         }
         this._setItems(items);
         return this._items;
@@ -197,6 +199,18 @@ export default class Controller {
 
     getFilter(): QueryWhereExpression<unknown> {
         return this._filter;
+    }
+
+    setNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): void {
+        this._navigation = navigation;
+
+        if (navigation && this._hasNavigationBySource(navigation)) {
+            if (this._navigationController) {
+                this._navigationController.updateOptions(this._getNavigationControllerOptions(navigation));
+            }
+        } else {
+            this._destroyNavigationController();
+        }
     }
 
     // FIXME, если root задаётся на списке, а не на data(browser)
@@ -255,14 +269,7 @@ export default class Controller {
         }
 
         if (isNavigationChanged) {
-            if (newOptions.navigation && this._hasNavigationBySource(newOptions.navigation)) {
-                if (this._navigationController)  {
-                    this._navigationController.updateOptions(this._getNavigationControllerOptions(newOptions));
-                } else {
-                    this._navigationController = this._getNavigationController(newOptions);
-                }
-            }
-
+            this.setNavigation(newOptions.navigation);
         }
 
         const isChanged =
@@ -313,7 +320,7 @@ export default class Controller {
         let hasMoreData = false;
 
         if (this._hasNavigationBySource()) {
-            hasMoreData = this._getNavigationController(this._options)
+            hasMoreData = this._getNavigationController(this._navigation)
                 .hasMoreData(NAVIGATION_DIRECTION_COMPATIBILITY[direction], key);
         }
 
@@ -328,7 +335,7 @@ export default class Controller {
         let loadedResult = false;
 
         if (this._hasNavigationBySource()) {
-            loadedResult = this._getNavigationController(this._options).hasLoaded(key);
+            loadedResult = this._getNavigationController(this._navigation).hasLoaded(key);
         }
 
         return loadedResult;
@@ -340,7 +347,7 @@ export default class Controller {
 
     shiftToEdge(direction: Direction, id: TKey, shiftMode: TNavigationPagingMode): IBaseSourceConfig {
         if (this._hasNavigationBySource()) {
-            return this._getNavigationController(this._options)
+            return this._getNavigationController(this._navigation)
                 .shiftToEdge(NAVIGATION_DIRECTION_COMPATIBILITY[direction], id, shiftMode);
         }
     }
@@ -369,16 +376,19 @@ export default class Controller {
         return this._crudWrapper;
     }
 
-    private _getNavigationController(options: IControllerOptions): NavigationController {
+    private _getNavigationController(
+        navigation: INavigationOptionValue<INavigationSourceConfig>
+    ): NavigationController {
         if (!this._navigationController) {
-            this._navigationController = new NavigationController(this._getNavigationControllerOptions(options));
+            this._navigationController =
+                new NavigationController(this._getNavigationControllerOptions(navigation));
         }
 
         return this._navigationController;
     }
 
     private _getNavigationControllerOptions(
-        {navigation}: IControllerOptions
+        navigation: INavigationOptionValue<INavigationSourceConfig>
     ): INavigationControllerOptions {
         return {
             navigationType: navigation.source,
@@ -397,7 +407,7 @@ export default class Controller {
             if (this._deepReload) {
                 this._destroyNavigationController();
             }
-            this._getNavigationController(this._options)
+            this._getNavigationController(this._navigation)
                 .updateQueryProperties(list, id, navigationConfig, NAVIGATION_DIRECTION_COMPATIBILITY[direction]);
         }
     }
@@ -408,8 +418,8 @@ export default class Controller {
         navigationSourceConfig: INavigationSourceConfig,
         direction: Direction
         ): IQueryParams|IQueryParams[] {
-        const navigationController = this._getNavigationController(this._options);
-        const navigationConfig = navigationSourceConfig || this._options.navigation.sourceConfig;
+        const navigationController = this._getNavigationController(this._navigation);
+        const navigationConfig = navigationSourceConfig || this._navigation.sourceConfig;
         const userQueryParams = {
             filter: queryParams.filter,
             sorting: queryParams.sorting
@@ -657,8 +667,13 @@ export default class Controller {
             const lastItem = this._getLastItemFromRoot();
 
             if (this._items.getCount() && firstItem && lastItem) {
-                this._getNavigationController(this._options)
-                    .updateQueryRange(this._items, this._root, this._getFirstItemFromRoot(), this._getLastItemFromRoot());
+                this._getNavigationController(this._navigation)
+                    .updateQueryRange(
+                        this._items,
+                        this._root,
+                        this._getFirstItemFromRoot(),
+                        this._getLastItemFromRoot()
+                    );
             }
         }
     }
@@ -707,7 +722,7 @@ export default class Controller {
     }
 
     private _hasNavigationBySource(navigation?: INavigationOptionValue<unknown>): boolean {
-        const navigationOption = navigation || this._options.navigation;
+        const navigationOption = navigation || this._navigation;
         return Boolean(navigationOption && navigationOption.source);
     }
 
