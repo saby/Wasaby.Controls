@@ -28,8 +28,7 @@ var
                 const lastBreadCrumb = item.getContents()[item.getContents().length - 1];
                 if (lastBreadCrumb) {
 
-                    // Тут нельзя делать bubbling, т.к. это приводит к отправке в TreeGrid двух событий itemClick
-                    // Одно - из SearchView, второе - из BaseControl
+                    // bubbling != true, т.к. BaseControl также посылает itemClick
                     this._notify('itemClick', [lastBreadCrumb, e, this._getCellIndexByEventTarget(e)]);
                 }
             }
@@ -37,7 +36,9 @@ var
             e.stopPropagation();
         },
         _onSearchPathClick(e, item): void {
-           this._notify('itemClick', [item, e], {bubbling: true});
+
+            // bubbling != true, т.к. BaseControl также посылает itemClick
+           this._notify('itemClick', [item, e]);
            this._itemClickNotifiedByPathClick = true;
         },
         _onItemMouseUp(e, itemData) {
