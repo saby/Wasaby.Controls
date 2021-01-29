@@ -36,7 +36,6 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
-import {descriptor} from 'Types/entity';
 
 type Key = string|number|null;
 
@@ -106,8 +105,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _viewMode: TViewMode = undefined;
     private _inputSearchValue: string = '';
     private _searchValue: string = '';
-    private _searchInProgress: boolean = false;
     private _dataOptionsContext: typeof ContextOptions;
+    private _sourceControllerState: IControllerState;
 
     private _itemsReadyCallback: Function;
     private _loading: boolean = false;
@@ -167,6 +166,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         if (receivedState &&  'filterItems' in receivedState && 'items' in receivedState) {
             this._setFilterItems(receivedState.filterItems as IFilterItem[]);
+            sourceController.setFilter(this._filter);
             this._defineShadowVisibility(receivedState.items);
             if (isNewEnvironment()) {
                 this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
@@ -175,6 +175,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             return this._filterController.loadFilterItemsFromHistory()
                 .then((filterItems) => {
                     this._setFilterItems(filterItems as IFilterItem[]);
+                    sourceController.setFilter(this._filter);
 
                     return this._loadItems(options, sourceController.getState())
                         .then((items) => {
@@ -426,20 +427,12 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         return this._viewMode === 'search';
     }
 
-    protected _filterChanged(event: SyntheticEvent, filter: object): void {
+    protected _filterChanged(event: SyntheticEvent, filter: QueryWhereExpression<unknown>): void {
         if (event) {
             event.stopPropagation();
         }
         this._filterController.setFilter(filter);
-
-        this._getSourceController().setFilter(this._filterController.getFilter() as QueryWhereExpression<unknown>);
-
-        const controllerState = this._sourceController.getState();
-
-        this._filter = controllerState.filter;
-        this._updateContext(controllerState);
-        this._dataOptionsContext.updateConsumers();
-
+        this._filter = filter;
         this._notify('filterChanged', [this._filter]);
     }
 
@@ -490,6 +483,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             }
         }
         curContext.updateConsumers();
+        this._sourceControllerState = sourceControllerState;
     }
 
     protected _filterHistoryApply(event: SyntheticEvent, history: IFilterItem[]): void {
@@ -501,7 +495,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._filter = this._filterController.getFilter() as QueryWhereExpression<unknown>;
         this._filterButtonItems = this._filterController.getFilterButtonItems();
         this._fastFilterItems = this._filterController.getFastFilterItems();
-        this._sourceController.setFilter(this._filter);
     }
 
     protected _processLoadError(error: Error): void {
@@ -678,9 +671,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _afterSearch(recordSet: RecordSet, value: string): void {
+        const filter = this._searchController.getFilter();
         this._updateParams(value);
         this._afterSourceLoad(this._sourceController, this._options);
-        this._filterChanged(null, this._searchController.getFilter());
+        this._filterChanged(null, filter);
+        this._sourceController.setFilter(filter);
 
         const switchedStr = getSwitcherStrFromData(recordSet);
         this._misspellValue = switchedStr;
@@ -714,7 +709,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 this._rootBeforeSearch = this._root;
                 this._root = newRoot;
                 this._searchController.setRoot(newRoot);
-                this._sourceController.setRoot(newRoot);
                 this._notify('rootChanged', [newRoot]);
             }
         }
@@ -732,6 +726,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         if (this._searchController && this._searchController.isSearchInProcess()) {
             this._searchDataLoad(data, this._searchController.getSearchValue());
+        } else if (this._loading) {
+            this._afterSourceLoad(this._sourceController, this._options);
         }
 
         this._path = data?.getMetaData().path ?? null;
@@ -775,16 +771,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 this._items = sourceController.getItems();
                 this._loading = false;
                 return items;
-            }, (error) => {
+            })
+            .catch((error) => {
                 this._processLoadError(error);
                 return error;
             })
-            .finally((result) => {
-                this._afterSourceLoad(sourceController, newOptions);
-                return result;
-            })
             .then((result) => {
-                return this._updateSearchController(newOptions).then(() => result);
+                return this._updateSearchController(options).then(() => result);
             });
     }
 

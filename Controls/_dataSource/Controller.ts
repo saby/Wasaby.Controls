@@ -271,7 +271,7 @@ export default class Controller {
             isSourceChanged ||
             newOptions.sorting !== this._options.sorting ||
             newOptions.keyProperty !== this._options.keyProperty ||
-            (newOptions.parentProperty && rootChanged);
+            (this._parentProperty && rootChanged);
 
         this._options = newOptions;
         return isChanged;

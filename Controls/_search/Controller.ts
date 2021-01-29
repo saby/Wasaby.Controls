@@ -192,7 +192,6 @@ export default class Container extends Control<IContainerOptions> {
             this._rootBeforeSearch = this._root;
             this._root = newRoot;
             this._searchController.setRoot(newRoot);
-            this._sourceController.setRoot(newRoot);
             this._notify('rootChanged', [newRoot]);
          }
       }
@@ -284,8 +283,10 @@ export default class Container extends Control<IContainerOptions> {
       }
 
       if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
+         const filter = this._searchController.getFilter();
          this._updateParams(this._searchController.getSearchValue());
-         this._notify('filterChanged', [this._searchController.getFilter()]);
+         this._sourceController.setFilter(filter);
+         this._notify('filterChanged', [filter]);
       }
 
       this._path = data?.getMetaData().path ?? null;

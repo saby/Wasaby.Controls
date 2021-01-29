@@ -99,6 +99,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       // TODO придумать как отказаться от этого свойства
       this._itemsReadyCallback = this._itemsReadyCallbackHandler.bind(this);
       this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
+      this._dataLoadCallback = this._dataLoadCallback.bind(this);
 
       if (!options.hasOwnProperty('sourceController')) {
          this._errorRegister = new RegisterClass({register: 'dataError'});
@@ -216,7 +217,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          source: this._source,
          navigationParamsChangedCallback: this._notifyNavigationParamsChanged,
          filter: this._filter || options.filter,
-         root: this._root
+         root: this._root,
+         dataLoadCallback: this._dataLoadCallback
       } as ISourceControllerOptions;
    }
 
@@ -319,9 +321,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                 this._sourceController.setRoot(currentRoot);
              }
              this._items = this._sourceController.getItems();
-
-             const controllerState = this._sourceController.getState();
-             this._updateContext(controllerState);
              this._loading = false;
              return reloadResult;
           })
@@ -335,6 +334,17 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
              );
              return error;
           });
+   }
+
+   private _dataLoadCallback(items: RecordSet, direction): void {
+      if (this._loading) {
+         const controllerState = this._sourceController.getState();
+         this._updateContext(controllerState);
+      }
+
+      if (this._options.dataLoadCallback) {
+         this._options.dataLoadCallback(items, direction);
+      }
    }
 
    _getChildContext(): object {
