@@ -359,9 +359,11 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
         const T_KEY_CODE = 84;
         const PAUSE_KEY_CODE = 19;
+
+        this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
+
         if (
             event.nativeEvent.altKey && event.nativeEvent.keyCode === T_KEY_CODE ||
             event.nativeEvent.keyCode === PAUSE_KEY_CODE
