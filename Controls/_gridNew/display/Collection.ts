@@ -11,6 +11,7 @@ import {
 import GroupItem from './GroupItem';
 import GridMixin, { IOptions as IGridMixinOptions } from './mixins/Grid';
 import Row, {IOptions as IRowOptions} from './Row';
+import { TemplateFunction } from 'UI/Base';
 
 export interface IOptions<
     S,
@@ -27,6 +28,22 @@ export default class Collection<
     }
 
     // region override
+
+    setEmptyTemplate(emptyTemplate: TemplateFunction): boolean {
+        const superResult = super.setEmptyTemplate(emptyTemplate);
+        if (superResult) {
+            if (this._$emptyTemplate) {
+                if (this._$emptyGridRow) {
+                    this._$emptyGridRow.setEmptyTemplate(this._$emptyTemplate);
+                } else {
+                    this._initializeEmptyRow();
+                }
+            } else {
+                this._$emptyGridRow = undefined;
+            }
+        }
+        return superResult;
+    }
 
     setMultiSelectVisibility(visibility: string): void {
         super.setMultiSelectVisibility(visibility);

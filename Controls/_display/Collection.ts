@@ -121,6 +121,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     multiSelectVisibility?: string;
     multiSelectPosition?: 'default'|'custom';
     itemPadding?: IItemPadding;
+    emptyTemplate?: TemplateFunction;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
@@ -635,6 +636,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _$topPadding: string;
 
     protected _$bottomPadding: string;
+
+    protected _$emptyTemplate: TemplateFunction;
 
     protected _$theme: string;
 
@@ -2501,6 +2504,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$rightPadding;
     }
 
+    setEmptyTemplate(emptyTemplate: TemplateFunction): boolean {
+        if (this._$emptyTemplate !== emptyTemplate) {
+            this._$emptyTemplate = emptyTemplate;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
     setEditingConfig(config: IEditingConfig): void {
         if (this._$editingConfig === config) {
             return;
@@ -3988,6 +4000,7 @@ Object.assign(Collection.prototype, {
     _actionsTemplateConfig: null,
     _swipeConfig: null,
     _userStrategies: null,
+    _$emptyTemplate: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 
