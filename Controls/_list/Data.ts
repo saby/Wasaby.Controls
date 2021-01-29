@@ -299,7 +299,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    // https://online.sbis.ru/opendoc.html?guid=c1dc4b23-57cb-42c8-934f-634262ec3957
    private _fixRootForMemorySource(options: IDataOptions): void {
       if (!options.hasOwnProperty('root') &&
-          options.source instanceof Memory &&
+          options.source &&
+          Object.getPrototypeOf(options.source).constructor === Memory &&
           this._sourceController.getRoot() === null) {
          this._sourceController.setRoot(undefined);
       }
