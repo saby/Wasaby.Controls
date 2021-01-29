@@ -208,7 +208,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             const filterSourceCallbackId = Store.onPropertyChanged('filter',
                (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
             const searchValueCallbackId = Store.onPropertyChanged('searchValue',
-               (searchValue: string) => this._search(null, searchValue));
+               (searchValue: string) => {
+                    if (searchValue) {
+                        this._search(null, searchValue);
+                    } else {
+                        this._searchReset(null);
+                    }
+               });
 
             this._storeCallbacks = [
                 sourceCallbackId,
