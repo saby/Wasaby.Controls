@@ -23,7 +23,7 @@ class ButtonGroupBase extends Control<IButtonGroupOptions> {
         }
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes', 'Controls/theme'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
 
     static getDefaultOptions(): IButtonGroupOptions {
         return {
