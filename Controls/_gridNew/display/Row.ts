@@ -71,13 +71,17 @@ export default class Row<T>
         return isChangedMultiSelectVisibility;
     }
 
-    setEditing(editing: boolean, editingContents?: T, silent?: boolean): void {
-        super.setEditing(editing, editingContents, silent);
+    setEditing(editing: boolean, editingContents?: T, silent?: boolean, columnIndex?: number): void {
+        // TODO: Убрать columnIndex.
+        //  Подробнее можно прочитать в коментарии базового метода CollectionItem.setEditing
+        //  https://online.sbis.ru/opendoc.html?guid=b13d5312-a8f5-4cea-b88f-8c4c043e4a77
+        super.setEditing(editing, editingContents, silent, columnIndex);
         const colspanCallback = this._$colspanCallback;
         if (colspanCallback) {
             this._reinitializeColumns();
         }
     }
+
 
     setMarked(marked: boolean, silent?: boolean): void {
         const changed = marked !== this.isMarked();

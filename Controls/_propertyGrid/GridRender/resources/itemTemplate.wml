@@ -6,7 +6,7 @@
                collectionItem="{{_options.collectionItem}}"/>
 </ws:if>
 <ws:else>
-    <ws:if data="{{!item.editorOptions.jumpingLabel}}">
+    <ws:if data="{{!item.editorOptions.jumpingLabel && item.caption}}">
         <div class="controls-PropertyGrid__gridLayout_editor-caption
                        controls-PropertyGrid__gridLayout_editor-caption_theme-{{theme}}
                        {{collectionItem.isHovered() && highlightOnHover ? 'controls-PropertyGrid__cell_highlightOnHover_theme-' + theme}}

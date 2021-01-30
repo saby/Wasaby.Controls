@@ -588,7 +588,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return void 0;
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars', 'Controls/theme'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {

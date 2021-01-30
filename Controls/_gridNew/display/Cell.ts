@@ -5,7 +5,8 @@ import {
     InstantiableMixin,
     VersionableMixin,
     IInstantiable,
-    IVersionable
+    IVersionable,
+    Model
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 
@@ -21,6 +22,7 @@ const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ColumnTemplate';
 const MONEY_RENDER = 'Controls/gridNew:MoneyTypeRender';
 const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
 const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
+const STRING_SEARCH_RENDER = 'Controls/gridNew:StringSearchTypeRender';
 
 export interface IOptions<T> extends IColspanParams, IRowspanParams {
     owner: Row<T>;
@@ -36,7 +38,7 @@ export interface IOptions<T> extends IColspanParams, IRowspanParams {
     rowSeparatorSize?: string;
 }
 
-export default class Cell<T, TOwner extends Row<T>> extends mixin<
+export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     DestroyableMixin,
     OptionsToPropertyMixin,
     InstantiableMixin,
@@ -74,11 +76,16 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             this._$column.displayType ||
             this._$column.textOverflow ||
             this._$column.fontColorStyle ||
-            this._$column.fontSize
+            this._$column.fontSize ||
+            this.getSearchValue()
         );
     }
 
     getCellContentRender(): string {
+        if (this.getSearchValue()) {
+            return STRING_SEARCH_RENDER;
+        }
+
         switch (this._$column.displayType) {
             case 'money': return MONEY_RENDER;
             case 'number': return NUMBER_RENDER;
@@ -99,6 +106,10 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
     getOwner(): TOwner {
         return this._$owner;
+    }
+
+    getSearchValue(): string {
+        return this.getOwner().getSearchValue();
     }
 
     // region Аспект "Объединение колонок"
@@ -172,7 +183,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             wrapperClasses += ` controls-Grid__row-cell-editing_theme-${theme}`;
         }
 
-        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, templateHighlightOnHover, backgroundColorStyle, hoverBackgroundStyle)}`;
+        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, templateHighlightOnHover, backgroundColorStyle, hoverBackgroundStyle, style)}`;
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
@@ -182,29 +193,27 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return wrapperClasses;
     }
 
-    protected _getBackgroundColorColumnScrollClasses(backgroundColorStyle: string, theme: string): string {
-        // TODO: Брать от родителя
-        // return options.backgroundStyle || options.style || 'default';
-        return `controls-background-${'default'}_theme-${theme}`;
-    }
     protected _getBackgroundColorWrapperClasses(
        theme: string,
        templateHighlightOnHover?: boolean,
        backgroundColorStyle?: string,
-       hoverBackgroundStyle?: string
+       hoverBackgroundStyle?: string,
+       style: string = 'default'
     ): string {
         let wrapperClasses = '';
-        if (this._$owner.isEditing()) {
+        const isSingleCellEditableMode = this._$owner.getEditingConfig()?.mode === 'cell';
+        if (this._$owner.isEditing() && !isSingleCellEditableMode) {
             const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
             wrapperClasses += ` controls-Grid__row-cell-background-editing_${editingBackgroundStyle}_theme-${theme} `;
-        } else if (templateHighlightOnHover !== false) {
+        } else if (!isSingleCellEditableMode && templateHighlightOnHover !== false) {
             wrapperClasses += `controls-Grid__row-cell-background-hover-${hoverBackgroundStyle}_theme-${theme} `;
 
             if (backgroundColorStyle !== 'default') {
-                wrapperClasses += `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
+                wrapperClasses += ` controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme}`;
             }
-            if (this._$owner.hasColumnScroll()) {
-                wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
+
+            if (backgroundColorStyle || this.getOwner().hasColumnScroll()) {
+                wrapperClasses += ` controls-background-${backgroundColorStyle || style}_theme-${theme}`;
             }
         }
         return wrapperClasses;
@@ -269,7 +278,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             contentClasses += ` controls-Grid__row-cell__content_background_${backgroundColorStyle}_theme-${theme}`;
         }
 
-        if (templateHighlightOnHover !== false) {
+        if (templateHighlightOnHover !== false && this._$owner.getEditingConfig()?.mode !== 'cell') {
             contentClasses += ` controls-Grid__item_background-hover_${hoverBackgroundStyle}_theme-${theme}`;
         }
 
@@ -302,6 +311,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         const topPadding = this._$owner.getTopPadding();
         const bottomPadding = this._$owner.getBottomPadding();
         const isEditing = this._$owner.isEditing();
+        const isSingleCellEditing = this._$owner.getEditingConfig()?.mode === 'cell';
         const isDragged = this._$owner.isDragged();
         const preparedStyle = style;
         const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
@@ -309,7 +319,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
         classes += ` controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
 
-        if (isEditing) {
+        if (isEditing && !isSingleCellEditing) {
             classes += ` controls-ListView__item_editing_theme-${theme}`;
             classes += ` controls-ListView__item_background-editing_${editingBackgroundStyle}_theme-${theme}`;
         }
@@ -375,10 +385,6 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
 
         /*if (columns[columnIndex].isActionCell) {
             return classLists;
-        }*/
-        // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-        /*if (params.isBreadCrumbs) {
-            classLists.left += ` controls-Grid__cell_spacingFirstCol_null_theme-${theme}`;
         }*/
 
         // left <-> right

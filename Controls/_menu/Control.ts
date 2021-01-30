@@ -6,7 +6,7 @@ import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy, QueryWhere} from 'Types/source';
 import * as Clone from 'Core/core-clone';
 import * as Merge from 'Core/core-merge';
-import {Collection, Search, CollectionItem} from 'Controls/display';
+import {Collection, CollectionItem, Search} from 'Controls/display';
 import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
@@ -118,6 +118,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const sourceChanged = newOptions.source !== this._options.source;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
         const searchValueChanged = newOptions.searchValue !== this._options.searchValue;
+        const selectedKeysChanged = this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys);
         let result;
 
         if (newOptions.sourceController && newOptions.searchParam &&
@@ -135,20 +136,14 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 this._notifyResizeAfterRender = true;
                 return res;
             });
-        }
+        } else if (selectedKeysChanged) {
+            if (this._selectionController) {
+                this._updateSelectionController(newOptions);
+                this._notify('selectedItemsChanged', [this._getSelectedItems()]);
+            }
 
-        const selectedKeysChanged = this._isSelectedKeysChanged(newOptions.selectedKeys, this._options.selectedKeys);
-        if (selectedKeysChanged) {
-            this._updateSelectionController(newOptions);
-            this._notify('selectedItemsChanged', [this._getSelectedItems()]);
-        }
-
-        if (this._markerController) {
-            this._markerController.updateOptions(this._getMarkerControllerConfig(newOptions));
-            if (selectedKeysChanged) {
-                const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey,
-                    newOptions.multiSelect);
-                this._markerController.setMarkedKey(markedKey);
+            if (this._markerController) {
+                this._updateMakerController(newOptions);
             }
         }
 
@@ -303,6 +298,13 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             searchValue: newOptions.searchValue,
             strategyOptions: this._getSelectionStrategyOptions()
         });
+    }
+
+    private _updateMakerController(newOptions: IMenuControlOptions): void {
+        this._getMarkerController(newOptions).updateOptions(this._getMarkerControllerConfig(newOptions));
+        const markedKey = this._getMarkedKey(this._getSelectedKeys(), newOptions.emptyKey,
+            newOptions.multiSelect);
+        this._markerController.setMarkedKey(markedKey);
     }
 
     private _getSelectionStrategyOptions(): IFlatSelectionStrategyOptions {
@@ -622,6 +624,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         this._setStateByItems(items, options);
         if (this._selectionController) {
             this._updateSelectionController(options);
+        }
+        if (this._markerController) {
+            this._updateMakerController(options);
         }
     }
 

@@ -19,53 +19,79 @@ import {ISelectionObject} from 'Controls/interface';
 import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { RecordSet } from 'Types/collection';
 import {calculatePath} from 'Controls/dataSource';
+import { SearchView as SearchViewNew } from 'Controls/searchBreadcrumbsGrid';
+import { TreeGridView as TreeGridViewNew } from 'Controls/treeGridNew';
 
 var
       HOT_KEYS = {
          backByPath: constants.key.backspace
       };
 
-var
-   ITEM_TYPES = {
-      node: true,
-      hiddenNode: false,
-      leaf: null
-   },
-   DEFAULT_VIEW_MODE = 'table',
-   VIEW_NAMES = {
-      search: SearchView,
-      tile: null,
-      table: TreeGridView,
-      list: ListView
-   },
-   VIEW_MODEL_CONSTRUCTORS = {
-      search: SearchGridViewModel,
-      tile: null,
-      table: TreeGridViewModel,
-      list: TreeGridViewModel
-   },
-   _private = {
-      setRoot: function(self, root, dataRoot = null) {
-         if (!self._options.hasOwnProperty('root')) {
-            self._root = root;
-         } else {
-            self._potentialMarkedKey = root;
-         }
-         self._notify('rootChanged', [root]);
-         if (typeof self._options.itemOpenHandler === 'function') {
-            self._options.itemOpenHandler(root, self._items, dataRoot);
-         }
-         self._forceUpdate();
+   var
+      ITEM_TYPES = {
+         node: true,
+         hiddenNode: false,
+         leaf: null
       },
-      setRestoredKeyObject: function(self, root) {
-         const curRoot = _private.getRoot(self, self._options.root);
-         const rootId = root.getId();
-         self._restoredMarkedKeys[rootId] = {
-            parent: curRoot,
-            markedKey: null
-         };
-         if (self._restoredMarkedKeys[curRoot]) {
-            self._restoredMarkedKeys[curRoot].markedKey = rootId;
+      DEFAULT_VIEW_MODE = 'table',
+      VIEW_NAMES = {
+         search: SearchView,
+         tile: null,
+         table: TreeGridView,
+         list: ListView
+      },
+      VIEW_MODEL_CONSTRUCTORS = {
+         search: SearchGridViewModel,
+         tile: null,
+         table: TreeGridViewModel,
+         list: TreeGridViewModel
+      },
+      USE_NEW_MODEL_VALUES = {
+         search: false,
+         tile: false,
+         table: false,
+         list: false
+      },
+      VIEW_NAMES_NEW = {
+         search: SearchViewNew,
+         tile: null,
+         table: TreeGridViewNew,
+         list: ListView
+      },
+      VIEW_MODEL_CONSTRUCTORS_NEW = {
+         search: 'Controls/searchBreadcrumbsGrid:SearchGridCollection',
+         tile: null,
+         table: 'Controls/treeGrid:TreeGridCollection',
+         list: 'Controls/treeGrid:TreeGridCollection'
+      },
+      USE_NEW_MODEL_VALUES_NEW = {
+         search: true,
+         tile: false,
+         table: true,
+         list: true
+      },
+      _private = {
+         setRoot: function(self, root, dataRoot = null) {
+            if (!self._options.hasOwnProperty('root')) {
+               self._root = root;
+            } else {
+               self._potentialMarkedKey = root;
+            }
+            self._notify('rootChanged', [root]);
+            if (typeof self._options.itemOpenHandler === 'function') {
+               self._options.itemOpenHandler(root, self._items, dataRoot);
+            }
+            self._forceUpdate();
+         },
+         setRestoredKeyObject: function(self, root) {
+            const curRoot = _private.getRoot(self, self._options.root);
+            const rootId = root.getId();
+            self._restoredMarkedKeys[rootId] = {
+               parent: curRoot,
+               markedKey: null
+            };
+            if (self._restoredMarkedKeys[curRoot]) {
+               self._restoredMarkedKeys[curRoot].markedKey = rootId;
 
             if (_private.isCursorNavigation(self._options.navigation)) {
                self._restoredMarkedKeys[curRoot].cursorPosition = _private.getCursorPositionFor(root, self._options.navigation);
@@ -188,17 +214,24 @@ var
          }
       },
 
-      setViewConfig: function (self, viewMode) {
-         self._viewName = VIEW_NAMES[viewMode];
-         self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
-      },
-      setViewModeSync: function(self, viewMode, cfg): void {
-         self._viewMode = viewMode;
-         _private.setViewConfig(self, self._viewMode);
-         _private.applyNewVisualOptions(self);
-      },
-      setViewMode: function(self, viewMode, cfg): Promise<void> {
-         var result;
+         setViewConfig: function (self, viewMode) {
+            if (self._options.useNewModel) {
+               self._viewName = VIEW_NAMES_NEW[viewMode];
+               self._useNewModel = USE_NEW_MODEL_VALUES_NEW[viewMode];
+               self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS_NEW[viewMode];
+            } else {
+               self._viewName = VIEW_NAMES[viewMode];
+               self._useNewModel = USE_NEW_MODEL_VALUES[viewMode];
+               self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
+            }
+         },
+         setViewModeSync: function(self, viewMode, cfg): void {
+            self._viewMode = viewMode;
+            _private.setViewConfig(self, self._viewMode);
+            _private.applyNewVisualOptions(self);
+         },
+         setViewMode: function(self, viewMode, cfg): Promise<void> {
+            var result;
 
          if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
             _private.updateRootOnViewModeChanged(self, viewMode, cfg);
@@ -265,26 +298,28 @@ var
             }
          }
 
-         return itemFromRoot;
-      },
-      loadTileViewMode: function (self) {
-         return new Promise((resolve) => {
-            import('Controls/tile').then((tile) => {
-               VIEW_NAMES.tile = tile.TreeView;
-               VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
-               resolve(tile);
-            }).catch((err) => {
-               Logger.error('Controls/_explorer/View: ' + err.message, self, err);
+            return itemFromRoot;
+         },
+         loadTileViewMode: function (self) {
+            return new Promise((resolve) => {
+               import('Controls/tile').then((tile) => {
+                  VIEW_NAMES.tile = tile.TreeView;
+                  VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+                  VIEW_NAMES_NEW.tile = tile.TreeView;
+                  VIEW_MODEL_CONSTRUCTORS_NEW.tile = tile.TreeViewModel;
+                  resolve(tile);
+               }).catch((err) => {
+                  Logger.error('Controls/_explorer/View: ' + err.message, self, err);
+               });
             });
-         });
-      },
-      canStartDragNDrop(self): boolean {
-         return self._viewMode !== 'search';
-      },
-      updateSubscriptionOnBreadcrumbs(oldItems, newItems, updateHeadingPathCallback): void {
-         const getPathRecordSet = (items) => items && items.getMetaData() && items.getMetaData().path;
-         const oldPath = getPathRecordSet(oldItems);
-         const newPath = getPathRecordSet(newItems);
+         },
+         canStartDragNDrop(self): boolean {
+            return self._viewMode !== 'search';
+         },
+         updateSubscriptionOnBreadcrumbs(oldItems, newItems, updateHeadingPathCallback): void {
+            const getPathRecordSet = (items) => items && items.getMetaData() && items.getMetaData().path;
+            const oldPath = getPathRecordSet(oldItems);
+            const newPath = getPathRecordSet(newItems);
 
          if (oldItems !== newItems || oldPath !== newPath) {
             if (oldPath && oldPath.getCount) {
