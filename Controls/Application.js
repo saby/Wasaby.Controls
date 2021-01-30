@@ -189,6 +189,13 @@ define('Controls/Application',
                .split(' ')
                .concat(['zIndex-context'])
                .filter(isExist);
+            for (var key in this._bodyClasses) {
+               if (this._bodyClasses.hasOwnProperty(key)) {
+                  if (isExist(this._bodyClasses[key])) {
+                     bodyClasses.push(this._bodyClasses[key]);
+                  }
+               }
+            }
             BodyAPI.addClass.apply(BodyAPI, bodyClasses);
          },
 
