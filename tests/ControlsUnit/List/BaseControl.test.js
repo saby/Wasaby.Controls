@@ -4512,7 +4512,7 @@ define([
                  return initTest({
                      multiSelectVisibility: 'visible',
                      selectedKeysCount: null,
-                     selectedKeys: [1],
+                     selectedKeys: [],
                      excludedKeys: [],
                      itemActions: [
                          {
