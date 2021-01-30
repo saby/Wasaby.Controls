@@ -166,13 +166,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._previousViewMode = this._viewMode = options.viewMode;
         this._updateViewMode(options.viewMode);
 
-        if (receivedState) {
-            if ('filterItems' in receivedState && 'items' in receivedState) {
-                this._setFilterItems(receivedState.filterItems as IFilterItem[]);
-                this._defineShadowVisibility(receivedState.items);
-                if (isNewEnvironment()) {
-                    this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
-                }
+        if (receivedState &&  'filterItems' in receivedState && 'items' in receivedState) {
+            this._setFilterItems(receivedState.filterItems as IFilterItem[]);
+            this._defineShadowVisibility(receivedState.items);
+            if (isNewEnvironment()) {
+                this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
             }
         } else {
             return this._filterController.loadFilterItemsFromHistory()
@@ -210,7 +208,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             const filterSourceCallbackId = Store.onPropertyChanged('filter',
                (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
             const searchValueCallbackId = Store.onPropertyChanged('searchValue',
-               (searchValue: string) => this._search(null, searchValue));
+               (searchValue: string) => {
+                    if (searchValue) {
+                        this._search(null, searchValue);
+                    } else {
+                        this._searchReset(null);
+                    }
+               });
 
             this._storeCallbacks = [
                 sourceCallbackId,

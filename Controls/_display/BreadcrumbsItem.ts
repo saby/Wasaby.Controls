@@ -4,7 +4,6 @@ import Tree from './Tree';
 import {register} from 'Types/di';
 import TreeChildren from './TreeChildren';
 import { object } from 'Types/util';
-import {TItemKey} from 'Controls/_display/interface';
 
 export interface IOptions<T> extends ICollectionItemOptions<T> {
     owner?: Tree<T>;
@@ -43,10 +42,6 @@ export default class BreadcrumbsItem<T> extends CollectionItem<T> {
          }
 
          return current;
-    }
-
-    get key(): TItemKey {
-        return this.getLast().getContents().getKey();
     }
 
     constructor(options?: IOptions<T>) {

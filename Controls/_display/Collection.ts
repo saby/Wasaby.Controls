@@ -35,7 +35,6 @@ import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
 import {ICollection, ISourceCollection} from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
-import SearchSeparator from "./SearchSeparator";
 import {INavigationOptionValue} from 'Controls/interface';
 
 // tslint:disable-next-line:ban-comma-operator
@@ -183,7 +182,25 @@ export interface ISwipeConfig {
 }
 
 /**
+ * @typedef {String} TEditingMode
+ * @variant row - Редактирование всей строки таблицы
+ * @variant cell - Редактирование отдельных ячеек таблицы
+ * @default row
+ * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
+ */
+
+/*
+ * @typedef {String} TEditingMode
+ * @variant row - Editing of whole row.
+ * @variant cell - Editing of separated cell.
+ * @default row
+ * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
+ */
+type TEditingMode = 'cell' | 'row';
+
+/**
  * @typedef {Object} IEditingConfig
+ * @property {TEditingMode} [mode='row'] Режим редактирования раписей в таблице.
  * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
  * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже сущестсвующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
  * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
@@ -195,6 +212,7 @@ export interface ISwipeConfig {
  */
 /*
  * @typedef {Object} IEditingConfig
+ * @property {TEditingMode} [mode='row'] Items editing mode.
  * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
  * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
  * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
@@ -203,6 +221,7 @@ export interface ISwipeConfig {
  * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
  */
 export interface IEditingConfig {
+    mode?: 'row' | 'cell';
     addPosition?: 'top'|'bottom';
     toolbarVisibility?: boolean;
     editOnClick?: boolean;
@@ -2233,7 +2252,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectVisibility(visibility: string): void {
         this.getViewIterator().each((item: CollectionItem<T>) => {
-            if (item.SelectableItem) {
+            // Нельзя проверять SelectableItem, т.к. элементы которые нельзя выбирать
+            // тоже должны перерисоваться при изменении видимости чекбоксов
+            if (item.setMultiSelectVisibility) {
                 item.setMultiSelectVisibility(visibility);
             }
         });
@@ -2241,7 +2262,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _updateItemsMultiSelectAccessibilityProperty(property: string): void {
         this.getViewIterator().each((item: CollectionItem) => {
-            if (item.SelectableItem) {
+            if (item.setMultiSelectAccessibilityProperty) {
                 item.setMultiSelectAccessibilityProperty(property);
             }
         });
@@ -2263,7 +2284,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     setMarkedKey(key: string|number, status: boolean): void {
         const item = this.getItemBySourceKey(key);
-        if (item) {
+        if (item && item.Markable) {
             item.setMarked(status);
         }
     }
@@ -2342,7 +2363,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     getSearchValue(): string {
-        return this._$searchValue;
+        return this._$searchValue || '';
     }
 
     getItemBySourceKey(key: string|number): T {
@@ -2937,7 +2958,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
-            return create(this._itemModule, options);
+            return create(options.itemModule || this._itemModule, options);
         };
     }
 
@@ -3254,7 +3275,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 prevGroupIndex = index;
                 prevGroupPosition = position;
                 prevGroupHasMembers = false;
-            } else if (!(item instanceof SearchSeparator)) {
+            } else if (!(item['[Controls/_display/SearchSeparator]'])) {
                 // Check item match
                 match = isMatch(item, index, position);
                 changed = applyMatch(match, index) || changed;

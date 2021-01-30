@@ -21,7 +21,6 @@ import {Object as EventObject} from 'Env/Event';
 import { TemplateFunction } from 'UI/Base';
 import { CrudEntityKey } from 'Types/source';
 import NodeFooter from 'Controls/_display/itemsStrategy/NodeFooter';
-import BreadcrumbsItem from 'Controls/_display/BreadcrumbsItem';
 import { Model } from 'Types/entity';
 import { IDragPosition } from './interface/IDragPosition';
 import TreeDrag from './itemsStrategy/TreeDrag';
@@ -588,7 +587,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         } else {
             expandedKeys.forEach((key) => {
                 const item = this.getItemBySourceKey(key);
-                if (item) {
+                if (item && item.Expandable) {
                     // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
                     item.setExpanded(true);
                 }
@@ -607,7 +606,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
         collapsedKeys.forEach((key) => {
             const item = this.getItemBySourceKey(key);
-            if (item) {
+            if (item && item.Expandable) {
                 // TODO нужно передать silent=true и занотифицировать все измененные элементы разом
                 item.setExpanded(false);
             }
@@ -617,7 +616,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     resetExpandedItems(): void {
-        this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
+        this.getItems().filter((it) => it.Expandable && it.isExpanded()).forEach((it) => it.setExpanded(false));
         this._reBuildNodeFooters();
     }
 
@@ -820,7 +819,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 let item;
                 while (enumerator.moveNext()) {
                     item = enumerator.getCurrent();
-                    if (!(item instanceof TreeItem) && !(item instanceof BreadcrumbsItem)) {
+                    if (!(item instanceof TreeItem) && !(item['[Controls/_display/BreadcrumbsItem]'])) {
                         continue;
                     }
                     if (item.getParent() === parent) {

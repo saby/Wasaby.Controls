@@ -46,6 +46,20 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
+    * @typedef {Enum} Controls/interface/IEditableList/TEditingMode
+    * @variant row Редактирование всей строки.
+    * @variant cell Редактирование отдельной ячейки.
+    * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
+    */
+
+   /*
+    * @typedef {Enum} Controls/interface/IEditableList/TEditingMode
+    * @variant row Editing of whole row.
+    * @variant cell Editing of separated cell.
+    * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
+    */
+
+   /**
     * @typedef {Object} Controls/interface/IEditableList/EditingConfig
     * @property {Boolean} [autoAddOnInit=false] Если передано значение "true", при построении списка автомати начнется рдобавление по месту, при условии, что список пустой.
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
@@ -55,6 +69,7 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * Когда кнопки не отображаются, аналогичные действия выполняются с помощью {@link /doc/platform/developmentapl/interface-development/controls/list/actions/keys/ клавиш}.
     * @property {String} [backgroundStyle=default] Предназначен для настройки фона редактируемой записи.
+    * @property {Controls/interface/IEditableList/TEditingMode} [mode=row] Определяет режим редактирования в таблице.
     * @property {Controls/interface/IEditableList/AddPositionOption.typedef} [addPosition=bottom] Позиция добавления по месту.
     * В корне списка, в группе (когда включена группировка) или в рамках узла (для иерархических списков).
     * Если в контроле включена {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группировка} элементов, тогда в модели нового элемента необходимо задать поле с группой.
@@ -136,6 +151,7 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
     * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
     * @property {Boolean} [toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
+    * @property {Controls/interface/IEditableList/TEditingMode} [mode=row] Determines editing mode in grid.
     * @property {AddPosition} [addPosition] Editing in place position.
     * @property {Types/entity:Model} [item=undefined] If present, editing of this item will begin on first render.
     */
