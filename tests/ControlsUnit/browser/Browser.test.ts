@@ -55,6 +55,13 @@ function getBrowser(options: object = {}): Browser {
     return new Browser(options);
 }
 
+async function getBrowserWithMountCall(options: object = {}): Promise<Browser> {
+    const brow = getBrowser(options);
+    await brow._beforeMount(options);
+    brow.saveOptions(options);
+    return brow;
+}
+
 describe('Controls/browser:Browser', () => {
 
     describe('_beforeMount', () => {
@@ -508,12 +515,9 @@ describe('Controls/browser:Browser', () => {
         });
 
         it('search view mode changed on dataLoadCallback', async () => {
-            let options = getBrowserOptions();
+            const options = getBrowserOptions();
             options.searchValue = 'Sash';
-            const browser = getBrowser(options);
-
-            await browser._beforeMount(options);
-            browser.saveOptions(options);
+            const browser = await getBrowserWithMountCall(options);
 
             browser._viewMode = 'search';
             browser._searchValue = '';
@@ -522,6 +526,22 @@ describe('Controls/browser:Browser', () => {
             assert.isUndefined(browser._viewMode);
             assert.isNull(browser._rootBeforeSearch);
             assert.isEmpty(browser._misspellValue);
+        });
+
+        it('path is updated in searchController after load', async () => {
+            const options = getBrowserOptions();
+            const browser = await getBrowserWithMountCall(options);
+            await browser._getSearchController();
+            const recordset = new RecordSet();
+            const path = new RecordSet({
+                rawData: [
+                    {id: 1, title: 'folder'}
+                ]
+            });
+            recordset.setMetaData({path});
+            browser._dataLoadCallback(recordset);
+            assert.ok(browser._searchController._path === path);
+            assert.ok(browser._path === path);
         });
     });
 
