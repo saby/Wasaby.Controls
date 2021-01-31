@@ -340,7 +340,14 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    private _dataLoadCallback(items: RecordSet, direction): void {
-      if (this._loading) {
+      const rootChanged = this._root !== this._sourceController.getRoot();
+      const needUpdateStateAfterLoad = rootChanged || this._loading;
+
+      if (rootChanged) {
+         this._sourceController.setRoot(this._root);
+      }
+
+      if (needUpdateStateAfterLoad) {
          const controllerState = this._sourceController.getState();
          this._updateContext(controllerState);
       }

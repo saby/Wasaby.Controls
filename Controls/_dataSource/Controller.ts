@@ -233,7 +233,10 @@ export default class Controller {
             !isEqual(this._filter, newOptions.filter);
         const isSourceChanged = newOptions.source !== this._options.source;
         const isNavigationChanged = !isEqual(newOptions.navigation, this._options.navigation);
-        const rootChanged = newOptions.root !== undefined && newOptions.root !== this._options.root;
+        const rootChanged =
+            newOptions.root !== undefined &&
+            newOptions.root !== this._options.root &&
+            newOptions.root !== this._root;
         const isExpadedItemsChanged = !isEqual(this._options.expandedItems, newOptions.expandedItems);
         const dataLoadCallbackChanged =
             newOptions.dataLoadCallback !== undefined &&
