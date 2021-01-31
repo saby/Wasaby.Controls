@@ -552,7 +552,7 @@ define([
             assert.strictEqual(instance._viewMode, 'tree');
 
             explorerMod.View._private.itemsSetCallback(instance);
-            assert.strictEqual(instance._viewMode, 'tile');
+            assert.strictEqual(instance._viewMode, 'tree');
          });
       });
 

@@ -201,7 +201,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    _updateWithSourceControllerInOptions(newOptions: IDataOptions): void {
       const sourceControllerState = this._sourceController.getState();
 
-      if (!isEqual(sourceControllerState, this._sourceControllerState)) {
+      if (!isEqual(sourceControllerState, this._sourceControllerState) && !this._sourceController.isLoading()) {
          this._filter = sourceControllerState.filter;
          this._updateContext(sourceControllerState);
       }
