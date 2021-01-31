@@ -3857,8 +3857,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
-            // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
-            (sourceChanged || searchValueChanged && newOptions.searchValue && !newOptions.sourceControllerCreated);
+            (sourceChanged || searchValueChanged && newOptions.searchValue);
 
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
