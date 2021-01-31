@@ -98,7 +98,11 @@ define(
             await data._beforeMount(dataOptions);
 
             const errorSource = new sourceLib.Memory();
-            errorSource.query = () => Promise.reject(new Error('testError'));
+            errorSource.query = () => {
+               const error = new Error('testError');
+               error.processed = true;
+               Promise.reject(error);
+            };
             dataOptions = {...dataOptions};
             dataOptions.source = errorSource;
             data._onDataError = () => {
@@ -507,7 +511,7 @@ define(
                query: function() {
                   return Deferred.fail({
                      canceled: false,
-                     processed: false,
+                     processed: true,
                      _isOfflineMode: false
                   });
                },
@@ -548,6 +552,7 @@ define(
                dataLoadErrbackCalled = true;
             };
             var error = new Error('test');
+            error.processed = true;
 
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var promise = getDataWithConfig(config)._beforeMount(config);
