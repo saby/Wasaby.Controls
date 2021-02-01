@@ -2545,11 +2545,13 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$editingConfig;
     }
 
-    setSearchValue(searchValue: string): void {
+    setSearchValue(searchValue: string): boolean {
         if (this._$searchValue !== searchValue) {
             this._$searchValue = searchValue;
             this._nextVersion();
+            return true;
         }
+        return false;
     }
 
     getSearchValue(): string {
