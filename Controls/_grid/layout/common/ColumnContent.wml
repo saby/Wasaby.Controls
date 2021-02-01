@@ -10,6 +10,7 @@
         <Controls.Container.Async templateName="{{itemData.getCellContentRender(itemData.column)}}">
             <ws:partial template="{{content.resolvedTemplate}}"
                         scope="{{itemData.column}}"
+                        searchValue="{{itemData.needSearchHighlight ? itemData.searchValue}}"
                         value="{{itemData.item[itemData.column.displayProperty]}}"/>
         </Controls.Container.Async>
     </ws:else>
