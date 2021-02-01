@@ -426,7 +426,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _checkOpenedMenu(nativeEvent: MouseEvent, newItem?: CollectionItem<Model>): void {
-        if (!this._getMenuHoverController().isNeedKeepMenOpened(newItem)) {
+        if (!this._getMenuHoverController().isNeedKeepMenuOpened(newItem)) {
             this._closeSubMenu();
         }
     }
@@ -457,7 +457,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         const needOpenDropDown: boolean = item.getContents().get(this._options.nodeProperty) &&
             !item.getContents().get('readOnly');
 
-        const needKeepMenuOpen: boolean = this._getMenuHoverController().isNeedKeepMenOpened(item);
+        const needKeepMenuOpen: boolean = this._getMenuHoverController().isNeedKeepMenuOpened(item);
         // Close the already opened sub menu. Installation of new data sets new size of the container.
         // If you change the size of the update, you will see the container twitch.
 

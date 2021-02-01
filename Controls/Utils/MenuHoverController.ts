@@ -30,7 +30,7 @@ export default class MenuHoverController {
     protected _subMenuDelay: number = null;
     protected _subMenuEvent: MouseEvent = null;
     protected _subMenu: HTMLElement = null;
-    protected _currentItem: CollectionItem<Model> = null;
+    protected _currentItem: CollectionItem<Model>|string = null;
     protected _curMouseEvent: MouseEvent = null;
     protected _isMouseInOpenedItemArea: boolean = null;
 
@@ -83,10 +83,10 @@ export default class MenuHoverController {
     /**
      * Обрабатывает событие itemMouseEnter
      */
-    itemMouseEnter(item: CollectionItem<Model>, curMouseEvent: MouseEvent): void {
+    itemMouseEnter(item: CollectionItem<Model>|string, curMouseEvent: MouseEvent): void {
         this.clearClosingTimeout();
         this._curMouseEvent = curMouseEvent;
-        if (!this.isNeedKeepMenOpened(item)) {
+        if (!this.isNeedKeepMenuOpened(item)) {
             this._menuClose();
         }
         this._currentItem = item;
@@ -103,7 +103,7 @@ export default class MenuHoverController {
     /**
      * Рассчитывает нужно ли оставлять подменю открытым.
      */
-    isNeedKeepMenOpened(item: CollectionItem<Model>): boolean {
+    isNeedKeepMenuOpened(item: CollectionItem<Model>|string): boolean {
         const needCloseSubMenu = this._needCloseSubMenu(item);
         if (needCloseSubMenu) {
             this._isMouseInOpenedItemArea = this._isMouseInOpenedItemAreaCheck();
@@ -175,7 +175,7 @@ export default class MenuHoverController {
             Math.sign(firstSegment) === Math.sign(thirdSegment);
     }
 
-    private _needCloseSubMenu(item: CollectionItem<Model>): boolean {
+    private _needCloseSubMenu(item: CollectionItem<Model>|string): boolean {
         return this._subMenu && this._currentItem && (!item || item !== this._currentItem);
     }
 

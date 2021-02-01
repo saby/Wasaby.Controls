@@ -606,7 +606,7 @@ define(
                menuControl._setSubMenuPosition = function() {};
                menuControl._getMenuHoverController = () => {
                   return {
-                     isNeedKeepMenOpened: () => isMouseInArea
+                     isNeedKeepMenuOpened: () => isMouseInArea
                   };
                };
             });
@@ -644,7 +644,7 @@ define(
             };
             menuControl._getMenuHoverController = () => {
                return {
-                  isNeedKeepMenOpened: () => false
+                  isNeedKeepMenuOpened: () => false
                };
             };
             menuControl._footerMouseEnter(event);
@@ -652,7 +652,7 @@ define(
 
             menuControl._getMenuHoverController = () => {
                return {
-                  isNeedKeepMenOpened: () => true
+                  isNeedKeepMenuOpened: () => true
                };
             };
             menuControl._subDropdownItem = true;
