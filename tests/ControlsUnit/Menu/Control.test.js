@@ -347,8 +347,10 @@ define(
                });
             });
             it('check selected item', function() {
+               menuControl._markerController = null;
                menuControl._itemClick('itemClick', item, {});
                assert.equal(selectedItem.getKey(), 1);
+               assert.isNull(menuControl._markerController);
             });
 
             it('multiSelect=true', function() {
