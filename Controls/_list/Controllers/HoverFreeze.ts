@@ -190,6 +190,14 @@ export default class HoverFreeze {
         if (!this._itemAreaRect) {
             return false;
         }
+        // При зуме в браузере при срабатывании mouseLeave
+        // кордината y может оказаться выше нижней координаты замороженной записи.
+        // При этом не нужно, чтобы true возвращалось при соскакивании с записи вправо или влево, иначе
+        // будет эффект лага. Поэтому проверяем, что мы всё ещё находимся в зоне "замороженной" записи
+        if (x < this._itemAreaRect.right && x > this._itemAreaRect.left &&
+            y < this._itemAreaRect.bottom && y > this._itemAreaRect.top) {
+            return true;
+        }
         const cursorPoint = { x, y };
         if (!this._mouseLeavePoint) {
             this._mouseLeavePoint = HoverFreeze._createPoint(
