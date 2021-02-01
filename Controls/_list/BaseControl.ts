@@ -656,7 +656,7 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean | 'adaptive') {
+    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean) {
         const scrollCallback = (index, result) => {
 
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
@@ -666,10 +666,9 @@ const _private = {
             const itemsContainer = self._getItemsContainer();
             const itemContainer = _private.getItemContainerByIndex(index - self._listViewModel.getStartIndex(), itemsContainer);
 
-            const forceScroll = force === true || force === 'adaptive' && !!result;
             if (itemContainer) {
                 self._notify('scrollToElement', [{
-                    itemContainer, toBottom, force: forceScroll
+                    itemContainer, toBottom, force
                 }], {bubbling: true});
             }
             if (result) {
@@ -5041,7 +5040,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }).then(() => {
             // Подскролл к редактору
             if (this._isMounted) {
-                return _private.scrollToItem(this, item.contents.getKey(), false, 'adaptive');
+                return _private.scrollToItem(this, item.contents.getKey(), false, false);
             }
         })
     },
