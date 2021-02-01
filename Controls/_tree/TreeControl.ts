@@ -16,7 +16,7 @@ import { Collection, Tree, TreeItem } from 'Controls/display';
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
 import {ISelectionObject, TKey} from 'Controls/interface';
-import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
+import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import { SyntheticEvent } from 'UI/Vdom';
 import {constants} from 'Env/Env';
 
@@ -897,7 +897,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
     // region mover
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<DataSet> {
         return this._children.baseControl.moveItems(selection, targetKey, position);
     },
 
@@ -909,7 +909,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return this._children.baseControl.moveItemDown(selectedKey);
     },
 
-    moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+    moveItemsWithDialog(selection: ISelectionObject): Promise<DataSet> {
         return this._children.baseControl.moveItemsWithDialog(selection);
     },
 
