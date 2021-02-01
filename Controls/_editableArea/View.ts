@@ -98,6 +98,9 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
       this._isEditing = newOptions.autoEdit;
       this._editObject = newOptions.editObject;
    },
+   _afterMount: function () {
+      this._registerFormOperation();
+   },
    /* В режиме редактирования создается клон, и ссылка остается на старый объект. Поэтому при изменении опций копируем ссылку
     актуального объекта */
    _beforeUpdate: function (newOptions) {
@@ -117,6 +120,14 @@ var View = Control.extend( /** @lends Controls/List/View.prototype */ {
          this.beginEdit(event);
       }
    },
+
+    _registerFormOperation: function () {
+        this._notify('registerFormOperation', [{
+            save: this.commitEdit.bind(this),
+            cancel: this.cancelEdit.bind(this),
+            isDestroyed: () => this._destroyed
+        }], {bubbling: true});
+    },
 
    _onDeactivatedHandler: function () {
       if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisible) {

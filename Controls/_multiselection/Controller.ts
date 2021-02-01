@@ -219,7 +219,7 @@ export class Controller {
     * @return {ISelection}
     */
    toggleAll(): ISelection {
-      const initSelection = this._filterChanged ? {selected: [], excluded: []} : this._selection;
+      const initSelection = this._filterChanged ? this._removeFilteredItemKeys(this._selection) : this._selection;
       return this._strategy.toggleAll(initSelection, this._model.getHasMoreData());
    }
 
@@ -347,6 +347,13 @@ export class Controller {
    }
 
    // endregion
+
+   private _removeFilteredItemKeys(selection: ISelection): ISelection {
+      return {
+         selected: selection.selected.filter((key) => !!this._model.getItemBySourceKey(key)),
+         excluded: selection.excluded.filter((key) => !!this._model.getItemBySourceKey(key))
+      };
+   }
 
    private _getItemsKeys(items: Array<CollectionItem<Model>>): TKeys {
       return items

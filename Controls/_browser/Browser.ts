@@ -753,7 +753,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._path = data?.getMetaData().path ?? null;
 
         if (this._options.searchParam) {
-            if (!this._isSearchViewMode()) {
+            if (this._searchController) {
+                this._searchController.setPath(this._path);
+            } else if (this._path) {
                 this._getSearchController().then((searchController) => searchController.setPath(this._path));
             }
         }
