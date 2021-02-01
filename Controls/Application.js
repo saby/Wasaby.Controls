@@ -109,7 +109,8 @@ define('Controls/Application',
             touchClass: '',
             hoverClass: '',
             dragClass: 'ws-is-no-drag',
-            themeClass: ''
+            themeClass: '',
+            isAdaptiveClass: ''
          },
 
          _registers: {},
@@ -294,9 +295,9 @@ define('Controls/Application',
                   name: 'viewport',
                   content: 'width=device-width, initial-scale=1'
                });
-               this._isAdaptiveClass = 'ws-is-adaptive';
+               this._bodyClasses.isAdaptiveClass = 'ws-is-adaptive';
             } else {
-               this._isAdaptiveClass = '';
+               this._bodyClasses.isAdaptiveClass = '';
             }
          },
 
