@@ -111,7 +111,11 @@ describe('Controls/browser:Browser', () => {
 
             it('source returns error', async () => {
                 let options = getBrowserOptions();
-                options.source.query = () => Promise.reject(new Error('source error'));
+                options.source.query = () => {
+                    const error = new Error();
+                    error.processed = true;
+                    return Promise.reject(error);
+                };
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
                 assert.ok(browser._dataOptionsContext.source === options.source);
