@@ -3845,6 +3845,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._cancelEdit(true);
         }
 
+        if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
+            this._initKeyProperty(newOptions);
+            _private.checkRequiredOptions(this, newOptions);
+            this._listViewModel.setKeyProperty(this._keyProperty);
+        }
+
         if (oldViewModelConstructorChanged) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._loadedBySourceController ? newOptions.sourceController.getItems() : this._listViewModel.getItems();
@@ -3893,12 +3899,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
             GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
-        }
-
-        if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
-            this._initKeyProperty(newOptions);
-            _private.checkRequiredOptions(this, newOptions);
-            this._listViewModel.setKeyProperty(this._keyProperty);
         }
 
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
