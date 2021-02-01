@@ -267,7 +267,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     this._handleCurrentItem(treeItem, sourceEvent.currentTarget, sourceEvent.nativeEvent);
                 } else {
                     this._notify('itemClick', [item, sourceEvent]);
-                    this._getMarkerController(this._options).setMarkedKey(key);
                 }
             }
         }
