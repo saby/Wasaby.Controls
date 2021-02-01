@@ -92,7 +92,7 @@
     <div attr:date="{{ _today }}"
          on:click="_todayCalendarClick()"
          title="{[Текущий период]}"
-         class="controls-PeriodDialog__header_calendar
+         class="controls-PeriodDialog__header_calendar controls-PeriodDialog__header_calendar_theme-{{ _options.theme }}
                 controls-PeriodDialog__header_calendar_{{ _todayCalendarEnabled ? 'active' : 'readOnly' }}_theme-{{ _options.theme }}
                     {{ _todayCalendarEnabled ? 'controls-PeriodDialog__cursor-pointer' }}"
     >
