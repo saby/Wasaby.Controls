@@ -16,6 +16,7 @@
                            nodeProperty="{{_options.nodeProperty}}"
                            keyProperty="{{_options.keyProperty}}"
                            iconSize="m"
+                           iconStyle="{{_options.iconStyle}}"
                            source="{{_toolbarSource}}"
                            on:itemClick="_itemClickHandler()"
                            itemTemplate="{{ _options.itemTemplate }}"
