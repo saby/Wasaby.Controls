@@ -200,7 +200,7 @@ define('Controls/Application',
                }
                HeadAPI.createTag('meta', {
                   name: 'viewport',
-                  content: 'width=device-width, initial-scale=1'
+                  content: 'width=device-width, initial-scale=1.0'
                });
                this._isAdaptiveClass = 'ws-is-adaptive';
             } else {
