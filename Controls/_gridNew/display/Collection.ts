@@ -11,6 +11,7 @@ import {
 import GroupItem from './GroupItem';
 import GridMixin, { IOptions as IGridMixinOptions } from './mixins/Grid';
 import Row, {IOptions as IRowOptions} from './Row';
+import DataRow from './DataRow';
 import { TemplateFunction } from 'UI/Base';
 
 export interface IOptions<
@@ -28,6 +29,18 @@ export default class Collection<
     }
 
     // region override
+
+    setSearchValue(searchValue: string): boolean {
+        const searchValueChanged = super.setSearchValue(searchValue);
+        if (searchValueChanged) {
+            this.getViewIterator().each((item: DataRow<S>) => {
+                if (item.DisplaySearchValueItem) {
+                    item.setSearchValue(searchValue);
+                }
+            });
+        }
+        return searchValueChanged;
+    }
 
     setEmptyTemplate(emptyTemplate: TemplateFunction): boolean {
         const superResult = super.setEmptyTemplate(emptyTemplate);
