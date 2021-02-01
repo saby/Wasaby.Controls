@@ -5,16 +5,23 @@ import {IMarkable, ISelectableItem} from 'Controls/display';
 import Row, {IOptions as IRowOptions} from './Row';
 import DataCell from './DataCell';
 import ILadderSupport from './interface/ILadderSupport';
+import { IDisplaySearchValueItem, IDisplaySearchValueItemOptions } from './interface/IDisplaySearchValueItem';
 import ItemActionsCell from './ItemActionsCell';
 import { Model } from 'Types/entity';
 
-export interface IOptions<T> extends IRowOptions<T> {
+export interface IOptions<T> extends IRowOptions<T>, IDisplaySearchValueItemOptions {
 }
 
-export default class DataRow<T extends Model> extends Row<T> implements IMarkable, ILadderSupport, ISelectableItem {
+export default class DataRow<T extends Model> extends Row<T> implements
+    IMarkable,
+    ILadderSupport,
+    ISelectableItem,
+    IDisplaySearchValueItem {
     protected _$columnItems: Array<DataCell<T, this>>;
+    protected _$searchValue: string;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly DisplaySearchValueItem: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
@@ -38,8 +45,17 @@ export default class DataRow<T extends Model> extends Row<T> implements IMarkabl
                 owner: this,
                 isFixed: true,
                 column: {}
-            }))
+            }));
         }
+    }
+
+    setSearchValue(searchValue: string): void {
+        this._$searchValue = searchValue;
+        this._nextVersion();
+    }
+
+    getSearchValue(): string {
+        return this._$searchValue;
     }
 
     setEditing(editing: boolean, editingContents?: T, silent?: boolean, columnIndex?: number): void {
@@ -60,5 +76,6 @@ Object.assign(DataRow.prototype, {
     _moduleName: 'Controls/gridNew:GridDataRow',
     _cellModule: 'Controls/gridNew:GridDataCell',
     _instancePrefix: 'grid-data-row-',
-    _$editingColumnIndex: null
+    _$editingColumnIndex: null,
+    _$searchValue: ''
 });
