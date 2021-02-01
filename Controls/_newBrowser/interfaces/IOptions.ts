@@ -1,9 +1,9 @@
 import {ICrudPlus} from 'Types/source';
-import {IControlOptions} from 'UI/Base';
+import {TKey} from 'Controls/interface';
+import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IMasterOptions} from 'Controls/_newBrowser/interfaces/IMasterOptions';
-import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
-import {TKey} from 'Controls/_interface/IItems';
+import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
 
 /**
  * Интерфейс описывает структуру настроек компонента {@link Controls/newBrowser:Browser}
@@ -74,4 +74,9 @@ export interface IOptions extends IControlOptions, ISourceOptions {
      * Конфигурация detail-колонки.
      */
     detail?: IDetailOptions;
+
+    /**
+     * Шаблон, который будет выведен под detail-списком
+     */
+    detailFooterTemplate?: TemplateFunction | string;
 }
