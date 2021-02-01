@@ -159,7 +159,7 @@ describe('Controls/list/HoverFreeze', () => {
         assert.isTrue(isFreezeHoverCallbackCalled);
     });
 
-    it ('should call unFreezeHoverCallback when cursor position is in bottom of the moveArea', () => {
+    it ('should call unFreezeHoverCallback deferred when cursor position is in bottom of the moveArea', () => {
         hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
 
@@ -170,7 +170,18 @@ describe('Controls/list/HoverFreeze', () => {
         assert.isTrue(isUnFreezeHoverCallbackCalled);
     });
 
-    it ('should call unFreezeHoverCallback when cursor position is under the moveArea', () => {
+    it ('should call unFreezeHoverCallback deferred when cursor position is inside of current item', () => {
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+
+        const event = createFakeMouseEvent(100, hoverContainerRect.top + hoverContainerRect.height - 1);
+        hoverFreeze.startUnfreezeHoverTimeout(event);
+        assert.isFalse(isUnFreezeHoverCallbackCalled);
+        clock.tick(TEST_HOVER_UNFREEZE_TIMEOUT);
+        assert.isTrue(isUnFreezeHoverCallbackCalled);
+    });
+
+    it ('should call unFreezeHoverCallback immediately when cursor position is under the moveArea', () => {
         hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
 
@@ -180,7 +191,34 @@ describe('Controls/list/HoverFreeze', () => {
         assert.isTrue(isUnFreezeHoverCallbackCalled);
     });
 
-    it ('should call unFreezeHoverCallback when cursor position is under the moveArea', () => {
+    it ('should call unFreezeHoverCallback immediately when cursor position is rights of current item', () => {
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+
+        const event = createFakeMouseEvent(hoverContainerRect.left +  hoverContainerRect.width + 1, 54);
+        hoverFreeze.startUnfreezeHoverTimeout(event);
+        assert.isTrue(isUnFreezeHoverCallbackCalled);
+    });
+
+    it ('should call unFreezeHoverCallback immediately when cursor position is lefts of current item', () => {
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+
+        const event = createFakeMouseEvent(hoverContainerRect.left - 1, 54);
+        hoverFreeze.startUnfreezeHoverTimeout(event);
+        assert.isTrue(isUnFreezeHoverCallbackCalled);
+    });
+
+    it ('should call unFreezeHoverCallback immediately when cursor position is above of current item', () => {
+        hoverFreeze.startFreezeHoverTimeout('key_1', 0);
+        clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
+
+        const event = createFakeMouseEvent(100, hoverContainerRect.top - 1);
+        hoverFreeze.startUnfreezeHoverTimeout(event);
+        assert.isTrue(isUnFreezeHoverCallbackCalled);
+    });
+
+    it ('should call unFreezeHoverCallback immediately when cursor position is under the moveArea', () => {
         hoverFreeze.startFreezeHoverTimeout('key_1', 0);
         clock.tick(TEST_HOVER_FREEZE_TIMEOUT);
 
@@ -188,6 +226,9 @@ describe('Controls/list/HoverFreeze', () => {
         const event1 = createFakeMouseEvent(100, 80);
         const event2 = createFakeMouseEvent(45, 60);
         hoverFreeze.startUnfreezeHoverTimeout(event1);
+        assert.isFalse(isUnFreezeHoverCallbackCalled);
+
+        // Вышли за угол треугольника
         hoverFreeze.startUnfreezeHoverTimeout(event2);
         assert.isTrue(isUnFreezeHoverCallbackCalled);
     });
