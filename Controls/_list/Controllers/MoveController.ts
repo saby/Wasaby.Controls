@@ -13,10 +13,10 @@ import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 type TSource = SbisService|ICrudPlus;
 type TFilterObject = IHashMap<any>;
 
-type TValidationResult = {
+interface IValidationResult {
     message: string;
     isError: boolean;
-};
+}
 
 /**
  * Интерфейс опций контроллера.
@@ -39,7 +39,7 @@ export interface IMoveControllerOptions {
      * @name Controls/_list/Controllers/IMoveController#popupOptions
      * @cfg {Controls/popup:IBasePopupOptions} опции диалога перемещения
      */
-    popupOptions?: IBasePopupOptions
+    popupOptions?: IBasePopupOptions;
 }
 
 /**
@@ -165,7 +165,7 @@ export class MoveController {
                           filter: TFilterObject = {},
                           targetKey: CrudEntityKey,
                           position: LOCAL_MOVE_POSITION): Promise<DataSet | void>  {
-        const validationResult: TValidationResult = MoveController
+        const validationResult: IValidationResult = MoveController
             ._validateBeforeMove(this._source, selection, filter, targetKey, position);
         if (validationResult.message !== undefined) {
             if (validationResult.isError) {
@@ -196,7 +196,7 @@ export class MoveController {
                         resolve(result);
                     });
                 });
-            })
+            });
         }
         return this._source.move(selection.selected, targetKey, {
             position,
@@ -218,11 +218,11 @@ export class MoveController {
         selection: ISelectionObject,
         filter: TFilterObject,
         targetKey: CrudEntityKey,
-        position: LOCAL_MOVE_POSITION): TValidationResult {
-        let result: TValidationResult = {
+        position: LOCAL_MOVE_POSITION): IValidationResult {
+        const result: IValidationResult = {
             message: undefined,
             isError: true
-        }
+        };
         if (!source) {
             result.message = 'MoveController: Source is not set';
         }
@@ -253,8 +253,8 @@ export class MoveController {
      * @private
      */
     private static _validateBeforeOpenDialog(selection: ISelectionObject,
-                                             popupOptions: IBasePopupOptions): TValidationResult {
-        const result: TValidationResult = {
+                                             popupOptions: IBasePopupOptions): IValidationResult {
+        const result: IValidationResult = {
             message: undefined,
             isError: false
         };
