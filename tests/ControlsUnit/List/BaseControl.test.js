@@ -4512,7 +4512,7 @@ define([
                  return initTest({
                      multiSelectVisibility: 'visible',
                      selectedKeysCount: null,
-                     selectedKeys: [1],
+                     selectedKeys: [],
                      excludedKeys: [],
                      itemActions: [
                          {
@@ -4532,6 +4532,7 @@ define([
                          }
                      ]
                  }).then(() => {
+                     lists.BaseControl._private.createSelectionController(instance, instance._options);
                      lists.BaseControl._private.updateItemActions(instance, instance._options);
                      const item = instance._listViewModel.at(0);
                      instance._onItemSwipe({}, item, swipeEvent);
