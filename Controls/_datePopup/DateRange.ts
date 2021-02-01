@@ -48,8 +48,6 @@ var Component = BaseControl.extend([EventProxy], {
     _weekdaysCaptions: DateControlsUtils.getWeekdaysCaptions(),
     _formatDate: formatDate,
 
-    _isStickySupport: datePopupUtils.isStickySupport(),
-
     _monthSelectionEnabled: true,
     _selectionProcessing: false,
 
@@ -152,12 +150,6 @@ var Component = BaseControl.extend([EventProxy], {
         if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
             _private.notifyPositionChanged(this, position);
         }
-    },
-
-    _getSeparatorCssClass: function(): string {
-        return this._isStickySupport ?
-            'controls-PeriodDialog-DateRangeItem__separator-sticky-support' :
-            'controls-PeriodDialog-DateRangeItem__separator-not-sticky-support';
     },
 
     _preventEvent(event: Event): void {
