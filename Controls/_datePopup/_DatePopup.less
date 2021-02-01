@@ -164,14 +164,29 @@
    align-items: center;
 
    &::before {
+      text-align: center;
       content: attr(date);
       font-family: @font-family;
       position: absolute;
    }
 }
 
+.controls-PeriodDialog__header_calendar_theme-@{themeName}::before {
+   height: @calendar-icon-size_datePicker;
+   line-height: @calendar-icon-size_datePicker;
+   width: @calendar-icon-size_datePicker;
+}
+
+.ws-is-ie11 {
+   // Под IE свойство line-height считается неправильно в абсолютно спозиционированных контейнерах
+   .controls-PeriodDialog__header_calendar_theme-@{themeName}::before {
+      line-height: 0;
+   }
+}
+
 .controls-PeriodDialog__header_calendar_svg_theme-@{themeName} {
-   height: 28px;
+   height: @calendar-icon-size_datePicker;
+   width: @calendar-icon-size_datePicker;
 }
 
 .controls-PeriodDialog__header_calendar_svg-content_active_theme-@{themeName} {
