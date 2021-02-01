@@ -25,6 +25,7 @@ import {
 import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import 'wml!Controls/_buttons/ButtonBase';
+import 'css!Controls/Classes';
 
 export type IViewMode = 'button' | 'link' | 'linkButton' | 'toolButton' | 'functionalButton';
 
@@ -213,7 +214,7 @@ class Button extends Control<IButtonControlOptions> implements IHref, ICaption, 
         }
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/buttons'];
 
     static getDefaultOptions(): object {
         return getDefaultOptions();

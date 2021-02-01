@@ -15,6 +15,7 @@ import {
 } from 'Controls/interface';
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import * as template from 'wml!Controls/_toolbars/BoxView/BoxView';
+import 'css!Controls/Classes';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/BoxView/ItemTemplate';
 import {IButtonOptions} from 'Controls/buttons';
 
