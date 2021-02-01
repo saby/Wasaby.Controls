@@ -5423,7 +5423,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @param event
      * @private
      */
-    _onItemActionClick(event: SyntheticEvent<MouseEvent>) {
+    _onItemActionClick(event: SyntheticEvent<MouseEvent>): void {
         event.stopPropagation();
     },
 
