@@ -680,7 +680,18 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const sourceControllerRoot = sourceController.getState().root;
 
             this._root = newOptions.root;
-            this._updatedRoot = true;
+            viewModel.setRoot(this._root);
+
+            if (this._options.itemsSetCallback) {
+                this._options.itemsSetCallback(sourceController.getItems(), newOptions);
+            }
+
+            // При смене корне, не надо запрашивать все открытые папки,
+            // т.к. их может не быть и мы загрузим много лишних данных.
+            // Так же учитываем, что вместе со сменой root могут поменять и expandedItems - тогда не надо их сбрасывать.
+            if (isEqual(newOptions.expandedItems, this._options.expandedItems)) {
+                this._needResetExpandedItems = true;
+            }
 
             if (sourceControllerRoot === undefined || sourceControllerRoot !== newOptions.root) {
                 updateSourceController = true;
@@ -689,10 +700,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             if (this.isEditing()) {
                 baseControl.cancelEdit();
             }
-        }
-
-        if (this._options.deepReload !== newOptions.deepReload) {
-            updateSourceController = true;
         }
 
         if (searchValueChanged && newOptions.searchValue && !_private.isDeepReload(this, newOptions)) {
@@ -706,7 +713,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
-            updateSourceController = true;
+            if (sourceController) {
+                sourceController.setExpandedItems(newOptions.expandedItems);
+            }
         }
         if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
             viewModel.setCollapsedItems(newOptions.collapsedItems);
@@ -745,30 +754,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
     },
     _afterUpdate: function(oldOptions) {
-        let afterUpdateResult;
-
-        if (this._updatedRoot) {
-            const sourceController = this._options.sourceController;
-            const isSourceControllerLoadingNewData = sourceController && sourceController.isLoading();
-            this._updatedRoot = false;
-            // При смене корне, не надо запрашивать все открытые папки,
-            // т.к. их может не быть и мы загрузим много лишних данных.
-            // Так же учитываем, что вместе со сменой root могут поменять и expandedItems - тогда не надо их сбрасывать.
-            if (isEqual(oldOptions.expandedItems, this._options.expandedItems)) {
-                this._needResetExpandedItems = true;
-            }
-            // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
-            if (isEqual(this._options.filter, oldOptions.filter) &&
-                this._options.source === oldOptions.source &&
-                !isSourceControllerLoadingNewData) {
-                afterUpdateResult = this._children.baseControl.reload();
-            }
-        }
         if (oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
-
-        return afterUpdateResult;
     },
     _beforeUnmount(): void {
         this._clearTimeoutForExpandOnDrag();

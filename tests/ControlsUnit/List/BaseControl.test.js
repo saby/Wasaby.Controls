@@ -3103,7 +3103,8 @@ define([
                isStopped: () => stopPropagationCalled,
                stopPropagation: function() {
                   stopPropagationCalled = true;
-               }
+               },
+               isBubbling: () => false
             };
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), {
                target: { closest: () => null }
@@ -5840,59 +5841,6 @@ define([
          assert.equal(instance._loadingState, 'down');
       });
 
-      it('_beforeUpdate with new sorting/filter', async function() {
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            sorting: [],
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            keyProperty: 'id',
-            source: source,
-            dataLoadCallback: sandbox.stub()
-         };
-         let instance = correctCreateBaseControl(cfg);
-         let cfgClone = { ...cfg };
-         let portionSearchReseted = false;
-
-         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
-         instance._portionedSearch.reset = () => {
-            portionSearchReseted = true;
-         };
-
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         instance._beforeUpdate(cfg);
-         instance._afterUpdate(cfg);
-         instance._componentDidUpdate();
-
-         let clock = sandbox.useFakeTimers();
-         let loadPromise;
-
-         cfgClone.sorting = [{ title: 'ASC' }];
-         loadPromise = instance._beforeUpdate(cfgClone);
-         clock.tick(100);
-         instance._afterUpdate({});
-         instance._componentDidUpdate();
-         await loadPromise;
-         assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
-         assert.isTrue(portionSearchReseted);
-
-         portionSearchReseted = false;
-         cfgClone = { ...cfg };
-         cfgClone.filter = { test: 'test' };
-         loadPromise = instance._beforeUpdate(cfgClone);
-         instance._afterUpdate({});
-         instance._componentDidUpdate();
-         clock.tick(100);
-         await loadPromise;
-         assert.isTrue(cfgClone.dataLoadCallback.calledTwice);
-         assert.isTrue(portionSearchReseted);
-      });
-
       it('_beforeUpdate with new viewModelConstructor', function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -7307,7 +7255,8 @@ define([
 
                const e = {
                   isStopped: () => isStopped,
-                  stopPropagation() { isStopped = true; }
+                  stopPropagation() { isStopped = true; },
+                  isBubbling: () => false
                };
 
                const originalEvent = {
