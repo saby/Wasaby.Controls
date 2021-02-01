@@ -105,6 +105,12 @@ export default class Container extends Control<IContainerOptions> {
       this._updateViewMode(options.viewMode);
 
       this._sourceController = context.dataOptions.sourceController;
+      if (options.dataLoadCallback && this._sourceController) {
+         this._sourceController.updateOptions({
+            ...this._sourceController.getOptions(),
+            dataLoadCallback: this._dataLoadCallback
+         });
+      }
 
       this._getSearchController({...options, ...context.dataOptions}).then((searchController) => {
          this._searchValue = searchController.getSearchValue();
