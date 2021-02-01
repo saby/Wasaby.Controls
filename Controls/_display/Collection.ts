@@ -121,6 +121,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     multiSelectVisibility?: string;
     multiSelectPosition?: 'default'|'custom';
     itemPadding?: IItemPadding;
+    emptyTemplate?: TemplateFunction;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
@@ -182,7 +183,25 @@ export interface ISwipeConfig {
 }
 
 /**
+ * @typedef {String} TEditingMode
+ * @variant row - Редактирование всей строки таблицы
+ * @variant cell - Редактирование отдельных ячеек таблицы
+ * @default row
+ * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
+ */
+
+/*
+ * @typedef {String} TEditingMode
+ * @variant row - Editing of whole row.
+ * @variant cell - Editing of separated cell.
+ * @default row
+ * @demo Controls-demo/grid/EditInPlace/SingleCellEditable/Index
+ */
+type TEditingMode = 'cell' | 'row';
+
+/**
  * @typedef {Object} IEditingConfig
+ * @property {TEditingMode} [mode='row'] Режим редактирования раписей в таблице.
  * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
  * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже сущестсвующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
  * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
@@ -194,6 +213,7 @@ export interface ISwipeConfig {
  */
 /*
  * @typedef {Object} IEditingConfig
+ * @property {TEditingMode} [mode='row'] Items editing mode.
  * @property {Boolean} [editOnClick=false] If true, click on list item starts editing in place.
  * @property {Boolean} [autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
  * @property {Boolean} [sequentialEditing=true] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
@@ -202,6 +222,7 @@ export interface ISwipeConfig {
  * @property {Types/entity:Record} [item=undefined] If present, editing of this item will begin on first render.
  */
 export interface IEditingConfig {
+    mode?: 'row' | 'cell';
     addPosition?: 'top'|'bottom';
     toolbarVisibility?: boolean;
     editOnClick?: boolean;
@@ -635,6 +656,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _$topPadding: string;
 
     protected _$bottomPadding: string;
+
+    protected _$emptyTemplate: TemplateFunction;
 
     protected _$theme: string;
 
@@ -2501,6 +2524,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$rightPadding;
     }
 
+    setEmptyTemplate(emptyTemplate: TemplateFunction): boolean {
+        if (this._$emptyTemplate !== emptyTemplate) {
+            this._$emptyTemplate = emptyTemplate;
+            this._nextVersion();
+            return true;
+        }
+        return false;
+    }
+
     setEditingConfig(config: IEditingConfig): void {
         if (this._$editingConfig === config) {
             return;
@@ -2513,11 +2545,13 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$editingConfig;
     }
 
-    setSearchValue(searchValue: string): void {
+    setSearchValue(searchValue: string): boolean {
         if (this._$searchValue !== searchValue) {
             this._$searchValue = searchValue;
             this._nextVersion();
+            return true;
         }
+        return false;
     }
 
     getSearchValue(): string {
@@ -3988,6 +4022,7 @@ Object.assign(Collection.prototype, {
     _actionsTemplateConfig: null,
     _swipeConfig: null,
     _userStrategies: null,
+    _$emptyTemplate: null,
     getIdProperty: Collection.prototype.getKeyProperty
 });
 

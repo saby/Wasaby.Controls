@@ -25,6 +25,12 @@ export default class EmptyRow<T> extends Row<T> {
             + ' js-controls-GridView__emptyTemplate controls-GridView__emptyTemplate';
     }
 
+    setEmptyTemplate(emptyTemplate): void {
+        this._$emptyTemplate = emptyTemplate;
+        this._$columnItems = null;
+        this._nextVersion();
+    }
+
     _initializeColumns(): void {
         this._$columnItems = [];
 

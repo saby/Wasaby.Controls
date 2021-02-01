@@ -16,6 +16,7 @@ import {
 import TreeGridFooterRow from './TreeGridFooterRow';
 import { Model } from 'Types/entity';
 import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
+import {TemplateFunction} from "UI/Base";
 
 export interface IOptions<S extends Model, T extends TreeGridDataRow<S>>
    extends IGridCollectionOptions<S, T>, ITreeCollectionOptions<S, T> {}
@@ -60,6 +61,22 @@ export default class TreeGridCollection<
     // TODO duplicate code with GridCollection. Нужно придумать как от него избавиться.
     //  Проблема в том, что mixin не умеет объединять одинаковые методы, а логику Grid мы добавляем через mixin
     // region override
+
+    setEmptyTemplate(emptyTemplate: TemplateFunction): boolean {
+        const superResult = super.setEmptyTemplate(emptyTemplate);
+        if (superResult) {
+            if (this._$emptyTemplate) {
+                if (this._$emptyGridRow) {
+                    this._$emptyGridRow.setEmptyTemplate(this._$emptyTemplate);
+                } else {
+                    this._initializeEmptyRow();
+                }
+            } else {
+                this._$emptyGridRow = undefined;
+            }
+        }
+        return superResult;
+    }
 
     setMultiSelectVisibility(visibility: string): void {
         super.setMultiSelectVisibility(visibility);
