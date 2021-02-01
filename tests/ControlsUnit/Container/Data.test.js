@@ -101,7 +101,7 @@ define(
             errorSource.query = () => {
                const error = new Error('testError');
                error.processed = true;
-               Promise.reject(error);
+               return Promise.reject(error);
             };
             dataOptions = {...dataOptions};
             dataOptions.source = errorSource;
@@ -509,11 +509,11 @@ define(
          it('query returns error', function(done) {
             var source = {
                query: function() {
-                  return Deferred.fail({
-                     canceled: false,
-                     processed: true,
-                     _isOfflineMode: false
-                  });
+                  const error = new Error('testError');
+                  error.processed = true;
+                  error.canceled = false;
+                  error._isOfflineMode = false;
+                  return Promise.reject(error);
                },
                _mixins: [],
                "[Types/_source/ICrud]": true
