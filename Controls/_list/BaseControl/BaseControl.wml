@@ -19,7 +19,7 @@
 </ws:template>
 
 <ws:template name="continueSearch">
-    <ws:partial template="{{_options.continueSearchTemplate}}">
+    <ws:partial template="{{_options.continueSearchTemplate}}" pagingVisible="{{_pagingVisible}}">
         <ws:contentTemplate>
             <div class="controls-BaseControl__continueSearch_caption" on:click="_continueSearch()">
                 {[Продолжить поиск]}
