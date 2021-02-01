@@ -193,7 +193,7 @@ export class MoveController {
                         filter: Record.fromObject(callFilter, sourceAdapter),
                         folder_id: targetKey
                     }).then((result: DataSet) => {
-                        resolve();
+                        resolve(result);
                     });
                 });
             })
