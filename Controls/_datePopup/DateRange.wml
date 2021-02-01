@@ -11,41 +11,39 @@
       </div>
    </div>
    <div class="controls-PeriodDialog-DateRange__body">
-      <ws:if data="{{_isStickySupport}}">
-         <Controls.calendar:MonthList shadowStyle="datePopup"
-                                      attachLoadTopTriggerToNull="{{ false }}"
-                                      bind:markedKey="_markedKey"
-                                      markerVisibility="visible"
-                                      bind:position="_monthsPosition"
-                                      _limit="{{ 36 }}"
-                                      virtualPageSize="{{36}}"
-                                      viewMode="month"
-                                      attr:class="controls-PeriodDialog-DateRangeItem__months"
-                                      on:positionChanged="_onMonthsPositionChanged()">
-            <ws:monthHeaderTemplate>
-               <ws:if data="{{ monthHeaderTemplate.date.getMonth() === 0 }}">
-                  <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn
+      <Controls.calendar:MonthList shadowStyle="datePopup"
+                                   attachLoadTopTriggerToNull="{{ false }}"
+                                   bind:markedKey="_markedKey"
+                                   markerVisibility="visible"
+                                   bind:position="_monthsPosition"
+                                   _limit="{{ 36 }}"
+                                   virtualPageSize="{{36}}"
+                                   viewMode="month"
+                                   attr:class="controls-PeriodDialog-DateRangeItem__months"
+                                   on:positionChanged="_onMonthsPositionChanged()">
+         <ws:monthHeaderTemplate>
+            <ws:if data="{{ monthHeaderTemplate.date.getMonth() === 0 }}">
+               <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn
                            controls-PeriodDialog-DateRangeItem__months-nextyearBtn_theme-{{_options.theme}}"
-                       on:click="_scrollToMonth(monthHeaderTemplate.date.getFullYear(), 0)" data-date="{{ monthHeaderTemplate.date.getFullYear() }}">
-                     {{monthHeaderTemplate.date.getFullYear()}}
+                    on:click="_scrollToMonth(monthHeaderTemplate.date.getFullYear(), 0)" data-date="{{ monthHeaderTemplate.date.getFullYear() }}">
+                  {{monthHeaderTemplate.date.getFullYear()}}
+               </div>
+            </ws:if>
+            <ws:else>
+               <invisible-node/>
+            </ws:else>
+         </ws:monthHeaderTemplate>
+         <ws:monthTemplate>
+            <ws:partial template="Controls/calendar:MonthListMonthTemplate">
+               <ws:bodyTemplate>
+                  <div class="controls-PeriodDialog-DateRangeItem__months-btn controls-PeriodDialog-DateRangeItem__months-btn_theme-{{_options.theme}}"
+                       on:click="_scrollToMonth(monthTemplate.date.getFullYear(), monthTemplate.date.getMonth())" data-date="{{ _dateToId(monthTemplate.date) }}">
+                     {{ _formatMonth(monthTemplate.date.getMonth()) }}
                   </div>
-               </ws:if>
-               <ws:else>
-                     <invisible-node/>
-               </ws:else>
-            </ws:monthHeaderTemplate>
-            <ws:monthTemplate>
-               <ws:partial template="Controls/calendar:MonthListMonthTemplate">
-                  <ws:bodyTemplate>
-                        <div class="controls-PeriodDialog-DateRangeItem__months-btn controls-PeriodDialog-DateRangeItem__months-btn_theme-{{_options.theme}}"
-                             on:click="_scrollToMonth(monthTemplate.date.getFullYear(), monthTemplate.date.getMonth())" data-date="{{ _dateToId(monthTemplate.date) }}">
-                           {{ _formatMonth(monthTemplate.date.getMonth()) }}
-                        </div>
-                  </ws:bodyTemplate>
-               </ws:partial>
-            </ws:monthTemplate>
-         </Controls.calendar:MonthList>
-      </ws:if>
+               </ws:bodyTemplate>
+            </ws:partial>
+         </ws:monthTemplate>
+      </Controls.calendar:MonthList>
       <!-- virtualPageSize="{{4}}" - with a value of 4, scrolling the mouse wheel over the years panel works faster. -->
          <Controls.calendar:MonthList
                  attachLoadTopTriggerToNull="{{ false }}"

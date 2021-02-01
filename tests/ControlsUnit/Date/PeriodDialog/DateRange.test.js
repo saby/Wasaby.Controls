@@ -113,23 +113,5 @@ define([
             cInstance.instanceOfModule(rDate, 'Types/entity:Date');
          });
       });
-
-      describe('_getSeparatorCssClass', function() {
-         it('sticky supported.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { year: year });
-            assert.strictEqual(
-               component._getSeparatorCssClass(),
-               'controls-PeriodDialog-DateRangeItem__separator-sticky-support'
-            );
-         });
-         it('sticky not supported.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { year: year });
-            component._isStickySupport = false;
-            assert.strictEqual(
-               component._getSeparatorCssClass(),
-               'controls-PeriodDialog-DateRangeItem__separator-not-sticky-support'
-            );
-         });
-      });
    });
 });
