@@ -69,25 +69,17 @@ class Controller extends BaseController {
         }
 
         const {
-            slidingPanelSizes: {minHeight, maxHeight: optsMaxHeight} = {},
+            slidingPanelSizes: {minHeight} = {},
             position: positionOption
         } = item.popupOptions;
         const heightOffset = positionOption === 'top' ? offset.y : -offset.y;
-        const workspaceHeight = SlidingPanelStrategy.getWindowHeight();
-        const maxHeight = optsMaxHeight > workspaceHeight ? workspaceHeight : optsMaxHeight;
         const newHeight = item.dragStartHeight + heightOffset;
-        if (newHeight < minHeight) {
-            position.height = minHeight;
-
-            if (isFirstDrag) {
-                // При свайпе вниз на минимальной высоте закрываем попап
-                PopupController.remove(item.id);
-            }
-        } else if (newHeight > maxHeight) {
-            position.height = maxHeight;
-        } else {
-            position.height = newHeight;
+        if (newHeight < minHeight && isFirstDrag) {
+            // При свайпе вниз на минимальной высоте закрываем попап
+            PopupController.remove(item.id);
         }
+        position.height = newHeight;
+        item.position = SlidingPanelStrategy.getPosition(item);
         item.popupOptions.slidingPanelPosition = this._getPopupTemplatePosition(item);
     }
 
