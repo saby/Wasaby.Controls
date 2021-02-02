@@ -121,10 +121,10 @@ export default class ControllerClass {
       const newSearchValue = this._trim(value);
       this._checkSourceController();
 
-      if (this._searchValue !== newSearchValue) {
+      if (this._searchValue !== newSearchValue || !this._searchPromise) {
          this._searchValue = newSearchValue;
          return this._updateFilterAndLoad(this._getFilter(this._searchValue));
-      } else if (this._sourceController.isLoading()) {
+      } else if (this._searchPromise) {
          return this._searchPromise;
       }
    }

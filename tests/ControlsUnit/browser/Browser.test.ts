@@ -202,6 +202,16 @@ describe('Controls/browser:Browser', () => {
                     const searchController2 = await searchControllerCreatedPromise2;
                     assert.isTrue(searchController1 === searchController2);
                 });
+                it('loading state on search', async () => {
+                    const browserOptions = getBrowserOptions();
+                    const browser = getBrowser(browserOptions);
+                    await browser._beforeMount(browserOptions);
+                    browser.saveOptions(browserOptions);
+                    const searchPromise = browser._search({}, 'test');
+                    assert.ok(browser._loading);
+                    await searchPromise;
+                    assert.ok(!browser._loading);
+                });
             });
         });
 
