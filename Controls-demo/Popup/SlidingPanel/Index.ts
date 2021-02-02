@@ -9,6 +9,7 @@ class Index extends Control<IControlOptions> {
     protected _maxHeight: number = 700;
     protected _position: string[] = ['bottom'];
     protected _desktopWidth: number = 900;
+    protected _modal: boolean = false;
     protected _positionSource: Memory = new Memory({
         keyProperty: 'id',
         data: [
@@ -25,6 +26,7 @@ class Index extends Control<IControlOptions> {
         this._dialogOpener.open({
             template: 'Controls-demo/Popup/SlidingPanel/PopupTemplate',
             opener: this,
+            modal: this._modal,
             position: this._position[0],
             slidingPanelSizes: {
                 minHeight: this._minHeight,
@@ -36,6 +38,6 @@ class Index extends Control<IControlOptions> {
         });
     }
     static _theme: string[] = ['Controls/Classes'];
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls-demo/Popup/SlidingPanel/Index/Index'];
 }
 export default Index;
