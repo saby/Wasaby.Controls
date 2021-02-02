@@ -22,7 +22,6 @@ define('Controls-demo/Popup/Edit/Opener',
          _openRecordByNewKey: false,
          _initializingDelayedCreate: false,
          _addedOnCreateInList: false,
-         _isRemoveRecord: false,
 
          _beforeMount: function(opt, context) {
             this._dataLoadCallback = this._dataLoadCallback.bind(this);
@@ -116,7 +115,6 @@ define('Controls-demo/Popup/Edit/Opener',
          _addRecord: function() {
             var record;
             var initializingWay;
-            this._isRemoveRecord = false;
             if (this._initializingDelayedCreate) {
                initializingWay = 'delayedCreate';
                record = this._items.at(0).clone();
@@ -140,11 +138,6 @@ define('Controls-demo/Popup/Edit/Opener',
 
          _closeHandler: function(event) {
             this._eventText = event.type;
-            if (this._isRemoveRecord) {
-               this._isRemoveRecord = false;
-               this._addRecordCount--;
-               RecordSynchronizer.deleteRecord(this._items, this._addRecordCount);
-            }
          },
 
          _resultHandler: function(event) {
@@ -157,15 +150,20 @@ define('Controls-demo/Popup/Edit/Opener',
                return 'cancel';
             }
 
-            if(action === 'create' && this._addedOnCreateInList) {
+            if (action === 'create' && this._addedOnCreateInList) {
                record.set('id', this._addRecordCount);
                this._addRecordCount++;
-               this._isRemoveRecord = true;
                RecordSynchronizer.addRecord(record, { at: this._addPosition }, this._items);
             }
+
             if (action === 'update' && this._addedOnCreateInList) {
-               this._isRemoveRecord = false;
                RecordSynchronizer.mergeRecord(record, this._items, record.get('id'));
+            }
+
+            if (action === 'deletestarted' && this._addedOnCreateInList) {
+               this._addRecordCount--;
+               RecordSynchronizer.deleteRecord(this._items, this._addRecordCount);
+                return 'cancel';
             }
 
             if (additionaData && additionaData.isNewRecord) {
