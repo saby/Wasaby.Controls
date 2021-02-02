@@ -9,6 +9,7 @@ import {Logger} from 'UI/Utils';
 import {Model} from 'Types/entity';
 import {ListView} from 'Controls/list';
 import {isEqual} from 'Types/object';
+import {DataSet} from 'Types/source';
 import {
    INavigationSourceConfig,
    INavigationPositionSourceConfig as IPositionSourceConfig,
@@ -787,7 +788,7 @@ var Explorer = Control.extend({
 
   // region mover
 
-  moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
+  moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<DataSet> {
      return this._children.treeControl.moveItems(selection, targetKey, position);
   },
 
@@ -799,7 +800,7 @@ var Explorer = Control.extend({
      return this._children.treeControl.moveItemDown(selectedKey);
   },
 
-  moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+  moveItemsWithDialog(selection: ISelectionObject): Promise<DataSet> {
      return this._children.treeControl.moveItemsWithDialog(selection);
   },
 
