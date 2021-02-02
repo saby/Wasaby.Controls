@@ -126,27 +126,12 @@ define('Controls-demo/Popup/Edit/Opener',
                record.set('balance', -10000);
                record.set('costPrice', -10000);
             }
-            if (this._addedOnCreateInList){
-               if (!this._cancelEdit) {
-                  record = this._baseRecord.clone();
-                  record.set('id', this._addRecordCount);
-                  record.set('name', '');
-                  record.set('price', 0);
-                  record.set('balance', 0);
-                  record.set('costPrice', 0);
-                  this._addRecordCount++;
-                  RecordSynchronizer.addRecord(record, {at: this._addPosition}, this._items);
-                  this._isRemoveRecord = true;
+            this._children.EditOpener.open(null, {
+               templateOptions: {
+                  record: record,
+                  initializingWay: initializingWay
                }
-               this._children.EditOpener.open({record: record});
-            } else {
-               this._children.EditOpener.open(null, {
-                  templateOptions: {
-                     record: record,
-                     initializingWay: initializingWay
-                  }
-               });
-            }
+            });
          },
 
          _openHandler: function(event) {
@@ -171,8 +156,16 @@ define('Controls-demo/Popup/Edit/Opener',
             if (this._cancelEdit) {
                return 'cancel';
             }
+
+            if(action === 'create' && this._addedOnCreateInList) {
+               record.set('id', this._addRecordCount);
+               this._addRecordCount++;
+               this._isRemoveRecord = true;
+               RecordSynchronizer.addRecord(record, { at: this._addPosition }, this._items);
+            }
             if (action === 'update' && this._addedOnCreateInList) {
                this._isRemoveRecord = false;
+               RecordSynchronizer.mergeRecord(record, this._items, record.get('id'));
             }
 
             if (additionaData && additionaData.isNewRecord) {
