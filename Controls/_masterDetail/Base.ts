@@ -285,7 +285,7 @@ class Base extends Control<IMasterDetail> {
             _bubbling: true
         };
         // https://online.sbis.ru/opendoc.html?guid=8aa1c2d6-f471-4a7e-971f-6ff9bfe72079
-        if (this._children.resizeDetectMaster) {
+        if (this._options.masterVisibility !== 'hidden') {
             this._children.resizeDetectMaster.start(new SyntheticEvent(null, eventCfg));
         }
         this._children.resizeDetectDetail.start(new SyntheticEvent(null, eventCfg));

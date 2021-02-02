@@ -200,6 +200,9 @@ define(['Controls/masterDetail'], function (masterDetail) {
 
       it('_startResizeRegister without resizeDetectMaster', () => {
          const Control = new masterDetail.Base();
+         Control._options = {
+            masterVisibility: 'hidden'
+         };
          let errorRaised = false;
          Control._children = {
             resizeDetectDetail: {
