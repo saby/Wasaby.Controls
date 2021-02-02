@@ -16,6 +16,7 @@ export interface IPropertyGridOptions extends IControlOptions {
     collapsedGroups?: Array<string|number>;
     nodeProperty?: string;
     parentProperty?: string;
+    keyProperty?: string;
     render?: Control<IPropertyGridOptions>;
     itemActions: IItemAction[];
     itemActionVisibilityCallback?: TItemActionVisibilityCallback;
@@ -42,6 +43,12 @@ export interface IPropertyGridOptions extends IControlOptions {
 export interface IPropertyGrid {
     readonly '[Controls/_propertyGrid/IPropertyGrid]': boolean;
 }
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#keyProperty
+ * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
+ */
+
 /**
  * @name Controls/_propertyGrid/IPropertyGrid#editingObject
  * @cfg {Object | Types/entity:Model} Объект, свойства которого являются значениями для редакторов.
