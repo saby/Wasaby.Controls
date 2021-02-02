@@ -450,6 +450,12 @@
 .controls-Grid__row-cell__content_ladder-empty.controls-Grid__row-cell__content_hiddenForLadder {
    z-index: 0;
 }
+
+/*
+   !important в стилях ниже необходим. Для прилипающей лесенки в комбинации с другими прилипающими элементами таблицы,
+   такими как заголовки, резултаты и группировка, увеличиваем отступ (по умолчанию top: 0).
+   Лесенка не прилипает ниже верхних заголовков, так как находится в своих стеках заголовков.
+*/
 .controls-Grid__row-cell__ladder-spacing_theme-@{themeName} {
    top: @item_line-height_l_grid !important;
    height: 0;
