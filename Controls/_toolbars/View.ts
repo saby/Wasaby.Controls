@@ -38,6 +38,7 @@ import {IButtonOptions} from 'Controls/buttons';
 import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
 
 import * as template from 'wml!Controls/_toolbars/View';
+import 'css!Controls/buttons';
 import 'css!Controls/Classes';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
@@ -589,7 +590,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return void 0;
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+    static _theme: string[] = ['Controls/toolbars'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {

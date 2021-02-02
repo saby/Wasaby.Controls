@@ -29,7 +29,7 @@
         </a>
     </ws:if>
     <ws:else>
-        <span >
+        <span>
             <ws:partial template="buttonTemplate"/>
         </span>
     </ws:else>
@@ -37,15 +37,13 @@
 
 <ws:partial template="buttonWrapperTemplate"
             attr:class="controls-BaseButton
-                controls-Button_{{_viewMode}} controls-Button_{{_viewMode}}
+                controls-Button_{{_viewMode}}
                 {{_hoverIcon ? ' controls-Button_hoverIcon'}} controls-Button_{{_options.readOnly ? 'readonly' : 'clickable'}}
                 {{_toggled ? ' controls-Button_toggled' : ''}}
                 controls-Button_{{_viewMode}}_style-{{_buttonStyle}}{{_toggled ? '_toggled' : ''}}
                 controls-Button_bg{{_contrastBackground ? '-contrast' : '-same'}}
-                {{_height ? ' controls-inlineheight-' + _height}}
                 {{_height ? ' controls-Button-inlineheight-' + _height}}
                 {{_height ? ' controls-Button_' + _viewMode + '_' + _height}}
-                controls-fontsize-{{_fontSize}}
                 controls-Button_{{_viewMode}}__wrapper-fontsize-{{_fontSize}}"
             attr:title="{{_options.tooltip}}"
 />

@@ -11,12 +11,13 @@ import {
 
 import {
     IHierarchyOptions, IIconSizeOptions,
-    IItemTemplate, IItemTemplateOptions,
+    IItemTemplate, IItemTemplateOptions
 } from 'Controls/interface';
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import * as template from 'wml!Controls/_toolbars/BoxView/BoxView';
-import 'css!Controls/Classes';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/BoxView/ItemTemplate';
+import 'css!Controls/buttons';
+import 'css!Controls/Classes';
 import {IButtonOptions} from 'Controls/buttons';
 
 type TItem = Record;
@@ -97,7 +98,7 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
         return getTemplateByItem(item, this._options);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
+    static _theme: string[] = ['Controls/toolbars'];
 
     static getDefaultOptions(): object {
         return {

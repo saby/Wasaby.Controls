@@ -1,5 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_buttons/ArrowButton/ArrowButton');
+import 'css!Controls/buttons';
+import 'css!Controls/Classes';
 
 type TArrowButtonDirection = 'right' | 'left' | 'up' | 'down';
 
@@ -30,8 +32,6 @@ class ArrowButton extends Control<IArrowButtonOptions>  {
             inlineHeight: 's'
         };
     }
-
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
 }
 
 /**
