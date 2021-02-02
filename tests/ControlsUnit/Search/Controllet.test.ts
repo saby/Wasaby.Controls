@@ -23,6 +23,22 @@ describe('Controls/search:Controller', () => {
     const dataOptions = {
         sourceController: options.sourceController
     };
+
+    describe('_beforeMount', () => {
+        it('_dataLoadCallback called', async () => {
+            let callbackCalled = false;
+            const searchController = new Controller(options);
+            searchController._options = options;
+            searchController._dataLoadCallback = () => {
+                callbackCalled = true;
+            };
+            options.dataLoadCallback = () => {};
+            searchController._beforeMount(options, {dataOptions});
+            await searchController._sourceController.load();
+            assert.isTrue(callbackCalled);
+        });
+    });
+
     describe('_beforeUpdate', () => {
         it('root is changed', () => {
             const searchController = getController(options);
