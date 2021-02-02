@@ -5524,12 +5524,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onCutClick() {
         if (!this._expanded) {
-            this._sourceController.updateOptions({...this._options, navigation: undefined});
+            this._sourceController.setNavigation(undefined);
             _private.reload(this, this._options).then(() => {
                 this._expanded = true;
             });
         } else {
-            this._sourceController.updateOptions(this._options);
+            this._sourceController.setNavigation(this._options.navigation);
             _private.reload(this, this._options).then(() => {
                 this._expanded = false;
             });
