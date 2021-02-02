@@ -21,6 +21,7 @@ define('Controls-demo/Popup/Edit/Opener',
          _cancelEdit: false,
          _openRecordByNewKey: false,
          _initializingDelayedCreate: false,
+         _addedOnCreateInList: false,
          _isRemoveRecord: false,
 
          _beforeMount: function(opt, context) {
@@ -124,26 +125,27 @@ define('Controls-demo/Popup/Edit/Opener',
                record.set('price', -10000);
                record.set('balance', -10000);
                record.set('costPrice', -10000);
-
-               this._children.EditOpener.open(null, {
-                   templateOptions: {
-                       record: record,
-                       initializingWay: initializingWay
-                   }
-               });
-            } else {
+            }
+            if (this._addedOnCreateInList){
                if (!this._cancelEdit) {
-                   record = this._baseRecord.clone();
-                   record.set('id', this._addRecordCount);
-                   record.set('name', '');
-                   record.set('price', 0);
-                   record.set('balance', 0);
-                   record.set('costPrice', 0);
-                   this._addRecordCount++;
-                   RecordSynchronizer.addRecord(record, {at: this._addPosition}, this._items);
-                   this._isRemoveRecord = true;
+                  record = this._baseRecord.clone();
+                  record.set('id', this._addRecordCount);
+                  record.set('name', '');
+                  record.set('price', 0);
+                  record.set('balance', 0);
+                  record.set('costPrice', 0);
+                  this._addRecordCount++;
+                  RecordSynchronizer.addRecord(record, {at: this._addPosition}, this._items);
+                  this._isRemoveRecord = true;
                }
-                this._children.EditOpener.open({record: record});
+               this._children.EditOpener.open({record: record});
+            } else {
+               this._children.EditOpener.open(null, {
+                  templateOptions: {
+                     record: record,
+                     initializingWay: initializingWay
+                  }
+               });
             }
          },
 
@@ -169,7 +171,7 @@ define('Controls-demo/Popup/Edit/Opener',
             if (this._cancelEdit) {
                return 'cancel';
             }
-            if (action === 'update') {
+            if (action === 'update' && this._addedOnCreateInList) {
                this._isRemoveRecord = false;
             }
 
