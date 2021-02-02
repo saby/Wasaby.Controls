@@ -252,7 +252,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._errorRegister = null;
       }
       if (this._sourceController) {
-         this._sourceController.destroy();
+         if (!this._options.sourceController) {
+            this._sourceController.destroy();
+         }
+         this._sourceController = null;
      }
    }
 
