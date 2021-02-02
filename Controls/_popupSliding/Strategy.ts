@@ -13,15 +13,15 @@ class Strategy {
      * @param item Popup configuration
      */
     getPosition({position: popupPosition = {}, popupOptions}: ISlidingPanelItem): IPopupPosition {
-        // Если у попапа
+        const windowHeight = this.getWindowHeight();
         const {
             position,
             slidingPanelSizes: {
-                maxHeight: optionsMaxHeight,
+                maxHeight: optionsMaxHeight = windowHeight,
                 minHeight: optionsMinHeight
             } = {}
         } = popupOptions;
-        const maxHeight = this._getHeightWithoutOverflow(optionsMaxHeight, this._getWindowHeight());
+        const maxHeight = this._getHeightWithoutOverflow(optionsMaxHeight, windowHeight);
         const minHeight = this._getHeightWithoutOverflow(optionsMinHeight, maxHeight);
         const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
         const height = initialHeight || minHeight;
@@ -55,9 +55,8 @@ class Strategy {
     /**
      * Получение доступного пространства для отображения попапа
      * @return {number}
-     * @private
      */
-    private _getWindowHeight(): number {
+    getWindowHeight(): number {
         return constants.isBrowserPlatform && window.innerHeight;
     }
 }

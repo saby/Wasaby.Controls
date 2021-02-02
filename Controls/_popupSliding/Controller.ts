@@ -27,6 +27,11 @@ class Controller extends BaseController {
         return true;
     }
 
+    elementUpdated(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
+        item.position = SlidingPanelStrategy.getPosition(item);
+        return true;
+    }
+
     elementDestroyed({popupOptions, position, id}: ISlidingPanelItem): Promise<null> {
         // Запускаем анимацию закрытия и откладываем удаление до её окончания
         position[popupOptions.position] = -position.height;
@@ -46,9 +51,7 @@ class Controller extends BaseController {
 
     getDefaultConfig(item: ISlidingPanelItem): void|Promise<void> {
         const popupOptions = item.popupOptions;
-        const animationClass = ` controls-SlidingPanel__animation-position-${popupOptions.position}`;
-        let className = item.popupOptions.className + animationClass;
-        className += animationClass;
+        const className = `${item.popupOptions.className || ''} controls-SlidingPanel__animation-position-${popupOptions.position}`;
 
         item.position = SlidingPanelStrategy.getPosition(item);
 
@@ -70,7 +73,7 @@ class Controller extends BaseController {
             position: positionOption
         } = item.popupOptions;
         const heightOffset = positionOption === 'top' ? offset.y : -offset.y;
-        const workspaceHeight = window.innerHeight;
+        const workspaceHeight = SlidingPanelStrategy.getWindowHeight();
         const maxHeight = optsMaxHeight > workspaceHeight ? workspaceHeight : optsMaxHeight;
         const newHeight = item.dragStartHeight + heightOffset;
         if (newHeight < minHeight) {
