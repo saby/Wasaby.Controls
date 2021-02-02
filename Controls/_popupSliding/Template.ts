@@ -4,10 +4,11 @@ import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISl
 import { detection } from 'Env/Env';
 
 /**
- * Интерфейс для шаблона попапа-шторки.
- *
- * @interface Controls/_popupSliding/Template
+ *  Базовый шаблон окна-шторки.
+ * @class Controls/_popupSliding/Template
+ * @implements Controls/_popupSliding/interface/ISlidingPanelTemplate
  * @public
+ * @demo Controls-demo/PopupTemplate/SlidingPanel/Index
  * @author Красильников А.С.
  */
 export default class Template extends Control<ISlidingPanelTemplateOptions> {

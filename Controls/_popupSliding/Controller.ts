@@ -1,4 +1,4 @@
-import {default as BaseController, IDragOffset} from 'Controls/_popupTemplate/BaseController';
+import {BaseController, IDragOffset} from 'Controls/popupTemplate';
 import {IPopupItem, ISlidingPanelPopupOptions, Controller as PopupController, ISlidingPanelPosition} from 'Controls/popup';
 import * as PopupContent from 'wml!Controls/_popupSliding/SlidingPanelContent';
 import SlidingPanelStrategy from './Strategy';

@@ -11,7 +11,7 @@ import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {ICrud, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
+import {DataSet, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {debounce, throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
 import {Model, relation} from 'Types/entity';
@@ -2613,7 +2613,7 @@ const _private = {
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
-                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, false); });
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
                 }
             }
         }
@@ -4419,8 +4419,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                                    this._scrollController.completeVirtualScrollIfNeed();
 
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
@@ -4428,8 +4426,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
-                needCheckTriggers = true;
             }
+
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
+                this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4851,7 +4851,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
@@ -4996,7 +4996,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }).then(() => {
             // Подскролл к редактору
             if (this._isMounted) {
-                return this.scrollToItem(item.contents.getKey(), false, true);
+                return _private.scrollToItem(this, item.contents.getKey(), false, false);
             }
         })
     },
@@ -5414,7 +5414,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
@@ -5444,7 +5444,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseUp(e, itemData, domEvent): void {
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
@@ -5529,8 +5529,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // region move
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
-        return _private.getMoveController(this).move(selection, this._filter, targetKey, position);
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<DataSet> {
+        return _private.getMoveController(this).move(selection, this._filter, targetKey, position) as Promise<DataSet>;
     },
 
     moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
@@ -5539,7 +5539,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.Before);
+        return _private.getMoveController(this)
+            .move(selection, {}, sibling, LOCAL_MOVE_POSITION.Before) as Promise<void>;
     },
 
     moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
@@ -5548,10 +5549,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.After);
+        return _private.getMoveController(this)
+            .move(selection, {}, sibling, LOCAL_MOVE_POSITION.After) as Promise<void>;
     },
 
-    moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+    moveItemsWithDialog(selection: ISelectionObject): Promise<DataSet> {
         return _private.getMoveController(this).moveWithDialog(selection, this._options.filter);
     },
 

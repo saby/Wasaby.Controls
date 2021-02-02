@@ -27,6 +27,7 @@ class SlidingPanelOpener extends BaseOpener {
  * @class Controls/_popup/PopupHelper/SlidingPanel
  *
  * @author Красильников А.С.
+ * @demo Controls-demo/PopupTemplate/SlidingPanel/Index
  * @public
  */
 
@@ -37,7 +38,7 @@ export default class SlidingPanel extends Base {
     /**
      * Метод для открытия шторки.
      * @function Controls/_popup/PopupHelper/SlidingPanel#open
-     * @param {Controls/_popup/interface/ISlidingPanel/PopupOptions.typedef} popupOptions Конфигурация шторки.
+     * @param {PopupOptions} popupOptions Конфигурация шторки.
      * @example
      * <pre class="brush: js">
      * import {SlidingPanelOpener} from 'Controls/popup';

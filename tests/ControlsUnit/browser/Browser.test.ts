@@ -266,14 +266,26 @@ describe('Controls/browser:Browser', () => {
     });
 
     describe('_beforeUnmount', () => {
+        const options = getBrowserOptions();
         it('_beforeUnmount while sourceController is loading', async () => {
-            const options = getBrowserOptions();
             const browser = getBrowser(options);
 
             await browser._beforeMount(options);
 
             browser._beforeUnmount();
             assert.ok(!browser._sourceController);
+        });
+
+        it('_beforeUnmount with undefined viewMode', () => {
+            let searchControllerReseted = false;
+            const browser = getBrowser(options);
+            browser._searchController = {
+                reset: () => {
+                    searchControllerReseted = true;
+                }
+            };
+            browser._beforeUnmount();
+            assert.isFalse(searchControllerReseted);
         });
     });
 
