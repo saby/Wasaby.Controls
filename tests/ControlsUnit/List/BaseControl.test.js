@@ -8566,6 +8566,16 @@ define([
 
       // endregion
 
+      it('_getItemActionVisibilityClasses', () => {
+         const baseControl = new lists.BaseControl();
+         baseControl.saveOptions({ itemActionsVisibility: 'onhover' });
+
+         assert.equal(baseControl._getItemActionVisibilityClasses(), '');
+
+         baseControl._addShowActionsClass = true;
+         assert.equal(baseControl._getItemActionVisibilityClasses(),
+             'controls-BaseControl_showActions controls-BaseControl_showActions_onhover');
+      });
       it('change RecordSet with eventRaising=false', () => {
          const recordSet = new collection.RecordSet({
             keyProperty: 'id',
