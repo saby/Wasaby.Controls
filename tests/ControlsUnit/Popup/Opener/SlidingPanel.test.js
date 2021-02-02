@@ -188,8 +188,6 @@ define(
             });
             describe('getDefaultConfig', () => {
                it('postion bottom', () => {
-                  const sandbox = sinon.sandbox.create();
-                  sandbox.stub(StrategySingleton, 'getPosition').returns({});
 
                   const item = getPopupItem();
                   item.popupOptions.position = 'bottom';
@@ -203,12 +201,9 @@ define(
                      position: item.popupOptions.position
                   });
                   assert.equal(item.popupOptions.hasOwnProperty('content'), true);
-                  sandbox.restore();
                });
 
                it('postion top', () => {
-                  const sandbox = sinon.sandbox.create();
-                  sandbox.stub(StrategySingleton, 'getPosition').returns({});
                   const item = getPopupItem();
                   item.popupOptions.position = 'top';
                   Controller.getDefaultConfig(item);
@@ -224,7 +219,6 @@ define(
                      position: item.popupOptions.position
                   });
                   assert.equal(item.popupOptions.hasOwnProperty('content'), true);
-                  sandbox.restore();
                });
             });
             describe('popupDragStart', () => {
@@ -358,7 +352,6 @@ define(
                });
                it('close by drag', () => {
                   const sandbox = sinon.sandbox.create();
-                  sandbox.stub(StrategySingleton, 'getPosition').returns({});
                   sandbox.stub(PopupController, 'remove').callsFake(() => null);
 
                   const item = getPopupItem();
@@ -371,6 +364,7 @@ define(
                      x: 0, y: 10
                   });
                   Controller.popupDragEnd(item);
+                  sinon.assert.called(PopupController.remove);
                   sandbox.restore();
                });
             });
