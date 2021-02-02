@@ -290,7 +290,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 this._inputSearchValue = newOptions.searchValue;
             }
             if (!methodResult) {
-                methodResult = this._updateSearchController(newOptions);
+                methodResult = this._updateSearchController(newOptions).catch((error) => {
+                    this._processLoadError(error);
+                    return error;
+                });
             }
         }
 
