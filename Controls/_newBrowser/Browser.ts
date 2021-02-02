@@ -462,7 +462,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             style: 'master',
             backgroundStyle: 'master',
             viewMode: DetailViewMode.table,
-            markItemByExpanderClick: '{{ false }}',
+            markItemByExpanderClick: true,
             markerVisibility: 'onactivated',
             expanderVisibility: 'hasChildren',
 
