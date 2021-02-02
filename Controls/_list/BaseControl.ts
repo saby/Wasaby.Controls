@@ -4409,8 +4409,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                                    this._scrollController.completeVirtualScrollIfNeed();
 
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
@@ -4418,8 +4416,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
-                needCheckTriggers = true;
             }
+
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
+                this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
