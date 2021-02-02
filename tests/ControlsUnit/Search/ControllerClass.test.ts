@@ -203,6 +203,11 @@ describe('Controls/search:ControllerClass', () => {
       assert.equal(controllerClass._root, 'newRoot');
    });
 
+   it('double search call', () => {
+      const searchPromise = controllerClass.search('testValue');
+      assert.ok(searchPromise === controllerClass.search('testValue'));
+   });
+
    describe('update', () => {
       it('shouldn\'t call when searchValue is null', () => {
          const searchStub = sandbox.stub(controllerClass, 'search');
