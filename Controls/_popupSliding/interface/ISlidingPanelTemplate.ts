@@ -11,7 +11,6 @@ export interface ISlidingPanelTemplateOptions extends IControlOptions {
  * Интерфейс для шаблона попапа-шторки.
  *
  * @interface Controls/_popupSliding/interface/ISlidingPanelTemplate
- * @implements Controls/_interface/IContrastBackground
  * @public
  * @author Красильников А.С.
  */

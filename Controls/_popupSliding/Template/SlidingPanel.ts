@@ -8,7 +8,7 @@ import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISl
  * Интерфейс для шаблона попапа-шторки.
  *
  * @interface Controls/_popupSliding/Template/SlidingPanel
- * @public
+ * @private
  * @author Красильников А.С.
  */
 export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> {
@@ -150,7 +150,13 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     static _theme: string[] = ['Controls/popupSliding'];
     static getDefaultOptions(): Partial<ISlidingPanelTemplateOptions> {
         return {
-            controlButtonVisibility: true
+            controlButtonVisibility: true,
+            slidingPanelPosition: {
+                height: undefined,
+                maxHeight: undefined,
+                minHeight: undefined,
+                position: 'bottom'
+            }
         };
     }
 }

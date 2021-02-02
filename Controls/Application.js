@@ -287,9 +287,15 @@ define('Controls/Application',
          _initIsAdaptiveClass: function(cfg) {//TODO: toso
             if (cfg.isAdaptive) {
                var HeadAPI = aPage.Head.getInstance();
-               var tagId = HeadAPI.getTag('meta', { name: 'viewport', content: 'width=1024' });
-               if (tagId && !(tagId instanceof Array)) {
-                  HeadAPI.deleteTag(tagId);
+               var tagsId = HeadAPI.getTag('meta', { name: 'viewport' });
+               if (tagsId) {
+                  if (tagsId instanceof Array) {
+                     tagsId.forEach(function(tagId) {
+                        HeadAPI.deleteTag(tagId);
+                     });
+                  } else {
+                     HeadAPI.deleteTag(tagsId);
+                  }
                }
                HeadAPI.createTag('meta', {
                   name: 'viewport',

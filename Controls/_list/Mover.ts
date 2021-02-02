@@ -7,7 +7,7 @@ import {ContextOptions as dataOptions} from 'Controls/context';
 
 import {MoveController, IMoveControllerOptions} from './Controllers/MoveController';
 import {Model} from 'Types/entity';
-import {CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
+import {LOCAL_MOVE_POSITION} from 'Types/source';
 
 
 // @TODO Если убрать отсюда шаблон, то operationPanel перестаёт получать события
