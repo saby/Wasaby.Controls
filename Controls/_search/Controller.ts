@@ -10,6 +10,7 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {ISourceOptions} from 'Controls/_interface/ISource';
 import {IHierarchyOptions} from 'Controls/_interface/IHierarchy';
 import {
+   ISourceControllerOptions,
    NewSourceController as SourceController
 } from 'Controls/dataSource';
 import {QueryWhereExpression} from 'Types/source';
@@ -104,6 +105,9 @@ export default class Container extends Control<IContainerOptions> {
       this._updateViewMode(options.viewMode);
 
       this._sourceController = context.dataOptions.sourceController;
+      if (options.dataLoadCallback && this._sourceController) {
+         this._sourceController.updateOptions(this._getSourceControllerOptions());
+      }
 
       this._getSearchController({...options, ...context.dataOptions}).then((searchController) => {
          this._searchValue = searchController.getSearchValue();
@@ -155,11 +159,15 @@ export default class Container extends Control<IContainerOptions> {
          }
       }
       if (newOptions.dataLoadCallback && this._sourceController) {
-         this._sourceController.updateOptions({
-            ...this._sourceController.getOptions(),
-            dataLoadCallback: this._dataLoadCallback
-         });
+         this._sourceController.updateOptions(this._getSourceControllerOptions());
       }
+   }
+
+   private _getSourceControllerOptions(): ISourceControllerOptions {
+      return {
+         ...this._sourceController.getOptions(),
+         dataLoadCallback: this._dataLoadCallback
+      };
    }
 
    private _setSearchValue(value: string): void {
