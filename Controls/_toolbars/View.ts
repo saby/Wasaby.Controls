@@ -124,7 +124,13 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @class Controls/_toolbars/View
  * @extends UI/Base:Control
  * @implements Controls/toolbars:IToolbarOptions
- * @implements Controls/interface/IItemTemplate
+ * // TODO: https://online.sbis.ru/opendoc.html?guid=64c95101-d268-4225-9e52-b6398ded5ced
+ * @implements Controls/_interface/IItemTemplate
+ * @implements Controls/_interface/IIconStyle
+ * @implements Controls/_interface/IIconSize
+ * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/_toolbars/IToolbarSource
+ * @implements Controls/toolbars:IToolbarOptions
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
@@ -132,11 +138,13 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
 
 /**
  * @name Controls/_toolbars/View#iconStyle
+ * @cfg
  * @demo Controls-demo/Toolbar/IconStyle/Index
  */
 
 /**
  * @name Controls/_toolbars/View#fontColorStyle
+ * @cfg
  * @demo Controls-demo/Toolbar/IconStyle/Index
  */
 
@@ -580,7 +588,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return void 0;
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars', 'Controls/theme'];
+    static _theme: string[] = ['Controls/buttons', 'Controls/Classes', 'Controls/toolbars'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {

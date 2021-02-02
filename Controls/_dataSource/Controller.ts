@@ -109,6 +109,7 @@ export default class Controller {
     private _filter: QueryWhereExpression<unknown>;
     private _items: RecordSet;
     private _loadPromise: CancelablePromise<RecordSet|Error>;
+    private _loadError: Error;
 
     private _dataLoadCallback: Function;
     // Необходимо для совместимости в случае, если dataLoadCallback задают на списке, а где-то сверху есть dataContainer
@@ -184,6 +185,10 @@ export default class Controller {
 
     getItems(): RecordSet {
         return this._items;
+    }
+
+    getLoadError(): Error {
+        return this._loadError;
     }
 
     setFilter(filter: QueryWhereExpression<unknown>): QueryWhereExpression<unknown> {
@@ -338,6 +343,10 @@ export default class Controller {
             this._loadPromise.cancel();
             this._loadPromise = null;
         }
+    }
+
+    getOptions(): IControllerOptions {
+        return this._options;
     }
 
     destroy(): void {
@@ -505,8 +514,13 @@ export default class Controller {
                 })
                 .catch((error) => {
                     if (!error.isCanceled && !error.canceled) {
+                        // Если упала ошибка при загрузке в каком-то направлении,
+                        // то контроллер навигации сбрасывать нельзя,
+                        // Т.к. в этом направлении могут продолжить загрухзку
+                        if (!direction) {
+                            this._navigationController = null;
+                        }
                         this._loadPromise = null;
-                        this._navigationController = null;
                         this._processQueryError(error);
                     }
                     return error;
@@ -576,21 +590,20 @@ export default class Controller {
         direction: Direction): LoadPromiseResult {
         // dataLoadCallback не надо вызывать если загружают узел,
         // определяем это по тому, что переданный ключ в метод load не соответствует текущему корню
-        const needCallDataLoadCallback = key === this._root || direction;
+        const loadedInCurrentRoot = key === this._root;
 
         let methodResult;
         let dataLoadCallbackResult;
 
         this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        this._loadError = null;
 
-        if (needCallDataLoadCallback) {
-            if (this._dataLoadCallback) {
-                dataLoadCallbackResult = this._dataLoadCallback(result, direction);
-            }
+        if (loadedInCurrentRoot && this._dataLoadCallback) {
+            dataLoadCallbackResult = this._dataLoadCallback(result, direction);
+        }
 
-            if (this._dataLoadCallbackFromOptions) {
-                this._dataLoadCallbackFromOptions(result, direction);
-            }
+        if ((loadedInCurrentRoot || direction) && this._dataLoadCallbackFromOptions) {
+            this._dataLoadCallbackFromOptions(result, direction);
         }
 
         if (dataLoadCallbackResult instanceof Promise) {
@@ -605,12 +618,13 @@ export default class Controller {
     }
 
     private _processQueryError(
-        result: LoadResult
-    ): LoadResult {
+        queryError: Error
+    ): Error {
         if (this._options.dataLoadErrback) {
-            this._options.dataLoadErrback(result);
+            this._options.dataLoadErrback(queryError);
         }
-        return result;
+        this._loadError = queryError;
+        return queryError;
     }
 
     private _subscribeItemsCollectionChangeEvent(items: RecordSet): void {

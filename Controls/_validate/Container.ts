@@ -157,6 +157,9 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
     protected _focusOutHandler(): void {
         this._contentActive = false;
         this._validationStatus = this._getValidStatus(this._contentActive);
+        if (!this.isValid()) {
+            this._closeInfoBox();
+        }
     }
 
     protected _mouseLeaveHandler(): void {

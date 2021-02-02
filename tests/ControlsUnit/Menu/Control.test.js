@@ -132,6 +132,24 @@ define(
                assert.isTrue(isClosed);
             });
 
+            it('source is changed, update markerController', async() => {
+               let isClosed = false;
+               let isMarkerControllerUpdated = false;
+               const menuControl = getMenu();
+               menuControl._markerController = 'markerController';
+               menuControl._updateMakerController = () => {
+                  isMarkerControllerUpdated = true;
+               };
+               const newMenuOptions = { ...defaultOptions };
+
+               menuControl._closeSubMenu = () => { isClosed = true; };
+               newMenuOptions.source = new source.Memory();
+               await menuControl._beforeUpdate(newMenuOptions);
+               assert.isTrue(menuControl._notifyResizeAfterRender);
+               assert.isTrue(isClosed);
+               assert.isTrue(isMarkerControllerUpdated);
+            });
+
             it('searchValue is changed', async() => {
                let isClosed = false;
                let isViewModelCreated = false;
@@ -191,6 +209,22 @@ define(
                };
                await menuControl._beforeMount(menuOptions);
                assert.isNotNull(menuControl._markerController);
+            });
+
+            it('sourceController don`t return items', () => {
+               let isErrorProcessed = false;
+               menuControl._listModel = {
+                  setMarkedKey: () => {},
+                  getItemBySourceKey: () => null
+               };
+               menuOptions.sourceController = {
+                  getLoadError: () => new Error('error')
+               };
+               menuControl._processError = () => {
+                  isErrorProcessed = true;
+               };
+               menuControl._beforeMount(menuOptions);
+               assert.isTrue(isErrorProcessed);
             });
          });
 
@@ -313,8 +347,10 @@ define(
                });
             });
             it('check selected item', function() {
+               menuControl._markerController = null;
                menuControl._itemClick('itemClick', item, {});
                assert.equal(selectedItem.getKey(), 1);
+               assert.isNull(menuControl._markerController);
             });
 
             it('multiSelect=true', function() {

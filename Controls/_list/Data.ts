@@ -111,6 +111,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._sourceController =
           options.sourceController ||
           new SourceController(this._getSourceControllerOptions(options));
+      this._sourceController.sourceControllerCreated = !options.sourceController;
       this._fixRootForMemorySource(options);
 
       let controllerState = this._sourceController.getState();
@@ -130,15 +131,16 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._sourceController.setItems(receivedState);
          this._setItemsAndUpdateContext();
       } else if (options.source) {
-         return this._sourceController.reload().then((items) => {
-            if (items instanceof RecordSet) {
-               // TODO items надо распространять либо только по контексту, либо только по опциям. Щас ждут и так и так
-               this._items = this._sourceController.setItems(items);
-            }
-            controllerState = this._sourceController.getState();
-            this._updateContext(controllerState);
-            return items;
-         }, (error) => error);
+         return this._sourceController
+             .reload()
+             .then((items) => {
+                this._items = this._sourceController.setItems(items as RecordSet);
+                return items;
+             })
+             .catch((error) => error)
+             .finally(() => {
+                this._updateContext(this._sourceController.getState());
+             });
       } else {
          this._updateContext(controllerState);
       }
@@ -252,7 +254,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._errorRegister = null;
       }
       if (this._sourceController) {
-         this._sourceController.destroy();
+         if (!this._options.sourceController) {
+            this._sourceController.destroy();
+         }
+         this._sourceController = null;
      }
    }
 

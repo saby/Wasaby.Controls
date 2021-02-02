@@ -4,8 +4,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {ControllerClass as OperationsController} from 'Controls/operations';
 import {
     ControllerClass as SearchController,
-    getSwitcherStrFromData,
-    SearchResolver as SearchResolverController
+    getSwitcherStrFromData
 } from 'Controls/search';
 import {ControllerClass as FilterController, IFilterItem} from 'Controls/filter';
 import {IFilterControllerOptions, IFilterHistoryData} from 'Controls/_filter/ControllerClass';
@@ -37,6 +36,7 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
+import {descriptor} from 'Types/entity';
 
 type Key = string|number|null;
 
@@ -121,8 +121,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _source: ICrudPlus | ICrud & ICrudPlus & IData;
     private _sourceController: SourceController = null;
-    private _searchResolverController: SearchResolverController = null;
     private _operationsController: OperationsController = null;
+    private _searchControllerCreatePromise: Promise<SearchController> = null;
     private _searchController: SearchController = null;
     private _filterController: FilterController = null;
 
@@ -138,10 +138,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
         this._notifyNavigationParamsChanged = this._notifyNavigationParamsChanged.bind(this);
 
-        this._filterController = new FilterController({
-            ...options,
-            historySaveCallback: this._historySaveCallback.bind(this)
-        } as IFilterControllerOptions);
+        this._filterController = new FilterController(this._getFilterControllerOptions(options));
 
         this._filter = options.filter || {};
         this._groupHistoryId = options.groupHistoryId;
@@ -163,36 +160,34 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._inputSearchValue = this._searchValue = options.searchValue;
         }
 
-        const controllerState = this._getSourceController(
-           this._getSourceControllerOptions(options as ISourceControllerOptions)).getState();
-        this._dataOptionsContext = this._createContext(controllerState);
+        const sourceController = this._getSourceController(options);
+        this._dataOptionsContext = this._createContext(sourceController.getState());
 
         this._previousViewMode = this._viewMode = options.viewMode;
         this._updateViewMode(options.viewMode);
 
-        if (receivedState) {
-            if ('filterItems' in receivedState && 'items' in receivedState) {
-                this._setFilterItems(receivedState.filterItems as IFilterItem[]);
-                this._defineShadowVisibility(receivedState.items);
-                if (isNewEnvironment()) {
-                    this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
-                }
+        if (receivedState &&  'filterItems' in receivedState && 'items' in receivedState) {
+            this._setFilterItems(receivedState.filterItems as IFilterItem[]);
+            this._defineShadowVisibility(receivedState.items);
+            if (isNewEnvironment()) {
+                this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
             }
         } else {
-            return this._filterController.loadFilterItemsFromHistory().then((filterItems) => {
-                this._setFilterItems(filterItems as IFilterItem[]);
+            return this._filterController.loadFilterItemsFromHistory()
+                .then((filterItems) => {
+                    this._setFilterItems(filterItems as IFilterItem[]);
 
-                return this._loadItems(options, this._getSourceController(options).getState()).then((items) => {
-                    this._defineShadowVisibility(items);
-                    return {
-                        filterItems,
-                        items
-                    };
-                }, (error) => {
-                    this._processLoadError(error);
-                    return error;
-                });
-            }, (error) => error);
+                    return this._loadItems(options, sourceController.getState())
+                        .then((items) => {
+                            this._defineShadowVisibility(items);
+                            return { filterItems, items };
+                        })
+                        .catch((error) => {
+                            this._updateContext(sourceController.getState());
+                            return error;
+                        });
+                })
+                .catch((error) => error);
         }
     }
 
@@ -213,7 +208,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             const filterSourceCallbackId = Store.onPropertyChanged('filter',
                (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
             const searchValueCallbackId = Store.onPropertyChanged('searchValue',
-               (searchValue: string) => this._search(null, searchValue));
+               (searchValue: string) => {
+                    if (searchValue) {
+                        this._search(null, searchValue);
+                    } else {
+                        this._searchReset(null);
+                    }
+               });
 
             this._storeCallbacks = [
                 sourceCallbackId,
@@ -267,14 +268,15 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             methodResult = sourceController.reload()
                .then((items) => {
                    this._items = sourceController.getItems();
-
-                   this._afterSourceLoad(sourceController, newOptions);
-
                    this._loading = false;
                    return items;
                }, (error) => {
                    this._processLoadError(error);
                    return error;
+               })
+               .finally((result) => {
+                   this._afterSourceLoad(sourceController, newOptions);
+                   return result;
                })
                .then((result) => {
                    return this._updateSearchController(newOptions).then(() => result);
@@ -326,9 +328,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _beforeUnmount(): void {
-        if (this._searchResolverController) {
-            this._searchResolverController.clearTimer();
-        }
         if (this._operationsController) {
             this._operationsController.destroy();
             this._operationsController = null;
@@ -395,12 +394,15 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _getSearchController(options?: IBrowserOptions): Promise<SearchController> {
         if (!this._searchController) {
-            return import('Controls/search').then((result) => {
-                this._searchController = new result.ControllerClass(
-                   this._getSearchControllerOptions(options ?? this._options));
+            if (!this._searchControllerCreatePromise) {
+                this._searchControllerCreatePromise = import('Controls/search').then((result) => {
+                    this._searchController = new result.ControllerClass(
+                        this._getSearchControllerOptions(options ?? this._options));
 
-                return this._searchController;
-            });
+                    return this._searchController;
+                });
+            }
+            return this._searchControllerCreatePromise;
         }
 
         return Promise.resolve(this._searchController);
@@ -442,7 +444,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
         }
-        this._rootBeforeSearch = null;
     }
 
     private _isSearchViewMode(): boolean {
@@ -752,7 +753,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._path = data?.getMetaData().path ?? null;
 
         if (this._options.searchParam) {
-            if (!this._isSearchViewMode()) {
+            if (this._searchController) {
+                this._searchController.setPath(this._path);
+            } else if (this._path) {
                 this._getSearchController().then((searchController) => searchController.setPath(this._path));
             }
         }
@@ -761,6 +764,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateViewMode(this._previousViewMode);
             this._previousViewMode = null;
             this._misspellValue = '';
+            this._rootBeforeSearch = null;
         }
     }
 

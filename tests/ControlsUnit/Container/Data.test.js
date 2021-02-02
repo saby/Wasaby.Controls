@@ -526,6 +526,7 @@ define(
                const soruceControllerState = data._sourceController.getState();
                assert.ok(soruceControllerState.source);
                assert.equal(soruceControllerState.source, source);
+               assert.equal(data._dataOptionsContext.source, source);
                assert.isTrue(dataLoadErrbackCalled);
                done();
             });
@@ -604,6 +605,20 @@ define(
                Config.UserConfig.getParam = originConfigGetParam;
                done(error);
             });
+         });
+
+         it('_beforeUnmount with sourceController in options', async() => {
+            const sourceController = new dataSourceLib.NewSourceController({ source: source, keyProperty: 'id' });
+            const dataOptions = { source, sourceController, keyProperty: 'id' };
+            let isSourceControllerDestroyed = false;
+            sourceController.destroy = () => {
+               isSourceControllerDestroyed = true;
+            };
+            await sourceController.reload();
+            const data = getDataWithConfig(dataOptions);
+            await data._beforeMount(dataOptions);
+            data._beforeUnmount();
+            assert.isFalse(isSourceControllerDestroyed);
          });
       });
    });

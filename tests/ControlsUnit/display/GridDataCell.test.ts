@@ -79,7 +79,8 @@ describe('Controls/display/GridDataCell', () => {
                 isDragging: () => false,
                 getEditingBackgroundStyle: () => 'default',
                 isActive: () => false,
-                getRowSeparatorSize: () => 's'
+                getRowSeparatorSize: () => 's',
+                getEditingConfig: () => ({})
             } as undefined as GridCollection<Model>;
             return new GridDataRow({
                 columns,

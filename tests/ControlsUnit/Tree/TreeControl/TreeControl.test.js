@@ -1264,7 +1264,7 @@ define([
          };
          options.sourceController = new dataSource.NewSourceController({...options});
          var
-             setHasMoreCalled = false,
+             hasMore = false,
              isIndicatorHasBeenShown = false,
              isIndicatorHasBeenHidden = false,
              loadNodeId,
@@ -1275,10 +1275,11 @@ define([
                    baseControl: {
                       getViewModel: function () {
                          return {
-                            setHasMoreStorage: function () {
-                               setHasMoreCalled = true;
+                            setHasMoreStorage: function (hasMoreStorage) {
+                               hasMore = hasMoreStorage;
                             },
-                            getExpandedItems: () => []
+                            getExpandedItems: () => [1],
+                            getCollection: () => new collection.RecordSet()
                          };
                       },
                       showIndicator() {
@@ -1294,7 +1295,8 @@ define([
                                loadNodeId = key;
                                loadMoreDirection = direction;
                                return options.sourceController.load(direction, key);
-                            }
+                            },
+                            hasMoreData: () => true
                          };
                       }
                    }
@@ -1315,7 +1317,7 @@ define([
                 testParam: 11101989
              }, mockedTreeControlInstance._options.filter,
              'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
-         assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
+         assert.deepEqual(hasMore, {1: true});
          assert.isTrue(dataLoadCallbackCalled, 'Invalid call "dataLoadCallbackCalled" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(isIndicatorHasBeenShown);
          assert.isTrue(isIndicatorHasBeenHidden);
@@ -2121,6 +2123,67 @@ define([
 
          assert.deepEqual(nodes, [1]);
          assert.deepEqual(lists, [2]);
+      });
+
+      it('goToNext, goToPrev', function() {
+         const rs = new collection.RecordSet({
+            rawData: getHierarchyData(),
+            keyProperty: 'id'
+         });
+         const source = new sourceLib.Memory({
+            rawData: getHierarchyData(),
+            keyProperty: 'id',
+            filter: () => true
+         });
+
+         // 0
+         // |-1
+         // | |-3
+         // |-2
+         // 4
+         const cfg = {
+            source: source,
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+            markerMoveMode: 'leaves',
+            expandedItems: [],
+            markedKey: 4
+         };
+         const treeControl = correctCreateTreeControl(cfg);
+         let newCfg = {...cfg};
+         treeControl._notify = (event, args) => {
+            if (event === 'expandedItemsChanged') {
+               newCfg.expandedItems = args[0];
+            }
+            if (event === 'markedKeyChanged') {
+               newCfg.markedKey = args[0];
+            }
+         };
+         treeControl._children.baseControl.getViewModel().setItems(rs, cfg);
+         treeControl._beforeMountCallback({
+            viewModel: treeControl._children.baseControl.getViewModel(),
+            markerController: treeControl._children.baseControl.getMarkerController()
+         });
+         treeControl._afterMount();
+         assert.equal(treeControl._markedLeaf, 'last');
+         treeControl.goToPrev();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'middle');
+         treeControl.goToPrev();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'first');
+         treeControl.goToNext();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'middle');
+         treeControl.goToNext();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'last');
       });
    });
 });

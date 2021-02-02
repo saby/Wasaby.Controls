@@ -217,14 +217,23 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          const key = this._getKey(item);
          const parentId = this._getKey(item.getParent());
          const isNode = this._isNode(item);
+         const inSelected = selection.selected.includes(key);
+         const inExcluded = selection.excluded.includes(key);
 
-         let isSelected = this._canBeSelected(item) && (!selection.excluded.includes(key) && (selection.selected.includes(key) || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key));
+         let isSelected;
+         if (!this._selectAncestors && !this._selectDescendants) {
+            // В этом случае мы вообще не смотри на узлы, т.к. выбранность элемента не зависит от выбора родительского узла
+            // или выбранность узла не зависит от его детей
+            isSelected = this._canBeSelected(item) && !inExcluded && (inSelected || this._isAllSelectedInRoot(selection));
+         } else {
+            isSelected = this._canBeSelected(item) && (!inExcluded && (inSelected || this._isAllSelected(selection, parentId)) || isNode && this._isAllSelected(selection, key));
 
-         if ((this._selectAncestors || searchValue) && isNode) {
-            isSelected = this._getStateNode(item, isSelected, {
-               selected: selectedKeysWithEntryPath,
-               excluded: selection.excluded
-            });
+            if ((this._selectAncestors || searchValue) && isNode) {
+               isSelected = this._getStateNode(item, isSelected, {
+                  selected: selectedKeysWithEntryPath,
+                  excluded: selection.excluded
+               });
+            }
          }
 
          if (isSelected && isNode && doNotSelectNodes) {
@@ -605,7 +614,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
                selectedChildrenCount = null;
             }
 
-            if (selectedChildrenCount !== null) {
+            if (selectedChildrenCount !== null && this._canBeSelected(childItem)) {
                childId = this._getKey(childItem);
 
                if (!selection.excluded.includes(childId)) {

@@ -901,6 +901,22 @@ describe('Controls/list_clean/BaseControl', () => {
             baseControl._initKeyProperty(baseControlOptions);
             assert.isFalse(!!baseControl._keyProperty);
         });
+
+        it('_beforeMount returns errorConfig', async () => {
+            const baseControlOptions = {...getBaseControlOptionsWithEmptyItems(),
+                sourceController: new NewSourceController({
+                    source: new Memory({
+                        keyProperty: 'keyProperty',
+                        data: []
+                    }),
+                    keyProperty: 'id'
+                })
+            };
+            const baseControl = new BaseControl(baseControlOptions);
+            baseControlOptions.sourceController._loadError = new Error('test error');
+            const receivedState = await baseControl._beforeMount(baseControlOptions);
+            assert.ok(receivedState.hasOwnProperty('errorConfig'));
+        });
     });
 
     describe('Edit in place', () => {
@@ -1028,6 +1044,26 @@ describe('Controls/list_clean/BaseControl', () => {
         });
 
         describe('_beforeUpdate sourceController', () => {
+
+            it('sourceController load error', async () => {
+                let sourceControllerOptions = getBaseControlOptionsWithEmptyItems();
+                const sourceController = new NewSourceController(sourceControllerOptions);
+                let baseControlOptions = {...sourceControllerOptions, sourceController};
+                const baseControl = new BaseControl(baseControlOptions);
+                await sourceController.reload();
+                await baseControl._beforeMount(baseControlOptions);
+                baseControl.saveOptions(baseControlOptions);
+
+                sourceControllerOptions = {...sourceControllerOptions};
+                sourceControllerOptions.source = new Memory();
+                sourceControllerOptions.source.query = () => Promise.reject(new Error());
+                sourceController.updateOptions(sourceControllerOptions);
+                await sourceController.reload().catch(() => {});
+                baseControlOptions.source = new Memory();
+                assert.doesNotThrow(() => {
+                    baseControl._beforeUpdate(baseControlOptions);
+                });
+            });
 
             it('_beforeUpdate while source controller is loading', async () => {
                 let baseControlOptions = getBaseControlOptionsWithEmptyItems();

@@ -11,7 +11,7 @@ import {constants, detection} from 'Env/Env';
 
 import {IObservable, RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
-import {ICrud, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
+import {DataSet, Memory, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
 import {debounce, throttle} from 'Types/function';
 import {create as diCreate} from 'Types/di';
 import {Model, relation} from 'Types/entity';
@@ -202,6 +202,17 @@ interface IIndicatorConfig {
     loadingIndicatorState: LoadingState;
     theme: string;
     isPortionedSearchInProgress: boolean;
+    attachLoadTopTriggerToNull: boolean;
+}
+
+interface IBeginEditOptions {
+    shouldActivateInput?: boolean;
+    columnIndex?: number;
+}
+
+interface IBeginAddOptions {
+    shouldActivateInput?: boolean;
+    addPosition?: 'top' | 'bottom';
 }
 
 /**
@@ -641,7 +652,7 @@ const _private = {
     },
 
     scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean, skippedItemsCount: number) {
-        const scrollCallback = (index) => {
+        const scrollCallback = (index, result) => {
             // Первым элементом может оказаться группа, к ней подскрол сейчас невозможен, поэтому отыскиваем первую
             // реальную запись и скролим именно к ней.
             // Сам контейнер же берем учитывая количество пропущенных элементов при поиске первой записи.
@@ -662,13 +673,13 @@ const _private = {
                     itemContainer, toBottom, force
                 }], {bubbling: true});
             }
+            if (result) {
+                _private.handleScrollControllerResult(self, result);
+            }
         };
         return new Promise((resolve) => {
             self._scrollController ?
-                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then((result) => {
-                    if (result) {
-                        _private.handleScrollControllerResult(self, result);
-                    }
+                self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
                     resolve();
                 }) : resolve();
         });
@@ -2318,11 +2329,14 @@ const _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress}: IIndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull}: IIndicatorConfig
     ): string {
+        const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
+           ? 'attachToNull'
+           : loadingIndicatorState;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}`)
-            .add(`controls-BaseControl__loadingIndicator__state-${loadingIndicatorState}_theme-${theme}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                 !hasItems && loadingIndicatorState === 'down')
             .add(`controls-BaseControl_withPaging__loadingIndicator__state-down_theme-${theme}`,
@@ -2861,7 +2875,7 @@ const _private = {
      * не должен ставить чекбокс
      */
     isItemsSelectionAllowed(options: object): boolean {
-        return options.selectedKeysCount !== null;
+        return options.selectedKeysCount !== null || options.selectedKeys.length;
     },
 
     /**
@@ -2871,7 +2885,13 @@ const _private = {
      * @private
      */
     initVisibleItemActions(self, options: IList): void {
-        if (options.itemActionsVisibility === 'visible') {
+        if (self._getEditingConfig(options)?.mode === 'cell') {
+            self._itemActionsVisibility = 'onhovercell';
+        } else {
+            self._itemActionsVisibility = options.itemActionsVisibility;
+        }
+
+        if (self._itemActionsVisibility === 'visible') {
             _private.addShowActionsClass(this);
             _private.updateItemActions(self, options);
         }
@@ -3345,6 +3365,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     const selection = {selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys};
                     selectionController.setSelection(selection);
                 }
+                if (newOptions.beforeMountCallback) {
+                    newOptions.beforeMountCallback({
+                        viewModel: this._listViewModel,
+                        markerController: _private.getMarkerController(this, newOptions)
+                    });
+                }
             }
             return res;
         });
@@ -3372,7 +3398,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
-        const receivedError = receivedState.errorConfig;
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
@@ -3448,12 +3473,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 return Promise.resolve();
             }
-            if (receivedError) {
-                if (newOptions.dataLoadErrback instanceof Function) {
-                    newOptions.dataLoadErrback(receivedError);
+                if (receivedState.errorConfig) {
+                    return Promise.resolve(_private.showError(self, receivedState.errorConfig));
+                } else if (self._sourceController && self._sourceController.getLoadError()) {
+                    return _private.processError(self, {error: self._sourceController.getLoadError()})
+                        .then((errorConfig) => {
+                            return getState(errorConfig);
+                        });
                 }
-                return Promise.resolve(_private.showError(self, receivedError));
-            }
             } else {
                 _private.createScrollController(self, newOptions);
                 return Promise.resolve();
@@ -3757,6 +3784,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         let isItemsResetFromSourceController = false;
         const self = this;
 
+        const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
+        // todo При отказе от старой - выпилить проверку "useNewModel".
+        if (emptyTemplateChanged && newOptions.useNewModel) {
+            this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
+        }
+
         // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
         if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
             if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
@@ -3766,7 +3799,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
-            (sourceChanged || searchValueChanged && newOptions.searchValue);
+            // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
+            (sourceChanged || searchValueChanged && newOptions.searchValue && !newOptions.sourceController.sourceControllerCreated);
 
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
@@ -3810,6 +3844,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
             // без возможности отменить закрытие из вне.
             this._cancelEdit(true);
+        }
+
+        if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
+            this._initKeyProperty(newOptions);
+            _private.checkRequiredOptions(this, newOptions);
+            this._listViewModel.setKeyProperty(this._keyProperty);
         }
 
         if (oldViewModelConstructorChanged) {
@@ -3862,12 +3902,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
         }
 
-        if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
-            this._initKeyProperty(newOptions);
-            _private.checkRequiredOptions(this, newOptions);
-            this._listViewModel.setKeyProperty(this._keyProperty);
-        }
-
         if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
         }
@@ -3912,9 +3946,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
 
-            if (this._loadedBySourceController) {
+            if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
                 if (this._listViewModel) {
-                    this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController))
+                    this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController));
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
@@ -4385,8 +4419,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                                    this._scrollController.completeVirtualScrollIfNeed();
 
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
@@ -4394,8 +4426,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
-                needCheckTriggers = true;
             }
+
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
+                this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4738,6 +4772,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    getMarkerController(): MarkerController {
+        return _private.getMarkerController(this, this._options);
+    },
+
     _onGroupClick(e, groupId, baseEvent, dispItem) {
         const collapseGroupAfterEndEdit = (collection) => {
             const display = this._options.useNewModel ? collection : collection.getDisplay();
@@ -4827,14 +4865,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const canEditByClick = !this._options.readOnly && this._getEditingConfig().editOnClick && !originalEvent.target.closest(`.${JS_SELECTORS.NOT_EDITABLE}`);
         if (canEditByClick) {
             e.stopPropagation();
-            this.beginEdit({ item }).then((result) => {
+            this._beginEdit({ item }, { columnIndex }).then((result) => {
                 if (!(result && result.canceled)) {
                     this._editInPlaceInputHelper.setClickInfo(originalEvent.nativeEvent, item);
                 }
                 return result;
             });
         } else if (this._editInPlaceController) {
-            this.commitEdit();
+            this._commitEdit();
         }
         // При клике по элементу может случиться 2 события: itemClick и itemActivate.
         // itemClick происходит в любом случае, но если список поддерживает редактирование по месту, то
@@ -4874,6 +4912,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         return new EditInPlaceController({
+            mode: this._getEditingConfig().mode,
             collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
@@ -4957,7 +4996,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }).then(() => {
             // Подскролл к редактору
             if (this._isMounted) {
-                return this.scrollToItem(item.contents.getKey(), false, true);
+                return _private.scrollToItem(this, item.contents.getKey(), false, false);
             }
         })
     },
@@ -5030,18 +5069,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return _private.isEditing(this);
     },
 
-    beginEdit(options) {
+    beginEdit(userOptions) {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
-        return this._beginEdit(options);
+        return this._beginEdit(userOptions);
     },
 
-    beginAdd(options) {
+    beginAdd(userOptions) {
         if (this._options.readOnly) {
             return Promise.reject('Control is in readOnly mode.');
         }
-        return this._beginAdd(options, this._getEditingConfig().addPosition);
+        return this._beginAdd(userOptions, { addPosition: this._getEditingConfig().addPosition });
     },
 
     cancelEdit() {
@@ -5061,16 +5100,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _startInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
         const isAdd = !this._items.getRecordById(editingConfig.item.getKey());
         if (isAdd) {
-            return this._beginAdd({ item: editingConfig.item }, editingConfig.addPosition);
+            return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
         } else {
             return this._beginEdit({ item: editingConfig.item });
         }
     },
 
-    _beginEdit(options, shouldActivateInput: boolean = true) {
+    _beginEdit(userOptions, {shouldActivateInput = true, columnIndex}: IBeginEditOptions = {}) {
         _private.closeSwipe(this);
         this.showIndicator();
-        return this._getEditInPlaceController().edit(options).then((result) => {
+        return this._getEditInPlaceController().edit(userOptions, { columnIndex }).then((result) => {
             if (shouldActivateInput && !(result && result.canceled)) {
                 this._editInPlaceInputHelper.shouldActivate();
             }
@@ -5080,7 +5119,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         });
     },
 
-    _beginAdd(options, addPosition, shouldActivateInput: boolean = true) {
+    _beginAdd(options, {shouldActivateInput = true, addPosition = 'bottom'}: IBeginAddOptions = {}) {
         _private.closeSwipe(this);
         this.showIndicator();
         return this._getEditInPlaceController().add(options, addPosition).then((addResult) => {
@@ -5134,7 +5173,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             const editingConfig = this._getEditingConfig();
             if (editingConfig.autoAddByApplyButton && collectionItem.isAdd) {
-                return this._beginAdd({}, editingConfig.addPosition);
+                return this._beginAdd({}, { addPosition: editingConfig.addPosition });
             } else {
                 return result;
             }
@@ -5151,8 +5190,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 return Promise.resolve();
             }
             const collection = this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay();
+            const columnIndex = this._getEditingConfig()?.mode === 'cell' ? collection.find((cItem) => cItem.isEditing()).getEditingColumnIndex() : undefined;
             this._editInPlaceInputHelper.setInputForFastEdit(nativeEvent.target, collection.getIndexBySourceItem(item));
-            return this._beginEdit({ item }, false);
+            return this._beginEdit({ item }, { shouldActivateInput: false, columnIndex });
         };
 
         switch (nativeEvent.keyCode) {
@@ -5209,7 +5249,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (shouldEdit) {
                 return this._beginEdit({ item });
             } else if (shouldAdd) {
-                return this._beginAdd({}, this._getEditingConfig().addPosition);
+                return this._beginAdd({}, { addPosition: this._getEditingConfig().addPosition });
             }
         });
     },
@@ -5231,6 +5271,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const addPosition = editingConfig.addPosition === 'top' ? 'top' : 'bottom';
 
         return {
+            mode: editingConfig.mode || 'row',
             editOnClick: !!editingConfig.editOnClick,
             sequentialEditing: editingConfig.sequentialEditing !== false,
             addPosition,
@@ -5488,8 +5529,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     // region move
 
-    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<void> {
-        return _private.getMoveController(this).move(selection, this._filter, targetKey, position);
+    moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<DataSet> {
+        return _private.getMoveController(this).move(selection, this._filter, targetKey, position) as Promise<DataSet>;
     },
 
     moveItemUp(selectedKey: CrudEntityKey): Promise<void> {
@@ -5498,7 +5539,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.Before);
+        return _private.getMoveController(this)
+            .move(selection, {}, sibling, LOCAL_MOVE_POSITION.Before) as Promise<void>;
     },
 
     moveItemDown(selectedKey: CrudEntityKey): Promise<void> {
@@ -5507,10 +5549,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             selected: [selectedKey],
             excluded: []
         };
-        return _private.getMoveController(this).move(selection, {}, sibling, LOCAL_MOVE_POSITION.After);
+        return _private.getMoveController(this)
+            .move(selection, {}, sibling, LOCAL_MOVE_POSITION.After) as Promise<void>;
     },
 
-    moveItemsWithDialog(selection: ISelectionObject): Promise<void> {
+    moveItemsWithDialog(selection: ISelectionObject): Promise<DataSet> {
         return _private.getMoveController(this).moveWithDialog(selection, this._options.filter);
     },
 
@@ -5531,7 +5574,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
-        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (!this._options._keyDownHandler || !this._options._keyDownHandler(event))) {
+        const handlerResult = this._options._keyDownHandler && this._options._keyDownHandler(event);
+        if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (handlerResult !== false)) {
             const key = event.nativeEvent.keyCode;
             const dontStop = key === 17 // Ctrl
                 || key === 33 // PageUp
@@ -5940,8 +5984,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _shouldDisplayTopLoadingIndicator(): boolean {
         return this._loadToDirectionInProgress
-           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up'
-           :  this._loadingIndicatorState === 'up';
+           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull
+           :  this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull;
     },
 
     _shouldDisplayMiddleLoadingIndicator(): boolean {
@@ -5955,7 +5999,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const shouldDisplayDownIndicator = this._loadingIndicatorState === 'down' && !this._portionedSearchInProgress;
         return this._loadToDirectionInProgress
            ? this._showLoadingIndicator && shouldDisplayDownIndicator
-           :  shouldDisplayDownIndicator
+           :  shouldDisplayDownIndicator;
     },
 
     _shouldDisplayPortionedSearch(): boolean {
@@ -5970,7 +6014,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             hasPaging: !!this._pagingVisible,
             loadingIndicatorState: indicatorState,
             theme: this._options.theme,
-            isPortionedSearchInProgress: !!this._portionedSearchInProgress
+            isPortionedSearchInProgress: !!this._portionedSearchInProgress,
+            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull
         });
     },
 

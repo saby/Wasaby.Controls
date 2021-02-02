@@ -3368,7 +3368,7 @@ define([
                };
                let beginEditStarted = false;
 
-               ctrl.beginEdit = () => {
+               ctrl._beginEdit = () => {
                   beginEditStarted = true;
                   return Promise.resolve();
                };
@@ -4512,7 +4512,7 @@ define([
                  return initTest({
                      multiSelectVisibility: 'visible',
                      selectedKeysCount: null,
-                     selectedKeys: [1],
+                     selectedKeys: [],
                      excludedKeys: [],
                      itemActions: [
                          {
@@ -4532,6 +4532,7 @@ define([
                          }
                      ]
                  }).then(() => {
+                     lists.BaseControl._private.createSelectionController(instance, instance._options);
                      lists.BaseControl._private.updateItemActions(instance, instance._options);
                      const item = instance._listViewModel.at(0);
                      instance._onItemSwipe({}, item, swipeEvent);
@@ -6416,12 +6417,12 @@ define([
           let baseControl,  testCases;
 
           const getErrorMsg = (index, caseData) => `Test case ${index} failed. Expected ${caseData[4]}. ` +
-              `Params: { _loadingIndicatorState: ${caseData[0]}, __needShowEmptyTemplate: ${caseData[1]},
+              `Params: { _loadingIndicatorState: ${caseData[0]}, _attachLoadTopTriggerToNull: ${caseData[1]},
               _loadToDirectionInProgress: ${caseData[2]}, _showLoadingIndicator: ${caseData[3]} }.`;
 
           const checkCase = (index, caseData, method) => {
              baseControl._loadingIndicatorState = caseData[0];
-             baseControl.__needShowEmptyTemplate = () => caseData[1];
+             baseControl._attachLoadTopTriggerToNull = caseData[1];
              baseControl._loadToDirectionInProgress = caseData[2];
              baseControl._showLoadingIndicator = caseData[3];
              assert.equal(method.apply(baseControl), caseData[4], getErrorMsg(index, caseData));
@@ -6433,19 +6434,19 @@ define([
           });
 
           it('_shouldDisplayTopLoadingIndicator', () => {
-             // indicatorState, __needShowEmptyTemplate, _loadToDirectionInProgress, _showLoadingIndicator, expected
+             // indicatorState, _attachLoadTopTriggerToNull, _loadToDirectionInProgress, _showLoadingIndicator, expected
              testCases = [
                 ['up',   true,  true,  true,  true],
-                ['up',   false, true,  false, false],
+                ['up',   true,  true,  false, true],
                 ['up',   false, false, true,  true],
                 ['up',   false, false, true,  true],
 
-                ['down', true,  true,  true,  false],
+                ['down', true,  true,  true,  true],
                 ['down', false, true,  false, false],
                 ['down', false, false, true,  false],
                 ['down', false, false, true,  false],
 
-                ['all',  true,  true,  true,  false],
+                ['all',  true,  true,  true,  true],
                 ['all',  false, true,  false, false],
                 ['all',  false, false, true,  false],
                 ['all',  false, false, true,  false],
