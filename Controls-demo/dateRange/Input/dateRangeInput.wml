@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo__PopupTemplate__demoWrapper">
+<div class="controlsDemo__wrapper controlsDemo__PopupTemplate__demoWrapper ws-align-self-center">
     <div class="controlsDemo__cell demo-dateRangeInput__default">
         <div class="controls-text-label_theme-{{_options.theme}} controlsDemo__maxWidth200">Default</div>
         <Controls-demo.dateRange.Input.Default.Index date="{{ _date }}"/>
