@@ -88,7 +88,7 @@ export default class Container extends Control<IContainerOptions> {
    private _misspellValue: string = null;
    private _root: Key = null;
    private _rootBeforeSearch: Key = null;
-   private _notifiedMarkedKey: Key = null;
+   private _notifiedMarkedKey: Key;
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
    private _inputSearchValue: string = '';
@@ -100,7 +100,6 @@ export default class Container extends Control<IContainerOptions> {
    protected _beforeMount(options: IContainerOptions, context: typeof DataOptions): void {
       this._itemOpenHandler = this._itemOpenHandler.bind(this);
       this._dataLoadCallback = this._dataLoadCallback.bind(this);
-      this._afterSetItemsOnReloadCallback = this._afterSetItemsOnReloadCallback.bind(this);
 
       this._previousViewMode = this._viewMode = options.viewMode;
       this._updateViewMode(options.viewMode);
@@ -196,10 +195,13 @@ export default class Container extends Control<IContainerOptions> {
    private _updateRootAfterSearch(): void {
       if (this._options.startingWith === 'root') {
          const newRoot = Container._getRoot(this._path, this._root, this._options.parentProperty);
-         this._rootBeforeSearch = this._root;
-         this._root = newRoot;
-         this._searchController.setRoot(newRoot);
-         this._notify('rootChanged', [newRoot]);
+
+         if (newRoot !== this._root) {
+            this._rootBeforeSearch = this._root;
+            this._root = newRoot;
+            this._searchController.setRoot(newRoot);
+            this._notify('rootChanged', [newRoot]);
+         }
       }
    }
 
@@ -283,9 +285,16 @@ export default class Container extends Control<IContainerOptions> {
          this._deepReload = undefined;
       }
 
+      if (this._notifiedMarkedKey !== undefined) {
+         this._notify('markedKeyChanged', [this._notifiedMarkedKey]);
+         this._notifiedMarkedKey = undefined;
+      }
+
       if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
+         const filter = this._searchController.getFilter();
          this._updateParams(this._searchController.getSearchValue());
-         this._notify('filterChanged', [this._searchController.getFilter()]);
+         this._sourceController.setFilter(filter);
+         this._notify('filterChanged', [filter]);
       }
 
       this._path = data?.getMetaData().path ?? null;
@@ -304,13 +313,6 @@ export default class Container extends Control<IContainerOptions> {
    private _updateViewMode(newViewMode: string): void {
       this._previousViewMode = this._viewMode;
       this._viewMode = newViewMode;
-   }
-
-   protected _afterSetItemsOnReloadCallback(): void {
-      if (this._notifiedMarkedKey !== undefined) {
-         this._notify('markedKeyChanged', [this._notifiedMarkedKey]);
-         this._notifiedMarkedKey = undefined;
-      }
    }
 
    protected _misspellCaptionClick(): void {

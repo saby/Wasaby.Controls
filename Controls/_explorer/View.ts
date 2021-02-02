@@ -78,10 +78,10 @@ var
             } else {
                self._potentialMarkedKey = root;
             }
-            self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root, self._items, dataRoot);
             }
+            self._notify('rootChanged', [root]);
             self._forceUpdate();
          },
          setRestoredKeyObject: function(self, root) {
@@ -192,9 +192,10 @@ var
             self._options.itemsReadyCallback(items);
          }
       },
-      itemsSetCallback: function(self) {
+      itemsSetCallback: function(self, items, newOptions) {
          if (self._isGoingBack) {
-            const curRoot = _private.getRoot(self, self._options.root);
+            const options = newOptions || self._options;
+            const curRoot = _private.getRoot(self, options.root);
             if (self._restoredMarkedKeys[curRoot]) {
                const { markedKey } = self._restoredMarkedKeys[curRoot];
                self._children.treeControl.setMarkedKey(markedKey);
@@ -555,7 +556,6 @@ var Explorer = Control.extend({
   },
   _beforeUpdate: function(cfg) {
      const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
-     const isSearchViewMode = cfg.viewMode === 'search';
      const isRootChanged = cfg.root !== this._options.root;
 
      // Мы не должны ставить маркер до проваливания, т.к. это лишняя синхронизация.
@@ -565,10 +565,6 @@ var Explorer = Control.extend({
      }
      this._potentialMarkedKey = undefined;
 
-     const loadedBySourceController =
-         cfg.sourceController &&
-         ((isSearchViewMode && cfg.searchValue && cfg.searchValue !== this._options.searchValue) ||
-          (cfg.source !== this._options.source));
      const isSourceControllerLoading = cfg.sourceController && cfg.sourceController.isLoading();
      this._resetScrollAfterViewModeChange = isViewModeChanged && !isRootChanged;
      this._headerVisibility = cfg.root === null ? cfg.headerVisibility || 'hasdata' : 'visible';
@@ -605,7 +601,7 @@ var Explorer = Control.extend({
         this._navigation = cfg.navigation;
      }
 
-     if ((isViewModeChanged && isRootChanged && !loadedBySourceController) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
+     if ((isViewModeChanged && isRootChanged && !cfg.sourceController) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
         // Если меняется и root и viewMode, не меняем режим отображения сразу,
         // потому что тогда мы перерисуем explorer в новом режиме отображения
         // со старыми записями, а после загрузки новых получим еще одну перерисовку.
@@ -619,7 +615,7 @@ var Explorer = Control.extend({
         const filterChanged = !isEqual(cfg.filter, this._options.filter);
         const recreateSource = cfg.source !== this._options.source || (isSourceControllerLoading);
         const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
-        if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !loadedBySourceController) {
+        if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !cfg.sourceController) {
            _private.setPendingViewMode(this, cfg.viewMode, cfg);
         } else {
            _private.checkedChangeViewMode(this, cfg.viewMode, cfg);
@@ -627,7 +623,7 @@ var Explorer = Control.extend({
      } else if (!isViewModeChanged &&
          this._pendingViewMode &&
          cfg.viewMode === this._pendingViewMode &&
-         loadedBySourceController) {
+         cfg.sourceController) {
         _private.setViewModeSync(this, this._pendingViewMode, cfg);
      } else {
         _private.applyNewVisualOptions(this);
