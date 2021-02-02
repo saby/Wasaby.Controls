@@ -942,21 +942,32 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       this._dependenciesTimer?.stop();
    }
 
-   protected async _tabsSelectedKeyChanged(tabId: Key): Promise<void> {
+   protected _tabsSelectedKeyChanged(tabId: Key): Promise<void|RecordSet>|void {
+      const changeTabCallback = () => {
+         // move focus from tabs to input, after change tab
+         this.activate();
+
+         /* because activate() does not call _forceUpdate and _tabsSelectedKeyChanged is callback function,
+            we should call _forceUpdate, otherwise child controls (like suggestionsList) does not get new filter */
+         this._forceUpdate();
+      };
       this._setSuggestMarkedKey(null);
 
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== tabId) {
-         await this._setFilterAndLoad(this._options.filter, this._options, tabId);
+         const currentFilter = {...this._filter};
+         this._setFilterAndLoad(this._options.filter, this._options, tabId)
+             .finally(() => {
+                this._sourceController.setFilter(this._filter);
+                changeTabCallback();
+             });
+         //Костыль, пока список сам грузит данные при изменении опции filter
+         //Удалено в 21.2000
+         this._sourceController.setFilter(currentFilter);
+      } else {
+         changeTabCallback();
       }
-
-      // move focus from tabs to input, after change tab
-      this.activate();
-
-      /* because activate() does not call _forceUpdate and _tabsSelectedKeyChanged is callback function,
-         we should call _forceUpdate, otherwise child controls (like suggestionsList) does not get new filter */
-      this._forceUpdate();
    }
 
    protected _select(event: SyntheticEvent, item: Model): void {
