@@ -31,7 +31,12 @@
             on:touchend="_touchEndHandler()">
             <ws:partial
                on:scrollStateChanged="_scrollStateChanged()"
-               template="{{ _options.bodyContentTemplate }}"/>
+               template="{{ _options.bodyContentTemplate }}">
+               <ws:controllerButtonTemplate>
+                  <ws:partial
+                     template="controller"/>
+               </ws:controllerButtonTemplate>
+            </ws:partial>
          </div>
       </div>
       <ws:if data="{{ _options.controlButtonVisibility && _position === 'top' }}">

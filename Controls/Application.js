@@ -194,13 +194,19 @@ define('Controls/Application',
          _initIsAdaptiveClass: function(cfg) {
             if (cfg.isAdaptive) {
                var HeadAPI = aPage.Head.getInstance();
-               var tagId = HeadAPI.getTag('meta', { name: 'viewport', content: 'width=1024' });
-               if (tagId && !(tagId instanceof Array)) {
-                  HeadAPI.deleteTag(tagId);
+               var tagsId = HeadAPI.getTag('meta', { name: 'viewport' });
+               if (tagsId) {
+                  if (tagsId instanceof Array) {
+                     tagsId.forEach(function(tagId) {
+                        HeadAPI.deleteTag(tagId);
+                     });
+                  } else {
+                     HeadAPI.deleteTag(tagsId);
+                  }
                }
                HeadAPI.createTag('meta', {
                   name: 'viewport',
-                  content: 'width=device-width, initial-scale=1'
+                  content: 'width=device-width, initial-scale=1.0'
                });
                this._isAdaptiveClass = 'ws-is-adaptive';
             } else {
