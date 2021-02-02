@@ -8,9 +8,9 @@
       itemActionsSize="{{ swipeConfig.itemActionsSize }}"
       paddingSize="{{ swipeConfig.paddingSize }}"
       actionCaptionPosition="{{ actionCaptionPosition }}"
-      hasActionWithIcon="{{ (item || itemData).hasActionWithIcon() }}"
-      on:mousedown="_onItemActionMouseDown(action, (item || itemData))"
-      on:click="_onItemActionClick(action, (item || itemData))"/>
+      hasActionWithIcon="{{ itemData.hasActionWithIcon() }}"
+      on:mousedown="_onItemActionMouseDown(action, itemData)"
+      on:click="_onItemActionClick(action, itemData)"/>
    <ws:if data="{{actionIndex !== showedActions.length - 1}}">
        <div class="controls-Swipe__separator_theme-{{ theme }}
        controls-Swipe__separator_{{actionAlignment}}_theme-{{ theme }}"></div>
