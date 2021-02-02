@@ -18,6 +18,7 @@ export interface IConfirmationOptions extends IConfirmationFooterOptions, IContr
 /**
  * Интерфейс для опций окон подтверждения.
  * @public
+ * @extends Controls/popupConfirmation:IConfirmationFooter
  * @author Красильников А.С.
  */
 export interface IConfirmationOpener {
