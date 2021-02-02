@@ -5308,6 +5308,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,
             autoAddOnInit: !!editingConfig.autoAddOnInit,
+            backgroundStyle: editingConfig.backgroundStyle || 'default',
             autoAddByApplyButton: editingConfig.autoAddByApplyButton === false ? false : !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd),
             toolbarVisibility: !!editingConfig.toolbarVisibility
         };
