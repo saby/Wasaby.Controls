@@ -317,7 +317,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         if (this._searchController) {
-            this._updateFilter(this._searchController);
+            if (this._isSearchViewMode()) {
+                this._updateFilter(this._searchController);
+            }
             this._searchController = null;
         }
 
