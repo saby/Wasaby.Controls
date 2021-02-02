@@ -454,6 +454,10 @@
    top: @item_line-height_l_grid !important;
    height: 0;
 }
+.controls-Grid__row-cell__ladder-spacing_withGroup_theme-@{themeName} {
+   top: @item_line-height_l_grid + @grouping_height_list !important;
+   height: 0;
+}
 
 .controls-Grid__row-cell__ladder-spacing_withHeader_theme-@{themeName} {
    top: @item_line-height_l_grid + @header_cell_min-height_grid !important;
@@ -469,6 +473,26 @@
    top: @item_line-height_l_grid + @header_cell_min-height_grid + @results_cell_min-height_grid !important;
    height: 0;
 }
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_withGroup_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid + @grouping_height_list !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withResults_withGroup_theme-@{themeName} {
+   top: @item_line-height_l_grid + @results_cell_min-height_grid + @grouping_height_list !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-spacing_withHeader_withResults_withGroup_theme-@{themeName} {
+   top: @item_line-height_l_grid + @header_cell_min-height_grid + @results_cell_min-height_grid + @grouping_height_list !important;
+   height: 0;
+}
+
+.controls-Grid__row-cell__ladder-main_spacing_withGroup_theme-@{themeName} {
+   top: @header_cell_min-height_grid !important;
+}
+
 .controls-Grid__cell-content-wrapper_ladder {
    align-items: baseline;
    position: absolute;

@@ -73,8 +73,11 @@ export default class StickyLadderCell<T, TOwner extends DataRow<T>> extends Data
         const hasMainCell = !!(stickyLadder[stickyProperties[0]].ladderLength);
         const hasHeader = this._$owner.hasHeader();
         const hasTopResults = this._$owner.getResultsPosition() === 'top';
+        const hasGroup = this._$owner.getOwner().at(0)['[Controls/_display/GroupItem]'] && this._$owner.getOwner()._$stickyHeader;
         if (!hasMainCell) {
-            classes += ` controls-Grid__row-cell__ladder-spacing${hasHeader ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}_theme-${theme}`;
+            classes += ` controls-Grid__row-cell__ladder-spacing${hasHeader ? '_withHeader' : ''}${hasTopResults ? '_withResults' : ''}${hasGroup ? '_withGroup' : ''}_theme-${theme}`;
+        } else if (hasGroup) {
+            classes += ` controls-Grid__row-cell__ladder-main_spacing_withGroup_theme-${theme}`;
         }
         return classes;
     }
