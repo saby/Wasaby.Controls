@@ -2609,7 +2609,7 @@ const _private = {
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
-                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, false); });
+                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
                 }
             }
         }
@@ -5008,7 +5008,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }).then(() => {
             // Подскролл к редактору
             if (this._isMounted) {
-                return this.scrollToItem(item.contents.getKey(), false, true);
+                return _private.scrollToItem(this, item.contents.getKey(), false, false);
             }
         })
     },
