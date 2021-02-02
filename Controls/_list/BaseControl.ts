@@ -4851,7 +4851,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
@@ -5414,7 +5414,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
@@ -5444,7 +5444,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseUp(e, itemData, domEvent): void {
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
