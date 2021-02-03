@@ -1668,7 +1668,7 @@ const _private = {
             }
 
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
-                _private.getStickyOpener(self).isOpened()) {
+                _private.isStickyOpened(this)) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
             if (action === IObservable.ACTION_RESET && self._options.searchValue) {
@@ -1936,19 +1936,18 @@ const _private = {
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
         clickEvent.stopImmediatePropagation();
         clickEvent.nativeEvent.preventDefault();
+        const onResult = _private.onItemActionsMenuResult.bind(null, self);
+        const onClose = _private.onItemActionsMenuClose.bind(null, self);
+        const onOpen = _private.onItemActionsMenuOpen.bind(null, self, item);
         menuConfig.eventHandlers = {
-            onResult: self._onItemActionsMenuResult,
-            onClose: () => {
-                self._itemActionsMenuId = false;
-                _private.closeActionsMenu(this);
-            },
-            onOpen: () => {
-                // Устанавливаем новый Id
-                self._itemActionsMenuId = true;
-                _private.getItemActionsController(self, self._options).setActiveItem(item);
-            }
+            onResult,
+            onClose,
+            onOpen
         };
-        _private.getStickyOpener(this).open(menuConfig);
+        if (!self._stickyOpener) {
+            self._stickyOpener = new StickyOpener();
+        }
+        self._stickyOpener.open(menuConfig);
     },
 
     /**
@@ -1957,8 +1956,8 @@ const _private = {
      * @private
      */
     closeActionsMenu(self: any): void {
-        if (_private.getStickyOpener(self).isOpened()) {
-            _private.getStickyOpener(self).close();
+        if (_private.isStickyOpened(self)) {
+            self._stickyOpener.close();
             const itemActionsController = _private.getItemActionsController(self, self._options);
             itemActionsController.setActiveItem(null);
             itemActionsController.deactivateSwipe();
@@ -1997,10 +1996,6 @@ const _private = {
             contents = contents[(contents as any).length - 1];
         }
         return contents;
-    },
-
-    bindHandlers(self): void {
-        self._onItemActionsMenuResult = self._onItemActionsMenuResult.bind(self);
     },
 
     groupsExpandChangeHandler(self, changes) {
@@ -3092,11 +3087,40 @@ const _private = {
         }
     },
 
-    getStickyOpener(self): StickyOpener {
-        if (!self._stickyOpener) {
-            self._stickyOpener = new StickyOpener();
+    isStickyOpened(self): boolean {
+        return self._stickyOpener && self._stickyOpener.isOpened();
+    },
+
+    /**
+     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
+     * @param self
+     * @param eventName название события, брошенного из Controls/menu:Popup.
+     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
+     * @param actionModel
+     * @param clickEvent
+     */
+    onItemActionsMenuResult(self, eventName: string, actionModel: Model, clickEvent: SyntheticEvent<MouseEvent>): void {
+        if (eventName === 'itemClick') {
+            const action = actionModel && actionModel.getRawData();
+            if (action) {
+                const item = _private.getItemActionsController(self, self._options).getActiveItem();
+                _private.handleItemActionClick(self, action, clickEvent, item, true);
+            }
+        } else if (eventName === 'menuOpened') {
+            _private.removeShowActionsClass(self);
+            _private.getItemActionsController(self, self._options).deactivateSwipe(false);
         }
-        return self._stickyOpener;
+    },
+
+    onItemActionsMenuOpen(self, item: CollectionItem): void {
+        self._isShownItemActionMenu = true;
+        _private.removeShowActionsClass(self);
+        _private.getItemActionsController(self, self._options).setActiveItem(item);
+    },
+
+    onItemActionsMenuClose(self): void {
+        self._isShownItemActionMenu = false;
+        _private.closeActionsMenu(self);
     }
 };
 
@@ -3227,8 +3251,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // По умолчанию считаем, что показывать экшны не надо, пока не будет установлено true
     _addShowActionsClass: false,
 
-    // Идентификатор текущего открытого popup
-    _itemActionsMenuId: null,
+    // Флаг открытия popup
+    _isShownItemActionMenu: null,
 
     // Шаблон операций с записью
     _itemActionsTemplate: ItemActionsTemplate,
@@ -3287,8 +3311,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.checkDeprecated(newOptions);
         this._initKeyProperty(newOptions);
         _private.checkRequiredOptions(this, newOptions);
-
-        _private.bindHandlers(this);
 
         _private.initializeNavigation(this, newOptions);
         this._loadTriggerVisibility = {};
@@ -4296,6 +4318,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._unregisterMouseMove();
         this._unregisterMouseUp();
         UnregisterUtil(this, 'scroll');
+
+        if (this._stickyOpener) {
+            this._stickyOpener.destroy();
+        }
 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
@@ -5352,27 +5378,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         event.stopPropagation();
     },
 
-    /**
-     * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
-     * @param eventName название события, брошенного из Controls/menu:Popup.
-     * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
-     * @param actionModel
-     * @param clickEvent
-     * @private
-     */
-    _onItemActionsMenuResult(eventName: string, actionModel: Model, clickEvent: SyntheticEvent<MouseEvent>): void {
-        if (eventName === 'itemClick') {
-            const action = actionModel && actionModel.getRawData();
-            if (action) {
-                const item = _private.getItemActionsController(this, this._options).getActiveItem();
-                _private.handleItemActionClick(this, action, clickEvent, item, true);
-            }
-        } else if (eventName === 'menuOpened') {
-            _private.removeShowActionsClass(this);
-            _private.getItemActionsController(this, this._options).deactivateSwipe(false);
-        }
-    },
-
     _handleMenuActionMouseEnter(event: SyntheticEvent): void {
         _private.getItemActionsController(this, this._options).startMenuDependenciesTimer();
     },
@@ -5568,7 +5573,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._notify('itemMouseMove', [itemData.item, nativeEvent]);
         if (!this._addShowActionsClass &&
             (!this._dndListController || !this._dndListController.isDragging()) &&
-            !_private.getStickyOpener(this).isOpened()) {
+            !_private.isStickyOpened(this)) {
             _private.addShowActionsClass(this);
         }
 
@@ -5857,13 +5862,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onListDeactivated() {
-        if (!_private.getStickyOpener(this).isOpened()) {
+        if (!_private.isStickyOpened(this)) {
             _private.closeSwipe(this);
         }
     },
 
     _onCloseSwipe() {
-        if (!_private.getStickyOpener(this).isOpened()) {
+        if (!_private.isStickyOpened(this)) {
             _private.closeSwipe(this);
         }
     },

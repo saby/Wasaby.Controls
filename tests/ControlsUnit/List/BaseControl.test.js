@@ -4748,8 +4748,14 @@ define([
                   }]
                })
             };
-            await instance._onItemContextMenu(null, breadcrumbItem, fakeEvent);
-            assert.equal(instance._listViewModel.getActiveItem(), itemAt1);
+
+            const stubOpenMenu = sinon.stub(lists.BaseControl._private, 'openItemActionsMenu')
+               .callsFake((self, action, clickEvent, currentItem) => {
+                  assert.equal(currentItem, itemAt1);
+               });
+            lists.BaseControl._private.openContextMenu(instance, fakeEvent, breadcrumbItem);
+            sinon.assert.called(stubOpenMenu);
+            stubOpenMenu.restore();
          });
 
          // Клик по ItemAction в меню отдавать контейнер в событии
