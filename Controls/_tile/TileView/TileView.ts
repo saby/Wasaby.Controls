@@ -344,6 +344,15 @@ TileView.getDefaultOptions = function () {
     };
 };
 
+Object.defineProperty(TileView, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return TileView.getDefaultOptions();
+   }
+});
+
 TileView.contextTypes = function contextTypes() {
     return {
         isTouch: TouchContextField

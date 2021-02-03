@@ -171,6 +171,16 @@ OperationsPanel.getDefaultOptions = function() {
       itemTemplate: toolbars.ItemTemplate
    };
 };
+
+Object.defineProperty(OperationsPanel, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return OperationsPanel.getDefaultOptions();
+   }
+});
+
 OperationsPanel._theme = ['Controls/operationsPanel', 'Controls/toolbars'];
 /**
  * @name Controls/_operationsPanel/OperationsPanel#rightTemplate

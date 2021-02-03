@@ -63,6 +63,16 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
         };
     }
 }
+
+Object.defineProperty(StickyTemplate, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return StickyTemplate.getDefaultOptions();
+   }
+});
+
 /**
  * @name Controls/_popupTemplate/Sticky#shadowVisible
  * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока

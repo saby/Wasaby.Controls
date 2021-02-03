@@ -149,3 +149,12 @@ export default class InfoboxTemplate extends Control<IInfoboxTemplateOptions> {
  * @name Controls/_popupTemplate/InfoBox#content
  * @cfg {function|String} Шаблон, который будет отображать всплывающая подсказка.
  */
+
+Object.defineProperty(InfoboxTemplate, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return InfoboxTemplate.getDefaultOptions();
+   }
+});

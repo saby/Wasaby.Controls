@@ -24,4 +24,14 @@ class Header extends Control<IControlOptions> {
         };
     }
 }
+
+Object.defineProperty(Header, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Header.getDefaultOptions();
+   }
+});
+
 export default Header;
