@@ -5809,11 +5809,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _getItemActionVisibilityClasses(): string {
-        if (this._addShowActionsClass) {
-            const visibility = this._getEditingConfig(this._options)?.mode === 'cell' ? 'onhovercell' : this._options.itemActionsVisibility;
-            return `controls-BaseControl_showActions controls-BaseControl_showActions_${visibility}`;
-        }
-        return '';
+        const visibility = this._getEditingConfig(this._options)?.mode === 'cell' ? 'onhovercell' : this._options.itemActionsVisibility;
+        return `controls-BaseControl_showActions controls-BaseControl_showActions_${visibility}`;
     },
 
     /**
