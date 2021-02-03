@@ -9,7 +9,6 @@ export interface ISearchInputContainerOptions extends IControlOptions {
    searchDelay?: number | null;
    minSearchLength?: number;
    inputSearchValue?: string;
-   useStore?: boolean;
 }
 
 /**
@@ -18,8 +17,6 @@ export interface ISearchInputContainerOptions extends IControlOptions {
  * @remark
  * Контрол принимает решение по событию valueChanged, должно ли сработать событие search или нет,
  * в зависимости от заданных параметров поиска - минимальной длины для начала поиска и времени задержки.
- *
- * Если задана опция useStore, то вместо использования события, будет отправлено значение свойства searchValue в Controls/Store.
  *
  * Использование c контролом {@link Controls/browser:Browser} можно посмотреть в демо {@link /materials/Controls-demo/app/Controls-demo%2FSearch%2FFlatList%2FIndex Controls-demo/Search/FlatList}
  *
@@ -53,7 +50,6 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    protected _template: TemplateFunction = template;
 
    protected _value: string;
-   protected _contextCallbackId: string;
    protected _searchResolverController: SearchResolver = null;
 
    protected _beforeMount(options?: ISearchInputContainerOptions): void {
@@ -66,26 +62,11 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       if (this._searchResolverController) {
          this._searchResolverController.clearTimer();
       }
-      if (this._contextCallbackId) {
-         Store.unsubscribe(this._contextCallbackId);
-      }
    }
 
    protected _beforeUpdate(newOptions: ISearchInputContainerOptions): void {
       if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
          this._updateSearchData(newOptions.inputSearchValue);
-      }
-   }
-
-   protected _afterMount(): void {
-      if (this._options.useStore) {
-         this._contextCallbackId = Store.onPropertyChanged(
-             '_contextName',
-             () => {
-                this._value = this._options.inputSearchValue;
-             },
-             true
-         );
       }
    }
 
@@ -118,11 +99,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    }
 
    private _resolve(value: string, event: 'searchReset' | 'search'): void {
-      if (this._options.useStore) {
-         Store.dispatch('searchValue', value);
-      } else {
-         this._notify(event, [value], { bubbling: true });
-      }
+      this._notify(event, [value], { bubbling: true });
    }
 
    protected _searchClick(event: SyntheticEvent): void {
@@ -172,14 +149,6 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 /**
  * @name Controls/_search/Input/Container#inputSearchValue
  * @cfg {string} Значение строки ввода
- * @demo Controls-demo/Search/Explorer/Index
- * @demo Controls-demo/Search/FlatList/Index
- * @demo Controls-demo/Search/TreeView/Index
- */
-
-/**
- * @name Controls/_search/Input/Container#useStore
- * @cfg {boolean} Использовать ли хранилище Store вместо отправки события при разрешении на поиск
  * @demo Controls-demo/Search/Explorer/Index
  * @demo Controls-demo/Search/FlatList/Index
  * @demo Controls-demo/Search/TreeView/Index

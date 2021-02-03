@@ -73,6 +73,7 @@ export default class ControllerClass {
    private _searchValue: string = '';
    private _searchInProgress: boolean = false;
    private _sourceController: NewSourceController = null;
+   private _searchPromise: Promise<RecordSet>;
    private _root: Key = null;
    private _path: RecordSet = null;
 
@@ -117,9 +118,15 @@ export default class ControllerClass {
     * @param {string} value Значение, по которому будет производиться поиск
     */
    search(value: string): Promise<RecordSet | Error> {
+      const newSearchValue = this._trim(value);
       this._checkSourceController();
-      this._searchValue = this._trim(value);
-      return this._updateFilterAndLoad(this._getFilter(this._searchValue));
+
+      if (this._searchValue !== newSearchValue || !this._searchPromise) {
+         this._searchValue = newSearchValue;
+         return this._updateFilterAndLoad(this._getFilter(this._searchValue));
+      } else if (this._searchPromise) {
+         return this._searchPromise;
+      }
    }
 
    /**
@@ -262,7 +269,7 @@ export default class ControllerClass {
 
    private _updateFilterAndLoad(filter: QueryWhereExpression<unknown>): Promise<Error | RecordSet> {
       this._searchStarted();
-      return this._sourceController
+      return this._searchPromise = this._sourceController
           .load(undefined, undefined, filter)
           .then((recordSet) => {
              if (recordSet instanceof RecordSet) {
@@ -273,6 +280,7 @@ export default class ControllerClass {
           })
           .finally(() => {
              this._searchEnded();
+             this._searchPromise = null;
           });
    }
 
