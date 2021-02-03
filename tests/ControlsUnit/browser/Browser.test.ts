@@ -202,6 +202,16 @@ describe('Controls/browser:Browser', () => {
                     const searchController2 = await searchControllerCreatedPromise2;
                     assert.isTrue(searchController1 === searchController2);
                 });
+                it('loading state on search', async () => {
+                    const browserOptions = getBrowserOptions();
+                    const browser = getBrowser(browserOptions);
+                    await browser._beforeMount(browserOptions);
+                    browser.saveOptions(browserOptions);
+                    const searchPromise = browser._search({}, 'test');
+                    assert.ok(browser._loading);
+                    await searchPromise;
+                    assert.ok(!browser._loading);
+                });
             });
         });
 
@@ -266,14 +276,26 @@ describe('Controls/browser:Browser', () => {
     });
 
     describe('_beforeUnmount', () => {
+        const options = getBrowserOptions();
         it('_beforeUnmount while sourceController is loading', async () => {
-            const options = getBrowserOptions();
             const browser = getBrowser(options);
 
             await browser._beforeMount(options);
 
             browser._beforeUnmount();
             assert.ok(!browser._sourceController);
+        });
+
+        it('_beforeUnmount with undefined viewMode', () => {
+            let searchControllerReseted = false;
+            const browser = getBrowser(options);
+            browser._searchController = {
+                reset: () => {
+                    searchControllerReseted = true;
+                }
+            };
+            browser._beforeUnmount();
+            assert.isFalse(searchControllerReseted);
         });
     });
 

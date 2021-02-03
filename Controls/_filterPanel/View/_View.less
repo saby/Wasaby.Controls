@@ -47,7 +47,6 @@
 
 .controls-FilterViewPanel__groupExpander_theme-@{themeName}:hover,
 .controls-FilterViewPanel__groupReset_theme-@{themeName}:hover,
-.controls-FilterViewPanel__group-content_theme-@{themeName}:hover,
 .controls-FilterViewPanel__groupReset-title_theme-@{themeName}:hover {
    color: @button_color-hover_filterViewPanel;
 }
@@ -57,15 +56,19 @@
    margin-left: @group-expander_padding-left_filterViewPanel;
    cursor: pointer;
    align-self: center;
-   &:hover {
-      color: @button_color-hover_filterViewPanel;
-   }
 }
 
 .controls-FilterViewPanel__group_theme-@{themeName} {
    display: flex;
    flex-direction: row;
    height: @group_height_filterViewPanel;
+}
+
+.controls-FilterViewPanel__group_theme-@{themeName}:hover {
+   .controls-FilterViewPanel__groupExpander_theme-@{themeName},
+   .controls-FilterViewPanel__group-content_theme-@{themeName} {
+      color: @button_color-hover_filterViewPanel;
+   }
 }
 
 .controls-FilterViewPanel__groupReset-title_theme-@{themeName} {

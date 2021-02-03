@@ -783,6 +783,8 @@ const _private = {
 
         if (_private.isDemandNavigation(options.navigation) && _private.hasMoreData(self, sourceController, 'down')) {
             self._shouldDrawFooter = (options.groupingKeyCallback || options.groupProperty) ? !self._listViewModel.isAllGroupsCollapsed() : true;
+        } else if (_private.isCutNavigation(options.navigation)) {
+            self._shouldDrawCut = true;
         } else {
             self._shouldDrawFooter = false;
         }
@@ -1025,6 +1027,10 @@ const _private = {
 
     isInfinityNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
         return navigation && navigation.view === 'infinity';
+    },
+
+    isCutNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): boolean {
+        return navigation && navigation.view === 'cut';
     },
 
     needShowShadowByNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>, itemsCount: number): boolean {
@@ -3234,6 +3240,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _loadMoreCaption: null,
     _shouldDrawFooter: false,
+    _shouldDrawCut: false,
+
+    _expanded: false,
+    _cutSize: 'm',
 
     _loader: null,
     _loadingState: null,
@@ -4453,8 +4463,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._scrollController.update({ params: { scrollHeight: this._viewSize, clientHeight: this._viewportSize } })
             this._scrollController.setRendering(false);
 
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                                    this._scrollController.completeVirtualScrollIfNeed();
 
             const paramsToRestoreScroll = this._scrollController.getParamsToRestoreScrollPosition();
             if (paramsToRestoreScroll) {
@@ -4462,8 +4470,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._notify('restoreScrollPosition',
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
-                needCheckTriggers = true;
             }
+
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
+                this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4860,7 +4870,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onItemClick(e, item, originalEvent, columnIndex = null) {
         _private.closeSwipe(this);
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
@@ -5298,6 +5308,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             item: editingConfig.item,
             autoAdd: !!editingConfig.autoAdd,
             autoAddOnInit: !!editingConfig.autoAddOnInit,
+            backgroundStyle: editingConfig.backgroundStyle || 'default',
             autoAddByApplyButton: editingConfig.autoAddByApplyButton === false ? false : !!(editingConfig.autoAddByApplyButton || editingConfig.autoAdd),
             toolbarVisibility: !!editingConfig.toolbarVisibility
         };
@@ -5438,7 +5449,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseDown(event, itemData, domEvent) {
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
@@ -5468,7 +5479,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _itemMouseUp(e, itemData, domEvent): void {
-        if (this.isLoading()) {
+        if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
         const key = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
@@ -5513,6 +5524,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _onLoadMoreClick() {
         _private.loadToDirectionIfNeed(this, 'down');
+    },
+
+    _onCutClick() {
+        if (!this._expanded) {
+            this._sourceController.setNavigation(undefined);
+            _private.reload(this, this._options).then(() => {
+                this._expanded = true;
+            });
+        } else {
+            this._sourceController.setNavigation(this._options.navigation);
+            _private.reload(this, this._options).then(() => {
+                this._expanded = false;
+            });
+        }
     },
 
     _continueSearch(): void {

@@ -124,7 +124,9 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _beforeUnmount(): void {
       if (this._searchController) {
-         this._searchController.reset(true);
+         if (this._isSearchViewMode()) {
+            this._searchController.reset(true);
+         }
          this._searchController = null;
       }
    }

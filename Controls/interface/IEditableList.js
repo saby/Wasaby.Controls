@@ -3,7 +3,7 @@ define('Controls/interface/IEditableList', [
 ], function() {
 
    /**
-    * Интерфейс для списков с возможностью {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
+    * Интерфейс для {@link {@link /doc/platform/developmentapl/interface-development/controls/list/ списков} с возможностью {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
     *
     * @interface Controls/interface/IEditableList
     * @public
@@ -64,7 +64,7 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [autoAddOnInit=false] Если передано значение "true", при построении списка автомати начнется рдобавление по месту, при условии, что список пустой.
     * @property {Boolean} [editOnClick=false] Если передано значение "true", клик по элементу списка начинает редактирование по месту.
     * @property {Boolean} [autoAdd=false] Если передано значение "true", после окончания редактирования последнего (уже существующего) элемента списка автоматически добавляется новый элемент и начинается его редактирование.
-    * @property {Boolean} [autoAddByApplyButton=false] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
+    * @property {Boolean} [autoAddByApplyButton=true] Если передано значение "true", после окончания редактирования только что добавленного элемента списка автоматически добавляется новый элемент и начинается его редактирование.
     * @property {Boolean} [sequentialEditing=true] Если передано значение "true", после окончания редактирования любого элемента списка, кроме последнего, автоматически запускается редактирование следующего элемента списка.
     * @property {Boolean} [toolbarVisibility=false] Определяет, должны ли отображаться кнопки "Сохранить" и "Отмена".
     * Когда кнопки не отображаются, аналогичные действия выполняются с помощью {@link /doc/platform/developmentapl/interface-development/controls/list/actions/keys/ клавиш}.
@@ -187,10 +187,10 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#beforeBeginEdit Происходит перед началом {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или добавления по месту.
+    * @event Controls/interface/IEditableList#beforeBeginEdit Происходит перед запуском {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Параметры редактирования.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент добавляется по месту.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -326,10 +326,10 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#afterBeginEdit Происходит после начала {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} по месту.
+    * @event Controls/interface/IEditableList#afterBeginEdit Происходит после запуска {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент добавляется по месту.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -388,7 +388,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} или {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления} элемента.
+    * @event Controls/interface/IEditableList#beforeEndEdit Происходит перед завершением {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
     * @param {Boolean} willSave Параметр принимает значение true, когда отредактированный элемент сохраняется.
@@ -397,7 +397,7 @@ define('Controls/interface/IEditableList', [
     * 2. пользователь выполнил действие, которое приводит к сохранению:
     *     * закрыл диалог, на котором находится список с редактируемым элементом;
     *     * начал редактирование другого элемента по клику.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент добавляется по месту.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -464,10 +464,10 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#afterEndEdit Происходит после завершения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования} иди {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавления}.
+    * @event Controls/interface/IEditableList#afterEndEdit Происходит после завершения {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
     * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
     * @param {Types/entity:Model} item Редактируемый элемент.
-    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавляется по месту}.
+    * @param {Boolean} isAdd Параметр принимает значение true, когда элемент добавляется по месту.
     * Добавление элемента происходит в следующих случаях:
     * 1. вызов метода {@link beginAdd}.
     * 2. после окончания редактирования:
@@ -553,7 +553,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Начинает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту}.
+    * Запускает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту}.
     * @function Controls/interface/IEditableList#beginEdit
     * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Параметры редактирования.
     * @returns {Core/Deferred}
@@ -609,7 +609,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Начинает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/add/ добавление по месту}.
+    * Запускает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ добавление по месту}.
     * @function Controls/interface/IEditableList#beginAdd
     * @param {Controls/interface/IEditableList/ItemEditOptions.typedef} options Параметры добавления.
     * @returns {Core/Deferred}
@@ -668,7 +668,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Завершает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование по месту} и сохраняет изменения.
+    * Завершает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование/добавление по месту} с сохранением введенных данных.
     * @function Controls/interface/IEditableList#commitEdit
     * @returns {Core/Deferred}
     * @remark
@@ -714,11 +714,11 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Завершает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование} и отменяет изменения.
+    * Завершает{@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование/добавление по месту} без сохранения введенных данных.
     * @function Controls/interface/IEditableList#cancelEdit
     * @returns {Core/Deferred}
     * @remark
-    * Используйте этот метод, когда вы хотите завершить редактирование в ответ на действия пользователя, например, когда пользователь нажимает на кнопку "Отмена".
+    * Используйте этот метод, когда вы хотите завершить редактирование или добавление в ответ на действия пользователя, например, когда пользователь нажимает на кнопку "Отмена".
     * @example
     * В следующем примере показано, как завершить редактирование и отменить изменения.
     * <pre class="brush: html">

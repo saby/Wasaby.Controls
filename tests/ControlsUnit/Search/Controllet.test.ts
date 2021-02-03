@@ -39,6 +39,33 @@ describe('Controls/search:Controller', () => {
         });
     });
 
+    describe('_beforeUnmount', () => {
+        it('_beforeUnmount with undefined viewMode', async () => {
+            let searchControllerReseted = false;
+            const searchController = new Controller(options);
+            searchController._searchController = {
+                reset: () => {
+                    searchControllerReseted = true;
+                }
+            };
+            searchController._beforeUnmount();
+            assert.isFalse(searchControllerReseted);
+        });
+
+        it('_beforeUnmount with search viewMode', async () => {
+            let searchControllerReseted = false;
+            const searchController = new Controller(options);
+            searchController._viewMode = 'search';
+            searchController._searchController = {
+                reset: () => {
+                    searchControllerReseted = true;
+                }
+            };
+            searchController._beforeUnmount();
+            assert.isTrue(searchControllerReseted);
+        });
+    });
+
     describe('_beforeUpdate', () => {
         it('root is changed', () => {
             const searchController = getController(options);
