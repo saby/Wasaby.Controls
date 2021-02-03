@@ -201,8 +201,7 @@
         <ws:if data="{{_listViewModel}}">
             <ws:partial template="loadingIndicator" loadingIndicatorState="up"/>
 
-            <ws:partial template="fullView" name="listView"
-                        attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _itemActionsVisibility}}"/>
+            <ws:partial template="fullView" name="listView" attr:class="{{ _addShowActionsClass ? _getItemActionVisibilityClasses() }}"/>
 
             <ws:partial template="loadingIndicator" loadingIndicatorState="down"/>
         </ws:if>

@@ -2885,13 +2885,7 @@ const _private = {
      * @private
      */
     initVisibleItemActions(self, options: IList): void {
-        if (self._getEditingConfig(options)?.mode === 'cell') {
-            self._itemActionsVisibility = 'onhovercell';
-        } else {
-            self._itemActionsVisibility = options.itemActionsVisibility;
-        }
-
-        if (self._itemActionsVisibility === 'visible') {
+        if (options.itemActionsVisibility === 'visible') {
             _private.addShowActionsClass(this);
             _private.updateItemActions(self, options);
         }
@@ -5813,6 +5807,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const itemActionsController = _private.getItemActionsController(this);
             itemActionsController.updateItemActions(itemKey, itemWidth);
         }
+    },
+
+    _getItemActionVisibilityClasses(): string {
+        const visibility = this._getEditingConfig(this._options)?.mode === 'cell' ? 'onhovercell' : this._options.itemActionsVisibility;
+        return `controls-BaseControl_showActions controls-BaseControl_showActions_${visibility}`;
     },
 
     /**
