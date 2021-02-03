@@ -211,7 +211,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         return ManagerController.getPopupHeaderTheme();
     }
 
-    static _theme: string[] = ['Controls/menu'];
+    static _theme: string[] = ['Controls/menu', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {

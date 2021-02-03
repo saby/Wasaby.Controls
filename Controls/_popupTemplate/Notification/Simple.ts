@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_popupTemplate/Notification/Simple/Simple');
 import {default as INotification, INotificationOptions} from './interface/INotification';
 import 'css!Controls/popupTemplate';
-import 'css!Controls/Classes';
 
 export interface INotificationSimpleOptions extends IControlOptions, INotificationOptions {
     icon?: String;
@@ -49,6 +48,8 @@ class NotificationSimple extends Control<INotificationSimpleOptions> implements 
     protected _beforeUpdate(options: INotificationSimpleOptions): void {
         this._iconStyle = this._prepareIconStyle(options);
     }
+
+    static _theme: string[] = [ 'Controls/Classes'];
 
     static getDefaultOptions(): INotificationSimpleOptions {
         return {
