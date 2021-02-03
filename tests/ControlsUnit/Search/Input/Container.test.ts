@@ -28,48 +28,24 @@ describe('Controls/_search/Input/Container', () => {
    });
 
    describe('_resolve', () => {
-      it('search: useStore = false', () => {
+      it('search', () => {
          const cont = new InputContainer({});
          const stub = sandbox.stub(cont, '_notify');
          const dispatchStub = sandbox.stub(Store, 'dispatch');
-         cont._options.useStore = false;
 
          cont._notifySearch('test');
          assert.isTrue(stub.withArgs('search', ['test']).calledOnce);
          assert.isFalse(dispatchStub.called);
       });
 
-      it('search: useStore = true', () => {
+      it('searchReset', () => {
          const cont = new InputContainer({});
          const stub = sandbox.stub(cont, '_notify');
          const dispatchStub = sandbox.stub(Store, 'dispatch');
-         cont._options.useStore = true;
-
-         cont._notifySearch('test');
-         assert.isFalse(stub.called);
-         assert.isTrue(dispatchStub.withArgs('searchValue', 'test').calledOnce);
-      });
-
-      it('searchReset: useStore = false', () => {
-         const cont = new InputContainer({});
-         const stub = sandbox.stub(cont, '_notify');
-         const dispatchStub = sandbox.stub(Store, 'dispatch');
-         cont._options.useStore = false;
 
          cont._notifySearchReset();
          assert.isTrue(stub.withArgs('searchReset', ['']).calledOnce);
          assert.isFalse(dispatchStub.called);
-      });
-
-      it('searchReset: useStore = true', () => {
-         const cont = new InputContainer({});
-         const stub = sandbox.stub(cont, '_notify');
-         const dispatchStub = sandbox.stub(Store, 'dispatch');
-         cont._options.useStore = true;
-
-         cont._notifySearchReset();
-         assert.isFalse(stub.called);
-         assert.isTrue(dispatchStub.withArgs('searchValue', '').calledOnce);
       });
    });
 

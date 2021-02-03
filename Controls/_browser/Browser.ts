@@ -160,7 +160,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._inputSearchValue = this._searchValue = options.searchValue;
         }
 
-        const sourceController = this._getSourceController(options);
+        const sourceController = this._getSourceController(this._getSourceControllerOptions(options));
         this._dataOptionsContext = this._createContext(sourceController.getState());
 
         this._previousViewMode = this._viewMode = options.viewMode;
@@ -290,7 +290,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 this._inputSearchValue = newOptions.searchValue;
             }
             if (!methodResult) {
-                methodResult = this._updateSearchController(newOptions);
+                methodResult = this._updateSearchController(newOptions).catch((error) => {
+                    this._processLoadError(error);
+                    return error;
+                });
             }
         }
 
@@ -654,7 +657,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     protected _search(event: SyntheticEvent, value: string): Promise<Error|RecordSet|void> {
         this._inputSearchValue = value;
-
+        this._loading = true;
         return this._getSearchController().then(
             (searchController) => {
                 return searchController.search(value)
@@ -749,6 +752,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         if (this._searchController && this._searchController.isSearchInProcess()) {
+            this._loading = false;
             this._searchDataLoad(data, this._searchController.getSearchValue());
         }
 
