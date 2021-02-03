@@ -10,7 +10,7 @@ const BUTTONS_COUNT = 6;
  *
  * @class Controls/_datePopup/YearsRange
  * @extends UI/Base:Control
- * 
+ *
  * @author Красильников А.С.
  * @private
  */
@@ -31,14 +31,15 @@ var Component = BaseControl.extend({
         this._year = options.year ? options.year.getFullYear() : (new Date()).getFullYear();
 
         if (dateUtils.isValidDate(options.endValue)) {
-            this._lastYear = Math.max(this._year, options.endValue.getFullYear());
+            // Прибавляем один, т.к. выбранный год должен показываться предпоследним.
+            this._lastYear = Math.max(this._year, options.endValue.getFullYear()) + 1;
             if (this._lastYear - this._year >= BUTTONS_COUNT) {
                 this._lastYear = this._year + BUTTONS_COUNT - 1;
             }
         } else if (dateUtils.isValidDate(options.startValue)) {
-            this._lastYear = options.startValue.getFullYear();
+            this._lastYear = options.startValue.getFullYear() + 1;
         } else {
-            this._lastYear = this._year;
+            this._lastYear = this._year + 1;
         }
 
         this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
