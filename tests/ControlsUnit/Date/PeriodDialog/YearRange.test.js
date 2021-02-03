@@ -35,7 +35,7 @@ define([
 
          [{
             position: new Date(2019, 0),
-            lastYear: 2019
+            lastYear: 2020
          }, {
             position: new Date(2019, 0),
             startValue: new Date(2019, 0),
