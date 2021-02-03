@@ -128,6 +128,5 @@ export default class Demo extends Control<IControlOptions> {
         return true;
     }
 
-    static _styles: string[] = ['Controls-demo/PropertyGridNew/Editors/HighlightOnHover/Index',
-        'Controls-demo/PropertyGridNew/PropertyGrid'];
+    static _styles: string[] = ['Controls-demo/PropertyGridNew/PropertyGrid'];
 }
