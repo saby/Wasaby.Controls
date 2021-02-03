@@ -160,7 +160,7 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     }
 
     protected _getConfig(popupOptions: IBaseOpenerOptions = {}): TBaseOpenerOptions {
-        const baseConfig = BaseOpener.getConfig(this._options, popupOptions);
+        const baseConfig = BaseOpenerUtil.getConfig(this._options, popupOptions);
         // if the .opener property is not set, then set the defaultOpener or the current control
         if (!baseConfig.hasOwnProperty('opener')) {
             baseConfig.opener = DefaultOpenerFinder.find(this) || this;
@@ -235,8 +235,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         }
         return null;
     }
-
-    static getConfig: Function = BaseOpenerUtil.getConfig;
 
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();

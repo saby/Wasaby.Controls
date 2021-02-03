@@ -1,6 +1,6 @@
 import Base from 'Controls/_popup/PopupHelper/Base';
 import BaseOpener, {ILoadDependencies} from 'Controls/_popup/Opener/BaseOpener';
-import {ISlidingPanelData, ISlidingPanelPopupOptions} from 'Controls/_popup/interface/ISlidingPanel';
+import {ISlidingPanelOptions, ISlidingPanelPopupOptions} from 'Controls/_popup/interface/ISlidingPanel';
 import StackOpener from 'Controls/_popup/PopupHelper/Stack';
 import DialogOpener from 'Controls/_popup/PopupHelper/Dialog';
 import {detection} from 'Env/Env';
@@ -44,17 +44,15 @@ class SlidingPanelOpener extends BaseOpener {
 export default class SlidingPanel extends Base {
     private _opener: Function = SlidingPanelOpener;
     private _desktopOpener: TDesktopOpener;
-    private _desktopMode: ISlidingPanelPopupOptions['slidingPanelOptions']['desktopMode'] = DEFAULT_DESKTOP_MODE;
-
-    constructor(settings?: ISlidingPanelPopupOptions) {
-        super(settings);
-        this._desktopMode = this._getDesktopMode(settings);
-    }
-
+    protected _options: ISlidingPanelPopupOptions;
     open(popupOptions: ISlidingPanelPopupOptions): unknown {
         const adaptivePopupOptions = this._getPopupOptionsWithSizes(popupOptions);
-        this._desktopMode = this._getDesktopMode(adaptivePopupOptions);
-        return this._callMethodAdaptive('open', adaptivePopupOptions, detection.isPhone ? POPUP_CONTROLLER : undefined);
+        const desktopMode = this._getDesktopMode(adaptivePopupOptions);
+        if (detection.isPhone) {
+            return super.open(adaptivePopupOptions, POPUP_CONTROLLER);
+        } else {
+            return this._getDesktopOpener(desktopMode).open(adaptivePopupOptions);
+        }
     }
 
     close(...args: unknown[]): void {
@@ -81,15 +79,16 @@ export default class SlidingPanel extends Base {
         if (detection.isPhone) {
             return super[methodName](...args);
         } else {
-            return this._getDesktopOpener(this._desktopMode)[methodName](...args);
+            return this._getDesktopOpener()[methodName](...args);
         }
     }
 
     private _getDesktopOpener(
         desktopMode?: ISlidingPanelPopupOptions['slidingPanelOptions']['desktopMode']
     ): TDesktopOpener {
-        const OpenerConstructor = OPENER_BY_DESKTOP_MODE[desktopMode];
-        if (!this._desktopOpener || !(OpenerConstructor && this._desktopOpener instanceof OpenerConstructor)) {
+        const mode = desktopMode || this._getDesktopMode(this._options);
+        const OpenerConstructor = OPENER_BY_DESKTOP_MODE[mode];
+        if (!this._desktopOpener) {
             this._desktopOpener = new OpenerConstructor();
         }
         return this._desktopOpener;
@@ -102,13 +101,13 @@ export default class SlidingPanel extends Base {
     }
 
     /**
-     * Получение дефолтного значения slidingPanelData,
+     * Получение дефолтного значения slidingPanelOptions,
      * т.к. при открытии на десктопе мы не попадем в контроллел SlidingPanel
      * @param {ISlidingPanelPopupOptions} popupOptions
-     * @return {ISlidingPanelData}
+     * @return {ISlidingPanelOptions}
      * @private
      */
-    private _getDefaultSlidingPanelData(popupOptions: ISlidingPanelPopupOptions): ISlidingPanelData {
+    private _getDefaultSlidingPanelData(popupOptions: ISlidingPanelPopupOptions): ISlidingPanelOptions {
         return {
             desktopMode: popupOptions.slidingPanelOptions?.desktopMode
         };
@@ -123,22 +122,23 @@ export default class SlidingPanel extends Base {
     private _getPopupOptionsWithSizes(popupOptions: ISlidingPanelPopupOptions): ISlidingPanelPopupOptions {
         const isPhone = detection.isPhone;
         const options = isPhone ? popupOptions.slidingPanelOptions : popupOptions.dialogOptions;
+        const mergedConfig = BaseOpenerUtil.getConfig(this._options, popupOptions) as ISlidingPanelPopupOptions;
         const resultPopupOptions = {
             position: 'bottom',
             desktopMode: DEFAULT_DESKTOP_MODE,
-            ...BaseOpenerUtil.getConfig(this._options, popupOptions) as ISlidingPanelPopupOptions,
+            ...mergedConfig,
             ...options
         };
 
         /*
             Если открываемся на десктопе, то открываемся другим опенером и в контроллер SlidingPanel не попадаем,
-            соответственно slidingPanelData никто не прокинет, прокидываем сами через templateOptions
+            соответственно slidingPanelOptions никто не прокинет, прокидываем сами через templateOptions
          */
         if (!isPhone) {
             if (!resultPopupOptions.templateOptions) {
                 resultPopupOptions.templateOptions = {};
             }
-            resultPopupOptions.templateOptions.slidingPanelData = this._getDefaultSlidingPanelData(popupOptions);
+            resultPopupOptions.templateOptions.slidingPanelOptions = this._getDefaultSlidingPanelData(popupOptions);
         }
 
         return resultPopupOptions;

@@ -7,7 +7,6 @@ export interface ISlidingPanelPopupOptions {
     dialogOptions: IDialogOptions;
     modal?: boolean;
     position?: TSlidingPanelPosition;
-    slidingPanelData?: ISlidingPanelData;
     content?: TemplateFunction;
 }
 
@@ -15,6 +14,7 @@ export interface ISlidingPanelOptions {
     maxHeight?: number;
     minHeight?: number;
     position?: TSlidingPanelPosition;
+    height?: number;
     desktopMode?: 'dialog' | 'stack';
 }
 
@@ -25,14 +25,6 @@ export interface IDialogOptions {
     maxWidth?: number;
     width?: number;
     height?: number;
-}
-
-export interface ISlidingPanelData {
-    minHeight?: number;
-    maxHeight?: number;
-    position?: TSlidingPanelPosition;
-    height?: number;
-    desktopMode?: 'dialog' | 'stack';
 }
 
 /**

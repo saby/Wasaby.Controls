@@ -1,10 +1,10 @@
 import {TemplateFunction, IControlOptions} from 'UI/Base';
-import {ISlidingPanelData} from 'Controls/popup';
+import {ISlidingPanelOptions} from 'Controls/popup';
 
 export interface ISlidingPanelTemplateOptions extends IControlOptions {
     controlButtonVisibility: boolean;
     bodyContentTemplate?: string | TemplateFunction;
-    slidingPanelData: ISlidingPanelData;
+    slidingPanelOptions: ISlidingPanelOptions;
 }
 
 /**
@@ -30,13 +30,13 @@ export interface ISlidingPanelTemplate {
  */
 
 /**
- * @name Controls/_popupSliding/interface/ISlidingPanelTemplate#slidingPanelData
+ * @name Controls/_popupSliding/interface/ISlidingPanelTemplate#slidingPanelOptions
  * @cfg {object} Содержит сведения о позиционировании шторки.
  * @remark
- * При открытии шторки с помощью {@link Controls/popup:SlidingPanelOpener}, в шаблон передаётся значение для опции slidingPanelData.
+ * При открытии шторки с помощью {@link Controls/popup:SlidingPanelOpener}, в шаблон передаётся значение для опции slidingPanelOptions.
  * Его рекомендуется использовать для конфигурации Controls/popupSliding:Template, что и показано в следующем примере.
  * <pre>
- * <Controls.popupSliding:Template slidingPanelData="{{_options.slidingPanelData}}" />
+ * <Controls.popupSliding:Template slidingPanelOptions="{{_options.slidingPanelOptions}}" />
  * </pre>
  * Значение опции задавать вручную не нужно.
  */

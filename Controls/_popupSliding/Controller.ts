@@ -1,5 +1,5 @@
 import {BaseController, IDragOffset} from 'Controls/popupTemplate';
-import {IPopupItem, ISlidingPanelPopupOptions, Controller as PopupController, ISlidingPanelData} from 'Controls/popup';
+import {IPopupItem, ISlidingPanelPopupOptions, Controller as PopupController, ISlidingPanelOptions} from 'Controls/popup';
 import * as PopupContent from 'wml!Controls/_popupSliding/SlidingPanelContent';
 import SlidingPanelStrategy from './Strategy';
 
@@ -88,13 +88,13 @@ class Controller extends BaseController {
     }
 
     /**
-     * Определяет опцию slidingPanelData для шаблона попапа
+     * Определяет опцию slidingPanelOptions для шаблона попапа
      * @param {IPopupPosition | undefined} position
      * @param {ISlidingPanelPopupOptions} popupOptions
      * @return {ISlidingPanelData}
      * @private
      */
-    private _getPopupTemplatePosition({position, popupOptions}: ISlidingPanelItem): ISlidingPanelData {
+    private _getPopupTemplatePosition({position, popupOptions}: ISlidingPanelItem): ISlidingPanelOptions {
         return {
             minHeight: position.minHeight,
             maxHeight: position.maxHeight,

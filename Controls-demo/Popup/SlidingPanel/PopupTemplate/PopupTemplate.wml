@@ -1,5 +1,5 @@
 <Controls.popupSliding:Template
-   slidingPanelData="{{ _options.slidingPanelData }}"
+   slidingPanelOptions="{{ _options.slidingPanelOptions }}"
    controlButtonVisibility="{{ _controlButtonVisibility }}">
    <ws:bodyContentTemplate>
       <Controls.scroll:Container

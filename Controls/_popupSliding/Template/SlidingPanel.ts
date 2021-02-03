@@ -27,18 +27,18 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
         this._scrollAvailable = this._isScrollAvailable(options);
-        this._position = options.slidingPanelData?.position;
+        this._position = options.slidingPanelOptions?.position;
     }
 
     protected _beforeUpdate(options: ISlidingPanelTemplateOptions): void {
-        if (options.slidingPanelData !== this._options.slidingPanelData) {
+        if (options.slidingPanelOptions !== this._options.slidingPanelOptions) {
             this._scrollAvailable = this._isScrollAvailable(options);
-            this._position = options.slidingPanelData?.position;
+            this._position = options.slidingPanelOptions?.position;
         }
     }
 
-    protected _isScrollAvailable({slidingPanelData}: ISlidingPanelTemplateOptions): boolean {
-        return slidingPanelData.height === slidingPanelData.maxHeight;
+    protected _isScrollAvailable({slidingPanelOptions}: ISlidingPanelTemplateOptions): boolean {
+        return slidingPanelOptions.height === slidingPanelOptions.maxHeight;
     }
 
     protected _dragEndHandler(): void {
@@ -151,7 +151,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     static getDefaultOptions(): Partial<ISlidingPanelTemplateOptions> {
         return {
             controlButtonVisibility: true,
-            slidingPanelData: {
+            slidingPanelOptions: {
                 height: undefined,
                 maxHeight: undefined,
                 minHeight: undefined,

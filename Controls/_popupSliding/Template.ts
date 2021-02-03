@@ -28,16 +28,16 @@ export default class Template extends Control<ISlidingPanelTemplateOptions> {
     protected _adaptiveTemplateName: string = MOBILE_TEMPLATE;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
-        this._adaptiveTemplateName = this._getDatapriveTemplate(options.slidingPanelData);
+        this._adaptiveTemplateName = this._getDatapriveTemplate(options.slidingPanelOptions);
     }
 
     protected _beforeUpdate(options: ISlidingPanelTemplateOptions): void {
-        if (options.slidingPanelData !== this._options.slidingPanelData) {
-            this._adaptiveTemplateName = this._getDatapriveTemplate(options.slidingPanelData);
+        if (options.slidingPanelOptions !== this._options.slidingPanelOptions) {
+            this._adaptiveTemplateName = this._getDatapriveTemplate(options.slidingPanelOptions);
         }
     }
 
-    private _getDatapriveTemplate(slidingPanelData: ISlidingPanelTemplateOptions['slidingPanelData']): string {
-        return detection.isPhone ? MOBILE_TEMPLATE : DESKTOP_TEMPLATE_BY_MODE[slidingPanelData.desktopMode];
+    private _getDatapriveTemplate(slidingPanelOptions: ISlidingPanelTemplateOptions['slidingPanelOptions']): string {
+        return detection.isPhone ? MOBILE_TEMPLATE : DESKTOP_TEMPLATE_BY_MODE[slidingPanelOptions.desktopMode];
     }
 }

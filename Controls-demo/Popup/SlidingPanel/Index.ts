@@ -30,6 +30,11 @@ class Index extends Control<IControlOptions> {
     protected _afterMount(options?: IControlOptions, contexts?: any): void {
         this._dialogOpener = new SlidingPanelOpener();
     }
+
+    protected _selectedModeChanged(): void {
+        this._dialogOpener = new SlidingPanelOpener();
+    }
+
     protected _openSlidingPanelHandler(event: Event, isInsideRestrictive: boolean): void {
         this._dialogOpener.open({
             template: 'Controls-demo/Popup/SlidingPanel/PopupTemplate',

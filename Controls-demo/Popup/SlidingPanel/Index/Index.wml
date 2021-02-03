@@ -24,6 +24,7 @@
       <Controls.dropdown:Selector
          keyProperty="id"
          displayProperty="id"
+         on:selectedKeysChanged="_selectedModeChanged()"
          source="{{_desktopModeSource}}"
          bind:selectedKeys="_desktopMode"/>
    </div>
