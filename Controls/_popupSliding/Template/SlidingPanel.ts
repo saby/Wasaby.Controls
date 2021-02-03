@@ -27,18 +27,18 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
         this._scrollAvailable = this._isScrollAvailable(options);
-        this._position = options.slidingPanelPosition?.position;
+        this._position = options.slidingPanelData?.position;
     }
 
     protected _beforeUpdate(options: ISlidingPanelTemplateOptions): void {
-        if (options.slidingPanelPosition !== this._options.slidingPanelPosition) {
+        if (options.slidingPanelData !== this._options.slidingPanelData) {
             this._scrollAvailable = this._isScrollAvailable(options);
-            this._position = options.slidingPanelPosition?.position;
+            this._position = options.slidingPanelData?.position;
         }
     }
 
-    protected _isScrollAvailable({slidingPanelPosition}: ISlidingPanelTemplateOptions): boolean {
-        return slidingPanelPosition.height === slidingPanelPosition.maxHeight;
+    protected _isScrollAvailable({slidingPanelData}: ISlidingPanelTemplateOptions): boolean {
+        return slidingPanelData.height === slidingPanelData.maxHeight;
     }
 
     protected _dragEndHandler(): void {
@@ -151,11 +151,12 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     static getDefaultOptions(): Partial<ISlidingPanelTemplateOptions> {
         return {
             controlButtonVisibility: true,
-            slidingPanelPosition: {
+            slidingPanelData: {
                 height: undefined,
                 maxHeight: undefined,
                 minHeight: undefined,
-                position: 'bottom'
+                position: 'bottom',
+                desktopMode: 'stack'
             }
         };
     }

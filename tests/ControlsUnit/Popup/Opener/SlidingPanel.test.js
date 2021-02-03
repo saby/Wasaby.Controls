@@ -15,9 +15,10 @@ define(
             id: 'randomId',
             popupOptions: {
                position: 'bottom',
-               slidingPanelSizes: {
+               slidingPanelOptions: {
                   minHeight: 400,
-                  maxHeight: 800
+                  maxHeight: 800,
+                  desktopMode: 'stack'
                }
             }
          };
@@ -194,11 +195,12 @@ define(
                   Controller.getDefaultConfig(item);
 
                   assert.equal(item.popupOptions.className.includes('controls-SlidingPanel__animation-position-bottom'), true);
-                  assert.deepEqual(item.popupOptions.slidingPanelPosition, {
+                  assert.deepEqual(item.popupOptions.slidingPanelData, {
                      minHeight: item.position.minHeight,
                      maxHeight: item.position.maxHeight,
                      height: item.position.height,
-                     position: item.popupOptions.position
+                     position: item.popupOptions.position,
+                     desktopMode: 'stack'
                   });
                   assert.equal(item.popupOptions.hasOwnProperty('content'), true);
                });
@@ -212,11 +214,12 @@ define(
                      item.popupOptions.className.includes('controls-SlidingPanel__animation-position-top'),
                      true
                   );
-                  assert.deepEqual(item.popupOptions.slidingPanelPosition, {
+                  assert.deepEqual(item.popupOptions.slidingPanelData, {
                      minHeight: item.position.minHeight,
                      maxHeight: item.position.maxHeight,
                      height: item.position.height,
-                     position: item.popupOptions.position
+                     position: item.popupOptions.position,
+                     desktopMode: 'stack'
                   });
                   assert.equal(item.popupOptions.hasOwnProperty('content'), true);
                });

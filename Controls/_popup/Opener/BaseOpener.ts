@@ -3,7 +3,6 @@ import ManagerController from 'Controls/_popup/Manager/ManagerController';
 import { IOpener, IBaseOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 import BaseOpenerUtil from 'Controls/_popup/Opener/BaseOpenerUtil';
 import {loadModule, getModuleByName} from 'Controls/_popup/utils/moduleHelper';
-import * as CoreMerge from 'Core/core-merge';
 import * as randomId from 'Core/helpers/Number/randomId';
 import * as Deferred from 'Core/Deferred';
 import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
@@ -16,7 +15,7 @@ import Template = require('wml!Controls/_popup/Opener/BaseOpener');
  * Base Popup opener
  * @class Controls/_popup/Opener/BaseOpener
  * @mixes Controls/_popup/interface/IBaseOpener
- * 
+ *
  * @private
  * @author Красильников А.С.
  */
@@ -30,8 +29,6 @@ export interface IBaseOpenerOptions extends IBasePopupOptions, IControlOptions {
     id?: string;
     closePopupBeforeUnmount?: boolean;
 }
-
-const OPEN_POPUP_DEBOUNCE_DELAY: number = 10;
 
 class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
     extends Control<TBaseOpenerOptions> implements IOpener, IBaseOpener {
@@ -239,6 +236,8 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
         return null;
     }
 
+    static getConfig: Function = BaseOpenerUtil.getConfig;
+
     static showDialog(rootTpl: Control, cfg: IBaseOpenerOptions, controller: Control, opener?: BaseOpener) {
         const def = new Deferred();
         // protect against wrong config. Opener must be specified only on popupOptions.
@@ -370,36 +369,6 @@ class BaseOpener<TBaseOpenerOptions extends IBaseOpenerOptions = {}>
      */
     static requireModule(module: string|Control): Promise<Control> {
         return loadModule(module);
-    }
-
-    static getConfig(options: IBaseOpenerOptions, popupOptions: IBaseOpenerOptions): IBaseOpenerOptions {
-        // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости),
-        // которые на окно попасть не должны.
-        const baseConfig = {...options};
-        const ignoreOptions = [
-            'iWantBeWS3',
-            '_$createdFromCode',
-            '_logicParent',
-            'theme',
-            'vdomCORE',
-            'name',
-            'esc'
-        ];
-
-        for (let i = 0; i < ignoreOptions.length; i++) {
-            const option = ignoreOptions[i];
-            if (options[option] !== undefined) {
-                delete baseConfig[option];
-            }
-        }
-
-        const templateOptions = {};
-        CoreMerge(templateOptions, baseConfig.templateOptions || {});
-        CoreMerge(templateOptions, popupOptions.templateOptions || {}, {rec: false});
-
-        const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
-
-        return baseCfg;
     }
 
     static _openPopup(cfg: IBaseOpenerOptions, controller: Control, def: Promise<string>): void {

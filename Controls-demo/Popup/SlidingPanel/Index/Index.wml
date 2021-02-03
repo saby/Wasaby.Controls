@@ -20,6 +20,14 @@
          bind:selectedKeys="_position"/>
    </div>
    <div class="ControlDemo__SlidingPanel-setting">
+      <Controls.input:Label caption="desktopMode"/>
+      <Controls.dropdown:Selector
+         keyProperty="id"
+         displayProperty="id"
+         source="{{_desktopModeSource}}"
+         bind:selectedKeys="_desktopMode"/>
+   </div>
+   <div class="ControlDemo__SlidingPanel-setting">
       <Controls.input:Label caption="desktop popup width"/>
       <Controls.input:Number bind:value="_desktopWidth"/>
    </div>

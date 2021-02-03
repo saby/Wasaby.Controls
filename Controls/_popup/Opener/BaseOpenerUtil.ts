@@ -4,15 +4,8 @@ import * as isNewEnvironment from 'Core/helpers/isNewEnvironment';
 import {goUpByControlTree} from 'UI/Focus';
 import {ILoadingIndicatorOptions, IndicatorOpener} from 'Controls/LoadingIndicator';
 import rk = require('i18n!Controls');
+import * as CoreMerge from 'Core/core-merge';
 import {IBaseOpenerOptions} from './BaseOpener';
-
-interface IModuleInfo {
-    parsedModule: {
-        path: string[]
-    };
-    isDefined: boolean;
-    moduleClass: Control;
-}
 
 let ManagerWrapperCreatingPromise; // TODO: Compatible
 let isLayerCompatibleLoaded; // TODO: Compatible
@@ -115,5 +108,35 @@ export default {
         }
 
         return ManagerWrapperCreatingPromise;
+    },
+
+    getConfig(options: IBaseOpenerOptions, popupOptions: IBaseOpenerOptions): IBaseOpenerOptions {
+        // Все опции опенера брать нельзя, т.к. ядро добавляет свои опции опенеру (в режиме совместимости),
+        // которые на окно попасть не должны.
+        const baseConfig = {...options};
+        const ignoreOptions = [
+            'iWantBeWS3',
+            '_$createdFromCode',
+            '_logicParent',
+            'theme',
+            'vdomCORE',
+            'name',
+            'esc'
+        ];
+
+        for (let i = 0; i < ignoreOptions.length; i++) {
+            const option = ignoreOptions[i];
+            if (options[option] !== undefined) {
+                delete baseConfig[option];
+            }
+        }
+
+        const templateOptions = {};
+        CoreMerge(templateOptions, baseConfig.templateOptions || {});
+        CoreMerge(templateOptions, popupOptions.templateOptions || {}, {rec: false});
+
+        const baseCfg = {...baseConfig, ...popupOptions, templateOptions};
+
+        return baseCfg;
     }
 };
