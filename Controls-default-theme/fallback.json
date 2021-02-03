@@ -442,6 +442,5 @@
   "--separator_length_ToolbarBox": "16px",
   "--separator_color_ToolbarBox": "#e4e4e4",
   "--separator_offset-horizontal_ToolbarBox": "var(--offset_s)",
-  "--item_padding-horizontal_l_menu": "var(--offset_m)",
-  "--item_height_menu": "32px"
+  "--item_padding-horizontal_l_menu": "var(--offset_m)"
 }
