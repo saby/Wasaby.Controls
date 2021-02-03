@@ -7,7 +7,7 @@
       <span name="infoBoxLink"
             style="order: {{_getItemOrder(index, _visibleItems.length, _options.itemsLayout, !(_options.readOnly && !_options.maxVisibleItems))}}"
             class="controls-SelectedCollection__InfoBox
-                   {{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed}}
+                   {{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}
                    {{_options.counterClassName}}"
             on:click="_openInfoBox()">
          <ws:partial template="{{_counterTemplate}}"
