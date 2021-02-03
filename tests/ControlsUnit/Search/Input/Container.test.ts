@@ -1,12 +1,13 @@
 import {assert} from 'chai';
 import {InputContainer} from 'Controls/search';
+import {SyntheticEvent} from 'UI/Vdom';
 import * as sinon from 'sinon';
 import Store from 'Controls/Store';
 
 describe('Controls/_search/Input/Container', () => {
 
-   const sandbox = sinon.createSandbox();
-
+   let sandbox;
+   beforeEach(() => sandbox = sinon.createSandbox());
    afterEach(() => sandbox.restore());
 
    it('_beforeMount', () => {
@@ -123,6 +124,24 @@ describe('Controls/_search/Input/Container', () => {
          cont._valueChanged(null, 'newValue');
 
          assert.isFalse(called);
+      });
+
+      it('_beforeMount with inputSearchValue, then valueChanged', () => {
+         const fakeTimer = sandbox.useFakeTimers();
+         const inputContainerOptions = InputContainer.getDefaultOptions();
+         inputContainerOptions.inputSearchValue = 'testValue';
+
+         const inputContainer = new InputContainer(inputContainerOptions);
+         const stubNotify = sandbox.stub(inputContainer, '_notify');
+         inputContainer._beforeMount(inputContainerOptions);
+         inputContainer.saveOptions(inputContainerOptions);
+
+         inputContainer._valueChanged({} as SyntheticEvent, 'testValue2');
+         assert.ok(stubNotify.notCalled);
+
+         fakeTimer.tick(inputContainerOptions.searchDelay);
+         assert.ok(stubNotify.calledWith('search', ['testValue2']));
+         stubNotify.restore();
       });
    });
 
