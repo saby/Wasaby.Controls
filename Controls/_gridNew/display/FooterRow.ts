@@ -39,7 +39,7 @@ export default class FooterRow<T> extends Row<T> {
         return 'footer' as unknown as T;
     }
 
-    setFooter(footerTemplate: TemplateFunction, footer: TFooter): void {
+    setFooter(footerTemplate: TemplateFunction, footer?: TFooter): void {
         this._$footerTemplate = footerTemplate;
         this._$footer = footer;
         this._reinitializeColumns();
@@ -99,7 +99,9 @@ export default class FooterRow<T> extends Row<T> {
         if (this._$columns) {
             const factory = this._getColumnsFactory();
 
-            if (this._$footerTemplate) {
+            if (this._$footer) {
+                this._$columnItems = this._prepareColumnItems(this._$footer, factory);
+            } else {
                 this._$columnItems = [factory({
                     column: {
                         template: this._$footerTemplate
@@ -107,8 +109,6 @@ export default class FooterRow<T> extends Row<T> {
                     colspan: this._$owner.getColumnsConfig().length,
                     isFixed: true
                 })];
-            } else {
-                this._$columnItems = this._prepareColumnItems(this._$footer, factory);
             }
 
             if (this._$owner.hasMultiSelectColumn()) {
