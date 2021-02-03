@@ -64,7 +64,7 @@
                   <ws:bodyTemplate>
                      <Controls.scroll:IntersectionObserverContainer
                              data="{{ monthTemplate.date }}"
-                             on:intersect="_monthVisible()"
+                             on:intersect="_monthObserverHandler()"
                              threshold="{{[1]}}">
                         <Controls.calendar:MonthView
                                 attr:class="controls-DateRangeBigChoose-DateRangePicker__item_theme-{{_options.theme}}"

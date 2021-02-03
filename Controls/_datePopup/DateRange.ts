@@ -78,7 +78,8 @@ var Component = BaseControl.extend([EventProxy], {
         this._rangeModel.destroy();
     },
 
-    _monthVisible: function(event, entries) {
+    _monthObserverHandler: function(event, entries) {
+        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
         if (entries.nativeEntry.intersectionRatio === 1) {
             this._markedKey = this._dateToId(entries.data);
         }
