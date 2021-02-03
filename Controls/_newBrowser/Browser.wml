@@ -14,9 +14,7 @@
 
             root="{{masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
-
-            markedKey="{{root}}"
-            on:markedKeyChanged="_onMasterMarkedKeyChanged()"
+            bind:markedKey="masterMarkedKey"
          />
       </Controls.scroll:Container>
    </ws:master>

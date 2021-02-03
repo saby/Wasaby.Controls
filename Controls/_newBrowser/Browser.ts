@@ -98,6 +98,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      */
     masterRoot: TKey;
 
+    masterMarkedKey: TKey;
+
     //region source
     private _detailDataSource: DataSource;
 
@@ -220,7 +222,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         // Перед тем как менять root уведомим об этом пользователя.
         // Что бы он мог либо отменить обработку либо подменить root.
         Promise.resolve(
-            this._notify('beforeRootChanged', [roots.detailRoot])
+            this._notify('beforeRootChanged', [roots])
         )
             // Обработаем результат события
             .then((beforeChangeResult: BeforeChangeRootResult) => {
@@ -242,6 +244,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
                 const masterRootChanged = newRoots?.masterRoot !== this.masterRoot;
 
                 this.masterRoot = newRoots.masterRoot;
+                this.masterMarkedKey = newRoots.detailRoot;
                 this._detailDataSource.setRoot(newRoots.detailRoot);
 
                 // Уведомим об изменении root
@@ -383,14 +386,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._setRoot(root);
     }
 
-    /**
-     * Обработчик события которое генерит master-explorer когда в нем меняется
-     * выбранный итем
-     */
-    protected _onMasterMarkedKeyChanged(event: SyntheticEvent, root: TKey): void {
-        this._setRoot(root);
-    }
-
     protected _onSearch(event: SyntheticEvent, validatedValue: string): void {
         this._setSearchString(validatedValue).then();
     }
@@ -467,6 +462,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             style: 'master',
             backgroundStyle: 'master',
             viewMode: DetailViewMode.table,
+            markItemByExpanderClick: true,
+            markerVisibility: 'onactivated',
+            expanderVisibility: 'hasChildren',
 
             ...this._masterSourceOptions
         };
@@ -632,7 +630,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
  * выше описанными значениями.
  *
  * @name Controls/newBrowser:Browser#beforeRootChanged
- * @param {TKey} root Текущий корневой узел
+ * @param {IRootsData} roots Новые id корневых директорий для master- и detail-списков
  */
 
 /**
