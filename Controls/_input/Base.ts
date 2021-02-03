@@ -220,7 +220,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
          * from the value in the model. And when you change the selection, the field starts to focus.
          * There is a situation that you can not withdraw focus from the field.
          */
-        this._hidePlaceholderUsingCSS = detection.chrome;
+        this._hidePlaceholderUsingCSS = detection.chrome || detection.firefox;
     }
 
     protected _beforeMount(options: IBaseInputOptions): void {
