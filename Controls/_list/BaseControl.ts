@@ -2887,13 +2887,7 @@ const _private = {
      * @private
      */
     initVisibleItemActions(self, options: IList): void {
-        if (self._getEditingConfig(options)?.mode === 'cell') {
-            self._itemActionsVisibility = 'onhovercell';
-        } else {
-            self._itemActionsVisibility = options.itemActionsVisibility;
-        }
-
-        if (self._itemActionsVisibility === 'visible') {
+        if (options.itemActionsVisibility === 'visible') {
             _private.addShowActionsClass(this);
             _private.updateItemActions(self, options);
         }
@@ -5402,7 +5396,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @param event
      * @private
      */
-    _onItemActionClick(event: SyntheticEvent<MouseEvent>) {
+    _onItemActionClick(event: SyntheticEvent<MouseEvent>): void {
         event.stopPropagation();
     },
 
@@ -5640,7 +5634,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _getViewClasses(addShowActionsClass: boolean, addHoverEnabledClass: boolean, uniqueId: string): string  {
         const classes: string[] = [];
         if (addShowActionsClass) {
-            classes.push(`controls-BaseControl_showActions controls-BaseControl_showActions_${this._options.itemActionsVisibility}`);
+            const visibility = this._getEditingConfig(this._options)?.mode === 'cell' ? 'onhovercell' : this._options.itemActionsVisibility;
+            classes.push(`controls-BaseControl_showActions controls-BaseControl_showActions_${visibility}`);
         }
         if (addHoverEnabledClass) {
             classes.push('controls-BaseControl_hover_enabled');
@@ -5903,6 +5898,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             const itemActionsController = _private.getItemActionsController(this);
             itemActionsController.updateItemActions(itemKey, itemWidth);
         }
+    },
+
+    _getItemActionVisibilityClasses(): string {
+        const visibility = this._getEditingConfig(this._options)?.mode === 'cell' ? 'onhovercell' : this._options.itemActionsVisibility;
+        return `controls-BaseControl_showActions controls-BaseControl_showActions_${visibility}`;
     },
 
     /**

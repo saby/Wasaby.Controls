@@ -1,7 +1,8 @@
 import { RecordSet } from 'Types/collection';
 import { TreeGridCollection } from 'Controls/treeGridNew';
 import { CssClassesAssert } from 'ControlsUnit/CustomAsserts';
-import { GridLayoutUtil } from 'Controls/grid';
+import * as Display from 'Controls/display';
+import * as sinon from 'sinon';
 
 describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
    const recordSet = new RecordSet({
@@ -112,14 +113,15 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
       });
 
       it('not support grid', () => {
-         const originalFullGridSupport = GridLayoutUtil.isFullGridSupport;
-         GridLayoutUtil.isFullGridSupport = () => false;
+         const sandbox = sinon.createSandbox();
+         const stubIsFullGridSupport = sandbox.stub(Display, 'isFullGridSupport');
+         stubIsFullGridSupport.returns(false);
 
          const expected = 'controls-TreeGridView__row-cell_innerWrapper controls-Grid__table__relative-cell-wrapper controls-Grid__table__relative-cell-wrapper_rowSeparator-null_theme-default ';
          const cell = treeGridCollection.at(0).getColumns()[1];
          CssClassesAssert.isSame(cell.getRelativeCellWrapperClasses('default'), expected);
 
-         GridLayoutUtil.isFullGridSupport = originalFullGridSupport;
+         sandbox.restore();
       });
    });
 });
