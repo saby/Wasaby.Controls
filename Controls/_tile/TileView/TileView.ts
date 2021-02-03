@@ -291,7 +291,10 @@ var TileView = ListView.extend({
                 self._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect), itemStartPosition, null, itemSize.width);
             }, ZOOM_DELAY);
         } else {
-            this._setHoveredItem(itemData);
+            /* Если позиции нет, то это означает, что плитка по одной из координат выходит за пределы контейнера.
+               В таком случае ее не надо увеличивать и itemAction'ы нужно посчитать от оригинального размера.
+             */
+            this._setHoveredItem(itemData, null, null, false, itemContainerRect.width);
         }
     },
 
