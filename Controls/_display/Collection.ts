@@ -2396,6 +2396,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$stickyHeader;
     }
 
+    hasStickyGroup(): boolean {
+        return this.at(0)['[Controls/_display/GroupItem]'] && this._$stickyHeader;
+    }
+
     getRowSeparatorSize(): string {
         return this._$rowSeparatorSize;
     }
