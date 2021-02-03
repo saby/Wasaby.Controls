@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/list_new/Navigation/Paging/Position/Left/Basic';
 import {Memory} from 'Types/source';
