@@ -1,5 +1,5 @@
 <Controls.validate:Controller name="formController">
-      <div class="controls-PeriodDialog controls-PeriodDialog_theme-{{_options.theme}}" on:keyDown="_keyDownHandler()">
+      <div class="controls-PeriodDialog controls-PeriodDialog_theme-{{_options.theme}}">
       <ws:partial
          template="{{_headerTmpl}}"
          _options="{{_options}}"
