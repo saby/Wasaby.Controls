@@ -107,6 +107,12 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         this._notify('sendResult', ['footerClick', sourceEvent], {bubbling: true});
     }
 
+    protected _mouseEnterHandler(): void {
+        if (this._container.closest('.controls-Menu__subMenu')) {
+            this._notify('sendResult', ['subMenuMouseenter'], {bubbling: true});
+        }
+    }
+
     protected _dataLoadCallback(options: IMenuPopupOptions, items: RecordSet): void {
         if (this._headingIcon) {
             const root = options.root !== undefined ? options.root : null;

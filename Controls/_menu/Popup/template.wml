@@ -22,6 +22,7 @@
               footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
+              on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">
          <ws:bodyContentTemplate>
