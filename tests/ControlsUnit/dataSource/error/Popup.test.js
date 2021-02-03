@@ -171,6 +171,22 @@ define([
                );
             });
          });
+
+         it('combines dialogTemplate options with templateOptions', () => {
+            Popup.POPUP_MODULES = [fakeModuleNames[0]];
+            Popup.POPUP_THEMES = [fakeModuleNames[1]];
+            const dialogTmplOptions = { dialogOption: 'dialogTemplateOption' };
+            const dialogOptions = { templateOptions: dialogTmplOptions, handler: 42 };
+            const viewConfig = { options: { configOption: 'configTemplateOption' } };
+            const p = new Popup();
+            return p.openDialog(viewConfig, dialogOptions).then(() => {
+               const popup = require(fakeModuleNames[0]);
+               const cfg = popup.Dialog.openPopup.getCall(0).args[0];
+               assert.strictEqual(cfg.templateOptions.dialogOption, dialogTmplOptions.dialogOption);
+               assert.strictEqual(cfg.templateOptions.configOption, viewConfig.options.configOption);
+               assert.strictEqual(cfg.handler, dialogOptions.handler);
+            });
+         });
       });
 
       describe('showDefaultDialog()', () => {
