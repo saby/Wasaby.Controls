@@ -31,14 +31,14 @@ var Component = BaseControl.extend({
         this._year = options.year ? options.year.getFullYear() : (new Date()).getFullYear();
 
         if (dateUtils.isValidDate(options.endValue)) {
-            // Прибавляем один, т.к. выбранный год должен показываться предпоследним.
-            this._lastYear = Math.max(this._year, options.endValue.getFullYear()) + 1;
+            this._lastYear = Math.max(this._year, options.endValue.getFullYear());
             if (this._lastYear - this._year >= BUTTONS_COUNT) {
                 this._lastYear = this._year + BUTTONS_COUNT - 1;
             }
         } else if (dateUtils.isValidDate(options.startValue)) {
-            this._lastYear = options.startValue.getFullYear() + 1;
+            this._lastYear = options.startValue.getFullYear();
         } else {
+            // Если период не выбран или выбран в пределах одног года, мы показываем его предпоследним
             this._lastYear = this._year + 1;
         }
 
