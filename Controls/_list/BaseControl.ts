@@ -5633,7 +5633,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _getViewClasses(addShowActionsClass: boolean, addHoverEnabledClass: boolean, uniqueId: string): string  {
         const classes: string[] = [];
         if (addShowActionsClass) {
-            classes.push(`controls-BaseControl_showActions controls-BaseControl_showActions_${this._options.itemActionsVisibility}`);
+            const visibility = this._getEditingConfig(this._options)?.mode === 'cell' ? 'onhovercell' : this._options.itemActionsVisibility;
+            classes.push(`controls-BaseControl_showActions controls-BaseControl_showActions_${visibility}`);
         }
         if (addHoverEnabledClass) {
             classes.push('controls-BaseControl_hover_enabled');
