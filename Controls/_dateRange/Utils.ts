@@ -189,8 +189,8 @@ var Utils = {
             lastQuantumLength = quantum.months[i];
             if (baseDate <= date) {
                start = DateUtil.getStartOfMonth(baseDate);
-               end = new Date(baseDate.getFullYear(), baseDate.getMonth() + (lastQuantumLength - 1));
-               end = DateUtil.getEndOfMonth(end);
+               const endValue = new Date(baseDate.getFullYear(), baseDate.getMonth() + (lastQuantumLength - 1));
+               end = DateUtil.getEndOfMonth(endValue);
             } else {
                start = DateUtil.getStartOfMonth(baseDate);
                start.setMonth(start.getMonth() - (lastQuantumLength - 1));
