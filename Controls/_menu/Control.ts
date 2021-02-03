@@ -173,9 +173,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     protected _mouseEnterHandler(): void {
-        if (this._container.closest('.controls-Menu__subMenu')) {
-            this._notify('subMenuMouseenter');
-        }
         this._updateItemActions(this._listModel, this._options);
     }
 
