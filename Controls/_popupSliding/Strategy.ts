@@ -13,18 +13,18 @@ class Strategy {
      * @param item Popup configuration
      */
     getPosition({position: popupPosition = {}, popupOptions}: ISlidingPanelItem): IPopupPosition {
-        // Если у попапа
+        const windowHeight = this._getWindowHeight();
         const {
             position,
             slidingPanelSizes: {
-                maxHeight: optionsMaxHeight,
+                maxHeight: optionsMaxHeight = windowHeight,
                 minHeight: optionsMinHeight
             } = {}
         } = popupOptions;
-        const maxHeight = this._getHeightWithoutOverflow(optionsMaxHeight, this._getWindowHeight());
+        const maxHeight = this._getHeightWithoutOverflow(optionsMaxHeight, windowHeight);
         const minHeight = this._getHeightWithoutOverflow(optionsMinHeight, maxHeight);
         const initialHeight = this._getHeightWithoutOverflow(popupPosition.height, maxHeight);
-        const height = initialHeight || minHeight;
+        const height = this._getHeightWithoutOverflow(initialHeight || minHeight, maxHeight);
         return {
             left: 0,
             right: 0,
@@ -33,7 +33,7 @@ class Strategy {
             [position]: initialHeight ? 0 : -minHeight,
             maxHeight,
             minHeight,
-            height: this._getHeightWithoutOverflow(height, maxHeight),
+            height: height < minHeight ? minHeight : height,
             position: 'fixed'
         };
     }
@@ -61,5 +61,9 @@ class Strategy {
         return constants.isBrowserPlatform && window.innerHeight;
     }
 }
+
+export {
+    Strategy
+};
 
 export default new Strategy();
