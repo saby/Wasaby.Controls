@@ -54,6 +54,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    protected _beforeMount(options?: ISearchInputContainerOptions): void {
       if (options.inputSearchValue) {
+         this._searchResolverController = this._initializeSearchResolverController(options);
          this._updateSearchData(options.inputSearchValue);
       }
    }
@@ -72,15 +73,19 @@ export default class Container extends Control<ISearchInputContainerOptions> {
 
    protected _getSearchResolverController(): SearchResolver {
       if (!this._searchResolverController) {
-         this._searchResolverController = new SearchResolver({
-            searchDelay: this._options.searchDelay,
-            minSearchLength: this._options.minSearchLength,
-            searchCallback: this._notifySearch.bind(this),
-            searchResetCallback: this._notifySearchReset.bind(this)
-         });
+         this._searchResolverController = this._initializeSearchResolverController(this._options);
       }
 
       return this._searchResolverController;
+   }
+
+   private _initializeSearchResolverController(options: ISearchInputContainerOptions): SearchResolver {
+      return new SearchResolver({
+         searchDelay: options.searchDelay,
+         minSearchLength: options.minSearchLength,
+         searchCallback: this._notifySearch.bind(this),
+         searchResetCallback: this._notifySearchReset.bind(this)
+      });
    }
 
    protected _notifySearch(value: string): void {
