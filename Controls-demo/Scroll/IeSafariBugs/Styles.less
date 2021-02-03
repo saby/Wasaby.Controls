@@ -1,0 +1,43 @@
+.demoWrapper {
+   display: flex;
+}
+
+.title {
+   font-weight: bold;
+   padding: 10px 0;
+}
+
+.demoItem {
+   padding: 20px;
+   width: 300px;
+}
+
+.scrollContainerWrapper {
+    /* position: relative; */
+    /* overflow: hidden; */
+    display: flex;
+    flex-direction: column;
+}
+
+.scrollContainer {
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: 0;
+    max-height: inherit;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 1;
+    min-height: 100%;
+}
+
+.userContent3 {
+   flex-grow: 1;
+   min-height: 100%;
+   background: red;
+}
