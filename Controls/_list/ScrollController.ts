@@ -259,18 +259,18 @@ export default class ScrollController {
     scrollToItem(key: string | number,
                  toBottom: boolean = true,
                  force: boolean = false,
-                 scrollCallback: Function): Promise<IScrollControllerResult> {
+                 scrollCallback: Function): Promise<IScrollControllerResult | void> {
         const index = this._options.collection.getIndexByKey(key);
 
         if (index !== -1) {
             return new Promise((resolve) => {
-                if (!this._virtualScroll
+                if (!this._virtualScroll || !this._options.needScrollCalculation
                             || this._virtualScroll.canScrollToItem(index, toBottom, force)
                             && !this._virtualScroll.rangeChanged) {
                     this._fakeScroll = true;
                     scrollCallback(index);
                     resolve();
-                } else if (force || this._virtualScroll.rangeChanged) {
+                } else {
                     this._inertialScrolling.callAfterScrollStopped(() => {
                         if (this._virtualScroll && this._virtualScroll.rangeChanged) {
                             // Нельзя менять диапазон отображемых элементов во время перерисовки
@@ -316,8 +316,6 @@ export default class ScrollController {
                             this.continueScrollToItemIfNeed();
                         }
                     });
-                } else {
-                    resolve();
                 }
             });
         } else {

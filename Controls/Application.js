@@ -19,6 +19,7 @@ define('Controls/Application',
       'Controls/dragnDrop',
       'Core/TimeTesterInv',
       'Controls/context',
+      'Application/Page',
       'css!theme?Controls/Application/oldCss'
    ],
 
@@ -70,7 +71,8 @@ define('Controls/Application',
       HotKeys,
       dragnDrop,
       TimeTesterInv,
-      cContext) {
+      cContext,
+      aPage) {
       'use strict';
 
       var _private;
@@ -184,11 +186,32 @@ define('Controls/Application',
             } else {
                this._touchClass = Env.compatibility.touch ? 'ws-is-touch' : 'ws-is-no-touch';
             }
-
             this._hoverClass = _private.isHover(this._touchClass, this._dragClass) ? 'ws-is-hover' : 'ws-is-no-hover';
          },
          _updateThemeClass: function(cfg) {
             this._themeClass = 'Application-body_theme-' + cfg.theme;
+         },
+         _initIsAdaptiveClass: function(cfg) {
+            if (cfg.isAdaptive) {
+               var HeadAPI = aPage.Head.getInstance();
+               var tagsId = HeadAPI.getTag('meta', { name: 'viewport' });
+               if (tagsId) {
+                  if (tagsId instanceof Array) {
+                     tagsId.forEach(function(tagId) {
+                        HeadAPI.deleteTag(tagId);
+                     });
+                  } else {
+                     HeadAPI.deleteTag(tagsId);
+                  }
+               }
+               HeadAPI.createTag('meta', {
+                  name: 'viewport',
+                  content: 'width=device-width, initial-scale=1.0'
+               });
+               this._isAdaptiveClass = 'ws-is-adaptive';
+            } else {
+               this._isAdaptiveClass = '';
+            }
          },
 
          _dragStartHandler: function() {
@@ -259,7 +282,6 @@ define('Controls/Application',
             this.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
 
-
             // Чтобы при загрузке слоя совместимости, понять нужно ли грузить провайдеры(extensions, userInfo, rights),
             // положим опцию из Application в constants. Иначе придется использовать глобальную переменную.
             // TODO: Удалить этот код отсюда по задае:
@@ -275,6 +297,7 @@ define('Controls/Application',
             }
             this._updateClasses();
             this._updateThemeClass(cfg);
+            this._initIsAdaptiveClass(cfg);
 
             SettingsController.setController(cfg.settingsController);
 
@@ -397,11 +420,11 @@ define('Controls/Application',
 
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
             this._dragnDropController.updateDraggingTemplate(draggingTemplateOptions, draggingTemplate);
-        },
+         },
 
          _removeDraggingTemplate: function(event) {
             this._dragnDropController.removeDraggingTemplate();
-        },
+         },
 
          _getResourceUrl: function(str) {
             return getResourceUrl(str);

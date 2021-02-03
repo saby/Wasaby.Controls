@@ -111,6 +111,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._sourceController =
           options.sourceController ||
           new SourceController(this._getSourceControllerOptions(options));
+      this._sourceController.sourceControllerCreated = !options.sourceController;
       this._fixRootForMemorySource(options);
 
       let controllerState = this._sourceController.getState();
@@ -253,7 +254,10 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._errorRegister = null;
       }
       if (this._sourceController) {
-         this._sourceController.destroy();
+         if (!this._options.sourceController) {
+            this._sourceController.destroy();
+         }
+         this._sourceController = null;
      }
    }
 

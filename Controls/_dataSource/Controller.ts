@@ -345,6 +345,10 @@ export default class Controller {
         }
     }
 
+    getOptions(): IControllerOptions {
+        return this._options;
+    }
+
     destroy(): void {
         this.cancelLoading();
         this._unsubscribeItemsCollectionChangeEvent();

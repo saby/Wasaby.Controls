@@ -23,6 +23,49 @@ describe('Controls/search:Controller', () => {
     const dataOptions = {
         sourceController: options.sourceController
     };
+
+    describe('_beforeMount', () => {
+        it('_dataLoadCallback called', async () => {
+            let callbackCalled = false;
+            const searchController = new Controller(options);
+            searchController._options = options;
+            searchController._dataLoadCallback = () => {
+                callbackCalled = true;
+            };
+            options.dataLoadCallback = () => {};
+            searchController._beforeMount(options, {dataOptions});
+            await searchController._sourceController.load();
+            assert.isTrue(callbackCalled);
+        });
+    });
+
+    describe('_beforeUnmount', () => {
+        it('_beforeUnmount with undefined viewMode', async () => {
+            let searchControllerReseted = false;
+            const searchController = new Controller(options);
+            searchController._searchController = {
+                reset: () => {
+                    searchControllerReseted = true;
+                }
+            };
+            searchController._beforeUnmount();
+            assert.isFalse(searchControllerReseted);
+        });
+
+        it('_beforeUnmount with search viewMode', async () => {
+            let searchControllerReseted = false;
+            const searchController = new Controller(options);
+            searchController._viewMode = 'search';
+            searchController._searchController = {
+                reset: () => {
+                    searchControllerReseted = true;
+                }
+            };
+            searchController._beforeUnmount();
+            assert.isTrue(searchControllerReseted);
+        });
+    });
+
     describe('_beforeUpdate', () => {
         it('root is changed', () => {
             const searchController = getController(options);
@@ -72,6 +115,7 @@ describe('Controls/search:Controller', () => {
 
         it('searchValue wasn\'t changed', () => {
             let searchControllerUpdated = false;
+            let sourceControllerOption = null;
             const searchController = new Controller(options);
 
             searchController._options = options;
@@ -80,10 +124,20 @@ describe('Controls/search:Controller', () => {
                     searchControllerUpdated = true;
                 }
             };
+
+            options.viewMode = 'searchViewMode';
+            options.dataLoadCallback = () => {};
+            searchController._sourceController = new NewSourceController({
+                source: options.source,
+                viewMode: 'sourceViewMode'
+            });
+            searchController._sourceController.updateOptions = (options) => {
+                sourceControllerOption = options.viewMode;
+            };
             searchController._searchValue = 'testValue';
-            searchController._sourceController = options.sourceController;
             searchController._beforeUpdate(options, {dataOptions: {}});
             assert.isFalse(searchControllerUpdated);
+            assert.equal(sourceControllerOption, 'sourceViewMode');
         });
 
         it('searchValue was changed', () => {

@@ -160,19 +160,17 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._inputSearchValue = this._searchValue = options.searchValue;
         }
 
-        const sourceController = this._getSourceController(options);
+        const sourceController = this._getSourceController(this._getSourceControllerOptions(options));
         this._dataOptionsContext = this._createContext(sourceController.getState());
 
         this._previousViewMode = this._viewMode = options.viewMode;
         this._updateViewMode(options.viewMode);
 
-        if (receivedState) {
-            if ('filterItems' in receivedState && 'items' in receivedState) {
-                this._setFilterItems(receivedState.filterItems as IFilterItem[]);
-                this._defineShadowVisibility(receivedState.items);
-                if (isNewEnvironment()) {
-                    this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
-                }
+        if (receivedState &&  'filterItems' in receivedState && 'items' in receivedState) {
+            this._setFilterItems(receivedState.filterItems as IFilterItem[]);
+            this._defineShadowVisibility(receivedState.items);
+            if (isNewEnvironment()) {
+                this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
             }
         } else {
             return this._filterController.loadFilterItemsFromHistory()
@@ -210,7 +208,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             const filterSourceCallbackId = Store.onPropertyChanged('filter',
                (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
             const searchValueCallbackId = Store.onPropertyChanged('searchValue',
-               (searchValue: string) => this._search(null, searchValue));
+               (searchValue: string) => {
+                    if (searchValue) {
+                        this._search(null, searchValue);
+                    } else {
+                        this._searchReset(null);
+                    }
+               });
 
             this._storeCallbacks = [
                 sourceCallbackId,
@@ -286,7 +290,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                 this._inputSearchValue = newOptions.searchValue;
             }
             if (!methodResult) {
-                methodResult = this._updateSearchController(newOptions);
+                methodResult = this._updateSearchController(newOptions).catch((error) => {
+                    this._processLoadError(error);
+                    return error;
+                });
             }
         }
 
@@ -330,7 +337,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         if (this._searchController) {
-            this._updateFilter(this._searchController);
+            if (this._isSearchViewMode()) {
+                this._updateFilter(this._searchController);
+            }
             this._searchController = null;
         }
 
@@ -648,7 +657,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     protected _search(event: SyntheticEvent, value: string): Promise<Error|RecordSet|void> {
         this._inputSearchValue = value;
-
+        this._loading = true;
         return this._getSearchController().then(
             (searchController) => {
                 return searchController.search(value)
@@ -743,13 +752,16 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         if (this._searchController && this._searchController.isSearchInProcess()) {
+            this._loading = false;
             this._searchDataLoad(data, this._searchController.getSearchValue());
         }
 
         this._path = data?.getMetaData().path ?? null;
 
         if (this._options.searchParam) {
-            if (!this._isSearchViewMode()) {
+            if (this._searchController) {
+                this._searchController.setPath(this._path);
+            } else if (this._path) {
                 this._getSearchController().then((searchController) => searchController.setPath(this._path));
             }
         }

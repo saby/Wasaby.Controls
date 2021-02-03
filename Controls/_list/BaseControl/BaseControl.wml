@@ -19,7 +19,7 @@
 </ws:template>
 
 <ws:template name="continueSearch">
-    <ws:partial template="{{_options.continueSearchTemplate}}">
+    <ws:partial template="{{_options.continueSearchTemplate}}" pagingVisible="{{_pagingVisible}}">
         <ws:contentTemplate>
             <div class="controls-BaseControl__continueSearch_caption" on:click="_continueSearch()">
                 {[Продолжить поиск]}
@@ -202,7 +202,7 @@
             <ws:partial template="loadingIndicator" loadingIndicatorState="up"/>
 
             <ws:partial template="fullView" name="listView"
-                        attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _options.itemActionsVisibility}}"/>
+                        attr:class="{{_addShowActionsClass ? 'controls-BaseControl_showActions controls-BaseControl_showActions_' + _itemActionsVisibility}}"/>
 
             <ws:partial template="loadingIndicator" loadingIndicatorState="down"/>
         </ws:if>
