@@ -213,8 +213,7 @@ export default class DateRangeInput extends Control<IDateRangeInputOptions> impl
             endValueValidators: [],
             validateByFocusOut: true,
             startValue: null,
-            endValue: null,
-            contrastBackground: true
+            endValue: null
         };
     }
 
