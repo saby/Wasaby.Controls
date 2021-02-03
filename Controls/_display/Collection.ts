@@ -419,6 +419,24 @@ function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boo
     }
 }
 
+function onCollectionPropertyChange(event: EventObject, values: {metaData: { results?: EntityModel }}): void {
+    if (values && values.metaData) {
+        if (
+            values.metaData.results &&
+            values.metaData.results['[Types/_entity/IObservableObject]'] &&
+            values.metaData.results !== this._$metaResults
+        ) {
+            values.metaData.results.subscribe('onPropertyChange', this._onMetaResultsChange);
+        }
+
+        this._updateMetaResults(values.metaData.results);
+    }
+}
+
+function onMetaResultsChange(event: EventObject, values: Record<string, unknown>) {
+    this._updateMetaResults(this._$collection.getMetaData().results);
+}
+
 /**
  * Adds/removes functor's properties into/out of list of important properties
  * @param func Functior to handle
@@ -775,6 +793,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _onCollectionChange: Function;
 
     /**
+     * Обработчик события об изменении свойства в коллекции
+     */
+    protected _onCollectionPropertyChange: Function;
+
+    /**
+     * Обработчик события об изменении результатов из мета данных коллекции
+     */
+    protected _onMetaResultsChange: Function;
+
+    /**
      * Обработчик события об изменении элемента коллекции
      */
     protected _onCollectionItemChange: Function;
@@ -908,6 +936,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         if (this._$collection['[Types/_collection/IObservable]']) {
             (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
             (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
+            (this._$collection as ObservableMixin).subscribe('onPropertyChange', this._onCollectionPropertyChange);
+
+            const metaResults = this._$collection.getMetaData()?.results;
+            if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
+                metaResults.subscribe('onPropertyChange', this._onMetaResultsChange);
+            }
         }
         if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -923,6 +957,14 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 (this._$collection as ObservableMixin).unsubscribe(
                     'onCollectionItemChange', this._onCollectionItemChange
                 );
+                (this._$collection as ObservableMixin).unsubscribe(
+                    'onPropertyChange', this._onCollectionPropertyChange
+                );
+
+                const metaResults = this._$collection.getMetaData()?.results;
+                if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
+                    metaResults.unsubscribe('onPropertyChange', this._onMetaResultsChange);
+                }
             }
             if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -3150,12 +3192,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._onCollectionChange = onCollectionChange.bind(this);
         this._onCollectionItemChange = onCollectionItemChange.bind(this);
         this._oEventRaisingChange = onEventRaisingChange.bind(this);
+        this._onCollectionPropertyChange = onCollectionPropertyChange.bind(this);
+        this._onMetaResultsChange = onMetaResultsChange.bind(this);
     }
 
     protected _unbindHandlers(): void {
         this._onCollectionChange = null;
         this._onCollectionItemChange = null;
         this._oEventRaisingChange = null;
+        this._onCollectionPropertyChange = null;
+        this._onMetaResultsChange = null;
     }
 
     // endregion
@@ -3967,6 +4013,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _handleAfterCollectionChange(): void {
         this._notifyAfterCollectionChange();
         this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
+    }
+
+    protected _updateMetaResults(metaResults: EntityModel) {
+        this._$metaResults = metaResults;
     }
 
     // endregion

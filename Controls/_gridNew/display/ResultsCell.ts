@@ -31,6 +31,11 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
         return this._$format;
     }
 
+    updateMetaResults(): void {
+        this._prepareDataAndFormat();
+        this._nextVersion();
+    }
+
     getResults(): EntityModel {
         return this._$owner.getResults();
     }

@@ -13,6 +13,7 @@ import GridMixin, { IOptions as IGridMixinOptions } from './mixins/Grid';
 import Row, {IOptions as IRowOptions} from './Row';
 import DataRow from './DataRow';
 import { TemplateFunction } from 'UI/Base';
+import {Model as EntityModel} from 'Types/entity';
 
 export interface IOptions<
     S,
@@ -127,6 +128,12 @@ export default class Collection<
 
     protected _getGroupItemConstructor(): new() => GroupItem<T> {
         return GroupItem;
+    }
+
+    protected _updateMetaResults(metaResults: EntityModel) {
+        super._updateMetaResults(metaResults);
+        this._$results?.updateMetaResults();
+        this._nextVersion();
     }
 
     // endregion

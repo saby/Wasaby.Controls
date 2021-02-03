@@ -39,12 +39,17 @@ export default class ResultsRow<T> extends Row<T> {
     }
 
     getResults(): EntityModel {
-        return this._$results;
+        return this._$owner.getMetaResults();
     }
 
     setResultsColspanCallback(resultsColspanCallback: TResultsColspanCallback): void {
         this._$resultsColspanCallback = resultsColspanCallback;
         this._reinitializeColumns();
+    }
+
+    updateMetaResults(): void {
+        this._$columnItems.forEach((c) => c.updateMetaResults());
+        this._nextVersion();
     }
 
     protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
