@@ -45,6 +45,7 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
 
    protected _defaultFontColorStyle: string = 'link';
    protected _defaultFontSize: string;
+   private _defaultCaptionFormatter: Function;
 
    constructor(options: ILinkViewControlOptions) {
       super(arguments);
@@ -57,6 +58,7 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    _beforeMount(options: ILinkViewControlOptions): void {
       this._setDefaultFontSize(options.viewMode);
       this._rangeModel.update(options);
+      this._defaultCaptionFormatter = dateControlsUtils.formatDateRangeCaption;
       this._updateCaption(options);
       this._updateStyles({}, options);
       this._updateClearButton(options);
@@ -118,20 +120,32 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
       }
    }
 
-   _getCaption(options, startValue: Date | null, endValue: Date | null): string {
-      return options.captionFormatter(startValue, endValue, options.emptyCaption);
+   _getCaption(options, startValue: Date | null, endValue: Date | null, captionFormatter: Function): string {
+      return captionFormatter(startValue, endValue, options.emptyCaption);
    }
 
    _updateCaption(options): void {
-      const opt = options || this._options;
-      if (this._rangeModel.startValue === null && this._rangeModel.endValue === null) {
-         this._caption = this._getCaption(opt, null, null);
-      } else if (this._rangeModel.startValue === null) {
-         this._caption = rk('по', 'Period') + ' ' + this._getCaption(opt, this._rangeModel.endValue, this._rangeModel.endValue);
-      } else if (this._rangeModel.endValue === null) {
-         this._caption = rk('с') + ' ' + this._getCaption(opt, this._rangeModel.startValue, this._rangeModel.startValue);
+      const opts = options || this._options;
+
+      const startValue = this._rangeModel.startValue;
+      const endValue = this._rangeModel.endValue;
+
+      if (opts.captionFormatter) {
+         this._caption = this._getCaption(opts, startValue, endValue, opts.captionFormatter);
       } else {
-         this._caption = this._getCaption(opt, this._rangeModel.startValue, this._rangeModel.endValue);
+         const captionFormatter = this._defaultCaptionFormatter;
+
+         if (startValue === null && endValue === null) {
+            this._caption = this._getCaption(opts, null, null, captionFormatter);
+         } else if (this._rangeModel.startValue === null) {
+            this._caption = rk('по', 'Period') + ' ' +
+                this._getCaption(opts, endValue, endValue, captionFormatter);
+         } else if (this._rangeModel.endValue === null) {
+            this._caption = rk('с') + ' ' +
+                this._getCaption(opts, startValue, startValue, captionFormatter);
+         } else {
+            this._caption = this._getCaption(opts, startValue, endValue, captionFormatter);
+         }
       }
    }
 
@@ -182,7 +196,6 @@ LinkView.getDefaultOptions = () => {
    return {
       ...IDateLinkView.getDefaultOptions(),
       emptyCaption: IDateLinkView.EMPTY_CAPTIONS.NOT_SPECIFIED,
-      captionFormatter: dateControlsUtils.formatDateRangeCaption
    };
 };
 
