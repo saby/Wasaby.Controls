@@ -12,6 +12,8 @@
  * @author Крайнов Д.О.
  */
 
+import {ISlidingPanelPosition} from 'Controls/_popup/interface/ISlidingPanel';
+
 export {default as ManagerClass} from './_popup/Manager';
 export {default as Container} from './_popup/Manager/Container';
 export {default as Controller} from './_popup/Manager/ManagerController';
@@ -53,7 +55,7 @@ export {IInfoBoxPopupOptions, IInfoBoxOpener} from './_popup/interface/IInfoBoxO
 export {IEditOptions, IEditOpener} from './_popup/interface/IEdit';
 export {
     ISlidingPanelPopupOptions,
-    ISlidingPanelPosition
+    ISlidingPanelData
 } from './_popup/interface/ISlidingPanel';
 
 export {isVDOMTemplate} from './_popup/utils/isVdomTemplate';
