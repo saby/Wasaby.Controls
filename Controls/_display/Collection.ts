@@ -429,12 +429,12 @@ function onCollectionPropertyChange(event: EventObject, values: {metaData: { res
             values.metaData.results.subscribe('onPropertyChange', this._onMetaResultsChange);
         }
 
-        this._updateMetaResults(values.metaData.results);
+        this.setMetaResults(values.metaData.results);
     }
 }
 
 function onMetaResultsChange(event: EventObject, values: Record<string, unknown>) {
-    this._updateMetaResults(this._$collection.getMetaData().results);
+    this.setMetaResults(this._$collection.getMetaData()?.results);
 }
 
 /**
@@ -893,7 +893,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             throw new TypeError(`${this._moduleName}: source collection should implement Types/collection:IEnumerable`);
         }
 
-        this.setMetaResults(this.getMetaData().results);
+        this._$metaResults = this.getMetaData().results;
 
         this._$sort = normalizeHandlers(this._$sort);
         this._$filter = normalizeHandlers(this._$filter);
@@ -938,7 +938,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
             (this._$collection as ObservableMixin).subscribe('onPropertyChange', this._onCollectionPropertyChange);
 
-            const metaResults = this._$collection.getMetaData()?.results;
+            const metaResults = this._$collection.getMetaData && this._$collection.getMetaData()?.results;
             if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
                 metaResults.subscribe('onPropertyChange', this._onMetaResultsChange);
             }
@@ -961,7 +961,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                     'onPropertyChange', this._onCollectionPropertyChange
                 );
 
-                const metaResults = this._$collection.getMetaData()?.results;
+                const metaResults = this._$collection.getMetaData && this._$collection.getMetaData()?.results;
                 if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
                     metaResults.unsubscribe('onPropertyChange', this._onMetaResultsChange);
                 }
@@ -2654,6 +2654,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     setMetaResults(metaResults: EntityModel): void {
         this._$metaResults = metaResults;
+        this._nextVersion();
     }
 
     getMetaResults(): EntityModel {
@@ -4013,10 +4014,6 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _handleAfterCollectionChange(): void {
         this._notifyAfterCollectionChange();
         this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
-    }
-
-    protected _updateMetaResults(metaResults: EntityModel) {
-        this._$metaResults = metaResults;
     }
 
     // endregion

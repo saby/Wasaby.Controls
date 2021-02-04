@@ -130,10 +130,9 @@ export default class Collection<
         return GroupItem;
     }
 
-    protected _updateMetaResults(metaResults: EntityModel) {
-        super._updateMetaResults(metaResults);
-        this._$results?.updateMetaResults();
-        this._nextVersion();
+    protected setMetaResults(metaResults: EntityModel) {
+        super.setMetaResults(metaResults);
+        this._$results?.setMetaResults(metaResults);
     }
 
     // endregion
