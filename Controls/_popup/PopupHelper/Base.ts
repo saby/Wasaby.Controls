@@ -75,8 +75,10 @@ export default class Base {
         this._opener = null;
     }
 
-    protected _openPopup(config, popupController): void {
-        this._opener.openPopup(config, popupController);
+    protected _openPopup(config: IBasePopupOptions, popupController: string): void {
+        this._opener.openPopup(config, popupController).catch(() => {
+            this._hideIndicator();
+        });
     }
 
     private _hideIndicator(): void {
