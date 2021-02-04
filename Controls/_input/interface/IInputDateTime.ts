@@ -91,6 +91,13 @@ export interface IInputDateTimeOptions {
  * </pre>
  */
 
+/**
+ * Интерфейс ввода даты/времени.
+ *
+ * @interface Controls/_input/interface/IInputDateTime
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IInputDateTime {
     readonly '[Controls/_input/interface/IInputDateTime]': boolean;
 }

@@ -105,7 +105,7 @@ export default class Container extends Control<IContainerOptions> {
       this._updateViewMode(options.viewMode);
 
       this._sourceController = context.dataOptions.sourceController;
-      if (options.dataLoadCallback && this._sourceController) {
+      if (this._sourceController) {
          this._sourceController.updateOptions(this._getSourceControllerOptions());
       }
 
@@ -135,8 +135,17 @@ export default class Container extends Control<IContainerOptions> {
       const options = {...newOptions, ...context.dataOptions};
       const searchValueChanged = newOptions.searchValue !== undefined &&
           (this._options.searchValue !== newOptions.searchValue && this._searchValue !== newOptions.searchValue);
+
       if (newOptions.root !== this._options.root) {
          this._root = newOptions.root;
+      }
+
+      if (this._options.viewMode !== newOptions.viewMode) {
+         if (this._isSearchViewMode()) {
+            this._previousViewMode = newOptions.viewMode;
+         } else {
+            this._updateViewMode(newOptions.viewMode);
+         }
       }
 
       if (this._searchController && options.sourceController && searchValueChanged) {
@@ -160,7 +169,7 @@ export default class Container extends Control<IContainerOptions> {
             });
          }
       }
-      if (newOptions.dataLoadCallback && this._sourceController) {
+      if (this._sourceController) {
          this._sourceController.updateOptions(this._getSourceControllerOptions());
       }
    }
