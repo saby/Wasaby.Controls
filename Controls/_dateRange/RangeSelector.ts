@@ -177,16 +177,14 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
         return {
             minRange: 'day',
             ...ILinkView.getDefaultOptions(),
-            ...IDateRangeSelectable.getDefaultOptions(),
-            captionFormatter: dateControlsUtils.formatDateRangeCaption
+            ...IDateRangeSelectable.getDefaultOptions()
         };
     }
 
     static getOptionTypes(): object {
         return {
             ...IDateRangeSelectable.getOptionTypes(),
-            ...ILinkView.getOptionTypes(),
-            captionFormatter: descriptor(Function)
+            ...ILinkView.getOptionTypes()
         };
     }
 
