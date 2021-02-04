@@ -8,11 +8,18 @@
    }
 }
 
+.controls-Scroll-ContainerBase {
+   display: flex;
+   flex-direction: column;
+}
+
 .controls-Scroll-ContainerBase__content {
    display: flex;
    flex-direction: column;
-   flex-shrink: 1;
+   flex-shrink: 0;
+   flex-grow: 1;
    min-height: 100%;
+   box-sizing: border-box;
 }
 
 .controls-Scroll-ContainerBase__contentNotScrollable {

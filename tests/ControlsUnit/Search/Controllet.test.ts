@@ -19,10 +19,15 @@ const getController = (options): Controller => {
 };
 
 describe('Controls/search:Controller', () => {
-    const options = {...getDefatultSearchControllerOptions(), root: 'testRoot'};
-    const dataOptions = {
-        sourceController: options.sourceController
-    };
+    let options;
+    let dataOptions;
+
+    beforeEach(() => {
+        options = {...getDefatultSearchControllerOptions(), root: 'testRoot'};
+        dataOptions = {
+            sourceController: options.sourceController
+        };
+    });
 
     describe('_beforeMount', () => {
         it('_dataLoadCallback called', async () => {
@@ -84,7 +89,8 @@ describe('Controls/search:Controller', () => {
         it('_dataLoadCallback called', async () => {
             let callbackCalled = false;
             const searchController = new Controller(options);
-            searchController._options = options;
+            searchController.saveOptions(options);
+
             searchController._dataLoadCallback = () => {
                 callbackCalled = true;
             };
@@ -93,6 +99,21 @@ describe('Controls/search:Controller', () => {
             searchController._beforeUpdate(options, {dataOptions: {}});
             await searchController._sourceController.load();
             assert.isTrue(callbackCalled);
+        });
+
+        it('_dataLoadCallback from options called', async () => {
+            let dataLoadCallbackFromOptionsCalled = false;
+
+            const searchController = new Controller(options);
+            options.dataLoadCallback = () => {
+                dataLoadCallbackFromOptionsCalled = true;
+            };
+            searchController._beforeMount(options, {dataOptions: {}});
+            searchController.saveOptions(options);
+            searchController._sourceController = options.sourceController;
+            searchController._beforeUpdate(options, {dataOptions: {}});
+            await searchController._sourceController.load();
+            assert.isTrue(dataLoadCallbackFromOptionsCalled);
         });
 
         it('_searchValue updated', () => {
