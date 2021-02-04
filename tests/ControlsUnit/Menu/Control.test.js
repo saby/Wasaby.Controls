@@ -536,10 +536,7 @@ define(
                }
             });
             expectedOptions.footerContentTemplate = defaultOptions.nodeFooterTemplate;
-            expectedOptions.footerItemData = {
-               item,
-               key: expectedOptions.root
-            };
+            expectedOptions.item = item.getContents();
             expectedOptions.emptyText = null;
             expectedOptions.closeButtonVisibility = false;
             expectedOptions.showClose = false;
