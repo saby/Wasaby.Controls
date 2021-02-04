@@ -194,8 +194,11 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         }
         const rawData = oldRawData.slice(0, this._lastIndex + 1);
 
-        const find = rawData.find((data) => data[items.getKeyProperty()] === options.selectedKey);
-        if (find === undefined) {
+        /**
+         * Если отмеченного элемента нет в rawData, то добавляем его вместо последнего.
+         */
+        const selectedItem = rawData.find((data) => data[items.getKeyProperty()] === options.selectedKey);
+        if (selectedItem === undefined) {
             rawData[rawData.length - 1] = items.getRecordById(options.selectedKey).getRawData();
         }
         // чтобы ужималась
