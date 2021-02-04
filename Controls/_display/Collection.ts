@@ -976,6 +976,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         const projectionOldItems = toArray(this) as [];
         this._deinitializeCollection();
         this._$collection = newCollection;
+        this._$metaResults = this.getMetaData().results;
         this._initializeCollection();
         const projectionNewItems = toArray(this) as [];
         this._notifyBeforeCollectionChange();

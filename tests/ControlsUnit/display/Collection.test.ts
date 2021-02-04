@@ -205,6 +205,18 @@ describe('Controls/_display/Collection', () => {
 
             display.destroy();
         });
+
+        it('should set meta results', () => {
+            const results = new Model({ rawData: {} });
+            const list = new RecordSet({
+                keyProperty: 'id',
+                rawData: [],
+                metaData: { results }
+            });
+            const display = new CollectionDisplay({ collection: list });
+
+            assert.equal(results, display.getMetaResults());
+        });
     });
 
     describe('.getEnumerator()', () => {
