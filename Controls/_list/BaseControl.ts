@@ -4358,6 +4358,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._unregisterMouseMove();
         this._unregisterMouseUp();
 
+        _private.closePopup(this, this._itemActionsMenuId);
+
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
