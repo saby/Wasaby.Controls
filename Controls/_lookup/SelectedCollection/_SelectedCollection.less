@@ -29,11 +29,12 @@
 .controls-SelectedCollection__InfoBox_fixed:after {
     content: '';
     position: absolute;
-    right: -var(--counter_shadow-blur_lookupSelectedCollection);
+    right: calc(-1 * var(--counter_shadow-blur_lookupSelectedCollection));
     width: var(--counter_shadow-blur_lookupSelectedCollection);
     top: 0;
     bottom: 0;
-    .horizontal-gradient(var(--counter_background-color_lookupSelectedCollection), rgba(255, 255, 255, 0));
+    background-image: linear-gradient(to right, var(--counter_background-color_lookupSelectedCollection), rgba(255, 255, 255, 0));
+    //.horizontal-gradient(var(--counter_background-color_lookupSelectedCollection), rgba(255, 255, 255, 0));
     background-color: transparent;
 }
 
