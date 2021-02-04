@@ -20,7 +20,7 @@
               dropdownClassName="{{_options.dropdownClassName}}"
               headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
               footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
-              footerItemData="{{_options.footerItemData}}"
+              item="{{_options.item}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
               on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"

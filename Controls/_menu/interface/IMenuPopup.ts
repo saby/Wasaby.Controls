@@ -1,19 +1,13 @@
 import {TemplateFunction} from 'UI/Base';
 import {ISearch} from 'Controls/interface';
 import {IMenuControlOptions} from 'Controls/menu';
-import {CollectionItem} from 'Controls/display';
-import {Model, CrudEntityKey} from 'Types/entity';
-
-export interface IFooterItemData {
-    item: CollectionItem<Model>,
-    key: CrudEntityKey
-}
+import {Model} from 'Types/entity';
 
 export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {
     headerContentTemplate: TemplateFunction;
     footerContentTemplate: TemplateFunction;
     closeButtonVisibility: boolean;
-    footerItemData: IFooterItemData
+    item: Model;
 }
 
 /**
@@ -151,6 +145,7 @@ export default interface IMenuPopup {
  */
 
 /**
- * @name Controls/_menu/interface/IMenuPopup#footerItemData
- * @cfg {IFooterItemData} Данные для {@link Controls/_menu/interface/IMenuPopup#footerContentTemplate шаблона нижней части окна}.
+ * @name Controls/_menu/interface/IMenuPopup#item
+ * @cfg {Types/entity:Model} Запись для которой было вызвано текущее меню/подменю
+ * @remark Доступно для использования в {@link Controls/_menu/interface/IMenuPopup#footerContentTemplate шаблоне нижней части меню}.
  */
