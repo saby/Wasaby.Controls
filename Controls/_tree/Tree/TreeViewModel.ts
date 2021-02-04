@@ -192,7 +192,7 @@ var
             let expanderIconClass = '';
 
             let expanderIconStyle = itemData.style;
-            if (expanderPosition !== 'right') {
+            if (expanderPosition === 'default') {
                 expanderClasses += ` controls-TreeGrid__row_${style}-expander_size_${(expanderSize || 'default')}_theme-${theme} `;
             } else {
                 expanderClasses += ` controls-TreeGrid__row_expander_position_right_theme-${theme} `;
