@@ -201,6 +201,11 @@ export default class Button extends BaseDropdown {
             break;
          case 'footerClick':
             this._footerClick(data);
+            break;
+          case 'menuOpened':
+          case 'menuClosed':
+              this._notify(action, [], {bubbling: true});
+              break;
       }
    }
 
