@@ -53,7 +53,6 @@ export {default as Toggle} from 'Controls/_dropdown/Toggle';
 
 export {
     Button,
-    Input,
     _Controller,
     Combobox,
     ItemTemplate,
