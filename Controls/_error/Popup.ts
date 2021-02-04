@@ -85,17 +85,14 @@ export default class Popup implements IPopupHelper {
                 return;
             }
 
-            const dialogTemplateOptions = dialogOptions.templateOptions as object;
-            delete dialogOptions.templateOptions;
-
             return popup.Dialog.openPopup({
                 template: config.template,
-                templateOptions: {
-                    ...dialogTemplateOptions,
-                    ...config.options
-                },
                 modal: true,
-                ...dialogOptions
+                ...dialogOptions,
+                templateOptions: {
+                    ...dialogOptions.templateOptions as object,
+                    ...config.options
+                }
             });
         });
     }
