@@ -3,7 +3,6 @@ import {Model} from 'Types/entity';
 import {ISingleSelectableOptions, IItemsOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/buttons';
-import 'css!Controls/Classes';
 
 export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlOptions, IItemsOptions<object> {
 }
@@ -25,7 +24,7 @@ class ButtonGroupBase extends Control<IButtonGroupOptions> {
         }
     }
 
-    static _theme: string[] = ['Controls/toggle'];
+    static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
 
     static getDefaultOptions(): IButtonGroupOptions {
         return {

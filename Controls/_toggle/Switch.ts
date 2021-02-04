@@ -3,6 +3,7 @@ import SwitchTemplate = require('wml!Controls/_toggle/Switch/Switch');
 import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+import 'css!Controls/toggle';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IValidationStatusOptions {
    caption: string;
@@ -54,8 +55,6 @@ class Switch extends Control<ISwitchOptions> implements ITooltip, ICheckable, IV
          this._notify('valueChanged', [!this._options.value]);
       }
    }
-
-   static _theme: string[] = ['Controls/toggle'];
 
    static getDefaultOptions(): object {
       return {

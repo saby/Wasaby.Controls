@@ -1,6 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_toggle/ButtonGroup/ButtonGroup');
-import 'css!Controls/Classes';
 import {ButtonTemplate} from 'Controls/buttons';
 import ButtonGroupBase from 'Controls/_toggle/ButtonGroupBase';
 
@@ -16,6 +15,8 @@ import ButtonGroupBase from 'Controls/_toggle/ButtonGroupBase';
 class ButtonGroup extends ButtonGroupBase {
     protected _template: TemplateFunction = template;
     protected _buttonTemplate: TemplateFunction = ButtonTemplate;
+
+    static _theme: string[] = ['Controls/Classes'];
 }
 
 Object.defineProperty(ButtonGroup, 'defaultProps', {
