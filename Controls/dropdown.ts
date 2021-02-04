@@ -49,6 +49,7 @@ import dropdownHistoryUtils = require('Controls/_dropdown/dropdownHistoryUtils')
 import inputDefaultContentTemplate = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplate');
 import defaultContentTemplateWithIcon = require('wml!Controls/_dropdown/Input/resources/defaultContentTemplateWithIcon');
 
+export {default as Selector} from 'Controls/_dropdown/Input';
 export {default as IGrouped, IGroupedOptions} from 'Controls/_dropdown/interface/IGrouped';
 
 export {
