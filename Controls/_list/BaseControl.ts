@@ -1668,7 +1668,7 @@ const _private = {
             }
 
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
-                _private.isStickyOpened(this)) {
+                _private.isStickyOpened(self)) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
             }
             if (action === IObservable.ACTION_RESET && self._options.searchValue) {
@@ -1924,10 +1924,10 @@ const _private = {
         action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        isContextMenu: boolean): Promise<void> {
+        isContextMenu: boolean): void {
         const menuConfig = _private.getItemActionsMenuConfig(self, item, clickEvent, action, isContextMenu);
         if (!menuConfig) {
-            return Promise.resolve();
+            return;
         }
         /**
          * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
@@ -1937,7 +1937,7 @@ const _private = {
         clickEvent.stopImmediatePropagation();
         clickEvent.nativeEvent.preventDefault();
         const onResult = _private.onItemActionsMenuResult.bind(null, self);
-        const onClose = _private.onItemActionsMenuClose.bind(null, self);
+        const onClose = _private.closeActionsMenu.bind(null, self);
         const onOpen = _private.onItemActionsMenuOpen.bind(null, self, item);
         menuConfig.eventHandlers = {
             onResult,
@@ -1956,8 +1956,14 @@ const _private = {
      * @private
      */
     closeActionsMenu(self: any): void {
+        if (self._destroyed) {
+            return;
+        }
         if (_private.isStickyOpened(self)) {
             self._stickyOpener.close();
+        }
+        if (self._isShownItemActionMenu) {
+            self._isShownItemActionMenu = false;
             const itemActionsController = _private.getItemActionsController(self, self._options);
             itemActionsController.setActiveItem(null);
             itemActionsController.deactivateSwipe();
@@ -3116,11 +3122,6 @@ const _private = {
         self._isShownItemActionMenu = true;
         _private.removeShowActionsClass(self);
         _private.getItemActionsController(self, self._options).setActiveItem(item);
-    },
-
-    onItemActionsMenuClose(self): void {
-        self._isShownItemActionMenu = false;
-        _private.closeActionsMenu(self);
     }
 };
 
