@@ -697,14 +697,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 updateSourceController = true;
             }
 
-            // Костыль, до 21.2000
-            // Проблема возникает из-за того, что корень в модели меняется на callback загрузки данных
-            // А при поиске запрос идёт за пределами списка
-            if (searchValueChanged && newOptions.sourceController &&
-                newOptions.viewModelConstructor === this._options.viewModelConstructor) {
-                viewModel.setRoot(newOptions.root);
-            }
-
             if (this.isEditing()) {
                 baseControl.cancelEdit();
             }
