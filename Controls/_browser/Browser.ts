@@ -477,7 +477,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _historySaveCallback(historyData: Record<string, any>, items: IFilterItem[]): void {
-        if (this. && !this._destroyed) {
+        if (this._mounted && !this._destroyed) {
             this?._notify('historySave', [historyData, items]);
         }
     }
