@@ -190,6 +190,8 @@ const _private = {
                     });
                 } else {
                     _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+
+                    return Promise.resolve();
                 }
             }
         }
