@@ -611,9 +611,10 @@ export default class ScrollController {
      * @param addIndex
      * @param items
      * @param direction направление добавления
+     * @param shift автоматически сдвинуть диапазон в направлении direction
      * @private
      */
-    handleAddItems(addIndex: number, items: object[], direction?: IDirection): IScrollControllerResult {
+    handleAddItems(addIndex: number, items: object[], direction?: IDirection, shift: boolean = false): IScrollControllerResult {
         let result = {};
         if (!this._virtualScroll) {
             result = this._initVirtualScroll(
@@ -622,13 +623,15 @@ export default class ScrollController {
             );
         }
 
-        const rangeShiftResult = this._virtualScroll.addItems(
+        let rangeShiftResult = this._virtualScroll.addItems(
             addIndex,
             items.length,
             this._triggerVisibility,
             direction
         );
-
+        if (shift && this._options.collection.getCount() - items.length > this._options.virtualScrollConfig.pageSize) {
+            rangeShiftResult = this._virtualScroll.shiftRange(direction);
+        }
         this._setCollectionIndices(this._options.collection, rangeShiftResult.range, false,
             this._options.needScrollCalculation);
         this.savePlaceholders(rangeShiftResult.placeholders);
