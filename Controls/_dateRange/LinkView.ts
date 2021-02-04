@@ -45,7 +45,6 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
 
    protected _defaultFontColorStyle: string = 'link';
    protected _defaultFontSize: string;
-   private _defaultCaptionFormatter: Function;
 
    constructor(options: ILinkViewControlOptions) {
       super(arguments);
@@ -58,7 +57,6 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    _beforeMount(options: ILinkViewControlOptions): void {
       this._setDefaultFontSize(options.viewMode);
       this._rangeModel.update(options);
-      this._defaultCaptionFormatter = dateControlsUtils.formatDateRangeCaption;
       this._updateCaption(options);
       this._updateStyles({}, options);
       this._updateClearButton(options);
@@ -126,27 +124,35 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
 
    _updateCaption(options): void {
       const opts = options || this._options;
-
-      const startValue = this._rangeModel.startValue;
-      const endValue = this._rangeModel.endValue;
+      let captionFormatter;
+      let startValue;
+      let endValue;
+      let captionPrefix = '';
 
       if (opts.captionFormatter) {
-         this._caption = this._getCaption(opts, startValue, endValue, opts.captionFormatter);
+         captionFormatter = opts.captionFormatter;
+         startValue = this._rangeModel.startValue;
+         endValue = this._rangeModel.endValue;
       } else {
-         const captionFormatter = this._defaultCaptionFormatter;
+         captionFormatter = dateControlsUtils.formatDateRangeCaption;
 
-         if (startValue === null && endValue === null) {
-            this._caption = this._getCaption(opts, null, null, captionFormatter);
+         if (this._rangeModel.startValue === null && this._rangeModel.endValue === null) {
+            startValue = null;
+            endValue = null;
          } else if (this._rangeModel.startValue === null) {
-            this._caption = rk('по', 'Period') + ' ' +
-                this._getCaption(opts, endValue, endValue, captionFormatter);
+            startValue = this._rangeModel.endValue;
+            endValue = this._rangeModel.endValue;
+            captionPrefix = `${rk('по', 'Period')} `;
          } else if (this._rangeModel.endValue === null) {
-            this._caption = rk('с') + ' ' +
-                this._getCaption(opts, startValue, startValue, captionFormatter);
+            startValue = this._rangeModel.startValue;
+            endValue = this._rangeModel.startValue;
+            captionPrefix = `${rk('с')} `;
          } else {
-            this._caption = this._getCaption(opts, startValue, endValue, captionFormatter);
+            startValue = this._rangeModel.startValue;
+            endValue = this._rangeModel.endValue;
          }
       }
+      this._caption = captionPrefix + this._getCaption(opts, startValue, endValue, captionFormatter);
    }
 
    _updateClearButton(options): void {
