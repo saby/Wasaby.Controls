@@ -1093,68 +1093,82 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return hasPrevLeaf ? 'middle' : 'first';
     },
     goToNext(listModel?, mController?): void {
-        const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
-        const model = listModel || this._children.baseControl.getViewModel();
-        const markerController = mController || this._children.baseControl.getMarkerController();
-        if (item) {
-            this._tempItem = item.getKey();
-            const dispItem = model.getItemBySourceKey(this._tempItem);
-            if (item.get(this._options.nodeProperty) !== null) {
-                this._doAfterItemExpanded = () => {
-                    this._doAfterItemExpanded = null;
-                    this.goToNext(model, markerController);
-                };
-                if (this._isExpanded(dispItem, model)) {
-                    this._doAfterItemExpanded();
-                } else {
-                    const expandResult = this.toggleExpanded(this._tempItem, model);
-                    if (expandResult instanceof Promise) {
-                        expandResult.then(() => {
-                            this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
-                        });
+        return new Promise((resolve) => {
+            const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
+            const model = listModel || this._children.baseControl.getViewModel();
+            const markerController = mController || this._children.baseControl.getMarkerController();
+            if (item) {
+                this._tempItem = item.getKey();
+                const dispItem = model.getItemBySourceKey(this._tempItem);
+                if (item.get(this._options.nodeProperty) !== null) {
+                    this._doAfterItemExpanded = () => {
+                        this._doAfterItemExpanded = null;
+                        this.goToNext(model, markerController);
+                    };
+                    if (this._isExpanded(dispItem, model)) {
+                        this._doAfterItemExpanded();
+                        resolve();
                     } else {
-                        this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
+                        const expandResult = this.toggleExpanded(this._tempItem, model);
+                        if (expandResult instanceof Promise) {
+                            expandResult.then(() => {
+                                this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
+                                resolve();
+                            });
+                        } else {
+                            this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
+                            resolve();
+                        }
                     }
+                } else {
+                    this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    resolve();
                 }
             } else {
-                this._applyMarkedLeaf(this._tempItem, model, markerController);
+                this._tempItem = null;
+                resolve();
             }
-        } else {
-            this._tempItem = null;
-        }
+        });
     },
     goToPrev(listModel?, mController?): void {
-        const item = this.getPrevItem(this._tempItem || this._currentItem, listModel);
-        const model = listModel || this._children.baseControl.getViewModel();
-        const markerController = mController || this._children.baseControl.getMarkerController();
-        if (item) {
-            const itemKey = item.getKey();
-            const dispItem = model.getItemBySourceKey(item.getKey());
-            if (item.get(this._options.nodeProperty) !== null) {
-                this._doAfterItemExpanded = () => {
-                    this._doAfterItemExpanded = null;
-                    this.goToPrev(model, markerController);
-                };
-                if (this._isExpanded(dispItem, model)) {
-                    this._tempItem = itemKey;
-                    this._doAfterItemExpanded();
-                } else {
-                    const expandResult = this.toggleExpanded(itemKey);
-                    if (expandResult instanceof Promise) {
-                        expandResult.then(() => {
-                            this._expandToFirstLeaf(itemKey, model.getItems(), model);
-                        });
+        return new Promise((resolve) => {
+            const item = this.getPrevItem(this._tempItem || this._currentItem, listModel);
+            const model = listModel || this._children.baseControl.getViewModel();
+            const markerController = mController || this._children.baseControl.getMarkerController();
+            if (item) {
+                const itemKey = item.getKey();
+                const dispItem = model.getItemBySourceKey(item.getKey());
+                if (item.get(this._options.nodeProperty) !== null) {
+                    this._doAfterItemExpanded = () => {
+                        this._doAfterItemExpanded = null;
+                        this.goToPrev(model, markerController);
+                    };
+                    if (this._isExpanded(dispItem, model)) {
+                        this._tempItem = itemKey;
+                        this._doAfterItemExpanded();
+                        resolve();
                     } else {
-                        this._expandToFirstLeaf(itemKey, model.getItems(), model);
+                        const expandResult = this.toggleExpanded(itemKey);
+                        if (expandResult instanceof Promise) {
+                            expandResult.then(() => {
+                                this._expandToFirstLeaf(itemKey, model.getItems(), model);
+                                resolve();
+                            });
+                        } else {
+                            this._expandToFirstLeaf(itemKey, model.getItems(), model);
+                            resolve();
+                        }
                     }
+                } else {
+                    this._tempItem = itemKey;
+                    this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    resolve();
                 }
             } else {
-                this._tempItem = itemKey;
-                this._applyMarkedLeaf(this._tempItem, model, markerController);
+                this._tempItem = null;
+                resolve();
             }
-        } else {
-            this._tempItem = null;
-        }
+        });
     },
     _applyMarkedLeaf(key: CrudEntityKey, model, markerController): void {
         this._currentItem = key;
