@@ -12,6 +12,7 @@ interface IOpenerStaticMethods {
 /**
  * Базовый хелпер для открытия всплывающих окон.
  * @class Controls/_popup/PopupHelper/Base
+ * @implements Controls/_popup/interface/IBaseOpener
  *
  * @author Красильников А.С.
  * @private
@@ -21,9 +22,14 @@ export default class Base {
     protected _popupId: string;
     private _opener: IOpenerStaticMethods;
     private _indicatorId: string;
+    protected _options: IBasePopupOptions;
+
+    constructor(cfg: IBasePopupOptions = {}) {
+        this._options = cfg;
+    }
 
     open(popupOptions: IBasePopupOptions, popupController?: string): void {
-        const config: IBasePopupOptions = {...popupOptions};
+        const config: IBasePopupOptions = BaseOpenerUtil.getConfig(this._options, popupOptions);
         config.isHelper = true;
 
         // Защита от множ. вызова. Хэлпер сам генерирует id
