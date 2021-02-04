@@ -16,8 +16,9 @@
                                    bind:markedKey="_markedKey"
                                    markerVisibility="visible"
                                    bind:position="_monthsPosition"
-                                   _limit="{{ 36 }}"
-                                   virtualPageSize="{{36}}"
+                                   _limit="36"
+                                   segmentSize="24"
+                                   virtualPageSize="36"
                                    viewMode="month"
                                    attr:class="controls-PeriodDialog-DateRangeItem__months"
                                    on:positionChanged="_onMonthsPositionChanged()">
