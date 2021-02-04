@@ -118,21 +118,41 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
       }
    }
 
-   _getCaption(options, startValue: Date | null, endValue: Date | null): string {
-      return options.captionFormatter(startValue, endValue, options.emptyCaption);
+   _getCaption(options, startValue: Date | null, endValue: Date | null, captionFormatter: Function): string {
+      return captionFormatter(startValue, endValue, options.emptyCaption);
    }
 
    _updateCaption(options): void {
-      const opt = options || this._options;
-      if (this._rangeModel.startValue === null && this._rangeModel.endValue === null) {
-         this._caption = this._getCaption(opt, null, null);
-      } else if (this._rangeModel.startValue === null) {
-         this._caption = rk('по', 'Period') + ' ' + this._getCaption(opt, this._rangeModel.endValue, this._rangeModel.endValue);
-      } else if (this._rangeModel.endValue === null) {
-         this._caption = rk('с') + ' ' + this._getCaption(opt, this._rangeModel.startValue, this._rangeModel.startValue);
+      const opts = options || this._options;
+      let captionFormatter;
+      let startValue;
+      let endValue;
+      let captionPrefix = '';
+
+      if (opts.captionFormatter) {
+         captionFormatter = opts.captionFormatter;
+         startValue = this._rangeModel.startValue;
+         endValue = this._rangeModel.endValue;
       } else {
-         this._caption = this._getCaption(opt, this._rangeModel.startValue, this._rangeModel.endValue);
+         captionFormatter = dateControlsUtils.formatDateRangeCaption;
+
+         if (this._rangeModel.startValue === null && this._rangeModel.endValue === null) {
+            startValue = null;
+            endValue = null;
+         } else if (this._rangeModel.startValue === null) {
+            startValue = this._rangeModel.endValue;
+            endValue = this._rangeModel.endValue;
+            captionPrefix = `${rk('по', 'Period')} `;
+         } else if (this._rangeModel.endValue === null) {
+            startValue = this._rangeModel.startValue;
+            endValue = this._rangeModel.startValue;
+            captionPrefix = `${rk('с')} `;
+         } else {
+            startValue = this._rangeModel.startValue;
+            endValue = this._rangeModel.endValue;
+         }
       }
+      this._caption = captionPrefix + this._getCaption(opts, startValue, endValue, captionFormatter);
    }
 
    _updateClearButton(options): void {
@@ -182,7 +202,6 @@ LinkView.getDefaultOptions = () => {
    return {
       ...IDateLinkView.getDefaultOptions(),
       emptyCaption: IDateLinkView.EMPTY_CAPTIONS.NOT_SPECIFIED,
-      captionFormatter: dateControlsUtils.formatDateRangeCaption
    };
 };
 
