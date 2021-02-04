@@ -438,11 +438,12 @@ var
             var itemValue = item.get(dispProp);
             return itemValue && searchValue;
         },
-        getItemsLadderVersion(ladder) {
+        getItemsLadderVersion(ladder, simple: boolean = false) {
             let ladderVersion = '';
 
             Object.keys(ladder).forEach((ladderProperty) => {
-                ladderVersion += (ladder[ladderProperty].ladderLength || 0) + '_';
+                const length = ladder[ladderProperty].ladderLength || 0;
+                ladderVersion += (simple && length ? 1 : length) + '_';
             });
 
             return ladderVersion;
@@ -454,7 +455,7 @@ var
                 stickyLadder = ladder.stickyLadder && ladder.stickyLadder[index];
 
             if (simpleLadder) {
-                version += 'LP_';
+                version += 'LP_' + _private.getItemsLadderVersion(simpleLadder, true);
             }
             if (stickyLadder) {
                 version += 'SP_' + _private.getItemsLadderVersion(stickyLadder);
