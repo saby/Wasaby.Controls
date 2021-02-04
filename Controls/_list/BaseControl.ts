@@ -4983,6 +4983,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Исключение - запуск редактирования при построении списка. В таком случае, уведомлений о запуске редактирования
         // происходить не должно, а дождаться построение редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
         return new Promise((resolve) => {
+            /*
+             * TODO: KINGO
+             * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
+             * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
+             * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
+             * _canUpdateItemsActions приведет к показу неактуальных операций.
+             */
+            _private.updateItemActions(this, this._options, item);
+
             if (this._isMounted) {
                 this._resolveAfterBeginEdit = resolve;
             } else {
@@ -5003,14 +5012,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
 
             item.contents.subscribe('onPropertyChange', this._resetValidation);
-            /*
-             * TODO: KINGO
-             * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-             * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-             * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-             * _canUpdateItemsActions приведет к показу неактуальных операций.
-             */
-            _private.updateItemActions(this, this._options, item);
         }).then(() => {
             // Подскролл к редактору
             if (this._isMounted) {
