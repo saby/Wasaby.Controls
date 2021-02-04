@@ -80,7 +80,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         return {
             headingFontColorStyle: 'secondary',
             headerBackgroundStyle: 'default',
-            headerBorderVisible: false,
+            headerBorderVisible: true,
             backgroundStyle: 'default',
             headingFontSize: '3xl',
             closeButtonVisibility: true,
@@ -108,7 +108,7 @@ Object.defineProperty(DialogTemplate, 'defaultProps', {
 /**
  * @name Controls/_popupTemplate/Dialog#headerBorderVisible
  * @cfg {Boolean} Определяет, будет ли отображаться граница шапки панели.
- * @default false
+ * @default true
  * @demo Controls-demo/PopupTemplate/Dialog/headerBorderVisible/Index
  */
 
