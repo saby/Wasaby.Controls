@@ -6,7 +6,8 @@ import {INotificationPopupOptions} from '../interface/INotification';
 /**
  * Хелпер для открытия нотификационных окон.
  * @class Controls/_popup/PopupHelper/Notification
- * 
+ * @implements Controls/_popup/interface/INotificationOpener
+ *
  * @author Красильников А.С.
  * @public
  */
@@ -20,9 +21,9 @@ export default class NotificationOpener extends Base {
      * @example
      * <pre class="brush: js">
      * import {NotificationOpener} from 'Controls/popup';
-     * 
+     *
      * this._notification = new NotificationOpener();
-     * 
+     *
      * openNotification() {
      *     this._notification.open({
      *         template: 'Example/MyNotificationTemplate',
@@ -57,7 +58,7 @@ export default class NotificationOpener extends Base {
  * @example
  * <pre class="brush: js">
  * import {NotificationOpener} from 'Controls/popup';
- * 
+ *
  * this._notification = new NotificationOpener();
  *
  * closeNotification() {
@@ -76,7 +77,7 @@ export default class NotificationOpener extends Base {
  * @example
  * <pre class="brush: js">
  * import {NotificationOpener} from 'Controls/popup';
- *    
+ *
  * this._notification = new NotificationOpener();
  *
  * _beforeUnmount() {
