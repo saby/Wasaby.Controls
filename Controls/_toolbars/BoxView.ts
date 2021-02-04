@@ -12,11 +12,13 @@ import {
 
 import {
     IHierarchyOptions, IIconSizeOptions,
-    IItemTemplate, IItemTemplateOptions,
+    IItemTemplate, IItemTemplateOptions
 } from 'Controls/interface';
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import * as template from 'wml!Controls/_toolbars/BoxView/BoxView';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/BoxView/ItemTemplate';
+import 'css!Controls/buttons';
+import 'css!Controls/Classes';
 import {IButtonOptions} from 'Controls/buttons';
 
 type TItem = Record;

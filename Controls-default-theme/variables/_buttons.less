@@ -190,29 +190,29 @@
    // Тень текста кнопки
    // Примечание: в режиме "только для чтения" тень текста всегда отключена
 
-   --text-shadow_button: @text-shadow_button;
+   --text-shadow_button: none;
 
    // Тень контейнера кнопки
 
-   --box-shadow_button: @box-shadow_button;
-   --box-shadow_button_toolButton: @box-shadow_button_toolButton;
-   --box-shadow_button_functionalButton: @box-shadow_button_functionalButton;
+   --box-shadow_button: none;
+   --box-shadow_button_toolButton: 0 1px 4px rgba(0, 0, 0, 0.05);
+   --box-shadow_button_functionalButton: 0 1px 4px rgba(0, 0, 0, 0.05);
 
    //Стили кнопки-стрелки
-   --arrow_icon-size_ArrowButton: @arrow_icon-size_ArrowButton;
-   --box-shadow_ArrowButton: @box-shadow_ArrowButton;
-   --border-color_ArrowButton: @border-color_ArrowButton;
-   --readonly_border-color_ArrowButton: @readonly_border-color_ArrowButton;
-   --background-color_ArrowButton: @background-color_ArrowButton;
-   --background-color_hover_ArrowButton: @background-color_hover_ArrowButton;
-   --border-color_hover_ArrowButton: @border-color_hover_ArrowButton;
-   --icon-color_ArrowButton: @icon-color_ArrowButton;
+   --arrow_icon-size_ArrowButton: 16px;
+   --box-shadow_ArrowButton: 0 1px 4px rgba(0, 0, 0, 0.05);
+   --border-color_ArrowButton: rgba(0, 0, 0, 0.08);
+   --readonly_border-color_ArrowButton: rgba(0, 0, 0, 0.08);
+   --background-color_ArrowButton: transparent;
+   --background-color_hover_ArrowButton: transparent;
+   --border-color_hover_ArrowButton: #ccc;
+   --icon-color_ArrowButton: #999;
    --hover_icon-color_ArrowButton: var(--hover_text-color_button);
-   --readonly_icon-color_ArrowButton: @readonly_icon-color_ArrowButton;
+   --readonly_icon-color_ArrowButton: #ccc;
    --width_ArrowButton: var(--width_s_ArrowButton);
    --height_ArrowButton: var(--height_s_ArrowButton);
-   --width_s_ArrowButton: @width_s_ArrowButton;
-   --height_s_ArrowButton: @height_s_ArrowButton;
-   --width_l_ArrowButton: @width_l_ArrowButton;
-   --height_l_ArrowButton: @height_l_ArrowButton;
+   --width_s_ArrowButton: 24px;
+   --height_s_ArrowButton: 24px;
+   --width_l_ArrowButton: 28px;
+   --height_l_ArrowButton: 28px;
 }

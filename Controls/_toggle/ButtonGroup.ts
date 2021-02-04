@@ -1,5 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_toggle/ButtonGroup/ButtonGroup');
+import 'css!Controls/Classes';
 import {ButtonTemplate} from 'Controls/buttons';
 import ButtonGroupBase from 'Controls/_toggle/ButtonGroupBase';
 

@@ -1,6 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {ActualApi, simpleCssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
 import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
+import 'css!Controls/buttons';
+import 'css!Controls/Classes';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
         IFontColorStyle,
@@ -164,7 +166,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         this._calculateState(newOptions);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/toggle'];
 
     static getDefaultOptions(): object {
         return {

@@ -1,9 +1,9 @@
 .controls-RadioCircle__innerCircle_selected_enabled_theme-@{themeName} {
-   fill: @marker_color_switcher;
+   fill: var(--marker_color_switcher);
 }
 
 .controls-RadioCircle__innerCircle_selected_disabled_theme-@{themeName} {
-   fill: @readonly_marker_color_switcher;
+   fill: var(--readonly_marker_color_switcher);
 }
 
 .controls-RadioCircle__innerCircle_unselected_theme-@{themeName} {
@@ -11,40 +11,40 @@
 }
 
 .controls-RadioCircle__borderCircle_theme-@{themeName} {
-   stroke-width: @marker-box_border-thickness_switcher;
+   stroke-width: var(--marker-box_border-thickness_switcher);
 }
 
 .controls-RadioCircle__borderCircle_selected_theme-@{themeName} {
-   stroke: @marker-box_border-color_switcher;
-   fill: @marker-box_background-color_switcher;
+   stroke: var(--marker-box_border-color_switcher);
+   fill: var(--marker-box_background-color_switcher);
 }
 
 .controls-RadioCircle__borderCircle_unselected_theme-@{themeName} {
-   stroke: @unselected_marker-box_border-color_switcher;
-   fill: @unselected_marker-box_background-color_switcher;
+   stroke: var(--unselected_marker-box_border-color_switcher);
+   fill: var(--unselected_marker-box_background-color_switcher);
 }
 
 .controls-RadioCircle__borderCircle_selected_disabled_theme-@{themeName} {
-   stroke: @readonly_marker-box_border-color_switcher;
-   fill: @readonly_marker-box_background-color_switcher;
+   stroke: var(--readonly_marker-box_border-color_switcher);
+   fill: var(--readonly_marker-box_background-color_switcher);
 }
 
 .controls-RadioCircle__borderCircle_unselected_disabled_theme-@{themeName} {
-   stroke: @readonly_unselected_marker-box_border-color_switcher;
-   fill: @readonly_unselected_marker-box_background-color_switcher;
+   stroke: var(--readonly_unselected_marker-box_border-color_switcher);
+   fill: var(--readonly_unselected_marker-box_background-color_switcher);
 }
 
 .ws-is-hover {
    .controls-RadioCircle__svg:hover {
       .controls-RadioCircle__borderCircle_enabled_theme-@{themeName} {
-         stroke: @marker-box_hover_border-color_switcher;
+         stroke: var(--marker-box_hover_border-color_switcher);
       }
    }
 }
 
 .controls-RadioCircle__svg_theme-@{themeName} {
-   width: @marker-box_size_switcher;
-   height: @marker-box_size_switcher;
+   width: var(--marker-box_size_switcher);
+   height: var(--marker-box_size_switcher);
 }
 
 .controls-RadioCircle__svg {
