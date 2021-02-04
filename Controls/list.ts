@@ -152,6 +152,5 @@ const editing = {
 
 import {groupConstants} from './display';
 import {MultiSelectAccessibility} from './display';
-import {TNavigationDirection} from './interface';
 
-export {TNavigationDirection, groupConstants, editing, MultiSelectAccessibility};
+export {groupConstants, editing, MultiSelectAccessibility};
