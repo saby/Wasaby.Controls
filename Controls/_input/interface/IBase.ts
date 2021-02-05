@@ -2,7 +2,7 @@ import {TemplateFunction} from 'UI/Base';
 import {IContrastBackground} from 'Controls/interface';
 
 export type TextAlign = 'left' | 'right' | 'center';
-export type AutoComplete = 'on' | 'off' | 'username' | 'current-password';
+export type AutoComplete = string;
 
 export interface IBaseOptions extends IContrastBackground {
     autoComplete?: AutoComplete;
@@ -48,11 +48,12 @@ export interface IBase {
  * @variant on Включить автозаполнение ранее введенными значениями.
  * @variant username Включить автозаполнение сохраненными именами пользователей.
  * @variant current-password Включить автозаполнение текущими паролями для учетной записи, указанной в поле для имени пользователя.
+ * @remark
+ * Список всех доступных значений смотрите {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete тут}
  */
 /**
  * @name Controls/_input/interface/IBase#autoComplete
- * @cfg {AutoComplete} Управление браузерным автозаполнением в поле.
- * @remark
+ * @cfg {AutoComplete} Управление браузерным автозаполнением в поле. Список всех доступных значений смотрите {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete тут}
  * Значения для автозаполнения берутся браузером из его хранилища.
  * Имя поля используется для доступа к ним. Поэтому, чтобы значения, хранящиеся в одном поле, не применялись к другому, поля должны иметь разные имена.
  * Для этого мы проксируем имя контрола на нативное поле.
