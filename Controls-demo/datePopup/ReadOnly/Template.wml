@@ -1,29 +1,33 @@
 <div class="PageWrap" style="padding-top: 50px;">
     <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly; flex-wrap: wrap; align-items: flex-start;">
+        <!-- _date задаем для случаев когда по умолчанию откроется текущий день. -->
+        <!-- Принудительно окрываем на периоде из прошлого, что бы не было проблем с эталонами. -->
         <Controls.datePopup
                 attr:class="controlsDemo_datePopup__readonly-one"
+                _date="{{_startValue}}"
                 selectionType="single"
                 readOnly="{{true}}"
                 name="datePopup1"
         />
-        <Controls.datePopup
-                attr:class="controlsDemo_datePopup__readonly-two"
-                selectionType="range"
-                readOnly="{{true}}"
-                name="datePopup2"
-        />
-        <Controls.datePopup
-                attr:class="controlsDemo_datePopup__readonly-three"
-                startValue="{{_startValue}}"
-                endValue="{{_startValue}}"
-                readOnly="{{true}}"
-        />
-        <Controls.datePopup
-                attr:class="controlsDemo_datePopup__readonly-four"
-                startValue="{{_startValue}}"
-                endValue="{{_endValue}}"
-                selectionType="range"
-                readOnly="{{true}}"
-        />
+<!--        <Controls.datePopup-->
+<!--                attr:class="controlsDemo_datePopup__readonly-two"-->
+<!--                _date="{{_startValue}}"-->
+<!--                selectionType="range"-->
+<!--                readOnly="{{true}}"-->
+<!--                name="datePopup2"-->
+<!--        />-->
+<!--        <Controls.datePopup-->
+<!--                attr:class="controlsDemo_datePopup__readonly-three"-->
+<!--                startValue="{{_startValue}}"-->
+<!--                endValue="{{_startValue}}"-->
+<!--                readOnly="{{true}}"-->
+<!--        />-->
+<!--        <Controls.datePopup-->
+<!--                attr:class="controlsDemo_datePopup__readonly-four"-->
+<!--                startValue="{{_startValue}}"-->
+<!--                endValue="{{_endValue}}"-->
+<!--                selectionType="range"-->
+<!--                readOnly="{{true}}"-->
+<!--        />-->
     </div>
 </div>

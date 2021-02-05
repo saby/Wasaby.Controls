@@ -19,8 +19,7 @@ define('Controls-demo/Input/Date/RangeLink', [
       _endValueHalfYear: new Date(2018, 5, 30),
       _startValueYear: new Date(2018, 0, 1),
       _endValueYear: new Date(2018, 11, 31),
-      _displayDateBind: new Date(2019, 0, 1),
-      _date: new Date(2021, 0, 27),
+      _date: new Date(2019, 0, 27),
 
       _captionFormatter: function() {
          return 'Custom range format';
