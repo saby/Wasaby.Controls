@@ -138,7 +138,8 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
         });
     }
 
-    private _menuItemClickHandler(event: SyntheticEvent<Event>, item: Model<object>): void {
+    private _menuItemClickHandler(event: SyntheticEvent<Event>, keys: number[]|string[]): void {
+        const item: Model<object> = this._items.getRecordById(keys[0]);
         item.set('isMainTab', true);
         /*Выбрав один из пунктов меню пользователь активирует соответствующую вкладку.
         Выбранная в меню вкладка заменяет собой прежнюю крайнюю на экране вкладку*/
