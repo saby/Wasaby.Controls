@@ -5,7 +5,7 @@ define('Controls-demo/Example/Input',
       'Controls/scroll',
       'wml!Controls-demo/Example/Input',
 
-      'Controls/Application',
+      'SbisEnvUI/Bootstrap',
       'Controls-demo/Example/Input/Area',
       'Controls-demo/Example/Input/Label',
       'Controls-demo/Example/Input/Font',
