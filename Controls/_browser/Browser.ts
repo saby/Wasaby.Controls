@@ -207,26 +207,34 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _afterMount(options: IBrowserOptions): void {
         this._isMounted = true;
         if (options.useStore) {
-            const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
+            this._storeCallbackIds = this._createNewStoreObserver();
+            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', function () {
+                this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
+                this._storeCallbackIds = this._createNewStoreObservers();
+            }, true);
+        }
+    }
+        
+    protected _createNewStoreObservers(): string[] {
+        const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
                 this._filterItemsChanged(null, filterSource);
             });
-            const filterSourceCallbackId = Store.onPropertyChanged('filter',
-               (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
-            const searchValueCallbackId = Store.onPropertyChanged('searchValue',
-               (searchValue: string) => {
-                    if (searchValue) {
-                        this._search(null, searchValue);
-                    } else {
-                        this._searchReset(null);
-                    }
-               });
+        const filterSourceCallbackId = Store.onPropertyChanged('filter',
+           (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
+        const searchValueCallbackId = Store.onPropertyChanged('searchValue',
+           (searchValue: string) => {
+                if (searchValue) {
+                    this._search(null, searchValue);
+                } else {
+                    this._searchReset(null);
+                }
+           });
 
-            this._storeCallbacks = [
-                sourceCallbackId,
-                filterSourceCallbackId,
-                searchValueCallbackId
-            ];
-        }
+        return [
+            sourceCallbackId,
+            filterSourceCallbackId,
+            searchValueCallbackId
+        ];
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
@@ -353,8 +361,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._errorRegister = null;
         }
 
-        if (this._storeCallbacks) {
-            this._storeCallbacks.forEach((id) => Store.unsubscribe(id));
+        if (this._storeCallbackIds) {
+            this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
+        }
+        if (this._storeCtxCallbackId) {
+            Store.unsubscribe(this._storeCtxCallbackId);
         }
 
         if (this._sourceController) {
