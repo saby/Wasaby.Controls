@@ -47,7 +47,7 @@
               on:click="shiftForward()">
            </span>
         </ws:if>
-        <ws:if data="{{ _options.resetButtonVisible }}">
+        <ws:if data="{{ _resetButtonVisible || _clearButtonVisible }}">
             <span class="controls-DateLinkView__resetButton controls-DateLinkView__resetButton_theme-{{_options.theme}}
                         controls-icon controls-icon_style-unaccented_theme-{{ _options.theme }}
                         controls-icon_size-s_theme-{{ _options.theme }} icon-Close"

@@ -528,10 +528,6 @@
           </ul>
          </Controls.spoiler:View>
 
-         <li>
-            <a href="Controls-demo%252FSpoiler%252FListCut%252FIndex">ListCut</a>
-         </li>
-
          <h1>Decorator</h1>
          <h2>
             <a href="Controls-demo%252FDecorator%252FWrapURLs%252FIndex">WrapURLs</a>

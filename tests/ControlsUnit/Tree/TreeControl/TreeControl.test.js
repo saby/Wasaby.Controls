@@ -2006,7 +2006,7 @@ define([
          assert.deepEqual(lists, [2]);
       });
 
-      it('goToNext, goToPrev', function() {
+      it('goToNext, goToPrev', async function() {
          const rs = new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
@@ -2049,19 +2049,19 @@ define([
          });
          treeControl._afterMount();
          assert.equal(treeControl._markedLeaf, 'last');
-         treeControl.goToPrev();
+         await treeControl.goToPrev();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'middle');
-         treeControl.goToPrev();
+         await treeControl.goToPrev();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'first');
-         treeControl.goToNext();
+         await treeControl.goToNext();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'middle');
-         treeControl.goToNext();
+         await treeControl.goToNext();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'last');

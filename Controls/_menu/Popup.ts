@@ -98,6 +98,10 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         this._notify('sendResult', ['menuOpened', this._container], {bubbling: true});
     }
 
+    protected _beforeUnmount(): void {
+        this._notify('sendResult', ['menuClosed', this._container], {bubbling: true});
+    }
+
     protected _headerClick(): void {
         if (!this._options.searchParam) {
             this._notify('close', [], {bubbling: true});
