@@ -2,7 +2,7 @@
     <ws:content>
         <Controls._input.DateTime.Mask
                 contrastBackground="{{ _options.contrastBackground }}"
-                borderVisibility="{{ _options.borderVisibility }}"
+                horizontalPadding="{{ _options.horizontalPadding }}"
                 rightFieldTemplate="{{ _options.rightFieldTemplate }}"
                 attr:class="controls-{{ _controlName }}"
                 value="{{_model.clearTextValue}}"

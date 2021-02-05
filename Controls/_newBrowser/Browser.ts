@@ -203,6 +203,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
     //endregion
 
+    reload(): Promise<RecordSet> {
+        return this._detailDataSource.loadData();
+    }
+
     /**
      * Меняет корневую директорию относительно которой отображаются данные.
      * Перед тем как изменить корень генерит событие beforeRootChanged с помощью

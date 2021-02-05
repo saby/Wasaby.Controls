@@ -4314,6 +4314,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._unregisterMouseMove();
         this._unregisterMouseUp();
 
+        _private.closePopup(this, this._itemActionsMenuId);
+
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
@@ -5917,7 +5919,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // в итоге ScrollContainer, который реагирует на afterRender beforeRender начинает восстанавливать скролл не
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
-            this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction);
+            const needShift = this._attachLoadTopTriggerToNull && direction === 'up';
+            this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
         }
 
         this._addItems = [];
