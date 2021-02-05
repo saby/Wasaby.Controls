@@ -12,15 +12,21 @@ import { error as errorLib } from 'Controls/dataSource';
 
 interface IPreviewerOptions extends IControlOptions {
     template: string|TemplateFunction;
-    templateOptions: any;
+    templateOptions: unknown;
 }
 
 class PreviewerTemplate extends Control<IPreviewerOptions> {
-    _template: TemplateFunction = template;
+    protected _template: TemplateFunction = template;
+    protected _templateLoaded: boolean = false;
 
     protected _beforeMount(options: IPreviewerOptions): void|Promise<void> {
         if (constants.isBrowserPlatform && this._needRequireModule(options.template)) {
-            return load(options.template as string).catch((error) => errorLib.process({ error }));
+            return load(options.template).then(
+                () => {
+                    this._templateLoaded = true;
+                },
+                (error) => errorLib.process({ error })
+            );
         }
     }
 
