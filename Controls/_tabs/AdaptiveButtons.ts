@@ -193,6 +193,14 @@ class AdaptiveButtons extends Control<ITabsAdaptiveButtonsOptions, IReceivedStat
             oldRawData.reverse();
         }
         const rawData = oldRawData.slice(0, this._lastIndex + 1);
+
+        /**
+         * Если отмеченного элемента нет в rawData, то добавляем его вместо последнего.
+         */
+        const selectedItem = rawData.find((data) => data[items.getKeyProperty()] === options.selectedKey);
+        if (selectedItem === undefined) {
+            rawData[rawData.length - 1] = items.getRecordById(options.selectedKey).getRawData();
+        }
         // чтобы ужималась
         rawData[this._lastIndex].isMainTab = true;
         if (options.align === 'right') {
