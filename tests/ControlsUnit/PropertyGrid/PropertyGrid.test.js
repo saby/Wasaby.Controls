@@ -65,7 +65,14 @@ define([
 
         describe('displayFilter', () => {
             it('not filtered item from collapsed group', () => {
-                const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
+                const options = {
+                   nodeProperty: 'node',
+                   parentProperty: 'parent',
+                   editingObject,
+                   source,
+                   keyProperty: 'name'
+                };
+                const collection = ViewInstance._getCollection(options);
                 const collapsedItem = collection.getItemBySourceKey('stringField');
                 ViewInstance._collapsedGroups = {
                     text: true
@@ -74,7 +81,14 @@ define([
                 assert.isFalse(resultDisplay);
             });
             it('filtered groupItem', () => {
-                const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
+               const options = {
+                  nodeProperty: 'node',
+                  parentProperty: 'parent',
+                  editingObject,
+                  source,
+                  keyProperty: 'name'
+               };
+                const collection = ViewInstance._getCollection(options);
                 collection.moveToFirst();
                 const group = collection.getCurrent();
                 const resultDisplay = ViewInstance._displayFilter(group.getContents());
@@ -83,7 +97,14 @@ define([
         });
         describe('groupClick', () => {
             it('toggle expand state on group item', () => {
-                const collection = ViewInstance._getCollection('node', 'parent', editingObject, source);
+               const options = {
+                  nodeProperty: 'node',
+                  parentProperty: 'parent',
+                  editingObject,
+                  source,
+                  keyProperty: 'name'
+               };
+                const collection = ViewInstance._getCollection(options);
                 const groupItem = collection.at(2);
                 const expandedState = groupItem.isExpanded();
                 let controlResizeNotified = false;
@@ -111,7 +132,8 @@ define([
                source[0].toggleEditorButtonIcon = 'testIcon';
                ViewInstance._beforeMount({
                    source,
-                   editingObject
+                   editingObject,
+                   keyProperty: 'name'
                });
                assert.deepEqual(ViewInstance._toggledEditors, {stringField: false});
            });
@@ -124,7 +146,14 @@ define([
          });
 
          it('_updateItemActions', () => {
-            const collection = ViewInstance._getCollection('', '', editingObject, source);
+            const options = {
+               nodeProperty: '',
+               parentProperty: '',
+               editingObject,
+               source,
+               keyProperty: 'name'
+            };
+            const collection = ViewInstance._getCollection(options);
             ViewInstance._updateItemActions(collection, {
                itemActions: []
             });

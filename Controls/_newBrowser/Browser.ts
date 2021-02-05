@@ -203,6 +203,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
     //endregion
 
+    reload(): Promise<RecordSet> {
+        return this._detailDataSource.loadData();
+    }
+
     /**
      * Меняет корневую директорию относительно которой отображаются данные.
      * Перед тем как изменить корень генерит событие beforeRootChanged с помощью
@@ -423,22 +427,24 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         //endregion
 
         //region update detail fields
+        const dsOptions = {
+            ...options.detail,
+            ...this._detailSourceOptions,
+            dataLoadCallback: (items: RecordSet, direction: string) => {
+                // Если идет подгрузка страницы, то метаданные обрабатывать не нужно
+                if (direction) {
+                    return;
+                }
+
+                this._processItemsMetadata(items);
+            }
+        } as ISourceControllerOptions;
+
         // Если еще не создавался DataSource для detail-колонки, то создадим
         if (!this._detailDataSource) {
-            this._detailDataSource = new DataSource({
-                ...options.detail,
-                ...this._detailSourceOptions,
-                dataLoadCallback: (items: RecordSet, direction: string) => {
-                    // Если идет подгрузка страницы, то метаданные обрабатывать не нужно
-                    if (direction) {
-                        return;
-                    }
-
-                    this._processItemsMetadata(items);
-                }
-            } as ISourceControllerOptions);
+            this._detailDataSource = new DataSource(dsOptions);
         } else {
-            this._detailDataSource.setRoot(this._detailSourceOptions.root);
+            this._detailDataSource.sourceController.updateOptions(dsOptions);
         }
 
         // На основании полученного состояния соберем опции для detail-explorer

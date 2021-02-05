@@ -4,13 +4,14 @@ import {Memory} from 'Types/source';
 import {ok} from 'assert';
 import {assert} from "chai";
 
-const getDefatultSearchControllerOptions = (): object => {
+const getDefaultSearchControllerOptions = (): object => {
     const source = new Memory();
     return {
         source,
         keyProperty: 'id',
         searchValue: 'testValue',
-        sourceController: new NewSourceController({source})
+        sourceController: new NewSourceController({source}),
+        searchParam: 'testSearchParam'
     };
 };
 
@@ -19,10 +20,22 @@ const getController = (options): Controller => {
 };
 
 describe('Controls/search:Controller', () => {
-    const options = {...getDefatultSearchControllerOptions(), root: 'testRoot'};
-    const dataOptions = {
-        sourceController: options.sourceController
-    };
+    let options;
+    let dataOptions;
+    let sandbox;
+
+    beforeEach(() => {
+        options = {...getDefaultSearchControllerOptions(), root: 'testRoot'};
+        dataOptions = {
+            sourceController: options.sourceController
+        };
+        sandbox = sinon.createSandbox();
+    });
+
+    afterEach(() => {
+        sandbox.restore();
+        sandbox = null;
+    });
 
     describe('_beforeMount', () => {
         it('_dataLoadCallback called', async () => {
@@ -59,7 +72,8 @@ describe('Controls/search:Controller', () => {
             searchController._searchController = {
                 reset: () => {
                     searchControllerReseted = true;
-                }
+                },
+                setRoot: () => {}
             };
             searchController._beforeUnmount();
             assert.isTrue(searchControllerReseted);
@@ -84,7 +98,8 @@ describe('Controls/search:Controller', () => {
         it('_dataLoadCallback called', async () => {
             let callbackCalled = false;
             const searchController = new Controller(options);
-            searchController._options = options;
+            searchController.saveOptions(options);
+
             searchController._dataLoadCallback = () => {
                 callbackCalled = true;
             };
@@ -93,6 +108,21 @@ describe('Controls/search:Controller', () => {
             searchController._beforeUpdate(options, {dataOptions: {}});
             await searchController._sourceController.load();
             assert.isTrue(callbackCalled);
+        });
+
+        it('_dataLoadCallback from options called', async () => {
+            let dataLoadCallbackFromOptionsCalled = false;
+
+            const searchController = new Controller(options);
+            options.dataLoadCallback = () => {
+                dataLoadCallbackFromOptionsCalled = true;
+            };
+            searchController._beforeMount(options, {dataOptions: {}});
+            searchController.saveOptions(options);
+            searchController._sourceController = options.sourceController;
+            searchController._beforeUpdate(options, {dataOptions: {}});
+            await searchController._sourceController.load();
+            assert.isTrue(dataLoadCallbackFromOptionsCalled);
         });
 
         it('_searchValue updated', () => {
@@ -104,7 +134,8 @@ describe('Controls/search:Controller', () => {
                 update: () => {
                     searchControllerUpdated = true;
                     return {};
-                }
+                },
+                setRoot: () => {}
             };
             options.searchValue = 'newValue';
             searchController._searchValue = '';
@@ -122,7 +153,8 @@ describe('Controls/search:Controller', () => {
             searchController._searchController = {
                 update: () => {
                     searchControllerUpdated = true;
-                }
+                },
+                setRoot: () => {}
             };
 
             options.viewMode = 'searchViewMode';
@@ -149,7 +181,8 @@ describe('Controls/search:Controller', () => {
             searchController._searchController = {
                 update: () => {
                     searchControllerUpdated = true;
-                }
+                },
+                setRoot: () => {}
             };
             options.searchValue = 'newValue';
 
@@ -167,7 +200,8 @@ describe('Controls/search:Controller', () => {
             searchController._searchController = {
                 update: () => {
                     searchControllerUpdated = true;
-                }
+                },
+                setRoot: () => {}
             };
             searchController._searchValue = 'newValue';
             options.searchValue = 'newValue';
@@ -184,7 +218,8 @@ describe('Controls/search:Controller', () => {
             searchController._searchController = {
                 update: () => {
                     searchControllerUpdated = true;
-                }
+                },
+                setRoot: () => {}
             };
             searchController._searchValue = 'newValue';
             options.searchValue = undefined;
@@ -225,6 +260,24 @@ describe('Controls/search:Controller', () => {
             assert.equal(searchController._searchValue, '');
         });
 
+    });
+
+    it('searchReset', () => {
+        const options = {
+            ...getDefaultSearchControllerOptions(),
+            filter: {
+                testSearchParam: 'testSearchValue',
+                testFilterField: 'testFilterValue'
+            }
+        };
+        options.sourceController = new NewSourceController(options)
+        const searchController = new Controller(options);
+        searchController._beforeMount(options, {dataOptions: {}});
+        searchController.saveOptions(options);
+        const notifyStub = sandbox.stub(searchController, '_notify');
+
+        searchController._searchReset({});
+        assert.isTrue(notifyStub.calledWith('filterChanged', [{testFilterField: 'testFilterValue'}]));
     });
 
 });

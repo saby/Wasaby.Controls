@@ -185,6 +185,7 @@
   "--readonly_border-color_button_toolButton": "rgba(0, 0, 0, 0.08)",
   "--readonly_border-color_button_functionalButton": "rgba(0, 0, 0, 0.08)",
   "--success_border-color_button_functionalButton": "var(--success_color)",
+  "--success_hover_border-color_button_functionalButton": "#38ad4e",
   "--text-shadow_button": "none",
   "--box-shadow_button": "none",
   "--box-shadow_button_toolButton": "0 1px 4px rgba(0, 0, 0, 0.05)",

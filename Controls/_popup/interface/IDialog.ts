@@ -1,7 +1,7 @@
 import { IOpener, IBasePopupOptions } from 'Controls/_popup/interface/IBaseOpener';
 
 /**
- * 
+ *
  * Опции интерфейса подробно описаны {@link Controls/_popup/interface/IDialogOpener здесь}.
  * @public
  * @author Красильников А.С.
@@ -98,7 +98,7 @@ export interface IDialogOpener extends IOpener {
  * @cfg {String} Опция задает контейнер (через селектор), внутри которого будет позиционироваться окно. Окно не может спозиционироваться за пределами restrictiveContainer.
  * @remark
  * Алгоритм поиска контейнера, внутри которого будут строиться окна:
- * 
+ *
  * * Если задана опция restrictiveContainer, то ищем глобальным поиском класс по селектору, заданному в опции.
  * Если ничего не нашли или опция не задана см. следующий шаг.
  * * Если опция не задана, то ищем глобальным селектором класс "controls-Popup__dialog-target-container".

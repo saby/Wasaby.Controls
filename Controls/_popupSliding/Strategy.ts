@@ -16,7 +16,7 @@ class Strategy {
         const windowHeight = this._getWindowHeight();
         const {
             position,
-            slidingPanelSizes: {
+            slidingPanelOptions: {
                 maxHeight: optionsMaxHeight = windowHeight,
                 minHeight: optionsMinHeight
             } = {}
