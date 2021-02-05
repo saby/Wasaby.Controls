@@ -36,7 +36,7 @@ export default class MonthSlider extends Control<IControlOptions> {
     _month: Date | string;
     _animation: object = Slider.ANIMATIONS.slideLeft;
     _isHomeVisible: boolean = true;
-    _days: [];
+    _days: object[] = [];
     _formatDate: Date = formatDate;
 
     protected _beforeMount(options) {
@@ -95,7 +95,7 @@ export default class MonthSlider extends Control<IControlOptions> {
     static _theme: string[] = ['Controls/calendar'];
 
     static getOptionTypes(): object {
-        return coreMerge({}, IMonth.getOptionTypes());
+        return coreMerge(IMonth.getOptionTypes());
     }
 
     static getDefaultOptions(): object {
