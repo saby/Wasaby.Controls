@@ -231,7 +231,7 @@
   "--icon_hovered_background-image_closeButton_link": "url('../img/CloseIconHovered.svg')",
   "--border-color_closeButton_toolButton": "var(--border-color_button_toolButton)",
   "--border-color_hover_closeButton_toolButton": "var(--border-color_hover_button_toolButton)",
-  "--border-color_active_closeButton_toolButton": "#ссс",
+  "--border-color_active_closeButton_toolButton": "#ccc",
   "--border-thickness_closeButton_toolButton": "var(--border-thickness_button) 0 var(--border-thickness_button) var(--border-thickness_button)",
   "--border-thickness_closeButton_functionalButton": "0",
   "--border-radius_closeButton_toolButton": "var(--border-radius_button_toolButton) 0 0 var(--border-radius_button_toolButton)",
