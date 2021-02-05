@@ -5847,7 +5847,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         this._viewReady = true;
-        if (this._isScrollShown) {
+        if (this._needScrollCalculation) {
             this._viewSize = _private.getViewSize(this, true);
             this._updateHeights();
         }
