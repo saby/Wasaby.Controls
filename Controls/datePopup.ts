@@ -129,9 +129,9 @@ export default class DatePopup extends Control implements EventProxyMixin {
     _endValueValidators = null;
 
     _beforeMount(options: IControlOptions): void {
-        /* Опция _displayDate используется только(!) в тестах, чтобы иметь возможность перемотать
+        /* Опция _date используется только(!) в тестах, чтобы иметь возможность перемотать
          календарь в нужный период, если startValue endValue не заданы. */
-        this._displayedDate = dateUtils.getStartOfMonth(options._displayDate ?
+        this._displayedDate = dateUtils.getStartOfMonth(options._date ?
             options._displayDate :
             (dateUtils.isValidDate(options.startValue) ?
                 options.startValue :
