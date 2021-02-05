@@ -34,6 +34,7 @@ import TreeGridFooterCell from 'Controls/_treeGridNew/display/TreeGridFooterCell
 import { GridLayoutUtil } from 'Controls/grid';
 
 export {
+    TreeGridFooterCell,
     TreeGridCollection,
     TreeGridDataRow,
     TreeGridDataCell,

@@ -367,7 +367,7 @@ export default abstract class Row<T> {
     }
     protected _initializeColumns(): void {
         if (this._$columns) {
-            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+            this._$columnItems = this._prepareColumnItems(this._$columns, this.getColumnsFactory());
             const createMultiSelectColumn = this.hasMultiSelectColumn();
             this._processStickyLadderCells();
             if (createMultiSelectColumn) {
@@ -405,9 +405,9 @@ export default abstract class Row<T> {
         }
     }
 
-    protected _getColumnsFactory(): (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>> {
+    getColumnsFactory(): (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>> {
         if (!this._cellModule) {
-            throw new Error('Controls/_display/Row:_getColumnsFactory can not resolve cell module!');
+            throw new Error('Controls/_display/Row:getColumnsFactory can not resolve cell module!');
         }
         return (options) => {
             options.owner = this;
