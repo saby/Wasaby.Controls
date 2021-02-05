@@ -107,6 +107,7 @@ describe('Controls/browser:Browser', () => {
                 await browser._beforeMount(options);
                 assert.ok(browser._searchValue === 'test');
                 assert.ok(browser._inputSearchValue === 'test');
+                assert.ok(browser._viewMode === 'search');
             });
 
             it('source returns error', async () => {
