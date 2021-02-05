@@ -30,7 +30,8 @@ export type AutoComplete =
     | 'bday'
     | 'sex'
     | 'tel'
-    | 'url';
+    | 'url'
+    | string;
 
 export interface IBaseOptions extends IContrastBackground {
     autoComplete?: AutoComplete;
