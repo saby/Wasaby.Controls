@@ -8,7 +8,9 @@
 >
 
    <ws:master>
-      <Controls.scroll:Container>
+      <Controls.scroll:Container
+         attr:class="controls-newBrowser__master"
+      >
          <Controls.explorer:View
             scope="{{_masterExplorerOptions}}"
 
