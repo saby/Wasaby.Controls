@@ -182,7 +182,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
             mode: 'dialog'
          };
          const sandbox = sinon.createSandbox();
-         sandbox.replace(popup.Dialog, 'openPopup', () => {});
+         sandbox.replace(popup.Dialog, 'openPopup', () => {return new Promise(() => {})});
 
          showSelector.default(baseController, {});
          assert.isTrue(baseController._opener instanceof popup.DialogOpener);
@@ -196,7 +196,7 @@ define(['Controls/_lookup/showSelector', 'Controls/_lookup/Lookup', 'Controls/po
             mode: 'stack'
          };
          const sandbox = sinon.createSandbox();
-         sandbox.replace(popup.Stack, 'openPopup', () => {});
+         sandbox.replace(popup.Stack, 'openPopup', () => {return new Promise(() => {});});
 
          showSelector.default(baseController, {});
          assert.isTrue(baseController._opener instanceof popup.StackOpener);

@@ -60,7 +60,7 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
     }
 
     static openPopup(config: IStackPopupOptions): Promise<string> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const newCfg = getStackConfig(config);
             if (!newCfg.hasOwnProperty('isHelper')) {
                 Logger.warn('Controls/popup:Stack: Для открытия стековых окон из кода используйте StackOpener');
@@ -72,6 +72,8 @@ class Stack extends BaseOpener<IStackOpenerOptions> implements IStackOpener {
                 BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });
+            }).catch((error: RequireError) => {
+                reject(error);
             });
         });
     }
