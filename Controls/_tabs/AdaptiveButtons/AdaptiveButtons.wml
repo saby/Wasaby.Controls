@@ -5,16 +5,12 @@
                 <Controls.dropdown:Selector
                         name="menuButton"
                         keyProperty="{{_options.keyProperty}}"
-                        caption="{[Еще]}..."
                         parentProperty="parent"
                         nodeProperty="@parent"
                         source="{{_menuSource}}"
-                        buttonStyle="secondary"
                         displayProperty="{{_options.displayProperty}}"
-                        viewMode="link"
                         filter="{{_filter}}"
                         selectedKeys="{{_selectedKey}}"
-                        lazyItemsLoading="{{true}}"
                         on:selectedKeysChanged="_menuItemClickHandler()"
                         on:mousedown="_onMouseDownHandler()">
                     <ws:contentTemplate>
