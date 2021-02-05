@@ -5058,7 +5058,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _resetValidation() {
-        this._validateController.setValidationResult(null);
+        this._validateController?.setValidationResult(null);
     },
 
     isEditing(): boolean {

@@ -433,7 +433,7 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             }
             return CONSTANTS.CANCEL;
         }).then((result) => {
-            if (result === CONSTANTS.CANCEL) {
+            if (result === CONSTANTS.CANCEL || this.destroyed) {
                 return {canceled: true};
             }
             this._collectionEditor[commit ? 'commit' : 'cancel']();
@@ -462,8 +462,9 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
     }
 
     destroy(): void {
-        super.destroy();
+        this._collectionEditor.destroy();
         this._collectionEditor = null;
         this._options = null;
+        super.destroy();
     }
 }

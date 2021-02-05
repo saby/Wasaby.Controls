@@ -875,6 +875,24 @@ describe('Controls/_editInPlace/EditInPlace', () => {
                 assert.isNull(collection.find((i) => i.isEditing()));
             });
         });
+
+        it('should skip then branch if controller was destroyed while cancelling', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                }
+            });
+
+            const endPromise = editInPlace.cancel();
+            editInPlace.destroy();
+            return endPromise.then((res) => {
+                assert.deepEqual({ canceled: true }, res);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isFalse(onAfterEndEditCalled);
+            });
+        });
+
     });
 
     it('should not throw console error if it was processed by error controller', () => {
