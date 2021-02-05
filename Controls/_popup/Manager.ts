@@ -89,7 +89,7 @@ class Manager {
         // we have to make an event model on ManagerController.
         // Now there are no cases where the theme changes when the popup are open,
         // so now just change the theme to afterUpdate.
-        ManagerController.setPopupHeaderTheme(options.popupHeaderTheme);
+        ManagerController.setPopupHeaderTheme(popupHeaderTheme);
     }
 
     public destroy(): void {

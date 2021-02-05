@@ -21,6 +21,10 @@ import {TouchContextField} from 'Controls/context';
 import {RegisterClass} from 'Controls/event';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 
+// Нужно чтобы oldCss прилетал первым на страницу. Есть контролы (например itemsActions), стили которыйх
+// Завязаны на порядок css.
+import 'css!theme?Controls/Application/oldCss';
+
 /**
  * Корневой контрол для Wasaby-приложений. Служит для создания базовых html-страниц.
  * Подробнее читайте <a href='/doc/platform/developmentapl/interface-development/controls/controls-application/'>здесь</a>.
@@ -540,7 +544,7 @@ export default class Application extends Control<IApplication> {
       };
    }
 
-   static _theme: string[] = ['Controls/application', 'Controls/Application/oldCss'];
+   static _theme: string[] = ['Controls/application'];
    static _styles: string[] = ['Controls/dragnDrop'];
 
    private static _isIOS13(): boolean {
