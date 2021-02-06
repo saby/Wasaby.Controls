@@ -207,7 +207,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     protected _afterMount(options: IBrowserOptions): void {
         this._isMounted = true;
         if (options.useStore) {
-            this._storeCallbackIds = this._createNewStoreObserver();
+            this._storeCallbackIds = this._createNewStoreObservers();
             this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', function () {
                 this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
                 this._storeCallbackIds = this._createNewStoreObservers();
