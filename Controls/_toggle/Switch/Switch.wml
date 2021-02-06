@@ -18,7 +18,7 @@
    </ws:if>
 </ws:template>
 
-<span class="controls-Switch"
+<span class="controls-Switch controls_theme-{{_options.theme}}"
             on:click="_clickHandler()"
       title="{{_options.tooltip}}">
    <div class="controls-invalid-container controls-Switch__wrapper controls-Switch__wrapper">

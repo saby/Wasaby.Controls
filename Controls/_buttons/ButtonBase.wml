@@ -46,6 +46,7 @@
                 {{_height ? ' controls-Button-inlineheight-' + _height}}
                 {{_height ? ' controls-Button_' + _viewMode + '_' + _height}}
                 controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
-                controls-Button_{{_viewMode}}__wrapper-fontsize-{{_fontSize}}"
+                controls-Button_{{_viewMode}}__wrapper-fontsize-{{_fontSize}}
+                controls_theme-{{_options.theme}}"
             attr:title="{{_options.tooltip}}"
 />
