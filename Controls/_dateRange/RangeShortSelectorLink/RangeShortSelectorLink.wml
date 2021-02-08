@@ -33,11 +33,11 @@
                     on:mousedown="_onClick()"/>
            </ws:else>
         </span>
-        <ws:if data="{{ _clearButtonVisible }}">
-            <div on:click="_clearDate()" class="controls-RangeShortSelectorLink__clear
-              controls-RangeShortSelectorLink__clear_theme-{{_options.theme}}">
-                <span class="icon-CloseNew controls-icon_size-s_theme-{{_options.theme}}"></span>
-            </div>
+        <ws:if data="{{ _resetButtonVisible || _clearButtonVisible }}">
+            <span class="controls-DateLinkView__resetButton controls-DateLinkView__resetButton_theme-{{_options.theme}}
+                        controls-icon controls-icon_style-unaccented_theme-{{ _options.theme }}
+                        controls-icon_size-s_theme-{{ _options.theme }} icon-Close"
+                  on:click="_resetButtonClickHandler()"></span>
         </ws:if>
         <ws:if data="{{ _options.prevArrowVisibility && _viewMode == 'selector'  && !_options.readOnly}}">
             <Controls.buttons:ArrowButton attr:class="controls-RangeShortSelectorLink__arrow-prev_theme-{{_options.theme}}"

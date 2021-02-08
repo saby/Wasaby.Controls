@@ -63,24 +63,11 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
             this._emptyCaption = options.selectionType !== IDateRangeSelectable.SELECTION_TYPES.single ?
                 this.EMPTY_CAPTIONS.ALL_TIME : this.EMPTY_CAPTIONS.NOT_SPECIFIED;
         }
-        this._updateResetButtonVisible(options);
     }
 
     protected _beforeUpdate(options): void {
         this._updateValues(options);
-        this._updateResetButtonVisible(options);
         super._beforeUpdate(options);
-    }
-
-    _updateResetButtonVisible(options): void {
-        const hasResetStartValue = options.resetStartValue || options.resetStartValue === null;
-        const hasResetEndValue = options.resetEndValue || options.resetEndValue === null;
-        this._resetButtonVisible = (hasResetStartValue &&
-            (!dateUtils.isDatesEqual(this._startValue, options.resetStartValue) ||
-            this._startValue !== options.resetStartValue)) ||
-            (hasResetEndValue &&
-                (!dateUtils.isDatesEqual(this._endValue, options.resetEndValue)
-        || this._endValue !== options.resetEndValue));
     }
 
     _updateValues(options): void {
@@ -177,16 +164,14 @@ export default class RangeSelector extends BaseSelector<IControlOptions> {
         return {
             minRange: 'day',
             ...ILinkView.getDefaultOptions(),
-            ...IDateRangeSelectable.getDefaultOptions(),
-            captionFormatter: dateControlsUtils.formatDateRangeCaption
+            ...IDateRangeSelectable.getDefaultOptions()
         };
     }
 
     static getOptionTypes(): object {
         return {
             ...IDateRangeSelectable.getOptionTypes(),
-            ...ILinkView.getOptionTypes(),
-            captionFormatter: descriptor(Function)
+            ...ILinkView.getOptionTypes()
         };
     }
 

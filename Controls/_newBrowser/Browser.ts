@@ -203,6 +203,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
     //endregion
 
+    reload(): Promise<RecordSet> {
+        return this._detailDataSource.loadData();
+    }
+
     /**
      * Меняет корневую директорию относительно которой отображаются данные.
      * Перед тем как изменить корень генерит событие beforeRootChanged с помощью
@@ -238,7 +242,21 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
                 return roots;
             })
-            // Загрузим данные если нужно
+            // Обрабатываем смену root когда находимся в режиме поиска
+            .then((newRoots) => {
+                let resultPromise = Promise.resolve(newRoots);
+
+                // Если меняют root когда находимся в режиме поиска, то нужно
+                // сбросить поиск и отобразить содержимое нового root
+                if (this.viewMode === DetailViewMode.search) {
+                    resultPromise = this._detailDataSource
+                        .resetSearchString()
+                        .then(() => newRoots);
+                }
+
+                return resultPromise;
+            })
+            // Обновим состояние чтобы загрузились новые данные
             .then((newRoots) => {
                 const detailRootChanged = newRoots?.detailRoot !== this.root;
                 const masterRootChanged = newRoots?.masterRoot !== this.masterRoot;
@@ -284,7 +302,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._notify('viewModeChanged', [result]);
     }
 
-    private _setSearchString(searchString: string): Promise<RecordSet> {
+    private _setSearchString(searchString: string): void {
         this._waitingSearchResult = !!searchString;
 
         const searchStartingWith = this._options.detail.searchStartingWith || 'root';
@@ -303,7 +321,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             }
         }
 
-        return this._detailDataSource
+        this._detailDataSource
             .setSearchString(searchString)
             .then((items) => {
                 // Если ждем результаты поиска, то нужно проставить DetailViewMode.search,
@@ -341,7 +359,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._tileCfg = new TileConfig(cfg, options);
         this._listCfg = new ListConfig(cfg, options);
 
-        // Если не в режиме поиска, то нужно применить viewMode из конфига
         this._setViewMode(cfg.settings.clientViewMode, options);
         this._updateMasterVisibility(options);
     }
@@ -387,11 +404,11 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     protected _onSearch(event: SyntheticEvent, validatedValue: string): void {
-        this._setSearchString(validatedValue).then();
+        this._setSearchString(validatedValue);
     }
 
     protected _onSearchReset(): void {
-        this._setSearchString(null).then();
+        this._setSearchString(null);
     }
 
     // TODO: implement
@@ -486,7 +503,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         const result: any = {
             // Дефолтные опции
             style: 'default',
-            backgroundStyle: 'transparent',
 
             // Пользовательские опции
             ...options.detail,
@@ -513,12 +529,18 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * случае на основании конфигурации.
      */
     private _updateMasterVisibility(options: IOptions = this._options): void {
+        // В режиме поиска не обновляем видимость мастера, т.к. если он был, то должен остаться
+        // если нет, то нет
+        if (this.viewMode === DetailViewMode.search) {
+            return;
+        }
+
         // По умолчанию вычисляем видимость мастера на основании опций
         this._masterVisibility = options.master?.visibility || MasterVisibilityEnum.hidden;
 
-        // Если данных о конфигурации представления не достаточно или мы находимся в режиме поиска
-        // то оставляем видимость, которая вычислилась на основании опций
-        if (!this._listConfiguration || !this.viewMode || this.viewMode === DetailViewMode.search) {
+        // Если данных о конфигурации представления не достаточно, то оставляем видимость,
+        // которая вычислилась на основании опций
+        if (!this._listConfiguration || !this.viewMode) {
             return;
         }
 

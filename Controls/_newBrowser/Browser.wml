@@ -8,7 +8,9 @@
 >
 
    <ws:master>
-      <Controls.scroll:Container>
+      <Controls.scroll:Container
+         attr:class="controls-newBrowser__master"
+      >
          <Controls.explorer:View
             scope="{{_masterExplorerOptions}}"
 
@@ -47,6 +49,7 @@
                   <invisible-node/>
                </ws:else>
             </ws:afterBreadCrumbsTemplate>
+
             <ws:itemTemplate>
                <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
                <ws:if data="{{viewMode === _viewModeEnum.table || viewMode === 'search'}}">
@@ -64,6 +67,7 @@
                   />
                </ws:else>
             </ws:itemTemplate>
+
             <ws:tileItemTemplate>
                <ws:partial
                   scope="{{tileItemTemplate}}"
