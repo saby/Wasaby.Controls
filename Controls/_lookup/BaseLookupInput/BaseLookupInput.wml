@@ -100,7 +100,7 @@
                             <Controls.toolbars:View items="{{_options.toolbarItems}}"
                                                     iconSize="s"
                                                     on:itemClick="_toolbarItemClickHandler()"
-                                                    attr:class="controls-Lookup__toolbar_theme-{{_options.theme}}"/>
+                                                    attr:class="controls-Lookup__toolbar"/>
                         </ws:if>
                         <ws:partial template="{{_showSelectorTemplate}}"
                                     name="showSelector"
