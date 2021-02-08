@@ -24,7 +24,7 @@
                     style="left: {{_options.direction === 'horizontal' ? point.position + '%'}};
                            bottom: {{_options.direction === 'vertical' ? point.position + '%'}};">
                   <ws:if data="{{point.name=='tooltip' && _options.tooltipVisible && !_options.readOnly && (_tooltipValue || _tooltipValue==0)}}">
-                     <div class="controls-Slider__tooltipValue controls-Slider__tooltipValue_theme-{{_options.theme}} controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}} controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue_theme-{{_options.theme}}">
+                     <div class="controls-Slider__tooltipValue {{(_options.tooltipPosition !== 'center' || _options.size !=='m') ? 'controls-Slider__tooltipValue_theme-' + _options.theme + ' ':''}}controls-Slider__point{{_options.size === 'm' ? '_big' : '_small'}} controls-Slider__point{{_options.size=='m' ? '_big' : '_small'}}_tooltipValue_position-{{_options.tooltipPosition}}_theme-{{_options.theme}}">
                         {{_tooltipValue}}
                      </div>
                   </ws:if>
