@@ -1,5 +1,5 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as coreMerge from 'Core/core-merge';
+import {Control as BaseControl} from 'UI/Base';
+import coreMerge = require('Core/core-merge');
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import IMonth from './interfaces/IMonth';
@@ -7,6 +7,20 @@ import Slider from './MonthSlider/Slider';
 import {Utils as calendarUtils} from 'Controls/dateRange';
 import {Base as DateUtil} from 'Controls/dateUtils';
 import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
+
+var _private = {
+    _setMonth: function (self, month, silent, dateConstructor) {
+        if (DateUtil.isDatesEqual(month, self._month)) {
+            return;
+        }
+        self._animation = month < self._month ? Slider.ANIMATIONS.slideRight : Slider.ANIMATIONS.slideLeft;
+        self._month = month;
+        self._isHomeVisible = !DateUtil.isMonthsEqual(month, new dateConstructor());
+        if (!silent) {
+            self._notify('monthChanged', [month]);
+        }
+    }
+};
 
 /**
  * Календарь, который отображает 1 месяц и позволяет переключаться на следующий и предыдущий месяцы с помощью кнопок.
@@ -29,87 +43,96 @@ import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
  * @demo Controls-demo/Calendar/MonthSlider/ReadOnly/Index
  *
  */
-export {default as Base} from './MonthSlider/Slider';
 
-export default class MonthSlider extends Control<IControlOptions> {
-    _template: TemplateFunction = monthTmpl;
-    _month: Date | string;
-    _animation: object = Slider.ANIMATIONS.slideLeft;
-    _isHomeVisible: boolean = true;
-    _days: object[] = [];
-    _formatDate: Date = formatDate;
+/*
+ * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
+ * Designed to select a date or period within a few months or years.
+ *
+ * @class Controls/_calendar/MonthSlider
+ * @extends UI/Base:Control
+ * @mixes Controls/_calendar/interface/IMonth
+ * @mixes Controls/_dateRange/interfaces/IRangeSelectable
+ * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
+ *
+ * @public
+ * @author Красильников А.С.
+ * @demo Controls-demo/Calendar/MonthSlider
+ *
+ */
 
-    protected _beforeMount(options) {
+var Component = BaseControl.extend({
+    _template: monthTmpl,
+    _month: null,
+    _animation: Slider.ANIMATIONS.slideLeft,
+    _isHomeVisible: true,
+    _days: [],
+    _formatDate: formatDate,
+
+    _beforeMount: function (options) {
         this._days = calendarUtils.getWeekdaysCaptions();
-        this._setMonth(options.month, true, options.dateConstructor);
-    }
+        _private._setMonth(this, options.month, true, options.dateConstructor);
+    },
 
-    protected _beforeUpdate(options) {
+    _beforeUpdate: function (options) {
         this._days = calendarUtils.getWeekdaysCaptions();
-        this._setMonth(options.month, true, options.dateConstructor);
-    }
+        _private._setMonth(this, options.month, true, options.dateConstructor);
+    },
 
-    protected _wheelHandler(event) {
+    _wheelHandler(event) {
         event.preventDefault();
         if (event.nativeEvent.deltaY < 0) {
             this._slideMonth(null, 1);
-        } else if (event.nativeEvent.deltaY > 0) {
+        }
+        else if (event.nativeEvent.deltaY > 0) {
             this._slideMonth(null, -1);
         }
-    }
+    },
 
-    protected _itemClickHandler(event, item): void {
+    _slideMonth: function (event, delta) {
+        _private._setMonth(this,
+            new this._options.dateConstructor(this._month.getFullYear(), this._month.getMonth() + delta, 1), false, this._options.dateConstructor);
+    },
+
+    _setCurrentMonth: function () {
+        _private._setMonth(this, DateUtil.normalizeDate(new this._options.dateConstructor()), false, this._options.dateConstructor);
+    },
+
+    _itemClickHandler: function (event, item) {
         this._notify('itemClick', [item]);
-    }
+    },
 
-    protected _onStartValueChanged(event, value): void {
+    _onStartValueChanged: function (event, value) {
         this._notify('startValueChanged', [value]);
-    }
+    },
 
-    protected _onEndValueChanged(event, value): void {
+    _onEndValueChanged: function (event, value) {
         this._notify('endValueChanged', [value]);
     }
-
-    private _slideMonth(event, delta): void {
-        this._setMonth(new this._options.dateConstructor(this._month.getFullYear(),
-                this._month.getMonth() + delta, 1), false, this._options.dateConstructor);
-    }
-
-    protected _setCurrentMonth(): void {
-        this._setMonth(DateUtil.normalizeDate(new this._options.dateConstructor()),
-            false, this._options.dateConstructor);
-    }
-
-    private _setMonth(month, silent, dateConstructor): void {
-        if (DateUtil.isDatesEqual(month, this._month)) {
-            return;
-        }
-        this._animation = month < this._month ? Slider.ANIMATIONS.slideRight : Slider.ANIMATIONS.slideLeft;
-        this._month = month;
-        this._isHomeVisible = !DateUtil.isMonthsEqual(month, new dateConstructor());
-        if (!silent) {
-            this._notify('monthChanged', [month]);
-        }
-    }
-
-    static _theme: string[] = ['Controls/calendar'];
-
-    static getOptionTypes(): object {
-        return coreMerge(IMonth.getOptionTypes());
-    }
-
-    static getDefaultOptions(): object {
-        return {
-            ...IMonth.getDefaultOptions(),
-            dateConstructor: WSDate
-        };
-    }
-}
-Object.defineProperty(MonthSlider, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
-
-   get(): object {
-      return MonthSlider.getDefaultOptions();
-   }
 });
+
+Component.getDefaultOptions = function () {
+    return {
+        ...IMonth.getDefaultOptions(),
+        dateConstructor: WSDate
+    };
+};
+
+Object.defineProperty(Component, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+
+    get(): object {
+        return Component.getDefaultOptions();
+    }
+});
+
+Component.getOptionTypes = function () {
+    return coreMerge({}, IMonth.getOptionTypes());
+};
+
+Component._theme = ['Controls/calendar'];
+
+Component._private = _private;
+
+export default Component;
+export {default as Base} from './MonthSlider/Slider';
