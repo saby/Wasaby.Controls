@@ -4,6 +4,10 @@ import { IGridRowOptions, GridCell, GridRowMixin } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
 import { TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
+import GroupCell from "Controls/_gridNew/display/GroupCell";
+import Cell from "Controls/_gridNew/display/Cell";
+
+const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/treeGridNew:GroupItemTemplate';
 
 export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T> {
     owner: TreeGridCollection<T>;
@@ -104,6 +108,20 @@ export default class TreeGridDataRow<T extends Model>
     }
 
     // endregion overrides
+
+    getGroupColumns(): Array<Cell<T, TreeGridDataRow<T>>> {
+        if (this._$columns) {
+            const columns = [];
+
+            columns.push(new GroupCell({
+                owner: this,
+                columns: this._$columns,
+                column: { template: this._template || DEFAULT_GROUP_CONTENT_TEMPLATE }
+            }));
+
+            this._$columnItems = columns;
+        }
+    }
 }
 
 Object.assign(TreeGridDataRow.prototype, {

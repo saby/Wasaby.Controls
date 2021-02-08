@@ -40,6 +40,48 @@ export default class TreeGridDataCell<T extends Model> extends GridDataCell<T, T
         return classes;
     }
 
+    // region groupItem
+
+    getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
+        return 'getGroupWrapperClasses';
+    }
+
+    getCaptionClasses(expanderAlign, expanderVisible: boolean, theme: string) {
+        return 'getCaptionClasses';
+    }
+
+    getRightTemplateClasses(separatorVisibility: boolean,
+                            textVisible: boolean,
+                            columnAlignGroup: number,
+                            textAlign: string,
+                            theme: string): string {
+        return 'getRightTemplateClasses';
+    }
+
+    shouldDisplayLeftSeparator(separatorVisibility: boolean,
+                               textVisible: boolean,
+                               columnAlignGroup: number,
+                               textAlign: string): boolean {
+        return true;
+    }
+
+    shouldDisplayRightSeparator(separatorVisibility: boolean,
+                                textVisible: boolean,
+                                columnAlignGroup: number,
+                                textAlign: string): boolean {
+        return true;
+    }
+
+    getCaption(): string {
+        return 'getCaption';
+    }
+
+    isExpanded(): boolean {
+        return this._$owner.isExpanded();
+    }
+
+    // endregion groupItem
+
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = super._getWrapperBaseClasses(theme, style, templateHighlightOnHover);
         classes += ` controls-TreeGrid__row-cell_theme-${theme} controls-TreeGrid__row-cell_${style || 'default'}_theme-${theme}`;

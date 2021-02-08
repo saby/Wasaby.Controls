@@ -11,6 +11,8 @@ export interface IOptions<T> {
     columns: IColumn[];
 }
 
+const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupContent';
+
 export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
     protected _$columns: IColumn[];
 
@@ -126,6 +128,10 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
         return this._$owner.isExpanded();
     }
 
+    getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
+        return this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE;
+    }
+
     protected _shouldFixGroupOnColumn(columnAlignGroup: number, textVisible: boolean): boolean {
         return textVisible !== false &&
             columnAlignGroup !== undefined &&
@@ -135,7 +141,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
 
 Object.assign(GroupCell.prototype, {
     '[Controls/_display/grid/GroupCell]': true,
-    _moduleName: 'Controls/display:GridGroupCell',
+    _moduleName: 'Controls/gridNew:GridGroupCell',
     _instancePrefix: 'grid-group-cell-',
     _$owner: null,
     _$columns: null

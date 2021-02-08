@@ -11,9 +11,8 @@ import {
 import Row from './Row';
 import Cell from './Cell';
 import Collection from './Collection';
-import GroupCell from './GroupCell';
-
-const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupContent';
+import {IColumn} from "Controls/_grid/interface/IColumn";
+import {TColspanCallbackResult} from "Controls/_gridNew/display/mixins/Grid";
 
 export interface IOptions<T> extends IBaseCollectionItemOptions<T>, IExpandableMixinOptions {
     owner: Collection<T>;
@@ -99,31 +98,28 @@ export default class GroupItem<T> extends mixin<
         return 'top';
     }
 
-    _initializeColumns(): void {
-        if (this._$columns) {
-            const columns = [];
-
-            columns.push(new GroupCell({
-                owner: this,
-                columns: this._$columns,
-                column: { template: this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE }
-            }));
-
-            this._$columnItems = columns;
-        }
-    }
-
     setExpanded(expanded: boolean, silent?: boolean): void {
         super.setExpanded(expanded, silent);
         this._nextVersion();
     }
 
+    protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
+        return 'end';
+    }
+
+    protected _initializeColumns(): void {
+        if (this._$columns) {
+            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+            this._processStickyLadderCells();
+        }
+    }
 }
 
 Object.assign(GroupItem.prototype, {
     '[Controls/_display/GroupItem]': true,
     '[Controls/_display/grid/GroupItem]': true,
-    _moduleName: 'Controls/display:GridGroupItem',
+    _moduleName: 'Controls/gridNew:GridGroupItem',
+    _cellModule: 'Controls/gridNew:GridGroupCell',
     _instancePrefix: 'grid-group-item-',
     _$columns: null
 });

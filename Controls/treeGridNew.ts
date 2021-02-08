@@ -18,10 +18,13 @@ const ItemTemplate = function() {
 ItemTemplate.stable = true;
 ItemTemplate.isWasabyTemplate = true;
 
+import * as GroupItemTemplate from 'wml!Controls/_treeGridNew/render/grid/GroupItem';
+
 export {
     View,
     TreeGridView,
     ItemTemplate,
+    GroupItemTemplate,
     NodeFooterTemplate
 };
 

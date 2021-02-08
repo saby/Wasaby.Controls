@@ -12,12 +12,15 @@
       itemActionsPosition="outside"
       itemActions="{{_itemActions}}"
       dataLoadCallback="{{_dataLoadCallback}}"
+      groupProperty="type"
       keyProperty="id">
       <ws:itemPadding right="S" left="S"/>
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>
-      <ws:itemsGroup method="{{_groupingKeyCallback}}" template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
+      <ws:groupTemplate>
+         <Ws:partial template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
+      </ws:groupTemplate>
    </Controls.grid:View>
    <div class="ControlsDemo-EipScenarios__tableFooter">
       <Controls.list:AddButton if="{{_showAddButton}}" caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
