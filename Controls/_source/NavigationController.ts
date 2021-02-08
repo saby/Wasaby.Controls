@@ -279,7 +279,17 @@ export class NavigationController {
     }
 
     private _getStore(id: TKey): INavigationStore {
-        const storeIndex = this._navigationStores.getIndexByValue('id', id);
+        let storeIndex = this._navigationStores.getIndexByValue('id', id);
+
+        // Фикс, пока Витя Абрамов не починит изменения типа идентификатора в множестенной навигации
+        // https://online.sbis.ru/opendoc.html?guid=9f0b2454-3234-43f2-8a69-811d19cd8443
+        if (storeIndex === -1 && id !== null) {
+            storeIndex = this._navigationStores.getIndexByValue(
+                'id',
+                typeof id === 'string' ? Number(id) : String(id)
+            );
+        }
+
         let resStoreItem: INavigationStoresListItem = this._navigationStores.at(storeIndex);
 
         if (!resStoreItem) {

@@ -121,7 +121,7 @@ define([
             buttons._items = items;
 
 
-            buttons._menuItemClickHandler(event1, items.at(0));
+            buttons._menuItemClickHandler(event1, [1]);
             assert.equal(notifyCorrectCalled, true);
 
             buttons.destroy();

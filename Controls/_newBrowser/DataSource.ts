@@ -43,8 +43,19 @@ export class DataSource {
                     return;
                 }
 
-                // this.sourceController.setItems(result);
                 return result;
+            });
+    }
+
+    /**
+     * Сбрасывает значение поиска в фильтре
+     */
+    resetSearchString(): Promise<void> {
+        return this.getSearchController()
+            .then((sc) => {
+                this.searchValue = null;
+                const filter = sc.reset(true);
+                this.sourceController.setFilter(filter);
             });
     }
 

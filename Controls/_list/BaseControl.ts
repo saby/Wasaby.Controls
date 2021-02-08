@@ -5118,7 +5118,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beginAdd(options, {shouldActivateInput = true, addPosition = 'bottom'}: IBeginAddOptions = {}) {
         _private.closeSwipe(this);
         this.showIndicator();
-        return this._getEditInPlaceController().add(options, addPosition).then((addResult) => {
+        return this._getEditInPlaceController().add(options, {addPosition}).then((addResult) => {
             if (addResult && addResult.canceled) {
                 return addResult;
             }
@@ -5880,7 +5880,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         this._viewReady = true;
-        if (this._isScrollShown) {
+        if (this._needScrollCalculation) {
             this._viewSize = _private.getViewSize(this, true);
             this._updateHeights();
         }
