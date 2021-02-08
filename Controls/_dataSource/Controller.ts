@@ -644,6 +644,11 @@ export default class Controller {
             this._options.dataLoadErrback(queryError);
         }
         this._loadError = queryError;
+        // Выводим ошибку в консоль, иначе из-за того, что она произошла в Promise,
+        // у которого есть обработка ошибок через catch, никто о ней не узнает
+        if (!queryError.processed && !queryError.hasOwnProperty('httpError')) {
+            Logger.error('dataSource/Controller load error', this, queryError);
+        }
         return queryError;
     }
 

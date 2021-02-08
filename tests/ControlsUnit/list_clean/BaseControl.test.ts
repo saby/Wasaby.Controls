@@ -1050,7 +1050,11 @@ describe('Controls/list_clean/BaseControl', () => {
 
                 sourceControllerOptions = {...sourceControllerOptions};
                 sourceControllerOptions.source = new Memory();
-                sourceControllerOptions.source.query = () => Promise.reject(new Error());
+                sourceControllerOptions.source.query = () => {
+                    const error = new Error();
+                    error.processed = true;
+                    return Promise.reject(error);
+                };
                 sourceController.updateOptions(sourceControllerOptions);
                 await sourceController.reload().catch(() => {});
                 baseControlOptions.source = new Memory();

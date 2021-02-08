@@ -452,7 +452,11 @@ define([
       it('sourceController with error', async () => {
          const explorer = new explorerMod.View();
          const sourceWithQueryError = new sourceLib.Memory();
-         sourceWithQueryError.query = () => Promise.reject(new Error());
+         sourceWithQueryError.query = () => {
+            const error = new Error();
+            error.processed = true;
+            return Promise.reject(error);
+         };
          const sourceController = new dataSource.NewSourceController({
             source: sourceWithQueryError
          });
