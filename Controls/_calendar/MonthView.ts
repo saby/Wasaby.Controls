@@ -115,37 +115,38 @@ var MonthView = BaseControl.extend({
    },
 
    _keyDownHandler: function(event: Event, item: Date, isCurrentMonth: boolean): void {
+           const hoveredItem = this._hoveredItem || item;
            if (event.nativeEvent.keyCode === constants.key.enter) {
                this._dayClickHandler(event, this._hoveredItem, isCurrentMonth);
            }
-           if (this._hoveredItem && this._options.selectionType !== 'quantum') {
-               let hoveredItem;
+           if (hoveredItem && this._options.selectionType !== 'quantum') {
+               let newHoveredItem;
                const daysInWeek = 7;
                switch (event.nativeEvent.keyCode) {
                    case constants.key.up:
-                       hoveredItem = new Date(this._hoveredItem.getFullYear(),
-                           this._hoveredItem.getMonth(), this._hoveredItem.getDate() - daysInWeek);
+                       newHoveredItem = new Date(hoveredItem.getFullYear(),
+                           hoveredItem.getMonth(), hoveredItem.getDate() - daysInWeek);
                        break;
                    case constants.key.down:
-                       hoveredItem = new Date(this._hoveredItem.getFullYear(),
-                           this._hoveredItem.getMonth(), this._hoveredItem.getDate() + daysInWeek);
+                       newHoveredItem = new Date(hoveredItem.getFullYear(),
+                           hoveredItem.getMonth(), hoveredItem.getDate() + daysInWeek);
                        break;
                    case constants.key.left:
-                       hoveredItem = new Date(this._hoveredItem.getFullYear(),
-                           this._hoveredItem.getMonth(), this._hoveredItem.getDate() - 1);
+                       newHoveredItem = new Date(hoveredItem.getFullYear(),
+                           hoveredItem.getMonth(), hoveredItem.getDate() - 1);
                        break;
                    case constants.key.right:
-                       hoveredItem = new Date(this._hoveredItem.getFullYear(),
-                           this._hoveredItem.getMonth(), this._hoveredItem.getDate() + 1);
+                       newHoveredItem = new Date(hoveredItem.getFullYear(),
+                           hoveredItem.getMonth(), hoveredItem.getDate() + 1);
                        break;
                }
-               if (hoveredItem) {
+               if (newHoveredItem) {
                    const elementToFocus = document.querySelector(
-                       `.controls-MonthViewVDOM__item[data-date="${this._dateToDataString(hoveredItem)}"]`
+                       `.controls-MonthViewVDOM__item[data-date="${this._dateToDataString(newHoveredItem)}"]`
                    );
                    elementToFocus?.focus();
-                   this._hoveredItem = hoveredItem;
-                   this._notify('itemMouseEnter', [hoveredItem]);
+                   this._hoveredItem = newHoveredItem;
+                   this._notify('itemMouseEnter', [newHoveredItem]);
                    event.preventDefault();
                }
            }
