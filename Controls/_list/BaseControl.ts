@@ -155,7 +155,9 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
 /**
  * Нативный IntersectionObserver дергает callback по перерисовке.
  * В ie нет нативного IntersectionObserver.
- * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
+ * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка.
+ * В fireFox возникает аналогичная проблема, но уже с нативным обсервером.
+ * https://online.sbis.ru/opendoc.html?guid=ee31faa7-467e-48bd-9579-b60bc43b2f87
  */
 const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isWin && !detection.isDesktopChrome ||
                                      detection.isIE || detection.isMobileIOS ? 150 : 0;
