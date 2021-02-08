@@ -74,7 +74,7 @@ export default class View extends Control<IViewControlOptions> {
             cancel: this.cancelEdit.bind(this),
             isDestroyed: () => this._destroyed
         }], {bubbling: true});
-    },
+    }
 
    protected _onDeactivatedHandler(): void {
       if (!this._options.readOnly && this._isEditing && !this._toolbarVisible) {
