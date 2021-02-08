@@ -73,6 +73,7 @@ interface IContainerOptions extends IControlOptions, ISearchOptions, IHierarchyS
    viewMode: string;
    root?: Key;
    searchValue?: string;
+   sourceController?: SourceController;
 }
 
 type Key = string | number | null;
@@ -104,12 +105,16 @@ export default class Container extends Control<IContainerOptions> {
       this._previousViewMode = this._viewMode = options.viewMode;
       this._updateViewMode(options.viewMode);
 
-      this._sourceController = context.dataOptions.sourceController;
+      this._sourceController = options.sourceController || context.dataOptions.sourceController;
       if (this._sourceController) {
          this._sourceController.updateOptions(this._getSourceControllerOptions());
       }
 
-      this._searchValue = this._getSearchController({...options, ...context.dataOptions}).getSearchValue();
+      this._searchValue = this._getSearchController({
+         ...options,
+         ...context.dataOptions,
+         sourceController: this._sourceController
+      }).getSearchValue();
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
