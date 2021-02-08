@@ -44,7 +44,11 @@ function getSource(): Memory {
 const source = getSource();
 
 const sourceWithError = getSource();
-sourceWithError.query = () => Promise.reject(new Error());
+sourceWithError.query = () => {
+    const error = new Error();
+    error.processed = true;
+    return Promise.reject(error);
+};
 
 function getRecordSet(): RecordSet {
     return new RecordSet({
