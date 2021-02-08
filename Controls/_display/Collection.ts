@@ -1733,14 +1733,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return true;
     }
 
-    setGroupProperty(groupProperty: string): void {
+    setGroupProperty(groupProperty: string): boolean {
         if (this._$groupProperty !== groupProperty) {
             this._$groupProperty = groupProperty;
             this.setGroup((item) => {
                 return item.get(this._$groupProperty);
             });
             this._nextVersion();
+            return true;
         }
+        return false;
     }
 
     getGroupProperty(): string {
