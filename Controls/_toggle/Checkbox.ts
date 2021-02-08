@@ -1,10 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import checkBoxTemplate = require('wml!Controls/_toggle/Checkbox/Checkbox');
 import {descriptor as EntityDescriptor} from 'Types/entity';
-import {Logger} from 'UI/Utils';
 import {
    ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions,
    IIconSize, IIconSizeOptions, IIconStyle, IIconStyleOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
+import 'css!Controls/toggle';
+
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
     IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions {
    triState?: boolean;
@@ -75,7 +76,7 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
       }
    }
 
-   static _theme: string[] = ['Controls/toggle', 'Controls/Classes'];
+   static _theme: string[] = ['Controls/Classes'];
 
    static getDefaultOptions(): object {
       return {
