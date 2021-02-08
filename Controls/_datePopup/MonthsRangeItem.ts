@@ -8,6 +8,7 @@ import {MonthModel as modelViewModel} from 'Controls/calendar';
 import {IDateRangeSelectable, rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
+import {constants} from 'Env/Env';
 
 var _private = {},
     SELECTION_VEIW_TYPES = {
@@ -76,6 +77,9 @@ var Component = BaseControl.extend([EventProxyMixin], {
     _monthClickable: true,
 
     _months: null,
+
+    _hoveredItem: null,
+    _baseHoveredItem: null,
 
     // constructor: function() {
     //    this._dayFormatter = this._dayFormatter.bind(this);
@@ -188,6 +192,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _onMonthClick: function (e, date) {
+        this._baseHoveredItem = date;
+        this._hoveredItem = this._baseHoveredItem;
         if (this._options.selectionProcessing || !this._options.monthClickable) {
             this._selectionViewType = SELECTION_VIEW_TYPES.months;
             this._notify('selectionViewTypeChanged', [this._selectionViewType]);
@@ -197,13 +203,48 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _onMonthMouseEnter: function (e, date) {
         if (this._options.selectionProcessing || !this._options.monthClickable) {
+            this._hoveredItem = date;
             this._notify('itemMouseEnter', [date]);
         }
     },
 
     _onMonthMouseLeave: function (e, date) {
         if (this._options.selectionProcessing || !this._options.monthClickable) {
+            this._hoveredItem = this._baseHoveredItem;
             this._notify('itemMouseLeave', [date]);
+        }
+    },
+
+    _onMonthKeyDown: function(event: Event): void {
+        if (this._options.selectionProcessing || !this._options.monthClickable) {
+            if (event.nativeEvent.keyCode === constants.key.enter) {
+                this._onMonthClick(event, this._hoveredItem);
+            }
+            let hoveredItem;
+            const monthsInQuarter = 3;
+            switch (event.nativeEvent.keyCode) {
+                case constants.key.up:
+                    hoveredItem = new Date(this._hoveredItem.getFullYear(),
+                        this._hoveredItem.getMonth() - monthsInQuarter, 1);
+                    break;
+                case constants.key.down:
+                    hoveredItem = new Date(this._hoveredItem.getFullYear(),
+                        this._hoveredItem.getMonth() + monthsInQuarter, 1);
+                    break;
+                case constants.key.left:
+                    hoveredItem = new Date(this._hoveredItem.getFullYear(),
+                        this._hoveredItem.getMonth() - 1, 1);
+                    break;
+                case constants.key.right:
+                    hoveredItem = new Date(this._hoveredItem.getFullYear(),
+                        this._hoveredItem.getMonth() + 1, 1);
+                    break;
+            }
+            if (hoveredItem) {
+                this._hoveredItem = hoveredItem;
+                this._notify('itemMouseEnter', [hoveredItem]);
+                event.preventDefault();
+            }
         }
     },
 
