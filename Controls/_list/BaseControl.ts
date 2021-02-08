@@ -3262,7 +3262,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: SwipeActionsTemplate,
 
     _markerController: null,
-    _markerLoadPromise: null,
 
     _dndListController: null,
     _dragEntity: undefined,
@@ -5642,7 +5641,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateItemActionsOnce(this, this._options);
         }
 
-        if (this._documentDragging) {
+        if (this._documentDragging && !this._dndListController?.isDragging()) {
             this._insideDragging = true;
             this._notify('_removeDraggingTemplate', [], {bubbling: true});
             this._listViewModel.setDragOutsideList(false);
