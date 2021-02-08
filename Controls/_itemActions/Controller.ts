@@ -404,7 +404,9 @@ export class Controller {
         const root = parentAction && parentAction.id;
         return {
             source,
-            item: Controller._getItemContents(item),
+            footerItemData: {
+                item: Controller._getItemContents(item)
+            },
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',

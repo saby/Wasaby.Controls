@@ -7,7 +7,7 @@ import {CrudEntityKey} from 'Types/source';
 
 export interface IFooterItemData {
     item: Model;
-    key: CrudEntityKey;
+    key?: CrudEntityKey;
 }
 
 export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {

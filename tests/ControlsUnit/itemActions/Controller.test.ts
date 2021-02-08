@@ -1698,7 +1698,7 @@ describe('Controls/_itemActions/Controller', () => {
                 false
             );
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.footerItemData.item);
+            assert.exists(config.templateOptions.footerItemData);
             assert.equal(config.templateOptions.footerItemData.item, item3.getContents());
         });
 
