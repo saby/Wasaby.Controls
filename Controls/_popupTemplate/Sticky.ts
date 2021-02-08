@@ -5,6 +5,7 @@ import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from './interf
 
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions {
     shadowVisible?: boolean;
+    backgroundStyle?: string;
 }
 
 /**
@@ -59,7 +60,8 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
             headingFontSize: 'l',
             headingFontColorStyle: 'secondary',
             closeButtonVisibility: true,
-            shadowVisible: false
+            shadowVisible: false,
+            backgroundStyle: 'default'
         };
     }
 }
@@ -67,5 +69,10 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
  * @name Controls/_popupTemplate/Sticky#shadowVisible
  * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
  * @default false
+ */
+/**
+ * @name Controls/_popupTemplate/Sticky#backgroundStyle
+ * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
+ * @default default
  */
 export default StickyTemplate;

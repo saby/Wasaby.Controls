@@ -13,7 +13,9 @@ export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {
     headerContentTemplate: TemplateFunction;
     footerContentTemplate: TemplateFunction;
     closeButtonVisibility: boolean;
-    footerItemData: IFooterItemData
+    footerItemData: IFooterItemData;
+    popupTrigger: 'click' | 'hover';
+    popupBackground: string;
 }
 
 /**
@@ -148,6 +150,12 @@ export default interface IMenuPopup {
  * @name Controls/_menu/interface/IMenuPopup#emptyTemplate
  * @cfg {Function} Шаблон, который будет отображаться в выпадающем списке, если поисковой запрос не вернул результатов.
  * @demo Controls-demo/Menu/Popup/SearchParam/EmptyTemplate/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuPopup#popupBackground
+ * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
+ * @default default
  */
 
 /**

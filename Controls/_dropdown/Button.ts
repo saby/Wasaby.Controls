@@ -22,6 +22,8 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
+   menuPopupTrigger?: 'click' | 'hover';
+   menuPopupBackground?: string;
 }
 
 /**
@@ -139,7 +141,9 @@ export default class Button extends BaseDropdown {
             popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
             hasIconPin: this._hasIconPin,
             allowPin: true,
-            markerVisibility: 'hidden'
+            markerVisibility: 'hidden',
+            popupTrigger: options.menuPopupTrigger,
+            popupBackground: options.menuPopupBackground
          }
       };
    }
@@ -179,6 +183,12 @@ export default class Button extends BaseDropdown {
       }
       this.openMenu();
    }
+    _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
+      super._handleMouseEnter(event);
+      if (this._options.menuPopupTrigger === 'hover') {
+         this.openMenu();
+      }
+    }
 
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
@@ -234,6 +244,8 @@ export default class Button extends BaseDropdown {
          showHeader: true,
          filter: {},
          buttonStyle: 'secondary',
+         menuPopupTrigger: 'click',
+         menuPopupBackground: 'default',
          viewMode: 'button',
          fontSize: 'm',
          iconStyle: 'secondary',
@@ -296,6 +308,25 @@ export default class Button extends BaseDropdown {
  * @name Controls/_dropdown/Button#fontSize
  * @cfg
  * @demo Controls-demo/dropdown_new/Button/FontSize/Index
+ */
+
+/**
+ * @typedef {String} TMenuPopupTrigger
+ * @variation click Меню открывается по клику.
+ * @variation hover Меню открывается при наведении.
+ */
+/**
+ * @name Controls/_dropdown/Button#menuPopupTrigger
+ * @cfg {TMenuPopupTrigger} Определяет поведение отображения меню.
+ * @default click
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
+ */
+
+/**
+ * @name Controls/_dropdown/Button#menuPopupBackground
+ * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
+ * @default default
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
  */
 
 /**

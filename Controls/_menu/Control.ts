@@ -867,7 +867,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             },
             targetPoint: {
                 horizontal: 'right'
-            }
+            },
+            hoverController: this._options.hoverController,
+            popupBackground: this._options.popupBackground
         };
     }
 

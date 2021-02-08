@@ -12,6 +12,7 @@ import {Model} from 'Types/entity';
 import {TSelectedKeys} from 'Controls/interface';
 import {CollectionItem} from 'Controls/display';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
+import HoverController from 'Controls/_menu/HoverController';
 
 const SEARCH_DEPS = [
     'Controls/browser:Browser',
@@ -48,6 +49,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _horizontalDirection: string = 'right';
     protected _applyButtonVisible: boolean = false;
     protected _selectedItems: Model[] = null;
+    protected _hoverController: HoverController = null;
 
     protected _beforeMount(options: IMenuPopupOptions): Promise<void>|void {
         this._headerTheme = this._getTheme();
@@ -57,6 +59,14 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         this._prepareHeaderConfig(options);
         this._setItemPadding(options);
 
+        if ((options.root === null || options.root === undefined) && options.popupTrigger === 'hover') {
+            this._hoverController = new HoverController();
+            this._hoverController.setCallback(() => {
+                this._notify('close', [], {bubbling: true});
+            });
+        } else if (options.hoverController) {
+            this._hoverController = options.hoverController;
+        }
         if (options.searchParam) {
             return mStubs.require(SEARCH_DEPS);
         }
@@ -99,6 +109,19 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     protected _beforeUnmount(): void {
         this._notify('sendResult', ['menuClosed', this._container], {bubbling: true});
+    }
+
+    protected _mouseEvent(event: SyntheticEvent<MouseEvent>) {
+        if (this._hoverController) {
+            switch (event.type) {
+                case 'mouseenter':
+                    this._hoverController.mouseEnter();
+                    break;
+                case 'mouseleave':
+                    this._hoverController.mouseLeave();
+                    break;
+            }
+        }
     }
 
     protected _headerClick(): void {
@@ -224,7 +247,8 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
 
     static getDefaultOptions(): object {
         return {
-            selectedKeys: []
+            selectedKeys: [],
+            popupBackground: 'default'
         };
     }
 }
