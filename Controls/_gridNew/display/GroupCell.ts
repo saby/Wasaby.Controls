@@ -11,7 +11,7 @@ export interface IOptions<T> {
     columns: IColumn[];
 }
 
-const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupContent';
+const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
 
 export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
     protected _$columns: IColumn[];
@@ -43,7 +43,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
         const ladderStickyColumn = this._$owner.getStickyColumn();
         const ladderColumnLength = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
         const startColumn = hasMultiSelect ? 2 : 1;
-        const endColumn = startColumn + this._$columns.length + ladderColumnLength;
+        const endColumn = startColumn + this.getOwner().getColumnsConfig().length + ladderColumnLength;
         return {
             startColumn,
             endColumn
