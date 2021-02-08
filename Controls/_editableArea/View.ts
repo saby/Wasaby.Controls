@@ -3,7 +3,6 @@ import * as template from 'wml!Controls/_editableArea/View';
 import {IViewOptions} from './interface/IView';
 import * as Deferred from 'Core/Deferred';
 import buttonsTemplate from 'Controls/_editableArea/Templates/Buttons';
-import {autoEdit, toolbarVisible, backgroundStyleClass} from './ActualAPI';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 
@@ -36,8 +35,6 @@ export default class View extends Control<IViewControlOptions> {
    protected _template: TemplateFunction = template;
    protected _buttonsTemplate: typeof buttonsTemplate = buttonsTemplate;
    protected _isEditing: boolean = false;
-   protected _backgroundStyleClass: string;
-   protected _toolbarVisible: boolean;
    protected _editObject: Record;
    private _isStartEditing: boolean = false;
 
@@ -77,7 +74,7 @@ export default class View extends Control<IViewControlOptions> {
     }
 
    protected _onDeactivatedHandler(): void {
-      if (!this._options.readOnly && this._isEditing && !this._toolbarVisible) {
+      if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisible) {
          this.commitEdit();
       }
    }
