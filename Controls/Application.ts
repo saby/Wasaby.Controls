@@ -310,7 +310,9 @@ export default class Application extends Control<IApplication> {
       for (const key in this._bodyClasses) {
          if (this._bodyClasses.hasOwnProperty(key)) {
             if (Application._isExist(this._bodyClasses[key])) {
-               bodyClasses.push(this._bodyClasses[key]);
+               this._bodyClasses[key]
+                   .split(' ')
+                   .forEach((_class) => bodyClasses.push(_class));
             }
          }
       }
