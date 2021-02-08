@@ -68,7 +68,7 @@ export default Form;
  * Запускает валидацию.
  * @name Controls/_validate/Controller#submit
  * @function
- * @return {Promise}
+ * @return {Promise<ValidateResult|Error>}
  * @example
  * <pre>
  * <!-- WML -->
