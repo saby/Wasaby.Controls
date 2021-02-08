@@ -23,6 +23,8 @@ export default class Collection<
     S,
     T extends Row<S> = Row<S>
 > extends mixin<BaseCollection<any>, GridMixin<any, any>>(BaseCollection, GridMixin) {
+    protected _$hasStickyGroup: boolean = false;
+
     constructor(options: IOptions<S, T>) {
         super(options);
         GridMixin.call(this, options);
@@ -112,6 +114,7 @@ export default class Collection<
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
         }
+        this._updateHasStickyGroup();
     }
 
     protected _getItemsFactory(): ItemsFactory<T> {
@@ -121,6 +124,7 @@ export default class Collection<
             options.colspanCallback = this._$colspanCallback;
             options.columnSeparatorSize = this._$columnSeparatorSize;
             options.rowSeparatorSize = this._$rowSeparatorSize;
+            options.hasStickyGroup = this._$hasStickyGroup;
             return superFactory.call(this, options);
         };
     }
@@ -129,7 +133,34 @@ export default class Collection<
         return GroupItem;
     }
 
+    setGroupProperty(groupProperty: string): boolean {
+        const groupPropertyChanged = super.setGroupProperty(groupProperty);
+        if (groupPropertyChanged) {
+            this._updateHasStickyGroup();
+        }
+        return groupPropertyChanged;
+    }
+
     // endregion
+
+    protected _updateHasStickyGroup(): void {
+        const hasStickyGroup = this._hasStickyGroup();
+        if (this._$hasStickyGroup !== hasStickyGroup) {
+            this._$hasStickyGroup = hasStickyGroup;
+            this.getViewIterator().each((item: DataRow<S>) => {
+                if (item.LadderSupport) {
+                    item.setHasStickyGroup(hasStickyGroup);
+                }
+            });
+        }
+    }
+
+    protected _hasStickyGroup(): boolean {
+        return !!(this.at(0)
+            && this.at(0)['[Controls/_display/GroupItem]']
+            && !(this.at(0) as unknown as GroupItem<S>).isHiddenGroup()
+            && this._$stickyHeader);
+    }
 }
 
 Object.assign(Collection.prototype, {
