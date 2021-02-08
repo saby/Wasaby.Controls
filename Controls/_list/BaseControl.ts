@@ -1531,7 +1531,7 @@ const _private = {
         _private.getPortionedSearch(self).reset();
 
         if (options.sourceController) {
-            _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            _private.checkLoadToDirectionCapability(self, options.sourceController.getFilter(), options.navigation);
         }
     },
 
