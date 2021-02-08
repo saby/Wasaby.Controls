@@ -1188,16 +1188,22 @@ describe('Controls/list_clean/BaseControl', () => {
     describe('reload', () => {
 
         it('baseControl destroyed on reload', async () => {
-            const options = getBaseControlOptionsWithEmptyItems();
+            const options = await getCorrectBaseControlConfigAsync(getBaseControlOptionsWithEmptyItems());
+            let afterReloadCallbackCalled = false;
+            options.afterReloadCallback = () => {
+                afterReloadCallbackCalled = true;
+            };
             const baseControl = new BaseControl(options);
             await baseControl._beforeMount(options);
             baseControl.saveOptions(options);
+            afterReloadCallbackCalled = false;
             const reloadPromise = baseControl.reload();
             baseControl._beforeUnmount();
             baseControl._destroyed = true;
 
             const reloadPromiseResult = await reloadPromise;
             assert.ok(!reloadPromiseResult, 'reload return wrong result');
+            assert.ok(!afterReloadCallbackCalled);
         });
 
     });
