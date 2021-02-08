@@ -1,11 +1,12 @@
 <div class="controls-PeriodDialog-Years controls-PeriodDialog-Years_theme-{{_options.theme}}">
-   <span tabindex="0"
-         on:keyDown="_prevNextBtnKeyDownHandler(-1)"
-         on:click="_onPrevNextButtonClick(-1)"
-         title="{[Предыдущий год]}"
-         class="icon-MarkLeftBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}
-             controls-PeriodDialog-Years__prevNextBtn controls-PeriodDialog-Years__prevNextBtn_theme-{{_options.theme}}">
-   </span>
+   <div class="controls-PeriodDialog-Years__prevNextBtn controls-PeriodDialog-Years__prevNextBtn_theme-{{_options.theme}}">
+      <span tabindex="0"
+            on:keyDown="_prevNextBtnKeyDownHandler(-1)"
+            on:click="_onPrevNextButtonClick(-1)"
+            title="{[Предыдущий год]}"
+            class="icon-MarkLeftBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}">
+      </span>
+   </div>
    <div class="controls-PeriodDialog-Years__yearsRange">
       <ws:for data="yearIndex, year in _model">
          <div tabindex="0" class="controls-PeriodDialog-Years__rangeBtn controls-PeriodDialog-Years__rangeBtn_theme-{{_options.theme}}
@@ -19,11 +20,12 @@
          </div>
       </ws:for>
    </div>
-      <span tabindex="0"
-            on:keyDown="_prevNextBtnKeyDownHandler(1)"
-            on:click="_onPrevNextButtonClick(1)"
-            title="{[Следующий год]}"
-            class="icon-MarkRightBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}
-             controls-PeriodDialog-Years__prevNextBtn controls-PeriodDialog-Years__prevNextBtn_theme-{{_options.theme}}">
-      </span>
+      <div class="controls-PeriodDialog-Years__prevNextBtn controls-PeriodDialog-Years__prevNextBtn_theme-{{_options.theme}}">
+         <span tabindex="0"
+               on:keyDown="_prevNextBtnKeyDownHandler(1)"
+               on:click="_onPrevNextButtonClick(1)"
+               title="{[Следующий год]}"
+               class="icon-MarkRightBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}">
+         </span>
+      </div>
 </div>
