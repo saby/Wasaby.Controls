@@ -879,7 +879,10 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             bodyContentTemplate: 'Controls/_menu/Control',
             dataLoadCallback: !isLoadedChildItems ? this._subMenuDataLoadCallback.bind(this) : null,
             footerContentTemplate: this._options.nodeFooterTemplate,
-            item: item.getContents(),
+            footerItemData: {
+                key: root,
+                item: item.getContents()
+            },
             closeButtonVisibility: false,
             emptyText: null,
             showClose: false,

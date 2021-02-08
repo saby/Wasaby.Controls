@@ -1687,8 +1687,8 @@ describe('Controls/_itemActions/Controller', () => {
             assert.notExists(config.nativeEvent);
         });
 
-        // T3.18 нужно пробрасывать item в конфиг шаблона
-        it('should set config.item', () => {
+        // T3.18 нужно пробрасывать footerItemData в конфиг шаблона
+        it('should set config.footerItemData', () => {
             const item3 = collection.getItemBySourceKey(3);
             const config = itemActionsController.prepareActionsMenuConfig(
                 item3,
@@ -1698,8 +1698,8 @@ describe('Controls/_itemActions/Controller', () => {
                 false
             );
             assert.exists(config.templateOptions, 'Template options were not set');
-            assert.exists(config.templateOptions.item);
-            assert.equal(config.templateOptions.item, item3.getContents());
+            assert.exists(config.templateOptions.footerItemData.item);
+            assert.equal(config.templateOptions.footerItemData.item, item3.getContents());
         });
 
     });

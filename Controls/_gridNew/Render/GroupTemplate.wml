@@ -8,3 +8,4 @@
     </div>
     <div class="controls-ListView__groupSeparator-right_theme-{{theme}}">&nbsp;</div>
 </div>
+        expectedOptions.footerContentTemplate = defaultOptions.nodeFooterTemplate;
