@@ -6,6 +6,7 @@ import {applyHighlighter} from 'Controls/_breadcrumbs/resources/applyHighlighter
 import template = require('wml!Controls/_breadcrumbs/HeadingPath/HeadingPath');
 import Common from './HeadingPath/Common';
 import 'Controls/heading';
+import 'css!Controls/heading';
 import 'wml!Controls/_breadcrumbs/HeadingPath/Back';
 import {loadFontWidthConstants, getFontWidth} from 'Controls/Utils/getFontWidth';
 import {Record} from 'Types/entity';
@@ -200,7 +201,7 @@ class BreadCrumbsPath extends Control<IBreadCrumbsOptions> {
         }
     }
 
-    static _theme: string[] = ['Controls/crumbs', 'Controls/heading'];
+    static _theme: string[] = ['Controls/crumbs'];
     static _styles: string[] = ['Controls/_breadcrumbs/resources/FontLoadUtil'];
     static getDefaultOptions() {
         return {

@@ -1,6 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import backTemplate = require('wml!Controls/_heading/Back/Back');
 import {descriptor as EntityDescriptor} from 'Types/entity';
+import 'css!Controls/heading';
+
 import {
     IFontColorStyle,
     IFontColorStyleOptions,
@@ -36,7 +38,7 @@ const MODERN_IE_VERSION = 11;
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
  * @implements Controls/_interface/IIconStyle
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Heading/Back/SizesAndStyles/Index
@@ -56,7 +58,7 @@ const MODERN_IE_VERSION = 11;
  * @implements Controls/_interface/IFontSize
  * @implements Controls/_interface/IIconSize
  * @implements Controls/_interface/IIconStyle
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Heading/Back/SizesAndStyles/Index
@@ -66,7 +68,7 @@ class Back extends Control<IBackOptions> implements IFontColorStyle, IFontSize, 
     protected _template: TemplateFunction = backTemplate;
     protected _isOldIe: Boolean = false;
 
-    static _theme: string[] = ['Controls/heading', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
