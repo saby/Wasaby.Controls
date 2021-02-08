@@ -538,7 +538,7 @@ var
             // без nextModelVersion не обновляется itemData и возникают ошибки
             // https://online.sbis.ru/opendoc.html?guid=fc64fa58-7cb7-4bca-a691-f2ed2acf648c
             // https://online.sbis.ru/opendoc.html?guid=98a4f247-3efa-4d3a-a83f-8994678ec335
-            this._nextModelVersion();
+            self._nextModelVersion();
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
