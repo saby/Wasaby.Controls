@@ -103,14 +103,14 @@ describe('ColumnsInnerView', () => {
         assert.deepEqual(columnsView._addingColumnsCounter, 2, 'wrong _addingColumnsCounter');
         const rsForPrepend = new RecordSet({
             keyProperty: 'id',
-            rawData: [1, 2].map((id)=>{
+            rawData: [1, 2].map((id) => {
                 return {
                     id
                 };
             })
         });
         rs.prepend(rsForPrepend);
-        assert.deepEqual(columnsView._addingColumnsCounter, 2, 'wrong _addingColumnsCounter');
+        assert.deepEqual(columnsView._addingColumnsCounter, 4, 'wrong _addingColumnsCounter');
 
     });
 });
