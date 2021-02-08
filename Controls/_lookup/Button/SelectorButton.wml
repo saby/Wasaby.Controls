@@ -17,7 +17,7 @@
             <ws:itemTemplate>
                 <ws:partial template="{{_options.itemTemplate}}" clickable="{{!_options.multiSelect && !_options.readOnly}}"
                             attr:class="{{!_options.readOnly && !_options.multiSelect ? 'controls-Selectorbutton_selectedItem_single
-                            controls-text-' + _options.fontColorStyle + '_theme-' + _options.theme}}"/>
+                            controls-text-' + _options.fontColorStyle}} + '_theme-' + _options.theme"/>
             </ws:itemTemplate>
         </Controls._lookup.SelectedCollection>
         <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
