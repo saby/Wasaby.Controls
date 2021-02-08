@@ -3262,7 +3262,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: SwipeActionsTemplate,
 
     _markerController: null,
-    _markerLoadPromise: null,
 
     _dndListController: null,
     _dragEntity: undefined,
@@ -4269,8 +4268,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // Если sourceController есть в опциях, значит его создали наверху
         // например list:DataContainer, и разрушать его тоже должен создатель.
-        if (this._sourceController && !this._options.sourceController) {
-            this._sourceController.destroy();
+        if (this._sourceController) {
+            if (!this._options.sourceController) {
+                this._sourceController.destroy();
+            } else {
+                this._sourceController.setDataLoadCallback(null);
+            }
+            this._sourceController = null;
         }
 
         if (this._notifyPlaceholdersChanged) {
@@ -5637,7 +5641,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateItemActionsOnce(this, this._options);
         }
 
-        if (this._documentDragging) {
+        if (this._documentDragging && !this._dndListController?.isDragging()) {
             this._insideDragging = true;
             this._notify('_removeDraggingTemplate', [], {bubbling: true});
             this._listViewModel.setDragOutsideList(false);
