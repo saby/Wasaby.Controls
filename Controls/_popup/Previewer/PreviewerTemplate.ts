@@ -17,16 +17,10 @@ interface IPreviewerOptions extends IControlOptions {
 
 class PreviewerTemplate extends Control<IPreviewerOptions> {
     protected _template: TemplateFunction = template;
-    protected _templateLoaded: boolean = false;
 
     protected _beforeMount(options: IPreviewerOptions): void|Promise<void> {
         if (constants.isBrowserPlatform && this._needRequireModule(options.template)) {
-            return load(options.template).then(
-                () => {
-                    this._templateLoaded = true;
-                },
-                (error) => errorLib.process({ error })
-            );
+            return load(options.template).catch((error) => errorLib.process({ error }));
         }
     }
 
