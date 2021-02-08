@@ -9,6 +9,7 @@ import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {getMenuItems, needShowMenu} from './Util';
 import {showType} from './interfaces/IShowType';
 import 'css!Controls/toolbars';
+import 'css!Controls/buttons';
 
 import {
     getButtonTemplate, hasSourceChanged,
@@ -37,11 +38,10 @@ import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import {IButtonOptions} from 'Controls/buttons';
 import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
-
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
-import {IoC} from "Env/Env";
+import {IoC} from 'Env/Env';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -589,7 +589,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return void 0;
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/Classes'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {
