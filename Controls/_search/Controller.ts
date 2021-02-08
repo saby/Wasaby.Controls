@@ -120,7 +120,7 @@ export default class Container extends Control<IContainerOptions> {
          this._inputSearchValue = options.searchValue;
       }
 
-      if (this._inputSearchValue && this._inputSearchValue.length > this._options.minSearchLength) {
+      if (this._inputSearchValue && this._inputSearchValue.length > options.minSearchLength) {
          this._updateViewMode('search');
       } else {
          this._updateViewMode(options.viewMode);
