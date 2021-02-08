@@ -29,7 +29,8 @@ describe('Controls/suggest', () => {
          const options = {
             source: getMemorySource(),
             suggestTemplate: {},
-            footerTemplate: {}
+            footerTemplate: {},
+            minSearchLength: 3
          };
          controller.saveOptions({...options, ...customOptions});
          return controller;
@@ -252,6 +253,7 @@ describe('Controls/suggest', () => {
          assert.deepEqual(filter, resultFilter);
 
          const newFilter = {...resultFilter, ...{historyKeys: [1, 2]}};
+         newFilter.searchParam = '';
          filter = inputContainer._prepareFilter({filterTest: 'filterTest'}, 'searchParam',
             'test', 20, 1, [1, 2]);
          assert.deepEqual(filter, newFilter);
@@ -1184,7 +1186,7 @@ describe('Controls/suggest', () => {
          inputContainer._options.autoDropDown = true;
          inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {
-            testSearchParam: 'te', historyKeys: inputContainer._historyKeys
+            testSearchParam: '', historyKeys: inputContainer._historyKeys
          });
 
          inputContainer._searchValue = 'test';
@@ -1199,7 +1201,7 @@ describe('Controls/suggest', () => {
          inputContainer._filter = {};
          inputContainer._updateSuggestState();
          assert.deepEqual(inputContainer._filter, {
-            testSearchParam: 'test', historyKeys: inputContainer._historyKeys
+            testSearchParam: '', historyKeys: inputContainer._historyKeys
          });
          assert.isTrue(suggestOpened);
 
@@ -1213,7 +1215,7 @@ describe('Controls/suggest', () => {
          inputContainer._filter = {};
 
          await inputContainer._updateSuggestState();
-         assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
+         assert.deepEqual(inputContainer._filter, {testSearchParam: ''});
          assert.isFalse(suggestOpened);
 
          stub.callsFake(() => ({
