@@ -1,12 +1,11 @@
 import { assert } from 'chai';
-import * as sinon from 'sinon';
 import { Model } from 'Types/entity';
 import { GridStickyLadderCell } from 'Controls/gridNew';
 
 const rawData = { key: 1, col1: 'c1-1', col2: 'с2-1', col3: 'с3-1' };
 const column = { displayProperty: 'col1' };
 
-describe('Controls/grid_clean/Display/StickyGroup/DataRow/StickyHeaderClasses', () => {
+describe('Controls/grid_clean/Display/Ladder/StickyLadderCell/StickyHeaderClasses', () => {
     let model: Model;
 
     beforeEach(() => {

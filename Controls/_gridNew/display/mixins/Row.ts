@@ -36,6 +36,7 @@ export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
     colspanCallback?: TColspanCallback;
     columnSeparatorSize?: TColumnSeparatorSize;
+    hasStickyGroup?: boolean;
 }
 
 export default abstract class Row<T> {
@@ -156,9 +157,6 @@ export default abstract class Row<T> {
         return this._$owner.getResultsPosition();
     }
 
-    hasStickyGroup(): boolean {
-        return this._$owner.hasStickyGroup();
-    }
     getStickyLadderProperties(column: IColumn): string[] {
         let stickyProperties = column && column.stickyProperty;
         if (stickyProperties && !(stickyProperties instanceof Array)) {

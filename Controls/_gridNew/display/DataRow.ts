@@ -26,6 +26,7 @@ export default class DataRow<T> extends Row<T> implements
     readonly SelectableItem: boolean = true;
     readonly DraggableItem: boolean = true;
     private _$editingColumnIndex: number;
+    protected _$hasStickyGroup: boolean;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -68,6 +69,17 @@ export default class DataRow<T> extends Row<T> implements
     getEditingColumnIndex(): number {
         return this._$editingColumnIndex;
     }
+
+    setHasStickyGroup(hasStickyGroup: boolean): void {
+        if (this._$hasStickyGroup !== hasStickyGroup) {
+            this._$hasStickyGroup = hasStickyGroup;
+            this._nextVersion();
+        }
+    }
+
+    hasStickyGroup(): boolean {
+        return this._$hasStickyGroup;
+    }
 }
 
 Object.assign(DataRow.prototype, {
@@ -76,5 +88,6 @@ Object.assign(DataRow.prototype, {
     _cellModule: 'Controls/gridNew:GridDataCell',
     _instancePrefix: 'grid-data-row-',
     _$editingColumnIndex: null,
-    _$searchValue: ''
+    _$searchValue: '',
+    _$hasStickyGroup: false
 });
