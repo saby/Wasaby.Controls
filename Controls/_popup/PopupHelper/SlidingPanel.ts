@@ -37,7 +37,7 @@ class SlidingPanelOpener extends BaseOpener {
  * @implements Controls/_popup/interface/ISlidingPanel
  *
  * @author Красильников А.С.
- * @demo Controls-demo/PopupTemplate/SlidingPanel/Index
+ * @demo Controls-demo/Popup/SlidingPanel/Index
  * @public
  */
 
