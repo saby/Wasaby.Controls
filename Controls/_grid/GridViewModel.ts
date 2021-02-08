@@ -2408,6 +2408,11 @@ var
         },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();
+
+            if (_private.hasStickyColumn(this)) {
+                this._nextModelVersion();
+            }
+
             // Если есть прилипающая колонка, то нужно пересчитать футер,
             // т.к. прилипающая колонка во время днд скрывается и кол-во grid cтолбцов уменьшается
             if (_private.hasStickyColumn(this) && this._footerColumns) {
