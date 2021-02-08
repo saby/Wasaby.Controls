@@ -1,9 +1,8 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import * as coreMerge from 'Core/core-merge';
-import { default as MonthData, IMonthOptions} from 'Controls/_calendar/interfaces/IMonth';
-import MonthViewModel from 'Controls/_calendar/Month/Model';
+import {Control as BaseControl} from 'UI/Base';
+import coreMerge = require('Core/core-merge');
 import monthTmpl = require('wml!Controls/_calendar/Month/Month');
-import { SyntheticEvent } from 'Vdom/Vdom';
+import IMonth from 'Controls/_calendar/interfaces/IMonth';
+import MonthViewModel from 'Controls/_calendar/Month/Model';
 
 /**
  * Календарь, отображающий 1 месяц.
@@ -26,36 +25,36 @@ import { SyntheticEvent } from 'Vdom/Vdom';
  *
  */
 
-export interface IMonthControlOptions extends IControlOptions, IMonthOptions{
-}
+var Component = BaseControl.extend({
+    _template: monthTmpl,
+    _monthViewModel: MonthViewModel,
 
-export default class Month extends Control<IMonthControlOptions> {
-    _template: TemplateFunction = monthTmpl;
-    _monthViewModel: MonthViewModel;
-
-    protected _onRangeChangedHandler(event: SyntheticEvent<Event>, startValue: Date, endValue: Date): void {
+    _onRangeChangedHandler: function (event, startValue, endValue) {
         this._notify('startValueChanged', [startValue]);
         this._notify('endValueChanged', [endValue]);
-    }
+    },
 
-    protected _itemClickHandler(event: SyntheticEvent<Event>, item): void {
+    _itemClickHandler(event, item) {
         this._notify('itemClick', [item]);
     }
 
-    static getOptionTypes(): object {
-        return coreMerge({}, MonthData.getOptionTypes());
-    }
-
-    static getDefaultOptions(): IControlOptions {
-        return coreMerge({}, MonthData.getDefaultOptions());
-    }
-}
-
-Object.defineProperty(Month, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
-
-   get(): object {
-      return Month.getDefaultOptions();
-   }
 });
+
+Component.getDefaultOptions = function () {
+    return coreMerge({}, IMonth.getDefaultOptions());
+};
+
+Object.defineProperty(Component, 'defaultProps', {
+    enumerable: true,
+    configurable: true,
+
+    get(): object {
+        return Component.getDefaultOptions();
+    }
+});
+
+Component.getOptionTypes = function () {
+    return coreMerge({}, IMonth.getOptionTypes());
+};
+
+export default Component;
