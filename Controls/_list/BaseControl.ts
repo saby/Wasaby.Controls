@@ -4266,8 +4266,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // Если sourceController есть в опциях, значит его создали наверху
         // например list:DataContainer, и разрушать его тоже должен создатель.
-        if (this._sourceController && !this._options.sourceController) {
-            this._sourceController.destroy();
+        if (this._sourceController) {
+            if (!this._options.sourceController) {
+                this._sourceController.destroy();
+            } else {
+                this._sourceController.setDataLoadCallback(null);
+            }
+            this._sourceController = null;
         }
 
         if (this._notifyPlaceholdersChanged) {
