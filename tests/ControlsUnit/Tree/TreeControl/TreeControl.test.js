@@ -1178,7 +1178,8 @@ define([
 
          it('_beforeUpdate with expandedItems and without source', async() => {
             let options = {
-               expandedItems: []
+               expandedItems: [],
+               keyProperty: 'id'
             };
             const treeControl = await correctCreateTreeControlAsync(options);
 
