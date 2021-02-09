@@ -20,7 +20,7 @@ export default class Remove implements IAction {
     private _options: IOptions;
 
     constructor(options: IOptions) {
-        this._options = options;
+        this._options = {...Remove.defaultOptions, ...options};
         this._removeController = new RemoveController({
             source: this._options.source
         });
@@ -57,6 +57,6 @@ export default class Remove implements IAction {
     }
 
     static defaultOptions: Partial<IOptions> = {
-        strategy: 'silent'
+        strategy: 'confirmation'
     };
 }
