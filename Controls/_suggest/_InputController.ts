@@ -953,17 +953,21 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       };
       this._setSuggestMarkedKey(null);
 
+      let newFilter;
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== tabId) {
          const currentFilter = {...this._filter};
          this._setFilterAndLoad(this._options.filter, this._options, tabId)
              .finally(() => {
-                this._sourceController.setFilter(this._filter);
+                this._sourceController.setFilter(newFilter);
+                this._filter = newFilter;
                 changeTabCallback();
              });
          //Костыль, пока список сам грузит данные при изменении опции filter
          //Удалено в 21.2000
+         newFilter = {...this._filter};
+         this._filter = currentFilter;
          this._sourceController.setFilter(currentFilter);
       } else {
          changeTabCallback();
