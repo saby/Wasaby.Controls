@@ -159,7 +159,11 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
         this._contentActive = false;
         this._validationStatus = this._getValidStatus(this._contentActive);
         if (!this.isValid()) {
-            this._closeInfoBox();
+            // При уходе фокуса закрываю без задержки. Сценарий:
+            // На документе нажимают кнопку сохранить, validate:Controller активирует первое поле ввода, провалившее
+            // валидацию, после документ показывает диалоговое окно с сообщением об ошибке, фокус уходит на это окно.
+            // Если инфобокс упел показаться, то визуально будет моргание.
+            this._forceCloseInfoBox();
         }
     }
 
