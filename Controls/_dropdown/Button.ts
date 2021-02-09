@@ -22,6 +22,8 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
+   popupTrigger?: 'click' | 'hover';
+   popupBackgroundStyle?: string;
 }
 
 /**
@@ -139,7 +141,9 @@ export default class Button extends BaseDropdown {
             popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
             hasIconPin: this._hasIconPin,
             allowPin: true,
-            markerVisibility: 'hidden'
+            markerVisibility: 'hidden',
+            trigger: options.popupTrigger,
+            backgroundStyle: options.popupBackgroundStyle
          }
       };
    }
@@ -179,6 +183,12 @@ export default class Button extends BaseDropdown {
       }
       this.openMenu();
    }
+    _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
+      super._handleMouseEnter(event);
+      if (this._options.popupTrigger === 'hover') {
+         this.openMenu();
+      }
+    }
 
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
@@ -234,6 +244,8 @@ export default class Button extends BaseDropdown {
          showHeader: true,
          filter: {},
          buttonStyle: 'secondary',
+         popupTrigger: 'click',
+         popupBackgroundStyle: 'default',
          viewMode: 'button',
          fontSize: 'm',
          iconStyle: 'secondary',
@@ -296,6 +308,25 @@ export default class Button extends BaseDropdown {
  * @name Controls/_dropdown/Button#fontSize
  * @cfg
  * @demo Controls-demo/dropdown_new/Button/FontSize/Index
+ */
+
+/**
+ * @typedef {String} TPopupTrigger
+ * @variation click Открытие кликом по контенту. Закрытие кликом "мимо" - не по контенту или шаблону.
+ * @variation hover Открытие по ховеру - по наведению курсора на контент. Закрытие по ховеру - по навердению курсора на контент или шаблон.
+ */
+/**
+ * @name Controls/_dropdown/Button#popupTrigger
+ * @cfg {TPopupTrigger} Название события, которое запускает открытие или закрытие меню.
+ * @default click
+ * @demo Controls-demo/dropdown_new/Button/PopupTrigger/Index
+ */
+
+/**
+ * @name Controls/_dropdown/Button#popupBackgroundStyle
+ * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
+ * @default default
+ * @demo Controls-demo/dropdown_new/Button/PopupBackground/Index
  */
 
 /**

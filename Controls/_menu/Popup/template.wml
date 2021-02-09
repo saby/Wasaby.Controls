@@ -1,10 +1,13 @@
 <ws:template name="menuPopup" >
-   <div class="controls-Menu__popup">
+   <div class="controls-Menu__popup"
+        on:mouseEnter="_mouseEvent()"
+        on:mouseLeave="_mouseEvent()">
       <Controls.popupTemplate:Sticky
               attr:class="controls-DropdownList__popup
                           controls-Popup__isolatedFocusingContext
                           controls-Menu__popup-template
                           controls-Menu__popup_theme-{{_options.theme}}
+                          controls-Menu__popup-background-{{_options.backgroundStyle}}_theme-{{_options.theme}}
                           controls-Menu__popup-direction-vertical-{{_verticalDirection}}
                           {{!_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}}
                           controls-Menu__popup-shadow-{{_options.typeShadow || 'default'}}_theme-{{_options.theme}}
@@ -22,6 +25,7 @@
               footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
+              backgroundStyle="transparent"
               on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">
@@ -90,6 +94,7 @@
                        dataLoadCallback="{{_dataLoadCallback}}"
                        headingIcon="{{_headingIcon}}"
                        headerTemplate="{{_headerTemplate || _options.headerTemplate}}"
+                       backgroundStyle="{{_options.backgroundStyle}}"
                        theme="{{_options.theme}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"
