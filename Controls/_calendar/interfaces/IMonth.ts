@@ -9,8 +9,19 @@ import {Base as dateUtil} from 'Controls/dateUtils';
  * @author Красильников А.С.
  */
 
+type TMode = 'current' | 'extend';
+
+export interface IMonthOptions {
+    month?: Date;
+    showCaption?: boolean;
+    captionFormat?: string;
+    showWeekdays?: boolean;
+    dayFormatter?: (date: Date) => object;
+    mode?: TMode;
+}
+
 export default {
-    getDefaultOptions: function () {
+    getDefaultOptions(): IMonthOptions {
         return {
 
             /**
@@ -170,7 +181,7 @@ export default {
         };
     },
 
-    getOptionTypes: function () {
+    getOptionTypes(): object {
         return {
 
             // month: types(Date),
