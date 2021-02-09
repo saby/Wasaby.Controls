@@ -1,4 +1,4 @@
-<div class="{{_rootContainerClasses}}">
+<div class="{{_rootContainerClasses}} controls_theme-{{_options.theme}}">
     <Controls.suggest:_InputController
             name="layout"
             on:choose="_choose()"
