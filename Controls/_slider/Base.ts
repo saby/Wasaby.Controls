@@ -82,10 +82,6 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
          Logger.error('Slider: value must be in the range [minValue..maxValue].', this);
       }
 
-      if (opts.tooltipPosition === 'center' && opts.size !== 'm') {
-         Logger.warn('Slider: for values other than "m" and the position of the tooltip in "center", the tooltip is displayed at the top');
-      }
-
       if (intervals?.length) {
          intervals.forEach(({start, end}) => {
             if (start > end) {

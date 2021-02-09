@@ -297,10 +297,12 @@
 .controls-Slider__point_big_tooltipValue_position-center_theme-@{themeName} {
   top: 50%;
   transform: translate(-50%, -50%);
-  font-size: @tooltip_font-size_slider - @marker_border-thickness_slider;
+  font-size: @tooltip_position-center_font-size-big_slider;
 }
 .controls-Slider__point_small_tooltipValue_position-center_theme-@{themeName} {
-  bottom: @marker_s_size_slider + @tooltip_offset_slider;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: @tooltip_position-center_font-size-small_slider;
 }
 
 .controls-Slider__point_tooltip {
