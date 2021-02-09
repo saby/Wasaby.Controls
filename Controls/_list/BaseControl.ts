@@ -531,6 +531,16 @@ const _private = {
         }
     },
 
+    callDataLoadCallbackCompatibility(self, items, direction, options): void {
+        if (self._sourceController && options.dataLoadCallback) {
+            const sourceControllerDataLoadCallback = self._sourceController.getState().dataLoadCallback;
+
+            if (sourceControllerDataLoadCallback !== options.dataLoadCallback) {
+                options.dataLoadCallback(items, direction);
+            }
+        }
+    },
+
     initializeModel(self, options, list): void {
         const listModel = self._listViewModel;
 
@@ -2203,6 +2213,7 @@ const _private = {
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
         if (!direction) {
+            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
             return this.isEditing() ? this._cancelEdit(true) : void 0;
         }
@@ -3459,10 +3470,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     newOptions.serviceDataLoadCallback(null, self._items);
                 }
 
+                _private.callDataLoadCallbackCompatibility(self, self._items, undefined, newOptions);
                 _private.createScrollController(self, newOptions);
-
                 _private.prepareFooter(self, newOptions, self._sourceController);
-
                 _private.initVisibleItemActions(self, newOptions);
 
                 if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
