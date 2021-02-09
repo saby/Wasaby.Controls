@@ -408,8 +408,8 @@ var _private = {
     },
 
     purifyConfigs(configs): Array<Record<string, any>> {
-        _private.deleteFieldFromConfigs(configs, 'sourceController')
-        return deleteHistorySourceFromConfig(configs, '_source')
+        _private.deleteFieldFromConfigs(configs, 'sourceController');
+        return deleteHistorySourceFromConfig(configs, 'source');
     },
 
     setValue: function(self, selectedKeys, name) {

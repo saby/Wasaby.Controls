@@ -219,7 +219,7 @@ var _private = {
    onResult: function(event, action, data) {
        if (action === 'footerClick') {
            this._children.DropdownOpener.close();
-       } else if (data && action !== 'menuOpened') {
+       } else if (data && action !== 'menuOpened' && action !== 'menuClosed') {
            const items = action === 'itemClick' ? [data] : data;
            if (action === 'selectorResult') {
                this.lastOpenIndex = this._indexOpenedFilter;

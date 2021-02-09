@@ -130,13 +130,15 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     _beforeMount(options: IControlOptions): void {
         /* Опция _displayDate используется только(!) в тестах, чтобы иметь возможность перемотать
-         календарь в нужный период, если startValue endValue не заданы. */
+         календарь в нужный период, если startValue endValue не заданы.
+         https://online.sbis.ru/opendoc.html?guid=e7dc54f8-1b15-4c93-9d38-e6f33022b53d */
         this._displayedDate = dateUtils.getStartOfMonth(options._displayDate ?
             options._displayDate :
             (dateUtils.isValidDate(options.startValue) ?
                 options.startValue :
                 new Date()));
         // Опция _date используется только на демках для тестирования. В заголовке у нас указывается сегодняшний день.
+        // https://online.sbis.ru/opendoc.html?guid=e7dc54f8-1b15-4c93-9d38-e6f33022b53d
         this._today = options._date ? options._date.getDate() : new Date().getDate();
         this._rangeModel = new DateRangeModel({dateConstructor: options.dateConstructor});
         this._rangeModel.update(options);

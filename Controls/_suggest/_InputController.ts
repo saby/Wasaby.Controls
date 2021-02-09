@@ -393,7 +393,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
-      preparedFilter[searchParam] = searchValue;
+      preparedFilter[searchParam] = searchValue.length >= minSearchLength ? searchValue : '';
 
       return preparedFilter;
    }

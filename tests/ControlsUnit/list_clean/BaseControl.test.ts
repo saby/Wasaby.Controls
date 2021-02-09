@@ -1056,7 +1056,11 @@ describe('Controls/list_clean/BaseControl', () => {
 
                 sourceControllerOptions = {...sourceControllerOptions};
                 sourceControllerOptions.source = new Memory();
-                sourceControllerOptions.source.query = () => Promise.reject(new Error());
+                sourceControllerOptions.source.query = () => {
+                    const error = new Error();
+                    error.processed = true;
+                    return Promise.reject(error);
+                };
                 sourceController.updateOptions(sourceControllerOptions);
                 await sourceController.reload().catch(() => {});
                 baseControlOptions.source = new Memory();
@@ -1190,16 +1194,22 @@ describe('Controls/list_clean/BaseControl', () => {
     describe('reload', () => {
 
         it('baseControl destroyed on reload', async () => {
-            const options = getBaseControlOptionsWithEmptyItems();
+            const options = await getCorrectBaseControlConfigAsync(getBaseControlOptionsWithEmptyItems());
+            let afterReloadCallbackCalled = false;
+            options.afterReloadCallback = () => {
+                afterReloadCallbackCalled = true;
+            };
             const baseControl = new BaseControl(options);
             await baseControl._beforeMount(options);
             baseControl.saveOptions(options);
+            afterReloadCallbackCalled = false;
             const reloadPromise = baseControl.reload();
             baseControl._beforeUnmount();
             baseControl._destroyed = true;
 
             const reloadPromiseResult = await reloadPromise;
             assert.ok(!reloadPromiseResult, 'reload return wrong result');
+            assert.ok(!afterReloadCallbackCalled);
         });
 
     });
