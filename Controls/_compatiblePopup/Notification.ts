@@ -1,6 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as CommandDispatcher from 'Core/CommandDispatcher';
-import * as template 'wml!Controls/_compatiblePopup/Notification/Notification';
+import * as template from 'wml!Controls/_compatiblePopup/Notification/Notification';
 import 'css!Controls/compatiblePopup';
 
 /**

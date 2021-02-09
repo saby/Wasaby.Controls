@@ -1,5 +1,5 @@
 import * as CompoundContainer from 'Core/CompoundContainer';
-import * as template from 'wml!Controls/_compatiblePopup/CompoundAreaForOldTpl/CompoundArea');
+import * as template from 'wml!Controls/_compatiblePopup/CompoundAreaForOldTpl/CompoundArea';
 import * as LikeWindowMixin from 'Lib/Mixins/LikeWindowMixin';
 import * as arrayFindIndex from 'Core/helpers/Array/findIndex';
 import * as trackElement from 'Core/helpers/Hcontrol/trackElement';
