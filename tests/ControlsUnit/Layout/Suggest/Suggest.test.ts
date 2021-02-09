@@ -920,7 +920,7 @@ describe('Controls/suggest', () => {
          /* tabSelectedKey changed, filter must be changed */
          suggestComponent._suggestMarkedKey = 'test';
          suggestComponent._tabsSelectedKeyChanged('test');
-         assert.equal(suggestComponent._filter.currentTab, 'test');
+         assert.equal(suggestComponent._filter.currentTab, null);
          assert.isTrue(suggestActivated);
          assert.isTrue(suggestComponent._suggestMarkedKey === null);
       });
