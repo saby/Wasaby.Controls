@@ -270,7 +270,7 @@ class Base extends Control<IMasterDetail> {
             const touchendPosition: number = this._getTouchPageXCoord(e);
             const touchOffset: number = touchendPosition - this._touchstartPosition;
             this._touchstartPosition = null;
-            this._children.resizingLine.endDrag(touchOffset);
+            this._children.resizingLine?.endDrag(touchOffset);
         }
     }
 
