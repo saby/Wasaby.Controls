@@ -117,7 +117,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _fastFilterItems: IFilterItem[];
     private _groupHistoryId: string;
     private _errorRegister: RegisterClass;
-    private _storeCallbacks: string[];
+    private _storeCallbackIds: string[];
+    private _storeCtxCallbackId: string;
 
     private _source: ICrudPlus | ICrud & ICrudPlus & IData;
     private _sourceController: SourceController = null;
@@ -212,7 +213,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._isMounted = true;
         if (options.useStore) {
             this._storeCallbackIds = this._createNewStoreObservers();
-            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', function () {
+            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', () => {
                 this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
                 this._storeCallbackIds = this._createNewStoreObservers();
             }, true);
