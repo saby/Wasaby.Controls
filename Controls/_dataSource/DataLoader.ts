@@ -1,4 +1,4 @@
-import {NewSourceController} from 'Controls/dataSource';
+import {default as NewSourceController} from 'Controls/_dataSource/Controller';
 import {IFilterItem, ControllerClass as FilterController, IFilterControllerOptions} from 'Controls/filter';
 import {
     ISourceOptions,
