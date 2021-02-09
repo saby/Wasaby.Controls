@@ -22,8 +22,8 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
-   menuPopupTrigger?: 'click' | 'hover';
-   menuPopupBackground?: string;
+   popupTrigger?: 'click' | 'hover';
+   popupBackgroundStyle?: string;
 }
 
 /**
@@ -142,8 +142,8 @@ export default class Button extends BaseDropdown {
             hasIconPin: this._hasIconPin,
             allowPin: true,
             markerVisibility: 'hidden',
-            popupTrigger: options.menuPopupTrigger,
-            popupBackground: options.menuPopupBackground
+            trigger: options.popupTrigger,
+            backgroundStyle: options.popupBackgroundStyle
          }
       };
    }
@@ -185,7 +185,7 @@ export default class Button extends BaseDropdown {
    }
     _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
       super._handleMouseEnter(event);
-      if (this._options.menuPopupTrigger === 'hover') {
+      if (this._options.popupTrigger === 'hover') {
          this.openMenu();
       }
     }
@@ -244,8 +244,8 @@ export default class Button extends BaseDropdown {
          showHeader: true,
          filter: {},
          buttonStyle: 'secondary',
-         menuPopupTrigger: 'click',
-         menuPopupBackground: 'default',
+         popupTrigger: 'click',
+         popupBackgroundStyle: 'default',
          viewMode: 'button',
          fontSize: 'm',
          iconStyle: 'secondary',
@@ -311,22 +311,22 @@ export default class Button extends BaseDropdown {
  */
 
 /**
- * @typedef {String} TMenuPopupTrigger
- * @variation click Меню открывается по клику.
- * @variation hover Меню открывается при наведении.
+ * @typedef {String} TPopupTrigger
+ * @variation click Открытие кликом по контенту. Закрытие кликом "мимо" - не по контенту или шаблону.
+ * @variation hover Открытие по ховеру - по наведению курсора на контент. Закрытие по ховеру - по навердению курсора на контент или шаблон.
  */
 /**
- * @name Controls/_dropdown/Button#menuPopupTrigger
- * @cfg {TMenuPopupTrigger} Определяет поведение отображения меню.
+ * @name Controls/_dropdown/Button#popupTrigger
+ * @cfg {TPopupTrigger} Название события, которое запускает открытие или закрытие меню.
  * @default click
- * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
+ * @demo Controls-demo/dropdown_new/Button/PopupTrigger/Index
  */
 
 /**
- * @name Controls/_dropdown/Button#menuPopupBackground
+ * @name Controls/_dropdown/Button#popupBackgroundStyle
  * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
  * @default default
- * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
+ * @demo Controls-demo/dropdown_new/Button/PopupBackground/Index
  */
 
 /**

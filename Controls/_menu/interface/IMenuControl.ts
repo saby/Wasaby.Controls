@@ -11,11 +11,12 @@ import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {Stack} from 'Controls/popup';
 import {NewSourceController} from 'Controls/dataSource';
 import HoverController from 'Controls/_menu/HoverController';
+import {default as IBackgroundStyle, IBackgroundStyleOptions} from "Controls/_interface/IBackgroundStyle";
 
 export type TKey = string|number|null;
 
-export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions,
-    INavigationOptions<INavigationSourceConfig>, IFilterOptions, ISelectorDialogOptions {
+export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, IBackgroundStyle,
+    IBackgroundStyleOptions, INavigationOptions<INavigationSourceConfig>, IFilterOptions, ISelectorDialogOptions {
     nodeFooterTemplate?: TemplateFunction;
     root?: TKey;
     selectorOpener?: Stack;
@@ -26,7 +27,6 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions,
     selectorDialogResult: Function;
     sourceController?: NewSourceController;
     hoverController?: HoverController;
-    popupBackground?: string;
 }
 
 /**

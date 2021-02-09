@@ -1,11 +1,16 @@
+const MOUSE_LEAVE_DELAY = 1000;
 /**
  * HoverController
  * @author Мочалов М.А.
  * @private
  */
 export default class HoverController {
-    private _callback: Function;
+    private _mouseLeaveCallback: Function;
     private _timerId: number = null;
+
+    constructor(callback: Function) {
+        this._mouseLeaveCallback = callback;
+    }
 
     mouseEnter(): void {
         if (this._timerId !== null) {
@@ -14,10 +19,6 @@ export default class HoverController {
     }
 
     mouseLeave(): void {
-        this._timerId = setTimeout(this._callback, 1000);
-    }
-
-    setCallback(callback: Function): void {
-        this._callback = callback;
+        this._timerId = setTimeout(this._mouseLeaveCallback, MOUSE_LEAVE_DELAY);
     }
 }

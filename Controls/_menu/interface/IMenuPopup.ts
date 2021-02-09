@@ -5,8 +5,8 @@ import {CollectionItem} from 'Controls/display';
 import {Model, CrudEntityKey} from 'Types/entity';
 
 export interface IFooterItemData {
-    item: CollectionItem<Model>,
-    key: CrudEntityKey
+    item: CollectionItem<Model>;
+    key: CrudEntityKey;
 }
 
 export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {
@@ -14,8 +14,7 @@ export interface IMenuPopupOptions extends IMenuControlOptions, ISearch {
     footerContentTemplate: TemplateFunction;
     closeButtonVisibility: boolean;
     footerItemData: IFooterItemData;
-    popupTrigger: 'click' | 'hover';
-    popupBackground: string;
+    trigger: 'click' | 'hover';
 }
 
 /**
@@ -150,12 +149,6 @@ export default interface IMenuPopup {
  * @name Controls/_menu/interface/IMenuPopup#emptyTemplate
  * @cfg {Function} Шаблон, который будет отображаться в выпадающем списке, если поисковой запрос не вернул результатов.
  * @demo Controls-demo/Menu/Popup/SearchParam/EmptyTemplate/Index
- */
-
-/**
- * @name Controls/_menu/interface/IMenuPopup#popupBackground
- * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
- * @default default
  */
 
 /**

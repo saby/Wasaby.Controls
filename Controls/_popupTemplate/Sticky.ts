@@ -2,8 +2,10 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_popupTemplate/Sticky/Sticky';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplateBase, IPopupTemplateBaseOptions} from './interface/IPopupTemplateBase';
+import IBackgroundStyle, {IBackgroundStyleOptions} from 'Controls/_interface/IBackgroundStyle';
 
-interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions {
+interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions,
+    IBackgroundStyle, IBackgroundStyleOptions {
     shadowVisible?: boolean;
     backgroundStyle?: string;
 }
@@ -69,10 +71,5 @@ class StickyTemplate extends Control<IStickyTemplateOptions> implements IPopupTe
  * @name Controls/_popupTemplate/Sticky#shadowVisible
  * @cfg {Boolean} Определяет, будет ли отображаться тень у прилипающего блока
  * @default false
- */
-/**
- * @name Controls/_popupTemplate/Sticky#backgroundStyle
- * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
- * @default default
  */
 export default StickyTemplate;

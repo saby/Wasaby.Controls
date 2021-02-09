@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index');
+import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/popupTrigger/Index');
 import {Memory} from 'Types/source';
 
 export default class extends Control {

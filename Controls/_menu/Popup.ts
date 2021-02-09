@@ -59,13 +59,16 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         this._prepareHeaderConfig(options);
         this._setItemPadding(options);
 
-        if ((options.root === null || options.root === undefined) && options.popupTrigger === 'hover') {
-            this._hoverController = new HoverController();
-            this._hoverController.setCallback(() => {
-                this._notify('close', [], {bubbling: true});
-            });
-        } else if (options.hoverController) {
-            this._hoverController = options.hoverController;
+        if (options.trigger === 'hover') {
+            if (!options.root) {
+                this._hoverController = new HoverController(
+                    () => {
+                        this._notify('close', [], {bubbling: true});
+                    }
+                );
+            } else {
+                this._hoverController = options.hoverController;
+            }
         }
         if (options.searchParam) {
             return mStubs.require(SEARCH_DEPS);
@@ -248,7 +251,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     static getDefaultOptions(): object {
         return {
             selectedKeys: [],
-            popupBackground: 'default'
+            backgroundStyle: 'default'
         };
     }
 }

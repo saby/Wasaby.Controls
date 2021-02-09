@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/MenuPopupBackground/Index');
+import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/PopupBackground/Index');
 import {Memory} from 'Types/source';
 
 export default class extends Control {
@@ -20,6 +20,6 @@ export default class extends Control {
     static _theme: string[] = ['Controls/Classes'];
     static _styles: string[] = [
         'Controls-demo/Controls-demo',
-        'Controls-demo/dropdown_new/Button/MenuPopupBackground/Index'
+        'Controls-demo/dropdown_new/Button/PopupBackground/Index'
     ];
 }
