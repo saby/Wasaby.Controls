@@ -157,7 +157,7 @@ interface IPosition {
          }
 
          position[positionProperty] -= overflow;
-         if (position[positionProperty] < 0) {
+         if (position[positionProperty] <= 0) {
             _private.restrictContainer(position, sizeProperty, popupCfg, -position[positionProperty]);
             position[positionProperty] = 0;
          }
