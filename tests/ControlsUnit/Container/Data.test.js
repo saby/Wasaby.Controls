@@ -100,7 +100,11 @@ define(
             await data._beforeMount(dataOptions);
 
             const errorSource = new sourceLib.Memory();
-            errorSource.query = () => Promise.reject(new Error('testError'));
+            errorSource.query = () => {
+               const error = new Error('testError');
+               error.processed = true;
+               return Promise.reject(error);
+            };
             dataOptions = {...dataOptions};
             dataOptions.source = errorSource;
             data._onDataError = () => {
@@ -504,11 +508,11 @@ define(
          it('query returns error', function(done) {
             var source = {
                query: function() {
-                  return Deferred.fail({
-                     canceled: false,
-                     processed: false,
-                     _isOfflineMode: false
-                  });
+                  const error = new Error('testError');
+                  error.processed = true;
+                  error.canceled = false;
+                  error._isOfflineMode = false;
+                  return Promise.reject(error);
                },
                _mixins: [],
                "[Types/_source/ICrud]": true
@@ -547,6 +551,7 @@ define(
                dataLoadErrbackCalled = true;
             };
             var error = new Error('test');
+            error.processed = true;
 
             var config = {source: source, keyProperty: 'id', dataLoadErrback: dataLoadErrback};
             var promise = getDataWithConfig(config)._beforeMount(config);

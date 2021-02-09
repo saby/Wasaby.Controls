@@ -155,9 +155,12 @@ const PAGING_MIN_ELEMENTS_COUNT = 5;
 /**
  * Нативный IntersectionObserver дергает callback по перерисовке.
  * В ie нет нативного IntersectionObserver.
- * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка
+ * Для него работает полифилл, используя throttle. Поэтому для ie нужна задержка.
+ * В fireFox возникает аналогичная проблема, но уже с нативным обсервером.
+ * https://online.sbis.ru/opendoc.html?guid=ee31faa7-467e-48bd-9579-b60bc43b2f87
  */
-const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isIE || detection.isMobileIOS ? 150 : 0;
+const CHECK_TRIGGERS_DELAY_IF_NEED = detection.isWin && !detection.isDesktopChrome ||
+                                     detection.isIE || detection.isMobileIOS ? 150 : 0;
 const LIST_MEASURABLE_CONTAINER_SELECTOR = 'js-controls-ListView__measurableContainer';
 const ITEM_ACTION_SELECTOR = '.js-controls-ItemActions__ItemAction';
 
@@ -1532,7 +1535,7 @@ const _private = {
         _private.getPortionedSearch(self).reset();
 
         if (options.sourceController) {
-            _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            _private.checkLoadToDirectionCapability(self, options.sourceController.getFilter(), options.navigation);
         }
     },
 
@@ -2615,7 +2618,9 @@ const _private = {
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
-                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
+                    self._doAfterDrawItems = () => {
+                        _private.scrollToItem(self, self._options.activeElement, false, true);
+                    };
                 }
             }
         }
@@ -3326,7 +3331,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _swipeTemplate: SwipeActionsTemplate,
 
     _markerController: null,
-    _markerLoadPromise: null,
 
     _dndListController: null,
     _dragEntity: undefined,
@@ -4310,8 +4314,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         // Если sourceController есть в опциях, значит его создали наверху
         // например list:DataContainer, и разрушать его тоже должен создатель.
-        if (this._sourceController && !this._options.sourceController) {
-            this._sourceController.destroy();
+        if (this._sourceController) {
+            if (!this._options.sourceController) {
+                this._sourceController.destroy();
+            } else {
+                this._sourceController.setDataLoadCallback(null);
+            }
+            this._sourceController = null;
         }
 
         if (this._notifyPlaceholdersChanged) {
@@ -4592,6 +4601,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
+            if (this._doAfterDrawItems) {
+                this._doAfterDrawItems();
+            }
         }
     },
 
@@ -5148,7 +5160,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _beginAdd(options, {shouldActivateInput = true, addPosition = 'bottom'}: IBeginAddOptions = {}) {
         _private.closeSwipe(this);
         this.showIndicator();
-        return this._getEditInPlaceController().add(options, addPosition).then((addResult) => {
+        return this._getEditInPlaceController().add(options, {addPosition}).then((addResult) => {
             if (addResult && addResult.canceled) {
                 return addResult;
             }
@@ -5728,7 +5740,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateItemActionsOnce(this, this._options);
         }
 
-        if (this._documentDragging) {
+        if (this._documentDragging && !this._dndListController?.isDragging()) {
             this._insideDragging = true;
             this._notify('_removeDraggingTemplate', [], {bubbling: true});
             this._listViewModel.setDragOutsideList(false);

@@ -36,6 +36,7 @@ export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
     colspanCallback?: TColspanCallback;
     columnSeparatorSize?: TColumnSeparatorSize;
+    hasStickyGroup?: boolean;
 }
 
 export default abstract class Row<T> {

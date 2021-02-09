@@ -45,12 +45,12 @@ Component.getDefaultOptions = function () {
 };
 
 Object.defineProperty(Component, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return Component.getDefaultOptions();
-   }
+    get(): object {
+        return Component.getDefaultOptions();
+    }
 });
 
 Component.getOptionTypes = function () {

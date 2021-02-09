@@ -182,15 +182,19 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                     this._setFilterItems(filterItems as IFilterItem[]);
                     sourceController.setFilter(this._filter);
 
-                    return this._loadItems(options, sourceController.getState())
-                        .then((items) => {
-                            this._defineShadowVisibility(items);
-                            return { filterItems, items };
-                        })
-                        .catch((error) => {
-                            this._updateContext(sourceController.getState());
-                            return error;
-                        });
+                    if (options.source) {
+                        return this._loadItems(options, sourceController.getState())
+                            .then((items) => {
+                                this._defineShadowVisibility(items);
+                                return {filterItems, items};
+                            })
+                            .catch((error) => {
+                                this._updateContext(sourceController.getState());
+                                return error;
+                            });
+                    } else {
+                        this._updateContext(sourceController.getState());
+                    }
                 })
                 .catch((error) => error);
         }
