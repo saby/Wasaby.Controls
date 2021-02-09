@@ -535,7 +535,7 @@ const _private = {
             const sourceControllerDataLoadCallback = self._sourceController.getState().dataLoadCallback;
 
             if (sourceControllerDataLoadCallback !== options.dataLoadCallback) {
-                options.dataLoadCallback(items, direction);
+                Logger.warn('BaseControl: для корректной работы опцию dataLoadCallback необходимо задавать на Layout/browser:Browser (Controls/list:DataContainer)', self);
             }
         }
     },
