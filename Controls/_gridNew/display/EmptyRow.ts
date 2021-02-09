@@ -38,7 +38,7 @@ export default class EmptyRow<T> extends Row<T> {
             return;
         }
 
-        const factory = this._getColumnsFactory();
+        const factory = this.getColumnsFactory();
 
         if (this._$emptyTemplate) {
             const columns = this._$owner.getColumnsConfig();
