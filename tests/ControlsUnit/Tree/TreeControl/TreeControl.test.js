@@ -1143,6 +1143,7 @@ define([
             source: new sourceLib.Memory()
          };
          options.sourceController = new dataSource.NewSourceController({...options});
+         options.sourceController.setItems(new collection.RecordSet());
          var
              hasMore = false,
              isIndicatorHasBeenShown = false,

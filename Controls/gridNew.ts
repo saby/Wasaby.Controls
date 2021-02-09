@@ -74,6 +74,8 @@ import GridHeader, {IOptions as IGridHeaderOptions} from 'Controls/_gridNew/disp
 import GridHeaderRow, {IOptions as IGridHeaderRowOptions} from 'Controls/_gridNew/display/HeaderRow';
 import GridHeaderCell, {IOptions as IGridHeaderCellOptions} from 'Controls/_gridNew/display/HeaderCell';
 
+import GridStickyLadderCell, {IOptions as IGridStickyLadderCellOptions} from 'Controls/_gridNew/display/StickyLadderCell';
+
 import GridEmptyRow, {IOptions as IGridEmptyRowOptions} from 'Controls/_gridNew/display/EmptyRow';
 import GridEmptyCell, {IOptions as IGridEmptyCellOptions} from 'Controls/_gridNew/display/EmptyCell';
 
@@ -113,6 +115,7 @@ export {
     GridHeader, IGridHeaderOptions,
     GridHeaderRow, IGridHeaderRowOptions,
     GridHeaderCell, IGridHeaderCellOptions,
+    GridStickyLadderCell, IGridStickyLadderCellOptions,
     GridEmptyRow, IGridEmptyRowOptions,
     GridEmptyCell, IGridEmptyCellOptions,
     GridTableHeader,

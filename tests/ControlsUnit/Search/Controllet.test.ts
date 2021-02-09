@@ -50,6 +50,12 @@ describe('Controls/search:Controller', () => {
             await searchController._sourceController.load();
             assert.isTrue(callbackCalled);
         });
+        it('sourceController in options', async () => {
+            delete dataOptions.sourceController;
+            const searchController = new Controller(options);
+            searchController._beforeMount(options, {dataOptions});
+            assert.doesNotThrow(() => {searchController._search({}, 'test')});
+        });
     });
 
     describe('_beforeUnmount', () => {

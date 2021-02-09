@@ -11,7 +11,7 @@
       borderStyle="{{_options.borderStyle}}"
       borderVisibility="{{_options.borderVisibility}}"
       inlineHeight="{{_options.inlineHeight}}"
-      contrastBackground="{{ false }}"
+      contrastBackground="{{ _options.contrastBackground }}"
       rightFieldTemplate="{{ _options.rightFieldTemplate }}"
       style="{{_options.style}}"
       tagStyle="{{ _options.tagStyle }}"

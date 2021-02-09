@@ -7761,6 +7761,23 @@ define([
 
             sandbox.restore();
          });
+
+         it('mouseEnter', () => {
+            baseControl._dragEntity = new dragNDrop.ItemsEntity({ items: [1] });
+            baseControl._documentDragging = true;
+
+            let isDragging = false;
+            baseControl._dndListController = {
+               isDragging: () => isDragging,
+            };
+            baseControl._mouseEnter(null);
+            assert.isTrue(notifySpy.withArgs('dragEnter', [baseControl._dragEntity]).called);
+
+            notifySpy.resetHistory();
+            isDragging = true;
+            baseControl._mouseEnter(null);
+            assert.isFalse(notifySpy.withArgs('dragEnter').called);
+         });
       });
 
       // region Move
