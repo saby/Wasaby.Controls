@@ -8551,6 +8551,15 @@ define([
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[null], [null], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
             });
+
+            it('destroyed BaseControl', () => {
+               const notifySpy = sinon.spy(baseControl, '_notify');
+               baseControl._destroyed = true;
+               lists.BaseControl._private.onSelectedTypeChanged.apply(baseControl, ['toggleAll']);
+               assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+               assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+               baseControl._destroyed = false;
+            });
          });
 
          describe('onCollectionChanged', () => {

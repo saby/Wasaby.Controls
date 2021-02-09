@@ -2516,7 +2516,8 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        if (this._options.multiSelectVisibility === 'hidden') {
+        // Если записи удаляют при закрытия диалога, то к нам может долететь событие, уже когда список задестроился
+        if (this._destroyed || this._options.multiSelectVisibility === 'hidden') {
             return;
         }
 
