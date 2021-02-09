@@ -936,6 +936,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         if (this._$collection['[Types/_collection/IObservable]']) {
             (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
             (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
+
+            // Подписка на onPropertyChange коллекции для отслеживания установки/удаления/изменения метаданных.
+            // Метаданные нужны списку для отображения результатов.
+            // Результаты в метаданных должны быть заданы в формате Types/entity:Model, за изменение модели тоже
+            // необходимо следить.
             (this._$collection as ObservableMixin).subscribe('onPropertyChange', this._onCollectionPropertyChange);
 
             const metaResults = this._$collection.getMetaData && this._$collection.getMetaData()?.results;
