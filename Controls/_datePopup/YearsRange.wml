@@ -4,7 +4,8 @@
             on:keyDown="_prevNextBtnKeyDownHandler(-1)"
             on:click="_onPrevNextButtonClick(-1)"
             title="{[Предыдущий год]}"
-            class="icon-MarkLeftBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}">
+            class="controls-PeriodDialog-Years__prevNextBtn_icon controls-PeriodDialog-Years__prevNextBtn_icon_theme-{{ _options.theme }}
+            icon-MarkLeftBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}">
       </span>
    </div>
    <div class="controls-PeriodDialog-Years__yearsRange">
@@ -25,7 +26,8 @@
                on:keyDown="_prevNextBtnKeyDownHandler(1)"
                on:click="_onPrevNextButtonClick(1)"
                title="{[Следующий год]}"
-               class="icon-MarkRightBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}">
+               class="controls-PeriodDialog-Years__prevNextBtn_icon controls-PeriodDialog-Years__prevNextBtn_icon_theme-{{ _options.theme }}
+               icon-MarkRightBold controls-icon controls-icon_size-m_theme-{{ _options.theme }}">
          </span>
       </div>
 </div>

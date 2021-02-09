@@ -16,16 +16,19 @@
 
 .controls-PeriodDialog-Years__prevNextBtn_theme-@{themeName} {
    width: @yearnav_arrow_width_datePicker;
+}
+
+.controls-PeriodDialog-Years__prevNextBtn_icon_theme-@{themeName} {
    color: @secondary_icon-color;
 }
 
 .ws-is-hover {
-   .controls-PeriodDialog-Years__prevNextBtn_theme-@{themeName}:hover {
+   .controls-PeriodDialog-Years__prevNextBtn_icon_theme-@{themeName}:hover {
       color: @secondary_hover_icon-color;
    }
 }
 
-.controls-PeriodDialog-Years__prevNextBtn_theme-@{themeName}:focus {
+.controls-PeriodDialog-Years__prevNextBtn_icon_theme-@{themeName}:focus {
    color: @secondary_hover_icon-color;
 }
 
@@ -41,7 +44,7 @@
    position: relative;
 }
 
-.controls-PeriodDialog-Years__rangeBtn_theme-@{themeName}:focus {
+.controls-PeriodDialog-Years__rangeBtn_theme-@{themeName}:not(.controls-RangeSelection__selected-start-end_theme-@{themeName}):not(.controls-RangeSelection__selected-start-end-hovered_theme-@{themeName}):focus {
    background-color: @yearlist_monthview_item_selected_hover_background-color_datePicker;
    outline: @yearlist_monthview_item_selected_border-color_datePicker solid  @yearlist_monthview_selection-border_thickness_datePicker;
 }
