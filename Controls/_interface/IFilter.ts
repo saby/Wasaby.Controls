@@ -1,4 +1,5 @@
-import {QueryWhere} from 'Types/source';
+import {QueryWhereExpression, QueryWhere} from 'Types/source';
+export type TFilter = QueryWhereExpression<unknown>;
 
 export interface IFilterOptions {
     filter?: QueryWhere;

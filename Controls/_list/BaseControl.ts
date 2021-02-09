@@ -1535,7 +1535,7 @@ const _private = {
         _private.getPortionedSearch(self).reset();
 
         if (options.sourceController) {
-            _private.checkLoadToDirectionCapability(self, options.filter, options.navigation);
+            _private.checkLoadToDirectionCapability(self, options.sourceController.getFilter(), options.navigation);
         }
     },
 
@@ -2618,7 +2618,9 @@ const _private = {
                 if (result.scrollToActiveElement) {
                     // Если после перезагрузки списка нам нужно скроллить к записи, то нам не нужно сбрасывать скролл к нулю.
                     self._keepScrollAfterReload = true;
-                    _private.doAfterUpdate(self, () => { _private.scrollToItem(self, self._options.activeElement, false, true); });
+                    self._doAfterDrawItems = () => {
+                        _private.scrollToItem(self, self._options.activeElement, false, true);
+                    };
                 }
             }
         }
@@ -4599,6 +4601,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
+            if (this._doAfterDrawItems) {
+                this._doAfterDrawItems();
+            }
         }
     },
 
