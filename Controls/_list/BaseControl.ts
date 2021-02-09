@@ -3804,13 +3804,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
         }
 
-        // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
-        if (sourceChanged || filterChanged || sortingChanged || recreateSource) {
-            if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
-                self._hideTopTrigger = true;
-            }
-        }
-
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
