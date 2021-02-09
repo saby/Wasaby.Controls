@@ -4,7 +4,7 @@ import {assert} from 'chai';
 import * as sinon from "sinon";
 import {Model} from "Types/entity";
 
-describe('Controls/_display/UpdateMetaData', () => {
+describe('Controls/_display/collection/UpdateMetaData', () => {
     let sandbox: sinon.SinonSandbox;
     const createRecordSet = (metaData?) => new RecordSet({
         keyProperty: 'id',

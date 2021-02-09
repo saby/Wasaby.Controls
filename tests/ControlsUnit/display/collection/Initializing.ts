@@ -1,8 +1,8 @@
-import {Collection} from "Controls/display";
-import {RecordSet} from "Types/collection";
-import {Model} from "Types/entity";
+import {Collection as CollectionDisplay, Collection} from 'Controls/display';
+import {RecordSet} from 'Types/collection';
+import {Model} from 'Types/entity';
 import {assert} from 'chai';
-import * as sinon from "sinon";
+import * as sinon from 'sinon';
 
 describe('Controls/_display/collection/Initializing', () => {
     it('1. should subscribe on property change of RecordSet', () => {
@@ -38,5 +38,17 @@ describe('Controls/_display/collection/Initializing', () => {
 
         assert.isTrue(subscribeSpy.calledWith('onPropertyChange'));
         sandbox.restore();
+    });
+
+    it('3. Should set meta results', () => {
+        const results = new Model({rawData: {}});
+        const list = new RecordSet({
+            keyProperty: 'id',
+            rawData: [],
+            metaData: {results}
+        });
+        const display = new CollectionDisplay({collection: list});
+
+        assert.equal(results, display.getMetaResults());
     });
 });
