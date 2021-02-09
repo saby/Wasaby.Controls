@@ -177,7 +177,8 @@ class PreviewerTarget extends Control<IPreviewerOptions> implements IPreviewer {
     }
 
     protected _contentMouseDownHandler(event: SyntheticEvent<MouseEvent>): void {
-        if (this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick') {
+        if ((this._options.trigger === 'click' || this._options.trigger === 'hoverAndClick')
+            && event.nativeEvent.which === 1) {
             /**
              * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
              */
