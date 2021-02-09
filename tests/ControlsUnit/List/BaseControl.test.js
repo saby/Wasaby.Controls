@@ -4208,7 +4208,7 @@ define([
                })
             })
          };
-         ctrl._documentDragEnd();
+         ctrl._documentDragEnd({entity: {}});
          assert.isTrue(dragEnded);
 
          //dragend with deferred
@@ -4232,7 +4232,7 @@ define([
          };
          ctrl._insideDragging = true;
          ctrl._notify = () => new cDeferred();
-         ctrl._documentDragEnd({});
+         ctrl._documentDragEnd({entity: {}});
          assert.isFalse(dragEnded);
          assert.isTrue(!!ctrl._loadingState);
       });
@@ -7667,7 +7667,10 @@ define([
 
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({});
+            assert.isFalse(endDragSpy.called);
+
+            baseControl._documentDragEnd({ entity: {} });
 
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
@@ -7680,7 +7683,7 @@ define([
                })
             });
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
@@ -7688,7 +7691,7 @@ define([
             baseControl._insideDragging = true;
             baseControl._dndListController = dndController;
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
 
             assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
@@ -7756,7 +7759,7 @@ define([
             };
 
             const spy = sinon.spy(baseControl, 'checkTriggerVisibilityAfterRedraw');
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
             assert.isTrue(spy.called);
 
             sandbox.restore();
