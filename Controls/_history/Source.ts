@@ -666,8 +666,11 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     setHistory(history: IHistoryData): void {
         this._$history = history;
     }
-}
 
+    getKeyProperty(): string {
+        return this._getKeyProperty();
+    }
+}
 
 /**
  * @name Controls/_history/Source#originSource
