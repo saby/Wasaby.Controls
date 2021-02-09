@@ -543,6 +543,16 @@ const _private = {
         }
     },
 
+    callDataLoadCallbackCompatibility(self, items, direction, options): void {
+        if (self._sourceController && options.dataLoadCallback) {
+            const sourceControllerDataLoadCallback = self._sourceController.getState().dataLoadCallback;
+
+            if (sourceControllerDataLoadCallback !== options.dataLoadCallback) {
+                options.dataLoadCallback(items, direction);
+            }
+        }
+    },
+
     initializeModel(self, options, list): void {
         const listModel = self._listViewModel;
 
