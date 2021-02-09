@@ -71,7 +71,7 @@ class PageParamsCalculator implements IParamsCalculator {
             default: {
                 // Если направление не указано,
                 // значит это расчет параметров после начальной загрузки списка или после перезагрузки
-                if (config) {
+                if (config && config.pageSize) {
                     // TODO обработать эту ситуацию
                     const pageSizeRemainder = config.pageSize % storeParams.pageSize;
                     const pageSizeCoef = (config.pageSize - pageSizeRemainder) / storeParams.pageSize;
