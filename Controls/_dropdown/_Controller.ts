@@ -491,11 +491,11 @@ export default class _Controller implements IDropdownController {
                this._items.remove(item);
             }
          }
-         this._source.update(items, getMetaHistory());
-
-         if (this._sourceController && this._source.getItems) {
-            this._setItems(this._source.getItems());
-         }
+         this._source.update(items, getMetaHistory()).then(() => {
+            if (this._sourceController && this._source.getItems) {
+               this._setItems(this._source.getItems());
+            }
+         });
       }
    }
 

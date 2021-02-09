@@ -51,7 +51,6 @@ export {default as Selector} from 'Controls/_dropdown/Selector';
 
 export {
     Button,
-    Input,
     _Controller,
     Combobox,
     ItemTemplate,

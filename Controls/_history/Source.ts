@@ -28,6 +28,7 @@ interface IHistoryData {
 }
 
 const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$_addFromData'];
+const HISTORY_UPDATE_RECENT_DELAY = 50;
 
 /**
  * Источник, который возвращает из исходного источника отсортированные данные с учётом истории.
@@ -36,7 +37,7 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @mixes Types/_entity/OptionsToPropertyMixin
  * @public
  * @author Герасимов А.М.
- * 
+ *
  * @example
  * <pre class="brush: js">
  *    var source = new history.Source({
@@ -58,7 +59,7 @@ const HISTORY_META_FIELDS: string[] = ['$_favorite', '$_pinned', '$_history', '$
  * @class Controls/_history/Source
  * @extends Core/core-extend
  * @mixes Types/_entity/OptionsToPropertyMixin
- * 
+ *
  * @public
  * @author Герасимов А.М.
  * @example
@@ -454,30 +455,34 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     }
 
     private _updateRecent(data: any, meta: any): Promise<any> {
-        let historyData;
-        let recentData;
+        return new Promise((resolve, re) => {
+            setTimeout(() => {
+                let historyData;
+                let recentData;
 
-        if (data instanceof Array) {
-            historyData = {
-                ids: []
-            };
-            factory(data).each((item: Model): void => {
-                const itemId = item.get(this._getKeyProperty());
-                historyData.ids.push(itemId);
-            });
-            recentData = data;
-        } else {
-            historyData = data;
-            recentData = [data];
-        }
+                if (data instanceof Array) {
+                    historyData = {
+                        ids: []
+                    };
+                    factory(data).each((item: Model): void => {
+                        const itemId = item.get(this._getKeyProperty());
+                        historyData.ids.push(itemId);
+                    });
+                    recentData = data;
+                } else {
+                    historyData = data;
+                    recentData = [data];
+                }
 
-        this._resolveRecent(recentData);
-        if (this._$historyItems && !this._updateRecentInItems(recentData)) {
-            this._$historyItems = null;
-        }
+                this._resolveRecent(recentData);
+                if (this._$historyItems && !this._updateRecentInItems(recentData)) {
+                    this._$historyItems = null;
+                }
 
-        this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
-        return this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(historyData, meta);
+                this._$historySource.saveHistory(this._$historySource.getHistoryId(), this._$history);
+                resolve(this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(historyData, meta));
+            }, HISTORY_UPDATE_RECENT_DELAY);
+        });
     }
 
     private _updateRecentInItems(recent: Model[]): boolean {
@@ -567,7 +572,7 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
             return Promise.resolve(this._updatePinned(data, meta));
         }
         if (meta.hasOwnProperty('$_history')) {
-            return Promise.resolve(this._updateRecent(data, meta));
+            return Promise.resolve(this._updateRecent(data, meta).catch(() => {}));
         }
         return this._getSourceByMeta(meta, this._$historySource, this._$originSource).update(data, meta);
     }

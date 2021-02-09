@@ -118,7 +118,11 @@ function getPagingNavigation(hasMore: boolean = false, pageSize: number = 1): IN
 }
 
 const sourceWithError = new Memory();
-sourceWithError.query = () => Promise.reject(new Error());
+sourceWithError.query = () => {
+    const error = new Error();
+    error.processed = true;
+    return Promise.reject(error);
+};
 
 function getControllerWithHierarchy(additionalOptions: object = {}): NewSourceController {
     return new NewSourceController({...getControllerWithHierarchyOptions(), ...additionalOptions});

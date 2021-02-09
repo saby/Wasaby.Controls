@@ -201,6 +201,15 @@ export default class Button extends BaseDropdown {
             break;
          case 'footerClick':
             this._footerClick(data);
+            break;
+          /**
+           * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера
+           * переделать по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
+           */
+          case 'menuOpened':
+          case 'menuClosed':
+              this._notify(action, [], {bubbling: true});
+              break;
       }
    }
 
