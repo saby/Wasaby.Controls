@@ -17,7 +17,8 @@ define(
             PWInstance._debouncedAction = function(method, args) {
                result = true;
             };
-            var event = new SyntheticEvent({ which: 1 }, {});
+            var event = new SyntheticEvent(null, {});
+            event.nativeEvent.which = 1;
             PWInstance._options.trigger = 'click';
             PWInstance._contentMouseDownHandler(event);
             assert.deepEqual(result, true);
