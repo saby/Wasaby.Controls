@@ -6246,6 +6246,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _documentDragEnd(dragObject): void {
+        // Если перетаскиваются элементы списка, то мы всегда задаем entity
+        if (!dragObject || !dragObject.entity) {
+            return;
+        }
+
         let dragEndResult: Promise<any> | undefined;
         if (this._insideDragging && this._dndListController) {
             const targetPosition = this._dndListController.getDragPosition();
