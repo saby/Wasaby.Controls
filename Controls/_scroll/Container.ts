@@ -564,7 +564,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // После отключения оптимизации проблема почему то уходит.
         this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
             this._wasMouseEnter || detection.isIE);
-        if (this._scrollbars.vertical.isVisible && this._children.hasOwnProperty('scrollBar')) {
+        if (this._scrollbars.vertical && this._scrollbars.vertical.isVisible && this._children.hasOwnProperty('scrollBar')) {
             this._children.scrollBar.setViewportSize(
                 this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
         }
