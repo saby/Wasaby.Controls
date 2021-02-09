@@ -57,7 +57,7 @@ class RegisterClass {
       for (const i in this._registry) {
           if (this._registry.hasOwnProperty(i)) {
               const obj = this._registry[i];
-              if (obj && !obj.component._destroyed) {
+              if (obj && obj.component?._destroyed === false) {
                   obj.callback.apply(obj.component, arguments);
               }
           }
