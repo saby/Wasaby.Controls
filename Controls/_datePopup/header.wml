@@ -8,7 +8,7 @@
          class="controls-PeriodDialog__stateButton controls-PeriodDialog__stateButton_theme-{{theme}}"
          title="{{state === 'year' ? rk('Месячный режим') : rk('Годовой режим')}}">
             <span class="{{ state === 'year' ? 'icon-ArrangeList' : 'icon-ArrangePreview' }} controls-icon controls-icon_size-s_theme-{{ _options.theme }}
-                controls-PeriodDialog_stateButton_icon_theme-{{ _options.theme }}">
+                controls-PeriodDialog_stateButton_icon_theme-{{ _options.theme }} {{ keyboardActive? 'controls-PeriodDialog_stateButton_icon_focus_theme-' + _options.theme }}">
             </span>
     </div>
     <ws:if data="{{ selectionType === 'quantum' }}">

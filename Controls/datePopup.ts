@@ -127,6 +127,8 @@ export default class DatePopup extends Control implements EventProxyMixin {
     _startValueValidators = null;
     _endValueValidators = null;
 
+    _keyboardActive: boolean = false;
+
     _beforeMount(options: IControlOptions): void {
         /* Опция _displayDate используется только(!) в тестах, чтобы иметь возможность перемотать
          календарь в нужный период, если startValue endValue не заданы. */
@@ -384,12 +386,22 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     _keyDownHandler(event: SyntheticEvent): void {
+        // ПОМЕНЯТЬ НА СВИТЧ
         if (constants.key.home === event.nativeEvent.keyCode) {
             this._scrollToCurrentMonth();
         }
         if (constants.key.esc === event.nativeEvent.keyCode) {
             this._applyResult();
         }
+        // Если управление происходит через клавиатуру, то мы включаем режим, при котором фокус на элементах будет
+        // выделять их.
+        if (constants.key.tab === event.nativeEvent.keyCode) {
+            this._keyboardActive = true;
+        }
+    }
+
+    _onClickHandler(): void {
+        this._keyboardActive = false;
     }
 
     _applyClick(e: SyntheticEvent): Promise<void> {

@@ -1,4 +1,4 @@
-<Controls.validate:Controller name="formController" on:keyDown="_keyDownHandler()">
+<Controls.validate:Controller name="formController" on:keyDown="_keyDownHandler()" on:click="_onClickHandler()">
       <div class="controls-PeriodDialog controls-PeriodDialog_theme-{{_options.theme}}">
       <ws:partial
          template="{{_headerTmpl}}"
@@ -17,6 +17,7 @@
          dateConstructor="{{_options.dateConstructor}}"
          startValueValidators="{{_startValueValidators}}"
          endValueValidators="{{_endValueValidators}}"
+         keyboardActive="{{ _keyboardActive }}"
       />
 
          <div if="{{ _state === _STATES.year }}" class="controls-PeriodDialog__months
@@ -37,6 +38,7 @@
 
             <Controls._datePopup.YearsRange
                year="{{_displayedDate}}"
+               keyboardActive="{{ _keyboardActive }}"
                dateConstructor="{{_options.dateConstructor}}"
                on:itemClick="_onYearsItemClick()"
             />

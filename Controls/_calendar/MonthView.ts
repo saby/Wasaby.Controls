@@ -4,7 +4,7 @@ import {date as formatDate} from 'Types/formatter';
 import {Base as DateUtil} from 'Controls/dateUtils';
 import monthListUtils from './MonthList/Utils';
 
-import {IDateRangeSelectable, Utils as calendarUtils} from 'Controls/dateRange';
+import {IDateRangeSelectable, Utils as calendarUtils, keyboardPeriodController} from 'Controls/dateRange';
 import MonthViewModel from './MonthView/MonthViewModel';
 import dotTplFn = require('wml!Controls/_calendar/MonthView/MonthView');
 import dayTemplate = require('wml!Controls/_calendar/MonthView/dayTemplate');
@@ -116,30 +116,12 @@ var MonthView = BaseControl.extend({
 
    _keyDownHandler: function(event: Event, item: Date, isCurrentMonth: boolean): void {
            const hoveredItem = this._hoveredItem || item;
-           if (event.nativeEvent.keyCode === constants.key.enter) {
+           const keyCode = event.nativeEvent.keyCode;
+           if (keyCode === constants.key.enter) {
                this._dayClickHandler(event, this._hoveredItem, isCurrentMonth);
            }
            if (hoveredItem && this._options.selectionType !== 'quantum') {
-               let newHoveredItem;
-               const daysInWeek = 7;
-               switch (event.nativeEvent.keyCode) {
-                   case constants.key.up:
-                       newHoveredItem = new Date(hoveredItem.getFullYear(),
-                           hoveredItem.getMonth(), hoveredItem.getDate() - daysInWeek);
-                       break;
-                   case constants.key.down:
-                       newHoveredItem = new Date(hoveredItem.getFullYear(),
-                           hoveredItem.getMonth(), hoveredItem.getDate() + daysInWeek);
-                       break;
-                   case constants.key.left:
-                       newHoveredItem = new Date(hoveredItem.getFullYear(),
-                           hoveredItem.getMonth(), hoveredItem.getDate() - 1);
-                       break;
-                   case constants.key.right:
-                       newHoveredItem = new Date(hoveredItem.getFullYear(),
-                           hoveredItem.getMonth(), hoveredItem.getDate() + 1);
-                       break;
-               }
+               const newHoveredItem = keyboardPeriodController(keyCode, hoveredItem, 'days');
                if (newHoveredItem) {
                    const elementToFocus = document.querySelector(
                        `.controls-MonthViewVDOM__item[data-date="${this._dateToDataString(newHoveredItem)}"]`

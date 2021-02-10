@@ -5,7 +5,7 @@ import {date as formatDate} from 'Types/formatter';
 import isEmpty = require('Core/helpers/Object/isEmpty');
 import EventProxyMixin from './Mixin/EventProxy';
 import {MonthModel as modelViewModel} from 'Controls/calendar';
-import {IDateRangeSelectable, rangeSelection as rangeSelectionUtils} from 'Controls/dateRange';
+import {IDateRangeSelectable, rangeSelection as rangeSelectionUtils, keyboardPeriodController} from 'Controls/dateRange';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRangeItem');
 import {constants} from 'Env/Env';
@@ -221,31 +221,13 @@ var Component = BaseControl.extend([EventProxyMixin], {
 
     _onMonthKeyDown: function(event: Event, item: Date): void {
         const hoveredItem = this._hoveredItem || item;
+        const keyCode = event.nativeEvent.keyCode;
         if (this._options.selectionProcessing || !this._options.monthClickable) {
             if (event.nativeEvent.keyCode === constants.key.enter) {
                 this._chooseMonth(hoveredItem);
             }
-            if (this._hoveredItem && this._options.selectionType !== 'quantum') {
-                let newHoveredItem;
-                const monthsInQuarter = 3;
-                switch (event.nativeEvent.keyCode) {
-                    case constants.key.up:
-                        newHoveredItem = new Date(hoveredItem.getFullYear(),
-                            hoveredItem.getMonth() - monthsInQuarter, 1);
-                        break;
-                    case constants.key.down:
-                        newHoveredItem = new Date(hoveredItem.getFullYear(),
-                            hoveredItem.getMonth() + monthsInQuarter, 1);
-                        break;
-                    case constants.key.left:
-                        newHoveredItem = new Date(hoveredItem.getFullYear(),
-                            hoveredItem.getMonth() - 1, 1);
-                        break;
-                    case constants.key.right:
-                        newHoveredItem = new Date(hoveredItem.getFullYear(),
-                            hoveredItem.getMonth() + 1, 1);
-                        break;
-                }
+            if (hoveredItem && this._options.selectionType !== 'quantum') {
+                const newHoveredItem = keyboardPeriodController(keyCode, hoveredItem, 'months');
                 if (newHoveredItem) {
                     const elementToFocus = document.querySelector(
                         `.controls-PeriodDialog-MonthsRange__item[data-date="${this._dateToDataString(newHoveredItem)}"]`
