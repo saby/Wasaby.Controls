@@ -807,12 +807,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         return sourceController.reload()
             .then((items) => {
                 this._items = sourceController.getItems();
-                this._loading = false;
                 return items;
             })
             .catch((error) => {
                 this._processLoadError(error);
                 return error;
+            })
+            .finally(() => {
+                this._loading = false;
             })
             .then((result) => {
                 return this._updateSearchController(options).then(() => result);
