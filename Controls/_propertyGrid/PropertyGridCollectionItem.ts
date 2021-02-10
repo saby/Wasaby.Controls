@@ -79,6 +79,7 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
     setPropertyValue(editingObject: Object | Model | Record<string, any>): void {
         const itemContents = this.getContents();
         this._$propertyValue = object.getPropertyValue(editingObject, itemContents.get(this._$keyProperty));
+        this._nextVersion();
     }
 }
 
