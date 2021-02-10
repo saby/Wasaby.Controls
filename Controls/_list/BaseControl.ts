@@ -352,6 +352,13 @@ const _private = {
         if (!isInfinityNavigation) {
             return false;
         }
+
+        // Если у нас элементы отображаются в обратном направлении, то сверху не нужно добавлять отступ
+        const isBackwardDirection = options.navigation?.sourceConfig?.direction === 'backward';
+        if (isBackwardDirection) {
+            return false;
+        }
+
         return true;
     },
 
