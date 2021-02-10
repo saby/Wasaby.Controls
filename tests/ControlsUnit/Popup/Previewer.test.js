@@ -33,6 +33,20 @@ define(
             PWInstance._options.trigger = 'hoverAndClick';
             PWInstance._contentMouseDownHandler(event);
             assert.deepEqual(result, true);
+
+            // имитируем нажатие ПКМ
+            nativeEvent.which = 3;
+            event = new SyntheticEvent(nativeEvent, {});
+            result = false;
+            PWInstance._options.trigger = 'click';
+            PWInstance._contentMouseDownHandler(event);
+            assert.deepEqual(result, false);
+            PWInstance._options.trigger = 'hover';
+            PWInstance._contentMouseDownHandler(event);
+            assert.deepEqual(result, false);
+            PWInstance._options.trigger = 'hoverAndClick';
+            PWInstance._contentMouseDownHandler(event);
+            assert.deepEqual(result, false);
             PWInstance.destroy();
          });
          it('contentMouseenterHandler', () => {
