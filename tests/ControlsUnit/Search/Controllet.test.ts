@@ -131,23 +131,18 @@ describe('Controls/search:Controller', () => {
             assert.isTrue(dataLoadCallbackFromOptionsCalled);
         });
 
-        it('_searchValue updated', () => {
-            let searchControllerUpdated = false;
+        it('_searchValue updated', async () => {
             const searchController = new Controller(options);
             searchController._beforeMount(options, {dataOptions});
 
-            searchController._searchController = {
-                update: () => {
-                    searchControllerUpdated = true;
-                    return {};
-                },
-                setRoot: () => {}
-            };
+            options = {...options};
             options.searchValue = 'newValue';
-            searchController._searchValue = '';
-            searchController._beforeUpdate(options, {dataOptions: {}});
-            assert.equal(searchController._searchValue, 'newValue');
+            const updateResult = searchController._beforeUpdate(options, {dataOptions: {}});
             assert.equal(searchController._inputSearchValue, 'newValue');
+            assert.isTrue(searchController._loading);
+
+            await updateResult;
+            assert.equal(searchController._searchValue, 'newValue');
         });
 
         it('searchValue wasn\'t changed', () => {
