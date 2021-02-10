@@ -6,7 +6,7 @@ import {RecordSet} from 'Types/Collection';
 type TOpenerOptions = IStickyPopupOptions|IStackPopupOptions|IDialogPopupOptions;
 
 /**
- * Опции интерфейса описаны {@link Controls/_popup/interface/IEditOpener здесь}.
+ * Опции интерфейса описаны в {@link Controls/_popup/interface/IEditOpener}.
  * @public
  * @author Красильников А.С.
  */
@@ -42,12 +42,12 @@ export interface IEditOpener {
 /**
  * Открывает всплывающее окно диалога редактирования.
  * @function Controls/_popup/interface/IEditOpener#open
- * @param {Object} meta Данные, по которым определяется, откуда диалог получит редактируемую запись. В объект можно передать свойства key и record. Политика обработки свойств подробно описана {@link /doc/platform/developmentapl/interface-development/controls/list/actions/editing-dialog/#step4 здесь}.
+ * @param {Object} meta Данные, по которым определяется, откуда диалог получит редактируемую запись. В объект можно передать свойства key и record. Политика обработки свойств подробно описана {@link /doc/platform/developmentapl/interface-development/controls/list/actions/editing-dialog/#step22 здесь}.
  * @param {Object} popupOptions Опции всплывающего окна диалога редактирования.
  * В зависимости от значения опции {@link Controls/_popup/interface/IEditOpener#mode mode}:
- * * "stack" — смотреть {@link Controls/_popup/interface/IStack/PopupOptions.typedef popupOptions стекового окна}
- * * "dialog" — смотреть {@link Controls/_popup/interface/IDialog/PopupOptions.typedef popupOptions диалогового окна}
- * * "sticky" — смотреть {@link Controls/_popup/interface/ISticky/PopupOptions.typedef popupOptions окна прилипающего блока}
+ * * "stack" — смотреть {@link Controls/popup:IStackOpener.PopupOptions стекового окна}
+ * * "dialog" — смотреть {@link Controls/popup:IDialogOpener.PopupOptions диалогового окна}
+ * * "sticky" — смотреть {@link Controls/popup:IStickyOpener.PopupOptions окна прилипающего блока}
  * @returns {undefined}
  * @example
  * <pre class="brush: html">
