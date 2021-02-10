@@ -388,17 +388,18 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     _keyDownHandler(event: SyntheticEvent): void {
-        // ПОМЕНЯТЬ НА СВИТЧ
-        if (constants.key.home === event.nativeEvent.keyCode) {
-            this._scrollToCurrentMonth();
-        }
-        if (constants.key.esc === event.nativeEvent.keyCode) {
-            this._applyResult();
-        }
-        // Если управление происходит через клавиатуру, то мы включаем режим, при котором фокус на элементах будет
-        // выделять их.
-        if (constants.key.tab === event.nativeEvent.keyCode) {
-            this._keyboardActive = true;
+        switch (event.nativeEvent.keyCode) {
+            case constants.key.home:
+                this._scrollToCurrentMonth();
+                break;
+            case constants.key.esc:
+                this._applyResult();
+                break;
+            case constants.key.tab:
+                // Если управление происходит через клавиатуру,
+                // то мы включаем режим, при котором фокус на элементах будет выделять их.
+                this._keyboardActive = true;
+                break;
         }
     }
 
