@@ -249,14 +249,14 @@ class Base extends Control<IMasterDetail> {
         }
     }
 
+    /**
+     * Если кто-то пометил событие тача, как обработанное, то не запускаем ресайз по тачу
+     * Например, чтобы не ресайзить во время скролла списка
+     * @param event
+     * @private
+     */
     private _needHandleTouch(event: SyntheticEvent<TouchEvent>): boolean {
-        const nativeEvent = event.nativeEvent;
-
-        /*
-            Если кто-то пометил событие тача, как обработанное, то не запускаем ресайз по тачу
-            Например, чтобы не ресайзить во время скролла списка
-         */
-        return !nativeEvent.processed;
+        return !event.nativeEvent.processed;
     }
 
     protected _touchendHandler(e: SyntheticEvent<TouchEvent>): void {
