@@ -1,7 +1,6 @@
 import { constants } from 'Env/Env';
 import { Confirmation, Dialog, IConfirmationOptions, IBasePopupOptions } from 'Controls/popup';
 import { ViewConfig } from './Handler';
-import { Control } from 'UI/Base';
 
 interface IPopupModule {
     Confirmation: typeof Confirmation;
@@ -79,6 +78,10 @@ export default class Popup implements IPopupHelper {
      */
     openDialog<T extends IViewConfigMessage>(config: ViewConfig<T>,
                                              dialogOptions: IBasePopupOptions): Promise<PopupId | void> {
+        if (config && typeof config.template === 'string') {
+            this.modules.push(config.template);
+        }
+
         return this.preloadPopup().then((popup) => {
             if (!popup) {
                 Popup.showDefaultDialog(config.options.message, config.options.details);

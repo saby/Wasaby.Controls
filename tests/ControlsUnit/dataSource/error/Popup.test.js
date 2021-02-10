@@ -171,6 +171,16 @@ define([
                );
             });
          });
+
+         it('if config contains string template, it will load this', () => {
+            Popup.POPUP_MODULES = [fakeModuleNames[0]];
+            Popup.POPUP_THEMES = [fakeModuleNames[1]];
+            const p = new Popup();
+            const viewConfig = { template: 'template', options: {} };
+            return p.openDialog(viewConfig, {}).then(() => {
+               assert.strictEqual(p.modules.length, 2);
+            });
+         });
       });
 
       describe('showDefaultDialog()', () => {
