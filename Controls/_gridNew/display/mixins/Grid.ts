@@ -383,7 +383,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return new ResultsRow({
             ...options,
             owner: this,
-            results: this.getMetaResults(),
+            metaResults: this.getMetaResults(),
             resultsColspanCallback: options.resultsColspanCallback,
             resultsTemplate: options.resultsTemplate
         });

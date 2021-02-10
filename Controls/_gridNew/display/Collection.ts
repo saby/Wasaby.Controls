@@ -13,6 +13,7 @@ import GridMixin, { IOptions as IGridMixinOptions } from './mixins/Grid';
 import Row, {IOptions as IRowOptions} from './Row';
 import DataRow from './DataRow';
 import { TemplateFunction } from 'UI/Base';
+import {Model as EntityModel} from 'Types/entity';
 
 export interface IOptions<
     S,
@@ -139,6 +140,11 @@ export default class Collection<
             this._updateHasStickyGroup();
         }
         return groupPropertyChanged;
+    }
+
+    protected setMetaResults(metaResults: EntityModel) {
+        super.setMetaResults(metaResults);
+        this._$results?.setMetaResults(metaResults);
     }
 
     // endregion

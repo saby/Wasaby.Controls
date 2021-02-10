@@ -8,6 +8,7 @@ export interface IOptions<T> {
     template?: TemplateFunction;
     align?: string;
     displayProperty?: string;
+    metaResults?: EntityModel;
 }
 
 const DEFAULT_CELL_TEMPLATE = 'Controls/gridNew:ResultColumnTemplate';
@@ -17,6 +18,7 @@ const STICKY_RESULTS_Z_INDEX = 3;
 export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
     protected _$data: string|number;
     protected _$format: string;
+    protected _$metaResults: EntityModel;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -31,8 +33,14 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
         return this._$format;
     }
 
-    getResults(): EntityModel {
-        return this._$owner.getResults();
+    setMetaResults(metaResults: EntityModel): void {
+        this._$metaResults = metaResults;
+        this._prepareDataAndFormat();
+        this._nextVersion();
+    }
+
+    getMetaResults(): EntityModel {
+        return this._$metaResults;
     }
 
     getTemplate(): TemplateFunction|string {
@@ -107,7 +115,7 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
     }
 
     protected _prepareDataAndFormat(): void {
-        const results = this.getResults();
+        const results = this.getMetaResults();
         const displayProperty = this._$column && this._$column.displayProperty;
         if (results && displayProperty) {
             const metaResultsFormat = results.getFormat();
@@ -124,6 +132,7 @@ Object.assign(ResultsCell.prototype, {
     '[Controls/_display/grid/ResultsCell]': true,
     _moduleName: 'Controls/gridNew:GridResultsCell',
     _instancePrefix: 'grid-results-cell-',
+    _$metaResults: null,
     _$data: null,
     _$format: null
 });
