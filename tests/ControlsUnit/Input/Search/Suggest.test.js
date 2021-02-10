@@ -77,6 +77,9 @@ define(['Controls/suggest', 'Types/entity', 'Env/Env'], function(suggest, entity
          assert.isTrue(searchSuggest._suggestState);
 
          searchSuggest._suggestMarkedKeyChanged(null, null);
+         searchSuggest.saveOptions({
+            value: 'testValue'
+         });
          searchSuggest._searchClick(null, {
             which: 'any'
          });

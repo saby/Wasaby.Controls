@@ -386,6 +386,13 @@ export default class FilterControllerClass {
         let minimizedItemFromOption;
 
         const historySource = getHistorySource({historyId});
+        /* На сервере historySource не кэшируется и история никогда не будет проинициализирована
+           Нужно переводить кэширование на сторы Санникова
+           https://online.sbis.ru/opendoc.html?guid=4ca5d3b8-65a7-4d98-8ca4-92ed1fbcc0fc
+         */
+        if (!historySource.historyReady()) {
+            return;
+        }
         const historyItems = historySource.getItems();
         if (historyItems && historyItems.getCount()) {
             historyItems.each((item, index) => {

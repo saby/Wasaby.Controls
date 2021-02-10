@@ -86,7 +86,7 @@ export default class ResultsRow<T> extends Row<T> {
 
     protected _initializeColumns(): void {
         if (this._$columns) {
-            const factory = this._getColumnsFactory();
+            const factory = this.getColumnsFactory();
             const metaResults = this.getMetaResults();
 
             if (this._$resultsTemplate) {

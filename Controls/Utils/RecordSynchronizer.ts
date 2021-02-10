@@ -123,7 +123,9 @@ const _private = {
     },
     deleteRecord(items: RecordSet, editKey: string): void {
         const syncRecord = _private.getSyncRecord(items, editKey);
-        items.remove(syncRecord);
+        if (syncRecord) {
+            items.remove(syncRecord);
+        }
     }
 };
 
