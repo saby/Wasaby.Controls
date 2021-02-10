@@ -220,6 +220,7 @@ describe('Controls/browser:Browser', () => {
                     assert.ok(browser._loading);
                     await searchPromise;
                     assert.ok(!browser._loading);
+                    assert.ok(browser._searchValue === 'test');
                 });
             });
         });
