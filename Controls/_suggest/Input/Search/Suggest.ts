@@ -98,6 +98,9 @@ var Suggest = Control.extend({
    },
 
    _resetClick: function() {
+      if (!this._options.autoDropDown) {
+         this._suggestState = false;
+      }
       this._notify('resetClick');
    }
 
