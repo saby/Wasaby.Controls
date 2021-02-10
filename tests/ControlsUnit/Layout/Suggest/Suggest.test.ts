@@ -854,6 +854,7 @@ describe('Controls/suggest', () => {
          inputContainer._notify = () => {};
          inputContainer._searchValue = 'notEmpty';
          inputContainer._inputActive = true;
+         inputContainer._errorConfig = {errorField: 'errorValue'};
 
          queryRecordSet.setMetaData({
             results: new Model({
@@ -872,6 +873,7 @@ describe('Controls/suggest', () => {
          assert.equal(inputContainer._tabsSelectedKey, 'testId');
          assert.equal(inputContainer._misspellingCaption, 'testStr');
          assert.equal(inputContainer._moreCount, 7);
+         assert.isNull(inputContainer._errorConfig);
 
          const queryRecordSetEmpty = new RecordSet();
          queryRecordSetEmpty.setMetaData({
