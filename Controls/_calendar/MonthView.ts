@@ -102,7 +102,7 @@ export default class MonthView extends Control<IControlOptions> {
       }
    }
 
-    protected_keyDownHandler(event: Event, item: Date, isCurrentMonth: boolean): void {
+    protected _keyDownHandler(event: Event, item: Date, isCurrentMonth: boolean): void {
         const hoveredItem = this._hoveredItem || item;
         const keyCode = event.nativeEvent.keyCode;
         if (keyCode === constants.key.enter) {
