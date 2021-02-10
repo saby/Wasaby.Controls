@@ -5,7 +5,7 @@
             <div class="controls-ColumnsView_column" style="{{_getColumnStyle(i)}}">
                <div class="controls-ColumnsView_column-placeholder" style="{{_getPlaceholderStyle()}}"></div>
                <ws:partial
-                       template="wml!Controls/_Columns/render/resources/For"
+                       template="wml!Controls/_columns/render/resources/For"
                        collection="{{ _options.listModel }}"
                        keyPrefix="{{ _templateKeyPrefix }}"
                        columnMinWidth="{{ _options.columnMinWidth }}"
