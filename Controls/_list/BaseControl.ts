@@ -6399,7 +6399,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
             }
 
-            if (_private.hasSelectionController(this)) {
+            // данное поведение сейчас актуально только для дерева или когда перетаскиваем в другой список
+            if (_private.hasSelectionController(this) && (this._options.parentProperty || !this._insideDragging)) {
                 _private.changeSelection(this, {selected: [], excluded: []});
             }
 
