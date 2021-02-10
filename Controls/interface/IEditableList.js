@@ -525,28 +525,50 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @cfg {Controls/interface/IEditableList/EditingConfig.typedef} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования по месту}.
-    * @demo Controls-demo/list_new/EditInPlace/AutoAdd/Index
+    * @cfg {Controls/interface/IEditableList/EditingConfig.typedef} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирования/добавления по месту}.
+    * @demo Controls-demo/list_new/EditInPlace/EmptyActionsWithToolBar/Index
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * <pre class="brush: html; highlight: [3]">
     * <!-- WML -->
-    * <Controls.list:View>
-    *    <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}" />
+    * <Controls.list:View name="list" keyProperty="id" source="{{_viewSource}}">
+    *     <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}" />
+    *     <ws:itemTemplate>
+    *         <ws:partial template="Controls/list:ItemTemplate">
+    *             <ws:contentTemplate>
+    *                 <ws:partial template="Controls/list:EditingTemplate" value="{{ itemTemplate.itemData.item.title }}">
+    *                     <ws:editorTemplate>
+    *                         <Controls.input:Text bind:value="itemTemplate.itemData.item.title" />
+    *                     </ws:editorTemplate>
+    *                 </ws:partial>
+    *             </ws:contentTemplate>
+    *         </ws:partial>
+    *     </ws:itemTemplate>
     * </Controls.list:View>
     * </pre>
     */
 
    /*
     * @cfg {Controls/interface/IEditableList/EditingConfig.typedef} Configuration for editing in place.
-    * @demo Controls-demo/list_new/EditInPlace/AutoAdd/Index
+    * @demo Controls-demo/list_new/EditInPlace/EmptyActionsWithToolBar/Index
     * @name Controls/interface/IEditableList#editingConfig
     * @example
-    * WML:
-    * <pre>
-    *    <Controls.list:View>
-    *       <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}" />
-    *    </Controls.list:View>
+    * <pre class="brush: html; highlight: [3]">
+    * <!-- WML -->
+    * <Controls.list:View name="list" keyProperty="id" source="{{_viewSource}}">
+    *     <ws:editingConfig editOnClick="{{true}}" toolbarVisibility="{{true}}" />
+    *     <ws:itemTemplate>
+    *         <ws:partial template="Controls/list:ItemTemplate">
+    *             <ws:contentTemplate>
+    *                 <ws:partial template="Controls/list:EditingTemplate" value="{{ itemTemplate.itemData.item.title }}">
+    *                     <ws:editorTemplate>
+    *                         <Controls.input:Text bind:value="itemTemplate.itemData.item.title" />
+    *                     </ws:editorTemplate>
+    *                 </ws:partial>
+    *             </ws:contentTemplate>
+    *         </ws:partial>
+    *     </ws:itemTemplate>
+    * </Controls.list:View>
     * </pre>
     */
 

@@ -736,6 +736,10 @@ define(
                });
             });
 
+            it('getKeyProperty', () => {
+               assert.equal(hSource.getKeyProperty(), 'id');
+            });
+
             it('serialization', function() {
                const someConfig = {
                   source: hSource
