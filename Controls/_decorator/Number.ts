@@ -3,9 +3,20 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import splitIntoTriads from 'Controls/_decorator/inputUtils/splitIntoTriads';
 import toString from 'Controls/_decorator/inputUtils/toString';
 // @ts-ignore
-import * as template from 'wml!Controls/_decorator/Number/Number';
+import {
+    INumberFormatOptions,
+    INumberFormat,
+    IFontColorStyle,
+    IFontColorStyleOptions,
+    IFontSize,
+    IFontSizeOptions,
+    IFontWeight,
+    IFontWeightOptions
+} from 'Controls/interface';
 
+type TValue = string | number | null;
 type RoundingFn = (number: string, fractionSize: number) => string;
+type TAbbreviationType = 'none' | 'short' | 'long';
 
 /**
  * @typedef RoundMode
@@ -20,23 +31,14 @@ export type RoundMode = 'round' | 'trunc';
  * @public
  * @author Красильников А.С.
  */
-export interface INumberOptions extends IControlOptions {
+export interface INumberOptions extends IControlOptions, INumberFormatOptions, IFontColorStyleOptions,
+    IFontWeightOptions, IFontSizeOptions {
     /**
      * @name Controls/_decorator/INumber#value
      * @cfg {String|Number|null} Декорируемое число.
      * @demo Controls-demo/Decorator/Number/Value/Index
      */
-    value: string | number | null;
-    /**
-     * @name Controls/_decorator/INumber#useGrouping
-     * @cfg {Boolean} Определяет, следует ли использовать разделители группы.
-     * @remark
-     * true - число разделено на группы.
-     * false - разделения не происходит.
-     * @default true
-     * @demo Controls-demo/Decorator/Number/UseGrouping/Index
-     */
-    useGrouping: boolean;
+    value: TValue;
     /**
      * @name Controls/_decorator/INumber#fractionSize
      * @cfg {Number} Количество знаков после запятой. Диапазон от 0 до 20.
@@ -50,6 +52,7 @@ export interface INumberOptions extends IControlOptions {
      * @demo Controls-demo/Decorator/Number/RoundMode/Index
      */
     roundMode: RoundMode;
+    abbreviationType?: TAbbreviationType;
 }
 
 /**
@@ -69,6 +72,10 @@ export interface INumberOptions extends IControlOptions {
  * @author Красильников А.С.
  */
 class NumberDecorator extends Control<INumberOptions> {
+    private _fontSize: string;
+    private _fontWeight: string;
+    private _fontColorStyle: string;
+
     protected _formattedNumber: string = null;
 
     protected _template: TemplateFunction = template;
@@ -88,18 +95,48 @@ class NumberDecorator extends Control<INumberOptions> {
                 return currentValue !== newValue;
             }
 
-            return currentOptions[optionName] !== newOptions[optionName]
+            return currentOptions[optionName] !== newOptions[optionName];
         });
     }
 
+    private _setFontState(options: INumberOptions): void {
+        this._fontSize = options.fontSize;
+        this._fontWeight = options.fontWeight;
+        this._fontColorStyle = options.readOnly ? 'readonly' : options.fontColorStyle;
+    }
+
     protected _beforeMount(options: INumberOptions): void {
+        this._setFontState(options);
         this._formattedNumber = NumberDecorator._formatNumber(options.value, options);
     }
 
     protected _beforeUpdate(newOptions: INumberOptions): void {
+        this._setFontState(newOptions);
         if (this._needChangeFormattedNumber(newOptions)) {
             this._formattedNumber = NumberDecorator._formatNumber(newOptions.value, newOptions);
         }
+    }
+
+    private static _abbreviateNumber(value: TValue, abbreviationType: TAbbreviationType): string {
+        if (abbreviationType === 'none') {
+            return value.toString();
+        }
+        if (value >= 1000000000000) {
+            return this._intlFormat(value / 1000000000000) + abbreviationType === 'long' ? ' трлн' : 'Т';
+        }
+        if (value >= 1000000000) {
+            return this._intlFormat(value / 1000000000) + abbreviationType === 'long' ? ' млрд' : 'Г';
+        }
+        if (value >= 1000000) {
+            return this._intlFormat(value / 1000000) + abbreviationType === 'long' ? ' млн' : 'М';
+        }
+        if (value >= 1000) {
+            return this._intlFormat(value / 1000) + abbreviationType === 'long' ? ' тыс.' : 'К';
+        }
+    }
+
+    private static _intlFormat(num: number): string {
+        return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
     }
 
     private static _formatNumber(number: string | number | null, format: INumberOptions): string {
@@ -109,7 +146,7 @@ class NumberDecorator extends Control<INumberOptions> {
             return '';
         }
 
-        const {useGrouping, roundMode, fractionSize} = format;
+        const {useGrouping, roundMode, fractionSize, abbreviationType} = format;
 
         if (typeof fractionSize === 'number') {
             switch (roundMode) {
@@ -124,6 +161,10 @@ class NumberDecorator extends Control<INumberOptions> {
 
         if (useGrouping) {
             return splitIntoTriads(strNumber);
+        }
+
+        if (abbreviationType) {
+            return this._abbreviateNumber(strNumber, abbreviationType);
         }
 
         return strNumber;
@@ -154,14 +195,14 @@ class NumberDecorator extends Control<INumberOptions> {
                 'trunc',
                 'round'
             ])
-        }
+        };
     }
 
     static getDefaultOptions() {
         return {
             useGrouping: true,
             roundMode: 'trunc'
-        }
+        };
     }
 }
 

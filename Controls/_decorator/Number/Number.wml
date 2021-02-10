@@ -1,1 +1,4 @@
-<span class="controls-DecoratorNumber" title="{{_formattedNumber}}">{{_formattedNumber}}</span>
+<span class="controls-DecoratorNumber controls-fontsize-{{_fontSize}}_theme-{{_options.theme}} controls-text-{{_fontColorStyle}}_theme-{{_options.theme}} controls-DecoratorMoney__integer_fontWeight_{{_fontWeight}} {{ _stroked ? 'controls-DecoratorNumber__stroked' }}"
+      title="{{_formattedNumber}}">
+        {{_formattedNumber}}
+</span>
