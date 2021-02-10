@@ -2,12 +2,10 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {goUpByControlTree} from 'UI/Focus';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorageOptions} from 'Controls/interface';
 
 const RESIZE_DELAY = 50;
-const TOUCH_RESIZE_MASTER_OFFSET = 100;
 
 interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     master: TemplateFunction;
@@ -127,7 +125,6 @@ class Base extends Control<IMasterDetail> {
     protected _currentMaxWidth: string;
     protected _currentMinWidth: string;
     protected _containerWidth: number;
-    protected _updateOffsetDebounced: Function;
     private _touchstartPosition: number;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
