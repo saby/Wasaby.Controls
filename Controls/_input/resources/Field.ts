@@ -10,6 +10,7 @@ import {ICallback, IFieldData} from '../interface/IValue';
 import WorkWithSelection from './Field/WorkWithSelection';
 import ChangeEventController, {IConfig as ChangeEventConfig} from './Field/ChangeEventController';
 import MobileFocusController from './MobileFocusController';
+import 'css!Controls/input';
 import {
     split
 } from 'Controls/_input/Base/InputUtil';
@@ -467,8 +468,6 @@ class Field<Value, ModelOptions>
 
         this._handleInput(splitValue, 'insert');
     }
-
-    static _theme: string[] = ['Controls/input'];
 
     static getOptionTypes(): Partial<Record<keyof IFieldOptions<string, {}>, Function>> {
         return {
