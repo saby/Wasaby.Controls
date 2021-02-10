@@ -6105,6 +6105,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         );
     },
 
+    /**
+     * Говорим контролу сверху, что тач уже обработан этим контролом,
+     * помечая событие тача как обработанное
+     * @param event
+     */
+    _touchStartHandler(event: SyntheticEvent): void {
+        event.nativeEvent.processed = true;
+    },
+
     _isPagingPadding(): boolean {
         return !(detection.isMobileIOS || !this._isPagingPaddingFromOptions());
     },

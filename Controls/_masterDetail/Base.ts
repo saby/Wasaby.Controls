@@ -231,7 +231,7 @@ class Base extends Control<IMasterDetail> {
     }
 
     protected _touchstartHandler(e: SyntheticEvent<TouchEvent>): void {
-        const needHandleTouch: boolean = this._needHandleTouch(e.target as HTMLElement);
+        const needHandleTouch: boolean = this._needHandleTouch(e);
         if (needHandleTouch) {
             this._touchstartPosition = this._getTouchPageXCoord(e);
             this._beginResize();
@@ -249,20 +249,14 @@ class Base extends Control<IMasterDetail> {
         }
     }
 
-    private _needHandleTouch(target: HTMLElement): boolean {
-        const controlTree = goUpByControlTree(target);
-        const masterListModuleName: string = 'Controls/masterDetail:List';
-        for (let i = 0; i < controlTree.length; i++) {
-            // Если не встретили список и добрались до контрола, значит можем обрабатывать клик
-            if (controlTree[i]._moduleName === this._moduleName) {
-                return true;
-            }
-            // Если тач пришелся в список, то список обработает тач и ресайзиться не нужно
-            if (controlTree[i]._moduleName === masterListModuleName)  {
-                return false;
-            }
-        }
-        return true;
+    private _needHandleTouch(event: SyntheticEvent<TouchEvent>): boolean {
+        const nativeEvent = event.nativeEvent;
+
+        /*
+            Если кто-то пометил событие тача, как обработанное, то не запускаем ресайз по тачу
+            Например, чтобы не ресайзить во время скролла списка
+         */
+        return !nativeEvent.processed;
     }
 
     protected _touchendHandler(e: SyntheticEvent<TouchEvent>): void {
