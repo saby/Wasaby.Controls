@@ -53,8 +53,8 @@ export default class MonthView extends Control<IControlOptions> {
    _showWeekdays: boolean;
    _monthViewModel: MonthViewModel;
    _caption: string;
-    _hoveredItem: Date;
-    _baseHoveredItem: Date;
+   _hoveredItem: Date;
+   _baseHoveredItem: Date;
 
    protected _beforeMount(options): void {
       this._updateView(options);
