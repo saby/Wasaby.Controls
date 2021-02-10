@@ -46,6 +46,10 @@ var PathWrapper = Control.extend({
          this._needCrumbs = _private.needCrumbs(newOptions.header,  this._items, newOptions);
       }
 
+      if (this._options.breadcrumbsVisibility !== newOptions.breadcrumbsVisibility) {
+         this._needCrumbs = _private.needCrumbs(newOptions.header,  this._items, newOptions);
+      }
+
       if (!isEqualsHeader) {
          this._header = newOptions.header;
          this._withoutBackButton = _private.withoutBackButton(this._header);
