@@ -1,5 +1,5 @@
 import { TemplateFunction } from 'UI/Base';
-import template = require('wml!Controls/_Columns/render/Columns');
+import template = require('wml!Controls/_columns/render/Columns');
 
 import defaultItemTemplate = require('wml!Controls/_columns/render/resources/ItemTemplate');
 
