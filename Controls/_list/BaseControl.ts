@@ -3437,7 +3437,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const addOperation = (cb) => {
             if (state === 'sync') {
-                result = cb();
+                result = cb(result);
                 state = result instanceof Promise ? 'async' : 'sync';
             } else {
                 result.then(cb);
@@ -3451,7 +3451,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         addOperation((collapsedGroups) => this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups));
 
         // Try to start initial editing
-        addOperation(() => this._tryStartInitialEditing(this._getEditingConfig(newOptions)));
+        addOperation(() => this._tryStartInitialEditing(newOptions));
 
         // Init model state if need
         addOperation(() => {
@@ -3602,15 +3602,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 });
             });
         } else if (newOptions.collapsedGroups) {
-            result = new Promise((resolve) => {
-                resolve(newOptions.collapsedGroups);
-            });
+            result = newOptions.collapsedGroups;
         }
 
-        if (result) {
+        if (result instanceof Promise) {
             return callback ? result.then(callback) : result;
         } else {
-            return callback && callback(undefined);
+            return (callback && callback(result)) || result;
         }
     },
 
@@ -4975,12 +4973,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
-            this._editInPlaceController = this._createEditInPlaceController(this._options);
+            this._createEditInPlaceController();
         }
         return this._editInPlaceController;
     },
 
-    _createEditInPlaceController(options = {}): EditInPlaceController {
+    _createEditInPlaceController(options = this._options): void {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
         // При создании редактирования по мсесту до маунта, регистрация в formController
@@ -4990,9 +4988,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.registerFormOperation(this);
         }
 
-        return new EditInPlaceController({
-            mode: this._getEditingConfig().mode,
-            collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
+        this._editInPlaceController = new EditInPlaceController({
+            mode: this._getEditingConfig(options).mode,
+            collection: options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
             onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
@@ -5177,16 +5175,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._commitEdit();
     },
 
-    _tryStartInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
+    _tryStartInitialEditing(options) {
+        const editingConfig: Required<IEditableListOption['editingConfig']> = this._getEditingConfig(options);
         const hasItems = !!(this._loadedItems && this._loadedItems.getCount() || this._items && this._items.getCount());
 
         if (editingConfig.autoAddOnInit && !!this._sourceController && !hasItems) {
+            this._createEditInPlaceController(options);
             return this._beginAdd({}, editingConfig.addPosition);
         } else if (editingConfig.item) {
-            if (!this._items.getRecordById(editingConfig.item.getKey())) {
-                return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
-            } else {
+            this._createEditInPlaceController(options);
+            if (this._items && this._items.getRecordById(editingConfig.item.getKey())) {
                 return this._beginEdit({ item: editingConfig.item });
+            } else {
+                return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
             }
         }
     },
