@@ -759,7 +759,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._deepReload = undefined;
         }
 
-        if (this._searchController && this._searchController.isSearchInProcess()) {
+        if (this._searchController && this._searchController.getSearchValue() !== this._searchValue) {
             this._loading = false;
             this._searchDataLoad(data, this._searchController.getSearchValue());
         } else if (this._loading) {
