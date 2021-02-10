@@ -7701,6 +7701,16 @@ define([
             assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
             assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+
+            notifySpy.resetHistory();
+            baseControl._insideDragging = true;
+            baseControl._documentDragEnd({ entity: {} });
+
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+
+            baseControl._insideDragging = undefined;
          });
 
          it('loadToDirection, drag all items', () => {
