@@ -8390,6 +8390,18 @@ define([
                   assert.isOk(baseControl._selectionController);
                });
             });
+
+            it('change root', () => {
+               const spyNotify = sinon.spy(baseControl, '_notify');
+               const newCfg = { ...cfg, selectedKeys: [null], excludedKeys: [null], root: null };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  assert.isOk(baseControl._selectionController);
+                  baseControl._beforeUpdate({ ...newCfg, root: 2 });
+                  assert.isTrue(spyNotify.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+                  assert.isTrue(spyNotify.withArgs('excludedKeysChanged', [[], [], [null]]).called);
+               });
+            });
          });
 
          describe('_onCheckboxClick', () => {
