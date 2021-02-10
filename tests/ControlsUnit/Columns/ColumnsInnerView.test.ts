@@ -1,5 +1,5 @@
+import { ColumnsCollection } from 'Controls/columns';
 import ColumnsInnerView from 'Controls/_columns/ColumnsInnerView';
-import { ColumnsCollection } from 'Controls/display';
 import { RecordSet } from 'Types/collection';
 import { assert } from 'chai';
 import { Model } from 'Types/entity';
@@ -20,7 +20,7 @@ describe('ColumnsInnerView', () => {
     beforeEach(() => {
         rs = new RecordSet({
             keyProperty: 'id',
-            rawData: [0, 1, 2, 3, 4, 5, 6 ,7 , 8, 9, 10, 11].map((id)=>{
+            rawData: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((id) => {
                 return {
                     id
                 };

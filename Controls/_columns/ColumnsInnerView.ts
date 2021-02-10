@@ -2,10 +2,9 @@ import {TemplateFunction, Control} from 'UI/Base';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {constants} from 'Env/Env';
-import {
-    ColumnsCollection as Collection,
-    ColumnsCollectionItem as CollectionItem,
-} from 'Controls/display';
+import Collection from 'Controls/_columns/display/Collection';
+import CollectionItem from 'Controls/_columns/display/CollectionItem';
+
 import {scrollToElement} from 'Controls/scroll';
 
 import {IList} from 'Controls/list';
@@ -35,7 +34,7 @@ export default class ColumnsInnerView extends Control {
     private _columnsCount: number;
     private _columnsController: ColumnsController;
     private _markerController: MarkerController;
-    private _columnsIndexes:  Array<number>[];
+    private _columnsIndexes: Array<number>[];
     private _model: Collection<Model>;
     protected _options: IColumnsInnerViewOptions;
     private _spacing: number = SPACING;

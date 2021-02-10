@@ -1,13 +1,13 @@
 import {Model} from 'Types/entity';
-import ColumnsCollectionItem from '../ColumnsCollectionItem';
-import Drag from './Drag';
+import CollectionItem from '../CollectionItem';
+import {itemsStrategy} from 'Controls/display';
 
 /**
- * Стратегия для премещения элементов, относящихся к определённой колонке ColumnsCollection.
+ * Стратегия для премещения элементов, относящихся к определённой колонке Collection.
  * При создании аватара элемента использует ту же колонку, в которой начался Drag-n-Drop;
  */
-export default class ColumnsDrag<S extends Model, T extends ColumnsCollectionItem<S> = ColumnsCollectionItem<S>>
-    extends Drag<S, T> {
+export default class ColumnsDrag<S extends Model, T extends CollectionItem<S> = CollectionItem<S>>
+    extends itemsStrategy.Drag<S, T> {
     protected _createAvatarItem(): T {
         const protoItem = this._getProtoItem();
         return this._createColumnsItem(protoItem, protoItem?.getColumn());
