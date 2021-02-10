@@ -2230,6 +2230,8 @@ const _private = {
             this._options.serviceDataLoadCallback(this._items, items);
         }
 
+        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+
         if (
             this._loadingState === 'all' ||
             !_private.needScrollCalculation(navigation) ||
