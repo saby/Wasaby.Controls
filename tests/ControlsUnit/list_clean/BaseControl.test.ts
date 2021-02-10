@@ -535,7 +535,7 @@ describe('Controls/list_clean/BaseControl', () => {
 
             assert.isTrue(!!baseControl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
-            assert.equal(baseControl._pagingCfg.pagesCount, 26);
+            assert.equal(baseControl._pagingCfg.pagesCount, 25);
 
             BaseControl._private.handleListScrollSync(baseControl, 100);
             assert.deepEqual({

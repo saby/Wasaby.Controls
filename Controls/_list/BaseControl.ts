@@ -3654,13 +3654,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _getScrollParams(): IScrollParams {
         let headersHeight = 0;
-        const pagingPadding = this._isPagingPadding() ? PAGING_PADDING : 0;
         if (detection.isBrowserEnv) {
             headersHeight = getStickyHeadersHeight(this._container, 'top', 'allFixed') || 0;
         }
         const scrollParams = {
             scrollTop: this._scrollTop,
-            scrollHeight: _private.getViewSize(this, true) - headersHeight + pagingPadding,
+            scrollHeight: _private.getViewSize(this, true) - headersHeight,
             clientHeight: this._viewportSize - headersHeight
         };
         /**
