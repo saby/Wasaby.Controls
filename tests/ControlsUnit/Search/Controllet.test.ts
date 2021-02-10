@@ -143,6 +143,7 @@ describe('Controls/search:Controller', () => {
 
             await updateResult;
             assert.equal(searchController._searchValue, 'newValue');
+            assert.isFalse(searchController._loading);
         });
 
         it('searchValue wasn\'t changed', () => {
