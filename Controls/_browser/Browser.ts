@@ -685,6 +685,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _searchReset(event: SyntheticEvent): void {
+        if (this._sourceController) {
+            this._sourceController.cancelLoading();
+        }
         this._getSearchController().then((searchController) => {
             if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
                 this._root = this._rootBeforeSearch;
