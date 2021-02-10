@@ -2516,7 +2516,8 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        if (this._options.multiSelectVisibility === 'hidden') {
+        // Если записи удаляют при закрытия диалога, то к нам может долететь событие, уже когда список задестроился
+        if (this._destroyed || this._options.multiSelectVisibility === 'hidden') {
             return;
         }
 
@@ -3957,6 +3958,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
                 if (this._listViewModel) {
                     this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController));
+                }
+                if (this.__error) {
+                    _private.hideError(this);
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
@@ -6246,6 +6250,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _documentDragEnd(dragObject): void {
+        // Если перетаскиваются элементы списка, то мы всегда задаем entity
+        if (!dragObject || !dragObject.entity) {
+            return;
+        }
+
         let dragEndResult: Promise<any> | undefined;
         if (this._insideDragging && this._dndListController) {
             const targetPosition = this._dndListController.getDragPosition();

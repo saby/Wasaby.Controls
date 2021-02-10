@@ -243,7 +243,8 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         contentClasses += ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
         contentClasses += ` controls-Grid__row-cell_cursor-${cursor}`;
 
-        contentClasses += this._getContentPaddingClasses(theme);
+        contentClasses += this._getHorizontalPaddingClasses(theme);
+        contentClasses += this._getVerticalPaddingClasses(theme);
 
         contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
 
@@ -365,21 +366,11 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return COLUMN_SCROLL_JS_SELECTORS.SCROLLABLE_ELEMENT;
     }
 
-    protected _getContentPaddingClasses(theme: string): string {
+    protected _getHorizontalPaddingClasses(theme: string): string {
         let classes = '';
 
-        const topPadding = this._$owner.getTopPadding();
-        const bottomPadding = this._$owner.getBottomPadding();
         const leftPadding = this._$owner.getLeftPadding();
         const rightPadding = this._$owner.getRightPadding();
-
-        /*if (columns[columnIndex].isActionCell) {
-            return classLists;
-        }*/
-        // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-        /*if (params.isBreadCrumbs) {
-            classLists.left += ` controls-Grid__cell_spacingFirstCol_null_theme-${theme}`;
-        }*/
 
         // left <-> right
         const cellPadding = this._$column.cellPadding;
@@ -404,6 +395,15 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         } else {
             classes += ` controls-Grid__cell_spacingLastCol_${rightPadding}_theme-${theme}`;
         }
+
+        return classes;
+    }
+
+    protected _getVerticalPaddingClasses(theme: string): string {
+        let classes = '';
+
+        const topPadding = this._$owner.getTopPadding();
+        const bottomPadding = this._$owner.getBottomPadding();
 
         // top <-> bottom
         classes += ` controls-Grid__row-cell_rowSpacingTop_${topPadding}_theme-${theme}`;

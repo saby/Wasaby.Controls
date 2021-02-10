@@ -80,7 +80,7 @@ export default class ResultsRow<T> extends Row<T> {
 
     protected _initializeColumns(): void {
         if (this._$columns) {
-            const factory = this._getColumnsFactory();
+            const factory = this.getColumnsFactory();
 
             if (this._$resultsTemplate) {
                 this._$columnItems = [factory({
