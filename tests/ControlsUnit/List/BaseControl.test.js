@@ -6464,6 +6464,10 @@ define([
                 }
              };
              assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+
+             baseControl._loadingIndicatorState = 'up';
+             baseControl._portionedSearchInProgress = true;
+             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
           });
 
           it('_shouldDisplayMiddleLoadingIndicator', () => {
