@@ -33,7 +33,7 @@ class RegisterClass {
                if (typeof previousUnmountCallback === 'function') {
                    previousUnmountCallback();
                }
-               this.unregister(event, component);
+               this.unregister(event, registerType, component, config);
            };
            if (!config.listenAll) {
                event.stopPropagation();
@@ -57,7 +57,7 @@ class RegisterClass {
       for (const i in this._registry) {
           if (this._registry.hasOwnProperty(i)) {
               const obj = this._registry[i];
-              if (obj && obj.component?._destroyed === false) {
+              if (obj) {
                   obj.callback.apply(obj.component, arguments);
               }
           }
