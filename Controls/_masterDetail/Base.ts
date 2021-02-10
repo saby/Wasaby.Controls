@@ -266,7 +266,7 @@ class Base extends Control<IMasterDetail> {
     }
 
     protected _touchendHandler(e: SyntheticEvent<TouchEvent>): void {
-        if (this._touchstartPosition) {
+        if (this._touchstartPosition && this._canResizing) {
             const touchendPosition: number = this._getTouchPageXCoord(e);
             const touchOffset: number = touchendPosition - this._touchstartPosition;
             this._touchstartPosition = null;
