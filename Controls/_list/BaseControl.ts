@@ -533,6 +533,26 @@ const _private = {
         }
     },
 
+    callDataLoadCallbackCompatibility(self, items, direction, options): void {
+        if (self._sourceController && options.dataLoadCallback) {
+            const sourceControllerDataLoadCallback = self._sourceController.getState().dataLoadCallback;
+
+            if (sourceControllerDataLoadCallback !== options.dataLoadCallback) {
+                Logger.warn('BaseControl: для корректной работы опцию dataLoadCallback необходимо задавать на Layout/browser:Browser (Controls/list:DataContainer)', self);
+            }
+        }
+    },
+
+    callDataLoadCallbackCompatibility(self, items, direction, options): void {
+        if (self._sourceController && options.dataLoadCallback) {
+            const sourceControllerDataLoadCallback = self._sourceController.getState().dataLoadCallback;
+
+            if (sourceControllerDataLoadCallback !== options.dataLoadCallback) {
+                options.dataLoadCallback(items, direction);
+            }
+        }
+    },
+
     initializeModel(self, options, list): void {
         const listModel = self._listViewModel;
 
@@ -2204,6 +2224,7 @@ const _private = {
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
         if (!direction) {
+            _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
             return this.isEditing() ? this._cancelEdit(true) : void 0;
         }
@@ -2507,7 +2528,8 @@ const _private = {
     },
 
     onSelectedTypeChanged(typeName: string, limit: number|undefined): void {
-        if (this._options.multiSelectVisibility === 'hidden') {
+        // Если записи удаляют при закрытия диалога, то к нам может долететь событие, уже когда список задестроился
+        if (this._destroyed || this._options.multiSelectVisibility === 'hidden') {
             return;
         }
 
@@ -3525,10 +3547,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     newOptions.serviceDataLoadCallback(null, self._items);
                 }
 
+                _private.callDataLoadCallbackCompatibility(self, self._items, undefined, newOptions);
                 _private.createScrollController(self, newOptions);
-
                 _private.prepareFooter(self, newOptions, self._sourceController);
-
                 _private.initVisibleItemActions(self, newOptions);
 
                 if (_private.supportAttachLoadTopTriggerToNull(newOptions) &&
@@ -4026,6 +4047,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
                 if (this._listViewModel) {
                     this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController));
+                }
+                if (this.__error) {
+                    _private.hideError(this);
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
@@ -6339,6 +6363,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _documentDragEnd(dragObject): void {
+        // Если перетаскиваются элементы списка, то мы всегда задаем entity
+        if (!dragObject || !dragObject.entity) {
+            return;
+        }
+
         let dragEndResult: Promise<any> | undefined;
         if (this._insideDragging && this._dndListController) {
             const targetPosition = this._dndListController.getDragPosition();

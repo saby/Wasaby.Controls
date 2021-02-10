@@ -191,7 +191,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._release();
         }
         if (options.fixedZIndex !== this._options.fixedZIndex) {
-            this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247);
+            this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247, options.task1181007458);
         }
     }
 
@@ -484,19 +484,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStyles(options: IStickyHeaderOptions): void {
-        this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247);
+        this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247, options.task1181007458);
         this._updateShadowStyles(options.mode, options.shadowVisibility);
         this._updateObserversStyles(options.offsetTop, options.shadowVisibility);
     }
 
-    private _updateStyle(position: POSITION, fixedZIndex: number, zIndex: number, task1177692247): void {
+    private _updateStyle(position: POSITION, fixedZIndex: number, zIndex: number, task1177692247?, task1181007458?): void {
         const style = this._getStyle(position, fixedZIndex, zIndex, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
-    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, zIndex: number, task1177692247?): string {
+    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, zIndex: number, task1177692247?, task1181007458?): string {
         let
             offset: number = 0,
             container: HTMLElement,
@@ -512,7 +512,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
-        const isIosOptimizedMode = this._isMobileIOS && opts.task1181007458 !== true;
+        const isIosOptimizedMode = this._isMobileIOS && task1181007458 !== true;
 
         if (positionFromOptions.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;

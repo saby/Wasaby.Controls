@@ -374,6 +374,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          } else {
             this._moreCount = undefined;
          }
+         this._errorConfig = null;
       }
       if (!this._shouldShowSuggest(data)) {
          this._close();
@@ -959,6 +960,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._setFilterAndLoad(this._options.filter, this._options, tabId)
              .finally(() => {
                 changeTabCallback();
+                this._tabsSelectedKey = tabId;
              });
       } else {
          changeTabCallback();
