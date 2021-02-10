@@ -231,52 +231,54 @@ var
             self._viewMode = viewMode;
             _private.setViewConfig(self, self._viewMode);
             _private.applyNewVisualOptions(self);
+
+            if (self._isMounted) {
+               self._notify('viewModeChanged', [viewMode]);
+            }
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
-            var result;
+            if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
+               _private.updateRootOnViewModeChanged(self, viewMode, cfg);
+               self._breadCrumbsItems = null;
+            }
 
-         if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
-            _private.updateRootOnViewModeChanged(self, viewMode, cfg);
-            self._breadCrumbsItems = null;
-         }
-
-         if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-            result = _private.loadTileViewMode(self).then(() => {
+            if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
+               self._setViewModePromise = _private.loadTileViewMode(self).then(() => {
+                  _private.setViewModeSync(self, viewMode, cfg);
+               });
+            } else {
+               self._setViewModePromise = Promise.resolve();
                _private.setViewModeSync(self, viewMode, cfg);
-            });
-         } else {
-            result = Promise.resolve();
-            _private.setViewModeSync(self, viewMode, cfg);
-         }
+            }
 
-         return result;
-      },
-      applyNewVisualOptions(self): void {
-         if (self._newItemPadding) {
-            self._itemPadding = self._newItemPadding;
-            self._newItemPadding = null;
-         }
-         if (self._newItemTemplate) {
-            self._itemTemplate = self._newItemTemplate;
-            self._newItemTemplate = null;
-         }
-         if (self._newBackgroundStyle) {
-            self._backgrounStyle = self._newBackgroundStyle;
-            self._newBackgroundStyle = null;
-         }
-         if (self._newHeader) {
-            self._header = self._newHeader;
-            self._newHeader = null;
-         }
-      },
-      backByPath: function(self) {
-         if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
-            self._isGoingBack = true;
-            _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 1].get(self._options.parentProperty));
-         }
-      },
-      getDataRoot: function(self, options) {
-         var result;
+            return self._setViewModePromise;
+         },
+         applyNewVisualOptions(self): void {
+            if (self._newItemPadding) {
+               self._itemPadding = self._newItemPadding;
+               self._newItemPadding = null;
+            }
+            if (self._newItemTemplate) {
+               self._itemTemplate = self._newItemTemplate;
+               self._newItemTemplate = null;
+            }
+            if (self._newBackgroundStyle) {
+               self._backgrounStyle = self._newBackgroundStyle;
+               self._newBackgroundStyle = null;
+            }
+            if (self._newHeader) {
+               self._header = self._newHeader;
+               self._newHeader = null;
+            }
+         },
+         backByPath: function(self) {
+            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
+               self._isGoingBack = true;
+               _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 1].get(self._options.parentProperty));
+            }
+         },
+         getDataRoot: function(self, options) {
+            var result;
 
          if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
             result = self._breadCrumbsItems[0].get(self._options.parentProperty);
@@ -323,21 +325,28 @@ var
             const oldPath = getPathRecordSet(oldItems);
             const newPath = getPathRecordSet(newItems);
 
-         if (oldItems !== newItems || oldPath !== newPath) {
-            if (oldPath && oldPath.getCount) {
-               oldPath.unsubscribe('onCollectionItemChange', updateHeadingPathCallback);
+            if (oldItems !== newItems || oldPath !== newPath) {
+               if (oldPath && oldPath.getCount) {
+                  oldPath.unsubscribe('onCollectionItemChange', updateHeadingPathCallback);
+               }
+               if (newPath && newPath.getCount) {
+                  newPath.subscribe('onCollectionItemChange', updateHeadingPathCallback);
+               }
             }
-            if (newPath && newPath.getCount) {
-               newPath.subscribe('onCollectionItemChange', updateHeadingPathCallback);
-            }
-         }
-      },
-      checkedChangeViewMode(self, viewMode: string, cfg): void {
-         _private.setViewMode(self, viewMode, cfg);
-         if (cfg.searchNavigationMode !== 'expand') {
-            self._children.treeControl.resetExpandedItems();
-         }
-      },
+         },
+         checkedChangeViewMode(self, viewMode: string, cfg): void {
+            _private
+                .setViewMode(self, viewMode, cfg)
+                // Обрабатываем searchNavigationMode только после того как
+                // проставится setViewMode, т.к. он может проставится асинхронно
+                // а код ниже вызывает изменение версии модели что приводит к лишней
+                // перерисовке до изменения viewMode
+                .then(() => {
+                   if (cfg.searchNavigationMode !== 'expand') {
+                      self._children.treeControl.resetExpandedItems();
+                   }
+                });
+         },
 
       isCursorNavigation(navigation: INavigation<INavigationSourceConfig>): boolean {
          return !!navigation && navigation.source === 'position';
@@ -447,61 +456,63 @@ var
  * @author Авраменко А.С.
  */
 
-/*
- * Hierarchical list that can expand and go inside the folders. Can load data from data source.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Demo example</a>.
- * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Demo example with search</a>.
- * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
- *
- * @class Controls/_explorer/View
- * @extends UI/Base:Control
- * @implements Controls/_interface/IErrorController
- * @mixes Controls/_interface/ISource
- * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface/IItemTemplate
- * @mixes Controls/interface/IPromisedSelectable
- * @mixes Controls/interface/IEditableList
- * @mixes Controls/interface/IGroupedList
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IList
- * @mixes Controls/_itemActions/interface/IItemActionsOptions
- * @mixes Controls/_interface/ISorting
- * @mixes Controls/_interface/IHierarchy
- * @implements Controls/_tree/interface/ITreeControl
- * @mixes Controls/_explorer/interface/IExplorer
- * @mixes Controls/_interface/IDraggable
- * @mixes Controls/_tile/interface/ITile
- * @mixes Controls/_list/interface/IVirtualScrollConfig
- * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/_grid/interface/IGridControl
- * @mixes Controls/_list/interface/IMovableList
- * @mixes Controls/_list/interface/IRemovableList
- * @mixes Controls/_marker/interface/IMarkerList
- *
- * @public
- * @author Авраменко А.С.
- */
-var Explorer = Control.extend({
-  _template: template,
-  _breadCrumbsItems: null,
-  _root: null,
-  _viewName: null,
-  _viewMode: null,
-  _viewModelConstructor: null,
-  _dragOnBreadCrumbs: false,
-  _hoveredBreadCrumb: undefined,
-  _virtualScrolling: undefined,
-  _dragControlId: null,
-  _firstLoad: true,
-  _itemsPromise: null,
-  _itemsResolver: null,
-  _markerForRestoredScroll: null,
-  _navigation: null,
-  _resetScrollAfterViewModeChange: false,
-  _itemPadding: {},
-  _itemTemplate: undefined,
+   /*
+    * Hierarchical list that can expand and go inside the folders. Can load data from data source.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FExplorer">Demo example</a>.
+    * <a href="/materials/Controls-demo/app/Controls-demo%2FExplorer%2FSearch">Demo example with search</a>.
+    * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/controls/list/explorer/'>here</a>.
+    *
+    * @class Controls/_explorer/View
+    * @extends UI/Base:Control
+    * @implements Controls/_interface/IErrorController
+    * @mixes Controls/_interface/ISource
+    * @mixes Controls/interface/ITreeGridItemTemplate
+    * @mixes Controls/interface/IItemTemplate
+    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IEditableList
+    * @mixes Controls/interface/IGroupedList
+    * @mixes Controls/_interface/INavigation
+    * @mixes Controls/_interface/IFilterChanged
+    * @mixes Controls/interface/IHighlighter
+    * @mixes Controls/_list/interface/IList
+    * @mixes Controls/_itemActions/interface/IItemActionsOptions
+    * @mixes Controls/_interface/ISorting
+    * @mixes Controls/_interface/IHierarchy
+    * @implements Controls/_tree/interface/ITreeControl
+    * @mixes Controls/_explorer/interface/IExplorer
+    * @mixes Controls/_interface/IDraggable
+    * @mixes Controls/_tile/interface/ITile
+    * @mixes Controls/_list/interface/IVirtualScrollConfig
+    * @mixes Controls/interface/IGroupedGrid
+    * @mixes Controls/_grid/interface/IGridControl
+    * @mixes Controls/_list/interface/IMovableList
+    * @mixes Controls/_list/interface/IRemovableList
+    * @mixes Controls/_marker/interface/IMarkerList
+    *
+    * @public
+    * @author Авраменко А.С.
+    */
+    var Explorer = Control.extend({
+      _template: template,
+      _breadCrumbsItems: null,
+      _root: null,
+      _viewName: null,
+      _viewMode: null,
+      _viewModelConstructor: null,
+      _dragOnBreadCrumbs: false,
+      _hoveredBreadCrumb: undefined,
+      _virtualScrolling: undefined,
+      _dragControlId: null,
+      _firstLoad: true,
+      _itemsPromise: null,
+      _itemsResolver: null,
+      _markerForRestoredScroll: null,
+      _navigation: null,
+      _resetScrollAfterViewModeChange: false,
+      _itemPadding: {},
+      _itemTemplate: undefined,
+      _isMounted: false,
+      _setViewModePromise: null,
 
   _resolveItemsPromise() {
      this._itemsResolver();
@@ -554,6 +565,9 @@ var Explorer = Control.extend({
      this._navigation = cfg.navigation;
      return _private.setViewMode(this, cfg.viewMode, cfg);
   },
+       _afterMount(): void {
+          this._isMounted = true;
+       },
   _beforeUpdate: function(cfg) {
      const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
      const isRootChanged = cfg.root !== this._options.root;
