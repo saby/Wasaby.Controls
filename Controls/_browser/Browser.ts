@@ -286,13 +286,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             methodResult = sourceController.reload()
                .then((items) => {
                    this._items = sourceController.getItems();
-                   this._loading = false;
                    return items;
                }, (error) => {
                    this._processLoadError(error);
                    return error;
                })
                .finally((result) => {
+                   this._loading = false;
                    this._afterSourceLoad(sourceController, newOptions);
                    return result;
                })

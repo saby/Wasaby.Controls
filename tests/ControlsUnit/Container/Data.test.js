@@ -112,6 +112,7 @@ define(
 
             assert.ok(updateResult instanceof Error);
             assert.ok(isErrorProcessed);
+            assert.ok(!data._loading);
          });
 
          it('filter, navigation, sorting changed', async () => {
