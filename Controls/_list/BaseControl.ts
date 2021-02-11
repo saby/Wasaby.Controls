@@ -2230,6 +2230,8 @@ const _private = {
             this._options.serviceDataLoadCallback(this._items, items);
         }
 
+        _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
+
         if (
             this._loadingState === 'all' ||
             !_private.needScrollCalculation(navigation) ||
@@ -3897,15 +3899,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (_private.hasSelectionController(this)) {
             const selectionController = _private.getSelectionController(self, newOptions);
 
-            _private.updateSelectionController(this, newOptions);
-
             const allowClearSelectionBySelectionViewMode =
                 this._options.selectionViewMode === newOptions.selectionViewMode ||
                 newOptions.selectionViewMode !== 'selected';
-            if (filterChanged && selectionController.isAllSelected(false) &&
+            if ((filterChanged || this._options.root !== newOptions.root) && selectionController.isAllSelected(false) &&
                 allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
+
+            // Обновлять контроллер нужно после проверки выше, иначе не правильно отработает метод isAllSelected
+            _private.updateSelectionController(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -6015,15 +6018,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     // region LoadingIndicator
 
     _shouldDisplayTopLoadingIndicator(): boolean {
+        const shouldDisplayTopIndicator = this._loadingIndicatorState === 'up' && !this._portionedSearchInProgress;
         return this._loadToDirectionInProgress
-           ? this._showLoadingIndicator && this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull
-           :  this._loadingIndicatorState === 'up' || this._attachLoadTopTriggerToNull;
+           ? this._showLoadingIndicator && shouldDisplayTopIndicator || this._attachLoadTopTriggerToNull
+           :  shouldDisplayTopIndicator || this._attachLoadTopTriggerToNull;
     },
 
     _shouldDisplayMiddleLoadingIndicator(): boolean {
         // Также, не должно быть завязки на горизонтальный скролл.
         // https://online.sbis.ru/opendoc.html?guid=347fe9ca-69af-4fd6-8470-e5a58cda4d95
-        return this._showLoadingIndicator && this._loadingIndicatorState === 'all' &&
+        return !this._portionedSearchInProgress && this._showLoadingIndicator && this._loadingIndicatorState === 'all' &&
            !(this._children.listView && this._children.listView.isColumnScrollVisible && this._children.listView.isColumnScrollVisible());
     },
 
@@ -6106,6 +6110,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._options.navigation.viewConfig.pagingPadding === null
             )
         );
+    },
+
+    /**
+     * Говорим контролу сверху, что тач уже обработан этим контролом,
+     * помечая событие тача как обработанное
+     * @param event
+     */
+    _touchStartHandler(event: SyntheticEvent): void {
+        event.nativeEvent.processed = true;
     },
 
     _isPagingPadding(): boolean {
@@ -6288,7 +6301,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
             }
 
-            if (_private.hasSelectionController(this)) {
+            // данное поведение сейчас актуально только для дерева или когда перетаскиваем в другой список
+            if (_private.hasSelectionController(this) && (this._options.parentProperty || !this._insideDragging)) {
                 _private.changeSelection(this, {selected: [], excluded: []});
             }
 

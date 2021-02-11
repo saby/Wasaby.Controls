@@ -4,6 +4,7 @@ import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
+import {SyntheticEvent} from 'UI/Vdom';
 
 const browserData = [
     {
@@ -220,6 +221,20 @@ describe('Controls/browser:Browser', () => {
                     assert.ok(browser._loading);
                     await searchPromise;
                     assert.ok(!browser._loading);
+                    assert.ok(browser._searchValue === 'test');
+                });
+            });
+
+            describe('_searchReset', () => {
+                it('_searchReset while loading', async () => {
+                    const options = getBrowserOptions();
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+
+                    browser._sourceController.reload();
+                    browser._searchReset({} as SyntheticEvent);
+                    assert.ok(!browser._sourceController.isLoading());
                 });
             });
         });

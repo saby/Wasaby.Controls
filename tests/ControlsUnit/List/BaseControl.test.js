@@ -6464,6 +6464,10 @@ define([
                 }
              };
              assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+
+             baseControl._loadingIndicatorState = 'up';
+             baseControl._portionedSearchInProgress = true;
+             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
           });
 
           it('_shouldDisplayMiddleLoadingIndicator', () => {
@@ -7739,6 +7743,16 @@ define([
             assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
             assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+
+            notifySpy.resetHistory();
+            baseControl._insideDragging = true;
+            baseControl._documentDragEnd({ entity: {} });
+
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+
+            baseControl._insideDragging = undefined;
          });
 
          it('loadToDirection, drag all items', () => {
@@ -8460,6 +8474,18 @@ define([
                   assert.isNotOk(baseControl._selectionController);
                   baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
                   assert.isOk(baseControl._selectionController);
+               });
+            });
+
+            it('change root', () => {
+               const spyNotify = sinon.spy(baseControl, '_notify');
+               const newCfg = { ...cfg, selectedKeys: [null], excludedKeys: [null], root: null };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  assert.isOk(baseControl._selectionController);
+                  baseControl._beforeUpdate({ ...newCfg, root: 2 });
+                  assert.isTrue(spyNotify.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+                  assert.isTrue(spyNotify.withArgs('excludedKeysChanged', [[], [], [null]]).called);
                });
             });
          });

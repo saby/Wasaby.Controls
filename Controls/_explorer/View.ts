@@ -197,25 +197,27 @@ var
             self._viewMode = viewMode;
             _private.setViewConfig(self, self._viewMode);
             _private.applyNewVisualOptions(self);
+
+            if (self._isMounted) {
+               self._notify('viewModeChanged', [viewMode]);
+            }
          },
          setViewMode: function(self, viewMode, cfg): Promise<void> {
-            var result;
-
             if (viewMode === 'search' && cfg.searchStartingWith === 'root') {
                _private.updateRootOnViewModeChanged(self, viewMode, cfg);
                self._breadCrumbsItems = null;
             }
 
             if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-               result = _private.loadTileViewMode(self).then(() => {
+               self._setViewModePromise = _private.loadTileViewMode(self).then(() => {
                   _private.setViewModeSync(self, viewMode, cfg);
                });
             } else {
-               result = Promise.resolve();
+               self._setViewModePromise = Promise.resolve();
                _private.setViewModeSync(self, viewMode, cfg);
             }
 
-            return result;
+            return self._setViewModePromise;
          },
          applyNewVisualOptions(self): void {
             if (self._newItemPadding) {
@@ -297,10 +299,17 @@ var
             }
          },
          checkedChangeViewMode(self, viewMode: string, cfg): void {
-            _private.setViewMode(self, viewMode, cfg);
-            if (cfg.searchNavigationMode !== 'expand') {
-               self._children.treeControl.resetExpandedItems();
-            }
+            _private
+                .setViewMode(self, viewMode, cfg)
+                // Обрабатываем searchNavigationMode только после того как
+                // проставится setViewMode, т.к. он может проставится асинхронно
+                // а код ниже вызывает изменение версии модели что приводит к лишней
+                // перерисовке до изменения viewMode
+                .then(() => {
+                   if (cfg.searchNavigationMode !== 'expand') {
+                      self._children.treeControl.resetExpandedItems();
+                   }
+                });
          },
 
          isCursorNavigation(navigation: INavigation<INavigationSourceConfig>): boolean {
@@ -466,6 +475,8 @@ var
       _resetScrollAfterViewModeChange: false,
       _itemPadding: {},
       _itemTemplate: undefined,
+      _isMounted: false,
+      _setViewModePromise: null,
 
       _resolveItemsPromise() {
          this._itemsResolver();
@@ -517,6 +528,9 @@ var
          this._dragControlId = randomId();
          this._navigation = cfg.navigation;
          return _private.setViewMode(this, cfg.viewMode, cfg);
+      },
+      _afterMount(): void {
+         this._isMounted = true;
       },
       _beforeUpdate: function(cfg) {
          const isViewModeChanged = cfg.viewMode !== this._options.viewMode;

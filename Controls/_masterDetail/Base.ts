@@ -2,12 +2,10 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_masterDetail/Base/Base';
 import {debounce} from 'Types/function';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {goUpByControlTree} from 'UI/Focus';
 import {setSettings, getSettings} from 'Controls/Application/SettingsController';
 import {IPropStorageOptions} from 'Controls/interface';
 
 const RESIZE_DELAY = 50;
-const TOUCH_RESIZE_MASTER_OFFSET = 100;
 
 interface IMasterDetail extends IControlOptions, IPropStorageOptions {
     master: TemplateFunction;
@@ -127,7 +125,6 @@ class Base extends Control<IMasterDetail> {
     protected _currentMaxWidth: string;
     protected _currentMinWidth: string;
     protected _containerWidth: number;
-    protected _updateOffsetDebounced: Function;
     private _touchstartPosition: number;
 
     protected _beforeMount(options: IMasterDetail, context: object, receivedState: string): Promise<number> | void {
@@ -231,7 +228,7 @@ class Base extends Control<IMasterDetail> {
     }
 
     protected _touchstartHandler(e: SyntheticEvent<TouchEvent>): void {
-        const needHandleTouch: boolean = this._needHandleTouch(e.target as HTMLElement);
+        const needHandleTouch: boolean = this._needHandleTouch(e);
         if (needHandleTouch) {
             this._touchstartPosition = this._getTouchPageXCoord(e);
             this._beginResize();
@@ -249,24 +246,18 @@ class Base extends Control<IMasterDetail> {
         }
     }
 
-    private _needHandleTouch(target: HTMLElement): boolean {
-        const controlTree = goUpByControlTree(target);
-        const masterListModuleName: string = 'Controls/masterDetail:List';
-        for (let i = 0; i < controlTree.length; i++) {
-            // Если не встретили список и добрались до контрола, значит можем обрабатывать клик
-            if (controlTree[i]._moduleName === this._moduleName) {
-                return true;
-            }
-            // Если тач пришелся в список, то список обработает тач и ресайзиться не нужно
-            if (controlTree[i]._moduleName === masterListModuleName)  {
-                return false;
-            }
-        }
-        return true;
+    /**
+     * Если кто-то пометил событие тача, как обработанное, то не запускаем ресайз по тачу
+     * Например, чтобы не ресайзить во время скролла списка
+     * @param event
+     * @private
+     */
+    private _needHandleTouch(event: SyntheticEvent<TouchEvent>): boolean {
+        return !event.nativeEvent.processed;
     }
 
     protected _touchendHandler(e: SyntheticEvent<TouchEvent>): void {
-        if (this._touchstartPosition) {
+        if (this._touchstartPosition && this._canResizing) {
             const touchendPosition: number = this._getTouchPageXCoord(e);
             const touchOffset: number = touchendPosition - this._touchstartPosition;
             this._touchstartPosition = null;
