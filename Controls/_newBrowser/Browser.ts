@@ -23,6 +23,7 @@ import * as DefaultListItemTemplate from 'wml!Controls/_newBrowser/templates/Lis
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
 import * as DefaultTileItemTemplate from 'wml!Controls/_newBrowser/templates/TileItemTemplate';
+
 //endregion
 
 interface IReceivedState {
@@ -100,6 +101,11 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
     masterMarkedKey: TKey;
 
+    private _loadDataPromise: Promise<boolean[]>;
+    private _masterLoadResolver: () => void;
+    private _detailLoadPromise: Promise<boolean>;
+    private _detailLoadResolver: () => void;
+
     //region source
     private _detailDataSource: DataSource;
 
@@ -172,6 +178,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         receivedState?: IReceivedState
     ): Promise<IReceivedState> | void {
 
+        this._onMasterLoaded = this._onMasterLoaded.bind(this);
+
         this._updateState(options);
         let result = Promise.resolve(undefined);
 
@@ -225,7 +233,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      *
      * @see BeforeChangeRootResult
      */
-    private _setRoot(root: TKey | IRootsData): void {
+    private _setRoot(root: TKey | IRootsData): Promise<void> {
         let roots = root && typeof root === 'object' && (root as IRootsData);
         // По умолчанию master- и detail-root меняются синхронно
         roots = roots || {
@@ -235,7 +243,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         // Перед тем как менять root уведомим об этом пользователя.
         // Что бы он мог либо отменить обработку либо подменить root.
-        Promise.resolve(
+        return Promise.resolve(
             this._notify('beforeRootChanged', [roots])
         )
             // Обработаем результат события
@@ -275,15 +283,28 @@ export default class Browser extends Control<IOptions, IReceivedState> {
                 this.masterMarkedKey = newRoots.detailRoot;
                 this._detailDataSource.setRoot(newRoots.detailRoot);
 
-                // Уведомим об изменении root
-                if (detailRootChanged) {
-                    this._notify('rootChanged', [newRoots.detailRoot]);
+                // Для master и detail создадим промисы, которые зарезолвятся после загрузки данных
+                const masterLoadPromise = !masterRootChanged
+                    ? Promise.resolve(false)
+                    : new Promise<boolean>((resolve) => this._masterLoadResolver = () => resolve(masterRootChanged));
+                this._detailLoadPromise = !detailRootChanged
+                    ? Promise.resolve(false)
+                    : new Promise<boolean>((resolve) => this._detailLoadResolver = () => resolve(detailRootChanged));
+
+                if (masterRootChanged) {
+                    this._notify('masterRootChanged', [this.masterRoot]);
                 }
 
-                // Уведомим об изменении masterRoot
-                if (masterRootChanged) {
-                    this._notify('masterRootChanged', [newRoots.masterRoot]);
+                if (detailRootChanged) {
+                    this._notify('rootChanged', [this.root]);
                 }
+
+                return this._loadDataPromise = Promise.all([masterLoadPromise, this._detailLoadPromise]);
+            })
+            // Уведомляем о смене рутов только после загрузки данных, иначе
+            // могут быть прыжки, т.к. руты уже сменились, а данных еще нет
+            .then(([master, detail]) => {
+                this._loadDataPromise = null;
             });
     }
 
@@ -317,6 +338,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     private _setSearchString(searchString: string): void {
+        let setRootResult = Promise.resolve();
         this._waitingSearchResult = !!searchString;
 
         const searchStartingWith = this._options.detail.searchStartingWith || 'root';
@@ -328,15 +350,15 @@ export default class Browser extends Control<IOptions, IReceivedState> {
                 this._beforeSearchRoots.detailRoot = this.root;
                 this._beforeSearchRoots.masterRoot = this.masterRoot;
 
-                this._setRoot(null);
+                setRootResult = this._setRoot(null);
             } else {
-                this._setRoot(this._beforeSearchRoots);
+                setRootResult = this._setRoot(this._beforeSearchRoots);
                 this._beforeSearchRoots = {detailRoot: null, masterRoot: null};
             }
         }
 
-        this._detailDataSource
-            .setSearchString(searchString)
+        setRootResult
+            .then(() => this._detailDataSource.setSearchString(searchString))
             .then((items) => {
                 // Если ждем результаты поиска, то нужно проставить DetailViewMode.search,
                 // т.к. в этом случае конфигурация не применяется. Но если строку поиска
@@ -345,9 +367,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
                 if (this._waitingSearchResult) {
                     this._setViewMode(DetailViewMode.search);
                     this._waitingSearchResult = false;
-                    this._forceUpdate();
                 }
 
+                this._forceUpdate();
                 return items;
             });
     }
@@ -376,6 +398,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         this._setViewMode(cfg.settings.clientViewMode, options);
         this._updateMasterVisibility(options);
+
+        this._notify('listConfigurationChanged', [cfg]);
     }
 
     //region ⇑ events handlers
@@ -401,7 +425,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         const isNode = item.get(this._detailSourceOptions.nodeProperty) !== null;
         if (isNode) {
-            this._setRoot(item.get(this._detailSourceOptions.keyProperty));
+            this._setRoot(item.get(this._detailSourceOptions.keyProperty)).then();
             return false;
         }
 
@@ -417,14 +441,30 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * {@link _onDetailItemClick}
      */
     protected _onDetailRootChanged(event: SyntheticEvent, root: TKey): void {
-        this._setRoot(root);
+        this._setRoot(root).then();
+    }
+
+    protected _onMasterLoaded(items: RecordSet, direction: string): void {
+        this._runMasterLoadResolver();
+
+        if (this._options.master.dataLoadCallback) {
+            this._options.master.dataLoadCallback(items, direction);
+        }
+    }
+
+    private _runMasterLoadResolver(): void {
+        // Если есть промис, ожидающий загрузки данных в мастере, то зарезолвим его
+        if (this._masterLoadResolver) {
+            this._masterLoadResolver();
+            this._masterLoadResolver = null;
+        }
     }
 
     /**
      * Обработчик события которое генерит master-explorer когда в нем меняется root
      */
     protected _onMasterRootChanged(event: SyntheticEvent, root: TKey): void {
-        this._setRoot(root);
+        this._setRoot(root).then();
     }
 
     protected _onSearch(event: SyntheticEvent, validatedValue: string): void {
@@ -455,7 +495,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._masterSourceOptions = compileSourceOptions(options, false);
 
         //region update master fields
-        this.masterRoot = this._masterSourceOptions.root;
+        if (!this._loadDataPromise) {
+            this.masterRoot = this._masterSourceOptions.root;
+        }
         // На основании полученного состояния соберем опции для master-списка
         this._masterExplorerOptions = this._buildMasterExplorerOption(options);
         //endregion
@@ -465,12 +507,24 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             ...options.detail,
             ...this._detailSourceOptions,
             dataLoadCallback: (items: RecordSet, direction: string) => {
-                // Если идет подгрузка страницы, то метаданные обрабатывать не нужно
+                // Если идет подгрузка страницы, то дальнейшая обработка не нужна
                 if (direction) {
                     return;
                 }
 
                 this._processItemsMetadata(items);
+
+                // Если после применения конфигурации мастер скрыт, то руками резолвим его лоадер
+                if (this._masterVisibility === MasterVisibilityEnum.hidden) {
+                    this._runMasterLoadResolver();
+                }
+
+                // Если есть промис, ожидающий загрузки данных в detail, то зарезолвим его
+                if (this._detailLoadResolver) {
+                    this._detailLoadResolver();
+                    this._detailLoadResolver = null;
+                    this._detailLoadPromise = null;
+                }
             }
         } as ISourceControllerOptions;
 
@@ -478,6 +532,9 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         if (!this._detailDataSource) {
             this._detailDataSource = new DataSource(dsOptions);
         } else {
+            if (this._loadDataPromise) {
+                dsOptions.root = this.root;
+            }
             this._detailDataSource.sourceController.updateOptions(dsOptions);
         }
 
@@ -593,7 +650,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
     //endregion
 
-    //region static utils
+    //region • static utils
     static _theme: string[] = [
         'Controls/listTemplates',
         'Controls/newBrowser'
