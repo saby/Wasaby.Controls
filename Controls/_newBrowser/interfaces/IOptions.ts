@@ -4,6 +4,7 @@ import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IMasterOptions} from 'Controls/_newBrowser/interfaces/IMasterOptions';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
+import {IBrowserViewConfig} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
 
 /**
  * Интерфейс описывает структуру настроек компонента {@link Controls/newBrowser:Browser}
@@ -60,6 +61,11 @@ export interface IOptions extends IControlOptions, ISourceOptions {
      * приоритетным и настройка из listConfiguration не применяется.
      */
     userViewMode?: DetailViewMode;
+
+    /**
+     * Конфигурация списка, которая будет применена по умолчанию.
+     */
+    listConfiguration?: IBrowserViewConfig;
 
     /**
      * Конфигурация master-колонки. Если не задана, то мастер-колонка не отображается.

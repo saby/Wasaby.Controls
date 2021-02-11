@@ -17,6 +17,7 @@
             root="{{masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
             bind:markedKey="masterMarkedKey"
+            dataLoadCallback="{{_onMasterLoaded}}"
          />
       </Controls.scroll:Container>
    </ws:master>

@@ -301,7 +301,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
 
-            baseControl.scrollMoveSyncHandler({scrollTop: 600});
+            baseControl.scrollMoveSyncHandler({scrollTop: 640});
             assert.deepEqual({
                 begin: 'visible',
                 end: 'hidden',
