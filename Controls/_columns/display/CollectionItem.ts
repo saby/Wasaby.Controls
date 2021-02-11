@@ -1,15 +1,15 @@
-import CollectionItem, {IOptions as IBaseOptions} from './CollectionItem';
-import {ColumnsCollection} from '../display';
+import {CollectionItem as BaseCollectionItem, ICollectionItemOptions as IBaseOptions} from 'Controls/display';
+import Collection from './Collection';
 
 export interface IOptions<T> extends IBaseOptions<T> {
     columnProperty: number;
     column: number;
 }
 
-export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
+export default class CollectionItem<T> extends BaseCollectionItem<T> {
     protected _$columnProperty: string;
     protected _$column: number = 0;
-    protected _$owner: ColumnsCollection<T>;
+    protected _$owner: Collection<T>;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -50,9 +50,9 @@ export default class ColumnsCollectionItem<T> extends CollectionItem<T> {
     }
 }
 
-Object.assign(ColumnsCollectionItem.prototype, {
-    '[Controls/_display/ColumnsCollectionItem]': true,
-    _moduleName: 'Controls/display:ColumnsCollectionItem',
+Object.assign(CollectionItem.prototype, {
+    '[Controls/_columns/display/CollectionItem]': true,
+    _moduleName: 'Controls/columns:ColumnsCollectionItem',
     _instancePrefix: 'columns-item-',
     _$column: 1
 });

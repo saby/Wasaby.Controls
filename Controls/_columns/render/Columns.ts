@@ -1,13 +1,11 @@
 import { TemplateFunction } from 'UI/Base';
-import template = require('wml!Controls/_listRender/Columns/Columns');
+import template = require('wml!Controls/_columns/render/Columns');
 
-import defaultItemTemplate = require('wml!Controls/_listRender/Columns/resources/ItemTemplate');
+import defaultItemTemplate = require('wml!Controls/_columns/render/resources/ItemTemplate');
 
-import { SyntheticEvent } from 'Vdom/Vdom';
-import { ColumnsCollectionItem } from 'Controls/display';
-import { default as BaseRender, IRenderOptions } from './Render';
+import {ListView, IList} from 'Controls/list';
 
-export interface IColumnsRenderOptions extends IRenderOptions {
+export interface IColumnsRenderOptions extends IList {
     columnMinWidth: number;
     columnMaxWidth: number;
     columnsMode: 'auto' | 'fixed';
@@ -15,16 +13,13 @@ export interface IColumnsRenderOptions extends IRenderOptions {
     spacing: number;
 }
 
-export default class Columns extends BaseRender {
+export default class Columns extends ListView {
     protected _options: IColumnsRenderOptions;
     protected _template: TemplateFunction = template;
 
     protected _beforeMount(options: IColumnsRenderOptions): void {
         super._beforeMount(options);
         this._templateKeyPrefix = 'columns-render';
-    }
-    protected _beforeUnmount(): void {
-        this._unsubscribeFromModelChanges(this._options.listModel);
     }
     protected _resizeHandler(): void {
         this._notify('resize', []);
@@ -45,7 +40,7 @@ export default class Columns extends BaseRender {
     protected _getColumnStyle(index: number): string {
         return this._getMinMaxMidthStyle(this._options.columnMinWidth + this._options.spacing, this._options.columnMaxWidth + this._options.spacing) + `-ms-grid-column: ${index + 1};`
     }
-    static getDefaultOptions(): Partial<IRenderOptions> {
+    static getDefaultOptions(): Partial<IColumnsRenderOptions> {
         return {
             itemTemplate: defaultItemTemplate
         };
