@@ -164,10 +164,10 @@ var Panel = Control.extend({
  * @example
  * <pre class="brush: js">
  * // JavaScript
- * Control.extend({
+ * class MyControl extends Control<IControlOptions> {
  *    _selectionViewMode: 'all',
  *    ...
- * });
+ * }
  * </pre>
  * <pre class="brush: html">
  * <!-- WML -->

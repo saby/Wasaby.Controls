@@ -217,6 +217,8 @@ var
       },
 
          setViewConfig: function (self, viewMode) {
+            // todo useNewModel - это ветка, к котой стремимся, условие (и всё что в else) можно убрать, когда везде
+            // будет использоваться Controls/explorer:View на новой модели
             if (self._options.useNewModel) {
                self._viewName = VIEW_NAMES_NEW[viewMode];
                self._useNewModel = USE_NEW_MODEL_VALUES_NEW[viewMode];
