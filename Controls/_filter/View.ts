@@ -494,7 +494,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> {
         });
     }
 
-    private _showSelector(filterName?: string): void {
+    private _showSelector(filterName?: string): Promise<void> {
         let item = null;
         if (filterName && filterName !== DEFAULT_FILTER_NAME) {
             item = this._getItemByName(this._source, filterName);
@@ -508,13 +508,12 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> {
                 this._getConfigByItem(item);
             }
             if (item?.editorOptions.selectorTemplate) {
-                const selectedItems = [];
                 const items = this._configs[name]?.popupItems || this._configs[name]?.items;
                 const selectedKeys = item.editorOptions.multiSelect ? item.value : [item.value];
                 if (items) {
                     return this._openSelector(item, selectedKeys);
                 } else {
-                    return _private.loadItems(this, item).then(() => {
+                    return this._loadItems(item).then(() => {
                         return this._openSelector(item, selectedKeys);
                     });
                 }
@@ -912,7 +911,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> {
                 };
             });
         });
-    },
+    }
 
     private _setValue(selectedKeys: TKey | TKey[], name: string): void {
         const config = this._configs[name];

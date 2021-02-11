@@ -1,4 +1,4 @@
-import DetailPanel = require('Controls/_filterPopup/DetailPanel');
+import DetailPanel from 'Controls/_filterPopup/DetailPanel';
 
 /**
  * @class Controls/_filterPopup/Panel
