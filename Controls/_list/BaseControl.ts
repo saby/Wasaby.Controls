@@ -3456,6 +3456,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selectionController.setSelection(selection);
                 }
                 if (newOptions.beforeMountCallback) {
+                    this._beforeMountCallbackCalled = true;
                     newOptions.beforeMountCallback({
                         viewModel: this._listViewModel,
                         markerController: _private.getMarkerController(this, newOptions)
@@ -4036,6 +4037,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
+                if (newOptions.beforeMountCallback && !this._beforeMountCallbackCalled) {
+                    this._beforeMountCallbackCalled = true;
+                    newOptions.beforeMountCallback({
+                        viewModel: this._listViewModel,
+                        markerController: _private.getMarkerController(this, newOptions)
+                    });
+                }
                 isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
