@@ -53,20 +53,22 @@ export interface IMovableList {
     moveItems(selection: ISelectionObject, targetKey: CrudEntityKey, position: LOCAL_MOVE_POSITION): Promise<DataSet>;
 
     /**
-     * Перемещаетодин элемент вверх и возвращает результат перемещения
+     * Перемещает один элемент вверх и возвращает результат перемещения
      * @method
      * @public
-     * @param selectedKey
+     * @param selectedKey Ключ записи для перемещения
+     * @param reverse Если true, то перемещает в обратном направлении
      */
-    moveItemUp(selectedKey: CrudEntityKey): Promise<void>;
+    moveItemUp(selectedKey: CrudEntityKey, reverse?: boolean): Promise<void>;
 
     /**
      * Перемещает один элемент вниз и возвращает результат перемещения
      * @method
      * @public
-     * @param selectedKey
+     * @param selectedKey Ключ записи для перемещения
+     * @param reverse Если true, то перемещает в обратном направлении
      */
-    moveItemDown(selectedKey: CrudEntityKey): Promise<void>;
+    moveItemDown(selectedKey: CrudEntityKey, reverse?: boolean): Promise<void>;
 
     /**
      * Перемещает указанные элементы при помощи диалога MoveDialog, и возвращает результат moveItems().
