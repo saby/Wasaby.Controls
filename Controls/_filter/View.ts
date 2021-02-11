@@ -1026,13 +1026,13 @@ var Filter = Control.extend({
                 const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
                 if (items) {
                     factory(selectedKeys).each((key) => {
-                        if (key !== undefined && key !== null && items.getRecordById(key)) {
-                            selectedItems.push(items.getRecordById(key));
+                        if (key !== undefined && key !== null) {
+                            selectedItems.push(items.at(items.getIndexByValue(this._configs[name].keyProperty, key)));
                         }
                     });
                 }
                 templateOptions.multiSelect = item.editorOptions.multiSelect;
-                templateOptions.selectedItems = items || new List({
+                templateOptions.selectedItems = new List({
                     items: selectedItems
                 });
                 this._idOpenSelector = name;
