@@ -353,12 +353,6 @@ const _private = {
             return false;
         }
 
-        // Если у нас элементы отображаются в обратном направлении, то сверху не нужно добавлять отступ
-        const isBackwardDirection = options.navigation?.sourceConfig?.direction === 'backward';
-        if (isBackwardDirection) {
-            return false;
-        }
-
         return true;
     },
 
@@ -1688,9 +1682,7 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET) {
-                if (_private.attachLoadTopTriggerToNullIfNeed(self, self._options)) {
-                    self._hideTopTrigger = true;
-                }
+                _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
             }
 
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
