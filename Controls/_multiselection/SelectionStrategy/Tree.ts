@@ -557,18 +557,17 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
     * @param parentId
     * @private
     */
-   private _getChildrenIdsInEntryPath(parentId: CrudEntityKey): TKeys {
+   private _getRecursiveChildesInEntryPath(parentId: CrudEntityKey): TKeys {
       const childrenIds = [];
 
       const childesFromEntryPath = this._entryPath
           .filter((item) => item.parent === parentId)
           .map((item) => {
-             childrenIds.concat(this._getChildrenIdsInEntryPath(item.id));
+             childrenIds.concat(this._getRecursiveChildesInEntryPath(item.id));
              return item.id;
           });
 
-      childrenIds.concat(childesFromEntryPath);
-      return childrenIds;
+      return childrenIds.concat(childesFromEntryPath);
    }
 
    /**
@@ -585,7 +584,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
             if ((childrenIds.includes(entryPath.parent) || nodeId === entryPath.parent)
                 && !childrenIds.includes(entryPath.id)) {
                childrenIds.push(entryPath.id);
-               childrenIds = childrenIds.concat(this._getChildrenIdsInEntryPath(entryPath.id));
+               childrenIds = childrenIds.concat(this._getRecursiveChildesInEntryPath(entryPath.id));
             }
          });
       }

@@ -51,6 +51,7 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
    beforeEach(() => {
       strategy._rootId = null;
       strategyWithDescendantsAndAncestors._rootId = null;
+      strategy.setEntryPath(undefined);
    });
 
    describe('select', () => {
@@ -158,6 +159,17 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          selection = strategyWithDescendantsAndAncestors.unselect(selection, 3);
          assert.deepEqual(selection.selected, []);
          assert.deepEqual(selection.excluded, []);
+      });
+
+      it('with entry path', () => {
+         strategy.setEntryPath([
+            {id: 3, parent: 2},
+            {id: 2, parent: 1},
+            {id: 1, parent: null}
+         ]);
+
+         const result = strategy.unselect({selected: [3], excluded: []}, 3);
+         assert.deepEqual(result, {selected: [], excluded: []});
       });
    });
 
