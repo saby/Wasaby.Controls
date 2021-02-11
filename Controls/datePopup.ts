@@ -46,13 +46,11 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  *    <Controls.datePopup on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  * <pre>
- *    Base.Control.extend({
- *       ....
+ *    class MyControl extends Control<IControlOptions> {
  *       _inputCompletedHandler(event, startValue, endValue, displaydStartValue, displaydEndValue) {
  *          this._saveEnteredValueToDabase1(startValue, endValue);
  *          this._saveEnteredValueToDabase2(displaydStartValue, displaydEndValue);
- *       },
- *       ...
+ *       }
  *    })
  * </pre>
  */
