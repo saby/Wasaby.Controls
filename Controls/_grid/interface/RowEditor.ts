@@ -1,5 +1,5 @@
 /**
- * Шаблон, который используют для настройки отображения элемента контрола {@link Controls/grid:View Таблица} в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/edit/ режиме редактирования}.
+ * Шаблон, который используется для настройки отображения элемента контрола {@link Controls/grid:View Таблица} в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/edit/ режиме редактирования}.
  * 
  * @class Controls/_grid/interface/RowEditor
  * @author Авраменко А.С.
