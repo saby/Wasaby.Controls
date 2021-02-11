@@ -447,7 +447,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _resizeObserverCallback(entries: any): void {
-        if(isHidden(this._container)) {
+        if (isHidden(this._container)) {
             return;
         }
         const newState: IScrollState = {};
@@ -457,14 +457,24 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 newState.clientWidth = entry.contentRect.width;
             } else {
                 this._updateContentType();
-                newState.scrollWidth = entry.borderBoxSize.inlineSize === undefined ?
-                    entry.borderBoxSize[0].inlineSize : entry.borderBoxSize.inlineSize;
+                // Свойство borderBoxSize учитывает размеры отступов при расчете. Поддерживается не во всех браузерах.
+                if (entry.borderBoxSize) {
+                    const scrollStateProperties = {
+                        scrollWidth: 'inlineSize',
+                        scrollHeight: 'blockSize'
+                    };
+                    for (const property of Object.keys(scrollStateProperties)) {
+                        const borderBoxSizeProperty = scrollStateProperties[property];
+                        newState[property] = entry.borderBoxSize[borderBoxSizeProperty] === undefined ?
+                            entry.borderBoxSize[0][borderBoxSizeProperty] : entry.borderBoxSize[borderBoxSizeProperty];
+                    }
+                } else {
+                    newState.scrollWidth = entry.contentRect.width;
+                    newState.scrollHeight = entry.contentRect.height;
+                }
 
                 if (this._contentType === CONTENT_TYPE.restricted) {
                     newState.scrollHeight = this._getContentHeightByChildren();
-                } else {
-                    newState.scrollHeight = entry.borderBoxSize.blockSize === undefined ?
-                        entry.borderBoxSize[0].blockSize : entry.borderBoxSize.blockSize;
                 }
             }
         }
