@@ -32,10 +32,10 @@ const MODERN_IE_VERSION = 11;
  * @implements Controls/_interface/ICaption
  * @implements Controls/_buttons/interface/IClick
  * @implements Controls/_interface/ITooltip
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * 
  * @public
  * @author Красильников А.С.
@@ -52,10 +52,10 @@ const MODERN_IE_VERSION = 11;
  * @mixes Controls/_interface/ICaption
  * @mixes Controls/_buttons/interface/IClick
  * @mixes Controls/_interface/ITooltip
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * 
  * @public
  * @author Красильников А.С.

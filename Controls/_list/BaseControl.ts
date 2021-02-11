@@ -1764,7 +1764,9 @@ const _private = {
                 }
             }
 
-            if (_private.hasMarkerController(self)) {
+            const handleMarker = action === IObservable.ACTION_RESET
+                && (self._options.markerVisibility === 'visible' || self._options.markedKey !== undefined);
+            if (_private.hasMarkerController(self) || handleMarker) {
                 const markerController = _private.getMarkerController(self);
 
                 let newMarkedKey;
@@ -3745,6 +3747,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+        this._notify('register', ['dataError', this, this._onDataError], {bubbling: true});
 
         // TODO удалить после того как избавимся от onactivated
         if (_private.hasMarkerController(this)) {
@@ -4336,6 +4339,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
+        this._notify('unregister', ['dataError', this], {bubbling: true});
 
         this._unregisterMouseMove();
         this._unregisterMouseUp();
@@ -5534,7 +5538,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.getPortionedSearch(this).abortSearch();
     },
 
-    _onDataError(event: unknown, errorConfig: IErrbackConfig): void {
+    _onDataError(errorConfig: IErrbackConfig): void {
         _private.processError(this, {
             error: errorConfig.error,
             mode: errorConfig.mode || dataSourceError.Mode.dialog
