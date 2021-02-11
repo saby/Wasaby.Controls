@@ -715,7 +715,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
-            if (sourceController) {
+            if (sourceController && !isEqual(newOptions.expandedItems, sourceController.getExpandedItems())) {
                 sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
