@@ -2,6 +2,7 @@ import {descriptor} from 'Types/entity';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import splitIntoTriads from 'Controls/_decorator/inputUtils/splitIntoTriads';
 import toString from 'Controls/_decorator/inputUtils/toString';
+import * as template from 'wml!Controls/_decorator/Number/Number';
 // @ts-ignore
 import {
     INumberFormatOptions,
@@ -75,6 +76,8 @@ class NumberDecorator extends Control<INumberOptions> {
     private _fontSize: string;
     private _fontWeight: string;
     private _fontColorStyle: string;
+    private _stroked: boolean;
+    private _underline: 'hovered' | 'none';
 
     protected _formattedNumber: string = null;
 
@@ -105,38 +108,23 @@ class NumberDecorator extends Control<INumberOptions> {
         this._fontColorStyle = options.readOnly ? 'readonly' : options.fontColorStyle;
     }
 
+    private _setDecorationState(options: INumberOptions): void {
+        this._stroked = options.stroked;
+        this._underline = options.underline;
+    }
+
     protected _beforeMount(options: INumberOptions): void {
         this._setFontState(options);
+        this._setDecorationState(options);
         this._formattedNumber = NumberDecorator._formatNumber(options.value, options);
     }
 
     protected _beforeUpdate(newOptions: INumberOptions): void {
         this._setFontState(newOptions);
+        this._setDecorationState(newOptions);
         if (this._needChangeFormattedNumber(newOptions)) {
             this._formattedNumber = NumberDecorator._formatNumber(newOptions.value, newOptions);
         }
-    }
-
-    private static _abbreviateNumber(value: TValue, abbreviationType: TAbbreviationType): string {
-        if (abbreviationType === 'none') {
-            return value.toString();
-        }
-        if (value >= 1000000000000) {
-            return this._intlFormat(value / 1000000000000) + abbreviationType === 'long' ? ' трлн' : 'Т';
-        }
-        if (value >= 1000000000) {
-            return this._intlFormat(value / 1000000000) + abbreviationType === 'long' ? ' млрд' : 'Г';
-        }
-        if (value >= 1000000) {
-            return this._intlFormat(value / 1000000) + abbreviationType === 'long' ? ' млн' : 'М';
-        }
-        if (value >= 1000) {
-            return this._intlFormat(value / 1000) + abbreviationType === 'long' ? ' тыс.' : 'К';
-        }
-    }
-
-    private static _intlFormat(num: number): string {
-        return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
     }
 
     private static _formatNumber(number: string | number | null, format: INumberOptions): string {
@@ -159,15 +147,37 @@ class NumberDecorator extends Control<INumberOptions> {
             }
         }
 
-        if (useGrouping) {
-            return splitIntoTriads(strNumber);
-        }
-
         if (abbreviationType) {
             return this._abbreviateNumber(strNumber, abbreviationType);
         }
 
+        if (useGrouping) {
+            return splitIntoTriads(strNumber);
+        }
+
         return strNumber;
+    }
+
+    private static _abbreviateNumber(value: TValue, abbreviationType: TAbbreviationType): string {
+        if (abbreviationType === 'none') {
+            return value.toString();
+        }
+        if (value >= 1000000000000) {
+            return this._intlFormat(value / 1000000000000) + `${abbreviationType === 'long' ? ' трлн' : 'Т'}`;
+        }
+        if (value >= 1000000000) {
+            return this._intlFormat(value / 1000000000) + `${abbreviationType === 'long' ? ' млрд' : 'Г'}`;
+        }
+        if (value >= 1000000) {
+            return this._intlFormat(value / 1000000) + `${abbreviationType === 'long' ? ' млн' : 'М'}`;
+        }
+        if (value >= 1000) {
+            return this._intlFormat(value / 1000) + `${abbreviationType === 'long' ? ' тыс.' : 'К'}`;
+        }
+    }
+
+    private static _intlFormat(num: number): string {
+        return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
     }
 
     private static _round: RoundingFn = (number, fractionSize) => {
