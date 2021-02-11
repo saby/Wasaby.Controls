@@ -3851,10 +3851,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const oldViewModelConstructorChanged = !newOptions.useNewModel && newOptions.viewModelConstructor !== this._viewModelConstructor;
 
-        if (this.isEditing() && (oldViewModelConstructorChanged || needReload)) {
-            // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
-            // без возможности отменить закрытие из вне.
-            this._cancelEdit(true);
+        if (this._editInPlaceController && (oldViewModelConstructorChanged || needReload)) {
+            if (this.isEditing()) {
+                // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
+                // без возможности отменить закрытие из вне.
+                this._cancelEdit(true).then(() => {
+                    this._destroyEditInPlaceController();
+                });
+            } else {
+                this._destroyEditInPlaceController();
+            }
         }
 
         if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
@@ -4309,8 +4315,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlaceController) {
-            this._editInPlaceController.destroy();
-            this._editInPlaceInputHelper = null;
+            this._destroyEditInPlaceController();
         }
 
         if (this._listViewModel) {
@@ -4343,6 +4348,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.closePopup(this, this._itemActionsMenuId);
 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
+    },
+
+    _destroyEditInPlaceController() {
+        this._editInPlaceController.destroy();
+        this._editInPlaceController = null;
+        this._editInPlaceInputHelper = null;
     },
 
     _beforeRender(): void {
