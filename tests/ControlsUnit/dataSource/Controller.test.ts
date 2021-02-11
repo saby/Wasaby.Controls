@@ -169,6 +169,18 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 5);
         });
 
+        it('load without direction',  async () => {
+            const controller = getControllerWithHierarchy({
+                navigation: getPagingNavigation()
+            });
+            await controller.reload();
+            await controller.load(undefined, 3);
+            ok(controller.hasLoaded(3));
+
+            await controller.load();
+            ok(!controller.hasLoaded(3));
+        });
+
         it('load call while loading',  async () => {
             const controller = getController();
             let loadPromiseWasCanceled = false;
