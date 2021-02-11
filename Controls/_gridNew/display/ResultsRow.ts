@@ -13,12 +13,12 @@ export type TResultsPosition = 'top' | 'bottom';
 export interface IOptions<T> {
     owner: Collection<T>;
     resultsTemplate: TemplateFunction;
-    results: EntityModel;
+    metaResults: EntityModel;
     resultsColspanCallback?: TResultsColspanCallback;
 }
 
 export default class ResultsRow<T> extends Row<T> {
-    protected _$results: EntityModel;
+    protected _$metaResults: EntityModel;
     protected _$resultsTemplate: TemplateFunction;
     protected _$resultsColspanCallback: TResultsColspanCallback;
 
@@ -38,8 +38,14 @@ export default class ResultsRow<T> extends Row<T> {
         return `controls-Grid__results`;
     }
 
-    getResults(): EntityModel {
-        return this._$results;
+    getMetaResults(): EntityModel {
+        return this._$metaResults;
+    }
+
+    setMetaResults(metaResults: EntityModel): void {
+        this._$metaResults = metaResults;
+        this._$columnItems.forEach((c) => (c as ResultsCell<T>).setMetaResults(metaResults));
+        this._nextVersion();
     }
 
     setResultsColspanCallback(resultsColspanCallback: TResultsColspanCallback): void {
@@ -80,20 +86,30 @@ export default class ResultsRow<T> extends Row<T> {
 
     protected _initializeColumns(): void {
         if (this._$columns) {
-            const factory = this._getColumnsFactory();
+            const factory = this.getColumnsFactory();
+            const metaResults = this.getMetaResults();
 
             if (this._$resultsTemplate) {
                 this._$columnItems = [factory({
                     column: {
                         resultTemplate: this._$resultsTemplate
                     },
-                    colspan: this._$owner.getColumnsConfig().length
+                    colspan: this._$owner.getColumnsConfig().length,
+                    metaResults
                 })];
             } else {
-                this._$columnItems = this._prepareColumnItems(this._$columns, factory);
+                this._$columnItems = this._prepareColumnItems(this._$columns, (options) => {
+                    return factory({
+                        ...options,
+                        metaResults
+                    })
+                });
             }
 
-            this._processStickyLadderCells();
+            if (this._$owner.isFullGridSupport()) {
+                this._processStickyLadderCells();
+            }
+
             if (this._$columns && this.hasItemActionsSeparatedCell()) {
                 this._$columnItems.push(new ItemActionsCell({
                     owner: this,
@@ -113,7 +129,7 @@ Object.assign(ResultsRow.prototype, {
     '[Controls/_display/grid/ResultsRow]': true,
     _moduleName: 'Controls/gridNew:GridResults',
     _cellModule: 'Controls/gridNew:GridResultsCell',
-    _$results: null,
+    _$metaResults: null,
     _$resultsTemplate: null,
     _$resultsColspanCallback: null
 });

@@ -24,7 +24,7 @@ export interface IInputDateTimeOptions {
  *    <Controls.Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions>{
  *       ...
  *       _inputValue: new Date(),
  *
@@ -32,7 +32,7 @@ export interface IInputDateTimeOptions {
  *          this._sendData(this._inputValue);
  *       }
  *       ...
- *  });
+ *  };
  * </pre>
  */
 

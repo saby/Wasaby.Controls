@@ -2093,7 +2093,7 @@ define([
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn`t created');
 
             // прокручиваем к низу, проверяем состояние пэйджинга
-            lists.BaseControl._private.handleListScrollSync(ctrl, 600);
+            lists.BaseControl._private.handleListScrollSync(ctrl, 640);
 
             assert.deepEqual({
                     begin: "visible",
@@ -4208,7 +4208,7 @@ define([
                })
             })
          };
-         ctrl._documentDragEnd();
+         ctrl._documentDragEnd({entity: {}});
          assert.isTrue(dragEnded);
 
          //dragend with deferred
@@ -4232,7 +4232,7 @@ define([
          };
          ctrl._insideDragging = true;
          ctrl._notify = () => new cDeferred();
-         ctrl._documentDragEnd({});
+         ctrl._documentDragEnd({entity: {}});
          assert.isFalse(dragEnded);
          assert.isTrue(!!ctrl._loadingState);
       });
@@ -4679,7 +4679,8 @@ define([
                   }]
                }),
                isMarked: () => false,
-               isSwiped: () => false
+               isSwiped: () => false,
+               isEditing: () => false
             };
             instance.saveOptions(cfg);
             instance._scrollController = {
@@ -6412,6 +6413,10 @@ define([
                 }
              };
              assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+
+             baseControl._loadingIndicatorState = 'up';
+             baseControl._portionedSearchInProgress = true;
+             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
           });
 
           it('_shouldDisplayMiddleLoadingIndicator', () => {
@@ -7667,7 +7672,10 @@ define([
 
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({});
+            assert.isFalse(endDragSpy.called);
+
+            baseControl._documentDragEnd({ entity: {} });
 
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
@@ -7680,7 +7688,7 @@ define([
                })
             });
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
@@ -7688,11 +7696,21 @@ define([
             baseControl._insideDragging = true;
             baseControl._dndListController = dndController;
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
 
             assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
             assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+
+            notifySpy.resetHistory();
+            baseControl._insideDragging = true;
+            baseControl._documentDragEnd({ entity: {} });
+
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+
+            baseControl._insideDragging = undefined;
          });
 
          it('loadToDirection, drag all items', () => {
@@ -7756,7 +7774,7 @@ define([
             };
 
             const spy = sinon.spy(baseControl, 'checkTriggerVisibilityAfterRedraw');
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
             assert.isTrue(spy.called);
 
             sandbox.restore();
@@ -8384,6 +8402,18 @@ define([
                   assert.isNotOk(baseControl._selectionController);
                   baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
                   assert.isOk(baseControl._selectionController);
+               });
+            });
+
+            it('change root', () => {
+               const spyNotify = sinon.spy(baseControl, '_notify');
+               const newCfg = { ...cfg, selectedKeys: [null], excludedKeys: [null], root: null };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  assert.isOk(baseControl._selectionController);
+                  baseControl._beforeUpdate({ ...newCfg, root: 2 });
+                  assert.isTrue(spyNotify.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+                  assert.isTrue(spyNotify.withArgs('excludedKeysChanged', [[], [], [null]]).called);
                });
             });
          });

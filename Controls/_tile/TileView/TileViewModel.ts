@@ -4,8 +4,6 @@ import {Logger} from 'UI/Utils';
 import {object} from 'Types/util';
 import {Model} from 'Types/entity';
 import {getImageUrl, getImageSize, getImageClasses, IMAGE_FIT, getImageRestrictions} from './resources/imageUtil';
-import {ZOOM_DELAY, ZOOM_COEFFICIENT, TILE_SCALING_MODE} from './resources/Constants';
-import {SyntheticEvent} from 'Vdom/Vdom';
 
 const DEFAULT_ITEM_WIDTH = 250;
 const DEFAULT_ITEM_HEIGHT = 200;
@@ -115,7 +113,7 @@ var TileViewModel = ListViewModel.extend({
     getImageProportion(proportion: string = '1:1'): number {
         const [width, height]: string[] = proportion.split(':');
         if (width && height) {
-            return +(Number(width) / Number(height)).toFixed(2);
+            return +(Number(height) / Number(width)).toFixed(2);
         }
         return 1;
     },

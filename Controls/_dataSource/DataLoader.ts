@@ -6,14 +6,14 @@ import {
     TSortingOptionValue,
     INavigationOptions,
     INavigationSourceConfig,
-    IFilterOptions,
     TFilter,
-    TKey, INavigationOptionValue
+    TKey
 } from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
 import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {Logger} from 'UI/Utils';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
+import {loadAsync, loadSync, isLoaded} from 'WasabyLoader/ModulesLoader';
 
 const FILTER_PARAMS_LOAD_TIMEOUT = 1000;
 
@@ -23,11 +23,17 @@ interface IFilterHistoryLoaderResult {
     historyItems: IFilterItem[];
 }
 
+interface IBaseLoadDataConfig {
+    afterLoadCallback?: string;
+}
+
 export interface ILoadDataConfig extends
+    IBaseLoadDataConfig,
     ISourceOptions,
-    ISortingOptions,
-    INavigationOptions<INavigationSourceConfig>,
-    IFilterOptions {
+    INavigationOptions<INavigationSourceConfig> {
+    type?: 'list';
+    sorting?: TSortingOptionValue;
+    filter?: TFilter;
     filterButtonSource?: IFilterItem[];
     fastFilterSource?: object[];
     historyId?: string;
@@ -43,32 +49,24 @@ export interface ILoadDataConfig extends
     error?: Error;
 }
 
-export interface ILoadDataResult {
-    data: RecordSet;
-    error: Error;
-
-    filter?: TFilter;
-    sorting?: TSortingOptionValue;
-    navigation?: INavigationOptionValue<INavigationSourceConfig>;
-
-    sourceController: NewSourceController;
-    filterController?: FilterController;
+export interface ILoadDataCustomConfig extends IBaseLoadDataConfig {
+    type: 'custom';
+    loadDataMethod: Function;
 }
 
-function importFilterLibrary(): Promise<typeof import('Controls/filter')> {
-    return import('Controls/filter');
+export interface ILoadDataResult extends ILoadDataConfig {
+    data: RecordSet;
+    error: Error;
+    sourceController: NewSourceController;
+    filterController?: FilterController;
 }
 
 function isNeedPrepareFilter(loadDataConfig: ILoadDataConfig): boolean {
     return !!loadDataConfig.filterButtonSource;
 }
 
-function isNeedImportFilterLibrary(): boolean {
-    return !requirejs.defined('Controls/filter');
-}
-
 function getFilterController(options: IFilterControllerOptions): FilterController {
-    const controllerClass = requirejs('Controls/filter').ControllerClass;
+    const controllerClass = loadSync<typeof import('Controls/filter')>('Controls/filter').ControllerClass;
     return new controllerClass(options);
 }
 
@@ -99,12 +97,12 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
         if (loadConfig.filterHistoryLoader instanceof Function) {
             filterPromise  = getFilterControllerWithHistoryFromLoader(loadConfig);
         } else {
-            if (isNeedImportFilterLibrary()) {
-                filterPromise = importFilterLibrary().then(() => {
+            if (isLoaded('Controls/filter')) {
+                filterPromise = getFilterControllerWithFilterHistory(loadConfig);
+            } else {
+                filterPromise = loadAsync('Controls/filter').then(() => {
                     return getFilterControllerWithFilterHistory(loadConfig);
                 });
-            } else {
-                filterPromise = getFilterControllerWithFilterHistory(loadConfig);
             }
         }
 
@@ -142,25 +140,46 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
 
         return new Promise((resolve) => {
             sourceController.load().finally(() => {
-                resolve({
+                const loadResult = {
                     sourceController,
                     data: sourceController.getItems(),
                     error: sourceController.getLoadError(),
                     filter: sourceController.getFilter(),
                     sorting,
                     navigation: loadConfig.navigation
-                });
+                };
+                resolve({...loadConfig, ...loadResult});
             });
         });
     });
 }
 
 export default class DataLoader {
-    load(sourceConfigs: ILoadDataConfig[]): Promise<ILoadDataResult[]> {
+    load(sourceConfigs: Array<ILoadDataConfig|ILoadDataCustomConfig>): Promise<Array<ILoadDataResult|unknown>> {
         const loadDataPromises = [];
+        let loadPromise;
 
         sourceConfigs.forEach((loadConfig) => {
-            loadDataPromises.push(loadDataByConfig(loadConfig));
+            if (loadConfig.type === 'custom') {
+                loadPromise = loadConfig.loadDataMethod();
+            } else {
+                loadPromise = loadDataByConfig(loadConfig);
+            }
+            if (loadConfig.afterLoadCallback) {
+                const afterReloadCallbackLoadPromise = loadAsync(loadConfig.afterLoadCallback);
+                loadPromise.then((result) => {
+                    if (isLoaded(loadConfig.afterLoadCallback)) {
+                        loadSync<Function>(loadConfig.afterLoadCallback)(result);
+                        return result;
+                    } else {
+                        return afterReloadCallbackLoadPromise.then((afterLoadCallback: Function) => {
+                            afterLoadCallback(result);
+                            return result;
+                        });
+                    }
+                });
+            }
+            loadDataPromises.push(loadPromise);
         });
 
         return Promise.all(loadDataPromises);

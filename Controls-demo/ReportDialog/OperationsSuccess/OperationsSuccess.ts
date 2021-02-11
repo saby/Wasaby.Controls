@@ -4,5 +4,6 @@ import * as controlTemplate from 'wml!Controls-demo/ReportDialog/OperationsSucce
 export default class extends Control{
    protected _template: TemplateFunction = controlTemplate;
 
-   static _styles: string[] = ['Controls-demo/Controls-demo', 'Controls/Classes'];
+   static _styles: string[] = ['Controls-demo/Controls-demo'];
+   static _theme: string[] = ['Controls/Classes'];
 }

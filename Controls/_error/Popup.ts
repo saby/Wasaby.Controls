@@ -113,8 +113,7 @@ export default class Popup implements IPopupHelper {
         'Controls/popup',
         'Controls/popupConfirmation',
         'Controls/popupTemplate',
-        'css!Controls/buttons',
-        'css!Controls/Classes'
+        'css!Controls/buttons'
     ];
 
     /**
@@ -122,7 +121,8 @@ export default class Popup implements IPopupHelper {
      */
     private static readonly POPUP_THEMES: string[] = [
         'Controls/popup',
-        'Controls/popupConfirmation'
+        'Controls/popupConfirmation',
+        'Controls/Classes'
     ];
 
     /**

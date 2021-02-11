@@ -200,11 +200,9 @@ const GridView = ListView.extend({
         // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
         if (!e.preventItemEvent) {
             const contents = dispItem.getContents();
-            if (this._options.useNewModel) {
-                if (dispItem['[Controls/_display/GroupItem]']) {
-                    this._notify('groupClick', [contents, e, dispItem], {bubbling: true});
-                    return;
-                }
+            if (dispItem['[Controls/_display/GroupItem]']) {
+                this._notify('groupClick', [contents, e, dispItem], {bubbling: true});
+                return;
             }
             this._notify('itemClick', [contents, e, this._getCellIndexByEventTarget(e)]);
         }

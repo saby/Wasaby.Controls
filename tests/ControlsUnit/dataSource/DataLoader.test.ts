@@ -1,4 +1,4 @@
-import {DataLoader} from 'Controls/dataSource';
+import {DataLoader, ILoadDataResult} from 'Controls/dataSource';
 import {Memory} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 
@@ -83,6 +83,7 @@ describe('Controls/dataSource:loadData', () => {
 
     it('loadData with filterButtonSource', async () => {
         const loadDataConfigWithFilter = {
+            type: 'list',
             source: getSource(),
             filter: {},
             filterButtonSource: [
@@ -94,13 +95,24 @@ describe('Controls/dataSource:loadData', () => {
         const loadDataResult = await getDataLoaded().load([loadDataConfigWithFilter]);
 
         ok(loadDataResult.length === 1);
-        ok(loadDataResult[0].data.getCount() === 1);
+        ok((loadDataResult[0] as ILoadDataResult).data.getCount() === 1);
         deepStrictEqual(
-            loadDataResult[0].filter,
+            (loadDataResult[0] as ILoadDataResult).filter,
             {
                 title: 'Sasha'
             }
         );
+    });
+
+    it('load with custom loader', async () => {
+        const loadDataConfigCustomLoader = {
+            type: 'custom',
+            loadDataMethod: () => Promise.resolve({ testField: 'testValue' })
+        };
+        const loadDataResult = await getDataLoaded().load([loadDataConfigCustomLoader]);
+
+        ok(loadDataResult.length === 1);
+        deepStrictEqual(loadDataResult[0], { testField: 'testValue' });
     });
 
 });
