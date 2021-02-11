@@ -308,7 +308,7 @@ export default class Container extends Control<IContainerOptions> {
          this._notifiedMarkedKey = undefined;
       }
 
-      if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
+      if (this._searchController && (this._searchController.isSearchInProcess() || this._searchController.getSearchValue() !== this._searchValue)) {
          const filter = this._searchController.getFilter();
          this._updateParams(this._searchController.getSearchValue());
          this._sourceController.setFilter(filter);
