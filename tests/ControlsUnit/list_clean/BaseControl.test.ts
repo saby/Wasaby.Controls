@@ -301,7 +301,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
 
-            baseControl.scrollMoveSyncHandler({scrollTop: 600});
+            baseControl.scrollMoveSyncHandler({scrollTop: 640});
             assert.deepEqual({
                 begin: 'visible',
                 end: 'hidden',
@@ -1067,6 +1067,16 @@ describe('Controls/list_clean/BaseControl', () => {
                 assert.doesNotThrow(() => {
                     baseControl._beforeUpdate(baseControlOptions);
                 });
+
+                baseControl.__error = {testErrorField: 'testErrorValue'};
+                sourceControllerOptions = {...sourceControllerOptions};
+                sourceControllerOptions.source = new Memory();
+                sourceController.updateOptions(sourceControllerOptions);
+                await sourceController.reload();
+                baseControlOptions = {...baseControlOptions};
+                baseControlOptions.source = new Memory();
+                baseControl._beforeUpdate(baseControlOptions);
+                assert.ok(!baseControl.__error);
             });
 
             it('_beforeUpdate while source controller is loading', async () => {

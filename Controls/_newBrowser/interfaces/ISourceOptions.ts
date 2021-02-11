@@ -52,5 +52,5 @@ export interface ISourceOptions {
 
     columns?: unknown;
 
-    dataLoadCallback?: (items: RecordSet) => void;
+    dataLoadCallback?: (items: RecordSet, direction: string) => void;
 }
