@@ -410,10 +410,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             return;
         }
 
-        if (this._waitingSearchResult) {
-            this._forceUpdate();
-        }
-
         this._processItemsMetadata(items);
 
         // Если после применения конфигурации мастер скрыт, то руками резолвим его лоадер
