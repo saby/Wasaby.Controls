@@ -127,10 +127,20 @@ define([
       });
 
       describe('openDialog()', () => {
-         it('calls openPopup()', () => {
+         let p;
+
+         beforeEach(() => {
+            sinon.stub(Popup, 'showDefaultDialog');
             Popup.POPUP_MODULES = [fakeModuleNames[0]];
             Popup.POPUP_THEMES = [fakeModuleNames[1]];
-            const p = new Popup();
+            p = new Popup();
+         });
+
+         afterEach(() => {
+            sinon.resetHistory();
+         });
+
+         it('calls openPopup()', () => {
             const viewConfig = {
                template: {},
                options: {}
@@ -150,10 +160,7 @@ define([
          });
 
          it('calls showDefaultDialog()', () => {
-            Popup.POPUP_MODULES = [fakeModuleNames[0]];
-            Popup.POPUP_THEMES = ['FakeFailModule1'];
-            const p = new Popup();
-            sinon.stub(Popup, 'showDefaultDialog');
+            p.themes = ['FakeFailModule1'];
             const config = {
                options: {
                   message: 'message',
@@ -172,13 +179,26 @@ define([
             });
          });
 
-         it('if config contains string template, it will load this', () => {
-            Popup.POPUP_MODULES = [fakeModuleNames[0]];
-            Popup.POPUP_THEMES = [fakeModuleNames[1]];
-            const p = new Popup();
-            const viewConfig = { template: 'template', options: {} };
+         it('if config contains string template, it will load this and opens popup', () => {
+            const viewConfig = { template: fakeModuleNames[2], options: {} };
             return p.openDialog(viewConfig, {}).then(() => {
-               assert.strictEqual(p.modules.length, 2);
+               const popup = require(fakeModuleNames[0]);
+               assert.isTrue(popup.Dialog.openPopup.calledOnce, 'openPopup() called');
+            });
+         });
+
+         it('if config contains falsy string template, it will opens default popup', () => {
+            const viewConfig = { template: 'fakeModuleName', options: {} };
+            return p.openDialog(viewConfig, {}).then(() => {
+               const popup = require(fakeModuleNames[0]);
+               assert.isFalse(
+                  popup.Confirmation.openPopup.called,
+                  'openPopup() should not be called'
+               );
+               assert.isTrue(
+                  Popup.showDefaultDialog.calledOnce,
+                  'showDefaultDialog() called'
+               );
             });
          });
       });

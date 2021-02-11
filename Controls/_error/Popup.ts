@@ -78,12 +78,16 @@ export default class Popup implements IPopupHelper {
      */
     openDialog<T extends IViewConfigMessage>(config: ViewConfig<T>,
                                              dialogOptions: IBasePopupOptions): Promise<PopupId | void> {
-        if (config && typeof config.template === 'string') {
-            this.modules.push(config.template);
-        }
+        const { template } = config;
+        const preloadConfigTemplate = typeof template === 'string'
+            ? import(template).catch(() => undefined)
+            : Promise.resolve(true);
 
-        return this.preloadPopup().then((popup) => {
-            if (!popup) {
+        return Promise.all([
+            this.preloadPopup(),
+            preloadConfigTemplate
+        ]).then(([popup, configTemplate]) => {
+            if (!popup || !configTemplate) {
                 Popup.showDefaultDialog(config.options.message, config.options.details);
                 return;
             }
