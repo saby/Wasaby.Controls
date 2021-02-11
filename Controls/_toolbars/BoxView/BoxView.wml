@@ -7,7 +7,7 @@
                      item="{{item}}"
                      itemsSpacing="{{_options.itemsSpacing}}"
                      buttonTemplate="{{_buttonTemplate}}"
-                     buttonTemplateOptions="{{_getButtonTemplateOptionsByItem(item)}}"
+                     buttonTemplateOptions="{{_getSimpleButtonTemplateOptionsByItem(item)}}"
                      theme="{{_options.theme}}"
                      on:click="_itemClickHandler(item)"/>
          <ws:if data="{{ key < (_items.getCount() - 1) }}">

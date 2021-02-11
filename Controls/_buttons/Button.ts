@@ -36,37 +36,6 @@ export interface IButtonControlOptions extends IControlOptions, IHrefOptions, IC
     captionPosition: 'left' | 'right';
 }
 
-export function cssStyleGeneration(options: IButtonControlOptions, hasMsg: boolean = false): void {
-    const currentButtonClass = ActualApi.styleToViewMode(options.style);
-    const oldViewModeToken = ActualApi.viewMode(currentButtonClass.viewMode, options.viewMode);
-
-    this._buttonStyle = ActualApi.buttonStyle(currentButtonClass.style, options.style, options.buttonStyle, options.readOnly, hasMsg);
-    this._contrastBackground = ActualApi.contrastBackground(options, hasMsg);
-    this._viewMode = oldViewModeToken.viewMode;
-    if (typeof oldViewModeToken.contrast !== 'undefined') {
-        this._contrastBackground = oldViewModeToken.contrast;
-    }
-    this._height = ActualApi.actualHeight(options.size, options.inlineHeight, this._viewMode, hasMsg);
-    this._fontColorStyle = ActualApi.fontColorStyle(this._buttonStyle, this._viewMode, options.fontColorStyle);
-    this._fontSize = ActualApi.fontSize(options, hasMsg);
-    this._hasIcon = !!options.icon;
-
-    this._caption = options.caption;
-    this._stringCaption = typeof options.caption === 'string';
-    this._captionPosition = options.captionPosition || 'right';
-
-    this._icon = options.icon;
-    this._iconSize = options.icon ? ActualApi.iconSize(options.iconSize, this._icon) : '';
-    this._iconStyle = options.icon ?
-        ActualApi.iconStyle(options.iconStyle, this._icon, options.readOnly, options.buttonAdd) : '';
-
-    if (this._viewMode === 'linkButton') {
-        const actualState = ActualApi.actualLinkButton(this._viewMode, this._height);
-        this._viewMode = actualState.viewMode;
-        this._height = actualState.height;
-    }
-}
-
 export function defaultHeight(viewMode: string): string {
     if (viewMode === 'button') {
         return 'default';

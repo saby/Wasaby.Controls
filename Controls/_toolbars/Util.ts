@@ -1,6 +1,5 @@
 import {IControlOptions, TemplateFunction} from 'UI/Base';
-import {ActualApi} from 'Controls/buttons';
-import {ButtonTemplate, cssStyleGeneration, IButtonOptions, defaultHeight, defaultFontColorStyle, getDefaultOptions} from 'Controls/buttons';
+import {ButtonTemplate, IButtonOptions, defaultHeight, defaultFontColorStyle, getDefaultOptions} from 'Controls/buttons';
 import {Abstract as ChainAbstract, factory} from 'Types/chain';
 import {ICrudPlus} from "Types/source";
 import {Record} from 'Types/entity';
@@ -23,43 +22,6 @@ export function loadItems(source: ICrudPlus): Promise<TItems> {
 export function hasSourceChanged(newSource?: ICrudPlus, oldSource?: ICrudPlus): boolean {
     const currentSource = oldSource;
     return newSource && currentSource !== newSource;
-}
-
-export function getButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {
-    const icon = item.get('icon');
-    const style = item.get('buttonStyle');
-    const viewMode = item.get('viewMode');
-
-    // todo: https://online.sbis.ru/opendoc.html?guid=244a5058-47c1-4896-a494-318ba2422497
-    const inlineHeight = viewMode === 'functionalButton' ? 'default' :
-        ActualApi.actualHeight('m', undefined, viewMode, false);
-    const iconSize = viewMode === 'functionalButton' ? 's' : item.get('iconSize') || toolbarOptions.iconSize;
-
-    const iconStyle = item.get('iconStyle') || toolbarOptions.iconStyle;
-    const transparent = item.get('buttonTransparent');
-    const caption = item.get('caption');
-    const captionPosition = item.get('captionPosition');
-    const readOnly = item.get('readOnly') || toolbarOptions.readOnly;
-    const fontColorStyle = item.get('fontColorStyle') || toolbarOptions.fontColorStyle;
-    const contrastBackground = item.get('contrastBackground');
-    const cfg: IButtonOptions = {};
-    cfg._hoverIcon = true;
-    cssStyleGeneration.call(cfg, {
-        inlineHeight,
-        icon,
-        style,
-        viewMode,
-        iconStyle,
-        iconSize,
-        transparent,
-        caption,
-        captionPosition,
-        readOnly,
-        fontColorStyle,
-        contrastBackground
-    });
-    cfg.readOnly = readOnly;
-    return cfg;
 }
 
 export function getSimpleButtonTemplateOptionsByItem(item: TItem, toolbarOptions: IControlOptions = {}): IButtonOptions {

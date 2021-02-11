@@ -8,7 +8,7 @@ import 'css!Controls/buttons';
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {
     getButtonTemplate, hasSourceChanged,
-    getButtonTemplateOptionsByItem, getTemplateByItem, loadItems
+    getSimpleButtonTemplateOptionsByItem, getTemplateByItem, loadItems
 } from 'Controls/_toolbars/Util';
 
 import {
@@ -58,8 +58,8 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
         this._items = items;
     }
 
-    protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
-        return getButtonTemplateOptionsByItem(item, this._options);
+    protected _getSimpleButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
+        return getSimpleButtonTemplateOptionsByItem(item, this._options);
     }
 
     protected _beforeMount(options: IToolbarBoxOptions, context: {}, receivedItems?: TItems): Promise<TItems> {

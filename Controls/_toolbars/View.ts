@@ -12,8 +12,11 @@ import 'css!Controls/toolbars';
 import 'css!Controls/buttons';
 
 import {
-    getButtonTemplate, hasSourceChanged,
-    getButtonTemplateOptionsByItem, getTemplateByItem, loadItems, getSimpleButtonTemplateOptionsByItem
+    getButtonTemplate,
+    hasSourceChanged,
+    getTemplateByItem,
+    loadItems,
+    getSimpleButtonTemplateOptionsByItem
 } from 'Controls/_toolbars/Util';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
@@ -506,10 +509,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
 
     protected _getTemplateByItem(item: TItem): TemplateFunction {
         return getTemplateByItem(item, this._options);
-    }
-
-    protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
-        return getButtonTemplateOptionsByItem(item, this._options);
     }
 
     protected _getSimpleButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
