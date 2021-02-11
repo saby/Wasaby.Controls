@@ -3929,7 +3929,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (newOptions.sourceController) {
             const items = newOptions.sourceController.getItems();
-            const loadError = newOptions.sourceController.getLoadError();
 
             if (this._options.sourceController !== newOptions.sourceController) {
                 this._sourceController = newOptions.sourceController;
@@ -3960,7 +3959,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
 
-            if (this._loadedBySourceController && !loadError) {
+            if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
                 if (this._listViewModel) {
                     this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController));
                 }
@@ -3969,8 +3968,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
-            } else if (loadError) {
-
             }
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
