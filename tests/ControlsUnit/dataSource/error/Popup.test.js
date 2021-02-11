@@ -184,11 +184,13 @@ define([
             return p.openDialog(viewConfig, {}).then(() => {
                const popup = require(fakeModuleNames[0]);
                assert.isTrue(popup.Dialog.openPopup.calledOnce, 'openPopup() called');
+               assert.isDefined(require(fakeModuleNames[2]), 'template module exists');
             });
          });
 
          it('if config contains falsy string template, it will opens default popup', () => {
-            const viewConfig = { template: 'fakeModuleName', options: {} };
+            const fakeModuleName = 'fakeModuleName';
+            const viewConfig = { template: fakeModuleName, options: {} };
             return p.openDialog(viewConfig, {}).then(() => {
                const popup = require(fakeModuleNames[0]);
                assert.isFalse(
@@ -199,6 +201,7 @@ define([
                   Popup.showDefaultDialog.calledOnce,
                   'showDefaultDialog() called'
                );
+               assert.isUndefined(require(fakeModuleName), 'template module doesn\'t exist');
             });
          });
       });
