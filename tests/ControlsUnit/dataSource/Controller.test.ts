@@ -118,7 +118,11 @@ function getPagingNavigation(hasMore: boolean = false, pageSize: number = 1): IN
 }
 
 const sourceWithError = new Memory();
-sourceWithError.query = () => Promise.reject(new Error());
+sourceWithError.query = () => {
+    const error = new Error();
+    error.processed = true;
+    return Promise.reject(error);
+};
 
 function getControllerWithHierarchy(additionalOptions: object = {}): NewSourceController {
     return new NewSourceController({...getControllerWithHierarchyOptions(), ...additionalOptions});
@@ -163,6 +167,12 @@ describe('Controls/dataSource:SourceController', () => {
             const controller = getControllerWithHierarchy();
             const loadedItems = await controller.load();
             ok((loadedItems as RecordSet).getCount() === 5);
+        });
+
+        it('load with direction "down"',  async () => {
+            const controller  = getController();
+            await controller.load('down');
+            ok(controller.getItems().getCount() === 4);
         });
 
         it('load call while loading',  async () => {

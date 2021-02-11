@@ -408,8 +408,8 @@ var _private = {
     },
 
     purifyConfigs(configs): Array<Record<string, any>> {
-        _private.deleteFieldFromConfigs(configs, 'sourceController')
-        return deleteHistorySourceFromConfig(configs, '_source')
+        _private.deleteFieldFromConfigs(configs, 'sourceController');
+        return deleteHistorySourceFromConfig(configs, 'source');
     },
 
     setValue: function(self, selectedKeys, name) {
@@ -948,7 +948,9 @@ var Filter = Control.extend({
             }
             _private.notifyChanges(this, this._source);
         }
-        this._getFilterPopupOpener().close();
+        if (this._options.detailPanelOpenMode !== 'stack') {
+            this._getFilterPopupOpener().close();
+        }
     },
 
     _onSelectorTemplateResult: function(items) {

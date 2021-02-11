@@ -9,6 +9,7 @@ import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {getMenuItems, needShowMenu} from './Util';
 import {showType} from './interfaces/IShowType';
 import 'css!Controls/toolbars';
+import 'css!Controls/buttons';
 
 import {
     getButtonTemplate, hasSourceChanged,
@@ -37,11 +38,10 @@ import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import {IButtonOptions} from 'Controls/buttons';
 import {IGrouped, IGroupedOptions} from 'Controls/dropdown';
-
 import * as template from 'wml!Controls/_toolbars/View';
 import * as defaultItemTemplate from 'wml!Controls/_toolbars/ItemTemplate';
 import {DependencyTimer, isLeftMouseButton} from 'Controls/popup';
-import {IoC} from "Env/Env";
+import {IoC} from 'Env/Env';
 
 type TItem = Record;
 type TItems = RecordSet<TItem>;
@@ -62,8 +62,17 @@ export interface IMenuOptions {
  * Интерфейс опций контрола {@link Controls/toolbars:View}.
  * @public
  * @author Красильников А.С.
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/dropdown:IGrouped
+ * @implements Controls/toolbars:IToolbarSource
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IFilterChanged
  */
-export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
+
+ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
     IItemTemplateOptions, IGroupedOptions, IToolbarSourceOptions, IItemsOptions<TItem>, IFontColorStyleOptions,
     IIconStyleOptions, IFilterOptions {
     /**
@@ -126,12 +135,15 @@ export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIc
  * @extends UI/Base:Control
  * @implements Controls/toolbars:IToolbarOptions
  * // TODO: https://online.sbis.ru/opendoc.html?guid=64c95101-d268-4225-9e52-b6398ded5ced
- * @implements Controls/_interface/IItemTemplate
- * @implements Controls/_interface/IIconStyle
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IFontColorStyle
- * @implements Controls/_toolbars/IToolbarSource
- * @implements Controls/toolbars:IToolbarOptions
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IItems
+ * @implements Controls/toolbars:IToolbarSource
+ * @implements Controls/dropdown:IGrouped
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index
@@ -589,7 +601,7 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return void 0;
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/Classes'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {

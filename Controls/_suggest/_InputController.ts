@@ -374,6 +374,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          } else {
             this._moreCount = undefined;
          }
+         this._errorConfig = null;
       }
       if (!this._shouldShowSuggest(data)) {
          this._close();
@@ -393,7 +394,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (searchValue.length < minSearchLength && historyKeys && historyKeys.length) {
          preparedFilter[HISTORY_KEYS_FIELD] = historyKeys;
       }
-      preparedFilter[searchParam] = searchValue;
+      preparedFilter[searchParam] = searchValue.length >= minSearchLength ? searchValue : '';
 
       return preparedFilter;
    }
@@ -439,8 +440,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
          state = true;
-      } else if ((shouldSearch || this._options.autoDropDown && !this._options.suggestState)
-         && shouldShowSuggest) {
+      } else if ((shouldSearch ||
+          this._options.autoDropDown && !this._options.suggestState ||
+          !this._options.autoDropDown && this._options.suggestState) && shouldShowSuggest) {
          this._setFilter(this._options.filter, this._options);
          this._open();
          state = true;
@@ -959,6 +961,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._setFilterAndLoad(this._options.filter, this._options, tabId)
              .finally(() => {
                 changeTabCallback();
+                this._tabsSelectedKey = tabId;
              });
       } else {
          changeTabCallback();

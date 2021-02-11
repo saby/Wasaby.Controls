@@ -216,7 +216,8 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
      */
     private _getItemsArray(items: RecordSet): ITabButtonItem[] {
         if (items.getAdapter() instanceof adapter.Json) {
-            return items.getRawData();
+            // Получаем массив без клонирования, т.к. оно является тяжелой операцией и замедляет построение
+            return items.getRawData(true);
         } else {
             return factory(items).map((item) => {
                 return factory(item).toObject();

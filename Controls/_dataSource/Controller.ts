@@ -455,9 +455,9 @@ export default class Controller {
 
         if (direction === 'up') {
             this._prependItems(items);
-        } else if (direction === 'down') {
+        } else if (direction === 'down' && this._items) {
             this._appendItems(items);
-        } else if (key !== this._root && this._items) {
+        } else if (!direction && key !== this._root && this._items) {
             this._mergeItems(items);
         } else {
             this._setItems(items);
@@ -644,6 +644,11 @@ export default class Controller {
             this._options.dataLoadErrback(queryError);
         }
         this._loadError = queryError;
+        // Выводим ошибку в консоль, иначе из-за того, что она произошла в Promise,
+        // у которого есть обработка ошибок через catch, никто о ней не узнает
+        if (!queryError.processed && !queryError.hasOwnProperty('httpError')) {
+            Logger.error('dataSource/Controller load error', this, queryError);
+        }
         return queryError;
     }
 

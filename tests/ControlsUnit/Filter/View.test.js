@@ -128,16 +128,31 @@ define(
          });
 
          it('_beforeMount from options', function(done) {
-            let view = getView(defaultConfig);
+            const config = Clone(defaultConfig);
+            let view = getView(config);
             let expectedDisplayText = {
                state: {text: 'In any state', title: 'In any state', hasMoreText: ''},
                document: {}
             };
-            view._beforeMount(defaultConfig).addCallback(function() {
+            const testHSource = new history.Source({
+               originSource: config.source[1].editorOptions.source,
+               historySource: new history.Service({
+                  historyId: 'testhistorySource'
+               })
+            });
+            testHSource._$historySource.query = () => {
+               return Promise.reject();
+            };
+            testHSource.prepareItems = () => {
+               return new collection.RecordSet({ rawData: Clone(defaultItems[1]) });
+            };
+            config.source[1].editorOptions.source = testHSource;
+            view._beforeMount(config).addCallback(function(state) {
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
                assert.isUndefined(view._configs.document);
                assert.isOk(!view._configs.state.sourceController);
+               assert.isUndefined(state.configs.state.source);
                done();
             });
          });
@@ -963,6 +978,28 @@ define(
                assert.deepStrictEqual(view._source[1].value, defaultSource[1].resetValue);
                assert.deepStrictEqual(view._displayText, {document: {}, state: {}});
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
+            });
+
+            it('_resultHandler closed', function() {
+               let openerClosed = false;
+               let eventResult = {
+                  action: 'itemClick',
+                  id: 'state',
+                  selectedKeys: [2]
+               };
+               view._filterPopupOpener = {
+                  close: () => {
+                     openerClosed = true;
+                  }
+               };
+
+               view._resultHandler(eventResult);
+               assert.isTrue(openerClosed);
+
+               view._options.detailPanelOpenMode = 'stack';
+               openerClosed = false;
+               view._resultHandler(eventResult);
+               assert.isFalse(openerClosed);
             });
 
             it('_resultHandler applyClick', function() {

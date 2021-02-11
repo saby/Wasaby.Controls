@@ -4,6 +4,7 @@ import { RecordSet } from 'Types/collection';
 import { detection } from 'Env/Env';
 import {assert} from 'chai';
 import * as sinon from 'sinon';
+import {SyntheticEvent} from 'UI/Vdom';
 
 const browserData = [
     {
@@ -107,14 +108,52 @@ describe('Controls/browser:Browser', () => {
                 await browser._beforeMount(options);
                 assert.ok(browser._searchValue === 'test');
                 assert.ok(browser._inputSearchValue === 'test');
+                assert.ok(browser._viewMode === 'search');
             });
 
             it('source returns error', async () => {
                 let options = getBrowserOptions();
-                options.source.query = () => Promise.reject(new Error('source error'));
+                options.source.query = () => {
+                    const error = new Error();
+                    error.processed = true;
+                    return Promise.reject(error);
+                };
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
                 assert.ok(browser._dataOptionsContext.source === options.source);
+            });
+
+            it('_beforeMount with receivedState and dataLoadCallback', async () => {
+                const receivedState = {
+                   items: new RecordSet(),
+                   filterItems: [
+                       {
+                           name: 'filterField',
+                           value: 'filterValue',
+                           textValue: 'filterTextValue'
+                       }
+                   ]
+                };
+                let options = getBrowserOptions();
+                let dataLoadCallbackCalled = false;
+
+                options.filterButtonSource = [
+                    {
+                        name: 'filterField',
+                        value: '',
+                        textValue: ''
+                    }
+                ];
+                options.dataLoadCallback = () => {
+                    dataLoadCallbackCalled = true;
+                };
+                options.filter = {};
+                const browser = getBrowser(options);
+                await browser._beforeMount(options, {}, receivedState);
+                browser.saveOptions(options);
+
+                assert.ok(dataLoadCallbackCalled);
+                assert.deepStrictEqual(browser._filter, {filterField: 'filterValue'});
             });
         });
 
@@ -183,7 +222,11 @@ describe('Controls/browser:Browser', () => {
                     const browser = getBrowser(options);
                     await browser._beforeMount(options, {});
                     browser.saveOptions(options);
-                    options.source.query = () => Promise.reject(new Error());
+                    options.source.query = () => {
+                        const error = new Error();
+                        error.processed = true;
+                        return Promise.reject(error);
+                    };
 
                     await browser._search({}, 'test');
                     assert.isTrue(dataErrorProcessed);
@@ -211,6 +254,26 @@ describe('Controls/browser:Browser', () => {
                     assert.ok(browser._loading);
                     await searchPromise;
                     assert.ok(!browser._loading);
+                    assert.ok(browser._searchValue === 'test');
+
+                    //search with same value
+                    searchPromise = browser._search({}, 'test');
+                    assert.ok(browser._loading);
+                    await searchPromise;
+                    assert.ok(!browser._loading);
+                });
+            });
+
+            describe('_searchReset', () => {
+                it('_searchReset while loading', async () => {
+                    const options = getBrowserOptions();
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+
+                    browser._sourceController.reload();
+                    browser._searchReset({} as SyntheticEvent);
+                    assert.ok(!browser._sourceController.isLoading());
                 });
             });
         });
@@ -265,7 +328,9 @@ describe('Controls/browser:Browser', () => {
         it('source returns error', async () => {
             const options = getBrowserOptions();
             options.source.query = () => {
-                return Promise.reject(new Error('testError'));
+                const error = new Error('testError');
+                error.processed = true;
+                return Promise.reject(error);
             };
             const browser = getBrowser(options);
 
@@ -379,7 +444,11 @@ describe('Controls/browser:Browser', () => {
             let options = getBrowserOptions();
             const browser = getBrowser();
 
-            options.source.query = () => Promise.reject(new Error('testError'));
+            options.source.query = () => {
+                const error = new Error();
+                error.processed = true;
+                return Promise.reject(error);
+            };
             await browser._beforeMount(options);
 
             function update() {
@@ -397,7 +466,11 @@ describe('Controls/browser:Browser', () => {
 
             options = {...options};
             options.source = new Memory();
-            options.source.query = () => Promise.reject(new Error('testError'));
+            options.source.query = () => {
+                const error = new Error();
+                error.processed = true;
+                return Promise.reject(error);
+            };
             await browser._beforeUpdate(options);
             assert.ok(browser._errorRegister);
         });

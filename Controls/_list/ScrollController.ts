@@ -664,7 +664,8 @@ export default class ScrollController {
     }
 
     calculateVirtualScrollHeight(): number {
-        return this._virtualScroll.calculateVirtualScrollHeight();
+        return Math.max(this._virtualScroll.calculateVirtualScrollHeight(),
+                        this._viewHeight + this._placeholders.top + this._placeholders.bottom);
     }
     setResetInEnd(resetInEnd: boolean) {
         this._resetInEnd = resetInEnd;

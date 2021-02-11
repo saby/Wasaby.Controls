@@ -1,6 +1,8 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {ActualApi, simpleCssStyleGeneration, IButton, IButtonOptions} from 'Controls/buttons';
 import ToggleButtonTemplate = require('wml!Controls/_toggle/Button/Button');
+import 'css!Controls/buttons';
+import 'css!Controls/toggle';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {
         IFontColorStyle,
@@ -48,10 +50,10 @@ export interface IToggleButtonOptions extends
  * @extends UI/Base:Control
  * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * @implements Control
  * s/_interface/IHeight
  * @implements Controls/_interface/ITooltip
@@ -71,10 +73,10 @@ export interface IToggleButtonOptions extends
  * @extends UI/Base:Control
  * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * @implements Controls/_interface/IHeight
  * @implements Controls/_interface/ITooltip
  * 
@@ -164,7 +166,7 @@ class ToggleButton extends Control<IToggleButtonOptions> implements IButton,
         this._calculateState(newOptions);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/toggle', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {

@@ -1056,6 +1056,20 @@ define([
 
       describe('_beforeUpdate', () => {
 
+         it('_beforeUpdate with expandedItems and without source', async() => {
+            let options = {
+               expandedItems: [],
+               keyProperty: 'id'
+            };
+            const treeControl = await correctCreateTreeControlAsync(options);
+
+            options = { ...options };
+            options.expandedItems = ['testId'];
+            assert.doesNotThrow(() => {
+               treeControl._beforeUpdate(options);
+            });
+         });
+
          it('_afterReloadCallback called after data loaded by sourceController', async () => {
             const source = new sourceLib.Memory();
             const items = new collection.RecordSet({
@@ -1143,6 +1157,7 @@ define([
             source: new sourceLib.Memory()
          };
          options.sourceController = new dataSource.NewSourceController({...options});
+         options.sourceController.setItems(new collection.RecordSet());
          var
              hasMore = false,
              isIndicatorHasBeenShown = false,

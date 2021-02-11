@@ -733,6 +733,11 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
             assert.deepEqual(toArrayKeys(res.get(null)), []);
             assert.deepEqual(toArrayKeys(res.get(false)), [1, 2, 3, 4, 6]);
          });
+
+         it('selectAll', () => {
+            const result = strategy.selectAll({ selected: [], excluded: [] });
+            assert.deepEqual(result, { selected: [null], excluded: [null] });
+         });
       });
 
       describe('node', () => {
