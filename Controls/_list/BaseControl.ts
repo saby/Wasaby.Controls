@@ -1764,7 +1764,9 @@ const _private = {
                 }
             }
 
-            if (_private.hasMarkerController(self)) {
+            const handleMarker = action === IObservable.ACTION_RESET
+                && (self._options.markerVisibility === 'visible' || self._options.markedKey !== undefined);
+            if (_private.hasMarkerController(self) || handleMarker) {
                 const markerController = _private.getMarkerController(self);
 
                 let newMarkedKey;
