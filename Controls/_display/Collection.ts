@@ -45,23 +45,23 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * Возможные значения доступности чекбокса
+ * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @class
  * @public
  */
 const MultiSelectAccessibility = {
     /**
-     * Чекбокс виден и с ним можно взаимодействовать
+     * Чекбокс виден и с ним можно взаимодействовать.
      */
     enabled: true,
     /**
-     * Чекбокс виден, но с ним нельзя взаимодействовать
+     * Чекбокс виден, но с ним нельзя взаимодействовать.
      */
     disabled: false,
     /**
      * Чекбокс скрыт
      */
-    hidden: null
+    hidden: null.
 };
 export {MultiSelectAccessibility};
 
