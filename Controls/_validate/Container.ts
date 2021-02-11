@@ -166,7 +166,10 @@ class ValidateContainer extends Control<IValidateContainerOptions> {
 
             const InfoboxClassName: string = 'controls-InfoBoxTemplate';
             const {relatedTarget} = event.nativeEvent;
-            const isFocusOutToInfobox: boolean = !!(relatedTarget as HTMLElement).closest(`.${InfoboxClassName}`);
+            let isFocusOutToInfobox: boolean;
+            if (relatedTarget) {
+                isFocusOutToInfobox = !!(relatedTarget as HTMLElement).closest(`.${InfoboxClassName}`);
+            }
             // Если фокус ушел в связанную подсказку, то дадим время для закрытия. Нужно чтобы внутри окна могли
             // отработать обработчики на клик, если таковые имеются.
             if (isFocusOutToInfobox) {
