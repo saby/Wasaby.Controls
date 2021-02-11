@@ -21,6 +21,8 @@ import {TouchContextField} from 'Controls/context';
 import {RegisterClass} from 'Controls/event';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 
+import 'css!Controls/CommonClasses';
+
 // Нужно чтобы oldCss прилетал первым на страницу. Есть контролы (например itemsActions), стили которыйх
 // Завязаны на порядок css.
 import 'css!theme?Controls/Application/oldCss';
