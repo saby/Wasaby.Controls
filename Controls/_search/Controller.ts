@@ -92,6 +92,7 @@ export default class Container extends Control<IContainerOptions> {
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
    private _inputSearchValue: string = '';
+   private _loading: boolean = false;
 
    private _searchController: SearchController = null;
 
@@ -144,6 +145,7 @@ export default class Container extends Control<IContainerOptions> {
       const options = {...newOptions, ...context.dataOptions};
       const searchValueChanged = newOptions.searchValue !== undefined &&
           (this._options.searchValue !== newOptions.searchValue && this._searchValue !== newOptions.searchValue);
+      let updateResult;
 
       if (newOptions.root !== this._options.root) {
          this._root = newOptions.root;
@@ -163,13 +165,14 @@ export default class Container extends Control<IContainerOptions> {
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
          }
-         const updateResult = this._searchController.update(options);
+         updateResult = this._searchController.update(options);
 
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
             this._setSearchValue(newOptions.searchValue);
          } else if (updateResult instanceof Promise) {
+            this._loading = true;
             updateResult.catch((error: Error & {
                isCancelled?: boolean;
             }) => {
@@ -182,6 +185,8 @@ export default class Container extends Control<IContainerOptions> {
       if (this._sourceController) {
          this._sourceController.updateOptions(this._getSourceControllerOptions());
       }
+
+      return updateResult;
    }
 
    private _getSourceControllerOptions(): ISourceControllerOptions {
@@ -223,6 +228,7 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _search(event: SyntheticEvent, validatedValue: string): void {
       this._inputSearchValue = validatedValue;
+      this._loading = true;
       this._startSearch(validatedValue, this._options)
           .catch((error: Error & {
              isCancelled?: boolean;
@@ -304,6 +310,7 @@ export default class Container extends Control<IContainerOptions> {
       if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
          this._updateParams(this._searchController.getSearchValue());
          this._notify('filterChanged', [this._searchController.getFilter()]);
+         this._loading = false;
       }
 
       this._path = data?.getMetaData().path ?? null;
