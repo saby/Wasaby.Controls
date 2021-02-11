@@ -16,6 +16,7 @@
  * @includes TileImagePosition Controls/_newBrowser/interfaces/IBrowserViewConfig
  * @includes IBrowserViewConfig Controls/_newBrowser/interfaces/IBrowserViewConfig
  * @includes IMasterOptions Controls/_newBrowser/interfaces/IMasterOptions
+ * @includes MasterVisibilityEnum Controls/_newBrowser/interfaces/MasterVisibilityEnum
  * @includes IDetailOptions Controls/_newBrowser/interfaces/IDetailOptions
  * @includes DetailViewMode Controls/_newBrowser/interfaces/IDetailOptions
  * @includes IRootsData Controls/_newBrowser/interfaces/IRootsData
@@ -36,7 +37,7 @@ export {
 
 export {default as Browser} from 'Controls/_newBrowser/Browser';
 export {IOptions} from './_newBrowser/interfaces/IOptions';
-export {IMasterOptions} from './_newBrowser/interfaces/IMasterOptions';
+export {IMasterOptions, MasterVisibilityEnum} from './_newBrowser/interfaces/IMasterOptions';
 export {IDetailOptions, DetailViewMode} from './_newBrowser/interfaces/IDetailOptions';
 export {IRootsData, BeforeChangeRootResult} from './_newBrowser/interfaces/IRootsData';
 export {
