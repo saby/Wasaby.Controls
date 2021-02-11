@@ -3745,6 +3745,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+        this._notify('register', ['dataError', this, this._onDataError], {bubbling: true});
 
         // TODO удалить после того как избавимся от onactivated
         if (_private.hasMarkerController(this)) {
@@ -3928,6 +3929,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (newOptions.sourceController) {
             const items = newOptions.sourceController.getItems();
+            const loadError = newOptions.sourceController.getLoadError();
 
             if (this._options.sourceController !== newOptions.sourceController) {
                 this._sourceController = newOptions.sourceController;
@@ -3958,7 +3960,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
 
-            if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
+            if (this._loadedBySourceController && !loadError) {
                 if (this._listViewModel) {
                     this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController));
                 }
@@ -3967,6 +3969,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
+            } else if (loadError) {
+
             }
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
@@ -4336,6 +4340,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
+        this._notify('unregister', ['dataError', this], {bubbling: true});
 
         this._unregisterMouseMove();
         this._unregisterMouseUp();
@@ -5525,7 +5530,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.getPortionedSearch(this).abortSearch();
     },
 
-    _onDataError(event: unknown, errorConfig: IErrbackConfig): void {
+    _onDataError(errorConfig: IErrbackConfig): void {
         _private.processError(this, {
             error: errorConfig.error,
             mode: errorConfig.mode || dataSourceError.Mode.dialog
