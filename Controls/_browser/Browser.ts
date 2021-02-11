@@ -687,17 +687,17 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    private _searchReset(event: SyntheticEvent): void {
+    private _searchReset(event: SyntheticEvent): Promise<void> {
         if (this._sourceController) {
             this._sourceController.cancelLoading();
         }
-        this._getSearchController().then((searchController) => {
-            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
+        return this._getSearchController().then((searchController) => {
+            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch && this._options.startingWith === 'current') {
                 this._root = this._rootBeforeSearch;
-                this._rootBeforeSearch = null;
                 searchController.setRoot(this._root);
                 this._notify('rootChanged', [this._root]);
             }
+            this._rootBeforeSearch = null;
             this._updateFilter(searchController);
         });
     }
