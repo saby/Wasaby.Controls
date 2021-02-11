@@ -255,6 +255,12 @@ describe('Controls/browser:Browser', () => {
                     await searchPromise;
                     assert.ok(!browser._loading);
                     assert.ok(browser._searchValue === 'test');
+
+                    //search with same value
+                    searchPromise = browser._search({}, 'test');
+                    assert.ok(browser._loading);
+                    await searchPromise;
+                    assert.ok(!browser._loading);
                 });
             });
 
