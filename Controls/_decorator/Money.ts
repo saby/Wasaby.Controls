@@ -15,7 +15,7 @@ import {Logger} from 'UI/Utils';
 import {descriptor, DescriptorValidator} from 'Types/entity';
 import splitIntoTriads from 'Controls/_decorator/inputUtils/splitIntoTriads';
 import numberToString from 'Controls/_decorator/inputUtils/toString';
-
+import { abbreviateNumber } from 'Controls/_decorator/resources/Formatter';
 // tslint:disable-next-line:ban-ts-ignore
 //@ts-ignore
 import * as template from 'wml!Controls/_decorator/Money/Money';
@@ -81,13 +81,10 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     private _useGrouping: boolean;
     protected _tooltip: string;
     private _parsedNumber: IPaths;
+    private _abbreviatedNumber: string;
     private _fontColorStyle: string;
     private _fontSize: string;
-    private _readOnly: boolean;
     private _fontWeight: string;
-    private _crossedOut: boolean;
-    private _useAbbreviation: boolean;
-    private _abbreviatedNumber: string;
 
     readonly '[Controls/_interface/ITooltip]': boolean = true;
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
@@ -117,19 +114,13 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
         const value = options.value;
         const useGrouping = options.useGrouping;
-        const stroked = options.stroked;
-        const abbreviationType = options.abbreviationType;
 
         if (
             this._value !== value
             || this._useGrouping !== useGrouping
-            || this._crossedOut !== stroked
-            || this._useAbbreviation !== abbreviationType
         ) {
             this._value = value;
             this._useGrouping = useGrouping;
-            this._crossedOut = stroked;
-            this._useAbbreviation = abbreviationType;
 
             return true;
         }
@@ -156,25 +147,6 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
         };
     }
 
-    private _abbreviateNumber(value: TValue): string {
-        if (value >= 1000000000000) {
-            return this._intlFormat(value / 1000000000000) + ' трлн';
-        }
-        if (value >= 1000000000) {
-            return this._intlFormat(value / 1000000000) + ' млрд';
-        }
-        if (value >= 1000000) {
-            return this._intlFormat(value / 1000000) + ' млн';
-        }
-        if (value >= 1000) {
-            return this._intlFormat(value / 1000) + ' тыс.';
-        }
-    }
-
-    private _intlFormat(num: number): string {
-        return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
-    }
-
     private _setFontState(options: IMoneyOptions): void {
         this._fontSize = options.fontSize;
         this._fontWeight = options.fontWeight;
@@ -185,14 +157,15 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
         this._setFontState(options);
         this._changeState(options, true);
         this._parsedNumber = this._parseNumber();
+        this._abbreviatedNumber = abbreviateNumber(options.value, options.abbreviationType);
         this._tooltip = this._getTooltip(options);
-        this._abbreviatedNumber = this._abbreviateNumber(this._value);
     }
 
     protected _beforeUpdate(newOptions: IMoneyOptions): void {
         this._setFontState(newOptions);
         if (this._changeState(newOptions, false)) {
             this._parsedNumber = this._parseNumber();
+            this._abbreviatedNumber = abbreviateNumber(newOptions.value, newOptions.abbreviationType);
         }
         this._tooltip = this._getTooltip(newOptions);
     }

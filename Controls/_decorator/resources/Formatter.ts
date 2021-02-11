@@ -1,6 +1,9 @@
 import {IText, pasteWithRepositioning} from './Util';
 import {IFormat, IDelimiterGroups, IPairDelimiterData, ISingleDelimiterData} from './FormatBuilder';
 
+type TValue = string | number | null;
+type TAbbreviationType = 'none' | 'short' | 'long';
+
 /**
  * Разобрать значение на группы.
  * Успешный рабор будет, только в том случае, если значение полностью подходит формату маски.
@@ -142,4 +145,26 @@ export function formatData(format: IFormat, cleanText: IText): IText {
     });
 
     return text;
+}
+
+export function abbreviateNumber(value: TValue, abbreviationType: TAbbreviationType): string {
+    if (abbreviationType === 'none') {
+        return value.toString();
+    }
+    if (value >= 1000000000000 || value <= -1000000000000) {
+        return intlFormat(value / 1000000000000) + `${abbreviationType === 'long' ? ' трлн' : 'Т'}`;
+    }
+    if (value >= 1000000000 || value <= -1000000000) {
+        return intlFormat(value / 1000000000) + `${abbreviationType === 'long' ? ' млрд' : 'Г'}`;
+    }
+    if (value >= 1000000 || value <= -1000000) {
+        return intlFormat(value / 1000000) + `${abbreviationType === 'long' ? ' млн' : 'М'}`;
+    }
+    if (value >= 1000 || value <= -1000) {
+        return intlFormat(value / 1000) + `${abbreviationType === 'long' ? ' тыс.' : 'К'}`;
+    }
+}
+
+function intlFormat(num: number): string {
+    return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
 }
