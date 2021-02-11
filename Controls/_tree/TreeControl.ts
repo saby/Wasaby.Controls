@@ -1121,7 +1121,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         return hasPrevLeaf ? 'middle' : 'first';
     },
-    goToNext(listModel?, mController?): void {
+    goToNext(listModel?, mController?): Promise {
         return new Promise((resolve) => {
             const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
@@ -1151,6 +1151,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                     }
                 } else {
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    this.scrollToItem(this._tempItem, true);
                     resolve();
                 }
             } else {
@@ -1159,7 +1160,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         });
     },
-    goToPrev(listModel?, mController?): void {
+    goToPrev(listModel?, mController?): Promise {
         return new Promise((resolve) => {
             const item = this.getPrevItem(this._tempItem || this._currentItem, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
@@ -1191,6 +1192,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    this.scrollToItem(itemKey, false);
                     resolve();
                 }
             } else {
