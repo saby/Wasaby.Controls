@@ -12,7 +12,6 @@ import {IList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
 import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
-import {Memory} from 'Types/source';
 import 'css!Controls/toggle';
 
 export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOptions, INavigationOptions,
@@ -67,7 +66,6 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _columns: object[] = null;
     protected _stackOpener: StackOpener = null;
     protected _items: RecordSet = null;
-    protected _source: Memory = null;
     protected _selectedKeys: string[]|number[] = [];
     private _itemsReadyCallback: Function = null;
 
@@ -75,7 +73,6 @@ class ListEditor extends Control<IListEditorOptions> {
         this._selectedKeys = options.propertyValue;
         this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
-        this._source = options.source;
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
@@ -85,9 +82,6 @@ class ListEditor extends Control<IListEditorOptions> {
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
             this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
-        }
-        if (this._options.source !== options.source) {
-            this._source = options.source;
         }
     }
 
@@ -178,7 +172,7 @@ class ListEditor extends Control<IListEditorOptions> {
         const record = this._items.getRecordById(itemKey);
         if (!record) {
             const moveToKey = this._items.at(index).getKey();
-            this._source.move(item, moveToKey);
+            this._options.source.move(item, moveToKey);
         }
     }
 
