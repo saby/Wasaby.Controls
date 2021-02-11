@@ -435,9 +435,9 @@ export default class Controller {
 
         if (direction === 'up') {
             this._prependItems(items);
-        } else if (direction === 'down') {
+        } else if (direction === 'down' && this._items) {
             this._appendItems(items);
-        } else if (key !== this._root && this._items) {
+        } else if (!direction && key !== this._root && this._items) {
             this._mergeItems(items);
         } else {
             this._setItems(items);

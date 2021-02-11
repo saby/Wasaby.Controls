@@ -10,6 +10,7 @@ import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import ColumnScrollViewController, {COLUMN_SCROLL_JS_SELECTORS} from './ViewControllers/ColumnScroll';
+import { _Options } from 'UI/Vdom';
 
 const GridView = ListView.extend({
     _template: GridTemplate,
@@ -83,7 +84,8 @@ const GridView = ListView.extend({
             this._listModel.setSorting(newOptions.sorting);
         }
 
-        if (this._isFooterChanged(this._options, newOptions) || columnsChanged) {
+        if (_Options.getChangedOptions(newOptions.footer, this._options.footer) ||
+            _Options.getChangedOptions(newOptions.footerTemplate, this._options.footerTemplate)) {
             this._listModel.setFooter(newOptions.footerTemplate, newOptions.footer);
         }
 
@@ -422,26 +424,6 @@ const GridView = ListView.extend({
     _resizeHandler(): void {
         if (this._columnScrollViewController && this.isColumnScrollVisible()) {
             this._actualizeColumnScroll(this._options, this._options);
-        }
-    },
-
-    _isFooterChanged(oldOptions, newOptions): boolean {
-        if (
-           // Подвал появился/скрылся или индикатор загрузки в подвале появился, скрылся
-           (!oldOptions.footer && newOptions.footer) ||
-           (oldOptions.footer && !newOptions.footer) ||
-           (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
-           (oldOptions.footerTemplate && !newOptions.footerTemplate)
-        ) {
-            return true;
-        } else if (
-           // Подвала не было и нет
-           !oldOptions.footer && !newOptions.footer &&
-           !oldOptions.footerTemplate && !newOptions.footerTemplate
-        ) {
-            return false;
-        } else {
-            return false;
         }
     }
 

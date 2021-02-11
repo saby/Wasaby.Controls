@@ -48,10 +48,10 @@ export interface IToggleButtonOptions extends
  * @extends UI/Base:Control
  * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * @implements Control
  * s/_interface/IHeight
  * @implements Controls/_interface/ITooltip
@@ -71,10 +71,10 @@ export interface IToggleButtonOptions extends
  * @extends UI/Base:Control
  * @implements Controls/_buttons/interface/IButton
  * @implements Controls/_toggle/interface/ICheckable
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IIconStyle
  * @implements Controls/_interface/IHeight
  * @implements Controls/_interface/ITooltip
  * 
