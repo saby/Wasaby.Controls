@@ -23,7 +23,7 @@ export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | '
     'text-2xl' | 'text-xl' | 'text-l' | 'text-m' | 'text-xs';
 
 /**
- * Шаблон, который по умолчанию используется для отображения ячеек в контроле {@link Controls/grid:View Таблица}.
+ * Шаблон, который по умолчанию используется для отображения ячеек в {@link Controls/grid:View таблице}.
  *
  * @class Controls/_grid/interface/ColumnTemplate
  * @author Авраменко А.С.

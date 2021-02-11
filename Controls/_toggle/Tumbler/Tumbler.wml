@@ -1,5 +1,5 @@
 <div class="controls-Tumbler controls_theme-{{_options.theme}}">
-    <div class="controls-Tumbler__wrapper" on:mouseenter="_mouseEnterHandler()">
+    <div class="controls-Tumbler__wrapper" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()">
         <ws:for data="index, itemData in _options.items">
             <div class="controls-Tumbler__button
                         {{itemData[_options.keyProperty] !== _options.selectedKey && !_options.readOnly? 'controls-Tumbler__button-underline'}}
