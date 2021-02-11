@@ -3737,7 +3737,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         const scrollParams = {
             scrollTop: this._scrollTop,
-            scrollHeight: _private.getViewSize(this, true),
+            scrollHeight: _private.getViewSize(this, true) - headersHeight,
             clientHeight: this._viewportSize - headersHeight
         };
         /**

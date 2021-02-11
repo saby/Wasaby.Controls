@@ -2093,7 +2093,7 @@ define([
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn`t created');
 
             // прокручиваем к низу, проверяем состояние пэйджинга
-            lists.BaseControl._private.handleListScrollSync(ctrl, 600);
+            lists.BaseControl._private.handleListScrollSync(ctrl, 640);
 
             assert.deepEqual({
                     begin: "visible",
