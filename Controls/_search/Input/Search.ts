@@ -80,6 +80,7 @@ class Search extends Base {
     }
 
     protected _afterMount(): void {
+        super._afterMount.apply(this, arguments);
         if (this._options.useStore) {
             this._resetCommandCallbackId = Store.declareCommand('resetSearch', this._resetSearch.bind(this));
         }

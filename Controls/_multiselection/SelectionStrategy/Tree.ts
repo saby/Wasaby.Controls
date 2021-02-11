@@ -725,7 +725,7 @@ export class TreeSelectionStrategy implements ISelectionStrategy {
          case 'allBySelectAction':
             return true;
          case 'leaf':
-            return !isNode || this._recursiveSelection && isNode;
+            return !isNode || this._recursiveSelection && isNode || item.isRoot();
          case 'node':
             return isNode;
       }

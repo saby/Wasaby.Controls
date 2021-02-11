@@ -196,7 +196,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
                 const controllerState = this._sourceController.getState();
                 this._updateContext(controllerState);
-                this._loading = false;
                 return reloadResult;
              })
              .catch((error) => {
@@ -208,6 +207,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                     }
                 );
                 return error;
+             })
+             .finally(() => {
+                this._loading = false;
              });
       } else if (isChanged) {
          const controllerState = this._sourceController.getState();

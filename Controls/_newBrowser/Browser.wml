@@ -17,6 +17,7 @@
             root="{{masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
             bind:markedKey="masterMarkedKey"
+            dataLoadCallback="{{_onMasterLoaded}}"
          />
       </Controls.scroll:Container>
    </ws:master>
@@ -38,6 +39,7 @@
 
             on:arrowClick="_onDetailArrowClick()"
             on:itemClick="_onDetailItemClick()"
+            on:viewModeChanged="_onDetailExplorerChangedViewMode()"
          >
             <ws:afterBreadCrumbsTemplate>
                <ws:if data="{{_options.detail.afterBreadCrumbsTemplate}}">

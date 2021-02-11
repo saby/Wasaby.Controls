@@ -110,6 +110,9 @@ define(
                   let result;
 
                   scroll._scrollbars = {
+                     vertical: {
+                        isVisible: () => false
+                     },
                      setOffsets() {}
                   };
                   scroll._shadows = {

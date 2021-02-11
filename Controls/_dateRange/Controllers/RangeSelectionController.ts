@@ -265,6 +265,9 @@ var Component = BaseControl.extend({
          if (_private.updateDisplayedRange(this)) {
             this._notify('selectionHoveredValueChanged', [this._selectionHoveredValue]);
             this._notify('selectionChanged', [this._displayedStartValue, this._displayedEndValue]);
+            this._startValue = this._displayedStartValue;
+            this._endValue = this._displayedEndValue;
+            this._notify('rangeChanged', [this._startValue, this._endValue]);
          }
       }
    },
