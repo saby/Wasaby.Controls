@@ -352,7 +352,6 @@ const _private = {
         if (!isInfinityNavigation) {
             return false;
         }
-
         return true;
     },
 
