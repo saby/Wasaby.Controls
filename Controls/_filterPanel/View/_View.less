@@ -49,8 +49,8 @@
 }
 
 .controls-FilterViewPanel__groupExpander_theme-@{themeName}:hover,
-.controls-FilterViewPanel__groupReset_theme-@{themeName}:hover,
-.controls-FilterViewPanel__groupReset-title_theme-@{themeName}:hover {
+.controls-FilterViewPanel__groupReset-icon_theme-@{themeName}:hover,
+.controls-FilterViewPanel__groupReset_theme-@{themeName}:hover {
    color: @button_color-hover_filterViewPanel;
 }
 
@@ -75,12 +75,12 @@
    }
 }
 
-.controls-FilterViewPanel__groupReset-title_theme-@{themeName} {
-   color: @group_color_filterViewPanel;
+.controls-FilterViewPanel__groupReset_theme-@{themeName} {
    cursor: pointer;
+   color: @group_color_filterViewPanel;
 }
 
-.controls-FilterViewPanel__groupReset_theme-@{themeName} {
+.controls-FilterViewPanel__groupReset-icon_theme-@{themeName} {
    .icon-size(@reset-button_icon-size_filterView);
    display: flex;
    color: @reset-button_icon-color_filterView;

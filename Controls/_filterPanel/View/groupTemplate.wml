@@ -13,11 +13,11 @@
               {{!collapsedGroups[item] ? 'icon-CollapseLight' : 'icon-ExpandLight'}}
               controls-FilterViewPanel__groupExpander_theme-{{theme}}"></div>
       </div>
-      <div class="controls-FilterViewPanel__groupReset controls-FilterViewPanel__groupReset-title_theme-{{_options.theme}}"
+      <div class="controls-FilterViewPanel__groupReset controls-FilterViewPanel__groupReset_theme-{{_options.theme}}"
            ws-no-focus="{{true}}"
            title="{[Сбросить фильтр]}">
          <ws:if data="{{collapsedGroups[item] && _options.groupItems[item].textValue.length}}">
-            <span class="icon-CloseNew controls-FilterViewPanel__groupReset_theme-{{_options.theme}}"> </span>
+            <span class="icon-CloseNew controls-FilterViewPanel__groupReset-icon_theme-{{_options.theme}}"> </span>
          </ws:if>
          <ws:else>
             {{_options.resetCaption}}
