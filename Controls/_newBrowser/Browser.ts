@@ -403,6 +403,32 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     //region ⇑ events handlers
+    private _onDetailDataLoadCallback(items: RecordSet, direction: string): void {
+        // Не обрабатываем последующие загрузки страниц. Нас интересует только
+        // загрузка первой страницы
+        if (direction) {
+            return;
+        }
+
+        if (this._waitingSearchResult) {
+            this._forceUpdate();
+        }
+
+        this._processItemsMetadata(items);
+
+        // Если после применения конфигурации мастер скрыт, то руками резолвим его лоадер
+        if (this._masterVisibility === MasterVisibilityEnum.hidden) {
+            this._runMasterLoadResolver();
+        }
+
+        // Если есть промис, ожидающий загрузки данных в detail, то зарезолвим его
+        if (this._detailLoadResolver) {
+            this._detailLoadResolver();
+            this._detailLoadResolver = null;
+            this._detailLoadPromise = null;
+        }
+    }
+
     /**
      * Обрабатываем смену viewMode в explorer т.к. она может быть асинхронная если после загрузки
      * переключаются в плиточный режим представления, т.к. шаблон и модель для плитки подтягиваются
@@ -507,23 +533,10 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             ...options.detail,
             ...this._detailSourceOptions,
             dataLoadCallback: (items: RecordSet, direction: string) => {
-                // Если идет подгрузка страницы, то дальнейшая обработка не нужна
-                if (direction) {
-                    return;
-                }
+                this._onDetailDataLoadCallback(items, direction);
 
-                this._processItemsMetadata(items);
-
-                // Если после применения конфигурации мастер скрыт, то руками резолвим его лоадер
-                if (this._masterVisibility === MasterVisibilityEnum.hidden) {
-                    this._runMasterLoadResolver();
-                }
-
-                // Если есть промис, ожидающий загрузки данных в detail, то зарезолвим его
-                if (this._detailLoadResolver) {
-                    this._detailLoadResolver();
-                    this._detailLoadResolver = null;
-                    this._detailLoadPromise = null;
+                if (options.detail.dataLoadCallback) {
+                    options.detail.dataLoadCallback(items, direction);
                 }
             }
         } as ISourceControllerOptions;
