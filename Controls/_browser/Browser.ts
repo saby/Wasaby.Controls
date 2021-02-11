@@ -178,6 +178,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (isNewEnvironment()) {
                 this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
             }
+            if (options.source && options.dataLoadCallback) {
+                options.dataLoadCallback(receivedState.items);
+            }
         } else {
             return this._filterController.loadFilterItemsFromHistory()
                 .then((filterItems) => {
@@ -286,13 +289,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             methodResult = sourceController.reload()
                .then((items) => {
                    this._items = sourceController.getItems();
-                   this._loading = false;
                    return items;
                }, (error) => {
                    this._processLoadError(error);
                    return error;
                })
                .finally((result) => {
+                   this._loading = false;
                    this._afterSourceLoad(sourceController, newOptions);
                    return result;
                })
@@ -706,6 +709,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _searchReset(event: SyntheticEvent): void {
+        if (this._sourceController) {
+            this._sourceController.cancelLoading();
+        }
         this._getSearchController().then((searchController) => {
             if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
                 this._root = this._rootBeforeSearch;
@@ -772,7 +778,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._deepReload = undefined;
         }
 
-        if (this._searchController && this._searchController.isSearchInProcess()) {
+        if (this._searchController && this._searchController.getSearchValue() !== this._searchValue) {
             this._loading = false;
             this._searchDataLoad(data, this._searchController.getSearchValue());
         }

@@ -980,6 +980,28 @@ define(
                assert.deepStrictEqual(filterChanged, {'author': 'Ivanov K.K.'});
             });
 
+            it('_resultHandler closed', function() {
+               let openerClosed = false;
+               let eventResult = {
+                  action: 'itemClick',
+                  id: 'state',
+                  selectedKeys: [2]
+               };
+               view._filterPopupOpener = {
+                  close: () => {
+                     openerClosed = true;
+                  }
+               };
+
+               view._resultHandler(eventResult);
+               assert.isTrue(openerClosed);
+
+               view._options.detailPanelOpenMode = 'stack';
+               openerClosed = false;
+               view._resultHandler(eventResult);
+               assert.isFalse(openerClosed);
+            });
+
             it('_resultHandler applyClick', function() {
                let filterChanged;
                view._notify = (event, data) => {
