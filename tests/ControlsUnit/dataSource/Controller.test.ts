@@ -169,6 +169,12 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 5);
         });
 
+        it('load with direction "down"',  async () => {
+            const controller  = getController();
+            await controller.load('down');
+            ok(controller.getItems().getCount() === 4);
+        });
+
         it('load call while loading',  async () => {
             const controller = getController();
             let loadPromiseWasCanceled = false;
