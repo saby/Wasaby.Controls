@@ -869,7 +869,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                 horizontal: 'right'
             },
             hoverController: this._options.hoverController,
-            backgroundStyle: this._options.backgroundStyle
+            backgroundStyle: this._options.backgroundStyle,
+            trigger: this._options.trigger
         };
     }
 

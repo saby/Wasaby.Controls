@@ -13,7 +13,7 @@ import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownCo
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/popup';
 
-interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
+export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
    lazyItemsLoading?: boolean;
    buttonStyle?: string;

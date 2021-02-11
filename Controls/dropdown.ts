@@ -32,7 +32,7 @@
  * @author Крайнов Д.О.
  */
 
-import {default as Button} from 'Controls/_dropdown/Button';
+import {default as Button, IButtonOptions} from 'Controls/_dropdown/Button';
 import {default as _Controller} from 'Controls/_dropdown/_Controller';
 import Combobox = require('Controls/_dropdown/ComboBox');
 import ItemTemplate = require('wml!Controls/_dropdown/itemTemplate');
@@ -51,6 +51,7 @@ export {default as Selector} from 'Controls/_dropdown/Selector';
 
 export {
     Button,
+    IButtonOptions,
     _Controller,
     Combobox,
     ItemTemplate,

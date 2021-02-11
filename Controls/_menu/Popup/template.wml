@@ -95,6 +95,7 @@
                        headingIcon="{{_headingIcon}}"
                        headerTemplate="{{_headerTemplate || _options.headerTemplate}}"
                        backgroundStyle="{{_options.backgroundStyle}}"
+                       trigger="{{_options.trigger}}"
                        theme="{{_options.theme}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"
