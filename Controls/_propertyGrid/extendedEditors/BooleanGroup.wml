@@ -2,7 +2,7 @@
     <ws:for data="index, button in _buttons">
         <Controls.toggle:Button
                 bind:value="_stateOfButtons[index]"
-                attr:class="controls-PropertyGrid__editor_booleanGroup_item{{index === _buttons.length - 1 ? '-last' : ''}}"
+                attr:class="controls-PropertyGrid__editor_booleanGroup_item{{index === _buttons.length - 1 ? '-last' : ''}} {{button.className}}"
                 fontSize="m"
                 inlineHeight="default"
                 viewMode="pushButton"

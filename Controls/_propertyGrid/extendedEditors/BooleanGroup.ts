@@ -10,6 +10,7 @@ export interface IPropertyGridButton {
     tooltip: string;
     icon: string;
     active: boolean;
+    className: string;
 }
 
 interface IOptions extends IEditorOptions, IControlOptions {
