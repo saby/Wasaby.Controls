@@ -43,17 +43,20 @@
    cursor: pointer;
    color: @group_color_filterViewPanel;
    font-size: @group_font-size_filterViewPanel;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
 }
 
 .controls-FilterViewPanel__groupExpander_theme-@{themeName}:hover,
-.controls-FilterViewPanel__groupReset_theme-@{themeName}:hover,
-.controls-FilterViewPanel__groupReset-title_theme-@{themeName}:hover {
+.controls-FilterViewPanel__groupReset-icon_theme-@{themeName}:hover,
+.controls-FilterViewPanel__groupReset_theme-@{themeName}:hover {
    color: @button_color-hover_filterViewPanel;
 }
 
 .controls-PropertyGrid__groupExpander.controls-FilterViewPanel__groupExpander_theme-@{themeName} {
    color: @unaccented_icon-color;
-   margin-left: @group-expander_padding-left_filterViewPanel;
+   margin: 0 @group-expander_horizontal-offset_filterViewPanel;
    cursor: pointer;
    align-self: center;
 }
@@ -62,6 +65,7 @@
    display: flex;
    flex-direction: row;
    height: @group_height_filterViewPanel;
+   overflow: hidden;
 }
 
 .controls-FilterViewPanel__group_theme-@{themeName}:hover {
@@ -71,17 +75,12 @@
    }
 }
 
-.controls-FilterViewPanel__groupReset-title_theme-@{themeName} {
-   display: flex;
-   color: @group_color_filterViewPanel;
+.controls-FilterViewPanel__groupReset_theme-@{themeName} {
    cursor: pointer;
-   flex-shrink: 0;
-   position: absolute;
-   top: @group-close-button_padding-top_filterViewPanel;
-   right: @padding-right_filterViewPanel;
+   color: @group_color_filterViewPanel;
 }
 
-.controls-FilterViewPanel__groupReset_theme-@{themeName} {
+.controls-FilterViewPanel__groupReset-icon_theme-@{themeName} {
    .icon-size(@reset-button_icon-size_filterView);
    display: flex;
    color: @reset-button_icon-color_filterView;
@@ -95,6 +94,12 @@
 .controls-FilterViewPanel__group-wrapper_theme-@{themeName} {
    position: relative;
    padding-left: @padding-left_filterViewPanel;
+}
+
+.controls-FilterViewPanel__group-header_theme-@{themeName} {
+   display: flex;
+   justify-content: space-between;
+   padding-right: @padding-right_filterViewPanel;
 }
 
 .controls-FilterViewPanel__group-result_wrapper {
