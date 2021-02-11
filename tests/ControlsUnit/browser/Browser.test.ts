@@ -122,6 +122,39 @@ describe('Controls/browser:Browser', () => {
                 await browser._beforeMount(options);
                 assert.ok(browser._dataOptionsContext.source === options.source);
             });
+
+            it('_beforeMount with receivedState and dataLoadCallback', async () => {
+                const receivedState = {
+                   items: new RecordSet(),
+                   filterItems: [
+                       {
+                           name: 'filterField',
+                           value: 'filterValue',
+                           textValue: 'filterTextValue'
+                       }
+                   ]
+                };
+                let options = getBrowserOptions();
+                let dataLoadCallbackCalled = false;
+
+                options.filterButtonSource = [
+                    {
+                        name: 'filterField',
+                        value: '',
+                        textValue: ''
+                    }
+                ];
+                options.dataLoadCallback = () => {
+                    dataLoadCallbackCalled = true;
+                };
+                options.filter = {};
+                const browser = getBrowser(options);
+                await browser._beforeMount(options, {}, receivedState);
+                browser.saveOptions(options);
+
+                assert.ok(dataLoadCallbackCalled);
+                assert.deepStrictEqual(browser._filter, {filterField: 'filterValue'});
+            });
         });
 
         describe('searchController', () => {

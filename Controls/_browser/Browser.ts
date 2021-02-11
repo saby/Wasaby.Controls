@@ -177,6 +177,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (isNewEnvironment()) {
                 this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
             }
+            if (options.source && options.dataLoadCallback) {
+                options.dataLoadCallback(receivedState.items);
+            }
         } else {
             return this._filterController.loadFilterItemsFromHistory()
                 .then((filterItems) => {
