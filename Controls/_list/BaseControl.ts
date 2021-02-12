@@ -3900,18 +3900,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.hasSelectionController(this)) {
-            const selectionController = _private.getSelectionController(self, newOptions);
+            _private.updateSelectionController(this, newOptions);
 
+            const selectionController = _private.getSelectionController(self, newOptions);
             const allowClearSelectionBySelectionViewMode =
                 this._options.selectionViewMode === newOptions.selectionViewMode ||
                 newOptions.selectionViewMode !== 'selected';
-            if ((filterChanged || this._options.root !== newOptions.root) && selectionController.isAllSelected(false) &&
+            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            if ((filterChanged || this._options.root !== newOptions.root) && isAllSelected &&
                 allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
-
-            // Обновлять контроллер нужно после проверки выше, иначе не правильно отработает метод isAllSelected
-            _private.updateSelectionController(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
