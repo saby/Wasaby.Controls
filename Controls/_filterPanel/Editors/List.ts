@@ -71,7 +71,7 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
-        this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+        this._setColumns(options.displayProperty, options.propertyValue, options.keyProperty, options.additionalTextProperty);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
     }
 
@@ -81,7 +81,7 @@ class ListEditor extends Control<IListEditorOptions> {
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
-            this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+            this._setColumns(options.displayProperty, options.propertyValue, options.keyProperty, options.additionalTextProperty);
         }
     }
 
@@ -141,15 +141,16 @@ class ListEditor extends Control<IListEditorOptions> {
             needColapse
         };
         this._selectedKeys = value;
-        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.additionalTextProperty);
+        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.keyProperty, this._options.additionalTextProperty);
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
-    protected _setColumns(displayProperty: string, propertyValue: string[]|number[], additionalTextProperty?: string): void {
+    protected _setColumns(displayProperty: string, propertyValue: string[]|number[], keyProperty: string, additionalTextProperty?: string): void {
         this._columns = [{
             template: ColumnTemplate,
             selected: propertyValue,
-            displayProperty
+            displayProperty,
+            keyProperty
         }];
         if (additionalTextProperty) {
             this._columns.push({
