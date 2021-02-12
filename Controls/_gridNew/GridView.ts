@@ -84,8 +84,10 @@ const GridView = ListView.extend({
             this._listModel.setSorting(newOptions.sorting);
         }
 
-        if (_Options.getChangedOptions(newOptions.footer, this._options.footer) ||
-            _Options.getChangedOptions(newOptions.footerTemplate, this._options.footerTemplate)) {
+        // Нужно проверять именно все опции, т.к. проверка на newOptions.footer будет всегда возвращать наличие изменений
+        // https://online.sbis.ru/opendoc.html?guid=0f506fcf-2230-4d08-b902-50445e290727
+        const changes = _Options.getChangedOptions(newOptions, this._options);
+        if (changes && (changes.footer || changes.footerTemplate)) {
             this._listModel.setFooter(newOptions.footerTemplate, newOptions.footer);
         }
 
