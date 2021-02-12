@@ -96,10 +96,11 @@ export default class View extends Control<IControlOptions> {
             this._collapsedGroups = this._collapsedGroups.filter((item) => itemContents !== item);
         } else if (!isResetClick) {
             this._collapsedGroups = this._collapsedGroups.concat(itemContents);
-            displayItem.toggleExpanded();
         }
         if (isResetClick) {
             this._resetFilterItem(displayItem);
+        } else {
+            displayItem.toggleExpanded();
         }
     }
 
