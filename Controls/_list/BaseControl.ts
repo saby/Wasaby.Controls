@@ -1960,8 +1960,6 @@ const _private = {
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-        clickEvent.stopImmediatePropagation();
-        clickEvent.nativeEvent.preventDefault();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose(): void {
@@ -2019,6 +2017,7 @@ const _private = {
 
         // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
         if (!!self._itemActionsController) {
+            event.nativeEvent.preventDefault();
             const item = self._listViewModel.getItemBySourceKey(key) || itemData;
             _private.openItemActionsMenu(self, null, event, item, true);
         }
