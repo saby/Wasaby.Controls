@@ -12,7 +12,7 @@
             footerTemplate="{{_options.footerTemplate || _options.suggestFooterTemplate}}"
             emptyTemplate="{{_options.emptyTemplate}}"
             minSearchLength="{{_options.minSearchLength}}"
-            source="{{_options.suggestSource || _options.source}}"
+            source="{{_isInputVisible(_options) ? (_options.suggestSource || _options.source) : null}}"
             keyProperty="{{_options.suggestKeyProperty || _options.keyProperty}}"
             historyId="{{_options.historyId}}"
             searchParam="{{_options.searchParam}}"

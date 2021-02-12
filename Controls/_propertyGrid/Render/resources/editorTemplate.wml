@@ -19,6 +19,7 @@
                      validationStatus="{{content.validationStatus}}"/>
                   <ws:content>
                      <ws:partial template="{{content.resolvedTemplate}}"
+                                 attr:key="{{collectionItem.getUid()}}"
                                  validationStatus="{{content.validationStatus}}"
                                  propertyValue="{{collectionItem.getPropertyValue()}}"
                                  caption="{{caption}}"
@@ -36,6 +37,7 @@
                                 class="{{item.editorClass}}">
          <ws:partial
             propertyValue="{{collectionItem.getPropertyValue()}}"
+            attr:key="{{collectionItem.getUid()}}"
             template="{{content.resolvedTemplate}}"
             caption="{{caption}}"
             scope="{{collectionItem.getEditorOptions()}}"/>

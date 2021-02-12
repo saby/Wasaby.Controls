@@ -113,7 +113,7 @@ describe('Controls/_search/Input/Container', () => {
          inputContainer.saveOptions(inputContainerOptions);
 
          inputContainer._valueChanged({} as SyntheticEvent, 'testValue2');
-         assert.ok(stubNotify.notCalled);
+         assert.ok(stubNotify.withArgs('search', ['testValue2'], { bubbling: true }).notCalled);
 
          fakeTimer.tick(inputContainerOptions.searchDelay);
          assert.ok(stubNotify.calledWith('search', ['testValue2']));

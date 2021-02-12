@@ -1,4 +1,5 @@
-<div class="controls-FilterViewPanel__group-wrapper controls-FilterViewPanel__group-wrapper_theme-{{_options.theme}}">
+<div class="controls-FilterViewPanel__group-wrapper controls-FilterViewPanel__group-wrapper_theme-{{_options.theme}}
+            {{collapsedGroups[item] ? 'controls-FilterViewPanel__group-wrapper-collapsed_theme-' + _options.theme}}">
    <div class="controls-FilterViewPanel__group-header_theme-{{theme}}">
       <div class="controls-FilterViewPanel__group
               controls-FilterViewPanel__group_theme-{{theme}}" attr:key="group-{{item}}">

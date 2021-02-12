@@ -297,6 +297,10 @@ export default class Controller {
         this._expandedItems = expandedItems;
     }
 
+    getExpandedItems(): TKey[] {
+        return this._expandedItems;
+    }
+
     // FIXME для поддержки nodeSourceControllers в дереве
     calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
         this._updateQueryPropertiesByItems(items, key, undefined, direction);
@@ -387,7 +391,7 @@ export default class Controller {
         direction?: Direction
     ): void {
         if (this._hasNavigationBySource()) {
-            if (this._deepReload) {
+            if (this._deepReload || !direction && this._root === id) {
                 this._destroyNavigationController();
             }
             this._getNavigationController(this._options)
