@@ -715,9 +715,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param itemActionsClass
      * @param itemPadding @deprecated
      * @param theme
-     * @param useNewModel
      */
-    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string {
+    getItemActionPositionClasses(itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string): string {
         const classes = itemActionsClass || ITEMACTIONS_POSITION_CLASSES.bottomRight;
         const result: string[] = [];
         if (itemPadding === undefined) {

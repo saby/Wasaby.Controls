@@ -255,6 +255,12 @@ describe('Controls/browser:Browser', () => {
                     await searchPromise;
                     assert.ok(!browser._loading);
                     assert.ok(browser._searchValue === 'test');
+
+                    //search with same value
+                    searchPromise = browser._search({}, 'test');
+                    assert.ok(browser._loading);
+                    await searchPromise;
+                    assert.ok(!browser._loading);
                 });
             });
 
@@ -268,6 +274,18 @@ describe('Controls/browser:Browser', () => {
                     browser._sourceController.reload();
                     browser._searchReset({} as SyntheticEvent);
                     assert.ok(!browser._sourceController.isLoading());
+                });
+
+                it('_searchReset with startingWith === "current"', async () => {
+                    const options = getBrowserOptions();
+                    options.startingWith = 'current';
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+
+                    browser._rootBeforeSearch = 'testRoot';
+                    await browser._searchReset({} as SyntheticEvent);
+                    assert.isNull(browser._rootBeforeSearch);
                 });
             });
         });

@@ -135,12 +135,12 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre class="brush: js">
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _startValue0: new Date(2019, 0, 0),
  *       _endValue0: new Date(2019, 0, 31),
  *       _startValue1: new Date(2019, 1, 0),
  *       _endValue1: new Date(2019, 1, 31),
- *    });
+ *    }
  * </pre>
  */
 
@@ -166,12 +166,12 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _startValue0: new Date(2019, 0, 0),
  *       _endValue0: new Date(2019, 0, 31),
  *       _startValue1: new Date(2019, 1, 0),
  *       _endValue1: new Date(2019, 1, 31),
- *    });
+ *    }
  * </pre>
  */
 
@@ -197,12 +197,12 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre class="brush: js">
- *    Control.extend({
+ *   class MyControl extends Control<IControlOptions> {
  *       _startValue0: new Date(2019, 0, 0),
  *       _endValue0: new Date(2019, 0, 31),
  *       _startValue1: new Date(2019, 1, 0),
  *       _endValue1: new Date(2019, 1, 31),
- *    });
+ *    }
  * </pre>
  */
 
@@ -228,12 +228,12 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _startValue0: new Date(2019, 0, 0),
  *       _endValue0: new Date(2019, 0, 31),
  *       _startValue1: new Date(2019, 1, 0),
  *       _endValue1: new Date(2019, 1, 31),
- *    });
+ *    }
  * </pre>
  */
 
@@ -261,9 +261,9 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre class="brush: js">
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _bindType: 'normal'
- *    });
+ *    }
  * </pre>
  */
 
@@ -279,9 +279,9 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _bindType: 'normal'
- *    });
+ *    }
  * </pre>
  */
 
@@ -307,12 +307,12 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre class="brush: js">
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _startValue0: new Date(2019, 0, 0),
  *       _endValue0: new Date(2019, 0, 31),
  *       _startValue1: new Date(2019, 1, 0),
  *       _endValue1: new Date(2019, 1, 31),
- *    });
+ *    }
  * </pre>
  */
 
@@ -338,12 +338,12 @@ Object.defineProperty(Component, 'defaultProps', {
  *    </Controls.dateRange:RelationController>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _startValue0: new Date(2019, 0, 0),
  *       _endValue0: new Date(2019, 0, 31),
  *       _startValue1: new Date(2019, 1, 0),
  *       _endValue1: new Date(2019, 1, 31),
- *    });
+ *    }
  * </pre>
  */
 
@@ -356,7 +356,7 @@ Object.defineProperty(Component, 'defaultProps', {
  *    <Controls.dateRange:RelationController on:bindTypeChanged="_bindTypeChangedHandler()"/>
  * </pre>
  * <pre class="brush: js">
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       ...
  *       _bindTypeChangedHandler(bindType) {
  *          if (bindType === 'normal') {
@@ -366,7 +366,7 @@ Object.defineProperty(Component, 'defaultProps', {
  *          }
  *       },
  *       ...
- *    });
+ *    }
  * </pre>
  */
 
@@ -379,7 +379,7 @@ Object.defineProperty(Component, 'defaultProps', {
  *    <Controls.dateRange:RelationController on:bindTypeChanged="_bindTypeChangedHandler()"/>
  * </pre>
  * <pre>
- *    Control.extend({
+ *   class MyControl extends Control<IControlOptions> {
  *       ...
  *       _bindTypeChangedHandler(bindType) {
  *          if (bindType === 'normal') {
@@ -389,7 +389,7 @@ Object.defineProperty(Component, 'defaultProps', {
  *          }
  *       },
  *       ...
- *    });
+ *    }
  * </pre>
  */
 
@@ -402,13 +402,13 @@ Object.defineProperty(Component, 'defaultProps', {
  *    <Controls.dateRange:RelationController on:periodsChanged="_periodsChangedHandler()"/>
  * </pre>
  * <pre class="brush: js">
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       ...
  *       _periodsChangedHandler(periods) {
  *          this._saveToDatabase(periods);
  *       },
  *       ...
- *    });
+ *    }
  * </pre>
  */
 
@@ -421,13 +421,13 @@ Object.defineProperty(Component, 'defaultProps', {
  *    <Controls.dateRange:RelationController on:periodsChanged="_periodsChangedHandler()"/>
  * </pre>
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       ...
  *       _periodsChangedHandler(periods) {
  *          this._saveToDatabase(periods);
  *       },
  *       ...
- *    });
+ *    }
  * </pre>
  */
 

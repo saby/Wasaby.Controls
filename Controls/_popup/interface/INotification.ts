@@ -52,7 +52,7 @@ export interface INotificationOpener extends IOpener {
  * </pre>
  * <pre>
  * // JavaScript
- * Control.extend({
+ * class MyControl extends Control<IControlOptions>{
  *    ...
  *    _open() {
  *       var popupOptions = {
@@ -65,7 +65,7 @@ export interface INotificationOpener extends IOpener {
  *       this._children.notificationOpener.open(popupOptions)
  *    }
  *    ...
- * });
+ * }
  * </pre>
  * @see close
  * @see openPopup

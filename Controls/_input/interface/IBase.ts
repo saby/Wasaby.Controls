@@ -101,8 +101,7 @@ export interface IBase {
  * @variant sex Включить автозаполнение сохраненными гендерными идентичностями.
  * @variant tel Включить автозаполнение сохраненными полными номерами телефона, включая код страны.
  * @variant url Включить автозаполнение сохраненными url-адресами.
- * @remark
- * Список всех доступных значений смотрите {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete тут}
+ * @description Управление браузерным автозаполнением в поле. Список всех доступных значений смотрите {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/autocomplete тут}
  */
 /**
  * @name Controls/_input/interface/IBase#autoComplete
