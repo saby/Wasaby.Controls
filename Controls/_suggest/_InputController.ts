@@ -800,10 +800,16 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
                           return recordSet;
                        })
-                       .catch((error) => error);
+                       .catch((error) => {
+                          this._hideIndicator();
+                          return error;
+                       });
                 }
              })
-             .catch((error) => this._searchErrback(error));
+             .catch((error) => {
+                this._hideIndicator();
+                this._searchErrback(error);
+             });
       } else {
          return this._performLoad(options);
       }
