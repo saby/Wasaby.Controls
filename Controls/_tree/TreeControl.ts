@@ -665,6 +665,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         _private.initListViewModelHandler(this, viewModel);
         if (this._expandedItemsToNotify) {
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
+            this._expandedItemsToNotify = null;
         }
     },
     _beforeUpdate: function(newOptions) {
@@ -751,14 +752,22 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
             viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
         }
-
+        if (sourceController) {
+            const sourceControllerState = sourceController.getState();
+            if (newOptions.parentProperty && sourceControllerState.parentProperty !== newOptions.parentProperty) {
+                updateSourceController = true;
+            }
+        }
         if (sourceController && updateSourceController) {
             sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
     },
     _afterUpdate: function(oldOptions) {
         let afterUpdateResult;
-
+        if (this._expandedItemsToNotify) {
+            this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
+            this._expandedItemsToNotify = null;
+        }
         if (this._updatedRoot) {
             const sourceController = this._options.sourceController;
             const isSourceControllerLoadingNewData = sourceController && sourceController.isLoading();
@@ -1114,7 +1123,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         return hasPrevLeaf ? 'middle' : 'first';
     },
-    goToNext(listModel?, mController?): void {
+    goToNext(listModel?, mController?): Promise {
         return new Promise((resolve) => {
             const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
@@ -1144,6 +1153,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                     }
                 } else {
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    this.scrollToItem(this._tempItem, true);
                     resolve();
                 }
             } else {
@@ -1152,7 +1162,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         });
     },
-    goToPrev(listModel?, mController?): void {
+    goToPrev(listModel?, mController?): Promise {
         return new Promise((resolve) => {
             const item = this.getPrevItem(this._tempItem || this._currentItem, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
@@ -1184,6 +1194,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    this.scrollToItem(itemKey, false);
                     resolve();
                 }
             } else {
