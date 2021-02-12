@@ -87,6 +87,10 @@ export interface IControllerOptions {
      */
     style?: string;
     /**
+     * Опция, позволяющая настраивать фон панели операций над записью в режиме редактирования.
+     */
+    editingBackgroundStyle: string;
+    /**
      * Класс для установки контейнеру controls-itemActionsV.
      * По умолчанию 'controls-itemActionsV_position_bottomRight'
      */
@@ -561,6 +565,7 @@ export class Controller {
         this._collection.setActionsTemplateConfig({
             toolbarVisibility: options.editingToolbarVisible,
             style: options.style,
+            editingBackgroundStyle: options.editingBackgroundStyle,
             itemActionsClass: options.itemActionsClass,
             size: this._iconSize,
             itemActionsPosition: this._itemActionsPosition,

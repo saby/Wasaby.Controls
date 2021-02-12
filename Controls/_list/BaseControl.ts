@@ -2821,11 +2821,11 @@ const _private = {
                 }
             };
         }
-        let style;
+        let backgroundStyle;
         if (options.itemActionsVisibility === 'visible') {
-            style = 'transparent';
+            backgroundStyle = 'transparent';
         } else {
-            style = options.hoverBackgroundStyle || options.style
+            backgroundStyle = options.hoverBackgroundStyle || options.style
         }
         const itemActionsChangeResult = itemActionsController.update({
             editingItem: editingCollectionItem as CollectionItem<Model>,
@@ -2834,12 +2834,13 @@ const _private = {
             itemActionsProperty: options.itemActionsProperty,
             visibilityCallback: options.itemActionVisibilityCallback,
             itemActionsPosition: options.itemActionsPosition,
-            style,
+            backgroundStyle,
             theme: options.theme,
             actionMode: options.actionMode,
             actionAlignment: options.actionAlignment,
             actionCaptionPosition: options.actionCaptionPosition,
             itemActionsClass: options.itemActionsClass,
+            editingBackgroundStyle: editingConfig?.backgroundStyle || backgroundStyle,
             iconSize: editingConfig ? 's' : 'm',
             editingToolbarVisible: editingConfig?.toolbarVisibility,
             editArrowAction,
