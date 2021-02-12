@@ -82,12 +82,20 @@ define([
       }
 
       function correctCreateBaseControl(cfg, asyncCreate) {
-         return new lists.BaseControl(getCorrectBaseControlConfig(cfg, asyncCreate));
+         const baseControl = new lists.BaseControl(getCorrectBaseControlConfig(cfg, asyncCreate));
+         baseControl._children = {
+            scrollObserver: { startRegister: () => null }
+         };
+         return baseControl;
       }
 
       async function correctCreateBaseControlAsync(cfg) {
          const config = await getCorrectBaseControlConfigAsync(cfg);
-         return new lists.BaseControl(config);
+         const baseControl = new lists.BaseControl(config);
+         baseControl._children = {
+            scrollObserver: { startRegister: () => null }
+         };
+         return baseControl;
       }
       beforeEach(function() {
          data = [
@@ -2486,7 +2494,7 @@ define([
          var ctrl = await correctCreateBaseControlAsync(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._children = triggers;
+         ctrl._children = { ...ctrl._children, ...triggers };
          ctrl._container = {
             getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
             getBoundingClientRect: function() { return {}; }
