@@ -24,6 +24,7 @@ type TValue = string | number | null;
 type TAbbreviationType = 'long' | 'none';
 type TCurrency = 'Ruble' | 'Euro' | 'Dollar';
 type TCurrencyPosition = 'right' | 'left';
+type TCurrencySize = '2xs' | 'xs' | 's' | 'm' | 'l';
 
 interface IPaths {
     integer: string;
@@ -48,7 +49,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
     value: TValue;
     abbreviationType?: TAbbreviationType;
     currency?: TCurrency;
-    currencySize?: IFontSize;
+    currencySize?: TCurrencySize;
     currencyPosition?: TCurrencyPosition;
 }
 
@@ -80,11 +81,8 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     private _value: TValue;
     private _useGrouping: boolean;
     protected _tooltip: string;
-    private _parsedNumber: IPaths;
-    private _abbreviatedNumber: string;
+    private _formattedNumber: IPaths;
     private _fontColorStyle: string;
-    private _fontSize: string;
-    private _fontWeight: string;
 
     readonly '[Controls/_interface/ITooltip]': boolean = true;
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
@@ -106,19 +104,16 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             return options.tooltip;
         }
 
-        return this._isDisplayFractionPath(this._parsedNumber.fraction, options.showEmptyDecimals)
-            ? this._parsedNumber.number
-            : this._parsedNumber.integer;
+        return this._isDisplayFractionPath(this._formattedNumber.fraction, options.showEmptyDecimals)
+            ? this._formattedNumber.number
+            : this._formattedNumber.integer;
     }
 
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
         const value = options.value;
         const useGrouping = options.useGrouping;
 
-        if (
-            this._value !== value
-            || this._useGrouping !== useGrouping
-        ) {
+        if (this._value !== value || this._useGrouping !== useGrouping) {
             this._value = value;
             this._useGrouping = useGrouping;
 
@@ -128,7 +123,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
         return false;
     }
 
-    private _parseNumber(): IPaths {
+    private _formatNumber(options: IMoneyOptions): IPaths {
         const value = Money.toFormat(Money.toString(this._value));
         let exec: RegExpExecArray | string[] = Money.SEARCH_PATHS.exec(value);
 
@@ -139,33 +134,32 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 
         const integer = this._useGrouping ? splitIntoTriads(exec[1]) : exec[1];
         const fraction = exec[2];
+        const abbreviatedNumber = abbreviateNumber(options.value, options.abbreviationType);
 
         return {
             integer: integer,
             fraction: fraction,
-            number: integer + fraction
+            number: integer + fraction,
+            abbreviatedNumber
         };
     }
 
     private _setFontState(options: IMoneyOptions): void {
-        this._fontSize = options.fontSize;
-        this._fontWeight = options.fontWeight;
-        this._fontColorStyle = options.readOnly ? 'readonly' : options.fontColorStyle;
+        this._fontColorStyle = options.readOnly ? 'readonly'
+            : options.stroked ? 'unaccented' : options.fontColorStyle;
     }
 
     protected _beforeMount(options: IMoneyOptions): void {
         this._setFontState(options);
         this._changeState(options, true);
-        this._parsedNumber = this._parseNumber();
-        this._abbreviatedNumber = abbreviateNumber(options.value, options.abbreviationType);
+        this._formattedNumber = this._formatNumber(options);
         this._tooltip = this._getTooltip(options);
     }
 
     protected _beforeUpdate(newOptions: IMoneyOptions): void {
         this._setFontState(newOptions);
         if (this._changeState(newOptions, false)) {
-            this._parsedNumber = this._parseNumber();
-            this._abbreviatedNumber = abbreviateNumber(newOptions.value, newOptions.abbreviationType);
+            this._formattedNumber = this._formatNumber(newOptions);
         }
         this._tooltip = this._getTooltip(newOptions);
     }

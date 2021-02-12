@@ -1,5 +1,6 @@
 .controls-DecoratorMoney {
    white-space: nowrap;
+   align-items: baseline;
 }
 
 .controls-DecoratorMoney__integer_fontWeight_default {
@@ -15,8 +16,62 @@
    font-weight: var(--font-weight);
 }
 
+.controls-DecoratorMoney__fraction__colorStyle {
+   color: #cfcccc;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-default {
+   color: #9f9b99;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-unaccented {
+   color: #999ea3;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-readOnly {
+   color: #cfd0d1;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-primary {
+   color: #ccaea6;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-secondary {
+   color: #afb6cf;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-info {
+   color: #b5c0cf;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-link {
+   color: #aab2cc;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-success {
+   color: #a8d0af;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-warning {
+   color: #cfc1a9;
+}
+
+.controls-DecoratorMoney__fraction__colorStyle-danger {
+   color: #ceb3b6;
+}
+
 .controls-DecoratorMoney__stroked {
-   text-decoration: line-through;
+   position: relative;
+}
+
+.controls-DecoratorMoney__stroked::before {
+   content: '';
+   height: 1px;
+   background-color: black;
+   left: 0;
+   top: 50%;
+   width: 100%;
+   position: absolute;
 }
 
 .ws-is-hover .controls-DecoratorMoney__underline:hover {

@@ -3,7 +3,17 @@
 }
 
 .controls-DecoratorNumber__stroked {
-   text-decoration: line-through;
+   position: relative;
+}
+
+.controls-DecoratorNumber__stroked:before {
+   content: '';
+   height: 1px;
+   background-color: black;
+   left: 0;
+   top: 50%;
+   width: 100%;
+   position: absolute;
 }
 
 .ws-is-hover .controls-DecoratorNumber__underline:hover {

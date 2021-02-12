@@ -74,8 +74,6 @@ export interface INumberOptions extends IControlOptions, INumberFormatOptions, I
  * @author Красильников А.С.
  */
 class NumberDecorator extends Control<INumberOptions> {
-    private _fontSize: string;
-    private _fontWeight: string;
     private _fontColorStyle: string;
 
     protected _formattedNumber: string = null;
@@ -102,9 +100,8 @@ class NumberDecorator extends Control<INumberOptions> {
     }
 
     private _setFontState(options: INumberOptions): void {
-        this._fontSize = options.fontSize;
-        this._fontWeight = options.fontWeight;
-        this._fontColorStyle = options.readOnly ? 'readonly' : options.fontColorStyle;
+        this._fontColorStyle = options.readOnly ? 'readonly'
+            : options.stroked ? 'unaccented' : options.fontColorStyle;
     }
 
     protected _beforeMount(options: INumberOptions): void {
