@@ -78,11 +78,14 @@ class ListEditor extends Control<IListEditorOptions> {
 
     protected _beforeUpdate(options: IListEditorOptions): void {
         const valueChanged = options.propertyValue !== this._options.propertyValue;
+        const filterChanged = options.filter !== this._options.filter;
         const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
             this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+        }
+        if (filterChanged || valueChanged) {
             this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
         }
     }
