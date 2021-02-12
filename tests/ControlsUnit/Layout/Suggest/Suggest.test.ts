@@ -689,8 +689,9 @@ describe('Controls/suggest', () => {
                   }
                }
             };
+            const error = new Error();
             inputSandbox.stub(SourceController.prototype, 'load')
-               .callsFake(() => Promise.reject('error'));
+               .callsFake(() => Promise.reject(error));
 
             await inputContainer._resolveLoad();
             assert.isTrue(inidicatorHidden);
