@@ -66,12 +66,14 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _stackOpener: StackOpener = null;
     protected _items: RecordSet = null;
     protected _selectedKeys: string[]|number[] = [];
+    protected _filter: object = {};
     private _itemsReadyCallback: Function = null;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
         this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
+        this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
@@ -81,6 +83,7 @@ class ListEditor extends Control<IListEditorOptions> {
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
             this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+            this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
         }
     }
 
@@ -108,6 +111,7 @@ class ListEditor extends Control<IListEditorOptions> {
         result.forEach((item) => {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
+        this._setFilter(selectedKeys, this._options.filter, this._options.keyProperty);
         this._notifyPropertyValueChanged(selectedKeys, !this._options.multiSelect, result);
     }
 
@@ -162,6 +166,13 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _beforeUnmount(): void {
         if (this._stackOpener) {
             this._stackOpener.destroy();
+        }
+    }
+
+    private _setFilter(selectedKeys: string[]|number[], filter: object, keyProperty: string): void {
+        this._filter = {...filter};
+        if (selectedKeys && selectedKeys.length) {
+            this._filter[keyProperty] = selectedKeys;
         }
     }
 
