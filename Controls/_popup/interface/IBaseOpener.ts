@@ -405,7 +405,7 @@ export interface IBaseOpener {
  * </pre>
  * userControl.js
  * <pre>
- *   class MyControl extends Control<IControlOptions>{
+ *   class MyControl extends Control<IControlOptions> {
  *      ...
  *
  *      constructor: function() {

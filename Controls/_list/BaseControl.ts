@@ -1691,6 +1691,10 @@ const _private = {
                 }
             }
 
+            if (action === IObservable.ACTION_RESET) {
+                _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
+            }
+
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
                 self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
@@ -1960,8 +1964,6 @@ const _private = {
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-        clickEvent.stopImmediatePropagation();
-        clickEvent.nativeEvent.preventDefault();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose(): void {
@@ -2019,6 +2021,7 @@ const _private = {
 
         // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
         if (!!self._itemActionsController) {
+            event.nativeEvent.preventDefault();
             const item = self._listViewModel.getItemBySourceKey(key) || itemData;
             _private.openItemActionsMenu(self, null, event, item, true);
         }
@@ -3881,13 +3884,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // todo При отказе от старой - выпилить проверку "useNewModel".
         if (emptyTemplateChanged && newOptions.useNewModel) {
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
-        }
-
-        // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
-        if (needReloadByOptions) {
-            if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
-                self._hideTopTrigger = true;
-            }
         }
 
         this._loadedBySourceController = newOptions.sourceController &&
