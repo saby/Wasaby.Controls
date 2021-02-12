@@ -4412,6 +4412,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         _private.closePopup(this, this._itemActionsMenuId);
 
+        // При разрушении списка нужно в ПМО сбросить счетчик выбранных записей
+        if (_private.hasSelectionController(this)) {
+            this._notify('listSelectedKeysCountChanged', [0, false], {bubbling: true});
+        }
+
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
