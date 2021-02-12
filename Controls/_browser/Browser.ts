@@ -247,6 +247,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
         let methodResult;
+        let sourceChanged;
 
         this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
@@ -261,6 +262,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         if (this._options.source !== newOptions.source) {
             this._source = newOptions.source;
+            sourceChanged = true;
         }
 
         if (newOptions.root !== this._options.root) {
