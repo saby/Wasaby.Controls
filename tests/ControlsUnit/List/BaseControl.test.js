@@ -5432,7 +5432,7 @@ define([
          instance.destroy();
       });
 
-      it('close editInPlace if model changed', async () => {
+      it('close and destroy editInPlace if model changed', async () => {
          const cfg = {
                 viewName: 'Controls/List/ListView',
                 viewModelConfig: {
@@ -5444,20 +5444,29 @@ define([
                 source: source
              },
              instance = correctCreateBaseControl(cfg);
-         let cancelClosed = false;
+         let isEditingCanceled = false;
+         let isEIPDestroyed = false;
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._viewModelConstructor = {};
+         const cancelPromise = Promise.resolve();
          instance._cancelEdit = () => {
-            cancelClosed = true;
+            isEditingCanceled = true;
+            return cancelPromise;
          };
          instance._editInPlaceController = {
             isEditing: () => true,
-            updateOptions: () => {}
+            updateOptions: () => {},
+            destroy: () => {
+               isEIPDestroyed = true;
+            }
          };
          instance._beforeUpdate(cfg);
-         assert.isTrue(cancelClosed);
-         instance.destroy(cancelClosed);
+         return cancelPromise.then(() => {
+            assert.isTrue(isEditingCanceled);
+            assert.isTrue(isEIPDestroyed);
+            assert.isNull(instance._editInPlaceController);
+         });
       });
 
       it('getListTopOffset', function () {
