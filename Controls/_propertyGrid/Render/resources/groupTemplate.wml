@@ -15,7 +15,7 @@
             </ws:else>
         </div>
         <ws:if data="{{expanderVisible}}">
-            <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"
+            <div title="{{!collapsedGroups[item] ? rk('Свернуть') : rk('Развернуть')}}"
                  class="controls-PropertyGrid__groupExpander
                         controls-icon
                         controls-icon_size-s_theme-{{theme}}
