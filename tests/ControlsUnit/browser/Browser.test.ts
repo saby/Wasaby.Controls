@@ -416,6 +416,21 @@ describe('Controls/browser:Browser', () => {
                 assert.deepStrictEqual(browser._filter.name, 'test');
             });
 
+            it('update source without new searchValue should reset inputSearchValue', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                await browser._search({}, 'testSearchValue');
+                assert.ok(browser._inputSearchValue === 'testSearchValue');
+
+                options = {...options};
+                options.source = new Memory();
+                browser._beforeUpdate(options);
+                assert.ok(!browser._inputSearchValue);
+            });
+
         });
 
         describe('operationsController', () => {
