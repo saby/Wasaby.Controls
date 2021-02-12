@@ -16,9 +16,13 @@
               editingObject="{{_editingObject}}"
               source="{{_source}}"
               collapsedGroups="{{_collapsedGroups}}"
+              itemPadding="{{_itemPadding}}"
               on:editingObjectChanged="_editingObjectChanged()"
               on:groupClick="_groupClick()"
               attr:class="controls-FilterViewPanel__propertyGrid controls-FilterViewPanel__propertyGrid_theme-{{_options.theme}}">
+         <ws:itemTemplate>
+            <ws:partial template="Controls/propertyGrid:ItemTemplate" attr:class="controls-FilterViewPanel__propertyGrid_itemTemplate_theme-{{_options.theme}}"/>
+         </ws:itemTemplate>
          <ws:groupTemplate>
             <ws:partial template="wml!Controls/_filterPanel/View/groupTemplate" resetCaption="{{_resetCaption}}" groupItems="{{_groupItems}}"/>
          </ws:groupTemplate>
