@@ -2006,7 +2006,7 @@ const _private = {
 
         // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
         if (!!self._itemActionsController) {
-            event.preventDefault();
+            event.nativeEvent.preventDefault();
             const item = self._listViewModel.getItemBySourceKey(key) || itemData;
             _private.openItemActionsMenu(self, null, event, item, true);
         }
