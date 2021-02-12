@@ -1,10 +1,12 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/popupTrigger/Index');
+import controlTemplate = require('wml!Controls-demo/dropdown_new/Button/MenuPopupBackground/Index');
 import {Memory} from 'Types/source';
+import {IMenuPopupOptions} from 'Controls/menu';
 
 export default class extends Control {
     protected _template: TemplateFunction = controlTemplate;
     protected _source: Memory;
+    protected menuPopupOptions: IMenuPopupOptions;
 
     protected _beforeMount(): void {
         this._source = new Memory({
@@ -15,8 +17,16 @@ export default class extends Control {
                 {key: 3, title: 'Санкт-Петербург'}
             ]
         });
+        this.menuPopupOptions = {
+            templateOptions: {
+                backgroundStyle: 'custom'
+            }
+        };
     }
 
     static _theme: string[] = ['Controls/Classes'];
-    static _styles: string[] = ['Controls-demo/Controls-demo'];
+    static _styles: string[] = [
+        'Controls-demo/Controls-demo',
+        'Controls-demo/dropdown_new/Button/MenuPopupBackground/Index'
+    ];
 }
