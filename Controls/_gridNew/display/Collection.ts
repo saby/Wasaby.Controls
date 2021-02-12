@@ -37,7 +37,7 @@ export default class Collection<
         const searchValueChanged = super.setSearchValue(searchValue);
         if (searchValueChanged) {
             this.getViewIterator().each((item: DataRow<S>) => {
-                if (item.DisplaySearchValueItem) {
+                if (item.DisplaySearchValue) {
                     item.setSearchValue(searchValue);
                 }
             });
