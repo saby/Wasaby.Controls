@@ -22,8 +22,7 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
-   popupTrigger?: 'click' | 'hover';
-   popupBackgroundStyle?: string;
+   menuPopupTrigger?: 'click' | 'hover';
 }
 
 /**
@@ -142,8 +141,7 @@ export default class Button extends BaseDropdown {
             hasIconPin: this._hasIconPin,
             allowPin: true,
             markerVisibility: 'hidden',
-            trigger: options.popupTrigger,
-            backgroundStyle: options.popupBackgroundStyle
+            trigger: options.menuPopupTrigger,
          }
       };
    }
@@ -185,7 +183,7 @@ export default class Button extends BaseDropdown {
    }
     _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
       super._handleMouseEnter(event);
-      if (this._options.popupTrigger === 'hover') {
+      if (this._options.menuPopupTrigger === 'hover') {
          this.openMenu();
       }
     }
@@ -244,8 +242,7 @@ export default class Button extends BaseDropdown {
          showHeader: true,
          filter: {},
          buttonStyle: 'secondary',
-         popupTrigger: 'click',
-         popupBackgroundStyle: 'default',
+         menuPopupTrigger: 'click',
          viewMode: 'button',
          fontSize: 'm',
          iconStyle: 'secondary',
@@ -311,22 +308,15 @@ export default class Button extends BaseDropdown {
  */
 
 /**
- * @typedef {String} TPopupTrigger
+ * @typedef {String} TMenuPopupTrigger
  * @variation click Открытие кликом по контенту. Закрытие кликом "мимо" - не по контенту или шаблону.
  * @variation hover Открытие по ховеру - по наведению курсора на контент. Закрытие по ховеру - по навердению курсора на контент или шаблон.
  */
 /**
- * @name Controls/_dropdown/Button#popupTrigger
- * @cfg {TPopupTrigger} Название события, которое запускает открытие или закрытие меню.
+ * @name Controls/_dropdown/Button#menuPopupTrigger
+ * @cfg {TMenuPopupTrigger} Название события, которое запускает открытие или закрытие меню.
  * @default click
  * @demo Controls-demo/dropdown_new/Button/PopupTrigger/Index
- */
-
-/**
- * @name Controls/_dropdown/Button#popupBackgroundStyle
- * @cfg {String} Определяет префикс стиля для настройки фона внутренних элементов контрола.
- * @default default
- * @demo Controls-demo/dropdown_new/Button/PopupBackground/Index
  */
 
 /**
