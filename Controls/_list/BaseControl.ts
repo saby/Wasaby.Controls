@@ -5953,7 +5953,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
             const needShift = this._attachLoadTopTriggerToNull && direction === 'up';
-            this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
+            const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
+            _private.handleScrollControllerResult(this, result);
         }
 
         this._addItems = [];
