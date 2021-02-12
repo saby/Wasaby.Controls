@@ -161,6 +161,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setDragItemData(dragItemData);
             assert.equal(gridViewModel.getDragItemData(), dragItemData);
          });
+
+         it('resetDraggedItems', () => {
+            gridViewModel.resetDraggedItems();
+            assert.equal(gridViewModel._model.getVersion(), 3);
+         });
       });
 
       describe('"_private" block', function() {

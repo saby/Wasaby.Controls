@@ -60,13 +60,13 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
     }
 
     function processLadder(params) {
-        var
-            value = params.value,
-            prevValue = params.prevValue,
-            state = params.state;
+        const value = params.value;
+        const prevValue = params.prevValue;
+        const state = params.state;
+        const hasMainLadder = !!(params.mainLadder?.ladderLength);
 
         // isEqual works with any types
-        if (isEqual(value, prevValue)) {
+        if (isEqual(value, prevValue) && !hasMainLadder) {
             state.ladderLength++;
         } else {
             params.ladder.ladderLength = state.ladderLength;
@@ -120,7 +120,8 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     value: item.get ? item.get(ladderProperties[fIdx]) : undefined,
                     prevValue: prevItem && prevItem.get ? prevItem.get(ladderProperties[fIdx]) : undefined,
                     state: ladderState[ladderProperties[fIdx]],
-                    ladder: ladder[idx][ladderProperties[fIdx]]
+                    ladder: ladder[idx][ladderProperties[fIdx]],
+                    mainLadder: ladder[idx][ladderProperties[fIdx - 1]]
                 });
             }
         }
@@ -134,7 +135,8 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     value: item.get ? item.get(stickyProperties[fIdx]) : undefined,
                     prevValue: prevItem && prevItem.get ? prevItem.get(stickyProperties[fIdx]) : undefined,
                     state: stickyLadderState[stickyProperties[fIdx]],
-                    ladder: stickyLadder[idx][stickyProperties[fIdx]]
+                    ladder: stickyLadder[idx][stickyProperties[fIdx]],
+                    mainLadder: stickyLadder[idx][stickyProperties[fIdx - 1]]
                 });
             }
         }

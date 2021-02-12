@@ -17,6 +17,7 @@ import {isHidden} from './StickyHeader/Utils';
 import {getHeadersHeight} from './StickyHeader/Utils/getHeadersHeight';
 
 export interface IContainerBaseOptions extends IControlOptions {
+    _notScrollableContent?: boolean; // Для HintWrapper, который сверстан максмально неудобно для скроллКонтейнера.
     scrollMode?: SCROLL_MODE;
 }
 
@@ -81,6 +82,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         // Не восстанавливаем скролл на то место, на котором он был перед релоадом страницы
         if (window && window.history && 'scrollRestoration' in window.history) {
            window.history.scrollRestoration = 'manual';
+        }
+
+        if (options._notScrollableContent) {
+            this._updateContentType(CONTENT_TYPE.restricted);
         }
     }
 
@@ -447,7 +452,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _resizeObserverCallback(entries: any): void {
-        if(isHidden(this._container)) {
+        if (isHidden(this._container)) {
             return;
         }
         const newState: IScrollState = {};
@@ -457,14 +462,24 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 newState.clientWidth = entry.contentRect.width;
             } else {
                 this._updateContentType();
-                newState.scrollWidth = entry.borderBoxSize.inlineSize === undefined ?
-                    entry.borderBoxSize[0].inlineSize : entry.borderBoxSize.inlineSize;
+                // Свойство borderBoxSize учитывает размеры отступов при расчете. Поддерживается не во всех браузерах.
+                if (entry.borderBoxSize) {
+                    const scrollStateProperties = {
+                        scrollWidth: 'inlineSize',
+                        scrollHeight: 'blockSize'
+                    };
+                    for (const property of Object.keys(scrollStateProperties)) {
+                        const borderBoxSizeProperty = scrollStateProperties[property];
+                        newState[property] = entry.borderBoxSize[borderBoxSizeProperty] === undefined ?
+                            entry.borderBoxSize[0][borderBoxSizeProperty] : entry.borderBoxSize[borderBoxSizeProperty];
+                    }
+                } else {
+                    newState.scrollWidth = entry.contentRect.width;
+                    newState.scrollHeight = entry.contentRect.height;
+                }
 
                 if (this._contentType === CONTENT_TYPE.restricted) {
                     newState.scrollHeight = this._getContentHeightByChildren();
-                } else {
-                    newState.scrollHeight = entry.borderBoxSize.blockSize === undefined ?
-                        entry.borderBoxSize[0].blockSize : entry.borderBoxSize.blockSize;
                 }
             }
         }
@@ -479,11 +494,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._updateStateAndGenerateEvents(newState);
     }
 
-    _updateContentType(): void {
-        const contentType: CONTENT_TYPE = this._getContentType();
+    _updateContentType(newValue?: CONTENT_TYPE): void {
+        const contentType: CONTENT_TYPE = newValue || this._getContentType();
         if (this._contentType !== contentType) {
             this._contentType = contentType;
-            this._updateContentWrapperCssClass()
+            this._updateContentWrapperCssClass();
         }
     }
 

@@ -29,7 +29,8 @@ describe('Controls/suggest', () => {
          const options = {
             source: getMemorySource(),
             suggestTemplate: {},
-            footerTemplate: {}
+            footerTemplate: {},
+            minSearchLength: 3
          };
          controller.saveOptions({...options, ...customOptions});
          return controller;
@@ -252,6 +253,7 @@ describe('Controls/suggest', () => {
          assert.deepEqual(filter, resultFilter);
 
          const newFilter = {...resultFilter, ...{historyKeys: [1, 2]}};
+         newFilter.searchParam = '';
          filter = inputContainer._prepareFilter({filterTest: 'filterTest'}, 'searchParam',
             'test', 20, 1, [1, 2]);
          assert.deepEqual(filter, newFilter);
@@ -675,6 +677,27 @@ describe('Controls/suggest', () => {
 
          after(() => sandbox.restore());
 
+         it('indicator is hidden', async () => {
+            const inputSandbox = sinon.createSandbox();
+            let inidicatorHidden = false;
+            inputContainer._inputActive = true;
+            inputContainer._children = {
+               indicator: {
+                  show: () => {},
+                  hide: () => {
+                     inidicatorHidden = true;
+                  }
+               }
+            };
+            const error = new Error();
+            inputSandbox.stub(SourceController.prototype, 'load')
+               .callsFake(() => Promise.reject(error));
+
+            await inputContainer._resolveLoad();
+            assert.isTrue(inidicatorHidden);
+            inputSandbox.restore();
+         });
+
          it('value is not specified', async () => {
             inputContainer._inputActive = true;
             sandbox.stub(SourceController.prototype, 'load')
@@ -852,6 +875,7 @@ describe('Controls/suggest', () => {
          inputContainer._notify = () => {};
          inputContainer._searchValue = 'notEmpty';
          inputContainer._inputActive = true;
+         inputContainer._errorConfig = {errorField: 'errorValue'};
 
          queryRecordSet.setMetaData({
             results: new Model({
@@ -870,6 +894,7 @@ describe('Controls/suggest', () => {
          assert.equal(inputContainer._tabsSelectedKey, 'testId');
          assert.equal(inputContainer._misspellingCaption, 'testStr');
          assert.equal(inputContainer._moreCount, 7);
+         assert.isNull(inputContainer._errorConfig);
 
          const queryRecordSetEmpty = new RecordSet();
          queryRecordSetEmpty.setMetaData({
@@ -918,7 +943,7 @@ describe('Controls/suggest', () => {
          /* tabSelectedKey changed, filter must be changed */
          suggestComponent._suggestMarkedKey = 'test';
          suggestComponent._tabsSelectedKeyChanged('test');
-         assert.equal(suggestComponent._filter.currentTab, 'test');
+         assert.equal(suggestComponent._filter.currentTab, null);
          assert.isTrue(suggestActivated);
          assert.isTrue(suggestComponent._suggestMarkedKey === null);
       });
@@ -1163,73 +1188,98 @@ describe('Controls/suggest', () => {
          assert.instanceOf(inputContainer._getSourceController().getState().source, Memory);
       });
 
-      it('Suggest::_updateSuggestState', async () => {
-         const inputContainer = getComponentObject({
-            filter: {},
-            searchParam: 'testSearchParam',
-            minSearchLength: 3,
-            historyId: 'historyField',
-            emptyTemplate: 'test'
-         });
-         let suggestOpened = false;
+      describe('Suggest::_updateSuggestState', async () => {
+         let inputContainer;
+         let suggestOpened;
+         let stub;
+         before(() => {
+            inputContainer = getComponentObject({
+               filter: {},
+               searchParam: 'testSearchParam',
+               minSearchLength: 3,
+               historyId: 'historyField',
+               emptyTemplate: 'test'
+            });
+            inputContainer._open = () => {
+               suggestOpened = true;
+            };
 
-         const stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
-            getCount: () => 1
-         }));
-
-         inputContainer._searchValue = 'te';
-         inputContainer._historyKeys = [1, 2];
-         inputContainer._inputActive = true;
-
-         inputContainer._options.autoDropDown = true;
-         inputContainer._updateSuggestState();
-         assert.deepEqual(inputContainer._filter, {
-            testSearchParam: 'te', historyKeys: inputContainer._historyKeys
+            stub = sinon.stub(inputContainer._getSourceController(), 'getItems').callsFake(() => ({
+               getCount: () => 1
+            }));
          });
 
-         inputContainer._searchValue = 'test';
-         inputContainer._updateSuggestState();
-         assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
-
-         inputContainer._open = () => {
-            suggestOpened = true;
-         };
-         inputContainer._options.autoDropDown = false;
-         inputContainer._options.minSearchLength = 10;
-         inputContainer._filter = {};
-         inputContainer._updateSuggestState();
-         assert.deepEqual(inputContainer._filter, {
-            testSearchParam: 'test', historyKeys: inputContainer._historyKeys
+         beforeEach(() => {
+            suggestOpened = false;
          });
-         assert.isTrue(suggestOpened);
 
-         inputContainer._getRecentKeys = () => {
-            return Promise.resolve(null);
-         };
+         it('suggest with history', () => {
+            inputContainer._searchValue = 'te';
+            inputContainer._historyKeys = [1, 2];
+            inputContainer._inputActive = true;
 
-         suggestOpened = false;
-         inputContainer._options.autoDropDown = false;
-         inputContainer._historyKeys = null;
-         inputContainer._filter = {};
+            inputContainer._options.autoDropDown = true;
+            inputContainer._updateSuggestState();
+            assert.deepEqual(inputContainer._filter, {
+               testSearchParam: '', historyKeys: inputContainer._historyKeys
+            });
+         });
 
-         await inputContainer._updateSuggestState();
-         assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
-         assert.isFalse(suggestOpened);
+         it('suggest with searchValue', () => {
+            inputContainer._searchValue = 'test';
+            inputContainer._updateSuggestState();
+            assert.deepEqual(inputContainer._filter, {testSearchParam: 'test'});
+         });
 
-         stub.callsFake(() => ({
-            getCount: () => 0
-         }));
-         suggestOpened = false;
-         inputContainer._options.autoDropDown = true;
-         inputContainer._options.historyId = null;
-         inputContainer._filter = {};
-         inputContainer._options.emptyTemplate = undefined;
-         inputContainer._updateSuggestState();
+         it('value < minSearchLength, with history', () => {
+            inputContainer._options.autoDropDown = false;
+            inputContainer._options.minSearchLength = 10;
+            inputContainer._filter = {};
+            inputContainer._updateSuggestState();
+            assert.deepEqual(inputContainer._filter, {
+               testSearchParam: '', historyKeys: inputContainer._historyKeys
+            });
+            assert.isTrue(suggestOpened);
+         });
 
-         assert.deepEqual(inputContainer._filter, {});
-         assert.isFalse(suggestOpened);
+         it('autoDropDown = false', async () => {
+            inputContainer._getRecentKeys = () => {
+               return Promise.resolve(null);
+            };
 
-         stub.restore();
+            inputContainer._options.autoDropDown = false;
+            inputContainer._historyKeys = null;
+            inputContainer._filter = {};
+
+            await inputContainer._updateSuggestState();
+            assert.deepEqual(inputContainer._filter, {testSearchParam: ''});
+            assert.isFalse(suggestOpened);
+         });
+
+         it('suggestState = true', () => {
+            inputContainer._options.autoDropDown = false;
+            inputContainer._options.suggestState = true;
+            inputContainer._updateSuggestState();
+            assert.isTrue(suggestOpened);
+         });
+
+         it('without items and history', () => {
+            stub.callsFake(() => ({
+               getCount: () => 0
+            }));
+            inputContainer._options.autoDropDown = true;
+            inputContainer._options.historyId = null;
+            inputContainer._filter = {};
+            inputContainer._options.emptyTemplate = undefined;
+            inputContainer._updateSuggestState();
+
+            assert.deepEqual(inputContainer._filter, {});
+            assert.isFalse(suggestOpened);
+         });
+
+         after(() => {
+            stub.restore();
+         });
       });
 
       it('Suggest::_misspellClick', async () => {

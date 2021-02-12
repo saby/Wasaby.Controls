@@ -301,7 +301,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
 
-            baseControl.scrollMoveSyncHandler({scrollTop: 600});
+            baseControl.scrollMoveSyncHandler({scrollTop: 640});
             assert.deepEqual({
                 begin: 'visible',
                 end: 'hidden',
@@ -1056,13 +1056,27 @@ describe('Controls/list_clean/BaseControl', () => {
 
                 sourceControllerOptions = {...sourceControllerOptions};
                 sourceControllerOptions.source = new Memory();
-                sourceControllerOptions.source.query = () => Promise.reject(new Error());
+                sourceControllerOptions.source.query = () => {
+                    const error = new Error();
+                    error.processed = true;
+                    return Promise.reject(error);
+                };
                 sourceController.updateOptions(sourceControllerOptions);
                 await sourceController.reload().catch(() => {});
                 baseControlOptions.source = new Memory();
                 assert.doesNotThrow(() => {
                     baseControl._beforeUpdate(baseControlOptions);
                 });
+
+                baseControl.__error = {testErrorField: 'testErrorValue'};
+                sourceControllerOptions = {...sourceControllerOptions};
+                sourceControllerOptions.source = new Memory();
+                sourceController.updateOptions(sourceControllerOptions);
+                await sourceController.reload();
+                baseControlOptions = {...baseControlOptions};
+                baseControlOptions.source = new Memory();
+                baseControl._beforeUpdate(baseControlOptions);
+                assert.ok(!baseControl.__error);
             });
 
             it('_beforeUpdate while source controller is loading', async () => {
@@ -1190,16 +1204,22 @@ describe('Controls/list_clean/BaseControl', () => {
     describe('reload', () => {
 
         it('baseControl destroyed on reload', async () => {
-            const options = getBaseControlOptionsWithEmptyItems();
+            const options = await getCorrectBaseControlConfigAsync(getBaseControlOptionsWithEmptyItems());
+            let afterReloadCallbackCalled = false;
+            options.afterReloadCallback = () => {
+                afterReloadCallbackCalled = true;
+            };
             const baseControl = new BaseControl(options);
             await baseControl._beforeMount(options);
             baseControl.saveOptions(options);
+            afterReloadCallbackCalled = false;
             const reloadPromise = baseControl.reload();
             baseControl._beforeUnmount();
             baseControl._destroyed = true;
 
             const reloadPromiseResult = await reloadPromise;
             assert.ok(!reloadPromiseResult, 'reload return wrong result');
+            assert.ok(!afterReloadCallbackCalled);
         });
 
     });

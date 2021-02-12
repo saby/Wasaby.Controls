@@ -65,6 +65,26 @@ describe('tileImageUtil', () => {
                 const restrictions = getImageRestrictions(0, null, 200, 300);
                 assert.isTrue(restrictions.width && restrictions.height);
             });
+            it('Картинка пропорциоально шире плитки', () => {
+                const restrictions = getImageRestrictions(100, 300, 400, 400);
+                assert.isTrue(restrictions.height);
+            });
+            it('Картинка пропорционально ниже плитки', () => {
+                const restrictions = getImageRestrictions(300, 100, 400, 400);
+                assert.isTrue(restrictions.width);
+            });
+            it('Картинка пропорционально равна по ширине плитке, но выше', () => {
+                const restrictions = getImageRestrictions(5760, 3840, 196, 142);
+                assert.isTrue(restrictions.height);
+            });
+            it('Картинка пропорционально выше плитки', () => {
+                const restrictions = getImageRestrictions(300, 100, 400, 100);
+                assert.isTrue(restrictions.width);
+            });
+            it('Картинка полностью пропорциональна плитке', () => {
+                const restrictions = getImageRestrictions(300, 300, 500, 500);
+                assert.isTrue(restrictions.width);
+            });
         });
     });
 });
