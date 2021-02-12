@@ -1,6 +1,7 @@
 /**
  * Интерфейс для поля ввода диапазона дат.
  * @interface Controls/_dateRange/interfaces/IInput
+ * @implements Controls/interface:IContrastBackground
  * @public
  * @author Красильников А.С.
  */
@@ -75,3 +76,8 @@
  *   <li>inputPosition - указывает с какой стороны находится поле ввода. 'right' или 'left'</li>
  * </ul>
 */
+
+/**
+ * @name Controls/_dateRange/interfaces/IInput#contrastBackground
+ * @demo Controls-demo/dateRange/Input/ContrastBackground/Index
+ */
