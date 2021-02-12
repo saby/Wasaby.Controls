@@ -42,6 +42,7 @@
       <div class="controls-FilterPanel__separator" title="{{!_isMaxHeight ? rk('Свернуть', 'ПанельФильтра') : rk('Развернуть', 'ПанельФильтра')}}">
          <Controls.toggle:BigSeparator
                  value="{{!_isMaxHeight}}"
+                 attr:ws-no-focus="{{true}}"
                  viewMode="arrow"
                  contrastBackground="{{false}}"
                  on:click="_clickSeparatorHandler()"/>
