@@ -85,7 +85,7 @@ class ListEditor extends Control<IListEditorOptions> {
             this._selectedKeys = options.propertyValue;
             this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
         }
-        if (filterChanged || valueChanged) {
+        if (filterChanged) {
             this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
         }
     }
@@ -114,7 +114,7 @@ class ListEditor extends Control<IListEditorOptions> {
         result.forEach((item) => {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
-        this._setFilter(selectedKeys, this._options.filter, this._options.keyProperty);
+        this._items.assign(result);
         this._notifyPropertyValueChanged(selectedKeys, !this._options.multiSelect, result);
     }
 
