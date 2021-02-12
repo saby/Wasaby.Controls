@@ -676,6 +676,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const selection = { selected: [], excluded: [] };
          assert.isFalse(strategy.isAllSelected(selection, false, 0, true));
       });
+
+      it ('pass rootId', () => {
+         const selection = { selected: [5], excluded: [5] };
+         strategy.update({
+            selectDescendants: false,
+            selectAncestors: false,
+            rootId: 5,
+            model: model
+         });
+         assert.isTrue(strategy._rootChanged);
+         assert.isTrue(strategy.isAllSelected(selection, false, 7));
+         assert.isTrue(strategy.isAllSelected(selection, true, 7, false));
+         assert.isFalse(strategy.isAllSelected(selection, true, 7, false, 4));
+         assert.isTrue(strategy.isAllSelected({selected: [4], excluded: [4]}, true, 7, false, 4));
+      });
    });
 
    describe('selectionType', () => {
