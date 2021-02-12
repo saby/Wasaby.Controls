@@ -5981,7 +5981,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _registerObserver(): void {
         if (!this._observerRegistered && this._listViewModel) {
             // @ts-ignore
-            this._children.scrollObserver.startRegister([this._children.scrollObserver]);
+            this._children.scrollObserver?.startRegister([this._children.scrollObserver]);
             this._observerRegistered = true;
         }
     },
