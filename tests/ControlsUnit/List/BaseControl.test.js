@@ -8145,6 +8145,22 @@ define([
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
             });
+
+            it('reset and not exist controller', () => {
+               baseControl._markerController = null;
+               baseControl.getViewModel().setItems(new collection.RecordSet({
+                  rawData: [
+                     {id: 1},
+                     {id: 2},
+                     {id: 3}
+                  ],
+                  keyProperty: 'id'
+               }));
+
+               lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rs');
+               const item = baseControl.getViewModel().getItemBySourceKey(1);
+               assert.isTrue(item.isMarked());
+            });
          });
 
          describe('_beforeUpdate', () => {

@@ -1775,7 +1775,9 @@ const _private = {
                 }
             }
 
-            if (_private.hasMarkerController(self)) {
+            const handleMarker = action === IObservable.ACTION_RESET
+                && (self._options.markerVisibility === 'visible' || self._options.markedKey !== undefined);
+            if (_private.hasMarkerController(self) || handleMarker) {
                 const markerController = _private.getMarkerController(self);
 
                 let newMarkedKey;
@@ -3454,6 +3456,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selectionController.setSelection(selection);
                 }
                 if (newOptions.beforeMountCallback) {
+                    this._beforeMountCallbackCalled = true;
                     newOptions.beforeMountCallback({
                         viewModel: this._listViewModel,
                         markerController: _private.getMarkerController(this, newOptions)
@@ -3821,6 +3824,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('register', ['documentDragStart', this, this._documentDragStart], {bubbling: true});
         this._notify('register', ['documentDragEnd', this, this._documentDragEnd], {bubbling: true});
+        this._notify('register', ['dataError', this, this._onDataError], {bubbling: true});
 
         // TODO удалить после того как избавимся от onactivated
         if (_private.hasMarkerController(this)) {
@@ -4033,6 +4037,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
+                if (newOptions.beforeMountCallback && !this._beforeMountCallbackCalled) {
+                    this._beforeMountCallbackCalled = true;
+                    newOptions.beforeMountCallback({
+                        viewModel: this._listViewModel,
+                        markerController: _private.getMarkerController(this, newOptions)
+                    });
+                }
                 isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
@@ -4390,6 +4401,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._notify('unregister', ['documentDragStart', this], {bubbling: true});
         this._notify('unregister', ['documentDragEnd', this], {bubbling: true});
+        this._notify('unregister', ['dataError', this], {bubbling: true});
 
         this._unregisterMouseMove();
         this._unregisterMouseUp();
@@ -5584,7 +5596,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.getPortionedSearch(this).abortSearch();
     },
 
-    _onDataError(event: unknown, errorConfig: IErrbackConfig): void {
+    _onDataError(errorConfig: IErrbackConfig): void {
         _private.processError(this, {
             error: errorConfig.error,
             mode: errorConfig.mode || dataSourceError.Mode.dialog
@@ -6051,7 +6063,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
             const needShift = this._attachLoadTopTriggerToNull && direction === 'up';
-            this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
+            const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
+            _private.handleScrollControllerResult(this, result);
         }
 
         this._addItems = [];
