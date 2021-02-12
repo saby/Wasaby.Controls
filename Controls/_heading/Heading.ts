@@ -34,7 +34,7 @@ export interface IHeadingOptions
  * @extends UI/Base:Control
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/ICaption
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
  * @public
  * @author Красильников А.С.

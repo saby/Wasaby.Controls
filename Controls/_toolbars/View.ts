@@ -62,14 +62,14 @@ export interface IMenuOptions {
  * Интерфейс опций контрола {@link Controls/toolbars:View}.
  * @public
  * @author Красильников А.С.
- * @extends Controls/interface:IHierarchy
- * @extends Controls/interface:IIconSize
- * @extends Controls/interface/IItemTemplate
- * @extends Controls/dropdown:IGrouped
- * @extends Controls/toolbars:IToolbarSource
- * @extends Controls/interface:IFontColorStyle
- * @extends Controls/interface:IIconStyle
- * @extends Controls/interface:IFilterChanged
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/dropdown:IGrouped
+ * @implements Controls/toolbars:IToolbarSource
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IFilterChanged
  */
 
  export interface IToolbarOptions extends IControlOptions, IHierarchyOptions, IIconSizeOptions,
@@ -135,12 +135,15 @@ export interface IMenuOptions {
  * @extends UI/Base:Control
  * @implements Controls/toolbars:IToolbarOptions
  * // TODO: https://online.sbis.ru/opendoc.html?guid=64c95101-d268-4225-9e52-b6398ded5ced
- * @implements Controls/_interface/IItemTemplate
- * @implements Controls/_interface/IIconStyle
- * @implements Controls/_interface/IIconSize
- * @implements Controls/_interface/IFontColorStyle
- * @implements Controls/_toolbars/IToolbarSource
- * @implements Controls/toolbars:IToolbarOptions
+ * @implements Controls/interface/IItemTemplate
+ * @implements Controls/interface:IIconStyle
+ * @implements Controls/interface:IIconSize
+ * @implements Controls/interface:IFontColorStyle
+ * @implements Controls/interface:IHierarchy
+ * @implements Controls/interface:IFilterChanged
+ * @implements Controls/interface:IItems
+ * @implements Controls/toolbars:IToolbarSource
+ * @implements Controls/dropdown:IGrouped
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/Toolbar/Base/Index

@@ -394,22 +394,11 @@ var _private = {
         return self._loadDeferred.addCallback(function() {
             return _private.loadSelectedItems(self._source, self._configs).addCallback(() => {
                 _private.updateText(self, self._source, self._configs);
-                return { configs: force ? deleteHistorySourceFromConfig(self._configs, 'source') : _private.purifyConfigs(self._configs)};
+                return {
+                    configs: deleteHistorySourceFromConfig(self._configs, 'source')
+                };
             });
         });
-    },
-
-    deleteFieldFromConfigs(configs: Record<string, any>, fieldName: string): void {
-        factory(configs).each((config) => {
-            if (config[fieldName]) {
-                delete config[fieldName];
-            }
-        });
-    },
-
-    purifyConfigs(configs): Array<Record<string, any>> {
-        _private.deleteFieldFromConfigs(configs, 'sourceController');
-        return deleteHistorySourceFromConfig(configs, 'source');
     },
 
     setValue: function(self, selectedKeys, name) {
@@ -1026,13 +1015,13 @@ var Filter = Control.extend({
                 const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
                 if (items) {
                     factory(selectedKeys).each((key) => {
-                        if (key !== undefined && key !== null && items.getRecordById(key)) {
-                            selectedItems.push(items.getRecordById(key));
+                        if (key !== undefined && key !== null) {
+                            selectedItems.push(items.at(items.getIndexByValue(this._configs[name].keyProperty, key)));
                         }
                     });
                 }
                 templateOptions.multiSelect = item.editorOptions.multiSelect;
-                templateOptions.selectedItems = items || new List({
+                templateOptions.selectedItems = new List({
                     items: selectedItems
                 });
                 this._idOpenSelector = name;
