@@ -151,7 +151,7 @@ define(
                assert.deepStrictEqual(view._displayText, expectedDisplayText);
                assert.strictEqual(view._filterText, 'Author: Ivanov K.K.');
                assert.isUndefined(view._configs.document);
-               assert.isOk(!view._configs.state.sourceController);
+               assert.isOk(view._configs.state.sourceController);
                assert.isUndefined(state.configs.state.source);
                done();
             });

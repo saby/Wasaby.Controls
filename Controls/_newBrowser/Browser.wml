@@ -11,6 +11,9 @@
       <Controls.scroll:Container
          attr:class="controls-newBrowser__master"
       >
+         <ws:if data="{{_options.masterHeaderTemplate}}">
+            <ws:partial template="{{_options.masterHeaderTemplate}}"/>
+         </ws:if>
          <Controls.explorer:View
             scope="{{_masterExplorerOptions}}"
 

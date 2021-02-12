@@ -168,7 +168,7 @@ define(
                suggestList._reverseList = true;
                suggestList._markedKey = null;
                suggestList._inputKeydown(null, domEvent);
-               assert.equal(suggestList._markedKey, 'first');
+               assert.equal(suggestList._markedKey, 'last');
             });
          });
 

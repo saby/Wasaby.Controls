@@ -413,14 +413,11 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
 
         const editingItem = editingCollectionItem.contents;
         const isAdd = editingCollectionItem.isAdd;
-
-        if (commit && commitStrategy === 'hasChanges' && !editingItem.isChanged()) {
-            return Promise.resolve(this._collectionEditor.cancel());
-        }
+        const willSave = commitStrategy === 'hasChanges' && !editingItem.isChanged() ? false : commit;
 
         this._operationsPromises.end = new Promise((resolve) => {
             if (this._options.onBeforeEndEdit) {
-                const result = this._options.onBeforeEndEdit(editingItem, commit, isAdd);
+                const result = this._options.onBeforeEndEdit(editingItem, willSave, isAdd);
                 resolve(force ? void 0 : result);
             } else {
                 resolve();
@@ -436,9 +433,9 @@ export class Controller extends mixin<DestroyableMixin>(DestroyableMixin) {
             if (result === CONSTANTS.CANCEL) {
                 return {canceled: true};
             }
-            this._collectionEditor[commit ? 'commit' : 'cancel']();
+            this._collectionEditor[willSave ? 'commit' : 'cancel']();
             (this._options.collection.getCollection() as unknown as RecordSet).acceptChanges();
-            return this._options?.onAfterEndEdit(editingCollectionItem, isAdd, commit);
+            return this._options?.onAfterEndEdit(editingCollectionItem, isAdd, willSave);
         }).finally(() => {
             this._operationsPromises.end = null;
         }) as TAsyncOperationResult;
