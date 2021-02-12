@@ -62,13 +62,13 @@ export default class View extends Control<IControlOptions> {
     };
 
     protected _beforeMount(options: IViewPanelOptions): void {
-        this._source = clone(options.source);
+        this._setSource(options.source);
         this._updateFilterParams();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         if (this._options.source !== newOptions.source) {
-            this._source = clone(newOptions.source);
+            this._setSource(options.source);
             this._updateFilterParams();
         }
     }
@@ -108,6 +108,10 @@ export default class View extends Control<IControlOptions> {
         }
     }
 
+    private _setSource(source: IFilterItem[]): void {
+        this._source = clone(source);
+    }
+
     private _resetFilterItem(item: unknown): void {
         const itemContent = item.getContents();
         this._source.forEach((item) => {
@@ -116,6 +120,7 @@ export default class View extends Control<IControlOptions> {
                 item.textValue = null;
             }
         });
+        this._setSource(this._source);
         this._updateFilterParams();
         this._notifyChanges();
     }
