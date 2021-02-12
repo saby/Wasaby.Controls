@@ -600,6 +600,21 @@ describe('Controls/_multiselection/SelectionStrategy/Tree', () => {
          const res = strategy.getCount(selection, false);
          assert.equal(res, 6);
       });
+
+      it('selectionType=leaf and recursiveSelection', () => {
+         const strategy = new TreeSelectionStrategy({
+            selectDescendants: true,
+            selectAncestors: true,
+            rootId: null,
+            model,
+            selectionType: 'leaf',
+            recursiveSelection: true
+         });
+
+         const selection = { selected: [2], excluded: [] };
+         const res = strategy.getCount(selection, false);
+         assert.equal(res, 2);
+      });
    });
 
    describe('cases of go inside node and out it', () => {
