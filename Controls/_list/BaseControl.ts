@@ -3456,6 +3456,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     selectionController.setSelection(selection);
                 }
                 if (newOptions.beforeMountCallback) {
+                    this._beforeMountCallbackCalled = true;
                     newOptions.beforeMountCallback({
                         viewModel: this._listViewModel,
                         markerController: _private.getMarkerController(this, newOptions)
@@ -4036,6 +4037,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
+                if (newOptions.beforeMountCallback && !this._beforeMountCallbackCalled) {
+                    this._beforeMountCallbackCalled = true;
+                    newOptions.beforeMountCallback({
+                        viewModel: this._listViewModel,
+                        markerController: _private.getMarkerController(this, newOptions)
+                    });
+                }
                 isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
@@ -6055,7 +6063,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // по отрисовке записей а по другой перерисовке списка, например появлению пэйджинга
         if (this._addItems && this._addItems.length) {
             const needShift = this._attachLoadTopTriggerToNull && direction === 'up';
-            this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
+            const result = this._scrollController.handleAddItems(this._addItemsIndex, this._addItems, direction, needShift);
+            _private.handleScrollControllerResult(this, result);
         }
 
         this._addItems = [];
