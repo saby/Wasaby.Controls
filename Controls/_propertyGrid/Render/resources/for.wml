@@ -1,7 +1,6 @@
 <ws:for data="index, item in listModel.getViewIterator()">
     <ws:partial
             template="{{item.getTemplate(itemTemplateProperty, itemTemplate, groupTemplate, toggleEditorsTemplate)}}"
-            attr:key="property-grid-item-{{item.getUid()}}"
             isGridLayout="{{isGridLayout}}"
             theme="{{theme}}"
             getItemStyles="{{getItemStyles}}"

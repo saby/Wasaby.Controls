@@ -289,6 +289,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._afterSourceLoad(sourceController, newOptions);
         }
 
+        if (sourceChanged && this._inputSearchValue && !newOptions.searchValue) {
+            this._inputSearchValue = '';
+        }
+
         if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
             if (this._options.searchValue !== newOptions.searchValue) {
                 this._inputSearchValue = newOptions.searchValue;
@@ -669,6 +673,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                     });
             }
         );
+    }
+
+    protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+        this._inputSearchValue = value;
     }
 
     protected _searchDataLoad(result: RecordSet|Error, searchValue: string): void {
