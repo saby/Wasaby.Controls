@@ -23,7 +23,7 @@
                   <div class="controls-TileView__previewTemplate_title_text" title="{{itemData.item[itemData.displayProperty]}}">
                      <div class="{{titleLines > 1 ? 'controls-TileView__text_ellipsis_multiLine' : 'ws-ellipsis'}}" style="-webkit-line-clamp: {{titleLines || 1}};">
                         <ws:if data="{{itemData.searchValue && task1180643735}}">
-                           <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}">
+                           <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}" className="{{highlightClassName}}">
                               <ws:value>
                                  <ws:String>{{itemData.item[itemData.displayProperty]}}</ws:String>
                               </ws:value>
