@@ -45,9 +45,9 @@ export interface IEditOpener {
  * @param {Object} meta Данные, по которым определяется, откуда диалог получит редактируемую запись. В объект можно передать свойства key и record. Политика обработки свойств подробно описана {@link /doc/platform/developmentapl/interface-development/controls/list/actions/editing-dialog/#step22 здесь}.
  * @param {Object} popupOptions Опции всплывающего окна диалога редактирования.
  * В зависимости от значения опции {@link Controls/_popup/interface/IEditOpener#mode mode}:
- * * "stack" — смотреть {@link Controls/popup:IStackOpener.PopupOptions стекового окна}
- * * "dialog" — смотреть {@link Controls/popup:IDialogOpener.PopupOptions диалогового окна}
- * * "sticky" — смотреть {@link Controls/popup:IStickyOpener.PopupOptions окна прилипающего блока}
+ * * "stack" — смотреть {@link Controls/popup:IStackOpener.PopupOptions.typedef}
+ * * "dialog" — смотреть {@link Controls/popup:IDialogOpener.PopupOptions.typedef}
+ * * "sticky" — смотреть {@link Controls/popup:IStickyOpener.PopupOptions.typedef}
  * @returns {undefined}
  * @example
  * <pre class="brush: html">
