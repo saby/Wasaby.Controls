@@ -1,4 +1,5 @@
 <div class="controls-StickyTemplate controls-StickyTemplate_theme_{{_options.theme}}
+            controls-StickyTemplate-background-{{_options.backgroundStyle}}_theme_{{_options.theme}}
             {{_options.shadowVisible ? 'controls-StickyTemplate-shadow_theme_' + _options.theme}}"
      ws-tab-cycling="true">
     <ws:if data="{{_options.headingCaption || _options.headerContentTemplate}}">
