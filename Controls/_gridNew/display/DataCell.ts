@@ -3,6 +3,8 @@ import {Record, Model} from 'Types/entity';
 
 import {IMarkable, ILadderConfig, TLadderElement} from 'Controls/display';
 
+import { IDisplaySearchValue, IDisplaySearchValueOptions } from './interface/IDisplaySearchValue';
+
 import ITagCell from './interface/ITagCell';
 import ILadderContentCell from './interface/ILadderContentCell';
 import IItemActionsCell from './interface/IItemActionsCell';
@@ -10,7 +12,7 @@ import Cell, {IOptions as ICellOptions} from './Cell';
 import DataRow from './DataRow';
 import DataCellCompatibility from './compatibility/DataCell';
 
-export interface IOptions<T> extends ICellOptions<T> {
+export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions {
 }
 
 export default class DataCell<T extends Model, TOwner extends DataRow<T>> extends mixin<
@@ -19,7 +21,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
 >(
     Cell,
     DataCellCompatibility
-) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
+) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell, IDisplaySearchValue {
 
     readonly Markable: boolean = true;
     readonly Draggable: boolean = true;
@@ -27,8 +29,15 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
     readonly ItemActionsCell: boolean = true;
     readonly LadderContentCell: boolean = true;
 
+    protected _$searchValue: string;
+
     get ladder(): TLadderElement<ILadderConfig> {
         return this.getOwner().getLadder();
+    }
+
+    setSearchValue(searchValue: string): void {
+        this._$searchValue = searchValue;
+        this._nextVersion();
     }
 
     getContentClasses(theme: string,
@@ -145,5 +154,6 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
 Object.assign(DataCell.prototype, {
     '[Controls/_display/grid/DataCell]': true,
     _moduleName: 'Controls/gridNew:GridDataCell',
+    _$searchValue: '',
     _instancePrefix: 'grid-data-cell-'
 });

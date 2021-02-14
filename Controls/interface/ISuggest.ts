@@ -314,8 +314,7 @@ interface ISuggest {
        * In this example, suggest will open up.
        * <pre class="brush: js">
        * // myModule.js
-       * define('myModule', ['UI/Base:Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
-       *    return Control.extend({
+       * class MyControl extends Control<IControlOptions> {
        *       _template: template,
        *       _suggestPopupOptions: null,
        *       _beforeMount: function() {
