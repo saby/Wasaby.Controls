@@ -21,6 +21,8 @@ import {TouchContextField} from 'Controls/context';
 import {RegisterClass} from 'Controls/event';
 import {ControllerClass as DnDController} from 'Controls/dragnDrop';
 
+import 'css!Controls/CommonClasses';
+
 // Нужно чтобы oldCss прилетал первым на страницу. Есть контролы (например itemsActions), стили которыйх
 // Завязаны на порядок css.
 import 'css!theme?Controls/Application/oldCss';
@@ -310,7 +312,9 @@ export default class Application extends Control<IApplication> {
       for (const key in this._bodyClasses) {
          if (this._bodyClasses.hasOwnProperty(key)) {
             if (Application._isExist(this._bodyClasses[key])) {
-               bodyClasses.push(this._bodyClasses[key]);
+               this._bodyClasses[key]
+                   .split(' ')
+                   .forEach((_class) => bodyClasses.push(_class));
             }
          }
       }

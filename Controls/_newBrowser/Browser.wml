@@ -11,12 +11,16 @@
       <Controls.scroll:Container
          attr:class="controls-newBrowser__master"
       >
+         <ws:if data="{{_options.masterHeaderTemplate}}">
+            <ws:partial template="{{_options.masterHeaderTemplate}}"/>
+         </ws:if>
          <Controls.explorer:View
             scope="{{_masterExplorerOptions}}"
 
             root="{{masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
             bind:markedKey="masterMarkedKey"
+            dataLoadCallback="{{_onMasterLoaded}}"
          />
       </Controls.scroll:Container>
    </ws:master>
@@ -38,6 +42,7 @@
 
             on:arrowClick="_onDetailArrowClick()"
             on:itemClick="_onDetailItemClick()"
+            on:viewModeChanged="_onDetailExplorerChangedViewMode()"
          >
             <ws:afterBreadCrumbsTemplate>
                <ws:if data="{{_options.detail.afterBreadCrumbsTemplate}}">

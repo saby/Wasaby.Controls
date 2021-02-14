@@ -129,6 +129,7 @@
                 on:itemLongTap="_onItemLongTap()"
                 on:itemMouseDown="_itemMouseDown()"
                 on:itemMouseUp="_itemMouseUp()"
+                on:touchstart="_touchStartHandler()"
                 on:itemMouseEnter="_itemMouseEnter()"
                 on:itemMouseMove="_itemMouseMove()"
                 on:itemMouseLeave="_itemMouseLeave()"
@@ -244,8 +245,5 @@
                 </ws:if>
             </div>
         </ws:if>
-        <Controls.event:Listener
-           event="dataError"
-           on:dataError="_onDataError()"/>
     </div>
 </Controls.dataSource:error.Container>

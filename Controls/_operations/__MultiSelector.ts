@@ -131,7 +131,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       const selectedKeys = options.selectedKeys;
       const excludedKeys = options.excludedKeys;
       const selection = this._getSelection(selectedKeys, excludedKeys);
-      const count = counterConfigChanged ? null : options.selectedKeysCount;
+      const count = (counterConfigChanged && options.selectedKeysCount !== 0) ? null : options.selectedKeysCount;
       const getCountCallback = (count, isAllSelected) => {
          this._menuCaption = this._getMenuCaption(selection, count, isAllSelected);
          this._sizeChanged = true;

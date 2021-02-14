@@ -71,7 +71,7 @@ var _private = {
  *
  * @class Controls/_calendar/MonthSlider:Base
  * @extends UI/Base:Control
- * 
+ *
  * @private
  * @author Красильников А.С.
  * @noShow
@@ -143,12 +143,12 @@ Component.getDefaultOptions = function () {
 };
 
 Object.defineProperty(Component, 'defaultProps', {
-   enumerable: true,
-   configurable: true,
+    enumerable: true,
+    configurable: true,
 
-   get(): object {
-      return Component.getDefaultOptions();
-   }
+    get(): object {
+        return Component.getDefaultOptions();
+    }
 });
 
 /**

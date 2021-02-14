@@ -2093,7 +2093,7 @@ define([
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn`t created');
 
             // прокручиваем к низу, проверяем состояние пэйджинга
-            lists.BaseControl._private.handleListScrollSync(ctrl, 600);
+            lists.BaseControl._private.handleListScrollSync(ctrl, 640);
 
             assert.deepEqual({
                     begin: "visible",
@@ -4208,7 +4208,7 @@ define([
                })
             })
          };
-         ctrl._documentDragEnd();
+         ctrl._documentDragEnd({entity: {}});
          assert.isTrue(dragEnded);
 
          //dragend with deferred
@@ -4232,7 +4232,7 @@ define([
          };
          ctrl._insideDragging = true;
          ctrl._notify = () => new cDeferred();
-         ctrl._documentDragEnd({});
+         ctrl._documentDragEnd({entity: {}});
          assert.isFalse(dragEnded);
          assert.isTrue(!!ctrl._loadingState);
       });
@@ -4679,7 +4679,8 @@ define([
                   }]
                }),
                isMarked: () => false,
-               isSwiped: () => false
+               isSwiped: () => false,
+               isEditing: () => false
             };
             instance.saveOptions(cfg);
             instance._scrollController = {
@@ -5431,7 +5432,7 @@ define([
          instance.destroy();
       });
 
-      it('close editInPlace if model changed', async () => {
+      it('close and destroy editInPlace if model changed', async () => {
          const cfg = {
                 viewName: 'Controls/List/ListView',
                 viewModelConfig: {
@@ -5443,20 +5444,29 @@ define([
                 source: source
              },
              instance = correctCreateBaseControl(cfg);
-         let cancelClosed = false;
+         let isEditingCanceled = false;
+         let isEIPDestroyed = false;
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._viewModelConstructor = {};
+         const cancelPromise = Promise.resolve();
          instance._cancelEdit = () => {
-            cancelClosed = true;
+            isEditingCanceled = true;
+            return cancelPromise;
          };
          instance._editInPlaceController = {
             isEditing: () => true,
-            updateOptions: () => {}
+            updateOptions: () => {},
+            destroy: () => {
+               isEIPDestroyed = true;
+            }
          };
          instance._beforeUpdate(cfg);
-         assert.isTrue(cancelClosed);
-         instance.destroy(cancelClosed);
+         return cancelPromise.then(() => {
+            assert.isTrue(isEditingCanceled);
+            assert.isTrue(isEIPDestroyed);
+            assert.isNull(instance._editInPlaceController);
+         });
       });
 
       it('getListTopOffset', function () {
@@ -6411,6 +6421,10 @@ define([
                    isColumnScrollVisible: () => true
                 }
              };
+             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+
+             baseControl._loadingIndicatorState = 'up';
+             baseControl._portionedSearchInProgress = true;
              assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
           });
 
@@ -7667,7 +7681,10 @@ define([
 
             const endDragSpy = sinon.spy(baseControl._dndListController, 'endDrag');
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({});
+            assert.isFalse(endDragSpy.called);
+
+            baseControl._documentDragEnd({ entity: {} });
 
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
@@ -7680,7 +7697,7 @@ define([
                })
             });
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
             assert.isTrue(endDragSpy.called);
             assert.isFalse(notifySpy.withArgs('dragEnd').called);
             assert.isFalse(notifySpy.withArgs('markedKeyChanged', [1]).called);
@@ -7688,11 +7705,21 @@ define([
             baseControl._insideDragging = true;
             baseControl._dndListController = dndController;
 
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
 
             assert.isTrue(endDragSpy.called);
             assert.isTrue(notifySpy.withArgs('dragEnd').called);
             assert.isTrue(notifySpy.withArgs('markedKeyChanged', [1]).called);
+            assert.isTrue(notifySpy.withArgs('selectedKeysChanged').called);
+
+            notifySpy.resetHistory();
+            baseControl._insideDragging = true;
+            baseControl._documentDragEnd({ entity: {} });
+
+            assert.isTrue(endDragSpy.called);
+            assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+
+            baseControl._insideDragging = undefined;
          });
 
          it('loadToDirection, drag all items', () => {
@@ -7756,10 +7783,27 @@ define([
             };
 
             const spy = sinon.spy(baseControl, 'checkTriggerVisibilityAfterRedraw');
-            baseControl._documentDragEnd({ entity: baseControl._dragEntity });
+            baseControl._documentDragEnd({ entity: {} });
             assert.isTrue(spy.called);
 
             sandbox.restore();
+         });
+
+         it('mouseEnter', () => {
+            baseControl._dragEntity = new dragNDrop.ItemsEntity({ items: [1] });
+            baseControl._documentDragging = true;
+
+            let isDragging = false;
+            baseControl._dndListController = {
+               isDragging: () => isDragging,
+            };
+            baseControl._mouseEnter(null);
+            assert.isTrue(notifySpy.withArgs('dragEnter', [baseControl._dragEntity]).called);
+
+            notifySpy.resetHistory();
+            isDragging = true;
+            baseControl._mouseEnter(null);
+            assert.isFalse(notifySpy.withArgs('dragEnter').called);
          });
       });
 
@@ -8110,6 +8154,22 @@ define([
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
             });
+
+            it('reset and not exist controller', () => {
+               baseControl._markerController = null;
+               baseControl.getViewModel().setItems(new collection.RecordSet({
+                  rawData: [
+                     {id: 1},
+                     {id: 2},
+                     {id: 3}
+                  ],
+                  keyProperty: 'id'
+               }));
+
+               lists.BaseControl._private.onCollectionChanged(baseControl, {}, 'collectionChanged', 'rs');
+               const item = baseControl.getViewModel().getItemBySourceKey(1);
+               assert.isTrue(item.isMarked());
+            });
          });
 
          describe('_beforeUpdate', () => {
@@ -8369,6 +8429,18 @@ define([
                   assert.isOk(baseControl._selectionController);
                });
             });
+
+            it('change root', () => {
+               const spyNotify = sinon.spy(baseControl, '_notify');
+               const newCfg = { ...cfg, selectedKeys: [null], excludedKeys: [null], root: null };
+               baseControl.saveOptions(newCfg);
+               return baseControl._beforeMount(newCfg).then(() => {
+                  assert.isOk(baseControl._selectionController);
+                  baseControl._beforeUpdate({ ...newCfg, root: 2 });
+                  assert.isTrue(spyNotify.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+                  assert.isTrue(spyNotify.withArgs('excludedKeysChanged', [[], [], [null]]).called);
+               });
+            });
          });
 
          describe('_onCheckboxClick', () => {
@@ -8490,6 +8562,15 @@ define([
                lists.BaseControl._private.onSelectedTypeChanged.apply(baseControl, ['toggleAll']);
                assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[null], [null], []]).calledOnce);
                assert.isFalse(notifySpy.withArgs('excludedKeysChanged').calledOnce);
+            });
+
+            it('destroyed BaseControl', () => {
+               const notifySpy = sinon.spy(baseControl, '_notify');
+               baseControl._destroyed = true;
+               lists.BaseControl._private.onSelectedTypeChanged.apply(baseControl, ['toggleAll']);
+               assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
+               assert.isFalse(notifySpy.withArgs('excludedKeysChanged').called);
+               baseControl._destroyed = false;
             });
          });
 

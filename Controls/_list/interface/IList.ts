@@ -241,6 +241,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @typedef {String} MultiSelectVisibility
+ * @description Допустимые значения для опции {@link multiSelectVisibility}.
  * @variant visible Показать.
  * @variant hidden Скрыть.
  * @variant onhover Показывать при наведении.
@@ -248,11 +249,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {MultiSelectVisibility} Видимость чекбоксов.
+ * @cfg {MultiSelectVisibility} Видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбоксов}.
  * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
- * @remark
- * Подробнее о работе с чекбоксами читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ здесь}.
  * @see multiSelectAccessibilityProperty
  * @see multiSelectPosition
  */
@@ -273,13 +272,14 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @typedef {String} MultiSelectPosition
+ * @description Допустимые значения для опции {@link multiSelectPosition}.
  * @variant custom Позиционирование чекбокса в произвольном месте пользовательского шаблона. Подробнее читайте {@link здесь}.
  * @variant default Стандартная позиция чекбоксов множественного выбора в начале строки.
  */
 
 /**
  * @name Controls/_list/interface/IList#multiSelectPosition
- * @cfg {MultiSelectPosition} Позиционирование чекбокса.
+ * @cfg {MultiSelectPosition} Позиционирование {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбокса}.
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
  * @default default
  * @see multiSelectAccessibilityProperty
@@ -301,13 +301,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#multiSelectAccessibilityProperty
- * @cfg {String} Имя свойства, содержащего информацию о доступности чекбокса элемента.
- * @remark Определяет возможность изменения состояния чекбокса и его видимость.
- * Для указания значения в {@link Types/entity:Record рекорде} рекомендуется использовать константу {@link Controls/list:MultiSelectAccessibility MultiSelectAccessibility}.
- * Возможные значения свойства {@link Types/entity:Record рекорда}:
- * * {@link Controls/list:MultiSelectAccessibility#enabled enabled} Чекбокс виден и с ним можно взаимодействовать
- * * {@link Controls/list:MultiSelectAccessibility#disabled disabled} Чекбокс виден, но с ним нельзя взаимодействовать
- * * {@link Controls/list:MultiSelectAccessibility#hidden hidden} Чекбокс скрыт
+ * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбокса}.
  * @demo Controls-demo/list_new/ItemTemplate/MultiSelectAccessibilityProperty/Index
  * @see multiSelectVisibility
  * @see multiSelectPosition

@@ -1,3 +1,7 @@
+type TSortingValue = 'ASC'|'DESC';
+type TSorting = Record<string, TSortingValue>;
+export type TSortingOptionValue = TSorting[];
+
 export interface ISortingOptions {
    sorting?: any;
 }

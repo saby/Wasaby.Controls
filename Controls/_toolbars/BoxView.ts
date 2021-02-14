@@ -3,6 +3,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import 'css!Controls/toolbars';
+import 'css!Controls/buttons';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {
@@ -12,7 +13,7 @@ import {
 
 import {
     IHierarchyOptions, IIconSizeOptions,
-    IItemTemplate, IItemTemplateOptions,
+    IItemTemplate, IItemTemplateOptions
 } from 'Controls/interface';
 import {IToolbarSourceOptions, default as IToolbarSource} from 'Controls/_toolbars/IToolbarSource';
 import * as template from 'wml!Controls/_toolbars/BoxView/BoxView';
@@ -97,7 +98,7 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
         return getTemplateByItem(item, this._options);
     }
 
-    static _theme: string[] = ['Controls/buttons', 'Controls/Classes'];
+    static _theme: string[] = ['Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
