@@ -4,14 +4,10 @@ import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplayS
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
-import GroupCell from "Controls/_gridNew/display/GroupCell";
-import Cell from "Controls/_gridNew/display/Cell";
-import CheckboxCell from "Controls/_gridNew/display/CheckboxCell";
-
-const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/treeGridNew:GroupItemTemplate';
 
 export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {
     owner: TreeGridCollection<T>;
+    nodeTypeProperty: string;
 }
 
 export default class TreeGridDataRow<T extends Model>
@@ -29,11 +25,9 @@ export default class TreeGridDataRow<T extends Model>
 
     constructor(options: IOptions<T>) {
         super(options);
-
         this._cellModule = this.isGroupNode() ?
-            'Controls/treeGrid:TreeGridDataCell' :
-            'Controls/treeGrid:TreeGridGroupDataCell';
-
+            'Controls/treeGrid:TreeGridGroupDataCell' :
+            'Controls/treeGrid:TreeGridDataCell';
         GridRowMixin.call(this, options);
     }
 
@@ -143,7 +137,8 @@ export default class TreeGridDataRow<T extends Model>
     }
 
     isGroupNode(): boolean {
-        return this.getContents().get(this._$nodeTypeProperty) === 'group';
+        const contents = this.getContents();
+        return contents && contents.get && contents.get(this._$nodeTypeProperty) === 'group';
     }
 }
 

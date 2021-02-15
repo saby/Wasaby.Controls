@@ -2,11 +2,24 @@
     <Controls.treeGridNew:View
             keyProperty="id"
             source="{{_viewSource}}"
-            columns="{{_columns}}"
             parentProperty="parent"
-            nodeProperty="type">
-        <ws:itemTemplate>
-            <ws:partial template="Controls/treeGridNew:GroupItemTemplate"/>
-        </ws:itemTemplate>
+            nodeProperty="type"
+            nodeTypeProperty="nodeType">
+        <ws:columns>
+            <ws:Array>
+                <ws:Object displayProperty="title" width="1fr">
+                    <ws:template>
+                        <ws:if data="{{ template.item.isGroupNode() }}">
+                            <ws:partial template="Controls/treeGridNew:GroupColumnTemplate"/>
+                        </ws:if>
+                        <ws:else>
+                            <ws:partial template="Controls/gridNew:ColumnTemplate"/>
+                        </ws:else>
+                    </ws:template>
+                </ws:Object>
+                <ws:Object displayProperty="rating" width="100px"/>
+                <ws:Object displayProperty="country" width="100px"/>
+            </ws:Array>
+        </ws:columns>
     </Controls.treeGridNew:View>
 </div>

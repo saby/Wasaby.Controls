@@ -1,5 +1,5 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as Template from 'wml!Controls-demo/treeGridNew/Base/TreeGridView/TreeGridView';
+import * as Template from 'wml!Controls-demo/treeGridNew/GroupView/TreeGridView/TreeGridView';
 import {Memory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
 
@@ -11,7 +11,16 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: Gadgets.getFlatData()
+            data: this._prepareData()
+        });
+    }
+
+    private _prepareData(): any {
+        return Gadgets.getFlatData().map((data) => {
+            if ([1, 2, 3, 4, 5].indexOf(data.id) !== -1) {
+                data.nodeType = 'group';
+            }
+            return data;
         });
     }
 

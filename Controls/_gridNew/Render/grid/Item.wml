@@ -69,7 +69,6 @@
             <ws:for data="column in (item || itemData).getColumns()">
                 <Controls.scroll:StickyHeader position="{{ (item || itemData).getStickyHeaderPosition() }}"
                                               mode="{{ (item || itemData).getStickyHeaderMode() }}"
-                                              backgroundStyle="{{backgroundStyle}}"
                                               style="{{style}}"
                                               theme="{{theme}}"
                                               shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"

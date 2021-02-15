@@ -5,9 +5,6 @@
             columns="{{_columns}}"
             parentProperty="parent"
             nodeProperty="type">
-        <ws:itemTemplate>
-            <ws:partial template="Controls/treeGridNew:GroupItemTemplate"/>
-        </ws:itemTemplate>
     </Controls.treeGridNew:View>
 </div>
 

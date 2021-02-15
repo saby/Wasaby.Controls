@@ -1,6 +1,7 @@
 import { default as View } from 'Controls/_treeGridNew/TreeGrid';
 import TreeGridView from 'Controls/_treeGridNew/TreeGridView';
 
+import * as GroupColumnTemplate from 'wml!Controls/_treeGridNew/render/GroupCellContent';
 import * as GridItemTemplate from 'wml!Controls/_treeGridNew/render/grid/Item';
 import * as TableItemTemplate from 'wml!Controls/_treeGridNew/render/table/Item';
 import * as NodeFooterTemplate from 'wml!Controls/_treeGridNew/render/NodeFooterTemplate';
@@ -18,14 +19,12 @@ const ItemTemplate = function() {
 ItemTemplate.stable = true;
 ItemTemplate.isWasabyTemplate = true;
 
-import * as GroupItemTemplate from 'wml!Controls/_treeGridNew/render/grid/GroupItem';
-
 export {
     View,
     TreeGridView,
     ItemTemplate,
-    GroupItemTemplate,
-    NodeFooterTemplate
+    NodeFooterTemplate,
+    GroupColumnTemplate
 };
 
 import { register } from 'Types/di';
@@ -37,6 +36,7 @@ import TreeGridNodeFooterCell from 'Controls/_treeGridNew/display/TreeGridNodeFo
 import TreeGridFooterRow from 'Controls/_treeGridNew/display/TreeGridFooterRow';
 import TreeGridFooterCell from 'Controls/_treeGridNew/display/TreeGridFooterCell';
 import { isFullGridSupport } from 'Controls/display';
+import TreeGridGroupDataCell from 'Controls/_treeGridNew/display/TreeGridGroupDataCell';
 
 export {
     TreeGridFooterCell,
@@ -54,3 +54,4 @@ register('Controls/treeGrid:TreeGridNodeFooterRow', TreeGridNodeFooterRow, {inst
 register('Controls/treeGrid:TreeGridNodeFooterCell', TreeGridNodeFooterCell, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterRow', TreeGridFooterRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterCell', TreeGridFooterCell, {instantiate: false});
+register('Controls/treeGrid:TreeGridGroupDataCell', TreeGridGroupDataCell, {instantiate: false});
