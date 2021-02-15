@@ -46,6 +46,7 @@ var
          data.breadCrumbs = data.item && !!data.item.forEach;
          data.breadCrumbsDisplayProperty = this._options.displayProperty;
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
+         data.searchSeparatorTemplate = this._options.searchSeparatorTemplate || 'Controls/treeGrid:SearchSeparatorTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
          data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
 

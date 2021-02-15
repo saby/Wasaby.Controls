@@ -30,6 +30,7 @@ export interface ITreeControlOptions extends IControlOptions {
     nodeFooterVisibilityCallback?: TNodeFooterVisibilityCallback;
     hasChildrenProperty?: string;
     searchBreadCrumbsItemTemplate?: TemplateFunction;
+    searchSeparatorTemplate?: TemplateFunction;
     expanderVisibility?: 'visible'|'hasChildren'|'hasChildrenOrHover';
     nodeLoadCallback?: TNodeLoadCallback;
     deepReload?: boolean;
@@ -197,6 +198,25 @@ export interface ITreeControlOptions extends IControlOptions {
  *
  * Template supports the following parameters:
  * - checkboxReadOnly {Boolean} — A flag that allows the checkbox to be set to read-only mode.
+ */
+
+/**
+ * @name Controls/_tree/interface/ITreeControl#searchSeparatorTemplate
+ * @cfg {TemplateFunction} Шаблон отображения разделителя записей из корня в {@link Controls/treeGrid:View дереве} при {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/mode/ режиме поиска}.
+ * @remark
+ * По умолчанию используется базовый шаблон "Controls/treeGrid:SearchSeparatorTemplate", который поддерживает следующий параметр:
+ *
+ * * colspan {Boolean} — флаг, позволяющий отключить объединение колонок для строки разделителя
+ */
+
+/*
+ * @name Controls/_tree/interface/ITreeControl#searchSeparatorTemplate
+ * @cfg {TemplateFunction} Template of the root items separator in a {@link Controls/treeGrid:View tree} in search mode.
+ * @remark
+ * The default template is "Controls/treeGrid:SearchSeparatorTemplate".
+ *
+ * Template supports the following parameters:
+ * - colspan {Boolean} — A flag that switches off column span for separator item
  */
 
 /**
