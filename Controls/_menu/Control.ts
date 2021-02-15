@@ -343,7 +343,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             const action = actionModel && actionModel.getRawData();
             if (action && !action['parent@']) {
                 const item = this._itemActionsController.getActiveItem();
-                this._itemActionClick(null, item, action, clickEvent);
+                this._itemActionMouseDown(null, item, action, clickEvent);
                 this._itemActionSticky.close();
             }
         }
