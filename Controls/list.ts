@@ -35,7 +35,7 @@
  * @public
  * @author Крайнов Д.О.
  */
-import AddButton = require('Controls/_list/AddButton');
+export {default as AddButton} from 'Controls/_list/AddButton';
 import {default as Container} from 'Controls/_list/Container';
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
@@ -92,7 +92,6 @@ export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 
 export {
-    AddButton,
     Container,
     EmptyTemplate,
     GroupTemplate,
