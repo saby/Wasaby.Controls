@@ -78,7 +78,6 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _beforeMount: function (options) {
-        this._scrollToMonth = this._scrollToMonth.bind(this);
         _private.updateView(this, options);
     },
 
