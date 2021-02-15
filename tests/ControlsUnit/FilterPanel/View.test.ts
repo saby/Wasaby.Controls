@@ -7,7 +7,6 @@ describe('Controls/filterPanel:View', () => {
         const viewControl = new View({});
         let itemToggled = false;
         const displayItem = {
-            isExpanded: () => true,
             getContents: () => 'elem',
             toggleExpanded: () => { itemToggled = true; }
         };
@@ -29,7 +28,6 @@ describe('Controls/filterPanel:View', () => {
 
         it('collapsedGroups includes item contents', () => {
             itemToggled = false;
-            displayItem.isExpanded = () => false;
             viewControl._collapsedGroups = ['elem'];
 
             viewControl._groupClick(null, displayItem, clickEvent);
@@ -40,20 +38,10 @@ describe('Controls/filterPanel:View', () => {
         it('displayItem is collapsed', () => {
             itemToggled = false;
             viewControl._collapsedGroups = [];
-            displayItem.isExpanded = () => true;
 
             viewControl._groupClick(null, displayItem, clickEvent);
             assert.deepEqual(viewControl._collapsedGroups, ['elem']);
             assert.isTrue(itemToggled);
-        });
-
-        it('displayItem is collapsed, without click on group caption', () => {
-            itemToggled = false;
-            viewControl._collapsedGroups = [];
-
-            viewControl._groupClick(null, displayItem, null);
-            assert.deepEqual(viewControl._collapsedGroups, ['elem']);
-            assert.isFalse(itemToggled);
         });
     });
 });

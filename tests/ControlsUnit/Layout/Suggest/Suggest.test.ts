@@ -677,6 +677,27 @@ describe('Controls/suggest', () => {
 
          after(() => sandbox.restore());
 
+         it('indicator is hidden', async () => {
+            const inputSandbox = sinon.createSandbox();
+            let inidicatorHidden = false;
+            inputContainer._inputActive = true;
+            inputContainer._children = {
+               indicator: {
+                  show: () => {},
+                  hide: () => {
+                     inidicatorHidden = true;
+                  }
+               }
+            };
+            const error = new Error();
+            inputSandbox.stub(SourceController.prototype, 'load')
+               .callsFake(() => Promise.reject(error));
+
+            await inputContainer._resolveLoad();
+            assert.isTrue(inidicatorHidden);
+            inputSandbox.restore();
+         });
+
          it('value is not specified', async () => {
             inputContainer._inputActive = true;
             sandbox.stub(SourceController.prototype, 'load')

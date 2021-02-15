@@ -104,14 +104,5 @@ define([
             });
          });
       });
-
-      describe('_getMonth', function() {
-         it('should return proper date.', function() {
-            const component = calendarTestUtils.createComponent(DateRange, { year: year }),
-               rDate = component._getMonth(2019, 0);
-            assert.strictEqual(rDate.getTime(), (new Date(2019, 0)).getTime());
-            cInstance.instanceOfModule(rDate, 'Types/entity:Date');
-         });
-      });
    });
 });

@@ -274,12 +274,12 @@ export default class Container extends Control<IContainerOptions> {
    private _searchReset(event: SyntheticEvent): void {
       const searchController = this._getSearchController();
 
-      if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
+      if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch && this._options.startingWith === 'current') {
          this._root = this._rootBeforeSearch;
-         this._rootBeforeSearch = null;
          searchController.setRoot(this._root);
          this._notify('rootChanged', [this._root]);
       }
+      this._rootBeforeSearch = null;
       this._updateFilter(searchController);
    }
 
@@ -314,7 +314,7 @@ export default class Container extends Control<IContainerOptions> {
          this._notifiedMarkedKey = undefined;
       }
 
-      if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
+      if (this._searchController && (this._searchController.isSearchInProcess() || this._searchController.getSearchValue() !== this._searchValue)) {
          const filter = this._searchController.getFilter();
          this._updateParams(this._searchController.getSearchValue());
          this._sourceController.setFilter(filter);

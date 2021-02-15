@@ -230,6 +230,8 @@ describe('Controls/browser:Browser', () => {
 
                     await browser._search({}, 'test');
                     assert.isTrue(dataErrorProcessed);
+                    assert.isFalse(browser._loading);
+                    assert.deepStrictEqual(browser._filter, {name: 'test'});
                 });
 
                 it('double search call will create searchController once', async () => {
@@ -274,6 +276,18 @@ describe('Controls/browser:Browser', () => {
                     browser._sourceController.reload();
                     browser._searchReset({} as SyntheticEvent);
                     assert.ok(!browser._sourceController.isLoading());
+                });
+
+                it('_searchReset with startingWith === "current"', async () => {
+                    const options = getBrowserOptions();
+                    options.startingWith = 'current';
+                    const browser = getBrowser(options);
+                    await browser._beforeMount(options);
+                    browser.saveOptions(options);
+
+                    browser._rootBeforeSearch = 'testRoot';
+                    await browser._searchReset({} as SyntheticEvent);
+                    assert.isNull(browser._rootBeforeSearch);
                 });
             });
         });
@@ -402,6 +416,21 @@ describe('Controls/browser:Browser', () => {
                 options.searchValue = 'test';
                 browser._beforeUpdate(options);
                 assert.deepStrictEqual(browser._filter.name, 'test');
+            });
+
+            it('update source without new searchValue should reset inputSearchValue', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                await browser._search({}, 'testSearchValue');
+                assert.ok(browser._inputSearchValue === 'testSearchValue');
+
+                options = {...options};
+                options.source = new Memory();
+                browser._beforeUpdate(options);
+                assert.ok(!browser._inputSearchValue);
             });
 
         });

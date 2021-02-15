@@ -97,6 +97,36 @@ define(
                     assert.equal(menuPopup._headerTemplate, null);
                 });
             });
+
+            it('_hoverController', function () {
+               const menuPopop = new menu.Popup();
+               const menuOptions = {
+                   trigger: 'hover',
+                   headerContentTemplate: 'testTemplate'
+               };
+               let isClose = false;
+               menuPopop._notify = function (eventName) {
+                   if (isClose) {
+                       assert.equal(eventName, 'close');
+                   } else {
+                       assert.isTrue('false', 'The event should not be triggered');
+                   }
+               };
+               const clock = sinon.useFakeTimers();
+               menuPopop.__beforeMount(menuOptions);
+               assert.isTrue(!!menuPopop._hoverController);
+               menuPopop._mouseEvent({type:'mouseenter'});
+               menuPopop._mouseEvent({type:'mouseleave'});
+               isClose = true;
+               clock.tick(1500);
+
+                menuPopop._mouseEvent({type:'mouseenter'});
+                menuPopop._mouseEvent({type:'mouseleave'});
+                menuPopop._mouseEvent({type:'mouseenter'});
+                isClose = false;
+                clock.tick(1500);
+                clock.restore();
+            });
         });
     }
 );
