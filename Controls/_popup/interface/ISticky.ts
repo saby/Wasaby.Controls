@@ -1,12 +1,13 @@
 import {IBasePopupOptions, IOpener} from 'Controls/_popup/interface/IBaseOpener';
 import {Control} from 'UI/Base';
+import {default as IBackgroundStyle, IBackgroundStyleOptions} from "Controls/_interface/IBackgroundStyle";
 
 /**
  * Опции интерфейса описаны {@link Controls/_popup/interface/IStickyOpener здесь}.
  * @public
  * @author Красильников А.С.
  */
-export interface IStickyPopupOptions extends IBasePopupOptions {
+export interface IStickyPopupOptions extends IBasePopupOptions, IBackgroundStyleOptions, IBackgroundStyle {
     /**
      * @cfg {Number} Минимальная ширина всплывающего окна.
      */

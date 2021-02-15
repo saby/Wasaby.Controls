@@ -17,4 +17,5 @@ export default interface IBackgroundStyle {
  * @default default (фон цвета темы)
  * @demo Controls-demo/Spoiler/Cut/BackgroundStyle/Index
  * @demo Controls-demo/EditableArea/BackgroundStyle/Index
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
  */
