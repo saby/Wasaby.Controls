@@ -579,13 +579,14 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _createScrollModel(): void {
         const scrollState = this._getFullStateFromDOM();
-        this._scrollModel = new ScrollModel(this._children.content, scrollState);
+        const {content} = this._children;
+        this._scrollModel = new ScrollModel(content, scrollState);
+        this._oldScrollState = new ScrollModel(content, {});
     }
 
     _updateState(newState: IScrollState): boolean {
         if (!this._scrollModel) {
             this._createScrollModel();
-            this._oldScrollState = new ScrollModel(this._children.content, {});
         } else {
             this._oldScrollState = this._scrollModel.clone();
         }

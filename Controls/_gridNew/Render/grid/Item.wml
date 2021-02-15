@@ -73,6 +73,7 @@
                                               style="{{style}}"
                                               theme="{{theme}}"
                                               shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
+                                              backgroundStyle="{{ backgroundStyle }}"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                               attr:style="{{ column.getWrapperStyles() }}">
                     <ws:partial template="COLUMN" gridColumn="{{ column }}"/>

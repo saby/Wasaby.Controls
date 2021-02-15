@@ -1,6 +1,7 @@
 import { constants } from 'Env/Env';
 import { Confirmation, Dialog, IConfirmationOptions, IBasePopupOptions } from 'Controls/popup';
 import { ViewConfig } from './Handler';
+import { load } from 'WasabyLoader/Library';
 
 interface IPopupModule {
     Confirmation: typeof Confirmation;
@@ -80,7 +81,7 @@ export default class Popup implements IPopupHelper {
                                              dialogOptions: IBasePopupOptions): Promise<PopupId | void> {
         const { template } = config;
         const preloadConfigTemplate = typeof template === 'string'
-            ? import(template).catch(() => undefined)
+            ? load(template).catch(() => undefined)
             : Promise.resolve(true);
 
         return Promise.all([

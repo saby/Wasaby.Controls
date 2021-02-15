@@ -37,11 +37,11 @@ interface IContainerOptions extends IControlOptions {
      * </pre>
      *
      * <pre>
-     *    Control.extend({
+     *    class MyControl extends Control<IControlOptions> {
      *       ...
      *     _items: [...]
      *       ...
-     *    });
+     *    }
      * </pre>
      */
     draggingTemplate: TemplateFunction;
@@ -320,7 +320,7 @@ class Container extends Control<IContainerOptions> {
      * </pre>
      *
      * <pre>
-     *    Control.extend({
+     *    class MyControl extends Control<IControlOptions> {
      *       ...
      *       _items: [...],
      *       _startDragNDrop: function(event, item) {
@@ -329,7 +329,7 @@ class Container extends Control<IContainerOptions> {
      *          }), event);
      *       },
      *       ...
-     *    });
+     *    }
      * </pre>
      */
     startDragNDrop(
@@ -476,7 +476,7 @@ Object.defineProperty(Container, 'defaultProps', {
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       ...
  *       _items: [...],
  *       _documentDrag: false,
@@ -489,7 +489,7 @@ Object.defineProperty(Container, 'defaultProps', {
  *          }), event);
  *       },
  *       ...
- *    });
+ *    }
  * </pre>
  * @see documentDragEnd
  * @see dragStart
@@ -524,7 +524,7 @@ Object.defineProperty(Container, 'defaultProps', {
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       ...
  *       _items: [...],
  *       _documentDrag: false,
@@ -540,7 +540,7 @@ Object.defineProperty(Container, 'defaultProps', {
  *          }), event);
  *       },
  *       ...
- *    });
+ *    }
  * </pre>
  * @see documentDragStart
  * @see dragStart
@@ -574,7 +574,7 @@ Object.defineProperty(Container, 'defaultProps', {
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       ...
  *       _items: [...],
  *       _dragItemKey: null,
@@ -587,7 +587,7 @@ Object.defineProperty(Container, 'defaultProps', {
  *          }), event);
  *       },
  *       ...
- *    });
+ *    }
  * </pre>
  * @see documentDragStart
  * @see documentDragEnd
