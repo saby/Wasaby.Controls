@@ -44,7 +44,7 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * 
+ *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @public
  */
@@ -703,6 +703,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _$compatibleReset: boolean;
 
     protected _$itemActionsProperty: string;
+
+    protected _$itemActionsVisibility: string;
 
     protected _$markerVisibility: string;
 
@@ -2719,6 +2721,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$itemActionsProperty;
     }
 
+    getItemActionsVisibility(): string {
+        return this._$itemActionsVisibility;
+    }
+
     getMarkerVisibility(): string {
         return this._$markerVisibility;
     }
@@ -3807,6 +3813,7 @@ Object.assign(Collection.prototype, {
     _$compatibleReset: false,
     _$contextMenuConfig: null,
     _$itemActionsProperty: '',
+    _$itemActionsVisibility: 'onhover',
     _$markerVisibility: 'onactivated',
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
