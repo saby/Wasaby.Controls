@@ -674,16 +674,20 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      */
     getItemActionsStylingClasses(templateHighlightOnHover: boolean = true, theme?: string): string {
         let backgroundStyle;
-        if (this.isEditing()) {
-            backgroundStyle = `editing_${this.getOwner().getEditingBackgroundStyle()}`;
-        } else if (!templateHighlightOnHover) {
+        if (!this.isEditing() && !templateHighlightOnHover) {
             return '';
         }
-        if (this.getOwner().getItemActionsVisibility() === 'visible') {
-            backgroundStyle = 'transparent';
+
+        if (this.isEditing()) {
+            backgroundStyle = `editing_${this.getOwner().getEditingBackgroundStyle()}`;
         } else {
-            backgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getOwner().getStyle();
+            if (this.getOwner().getItemActionsVisibility() === 'visible') {
+                backgroundStyle = 'transparent';
+            } else {
+                backgroundStyle = this.getOwner().getHoverBackgroundStyle() || this.getOwner().getStyle();
+            }
         }
+
         return `controls-itemActionsV_style_${backgroundStyle}_theme-${theme}`;
     }
 
