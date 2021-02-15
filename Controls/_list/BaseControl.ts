@@ -1691,7 +1691,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET) {
+            if (action === IObservable.ACTION_RESET && newItems && newItems.length) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
             }
 
