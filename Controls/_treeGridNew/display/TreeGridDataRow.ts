@@ -6,6 +6,7 @@ import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
 import GroupCell from "Controls/_gridNew/display/GroupCell";
 import Cell from "Controls/_gridNew/display/Cell";
+import CheckboxCell from "Controls/_gridNew/display/CheckboxCell";
 
 const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/treeGridNew:GroupItemTemplate';
 
@@ -24,9 +25,15 @@ export default class TreeGridDataRow<T extends Model>
     readonly LadderSupport: boolean = true;
     readonly DraggableItem: boolean = true;
     protected _$searchValue: string;
+    protected _$nodeTypeProperty: string;
 
     constructor(options: IOptions<T>) {
         super(options);
+
+        this._cellModule = this.isGroupNode() ?
+            'Controls/treeGrid:TreeGridDataCell' :
+            'Controls/treeGrid:TreeGridGroupDataCell';
+
         GridRowMixin.call(this, options);
     }
 
@@ -96,7 +103,7 @@ export default class TreeGridDataRow<T extends Model>
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             searchValue: this._$searchValue
-        }
+        };
     }
 
     setSearchValue(searchValue: string): void {
@@ -131,18 +138,12 @@ export default class TreeGridDataRow<T extends Model>
 
     // endregion overrides
 
-    getGroupColumns(): Array<Cell<T, TreeGridDataRow<T>>> {
-        if (this._$columns) {
-            const columns = [];
+    setNodeTypeProperty(nodeTypeProperty: string): void {
+        this._$nodeTypeProperty = nodeTypeProperty;
+    }
 
-            columns.push(new GroupCell({
-                owner: this,
-                columns: this._$columns,
-                column: { template: this._template || DEFAULT_GROUP_CONTENT_TEMPLATE }
-            }));
-
-            this._$columnItems = columns;
-        }
+    isGroupNode(): boolean {
+        return this.getContents().get(this._$nodeTypeProperty) === 'group';
     }
 }
 
@@ -150,7 +151,8 @@ Object.assign(TreeGridDataRow.prototype, {
     '[Controls/treeGrid:TreeGridDataRow]': true,
     '[Controls/_display/grid/Row]': true,
     '[Controls/_display/TreeItem]': true,
-    _cellModule: 'Controls/treeGrid:TreeGridDataCell',
+    _cellModule: null,
+    _$nodeTypeProperty: null,
     _moduleName: 'Controls/treeGrid:TreeGridDataRow',
     _$searchValue: '',
     _instancePrefix: 'tree-grid-row-'

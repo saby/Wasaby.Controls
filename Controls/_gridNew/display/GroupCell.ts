@@ -1,6 +1,8 @@
 import {OptionsToPropertyMixin} from 'Types/entity';
+import {mixin} from 'Types/util';
 
 import {IColspanParams, IColumn} from 'Controls/_grid/interface/IColumn';
+import {default as GridGroupCellMixin} from 'Controls/_gridNew/display/mixins/GroupCell';
 
 import Cell from './Cell';
 import GroupItem from './GroupItem';
@@ -13,7 +15,8 @@ export interface IOptions<T> {
 
 const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
 
-export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
+export default class GroupCell<T>
+    extends mixin<Cell<any, GroupItem<any>>, GridGroupCellMixin<any>>(Cell, GridGroupCellMixin) {
     protected _$columns: IColumn[];
 
     constructor(options?: IOptions<T>) {
@@ -52,36 +55,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
 
     // endregion
 
-    getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
-        const leftPadding = this._$owner.getLeftPadding().toLowerCase();
-        const rightPadding = this._$owner.getRightPadding().toLowerCase();
-
-        return 'controls-ListView__groupContent' +
-            (expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '') +
-            ` controls-Grid__groupContent__spacingLeft_${leftPadding}_theme-${theme}` +
-            ` controls-Grid__groupContent__spacingRight_${rightPadding}_theme-${theme}`;
-    }
-
-    getCaptionClasses(expanderAlign, expanderVisible: boolean, theme: string) {
-        const expander = expanderAlign === 'right' ? 'right' : 'left';
-
-        let classes = 'controls-ListView__groupContent-text ' +
-            `controls-ListView__groupContent-text_theme-${theme} ` +
-            `controls-ListView__groupContent-text_default_theme-${theme} `;
-
-        if (expanderVisible !== false) {
-            if (!this.isExpanded()) {
-                classes += ' controls-ListView__groupExpander_collapsed';
-                classes += ` controls-ListView__groupExpander_collapsed_${expander}`;
-            }
-
-            classes += ` controls-ListView__groupExpander controls-ListView__groupExpander_theme-${theme}` +
-                ` controls-ListView__groupExpander_${expander}_theme-${theme}` +
-                ` controls-ListView__groupExpander-iconSize_default_theme-${theme}`;
-        }
-
-        return classes;
-    }
+    // region Аспект "Ячейка группы"
 
     getRightTemplateClasses(separatorVisibility: boolean,
                             textVisible: boolean,
@@ -104,21 +78,7 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
         return classes;
     }
 
-    shouldDisplayLeftSeparator(separatorVisibility: boolean,
-                               textVisible: boolean,
-                               columnAlignGroup: number,
-                               textAlign: string): boolean {
-        return separatorVisibility !== false && textVisible !== false &&
-            (columnAlignGroup !== undefined || textAlign !== 'left');
-    }
-
-    shouldDisplayRightSeparator(separatorVisibility: boolean,
-                                textVisible: boolean,
-                                columnAlignGroup: number,
-                                textAlign: string): boolean {
-        return separatorVisibility !== false &&
-            (columnAlignGroup !== undefined || textAlign !== 'right' || textVisible === false);
-    }
+    // endregion Aspect GridGroupCellMixin
 
     getCaption(): T {
         return this._$owner.getCaption();

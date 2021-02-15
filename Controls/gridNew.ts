@@ -66,6 +66,7 @@ import {
 } from 'Controls/_gridNew/display/Collection';
 export { default as GridMixin, TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from 'Controls/_gridNew/display/mixins/Grid';
 export { default as GridRowMixin } from 'Controls/_gridNew/display/mixins/Row';
+export { default as GridGroupCellMixin } from 'Controls/_gridNew/display/mixins/GroupCell';
 export { IItemTemplateParams } from 'Controls/_gridNew/display/mixins/Row';
 
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_gridNew/display/Row';

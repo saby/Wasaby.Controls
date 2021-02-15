@@ -47,6 +47,8 @@ export default class TreeGridCollection<
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
 
+    protected _$nodeTypeProperty: string;
+
     constructor(options: IOptions<S, T>) {
         super(options);
         GridMixin.call(this, options);
@@ -56,6 +58,15 @@ export default class TreeGridCollection<
         this.addFilter(
            (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
         );
+    }
+
+    setNodeTypeProperty(nodeTypeProperty: string): void {
+        this._$nodeTypeProperty = nodeTypeProperty;
+        this._nextVersion();
+    }
+
+    getNodeTypeProperty(): string {
+        return this._$nodeTypeProperty;
     }
 
     // TODO duplicate code with GridCollection. Нужно придумать как от него избавиться.
@@ -150,7 +161,6 @@ export default class TreeGridCollection<
     protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
         return GridGroupItem;
     }
-
     // endregion
 
     protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {
@@ -186,5 +196,6 @@ export default class TreeGridCollection<
 Object.assign(TreeGridCollection.prototype, {
     '[Controls/treeGrid:TreeGridCollection]': true,
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
-    _itemModule: 'Controls/treeGrid:TreeGridDataRow'
+    _itemModule: 'Controls/treeGrid:TreeGridDataRow',
+    _$nodeTypeProperty: null
 });
