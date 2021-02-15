@@ -1,13 +1,13 @@
 import {IBasePopupOptions, IOpener} from 'Controls/_popup/interface/IBaseOpener';
 import {Control} from 'UI/Base';
-import {default as IBackgroundStyle, IBackgroundStyleOptions} from "Controls/_interface/IBackgroundStyle";
+import {IBackgroundStyleOptions} from 'Controls/interface';
 
 /**
  * Опции интерфейса описаны {@link Controls/_popup/interface/IStickyOpener здесь}.
  * @public
  * @author Красильников А.С.
  */
-export interface IStickyPopupOptions extends IBasePopupOptions, IBackgroundStyleOptions, IBackgroundStyle {
+export interface IStickyPopupOptions extends IBasePopupOptions, IBackgroundStyleOptions {
     /**
      * @cfg {Number} Минимальная ширина всплывающего окна.
      */
@@ -285,6 +285,11 @@ export interface IStickyOpener extends IOpener {
 /**
  * @name Controls/_popup/interface/IStickyOpener#offset
  * @cfg {Controls/_popup/interface/IStickyOpener/Offset.typedef} Устанавливает отступы от точки позиционнирования до всплывающего окна
+ */
+
+/**
+ * @name Controls/_popup/interface/IStickyOpener#backgroundStyle
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
  */
 
 /*

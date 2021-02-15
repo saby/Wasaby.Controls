@@ -9,7 +9,7 @@ export interface IBackgroundStyleOptions {
  * @author Красильников А.С.
  */
 export default interface IBackgroundStyle {
-    readonly '[Controls/_interface/IBackgroundStyle]'?: boolean;
+    readonly '[Controls/_interface/IBackgroundStyle]': boolean;
 }
 /**
  * @name Controls/_interface/IBackgroundStyle#backgroundStyle
@@ -17,5 +17,4 @@ export default interface IBackgroundStyle {
  * @default default (фон цвета темы)
  * @demo Controls-demo/Spoiler/Cut/BackgroundStyle/Index
  * @demo Controls-demo/EditableArea/BackgroundStyle/Index
- * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
  */
