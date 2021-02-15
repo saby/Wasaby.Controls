@@ -75,6 +75,12 @@ export default interface IApplication extends IHTML {
  * @cfg {String} title of the tab
  */
 
+/**
+ * @name Controls/_interface/IApplication#isAdaptive
+ * @cfg {boolean} Позволяет использовать адаптивный дизайн. При этом, для мобильных устройств устанавливается системный шрифт.
+ * @default false
+ */
+
 export interface IAttributes {
     [index: string]: string | undefined
 }
