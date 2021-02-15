@@ -4051,11 +4051,12 @@ define([
          const ctrl = new lists.BaseControl({});
 
          ctrl._listViewModel = {
-            getDragEntity: () => null
+            getDragEntity: () => null,
+            setDragOutsideList: () => null
          };
 
          let
-            notifiedEvent = null,
+            notifiedEvent = '_removeDraggingTemplate',
             notifiedEntity = null;
 
          ctrl._notify = function(eventName, dragEntity) {
@@ -4065,12 +4066,12 @@ define([
 
          assert.isNull(ctrl._dndListController);
          ctrl._dragEnter({}, undefined);
-         assert.isNull(notifiedEvent);
+         assert.equal(notifiedEvent, '_removeDraggingTemplate');
          assert.isNotNull(ctrl._dndListController);
 
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
-         assert.isNull(notifiedEvent);
+         assert.equal(notifiedEvent, '_removeDraggingTemplate');
 
          const goodDragObject = {
             entity: {
@@ -5430,7 +5431,7 @@ define([
          instance.destroy();
       });
 
-      it('close editInPlace if model changed', async () => {
+      it('close and destroy editInPlace if model changed', async () => {
          const cfg = {
                 viewName: 'Controls/List/ListView',
                 viewModelConfig: {
@@ -5442,20 +5443,29 @@ define([
                 source: source
              },
              instance = correctCreateBaseControl(cfg);
-         let cancelClosed = false;
+         let isEditingCanceled = false;
+         let isEIPDestroyed = false;
          instance.saveOptions(cfg);
          await instance._beforeMount(cfg);
          instance._viewModelConstructor = {};
+         const cancelPromise = Promise.resolve();
          instance._cancelEdit = () => {
-            cancelClosed = true;
+            isEditingCanceled = true;
+            return cancelPromise;
          };
          instance._editInPlaceController = {
             isEditing: () => true,
-            updateOptions: () => {}
+            updateOptions: () => {},
+            destroy: () => {
+               isEIPDestroyed = true;
+            }
          };
          instance._beforeUpdate(cfg);
-         assert.isTrue(cancelClosed);
-         instance.destroy(cancelClosed);
+         return cancelPromise.then(() => {
+            assert.isTrue(isEditingCanceled);
+            assert.isTrue(isEIPDestroyed);
+            assert.isNull(instance._editInPlaceController);
+         });
       });
 
       it('getListTopOffset', function () {
@@ -7688,6 +7698,7 @@ define([
             assert.equal(secondBaseControl._dndListController.getDragEntity(), dragEntity);
             assert.isNotOk(secondBaseControl._dndListController.getDraggableItem());
 
+            secondBaseControl._dndListController = null;
             const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
             secondBaseControl._notify = () => newRecord;
             secondBaseControl._dragEnter({ entity: dragEntity });

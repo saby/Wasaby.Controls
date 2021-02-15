@@ -72,6 +72,10 @@ export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
         return this.getEditorOptions().validators;
     }
 
+    getUid(): string {
+        return `property-grid-item-${this.getContents().get(this._$keyProperty)}`;
+    }
+
     getPropertyValue(): any {
         return this._$propertyValue;
     }

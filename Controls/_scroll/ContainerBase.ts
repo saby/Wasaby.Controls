@@ -17,6 +17,7 @@ import {isHidden} from './StickyHeader/Utils';
 import {getHeadersHeight} from './StickyHeader/Utils/getHeadersHeight';
 
 export interface IContainerBaseOptions extends IControlOptions {
+    _notScrollableContent?: boolean; // Для HintWrapper, который сверстан максмально неудобно для скроллКонтейнера.
     scrollMode?: SCROLL_MODE;
 }
 
@@ -81,6 +82,10 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         // Не восстанавливаем скролл на то место, на котором он был перед релоадом страницы
         if (window && window.history && 'scrollRestoration' in window.history) {
            window.history.scrollRestoration = 'manual';
+        }
+
+        if (options._notScrollableContent) {
+            this._updateContentType(CONTENT_TYPE.restricted);
         }
     }
 
@@ -489,11 +494,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         this._updateStateAndGenerateEvents(newState);
     }
 
-    _updateContentType(): void {
-        const contentType: CONTENT_TYPE = this._getContentType();
+    _updateContentType(newValue?: CONTENT_TYPE): void {
+        const contentType: CONTENT_TYPE = newValue || this._getContentType();
         if (this._contentType !== contentType) {
             this._contentType = contentType;
-            this._updateContentWrapperCssClass()
+            this._updateContentWrapperCssClass();
         }
     }
 
@@ -574,13 +579,14 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     private _createScrollModel(): void {
         const scrollState = this._getFullStateFromDOM();
-        this._scrollModel = new ScrollModel(this._children.content, scrollState);
+        const {content} = this._children;
+        this._scrollModel = new ScrollModel(content, scrollState);
+        this._oldScrollState = new ScrollModel(content, {});
     }
 
     _updateState(newState: IScrollState): boolean {
         if (!this._scrollModel) {
             this._createScrollModel();
-            this._oldScrollState = new ScrollModel(this._children.content, {});
         } else {
             this._oldScrollState = this._scrollModel.clone();
         }

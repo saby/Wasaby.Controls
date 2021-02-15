@@ -238,6 +238,10 @@ describe('Controls/suggest', () => {
          inputController._suggestOpened = false;
          inputController._suggestDirectionChangedCallback('up');
          assert.isNull(inputController._suggestDirection);
+
+         inputController._suggestOpened = true;
+         inputController._sourceController = null;
+         assert.isNull(inputController._suggestDirection);
       });
 
       it('Suggest::_prepareFilter', () => {
@@ -676,6 +680,27 @@ describe('Controls/suggest', () => {
          afterEach(() => sandbox.reset());
 
          after(() => sandbox.restore());
+
+         it('indicator is hidden', async () => {
+            const inputSandbox = sinon.createSandbox();
+            let inidicatorHidden = false;
+            inputContainer._inputActive = true;
+            inputContainer._children = {
+               indicator: {
+                  show: () => {},
+                  hide: () => {
+                     inidicatorHidden = true;
+                  }
+               }
+            };
+            const error = new Error();
+            inputSandbox.stub(SourceController.prototype, 'load')
+               .callsFake(() => Promise.reject(error));
+
+            await inputContainer._resolveLoad();
+            assert.isTrue(inidicatorHidden);
+            inputSandbox.restore();
+         });
 
          it('value is not specified', async () => {
             inputContainer._inputActive = true;

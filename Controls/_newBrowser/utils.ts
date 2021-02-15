@@ -20,7 +20,7 @@ export function compileSourceOptions(options: IOptions, forDetail: boolean): ISo
 
     return {
         root: specific.root || (!forDetail ? options.masterRoot : null) || options.root,
-        filter: specific.filter || options.filter,
+        filter: specific.filter || (forDetail ? options.detailFilter : null) || options.filter,
         source: specific.source || options.source,
         columns: specific.columns || options.columns,
         keyProperty: specific.keyProperty || options.keyProperty,

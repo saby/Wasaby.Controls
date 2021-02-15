@@ -6,6 +6,7 @@
         <Controls.datePopup
                 attr:class="controlsDemo_datePopup__readonly-one"
                 _displayDate="{{_startValue}}"
+                _date="{{ _startValue }}"
                 selectionType="single"
                 readOnly="{{true}}"
                 name="datePopup1"
@@ -13,6 +14,7 @@
         <Controls.datePopup
                 attr:class="controlsDemo_datePopup__readonly-two"
                 _displayDate="{{_startValue}}"
+                _date="{{ _startValue }}"
                 selectionType="range"
                 readOnly="{{true}}"
                 name="datePopup2"
@@ -22,6 +24,7 @@
                 startValue="{{_startValue}}"
                 endValue="{{_startValue}}"
                 readOnly="{{true}}"
+                _date="{{ _startValue }}"
         />
         <Controls.datePopup
                 attr:class="controlsDemo_datePopup__readonly-four"
@@ -29,6 +32,7 @@
                 endValue="{{_endValue}}"
                 selectionType="range"
                 readOnly="{{true}}"
+                _date="{{ _startValue }}"
         />
     </div>
 </div>
