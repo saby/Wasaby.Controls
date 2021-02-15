@@ -147,6 +147,15 @@ export default class Collection<
         this._$results?.setMetaResults(metaResults);
     }
 
+    setEditing(editing: boolean): void {
+        super.setEditing(editing);
+
+        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+            this._$headerModel = null;
+        }
+        this._nextVersion();
+    }
+
     // endregion
 
     protected _updateHasStickyGroup(): void {
