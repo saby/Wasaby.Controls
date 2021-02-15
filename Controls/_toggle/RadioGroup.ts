@@ -8,6 +8,7 @@ import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/
 import {ISource, ISourceOptions, ISingleSelectable, ISingleSelectableOptions} from 'Controls/interface';
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
 import 'css!Controls/toggle';
+import 'css!Controls/CommonClasses';
 
 export interface IRadioGroupOptions extends IControlOptions,
     ISingleSelectableOptions,

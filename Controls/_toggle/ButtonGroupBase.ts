@@ -4,6 +4,7 @@ import {ISingleSelectableOptions, IItemsOptions} from 'Controls/interface';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import 'css!Controls/buttons';
 import 'css!Controls/toggle';
+import 'css!Controls/CommonClasses';
 
 export interface IButtonGroupOptions extends ISingleSelectableOptions, IControlOptions, IItemsOptions<object> {
 }
@@ -24,8 +25,6 @@ class ButtonGroupBase extends Control<IButtonGroupOptions> {
             this._notify('selectedKeyChanged', [item.get(this._options.keyProperty)]);
         }
     }
-
-    static _theme: string[] = ['Controls/Classes'];
 
     static getDefaultOptions(): IButtonGroupOptions {
         return {

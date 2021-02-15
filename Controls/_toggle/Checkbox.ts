@@ -5,6 +5,7 @@ import {
    ITooltip, ITooltipOptions, ICaption, ICaptionOptions, IIcon, IIconOptions,
    IIconSize, IIconSizeOptions, IIconStyle, IIconStyleOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
+import 'css!Controls/CommonClasses';
 
 export interface ICheckboxOptions extends IControlOptions, ICaptionOptions, IIconOptions, ITooltipOptions,
     IIconSizeOptions, IIconStyleOptions, IValidationStatusOptions {

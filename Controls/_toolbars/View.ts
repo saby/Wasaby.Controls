@@ -10,6 +10,7 @@ import {getMenuItems, needShowMenu} from './Util';
 import {showType} from './interfaces/IShowType';
 import 'css!Controls/toolbars';
 import 'css!Controls/buttons';
+import 'css!Controls/CommonClasses';
 
 import {
     getButtonTemplate, hasSourceChanged,
@@ -600,8 +601,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
         return void 0;
     }
-
-    static _theme: string[] = ['Controls/Classes'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {
