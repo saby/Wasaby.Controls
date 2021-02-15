@@ -43,6 +43,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _headerTheme: string;
     protected _headingCaption: string;
     protected _headingIcon: string;
+    protected _headingIconSize: string;
     protected _itemPadding: object;
     protected _closeButtonVisibility: boolean;
     protected _verticalDirection: string = 'bottom';
@@ -144,16 +145,23 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     }
 
     protected _dataLoadCallback(options: IMenuPopupOptions, items: RecordSet): void {
+        const sizes = ['s', 'm', 'l'];
+        let iconSize;
+        let headingIconSize = -1;
         if (this._headingIcon) {
             const root = options.root !== undefined ? options.root : null;
             let needShowHeadingIcon = false;
             factory(items).each((item) => {
                 if (item.get('icon') && (!options.parentProperty || item.get(options.parentProperty) === root)) {
+                    iconSize = sizes.indexOf(item.get('iconSize'));
+                    headingIconSize = iconSize > headingIconSize ? iconSize : headingIconSize;
                     needShowHeadingIcon = true;
                 }
             });
             if (!needShowHeadingIcon) {
                 this._headingIcon = null;
+            } else {
+                this._headingIconSize = sizes[headingIconSize] || options.iconSize;
             }
         }
         if (options.dataLoadCallback) {
