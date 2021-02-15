@@ -35,6 +35,9 @@ export interface ILookupInputOptions extends
     autoDropDown?: boolean;
     comment?: string;
     toolbarItems?: RecordSet;
+    toolbarKeyProperty?: string;
+    toolbarParentProperty?: string;
+    toolbarNodeProperty?: string;
 }
 
 export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOptions> {
@@ -134,6 +137,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     protected _toolbarItemClickHandler(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent): void {
+        this.closeSuggest();
         this._notify('toolbarItemClick', [item, nativeEvent]);
     }
 

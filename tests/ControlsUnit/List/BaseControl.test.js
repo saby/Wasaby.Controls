@@ -82,12 +82,20 @@ define([
       }
 
       function correctCreateBaseControl(cfg, asyncCreate) {
-         return new lists.BaseControl(getCorrectBaseControlConfig(cfg, asyncCreate));
+         const baseControl = new lists.BaseControl(getCorrectBaseControlConfig(cfg, asyncCreate));
+         baseControl._children = {
+            scrollObserver: { startRegister: () => null }
+         };
+         return baseControl;
       }
 
       async function correctCreateBaseControlAsync(cfg) {
          const config = await getCorrectBaseControlConfigAsync(cfg);
-         return new lists.BaseControl(config);
+         const baseControl = new lists.BaseControl(config);
+         baseControl._children = {
+            scrollObserver: { startRegister: () => null }
+         };
+         return baseControl;
       }
       beforeEach(function() {
          data = [
@@ -2487,7 +2495,7 @@ define([
          var ctrl = await correctCreateBaseControlAsync(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._children = triggers;
+         ctrl._children = { ...ctrl._children, ...triggers };
          ctrl._container = {
             getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
             getBoundingClientRect: function() { return {}; }
@@ -6478,6 +6486,27 @@ define([
              testCases.forEach((caseData, index) => {
                 checkCase(index, caseData, baseControl._shouldDisplayBottomLoadingIndicator);
              });
+          });
+
+          it('attachToNull, onCollectionChanged', () => {
+            const control = new lists.BaseControl();
+            control.saveOptions({
+               navigation: {
+                  view: 'infinity'
+               },
+               getHasMoreData: () => true
+            });
+            control._sourceController = {};
+            control._isMounted = true;
+            control._listViewModel = {
+               isActionsAssigned: () => false
+            };
+
+            lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [], 0, [], 0);
+            assert.isFalse(control._attachLoadTopTriggerToNull);
+
+            lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [1], 0, [], 0);
+            assert.isTrue(control._attachLoadTopTriggerToNull);
           });
        });
 

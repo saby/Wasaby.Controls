@@ -69,6 +69,13 @@ const USE_NEW_MODEL_VALUES_NEW = {
     list: true
 };
 
+const EXPLORER_CONSTANTS = {
+    DEFAULT_VIEW_MODE: DEFAULT_VIEW_MODE,
+    ITEM_TYPES: ITEM_TYPES,
+    VIEW_NAMES: VIEW_NAMES,
+    VIEW_MODEL_CONSTRUCTORS: VIEW_MODEL_CONSTRUCTORS
+};
+
 export default class Explorer extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _breadCrumbsItems: object[];
@@ -80,6 +87,11 @@ export default class Explorer extends Control<IControlOptions> {
     protected _notifyHandler: EventUtils.tmplNotify = EventUtils.tmplNotify;
     protected _backgroundStyle: string;
     protected _header: object;
+    protected _dataLoadErrback: Function;
+    protected _serviceDataLoadCallback: Function;
+    protected _itemsReadyCallback: Function;
+    protected _itemsSetCallback: Function;
+    protected _itemPadding: object;
 
     private _root: number = null;
     private _dragOnBreadCrumbs: boolean = false;
@@ -88,16 +100,11 @@ export default class Explorer extends Control<IControlOptions> {
     private _itemsPromise: Promise<void>;
     private _markerForRestoredScroll: string;
     private _resetScrollAfterViewModeChange: boolean = false;
-    private _itemPadding: object;
     private _isMounted: boolean = false;
     private _setViewModePromise: Promise<void>;
     private _firstLoad: boolean = true;
     private _needSetMarkerCallback: (item: Model, domEvent: any) => boolean;
     private _breadCrumbsDragHighlighter: any;
-    private _dataLoadErrback: any;
-    private _serviceDataLoadCallback: any;
-    private _itemsReadyCallback: any;
-    private _itemsSetCallback: any;
     private _updateHeadingPath: any;
     private _canStartDragNDrop: any;
     private _restoredMarkedKeys: { [p: string]: { markedKey: null } };
@@ -108,12 +115,12 @@ export default class Explorer extends Control<IControlOptions> {
     private _newBackgroundStyle: any;
     private _newHeader: undefined;
     private _isGoingBack: boolean;
-    private _backgrounStyle: any;
+    private _backgrounStyle: string;
     private _pendingViewMode: string;
     private _dataRoot: undefined;
     private _itemsResolver: any;
     private _items: any;
-
+    private _isGoingFront: boolean;
 
     protected _beforeMount(cfg): Promise<void> {
         if (cfg.itemPadding) {
@@ -216,7 +223,8 @@ export default class Explorer extends Control<IControlOptions> {
             this._navigation = cfg.navigation;
         }
 
-        if ((isViewModeChanged && isRootChanged && !cfg.sourceController) || this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
+        if ((isViewModeChanged && isRootChanged && !cfg.sourceController) ||
+            this._pendingViewMode && cfg.viewMode !== this._pendingViewMode) {
             // Если меняется и root и viewMode, не меняем режим отображения сразу,
             // потому что тогда мы перерисуем explorer в новом режиме отображения
             // со старыми записями, а после загрузки новых получим еще одну перерисовку.
@@ -764,7 +772,8 @@ export default class Explorer extends Control<IControlOptions> {
      * @param item - запись, для которой нужно "собрать" курсор
      * @param positionNavigation - конфигурация курсорной навигации
      */
-    private _getCursorPositionFor(item: Model, positionNavigation: INavigation<IPositionSourceConfig>): IPositionSourceConfig['position'] {
+    private _getCursorPositionFor(item: Model,
+                                  positionNavigation: INavigation<IPositionSourceConfig>): IPositionSourceConfig['position'] {
         const position: unknown[] = [];
         const optField = positionNavigation.sourceConfig.field;
         const fields: string[] = (optField instanceof Array) ? optField : [optField];
@@ -790,7 +799,8 @@ export default class Explorer extends Control<IControlOptions> {
             if (restoreDataForParent && typeof restoreDataForParent.cursorPosition !== 'undefined') {
                 this._navigation.sourceConfig.position = restoreDataForParent.cursorPosition;
             } else {
-                const fromOptions = this._options._navigation && this._options._navigation.sourceConfig && this._options._navigation.sourceConfig.position;
+                const fromOptions = this._options._navigation &&
+                    this._options._navigation.sourceConfig && this._options._navigation.sourceConfig.position;
                 this._navigation.sourceConfig.position = fromOptions || null;
             }
         }
@@ -815,6 +825,8 @@ export default class Explorer extends Control<IControlOptions> {
         }
     }
 
+    static _constants: object = EXPLORER_CONSTANTS;
+
     static _theme: string[] = ['Controls/explorer', 'Controls/tile'];
 
     static getDefaultOptions(): object {
@@ -829,13 +841,6 @@ export default class Explorer extends Control<IControlOptions> {
         };
     }
 }
-
-Explorer._constants = {
-    DEFAULT_VIEW_MODE: DEFAULT_VIEW_MODE,
-    ITEM_TYPES: ITEM_TYPES,
-    VIEW_NAMES: VIEW_NAMES,
-    VIEW_MODEL_CONSTRUCTORS: VIEW_MODEL_CONSTRUCTORS
-};
 
 Object.defineProperty(Explorer, 'defaultProps', {
     enumerable: true,
