@@ -10,7 +10,6 @@ define([
    'Types/source',
    'Controls/Application/SettingsController',
    'Controls/listDragNDrop',
-   'Controls/source',
    'Controls/dataSource'
 ], function(
    tree,
@@ -24,7 +23,6 @@ define([
    sourceLib,
    SettingsController,
    listDragNDrop,
-   cSource,
    dataSource
 ) {
    function correctCreateTreeControl(cfg, returnCreatePromise) {
