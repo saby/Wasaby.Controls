@@ -368,7 +368,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             };
         },  (e: Error) => {
             this._createdInMounting = {isError: true, result: e};
-            return this._processError(e).then(this._getState);
+            return this.processError(e).then(this._getState);
         });
     }
 
@@ -389,7 +389,7 @@ class FormController extends Control<IFormController, IReceivedState> {
             };
         }, (e: Error) => {
             this._readInMounting = {isError: true, result: e};
-            return this._processError(e).then(this._getState);
+            return this.processError(e).then(this._getState);
         }) as Promise<{data: Model}>;
     }
 
@@ -658,7 +658,7 @@ class FormController extends Control<IFormController, IReceivedState> {
                     return arg;
                 }).catch((error: Error) => {
                     updateDef.errback(error);
-                    return this._processError(error, dataSourceError.Mode.dialog);
+                    return this.processError(error, dataSourceError.Mode.dialog);
                 });
             } else {
                 // если были ошибки валидации, уведомим о них
@@ -705,7 +705,7 @@ class FormController extends Control<IFormController, IReceivedState> {
      * @private
      */
     private _crudErrback(error: Error, mode: dataSourceError.Mode): Promise<undefined | Model> {
-        return this._processError(error, mode).then(this._getData);
+        return this.processError(error, mode).then(this._getData);
     }
 
     private _updateIsNewRecord(value: boolean): void {
@@ -716,12 +716,13 @@ class FormController extends Control<IFormController, IReceivedState> {
     }
 
     /**
+     * Обработка ошибки возникшей при чтении/создании записи.
+     * Нужно использовать, если вы каким-либо образом самостоятельно получаете запись и получаете ошибку от сервера.
      * @param {Error} error
      * @param {Controls/_dataSource/_error/Mode} [mode]
-     * @return {Promise.<CrudResult>}
-     * @private
+     * @return {Promise.<object>}
      */
-    private _processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
+    processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
         return this.__errorController.process({
             error,
             theme: this._options.theme,
