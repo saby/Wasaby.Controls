@@ -77,7 +77,7 @@ export default interface IApplication extends IHTML {
 
 /**
  * @name Controls/_interface/IApplication#isAdaptive
- * @cfg {boolean} Позволяет использовать адаптивный дизайн. При этом, для мобильных устройств устанавливается системный шрифт.
+ * @cfg {boolean} Определяет режим отображения сайта. Если опция включена, то используется адаптивный дизайн, шрифты на мобильных устройствах используются системные.
  * @default false
  */
 

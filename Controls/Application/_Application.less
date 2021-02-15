@@ -58,6 +58,9 @@ img {
 }
 
 .ws-is-phone.ws-is-adaptive {
+   // Если название шрифта не соответствует шрифтам, установленным на устройстве, то системный шрифт не подцепляется
+   // Поэтому объявляем стек системных шрифтов ios
+   // https://online.sbis.ru/opendoc.html?guid=7532bfcc-578b-4fb4-a990-a3cb22b4d7aa
    &.ws-is-mobile-safari, &.ws-is-mobile-chrome-ios {
       font-family: -apple-system, San Francisco;
    }
