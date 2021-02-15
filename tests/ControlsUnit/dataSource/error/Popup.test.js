@@ -2,10 +2,12 @@
 define([
    'Controls/dataSource',
    'Env/Env',
+   'WasabyLoader/Library',
    'Browser/Transport'
 ], function(
    dataSource,
-   { constants }
+   { constants },
+   WasabyLib
 ) {
    const require = requirejs;
    describe('Controls/dataSource:error.Popup', () => {
@@ -137,7 +139,7 @@ define([
          });
 
          afterEach(() => {
-            sinon.resetHistory();
+            sinon.restore();
          });
 
          it('calls openPopup()', () => {
@@ -184,7 +186,9 @@ define([
             return p.openDialog(viewConfig, {}).then(() => {
                const popup = require(fakeModuleNames[0]);
                assert.isTrue(popup.Dialog.openPopup.calledOnce, 'openPopup() called');
-               assert.isDefined(require(fakeModuleNames[2]), 'template module exists');
+               WasabyLib.load(fakeModuleNames[2]).then((module) => {
+                  assert.isDefined(module, 'template module exists');
+               });
             });
          });
 
@@ -201,7 +205,10 @@ define([
                   Popup.showDefaultDialog.calledOnce,
                   'showDefaultDialog() called'
                );
-               assert.isUndefined(require(fakeModuleName), 'template module doesn\'t exist');
+               WasabyLib.load(fakeModuleName).then(
+                  () => assert.fail('template module exists'),
+                  (error) => assert.isOk(error, 'template module doesn\'t exist')
+               );
             });
          });
       });
