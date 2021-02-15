@@ -98,6 +98,9 @@
                         </ws:if>
                         <ws:if data="{{_options.toolbarItems}}">
                             <Controls.toolbars:View items="{{_options.toolbarItems}}"
+                                                    keyProperty="{{_options.toolbarKeyProperty}}"
+                                                    parentProperty="{{_options.toolbarParentProperty}}"
+                                                    nodeProperty="{{_options.toolbarNodeProperty}}"
                                                     iconSize="s"
                                                     on:itemClick="_toolbarItemClickHandler()"
                                                     attr:class="controls-Lookup__toolbar"/>

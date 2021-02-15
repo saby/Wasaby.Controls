@@ -18,6 +18,7 @@ interface INumberRange {
  * Контрол используют в качестве редактора для выбора диапазона чисел на {@link Controls/filterPanel:View панели фильтров}.
  * @class Controls/_filterPanel/Editors/NumberRange
  * @extends UI/Base:Control
+ * @mixes Controls/_input/Number
  * @author Мельникова Е.А.
  * @public
  */
@@ -84,7 +85,7 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     }
 
     protected _handleInputCompleted(event: SyntheticEvent, value: number): void {
-        if (this._minValue && this._maxValue) {
+        if (this._minValue !== null && this._maxValue) {
             this._notifyExtendedValue([this._minValue, this._maxValue]);
             this._children.numberRangeValidate.validate();
         }
@@ -109,6 +110,14 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
 
     private _getTextValue(value: number): string|number {
         return value || '';
+    }
+
+    static getDefaultOptions(): object {
+        return {
+            contrastBackground: false,
+            borderVisibility: 'partial',
+            horizontalPadding: 'null'
+        };
     }
 }
 export default NumberRangeEditor;

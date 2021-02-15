@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as coreMerge from 'Core/core-merge';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
+import StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
 import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import {EventUtils} from 'UI/Events';
 import {Popup as PopupUtil} from 'Controls/dateUtils';
