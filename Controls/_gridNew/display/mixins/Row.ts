@@ -1,10 +1,10 @@
 import { TemplateFunction } from 'UI/Base';
 import { create } from 'Types/di';
 import { isEqual } from 'Types/object';
-import {Model as EntityModel} from 'Types/entity';
+import { Model as EntityModel } from 'Types/entity';
 
 import { IColumn, TColumns, IColspanParams, TColumnSeparatorSize } from 'Controls/_grid/interface/IColumn';
-import {THeader} from '../../../_grid/interface/IHeaderCell';
+import { THeader } from '../../../_grid/interface/IHeaderCell';
 
 import {
     Collection,
@@ -36,6 +36,7 @@ export interface IOptions<T> extends IBaseOptions<T> {
     columns: TColumns;
     colspanCallback?: TColspanCallback;
     columnSeparatorSize?: TColumnSeparatorSize;
+    hasStickyGroup?: boolean;
 }
 
 export default abstract class Row<T> {
@@ -314,15 +315,21 @@ export default abstract class Row<T> {
                 columnIndex += colspan - 1;
             }
             columnItems.push(factory({
-                column,
+                ...this._getColumnFactoryParams(column, columnIndex),
                 instanceId: `${this.key}_column_${columnIndex}`,
                 colspan: colspan as number,
-                isFixed: columnIndex < this.getStickyColumnsCount(),
-                columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex),
-                rowSeparatorSize: this._$rowSeparatorSize
+                isFixed: columnIndex < this.getStickyColumnsCount()
             }));
         }
         return columnItems;
+    }
+
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<ICellOptions<T>> {
+        return {
+            column,
+            rowSeparatorSize: this._$rowSeparatorSize,
+            columnSeparatorSize: this._getColumnSeparatorSizeForColumn(column, columnIndex)
+        };
     }
 
     protected _processStickyLadderCells() {
@@ -340,7 +347,7 @@ export default abstract class Row<T> {
 
         if (stickyLadderStyleForSecondProperty) {
             this._$columnItems.splice(1, 0, new StickyLadderCell({
-                column: this._$columns[0],
+                ...this._getColumnFactoryParams(this._$columns[0], 0),
                 owner: this,
                 instanceId: `${this.key}_column_secondSticky`,
                 wrapperStyle: stickyLadderStyleForSecondProperty,
@@ -353,7 +360,7 @@ export default abstract class Row<T> {
         if (stickyLadderStyleForFirstProperty) {
             this._$columnItems = ([
                 new StickyLadderCell({
-                    column: this._$columns[0],
+                    ...this._getColumnFactoryParams(this._$columns[0], 0),
                     owner: this,
                     instanceId: `${this.key}_column_firstSticky`,
                     wrapperStyle: stickyLadderStyleForFirstProperty,
@@ -367,17 +374,16 @@ export default abstract class Row<T> {
     }
     protected _initializeColumns(): void {
         if (this._$columns) {
-            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+            this._$columnItems = this._prepareColumnItems(this._$columns, this.getColumnsFactory());
             const createMultiSelectColumn = this.hasMultiSelectColumn();
             this._processStickyLadderCells();
             if (createMultiSelectColumn) {
                 this._$columnItems = ([
                     new CheckboxCell({
-                        column: {} as IColumn,
+                        ...this._getColumnFactoryParams({}, 0),
                         instanceId: `${this.key}_column_checkbox`,
                         owner: this,
-                        isFixed: true,
-                        rowSeparatorSize: this._$rowSeparatorSize
+                        isFixed: true
                     })
                 ] as Array<Cell<T, Row<T>>>).concat(this._$columnItems);
             }
@@ -405,9 +411,9 @@ export default abstract class Row<T> {
         }
     }
 
-    protected _getColumnsFactory(): (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>> {
+    getColumnsFactory(): (options: Partial<ICellOptions<T>>) => Cell<T, Row<T>> {
         if (!this._cellModule) {
-            throw new Error('Controls/_display/Row:_getColumnsFactory can not resolve cell module!');
+            throw new Error('Controls/_display/Row:getColumnsFactory can not resolve cell module!');
         }
         return (options) => {
             options.owner = this;

@@ -36,7 +36,6 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
-import {descriptor} from 'Types/entity';
 
 type Key = string|number|null;
 
@@ -106,7 +105,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _viewMode: TViewMode = undefined;
     private _inputSearchValue: string = '';
     private _searchValue: string = '';
-    private _searchInProgress: boolean = false;
     private _dataOptionsContext: typeof ContextOptions;
 
     private _itemsReadyCallback: Function;
@@ -117,7 +115,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _fastFilterItems: IFilterItem[];
     private _groupHistoryId: string;
     private _errorRegister: RegisterClass;
-    private _storeCallbacks: string[];
+    private _storeCallbackIds: string[];
+    private _storeCtxCallbackId: string;
 
     private _source: ICrudPlus | ICrud & ICrudPlus & IData;
     private _sourceController: SourceController = null;
@@ -177,20 +176,27 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (isNewEnvironment()) {
                 this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
             }
+            if (options.source && options.dataLoadCallback) {
+                options.dataLoadCallback(receivedState.items);
+            }
         } else {
             return this._filterController.loadFilterItemsFromHistory()
                 .then((filterItems) => {
                     this._setFilterItems(filterItems as IFilterItem[]);
 
-                    return this._loadItems(options, sourceController.getState())
-                        .then((items) => {
-                            this._defineShadowVisibility(items);
-                            return { filterItems, items };
-                        })
-                        .catch((error) => {
-                            this._updateContext(sourceController.getState());
-                            return error;
-                        });
+                    if (options.source) {
+                        return this._loadItems(options, sourceController.getState())
+                            .then((items) => {
+                                this._defineShadowVisibility(items);
+                                return {filterItems, items};
+                            })
+                            .catch((error) => {
+                                this._updateContext(sourceController.getState());
+                                return error;
+                            });
+                    } else {
+                        this._updateContext(sourceController.getState());
+                    }
                 })
                 .catch((error) => error);
         }
@@ -208,7 +214,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._isMounted = true;
         if (options.useStore) {
             this._storeCallbackIds = this._createNewStoreObservers();
-            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', function () {
+            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', () => {
                 this._storeCallbackIds.forEach((id) => Store.unsubscribe(id));
                 this._storeCallbackIds = this._createNewStoreObservers();
             }, true);
@@ -281,13 +287,13 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             methodResult = sourceController.reload()
                .then((items) => {
                    this._items = sourceController.getItems();
-                   this._loading = false;
                    return items;
                }, (error) => {
                    this._processLoadError(error);
                    return error;
                })
                .finally((result) => {
+                   this._loading = false;
                    this._afterSourceLoad(sourceController, newOptions);
                    return result;
                })
@@ -296,6 +302,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                });
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
+        }
+
+        if (sourceChanged && this._inputSearchValue && !newOptions.searchValue) {
+            this._inputSearchValue = '';
         }
 
         if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
@@ -684,6 +694,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         );
     }
 
+    protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+        this._inputSearchValue = value;
+    }
+
     protected _searchDataLoad(result: RecordSet|Error, searchValue: string): void {
         if (result instanceof RecordSet) {
             this._afterSearch(result, searchValue);
@@ -692,6 +706,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _processSearchError(error: Error): void|Error {
         if (!error.isCancelled) {
+            this._loading = false;
+            this._filterChanged(null, this._searchController.getFilter());
             this._getErrorRegister().start({
                 error,
                 mode: dataSourceError.Mode.include
@@ -700,14 +716,17 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    private _searchReset(event: SyntheticEvent): void {
-        this._getSearchController().then((searchController) => {
-            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
+    private _searchReset(event: SyntheticEvent): Promise<void> {
+        if (this._sourceController) {
+            this._sourceController.cancelLoading();
+        }
+        return this._getSearchController().then((searchController) => {
+            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch && this._options.startingWith === 'current') {
                 this._root = this._rootBeforeSearch;
-                this._rootBeforeSearch = null;
                 searchController.setRoot(this._root);
                 this._notify('rootChanged', [this._root]);
             }
+            this._rootBeforeSearch = null;
             this._updateFilter(searchController);
         });
     }
@@ -767,7 +786,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._deepReload = undefined;
         }
 
-        if (this._searchController && this._searchController.isSearchInProcess()) {
+        if (this._searchController && (this._searchController.isSearchInProcess() || this._searchController.getSearchValue() !== this._searchValue)) {
             this._loading = false;
             this._searchDataLoad(data, this._searchController.getSearchValue());
         }

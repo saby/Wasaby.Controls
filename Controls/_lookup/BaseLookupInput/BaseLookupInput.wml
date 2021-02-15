@@ -12,7 +12,7 @@
             footerTemplate="{{_options.footerTemplate || _options.suggestFooterTemplate}}"
             emptyTemplate="{{_options.emptyTemplate}}"
             minSearchLength="{{_options.minSearchLength}}"
-            source="{{_options.suggestSource || _options.source}}"
+            source="{{_isInputVisible(_options) ? (_options.suggestSource || _options.source) : null}}"
             keyProperty="{{_options.suggestKeyProperty || _options.keyProperty}}"
             historyId="{{_options.historyId}}"
             searchParam="{{_options.searchParam}}"
@@ -96,6 +96,15 @@
                                         theme="{{_options.theme}}"
                                         on:click="_onClickClearRecords()"
                                         attr:class="controls-Lookup__clearRecords_{{_multiLineState ? 'multiLine' : 'singleLine'}}"/>
+                        </ws:if>
+                        <ws:if data="{{_options.toolbarItems}}">
+                            <Controls.toolbars:View items="{{_options.toolbarItems}}"
+                                                    keyProperty="{{_options.toolbarKeyProperty}}"
+                                                    parentProperty="{{_options.toolbarParentProperty}}"
+                                                    nodeProperty="{{_options.toolbarNodeProperty}}"
+                                                    iconSize="s"
+                                                    on:itemClick="_toolbarItemClickHandler()"
+                                                    attr:class="controls-Lookup__toolbar_theme-{{_options.theme}}"/>
                         </ws:if>
                         <ws:partial template="{{_showSelectorTemplate}}"
                                     name="showSelector"

@@ -452,7 +452,11 @@ define([
       it('sourceController with error', async () => {
          const explorer = new explorerMod.View();
          const sourceWithQueryError = new sourceLib.Memory();
-         sourceWithQueryError.query = () => Promise.reject(new Error());
+         sourceWithQueryError.query = () => {
+            const error = new Error();
+            error.processed = true;
+            return Promise.reject(error);
+         };
          const sourceController = new dataSource.NewSourceController({
             source: sourceWithQueryError
          });
@@ -468,9 +472,9 @@ define([
          await explorer._itemsPromise;
       });
       describe('_beforeUpdate', function() {
-         it('collapses and expands items as needed', () => {
+         it('collapses and expands items as needed', async() => {
             const cfg = { viewMode: 'tree', root: null };
-            const cfg2 = { viewMode: 'search' , root: null };
+            const cfg2 = { viewMode: 'search', root: null };
             const instance = new explorerMod.View(cfg);
             let resetExpandedItemsCalled = false;
             instance._children = {
@@ -483,12 +487,14 @@ define([
             instance._viewMode = cfg.viewMode;
 
             instance._beforeUpdate(cfg2);
+            await instance._setViewModePromise;
             assert.isTrue(resetExpandedItemsCalled);
 
             resetExpandedItemsCalled = false;
             instance._viewMode = cfg2.viewMode;
 
             instance._beforeUpdate(cfg2);
+            await instance._setViewModePromise;
             assert.isTrue(resetExpandedItemsCalled);
 
             instance._isGoingFront = true;

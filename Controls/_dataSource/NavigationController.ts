@@ -102,9 +102,9 @@ type NavigationRecord = Record<{
  * @remark
  * Хранит состояние навигации INavigationOptionValue<INavigationSourceConfig> и вычисляет на его основании параметры для построения запроса Query.
  *
- * @class Controls/source/NavigationController
+ * @class Controls/dataSource/NavigationController
  *
- * 
+ *
  * @public
  * @author Аверкиев П.А.
  */
@@ -113,14 +113,14 @@ type NavigationRecord = Record<{
  * @remark
  * Stores the navigation state and calculates on its base params to build Query
  *
- * @class Controls/source/NavigationController
+ * @class Controls/dataSource/NavigationController
  *
- * 
+ *
  * @public
  * @author Аверкиев П.А.
  */
 
-export class NavigationController {
+export default class NavigationController {
 
     private _navigationType: TNavigationSource;
     private _navigationConfig: INavigationSourceConfig;
@@ -221,7 +221,17 @@ export class NavigationController {
             updateResult = [];
             metaMore.each((nav: NavigationRecord) => {
                 const metaMoreItem = nav.get('nav_result');
-                const store = this._getStore(nav.get('id'));
+
+                let storeId = nav.get('id');
+                const storeIdInvertType = typeof storeId === 'string' ? Number(storeId) : String(storeId);
+
+                // Фикс, пока Витя Абрамов не починит изменения типа идентификатора в множестенной навигации
+                // https://online.sbis.ru/opendoc.html?guid=9f0b2454-3234-43f2-8a69-811d19cd8443
+                if (storeId !== null && list.getRecordById(storeIdInvertType)) {
+                    storeId = storeIdInvertType;
+                }
+
+                const store = this._getStore(storeId);
                 updateResult.push(
                     calculator.updateQueryProperties(store, list, metaMoreItem, navigationConfig, direction)
                 );
@@ -279,17 +289,7 @@ export class NavigationController {
     }
 
     private _getStore(id: TKey): INavigationStore {
-        let storeIndex = this._navigationStores.getIndexByValue('id', id);
-
-        // Фикс, пока Витя Абрамов не починит изменения типа идентификатора в множестенной навигации
-        // https://online.sbis.ru/opendoc.html?guid=9f0b2454-3234-43f2-8a69-811d19cd8443
-        if (storeIndex === -1 && id !== null) {
-            storeIndex = this._navigationStores.getIndexByValue(
-                'id',
-                typeof id === 'string' ? Number(id) : String(id)
-            );
-        }
-
+        const storeIndex = this._navigationStores.getIndexByValue('id', id);
         let resStoreItem: INavigationStoresListItem = this._navigationStores.at(storeIndex);
 
         if (!resStoreItem) {

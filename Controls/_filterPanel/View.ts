@@ -5,6 +5,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IFilterItem} from 'Controls/filter';
 import * as clone from 'Core/core-clone';
+import {IItemPadding} from 'Controls/list';
 import rk = require('i18n!Controls');
 
 /**
@@ -56,15 +57,18 @@ export default class View extends Control<IControlOptions> {
     protected _groupItems: object = {};
     protected _collapsedGroups: unknown[] = [];
     protected _resetCaption: string = rk('все');
+    protected _itemPadding: IItemPadding = {
+        bottom: 'null'
+    };
 
     protected _beforeMount(options: IViewPanelOptions): void {
-        this._source = clone(options.source);
+        this._setSource(options.source);
         this._updateFilterParams();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         if (this._options.source !== newOptions.source) {
-            this._source = clone(newOptions.source);
+            this._setSource(options.source);
             this._updateFilterParams();
         }
     }
@@ -91,18 +95,21 @@ export default class View extends Control<IControlOptions> {
 
     protected _groupClick(event: SyntheticEvent, displayItem: unknown, clickEvent: SyntheticEvent<MouseEvent>): void {
         const itemContents = displayItem.getContents();
-        if (this._collapsedGroups.length && (displayItem.isExpanded() || this._collapsedGroups.includes(itemContents))) {
+        const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
+        if (this._collapsedGroups.length && this._collapsedGroups.includes(itemContents)) {
             this._collapsedGroups = this._collapsedGroups.filter((item) => itemContents !== item);
-        } else {
+        } else if (!isResetClick) {
             this._collapsedGroups = this._collapsedGroups.concat(itemContents);
         }
-        const isResetClick = clickEvent?.target.closest('.controls-FilterViewPanel__groupReset');
-        const isGroupTitleClick = clickEvent?.target.closest('.controls-FilterViewPanel__group');
         if (isResetClick) {
             this._resetFilterItem(displayItem);
-        } else if (isGroupTitleClick) {
+        } else {
             displayItem.toggleExpanded();
         }
+    }
+
+    private _setSource(source: IFilterItem[]): void {
+        this._source = clone(source);
     }
 
     private _resetFilterItem(item: unknown): void {
@@ -113,6 +120,7 @@ export default class View extends Control<IControlOptions> {
                 item.textValue = null;
             }
         });
+        this._setSource(this._source);
         this._updateFilterParams();
         this._notifyChanges();
     }

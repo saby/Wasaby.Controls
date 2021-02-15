@@ -258,7 +258,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _suggestDirectionChangedCallback(direction: TSuggestDirection): void {
       // Проверка на _suggestOpened нужна, т.к. уже может быть вызвано закрытие саггеста,
       // но попап ещё не разрушился, и может стрелять событиями, звать callback'b
-      if (this._suggestOpened) {
+      if (this._suggestOpened && this._sourceController) {
          this._suggestDirection = direction;
          if (direction === 'up') {
             this._setItems(this._sourceController.getItems());
@@ -327,8 +327,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             theme: this._options.theme,
             mode: dataSourceError.Mode.include
          }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
-            this._pendingErrorConfig = errorConfig;
-            this._open();
+            if (errorConfig) {
+               this._pendingErrorConfig = errorConfig;
+               this._open();
+            }
          });
       }
    }
@@ -374,6 +376,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          } else {
             this._moreCount = undefined;
          }
+         this._errorConfig = null;
       }
       if (!this._shouldShowSuggest(data)) {
          this._close();
@@ -439,8 +442,9 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       if (this._options.historyId && !shouldSearch && !this._options.suggestState) {
          this._openWithHistory();
          state = true;
-      } else if ((shouldSearch || this._options.autoDropDown && !this._options.suggestState)
-         && shouldShowSuggest) {
+      } else if ((shouldSearch ||
+          this._options.autoDropDown && !this._options.suggestState ||
+          !this._options.autoDropDown && this._options.suggestState) && shouldShowSuggest) {
          this._setFilter(this._options.filter, this._options);
          this._open();
          state = true;
@@ -798,10 +802,16 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
                           return recordSet;
                        })
-                       .catch((error) => error);
+                       .catch((error) => {
+                          this._hideIndicator();
+                          return error;
+                       });
                 }
              })
-             .catch((error) => this._searchErrback(error));
+             .catch((error) => {
+                this._hideIndicator();
+                this._searchErrback(error);
+             });
       } else {
          return this._performLoad(options);
       }
@@ -879,6 +889,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _getSourceController(options?: IInputControllerOptions): SourceController {
       if (!this._sourceController) {
          this._sourceController = new SourceController(this._getSourceControllerOptions(options));
+         this._sourceController.loadedBySuggest = true;
       }
       return this._sourceController;
    }
@@ -953,17 +964,22 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       };
       this._setSuggestMarkedKey(null);
 
+      let newFilter;
       // change only filter for query, tabSelectedKey will be changed after processing query result,
       // otherwise interface will blink
       if (this._tabsSelectedKey !== tabId) {
          const currentFilter = {...this._filter};
          this._setFilterAndLoad(this._options.filter, this._options, tabId)
              .finally(() => {
-                this._sourceController.setFilter(this._filter);
+                this._sourceController.setFilter(newFilter);
+                this._filter = newFilter;
                 changeTabCallback();
+                this._tabsSelectedKey = tabId;
              });
          //Костыль, пока список сам грузит данные при изменении опции filter
          //Удалено в 21.2000
+         newFilter = {...this._filter};
+         this._filter = currentFilter;
          this._sourceController.setFilter(currentFilter);
       } else {
          changeTabCallback();

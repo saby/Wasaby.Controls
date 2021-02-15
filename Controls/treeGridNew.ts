@@ -34,6 +34,7 @@ import TreeGridFooterCell from 'Controls/_treeGridNew/display/TreeGridFooterCell
 import { isFullGridSupport } from 'Controls/display';
 
 export {
+    TreeGridFooterCell,
     TreeGridCollection,
     TreeGridDataRow,
     TreeGridDataCell,

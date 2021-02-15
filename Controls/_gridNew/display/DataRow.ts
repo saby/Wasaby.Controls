@@ -3,29 +3,31 @@ import {TemplateFunction} from 'UI/Base';
 import {IMarkable, ISelectableItem} from 'Controls/display';
 
 import Row, {IOptions as IRowOptions} from './Row';
-import DataCell from './DataCell';
+import DataCell, { IOptions as IGridDataCellOptions } from './DataCell';
 import ILadderSupport from './interface/ILadderSupport';
-import { IDisplaySearchValueItem, IDisplaySearchValueItemOptions } from './interface/IDisplaySearchValueItem';
+import { IDisplaySearchValue, IDisplaySearchValueOptions } from './interface/IDisplaySearchValue';
 import ItemActionsCell from './ItemActionsCell';
+import {IColumn} from "../../_grid/interface/IColumn";
 
-export interface IOptions<T> extends IRowOptions<T>, IDisplaySearchValueItemOptions {
+export interface IOptions<T> extends IRowOptions<T>, IDisplaySearchValueOptions {
 }
 
 export default class DataRow<T> extends Row<T> implements
     IMarkable,
     ILadderSupport,
     ISelectableItem,
-    IDisplaySearchValueItem {
+    IDisplaySearchValue {
     protected _$columnItems: Array<DataCell<T, this>>;
     protected _$searchValue: string;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
-    readonly DisplaySearchValueItem: boolean = true;
+    readonly DisplaySearchValue: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly DraggableItem: boolean = true;
     private _$editingColumnIndex: number;
+    protected _$hasStickyGroup: boolean;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -48,8 +50,20 @@ export default class DataRow<T> extends Row<T> implements
         }
     }
 
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGridDataCellOptions<T>> {
+        return {
+            ...super._getColumnFactoryParams(column, columnIndex),
+            searchValue: this._$searchValue
+        }
+    }
+
     setSearchValue(searchValue: string): void {
         this._$searchValue = searchValue;
+        if (this._$columnItems) {
+            this._$columnItems.forEach((cell, cellIndex) => {
+                cell.setSearchValue(searchValue);
+            });
+        }
         this._nextVersion();
     }
 
@@ -68,6 +82,17 @@ export default class DataRow<T> extends Row<T> implements
     getEditingColumnIndex(): number {
         return this._$editingColumnIndex;
     }
+
+    setHasStickyGroup(hasStickyGroup: boolean): void {
+        if (this._$hasStickyGroup !== hasStickyGroup) {
+            this._$hasStickyGroup = hasStickyGroup;
+            this._nextVersion();
+        }
+    }
+
+    hasStickyGroup(): boolean {
+        return this._$hasStickyGroup;
+    }
 }
 
 Object.assign(DataRow.prototype, {
@@ -76,5 +101,6 @@ Object.assign(DataRow.prototype, {
     _cellModule: 'Controls/gridNew:GridDataCell',
     _instancePrefix: 'grid-data-row-',
     _$editingColumnIndex: null,
-    _$searchValue: ''
+    _$searchValue: '',
+    _$hasStickyGroup: false
 });
