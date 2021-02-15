@@ -887,7 +887,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _getSourceController(options?: IInputControllerOptions): SourceController {
       if (!this._sourceController) {
          this._sourceController = new SourceController(this._getSourceControllerOptions(options));
-         this._sourceController.loadedBySuggest = true;
       }
       return this._sourceController;
    }
