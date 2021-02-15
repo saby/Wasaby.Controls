@@ -9,7 +9,7 @@ export interface IBackgroundStyleOptions {
  * @author Красильников А.С.
  */
 export default interface IBackgroundStyle {
-    readonly '[Controls/_interface/IBackgroundStyle]': boolean;
+    readonly '[Controls/_interface/IBackgroundStyle]'?: boolean;
 }
 /**
  * @name Controls/_interface/IBackgroundStyle#backgroundStyle
