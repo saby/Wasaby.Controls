@@ -21,13 +21,9 @@ export default class TreeGridDataRow<T extends Model>
     readonly LadderSupport: boolean = true;
     readonly DraggableItem: boolean = true;
     protected _$searchValue: string;
-    protected _$nodeTypeProperty: string;
 
     constructor(options: IOptions<T>) {
         super(options);
-        this._cellModule = this.isGroupNode() ?
-            'Controls/treeGrid:TreeGridGroupDataCell' :
-            'Controls/treeGrid:TreeGridDataCell';
         GridRowMixin.call(this, options);
     }
 
@@ -131,23 +127,13 @@ export default class TreeGridDataRow<T extends Model>
     }
 
     // endregion overrides
-
-    setNodeTypeProperty(nodeTypeProperty: string): void {
-        this._$nodeTypeProperty = nodeTypeProperty;
-    }
-
-    isGroupNode(): boolean {
-        const contents = this.getContents();
-        return contents && contents.get && contents.get(this._$nodeTypeProperty) === 'group';
-    }
 }
 
 Object.assign(TreeGridDataRow.prototype, {
     '[Controls/treeGrid:TreeGridDataRow]': true,
     '[Controls/_display/grid/Row]': true,
     '[Controls/_display/TreeItem]': true,
-    _cellModule: null,
-    _$nodeTypeProperty: null,
+    _cellModule: 'Controls/treeGrid:TreeGridDataCell',
     _moduleName: 'Controls/treeGrid:TreeGridDataRow',
     _$searchValue: '',
     _instancePrefix: 'tree-grid-row-'

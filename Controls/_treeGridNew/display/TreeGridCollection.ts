@@ -151,10 +151,14 @@ export default class TreeGridCollection<
         const superFactory = super._getItemsFactory();
         return function CollectionItemsFactory(options?: ITreeGridRowOptions<T>): T {
             options.columns = this._$columns;
-            options.nodeTypeProperty = this._$nodeTypeProperty;
             options.colspanCallback = this._$colspanCallback;
             options.columnSeparatorSize = this._$columnSeparatorSize;
             options.rowSeparatorSize = this._$rowSeparatorSize;
+
+            // TODO пока тут. Стратегия не подойдёт, т.к. стратегия работает с готовыми CollectionItem
+            if (options.contents.get(this._$nodeTypeProperty) === 'group') {
+                options.itemModule = 'Controls/treeGrid:TreeGridGroupDataRow';
+            }
             return superFactory.call(this, options);
         };
     }

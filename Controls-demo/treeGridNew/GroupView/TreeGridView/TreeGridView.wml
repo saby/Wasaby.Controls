@@ -9,7 +9,7 @@
             <ws:Array>
                 <ws:Object displayProperty="title" width="1fr">
                     <ws:template>
-                        <ws:if data="{{ template.item.isGroupNode() }}">
+                        <ws:if data="{{ template.item.GroupNode }}">
                             <ws:partial template="Controls/treeGridNew:GroupColumnTemplate"/>
                         </ws:if>
                         <ws:else>

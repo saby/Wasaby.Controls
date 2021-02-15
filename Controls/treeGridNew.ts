@@ -36,6 +36,7 @@ import TreeGridNodeFooterCell from 'Controls/_treeGridNew/display/TreeGridNodeFo
 import TreeGridFooterRow from 'Controls/_treeGridNew/display/TreeGridFooterRow';
 import TreeGridFooterCell from 'Controls/_treeGridNew/display/TreeGridFooterCell';
 import { isFullGridSupport } from 'Controls/display';
+import TreeGridGroupDataRow from 'Controls/_treeGridNew/display/TreeGridGroupDataRow';
 import TreeGridGroupDataCell from 'Controls/_treeGridNew/display/TreeGridGroupDataCell';
 
 export {
@@ -54,4 +55,5 @@ register('Controls/treeGrid:TreeGridNodeFooterRow', TreeGridNodeFooterRow, {inst
 register('Controls/treeGrid:TreeGridNodeFooterCell', TreeGridNodeFooterCell, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterRow', TreeGridFooterRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridFooterCell', TreeGridFooterCell, {instantiate: false});
+register('Controls/treeGrid:TreeGridGroupDataRow', TreeGridGroupDataRow, {instantiate: false});
 register('Controls/treeGrid:TreeGridGroupDataCell', TreeGridGroupDataCell, {instantiate: false});
