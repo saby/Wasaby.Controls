@@ -102,9 +102,9 @@ type NavigationRecord = Record<{
  * @remark
  * Хранит состояние навигации INavigationOptionValue<INavigationSourceConfig> и вычисляет на его основании параметры для построения запроса Query.
  *
- * @class Controls/source/NavigationController
+ * @class Controls/dataSource/NavigationController
  *
- * 
+ *
  * @public
  * @author Аверкиев П.А.
  */
@@ -113,14 +113,14 @@ type NavigationRecord = Record<{
  * @remark
  * Stores the navigation state and calculates on its base params to build Query
  *
- * @class Controls/source/NavigationController
+ * @class Controls/dataSource/NavigationController
  *
- * 
+ *
  * @public
  * @author Аверкиев П.А.
  */
 
-export class NavigationController {
+export default class NavigationController {
 
     private _navigationType: TNavigationSource;
     private _navigationConfig: INavigationSourceConfig;
