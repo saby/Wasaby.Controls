@@ -6538,6 +6538,27 @@ define([
                 checkCase(index, caseData, baseControl._shouldDisplayBottomLoadingIndicator);
              });
           });
+
+          it('attachToNull, onCollectionChanged', () => {
+            const control = new lists.BaseControl();
+            control.saveOptions({
+               navigation: {
+                  view: 'infinity'
+               },
+               getHasMoreData: () => true
+            });
+            control._sourceController = {};
+            control._isMounted = true;
+            control._listViewModel = {
+               isActionsAssigned: () => false
+            };
+
+            lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [], 0, [], 0);
+            assert.isFalse(control._attachLoadTopTriggerToNull);
+
+            lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [1], 0, [], 0);
+            assert.isTrue(control._attachLoadTopTriggerToNull);
+          });
        });
 
       describe('navigation', function() {
