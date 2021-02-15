@@ -7,7 +7,7 @@ define('Controls/ApplicationTemp', [
     * Полностью повторяет функционал Controls/Application, за исключением шаблона
     * В шаблоне строится только контент без UI/HTML
     */
-   return Base.extend({
+   return Base.default.extend({
       _template: template
    });
 });
