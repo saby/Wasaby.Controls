@@ -4051,11 +4051,12 @@ define([
          const ctrl = new lists.BaseControl({});
 
          ctrl._listViewModel = {
-            getDragEntity: () => null
+            getDragEntity: () => null,
+            setDragOutsideList: () => null
          };
 
          let
-            notifiedEvent = null,
+            notifiedEvent = '_removeDraggingTemplate',
             notifiedEntity = null;
 
          ctrl._notify = function(eventName, dragEntity) {
@@ -4065,12 +4066,12 @@ define([
 
          assert.isNull(ctrl._dndListController);
          ctrl._dragEnter({}, undefined);
-         assert.isNull(notifiedEvent);
+         assert.equal(notifiedEvent, '_removeDraggingTemplate');
          assert.isNotNull(ctrl._dndListController);
 
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
-         assert.isNull(notifiedEvent);
+         assert.equal(notifiedEvent, '_removeDraggingTemplate');
 
          const goodDragObject = {
             entity: {
@@ -7697,6 +7698,7 @@ define([
             assert.equal(secondBaseControl._dndListController.getDragEntity(), dragEntity);
             assert.isNotOk(secondBaseControl._dndListController.getDraggableItem());
 
+            secondBaseControl._dndListController = null;
             const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
             secondBaseControl._notify = () => newRecord;
             secondBaseControl._dragEnter({ entity: dragEntity });
