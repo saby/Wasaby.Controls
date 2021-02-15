@@ -3457,7 +3457,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         addOperation((collapsedGroups) => this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups));
 
         // Try to start initial editing
-        addOperation(() => this._tryStartInitialEditing(newOptions));
+        addOperation(() => {
+            if (newOptions.useNewModel ? this._listViewModel : this._listViewModel?.getDisplay()) {
+                return this._tryStartInitialEditing(newOptions);
+            }
+        });
 
         // Init model state if need
         addOperation(() => {
