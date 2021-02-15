@@ -1,14 +1,11 @@
-import Collection, {ItemsFactory} from './Collection';
-import ColumnsCollectionItem from './ColumnsCollectionItem';
-
-import {IOptions as ICollectionItemOptions} from './ColumnsCollectionItem';
+import {Collection as BaseCollection, ItemsFactory, IDragPosition} from 'Controls/display';
+import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import ColumnsDragStrategy from './itemsStrategy/ColumnsDrag';
-import { IDragPosition } from './interface/IDragPosition';
 
-export default class ColumnsCollection<
+export default class Collection<
     S,
-    T extends ColumnsCollectionItem<S> = ColumnsCollectionItem<S>
-> extends Collection<S, T> {
+    T extends CollectionItem<S> = CollectionItem<S>
+> extends BaseCollection<S, T> {
     protected _$columnProperty: string;
     protected _dragStrategy: Function = ColumnsDragStrategy;
 
@@ -36,8 +33,8 @@ export default class ColumnsCollection<
     }
 }
 
-Object.assign(ColumnsCollection.prototype, {
-    '[Controls/_display/ColumnsCollection]': true,
-    _moduleName: 'Controls/display:ColumnsCollection',
-    _itemModule: 'Controls/display:ColumnsCollectionItem'
+Object.assign(Collection.prototype, {
+    '[Controls/_columns/display/Collection]': true,
+    _moduleName: 'Controls/columns:ColumnsCollection',
+    _itemModule: 'Controls/columns:ColumnsCollectionItem'
 });

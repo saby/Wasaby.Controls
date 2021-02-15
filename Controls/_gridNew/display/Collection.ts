@@ -37,7 +37,7 @@ export default class Collection<
         const searchValueChanged = super.setSearchValue(searchValue);
         if (searchValueChanged) {
             this.getViewIterator().each((item: DataRow<S>) => {
-                if (item.DisplaySearchValueItem) {
+                if (item.DisplaySearchValue) {
                     item.setSearchValue(searchValue);
                 }
             });
@@ -116,6 +116,7 @@ export default class Collection<
             this._updateItemsLadder();
         }
         this._updateHasStickyGroup();
+        this._$results = null;
     }
 
     protected _getItemsFactory(): ItemsFactory<T> {
@@ -145,6 +146,15 @@ export default class Collection<
     protected setMetaResults(metaResults: EntityModel) {
         super.setMetaResults(metaResults);
         this._$results?.setMetaResults(metaResults);
+    }
+
+    setEditing(editing: boolean): void {
+        super.setEditing(editing);
+
+        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+            this._$headerModel = null;
+        }
+        this._nextVersion();
     }
 
     // endregion

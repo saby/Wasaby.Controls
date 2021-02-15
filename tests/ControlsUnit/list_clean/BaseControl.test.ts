@@ -144,6 +144,9 @@ describe('Controls/list_clean/BaseControl', () => {
 
         beforeEach(() => {
             baseControl = new BaseControl(baseControlCfg);
+            baseControl._children = {
+                scrollObserver: { startRegister: () => null }
+            };
         });
 
         afterEach(() => {
@@ -301,7 +304,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
 
-            baseControl.scrollMoveSyncHandler({scrollTop: 600});
+            baseControl.scrollMoveSyncHandler({scrollTop: 640});
             assert.deepEqual({
                 begin: 'visible',
                 end: 'hidden',

@@ -332,7 +332,7 @@ var TileView = ListView.extend({
 
     _beforeUnmount: function () {
         this._notify('unregister', ['controlResize', this], {bubbling: true});
-        this._notify('unregister', ['scroll', this], {bubbling: true});
+        this._notify('unregister', ['scroll', this, {listenAll: true}], {bubbling: true});
     },
 
     _onTileViewKeyDown: function () {

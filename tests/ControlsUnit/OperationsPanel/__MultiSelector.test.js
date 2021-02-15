@@ -261,6 +261,29 @@ define([
          instance._beforeUpdate(instance._options);
          assert.equal(instance._menuCaption, 'Отмечено: 2');
       });
+
+      it('_beforeUpdate with new selectionCountConfig, selectedKeysCount = 0', () => {
+         let instance = new MultiSelector.default();
+         let newOptions = {
+            selectedKeys: ['anyKey'],
+            excludedKeys: [],
+            selectedKeysCount: 0,
+            isAllSelected: false
+         };
+         instance._beforeMount(newOptions);
+         instance.saveOptions(newOptions);
+
+         newOptions = {...newOptions};
+         newOptions.selectionCountConfig = {
+            rpc: {
+               call: () => {},
+               getAdapter: () => {}
+            }
+         };
+         instance._beforeUpdate(newOptions);
+         assert.equal(instance._menuCaption, 'Отметить');
+      });
+
       it('_afterUpdate', function() {
          var instance = new MultiSelector.default();
          instance._notify = mockNotify();

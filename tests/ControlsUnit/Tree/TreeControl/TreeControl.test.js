@@ -10,7 +10,6 @@ define([
    'Types/source',
    'Controls/Application/SettingsController',
    'Controls/listDragNDrop',
-   'Controls/source',
    'Controls/dataSource'
 ], function(
    tree,
@@ -24,7 +23,6 @@ define([
    sourceLib,
    SettingsController,
    listDragNDrop,
-   cSource,
    dataSource
 ) {
    function correctCreateTreeControl(cfg, returnCreatePromise) {
@@ -317,7 +315,6 @@ define([
                keyProperty: 'key',
                nodeProperty: 'type',
                parentProperty: 'parent',
-               markedKey: 1,
                markerVisiblity: 'visible'
             },
             treeControl = correctCreateTreeControl(cfg);
@@ -329,13 +326,13 @@ define([
             rawData: rawData,
             keyProperty: 'key'
          }), cfg);
-         model.setMarkedKey(1);
+         treeControl._children.baseControl.setMarkedKey(1);
          tree.TreeControl._private.expandMarkedItem(treeControl);
-         model.setMarkedKey(2);
+         treeControl._children.baseControl.setMarkedKey(2);
          tree.TreeControl._private.expandMarkedItem(treeControl);
-         model.setMarkedKey(3);
+         treeControl._children.baseControl.setMarkedKey(3);
          tree.TreeControl._private.expandMarkedItem(treeControl);
-         assert.deepEqual(toggleExpandedStack, []);
+         assert.deepEqual(toggleExpandedStack, [1, 2]);
       });
 
       it('_private.getTargetRow', () => {

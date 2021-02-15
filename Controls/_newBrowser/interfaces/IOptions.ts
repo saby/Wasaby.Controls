@@ -1,9 +1,10 @@
-import {ICrudPlus} from 'Types/source';
+import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {TKey} from 'Controls/interface';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IMasterOptions} from 'Controls/_newBrowser/interfaces/IMasterOptions';
 import {ISourceOptions} from 'Controls/_newBrowser/interfaces/ISourceOptions';
 import {DetailViewMode, IDetailOptions} from 'Controls/_newBrowser/interfaces/IDetailOptions';
+import {IBrowserViewConfig} from 'Controls/_newBrowser/interfaces/IBrowserViewConfig';
 
 /**
  * Интерфейс описывает структуру настроек компонента {@link Controls/newBrowser:Browser}
@@ -62,6 +63,11 @@ export interface IOptions extends IControlOptions, ISourceOptions {
     userViewMode?: DetailViewMode;
 
     /**
+     * Конфигурация списка, которая будет применена по умолчанию.
+     */
+    listConfiguration?: IBrowserViewConfig;
+
+    /**
      * Конфигурация master-колонки. Если не задана, то мастер-колонка не отображается.
      * Также видимость мастер колонки можно регулировать опцией
      * {@link IMasterOptions.visibility}
@@ -76,7 +82,22 @@ export interface IOptions extends IControlOptions, ISourceOptions {
     detail?: IDetailOptions;
 
     /**
+     * Фильтр, который будет применен к detail-списку
+     */
+    detailFilter?: QueryWhereExpression<unknown>;
+
+    /**
+     * Шаблон, который будет выведен над мастер-списком
+     */
+    masterHeaderTemplate?: TemplateFunction | string;
+
+    /**
      * Шаблон, который будет выведен под detail-списком
      */
     detailFooterTemplate?: TemplateFunction | string;
+
+    /**
+     * Шаблон, который будет выведен над detail-списком
+     */
+    detailHeaderTemplate?: TemplateFunction | string;
 }

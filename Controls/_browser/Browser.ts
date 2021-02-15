@@ -177,6 +177,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (isNewEnvironment()) {
                 this._setItemsAndUpdateContext(receivedState.items as RecordSet, options);
             }
+            if (options.source && options.dataLoadCallback) {
+                options.dataLoadCallback(receivedState.items);
+            }
         } else {
             return this._filterController.loadFilterItemsFromHistory()
                 .then((filterItems) => {
@@ -244,6 +247,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
         let methodResult;
+        let sourceChanged;
 
         this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
@@ -258,6 +262,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         if (this._options.source !== newOptions.source) {
             this._source = newOptions.source;
+            sourceChanged = true;
         }
 
         if (newOptions.root !== this._options.root) {
@@ -284,6 +289,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             methodResult = this._reload(newOptions);
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
+        }
+
+        if (sourceChanged && this._inputSearchValue && !newOptions.searchValue) {
+            this._inputSearchValue = '';
         }
 
         if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
@@ -668,6 +677,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         );
     }
 
+    protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+        this._inputSearchValue = value;
+    }
+
     protected _searchDataLoad(result: RecordSet|Error, searchValue: string): void {
         if (result instanceof RecordSet) {
             this._afterSearch(result, searchValue);
@@ -676,6 +689,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _processSearchError(error: Error): void|Error {
         if (!error.isCancelled) {
+            this._loading = false;
+            this._filterChanged(null, this._searchController.getFilter());
             this._getErrorRegister().start({
                 error,
                 mode: dataSourceError.Mode.include
@@ -684,14 +699,17 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    private _searchReset(event: SyntheticEvent): void {
-        this._getSearchController().then((searchController) => {
-            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
+    private _searchReset(event: SyntheticEvent): Promise<void> {
+        if (this._sourceController) {
+            this._sourceController.cancelLoading();
+        }
+        return this._getSearchController().then((searchController) => {
+            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch && this._options.startingWith === 'current') {
                 this._root = this._rootBeforeSearch;
-                this._rootBeforeSearch = null;
                 searchController.setRoot(this._root);
                 this._notify('rootChanged', [this._root]);
             }
+            this._rootBeforeSearch = null;
             this._updateFilter(searchController);
         });
     }
@@ -756,7 +774,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._deepReload = undefined;
         }
 
-        if (this._searchController && this._searchController.isSearchInProcess()) {
+        if (this._searchController && (this._searchController.isSearchInProcess() || this._searchController.getSearchValue() !== this._searchValue)) {
             this._loading = false;
             this._searchDataLoad(data, this._searchController.getSearchValue());
         } else if (this._loading) {
@@ -804,12 +822,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         return sourceController.reload()
             .then((items) => {
                 this._items = sourceController.getItems();
-                this._loading = false;
                 return items;
             })
             .catch((error) => {
                 this._processLoadError(error);
                 return error;
+            })
+            .finally(() => {
+                this._loading = false;
             })
             .then((result) => {
                 return this._updateSearchController(options).then(() => result);

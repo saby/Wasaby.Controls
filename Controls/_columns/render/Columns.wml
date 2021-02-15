@@ -5,7 +5,7 @@
             <div class="controls-ColumnsView_column" style="{{_getColumnStyle(i)}}">
                <div class="controls-ColumnsView_column-placeholder" style="{{_getPlaceholderStyle()}}"></div>
                <ws:partial
-                       template="wml!Controls/_listRender/Columns/resources/For"
+                       template="wml!Controls/_columns/render/resources/For"
                        collection="{{ _options.listModel }}"
                        keyPrefix="{{ _templateKeyPrefix }}"
                        columnMinWidth="{{ _options.columnMinWidth }}"
@@ -27,8 +27,7 @@
       <ws:partial template="{{ _options.emptyTemplate }}" />
    </ws:if>
    <ws:if data="{{ _options.footerTemplate }}">
-      <div
-         attr:class="controls-ListView__footer__paddingLeft_{{ _canHaveMultiselect(_options) ? 'withCheckboxes' : 'default' }}_theme-{{_options.theme}}">
+      <div attr:class="{{_getFooterClasses()}}">
          <ws:partial template="{{ _options.footerTemplate }}" />
       </div>
    </ws:if>

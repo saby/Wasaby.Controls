@@ -106,7 +106,10 @@ export default class ResultsRow<T> extends Row<T> {
                 });
             }
 
-            this._processStickyLadderCells();
+            if (this._$owner.isFullGridSupport()) {
+                this._processStickyLadderCells();
+            }
+
             if (this._$columns && this.hasItemActionsSeparatedCell()) {
                 this._$columnItems.push(new ItemActionsCell({
                     owner: this,

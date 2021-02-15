@@ -35,7 +35,7 @@
  * @public
  * @author Крайнов Д.О.
  */
-import AddButton = require('Controls/_list/AddButton');
+export {default as AddButton} from 'Controls/_list/AddButton';
 import {default as Container} from 'Controls/_list/Container';
 import EmptyTemplate = require('wml!Controls/_list/emptyTemplate');
 import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
@@ -48,8 +48,8 @@ import {default as DataContainer} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
-import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/MoneyChooser');
-import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/NumberChooser');
+import MoneyEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/Money');
+import NumberEditingTemplate = require('wml!Controls/_list/EditInPlace/decorated/Number');
 
 import BaseViewModel = require('Controls/_list/BaseViewModel');
 import ListViewModel = require('Controls/_list/ListViewModel');
@@ -92,7 +92,6 @@ export {RemoveController} from 'Controls/_list/Controllers/RemoveController';
 export {IRemovableList} from 'Controls/_list/interface/IRemovableList';
 
 export {
-    AddButton,
     Container,
     EmptyTemplate,
     GroupTemplate,

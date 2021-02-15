@@ -22,7 +22,16 @@
                <ws:if data="{{!itemData.canShowActions || !itemData.hasVisibleActions()|| itemData.dispItem.isNode()}}">
                   <div class="controls-TileView__previewTemplate_title_text" title="{{itemData.item[itemData.displayProperty]}}">
                      <div class="{{titleLines > 1 ? 'controls-TileView__text_ellipsis_multiLine' : 'ws-ellipsis'}}" style="-webkit-line-clamp: {{titleLines || 1}};">
-                        {{itemData.item[itemData.displayProperty]}}
+                        <ws:if data="{{itemData.searchValue && task1180643735}}">
+                           <Controls.decorator:Highlight highlightedValue="{{itemData.searchValue}}" className="{{highlightClassName}}">
+                              <ws:value>
+                                 <ws:String>{{itemData.item[itemData.displayProperty]}}</ws:String>
+                              </ws:value>
+                           </Controls.decorator:Highlight>
+                        </ws:if>
+                        <ws:else>
+                           {{itemData.item[itemData.displayProperty]}}
+                        </ws:else>
                      </div>
                      <ws:if data="{{bottomRightTemplate}}">
                         <ws:partial template="{{bottomRightTemplate}}"

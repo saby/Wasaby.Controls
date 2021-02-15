@@ -133,6 +133,7 @@ export default class TreeGridCollection<
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
         }
+        this._$results = null;
     }
 
     protected _getItemsFactory(): ItemsFactory<T> {
@@ -148,6 +149,15 @@ export default class TreeGridCollection<
 
     protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
         return GridGroupItem;
+    }
+
+    setEditing(editing: boolean): void {
+        super.setEditing(editing);
+
+        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+            this._$headerModel = null;
+        }
+        this._nextVersion();
     }
 
     // endregion

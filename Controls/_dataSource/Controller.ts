@@ -1,7 +1,6 @@
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {CrudWrapper} from './CrudWrapper';
-import {NavigationController} from 'Controls/source';
-import {INavigationControllerOptions} from 'Controls/_source/NavigationController';
+import {default as NavigationController, INavigationControllerOptions} from 'Controls/_dataSource/NavigationController';
 import {INavigationOptionValue,
         INavigationSourceConfig,
         Direction,
@@ -314,6 +313,10 @@ export default class Controller {
         this._expandedItems = expandedItems;
     }
 
+    getExpandedItems(): TKey[] {
+        return this._expandedItems;
+    }
+
     // FIXME для поддержки nodeSourceControllers в дереве
     calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
         this._updateQueryPropertiesByItems(items, key, undefined, direction);
@@ -407,7 +410,7 @@ export default class Controller {
         direction?: Direction
     ): void {
         if (this._hasNavigationBySource()) {
-            if (this._deepReload) {
+            if (this._deepReload || !direction && this._root === id) {
                 this._destroyNavigationController();
             }
             this._getNavigationController(this._navigation)
@@ -455,9 +458,9 @@ export default class Controller {
 
         if (direction === 'up') {
             this._prependItems(items);
-        } else if (direction === 'down') {
+        } else if (direction === 'down' && this._items) {
             this._appendItems(items);
-        } else if (key !== this._root && this._items) {
+        } else if (!direction && key !== this._root && this._items) {
             this._mergeItems(items);
         } else {
             this._setItems(items);
