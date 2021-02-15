@@ -7,6 +7,7 @@ import template = require('wml!Controls/_toggle/RadioGroup/RadioGroup');
 import defaultItemTemplate = require('wml!Controls/_toggle/RadioGroup/resources/ItemTemplate');
 import {ISource, ISourceOptions, ISingleSelectable, ISingleSelectableOptions} from 'Controls/interface';
 import {IToggleGroup, IToggleGroupOptions} from './interface/IToggleGroup';
+import 'css!Controls/toggle';
 
 export interface IRadioGroupOptions extends IControlOptions,
     ISingleSelectableOptions,
@@ -93,8 +94,6 @@ class Radio extends Control<IRadioGroupOptions, RecordSet> implements ISource, I
          return items;
       });
    }
-
-   static _theme: string[] = ['Controls/toggle'];
 
    static getDefaultOptions(): object {
       return {

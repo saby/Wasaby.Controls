@@ -317,7 +317,6 @@ define([
                keyProperty: 'key',
                nodeProperty: 'type',
                parentProperty: 'parent',
-               markedKey: 1,
                markerVisiblity: 'visible'
             },
             treeControl = correctCreateTreeControl(cfg);
@@ -329,13 +328,13 @@ define([
             rawData: rawData,
             keyProperty: 'key'
          }), cfg);
-         model.setMarkedKey(1);
+         treeControl._children.baseControl.setMarkedKey(1);
          tree.TreeControl._private.expandMarkedItem(treeControl);
-         model.setMarkedKey(2);
+         treeControl._children.baseControl.setMarkedKey(2);
          tree.TreeControl._private.expandMarkedItem(treeControl);
-         model.setMarkedKey(3);
+         treeControl._children.baseControl.setMarkedKey(3);
          tree.TreeControl._private.expandMarkedItem(treeControl);
-         assert.deepEqual(toggleExpandedStack, []);
+         assert.deepEqual(toggleExpandedStack, [1, 2]);
       });
 
       it('_private.getTargetRow', () => {
@@ -1056,6 +1055,20 @@ define([
 
       describe('_beforeUpdate', () => {
 
+         it('_beforeUpdate with expandedItems and without source', async() => {
+            let options = {
+               expandedItems: [],
+               keyProperty: 'id'
+            };
+            const treeControl = await correctCreateTreeControlAsync(options);
+
+            options = { ...options };
+            options.expandedItems = ['testId'];
+            assert.doesNotThrow(() => {
+               treeControl._beforeUpdate(options);
+            });
+         });
+
          it('_afterReloadCallback called after data loaded by sourceController', async () => {
             const source = new sourceLib.Memory();
             const items = new collection.RecordSet({
@@ -1143,6 +1156,7 @@ define([
             source: new sourceLib.Memory()
          };
          options.sourceController = new dataSource.NewSourceController({...options});
+         options.sourceController.setItems(new collection.RecordSet());
          var
              hasMore = false,
              isIndicatorHasBeenShown = false,
@@ -2006,7 +2020,7 @@ define([
          assert.deepEqual(lists, [2]);
       });
 
-      it('goToNext, goToPrev', function() {
+      it('goToNext, goToPrev', async function() {
          const rs = new collection.RecordSet({
             rawData: getHierarchyData(),
             keyProperty: 'id'
@@ -2049,19 +2063,19 @@ define([
          });
          treeControl._afterMount();
          assert.equal(treeControl._markedLeaf, 'last');
-         treeControl.goToPrev();
+         await treeControl.goToPrev();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'middle');
-         treeControl.goToPrev();
+         await treeControl.goToPrev();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'first');
-         treeControl.goToNext();
+         await treeControl.goToNext();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'middle');
-         treeControl.goToNext();
+         await treeControl.goToNext();
          treeControl._beforeUpdate(newCfg);
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'last');

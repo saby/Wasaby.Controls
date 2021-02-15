@@ -839,6 +839,22 @@ describe('Controls/_editInPlace/EditInPlace', () => {
 
     describe('commit', () => {
         testEndEditWith('commit');
+
+        it('should cancel editing if called commit with commit strategy "hasChanges" on unchanged item', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: (item: Model, willSave: boolean, isAdd: boolean) => {
+                    onBeforeEndEditCalled = true;
+                    assert.isFalse(willSave);
+                }
+            });
+            return editInPlace.commit('hasChanges').then((res) => {
+                assert.isUndefined(res);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isTrue(onAfterEndEditCalled);
+                assert.isNull(collection.find((i) => i.isEditing()));
+            });
+        });
     });
 
     describe('cancel', () => {
@@ -875,6 +891,24 @@ describe('Controls/_editInPlace/EditInPlace', () => {
                 assert.isNull(collection.find((i) => i.isEditing()));
             });
         });
+
+        it('should skip then branch if controller was destroyed while cancelling', () => {
+            assert.equal(collection.find((i) => i.isEditing()).contents.getKey(), 1);
+            editInPlace.updateOptions({
+                onBeforeEndEdit: () => {
+                    onBeforeEndEditCalled = true;
+                }
+            });
+
+            const endPromise = editInPlace.cancel();
+            editInPlace.destroy();
+            return endPromise.then((res) => {
+                assert.deepEqual({ canceled: true }, res);
+                assert.isTrue(onBeforeEndEditCalled);
+                assert.isFalse(onAfterEndEditCalled);
+            });
+        });
+
     });
 
     it('should not throw console error if it was processed by error controller', () => {

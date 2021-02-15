@@ -12,6 +12,7 @@ import {IList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
 import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
+import 'css!Controls/toggle';
 
 export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOptions, INavigationOptions,
     IItemActionsOptions, IList, IColumn, ISelectorDialogOptions {
@@ -66,21 +67,27 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _stackOpener: StackOpener = null;
     protected _items: RecordSet = null;
     protected _selectedKeys: string[]|number[] = [];
+    protected _filter: object = {};
     private _itemsReadyCallback: Function = null;
 
     protected _beforeMount(options: IListEditorOptions): void {
         this._selectedKeys = options.propertyValue;
-        this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+        this._setColumns(options.displayProperty, options.propertyValue, options.keyProperty, options.additionalTextProperty);
         this._itemsReadyCallback = this._handleItemsReadyCallback.bind(this);
+        this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
     }
 
     protected _beforeUpdate(options: IListEditorOptions): void {
         const valueChanged = options.propertyValue !== this._options.propertyValue;
+        const filterChanged = options.filter !== this._options.filter;
         const displayPropertyChanged = options.displayProperty !== this._options.displayProperty;
         const additionalDataChanged = options.additionalTextProperty !== this._options.additionalTextProperty;
         if (additionalDataChanged || valueChanged || displayPropertyChanged) {
             this._selectedKeys = options.propertyValue;
-            this._setColumns(options.displayProperty, options.propertyValue, options.additionalTextProperty);
+            this._setColumns(options.displayProperty, options.propertyValue, options.keyProperty, options.additionalTextProperty);
+        }
+        if (filterChanged) {
+            this._setFilter(this._selectedKeys, options.filter, options.keyProperty);
         }
     }
 
@@ -108,6 +115,7 @@ class ListEditor extends Control<IListEditorOptions> {
         result.forEach((item) => {
             selectedKeys.push(item.get(this._options.keyProperty));
         });
+        this._items.assign(result);
         this._notifyPropertyValueChanged(selectedKeys, !this._options.multiSelect, result);
     }
 
@@ -140,15 +148,16 @@ class ListEditor extends Control<IListEditorOptions> {
             needColapse
         };
         this._selectedKeys = value;
-        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.additionalTextProperty);
+        this._setColumns(this._options.displayProperty, this._selectedKeys, this._options.keyProperty, this._options.additionalTextProperty);
         this._notify('propertyValueChanged', [extendedValue], {bubbling: true});
     }
 
-    protected _setColumns(displayProperty: string, propertyValue: string[]|number[], additionalTextProperty?: string): void {
+    protected _setColumns(displayProperty: string, propertyValue: string[]|number[], keyProperty: string, additionalTextProperty?: string): void {
         this._columns = [{
             template: ColumnTemplate,
             selected: propertyValue,
-            displayProperty
+            displayProperty,
+            keyProperty
         }];
         if (additionalTextProperty) {
             this._columns.push({
@@ -162,6 +171,13 @@ class ListEditor extends Control<IListEditorOptions> {
     protected _beforeUnmount(): void {
         if (this._stackOpener) {
             this._stackOpener.destroy();
+        }
+    }
+
+    private _setFilter(selectedKeys: string[]|number[], filter: object, keyProperty: string): void {
+        this._filter = {...filter};
+        if (selectedKeys && selectedKeys.length) {
+            this._filter[keyProperty] = selectedKeys;
         }
     }
 
@@ -198,7 +214,7 @@ class ListEditor extends Control<IListEditorOptions> {
         return this._stackOpener;
     }
 
-    static _theme: string[] = ['Controls/filterPanel', 'Controls/toggle'];
+    static _theme: string[] = ['Controls/filterPanel'];
 
     static getDefaultOptions(): object {
         return {

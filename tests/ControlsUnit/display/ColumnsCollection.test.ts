@@ -1,11 +1,11 @@
 import { assert } from 'chai';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
-import { ColumnsCollection, ColumnsCollectionItem } from 'Controls/display';
-import { ItemsEntity } from 'Controls/dragnDrop';
-import ColumnsDrag from 'Controls/_display/itemsStrategy/ColumnsDrag';
+import Collection from 'Controls/_columns/display/Collection';
+import CollectionItem from 'Controls/_columns/display/CollectionItem';
+import ColumnsDrag from 'Controls/_columns/display/itemsStrategy/ColumnsDrag';
 
-describe('Controls/_display/ColumnsCollection', () => {
+describe('Controls/_display/Collection', () => {
     let model;
     let items;
     let list;
@@ -46,7 +46,7 @@ describe('Controls/_display/ColumnsCollection', () => {
             rawData: items,
             keyProperty: 'id'
         });
-        model = new ColumnsCollection<Model, ColumnsCollectionItem<Model>>({
+        model = new Collection<Model, CollectionItem<Model>>({
             // @ts-ignore
             collection: list
         });

@@ -14,7 +14,7 @@ import {
     IGridCollectionOptions
 } from 'Controls/gridNew';
 import TreeGridFooterRow from './TreeGridFooterRow';
-import { Model } from 'Types/entity';
+import {Model as EntityModel, Model} from 'Types/entity';
 import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
 import {TemplateFunction} from "UI/Base";
 
@@ -133,6 +133,7 @@ export default class TreeGridCollection<
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
         }
+        this._$results = null;
     }
 
     protected _getItemsFactory(): ItemsFactory<T> {
@@ -174,6 +175,11 @@ export default class TreeGridCollection<
         });
 
         return composer;
+    }
+
+    protected setMetaResults(metaResults: EntityModel) {
+        super.setMetaResults(metaResults);
+        this._$results?.setMetaResults(metaResults);
     }
 }
 

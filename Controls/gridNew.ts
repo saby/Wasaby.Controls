@@ -74,6 +74,8 @@ import GridHeader, {IOptions as IGridHeaderOptions} from 'Controls/_gridNew/disp
 import GridHeaderRow, {IOptions as IGridHeaderRowOptions} from 'Controls/_gridNew/display/HeaderRow';
 import GridHeaderCell, {IOptions as IGridHeaderCellOptions} from 'Controls/_gridNew/display/HeaderCell';
 
+import GridStickyLadderCell, {IOptions as IGridStickyLadderCellOptions} from 'Controls/_gridNew/display/StickyLadderCell';
+
 import GridEmptyRow, {IOptions as IGridEmptyRowOptions} from 'Controls/_gridNew/display/EmptyRow';
 import GridEmptyCell, {IOptions as IGridEmptyCellOptions} from 'Controls/_gridNew/display/EmptyCell';
 
@@ -90,6 +92,8 @@ import GridFooterRow, {IOptions as IGridFooterRowOptions} from 'Controls/_gridNe
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from 'Controls/_gridNew/display/FooterCell';
 import GridGroupItem, {IOptions as IGridGroupItemOptions} from 'Controls/_gridNew/display/GroupItem';
 import GridGroupCell, {IOptions as IGridGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
+
+import { IDisplaySearchValueOptions, IDisplaySearchValue } from 'Controls/_gridNew/display/interface/IDisplaySearchValue';
 
 register('Controls/gridNew:GridCollection', GridCollection, {instantiate: false});
 register('Controls/gridNew:GridRow', GridRow, {instantiate: false});
@@ -115,6 +119,7 @@ export {
     GridHeader, IGridHeaderOptions,
     GridHeaderRow, IGridHeaderRowOptions,
     GridHeaderCell, IGridHeaderCellOptions,
+    GridStickyLadderCell, IGridStickyLadderCellOptions,
     GridEmptyRow, IGridEmptyRowOptions,
     GridEmptyCell, IGridEmptyCellOptions,
     GridTableHeader,
@@ -126,5 +131,6 @@ export {
     GridFooterRow, IGridFooterRowOptions,
     GridFooterCell, IGridFooterCellOptions,
     GridGroupItem, IGridGroupItemOptions,
-    GridGroupCell, IGridGroupCellOptions
+    GridGroupCell, IGridGroupCellOptions,
+    IDisplaySearchValueOptions, IDisplaySearchValue
 }

@@ -78,19 +78,6 @@ export default {
             prevArrowVisibility: false,
 
             /**
-             * @name Controls/_dateRange/interfaces/ILinkView#clearButtonVisibility
-             * @cfg {Boolean} Включает/отключает отображение кнопки "очистить период".
-             * @default true
-             */
-
-            /*
-             * @name Controls/_dateRange/interfaces/ILinkView#clearButtonVisibility
-             * @cfg {Boolean} Enables or disables the display of the period clear button.
-             * @default true
-             */
-            showDeleteButton: true,
-
-            /**
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
              * @default Не указан
@@ -132,7 +119,6 @@ export default {
             ]),
             nextArrowVisibility: descriptor(Boolean),
             prevArrowVisibility: descriptor(Boolean),
-            showDeleteButton: descriptor(Boolean),
             emptyCaption: descriptor(String)
         };
     }

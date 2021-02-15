@@ -11,6 +11,7 @@ import {
     ISortingOptions,
     ISourceOptions
 } from 'Controls/interface';
+import {RecordSet} from 'Types/collection';
 
 /**
  * Enum со списком доступных вариантов отображения контента в detail-колонке
@@ -119,4 +120,6 @@ export
     backgroundColor?: string;
 
     searchStartingWith?: string;
+
+    dataLoadCallback?: (items: RecordSet, direction: string) => void;
 }

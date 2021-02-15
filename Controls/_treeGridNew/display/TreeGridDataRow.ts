@@ -1,20 +1,20 @@
 import { mixin } from 'Types/util';
 import { ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
-import { IGridRowOptions, GridCell, GridRowMixin } from 'Controls/gridNew';
+import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
-import { TMarkerClassName } from 'Controls/grid';
+import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
 import GroupCell from "Controls/_gridNew/display/GroupCell";
 import Cell from "Controls/_gridNew/display/Cell";
 
 const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/treeGridNew:GroupItemTemplate';
 
-export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T> {
+export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {
     owner: TreeGridCollection<T>;
 }
 
 export default class TreeGridDataRow<T extends Model>
-   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
+   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
@@ -23,6 +23,7 @@ export default class TreeGridDataRow<T extends Model>
     readonly SelectableItem: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly DraggableItem: boolean = true;
+    protected _$searchValue: string;
 
     constructor(options: IOptions<T>) {
         super(options);
@@ -91,6 +92,27 @@ export default class TreeGridDataRow<T extends Model>
         }
     }
 
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGridDataCellOptions<T>> {
+        return {
+            ...super._getColumnFactoryParams(column, columnIndex),
+            searchValue: this._$searchValue
+        }
+    }
+
+    setSearchValue(searchValue: string): void {
+        this._$searchValue = searchValue;
+        if (this._$columnItems) {
+            this._$columnItems.forEach((cell, cellIndex) => {
+                cell.setSearchValue(searchValue);
+            });
+        }
+        this._nextVersion();
+    }
+
+    getSearchValue(): string {
+        return this._$searchValue;
+    }
+
     setSelected(selected: boolean|null, silent?: boolean): void {
         const changed = this._$selected !== selected;
         super.setSelected(selected, silent);
@@ -130,5 +152,6 @@ Object.assign(TreeGridDataRow.prototype, {
     '[Controls/_display/TreeItem]': true,
     _cellModule: 'Controls/treeGrid:TreeGridDataCell',
     _moduleName: 'Controls/treeGrid:TreeGridDataRow',
+    _$searchValue: '',
     _instancePrefix: 'tree-grid-row-'
 });

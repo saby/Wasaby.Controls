@@ -95,7 +95,11 @@ define(
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
 
-               options.source.query = () => Promise.reject(new Error());
+               options.source.query = () => {
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
+               };
 
                await menuControl._loadItems(options).catch(() => {
                   assert.isNotNull(menuControl._errorConfig);
@@ -107,10 +111,14 @@ define(
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
                menuControl._options.dataLoadErrback = () => {
-                  isDataLoadErrbackCalled = true
-               }
+                  isDataLoadErrbackCalled = true;
+               };
 
-               options.source.query = () => Promise.reject(new Error());
+               options.source.query = () => {
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
+               };
 
                await menuControl._loadItems(options).catch(() => {
                   assert.isNotNull(menuControl._errorConfig);
@@ -185,7 +193,9 @@ define(
 
             it('_loadItems return error', async() => {
                menuControl._loadItems = () => {
-                  return Promise.reject(new Error());
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
                };
                await menuControl._beforeMount(menuOptions);
 

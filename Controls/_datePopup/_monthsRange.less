@@ -91,7 +91,7 @@
    background-color: @yearlist_item_hover_background-color_datePicker;
 }
 
-.controls-PeriodDialog-MonthsRange__item,
+.controls-PeriodDialog-MonthsRange__item-unselected,
 .controls-PeriodDialog-MonthsRange__item-selected {
    .box-sizing(border-box);
    .flex-shrink(0);
@@ -100,7 +100,7 @@
    flex-direction: column;
 }
 
-.controls-PeriodDialog-MonthsRange__item_theme-@{themeName},
+.controls-PeriodDialog-MonthsRange__item-unselected_theme-@{themeName},
 .controls-PeriodDialog-MonthsRange__item-selected_theme-@{themeName} {
    padding: @yearlist_month_padding_datePicker;
    width: @yearlist_month_width_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
@@ -109,7 +109,7 @@
    height: @yearlist_month_height_datePicker - 2 * @yearlist_item_border-thickness_datePicker;
 }
 
-.controls-PeriodDialog-MonthsRange__item_theme-@{themeName} {
+.controls-PeriodDialog-MonthsRange__item-unselected_theme-@{themeName} {
    background-color: @background-color_datePicker;
 }
 
@@ -132,7 +132,7 @@
 .controls-PeriodDialog-MonthsRange__halfYear-hovered,
 .controls-PeriodDialog-MonthsRange__quarter-hovered {
    .controls-PeriodDialog-MonthsRange__item-selected,
-   .controls-PeriodDialog-MonthsRange__item {
+   .controls-PeriodDialog-MonthsRange__item-unselected {
       background-color: transparent;
    }
 }
@@ -157,9 +157,9 @@
 .controls-PeriodDialog-MonthsRange__halfYear-hovered_theme-@{themeName} {
    &:before {
       top: -@yearlist_item_border-thickness_datePicker;
-      left: @yearnav_arrow_width_datePicker - @yearlist_item_border-thickness_datePicker;
+      left: @yearlist_halfyears_width_datePicker + @yearlist_block-separator_thickness_datePicker;
       right: -@yearlist_item_border-thickness_datePicker;
-      border: solid @yearlist_item_border-thickness_datePicker @yearlist_item_hover_border-color_datePicker;
+      border: solid @yearlist_item_border-thickness_datePicker @yearlist_halfyears_hover_border-color_datePicker;
    }
 }
 
@@ -185,7 +185,7 @@
    &:before {
       top: -@yearlist_item_border-thickness_datePicker;
       left: -@yearlist_item_border-thickness_datePicker;
-      border: solid @yearlist_item_border-thickness_datePicker @yearlist_item_hover_border-color_datePicker;
+      border: solid @yearlist_item_border-thickness_datePicker @yearlist_quarters_hover_border-color_datePicker;
    }
 }
 

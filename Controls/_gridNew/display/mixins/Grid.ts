@@ -144,7 +144,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             this._$footer = this._initializeFooter(options);
         }
         if (this._resultsIsVisible()) {
-            this._$results = this._initializeResults(options);
+            this._initializeResults(options);
         }
         if (!this._$isFullGridSupport) {
             this._$colgroup = this._initializeColgroup(options);
@@ -198,6 +198,15 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     getResults(): ResultsRow<S> {
+        if (!this._$results && this._resultsIsVisible()) {
+            this._initializeResults({
+                owner: this,
+                columns: this._$columns,
+                metaResults: this.getMetaResults(),
+                resultsColspanCallback: this._$resultsColspanCallback,
+                resultsTemplate: this._$resultsTemplate
+            });
+        }
         return this._$results;
     }
 
@@ -355,9 +364,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     protected _resultsIsVisible(): boolean {
-        const hasResultsPosition = !!this._$resultsPosition;
-        const hasMoreData = this.getHasMoreData();
-        return hasResultsPosition && (this._$resultsVisibility === 'visible' || hasMoreData || this.getCollectionCount() > 1);
+        return !!this._$resultsPosition && (this._$resultsVisibility === 'visible' || this.getCollectionCount() > 1);
     }
 
     protected _initializeHeader(options: IOptions): Header<S> {
@@ -379,11 +386,11 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         });
     }
 
-    protected _initializeResults(options: IOptions): ResultsRow<S> {
-        return new ResultsRow({
+    protected _initializeResults(options: IOptions): void {
+        this._$results = new ResultsRow({
             ...options,
             owner: this,
-            results: this.getMetaResults(),
+            metaResults: this.getMetaResults(),
             resultsColspanCallback: options.resultsColspanCallback,
             resultsTemplate: options.resultsTemplate
         });
