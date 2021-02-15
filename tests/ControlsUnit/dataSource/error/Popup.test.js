@@ -186,7 +186,7 @@ define([
             return p.openDialog(viewConfig, {}).then(() => {
                const popup = require(fakeModuleNames[0]);
                assert.isTrue(popup.Dialog.openPopup.calledOnce, 'openPopup() called');
-               WasabyLib.load(fakeModuleNames[2]).then((module) => {
+               return WasabyLib.load(fakeModuleNames[2]).then((module) => {
                   assert.isDefined(module, 'template module exists');
                });
             });
@@ -205,7 +205,7 @@ define([
                   Popup.showDefaultDialog.calledOnce,
                   'showDefaultDialog() called'
                );
-               WasabyLib.load(fakeModuleName).then(
+               return WasabyLib.load(fakeModuleName).then(
                   () => assert.fail('template module exists'),
                   (error) => assert.isOk(error, 'template module doesn\'t exist')
                );
