@@ -813,7 +813,7 @@ const _private = {
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
                     display.getChildren(display.getRoot()).getCount() :
-                    self._items.getCount();
+                    display.getCount();
             } else {
                 loadedDataCount = 0;
             }
@@ -2787,7 +2787,6 @@ const _private = {
             disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig,
             needScrollCalculation: self._needScrollCalculation,
-            scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
@@ -3811,7 +3810,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
-            (sourceChanged || searchValueChanged && newOptions.searchValue && !newOptions.sourceController.sourceControllerCreated);
+            // loadedBySuggest опция до 21.2000, чтобы список не перезагружался лишний раз, т.к. в саггесте данные всегда грузятся на уровне контроллера инпута
+            (sourceChanged || searchValueChanged && newOptions.searchValue && !newOptions.sourceController.sourceControllerCreated || newOptions.sourceController.loadedBySuggest);
 
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
@@ -3979,6 +3979,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
+                _private.prepareFooter(this, newOptions, this._sourceController);
             }
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
@@ -5686,11 +5687,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateItemActionsOnce(this, this._options);
         }
 
-        if (this._documentDragging && !this._dndListController?.isDragging()) {
-            this._insideDragging = true;
-            this._notify('_removeDraggingTemplate', [], {bubbling: true});
-            this._listViewModel.setDragOutsideList(false);
-
+        if (this._documentDragging) {
             this._dragEnter(this._getDragObject());
         }
 
@@ -5981,7 +5978,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _registerObserver(): void {
-        if (!this._observerRegistered && this._children.scrollObserver) {
+        if (!this._observerRegistered && this._listViewModel) {
             // @ts-ignore
             this._children.scrollObserver.startRegister([this._children.scrollObserver]);
             this._observerRegistered = true;
@@ -6234,6 +6231,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _dragEnter(dragObject): void {
+        this._insideDragging = true;
+        this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        this._listViewModel.setDragOutsideList(false);
+
+        // Не нужно начинать dnd, если и так идет процесс dnd
+        if (this._dndListController?.isDragging()) {
+            return;
+        }
+
         // если мы утащим в другой список, то в нем нужно создать контроллер
         if (!this._dndListController) {
             this._dndListController = _private.createDndListController(this._listViewModel, this._options);

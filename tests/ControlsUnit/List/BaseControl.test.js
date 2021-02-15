@@ -82,12 +82,20 @@ define([
       }
 
       function correctCreateBaseControl(cfg, asyncCreate) {
-         return new lists.BaseControl(getCorrectBaseControlConfig(cfg, asyncCreate));
+         const baseControl = new lists.BaseControl(getCorrectBaseControlConfig(cfg, asyncCreate));
+         baseControl._children = {
+            scrollObserver: { startRegister: () => null }
+         };
+         return baseControl;
       }
 
       async function correctCreateBaseControlAsync(cfg) {
          const config = await getCorrectBaseControlConfigAsync(cfg);
-         return new lists.BaseControl(config);
+         const baseControl = new lists.BaseControl(config);
+         baseControl._children = {
+            scrollObserver: { startRegister: () => null }
+         };
+         return baseControl;
       }
       beforeEach(function() {
          data = [
@@ -1303,7 +1311,8 @@ define([
                   })
                }),
                getDisplay: () => ({
-                  '[Controls/_display/Tree]': false
+                  '[Controls/_display/Tree]': false,
+				  getCount: () => test.data[2].getLoadedDataCount(),
                })
             };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
@@ -2486,7 +2495,7 @@ define([
          var ctrl = await correctCreateBaseControlAsync(cfg);
          ctrl.saveOptions(cfg);
          await ctrl._beforeMount(cfg);
-         ctrl._children = triggers;
+         ctrl._children = { ...ctrl._children, ...triggers };
          ctrl._container = {
             getElementsByClassName: () => ([{ clientHeight: 100, offsetHeight: 0 }]),
             getBoundingClientRect: function() { return {}; }
@@ -4051,11 +4060,12 @@ define([
          const ctrl = new lists.BaseControl({});
 
          ctrl._listViewModel = {
-            getDragEntity: () => null
+            getDragEntity: () => null,
+            setDragOutsideList: () => null
          };
 
          let
-            notifiedEvent = null,
+            notifiedEvent = '_removeDraggingTemplate',
             notifiedEntity = null;
 
          ctrl._notify = function(eventName, dragEntity) {
@@ -4065,12 +4075,12 @@ define([
 
          assert.isNull(ctrl._dndListController);
          ctrl._dragEnter({}, undefined);
-         assert.isNull(notifiedEvent);
+         assert.equal(notifiedEvent, '_removeDraggingTemplate');
          assert.isNotNull(ctrl._dndListController);
 
          const badDragObject = { entity: {} };
          ctrl._dragEnter({}, badDragObject);
-         assert.isNull(notifiedEvent);
+         assert.equal(notifiedEvent, '_removeDraggingTemplate');
 
          const goodDragObject = {
             entity: {
@@ -7697,6 +7707,7 @@ define([
             assert.equal(secondBaseControl._dndListController.getDragEntity(), dragEntity);
             assert.isNotOk(secondBaseControl._dndListController.getDraggableItem());
 
+            secondBaseControl._dndListController = null;
             const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
             secondBaseControl._notify = () => newRecord;
             secondBaseControl._dragEnter({ entity: dragEntity });
