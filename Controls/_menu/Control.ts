@@ -765,7 +765,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
         if (options.additionalProperty) {
             listModel.addFilter(this._additionalFilter);
-        } else if (options.allowPin && options.root === null && !this._expander) {
+        } else if (options.allowPin && !options.subMenuLevel && !this._expander) {
             listModel.addFilter(this._limitHistoryFilter);
         }
         return listModel;
@@ -773,7 +773,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _groupMethod(options: IMenuControlOptions, item: Model): string {
         const groupId: string = item.get(options.groupProperty);
-        const isHistoryItem: boolean = MenuControl._isHistoryItem(item) && this._options.root === null;
+        const isHistoryItem: boolean = MenuControl._isHistoryItem(item) && !this._options.subMenuLevel;
         return groupId !== undefined && !isHistoryItem ? groupId : constView.hiddenGroup;
     }
 
@@ -831,11 +831,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     hasAdditional = item.get(options.additionalProperty) && !MenuControl._isHistoryItem(item);
                 }
             });
-        } else if (options.allowPin && options.root === null) {
+        } else if (options.allowPin && !options.subMenuLevel) {
             this._visibleIds = [];
             factory(items).each((item) => {
-                const hasParent = item.get(options.parentProperty);
-                if (!hasParent)  {
+                const parent = item.get(options.parentProperty);
+                if (parent === options.root || !parent && options.root === null)  {
                     this._visibleIds.push(item.getKey());
                 }
             });
@@ -893,6 +893,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             searchParam: null,
             itemPadding: null,
             source: this._getSourceSubMenu(isLoadedChildItems),
+            subMenuLevel: this._options.subMenuLevel ? this._options.subMenuLevel + 1 : 1,
             iWantBeWS3: false // FIXME https://online.sbis.ru/opendoc.html?guid=9bd2e071-8306-4808-93a7-0e59829a317a
         };
 
