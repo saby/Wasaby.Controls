@@ -1,0 +1,18 @@
+<div class="{{ gridColumn.getGroupWrapperClasses(expanderVisible, theme) }}">
+    <ws:if data="{{ gridColumn.shouldDisplayLeftSeparator(separatorVisibility, textVisible, null, textAlign) }}">
+        <div class="controls-ListView__groupSeparator_theme-{{theme}} controls-ListView__groupSeparator-left_theme-{{ theme }}">&nbsp;</div>
+    </ws:if>
+    <ws:if data="{{ textVisible !== false }}">
+        <div class="{{ gridColumn.getGroupCaptionClasses(theme) }}
+                    {{ gridColumn.getGroupExpanderClasses(expanderAlign, expanderVisible, theme) }}">
+            <ws:if data="{{ contentTemplate }}">
+                <ws:partial template="{{ contentTemplate }}" itemData="{{ item || itemData }}"/>
+            </ws:if>
+            <ws:else>{{ (gridColumn || itemData).getDefaultDisplayValue() }}</ws:else>
+        </div>
+    </ws:if>
+    <ws:if data="{{ gridColumn.shouldDisplayRightSeparator(separatorVisibility, textVisible, null, textAlign) }}">
+        <div class="controls-ListView__groupSeparator_theme-{{theme}}
+                    {{ textVisible !== false ? 'controls-ListView__groupSeparator-right_theme-' + theme }}">&nbsp;</div>
+    </ws:if>
+</div>
