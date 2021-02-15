@@ -35,6 +35,7 @@
          </ws:if>
 
          <Controls.explorer:View
+            attr:class="controls-newBrowser__detail-list"
             root="{{root}}"
             on:rootChanged="_onDetailRootChanged()"
 
