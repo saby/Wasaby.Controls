@@ -23,18 +23,11 @@
                                    attr:class="controls-PeriodDialog-DateRangeItem__months"
                                    on:positionChanged="_onMonthsPositionChanged()">
          <ws:monthHeaderTemplate>
-            <div>
-               <ws:if data="{{ monthHeaderTemplate.date.getMonth() === 0 }}">
-                  <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn
-                           controls-PeriodDialog-DateRangeItem__months-nextyearBtn_theme-{{_options.theme}}"
-                       on:click="_scrollToMonth(monthHeaderTemplate.date.getFullYear(), 0)" data-date="{{ monthHeaderTemplate.date.getFullYear() }}">
-                     {{monthHeaderTemplate.date.getFullYear()}}
-                  </div>
-               </ws:if>
-               <ws:else>
-                  <invisible-node/>
-               </ws:else>
-            </div>
+            <ws:partial
+                    template="{{ _monthHeaderTmpl }}"
+                    date="{{ monthHeaderTemplate.date }}"
+                    on:click="_scrollToMonth(monthHeaderTemplate.date.getFullYear(), 0)"
+            />
          </ws:monthHeaderTemplate>
          <ws:monthTemplate>
             <ws:partial template="Controls/calendar:MonthListMonthTemplate">

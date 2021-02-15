@@ -9,6 +9,7 @@ import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
+import * as monthHeaderTmpl from 'wml!Controls/_datePopup/DateRangeMonthHeaderTemplate';
 
 const _private = {
     updateView: function (self, options) {
@@ -48,6 +49,7 @@ const _private = {
  */
 var Component = BaseControl.extend([EventProxy], {
     _template: componentTmpl,
+    _monthHeaderTmpl: monthHeaderTmpl,
 
     _monthViewModel: MonthModel,
 
@@ -76,6 +78,7 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _beforeMount: function (options) {
+        this._scrollToMonth = this._scrollToMonth.bind(this);
         _private.updateView(this, options);
     },
 
