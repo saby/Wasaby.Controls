@@ -199,6 +199,8 @@
             <ws:partial template="continueSearch"/>
         </ws:if>
 
+        <ws:partial if="{{ _shouldDisplayPortionedSearch() }}" template="portionedSearch"/>
+
         <ws:if data="{{_listViewModel}}">
             <ws:partial template="loadingIndicator" loadingIndicatorState="up"/>
 
@@ -206,8 +208,6 @@
 
             <ws:partial template="loadingIndicator" loadingIndicatorState="down"/>
         </ws:if>
-
-        <ws:partial if="{{ _shouldDisplayPortionedSearch() }}" template="portionedSearch"/>
 
         <ws:if data="{{_showContinueSearchButtonDirection === 'down'}}">
             <ws:partial template="continueSearch"/>
