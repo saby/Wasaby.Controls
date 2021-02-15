@@ -706,9 +706,7 @@ var
             if (this._horizontalScrollPosition !== value) {
                 this._horizontalScrollPosition = value;
             }
-            if (this._isColumnScrollVisible() && this._listModel.isDrawHeaderWithEmptyList()) {
-                this._children.horizontalScrollWrapper.setPosition(value);
-            }
+            this._children.horizontalScrollWrapper?.setPosition(value);
         },
 
         // Не вызывает реактивную перерисовку, т.к. данные пишутся в поля объекта. Перерисовка инициируется обновлением позиции скрола.
