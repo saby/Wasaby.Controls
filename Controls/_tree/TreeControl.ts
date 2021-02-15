@@ -718,7 +718,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 this._updateExpandedItemsAfterReload = true;
             }
             if (newOptions.sourceController && !isEqual(newOptions.expandedItems, newOptions.sourceController.getExpandedItems())) {
-                updateSourceController = true;
+                newOptions.sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
         if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
