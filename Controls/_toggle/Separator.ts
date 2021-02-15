@@ -74,8 +74,6 @@ class Separator extends Control<ISeparatorOptions> implements ICheckable {
         this._iconChangedValue(newOptions);
     }
 
-    static _theme: string[] = ['Controls/Classes'];
-
     static getDefaultOptions(): object {
         return {
             style: 'secondary',

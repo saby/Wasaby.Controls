@@ -97,10 +97,15 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    }
 
    private _updateSearchData(inputSearchValue: string): void {
+      const searchResolver = this._getSearchResolverController();
       if (this._value !== inputSearchValue) {
          this._value = inputSearchValue;
+
+         if (!inputSearchValue) {
+            searchResolver.clearTimer();
+         }
       }
-      this._getSearchResolverController().setSearchStarted(true);
+      searchResolver.setSearchStarted(!!this._value);
    }
 
    private _resolve(value: string, event: 'searchReset' | 'search'): void {
@@ -118,6 +123,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       if (this._value !== value) {
          this._value = value;
          this._getSearchResolverController().resolve(value);
+         this._notify('inputSearchValueChanged', [value], {bubbling: true});
       }
    }
 

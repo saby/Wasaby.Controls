@@ -46,13 +46,11 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  *    <Controls.datePopup on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  * <pre>
- *    Base.Control.extend({
- *       ....
+ *    class MyControl extends Control<IControlOptions> {
  *       _inputCompletedHandler(event, startValue, endValue, displaydStartValue, displaydEndValue) {
  *          this._saveEnteredValueToDabase1(startValue, endValue);
  *          this._saveEnteredValueToDabase2(displaydStartValue, displaydEndValue);
- *       },
- *       ...
+ *       }
  *    })
  * </pre>
  */
@@ -490,11 +488,22 @@ export default class DatePopup extends Control implements EventProxyMixin {
     }
 
     rangeChanged(start: Date, end: Date): void {
-        this._rangeModel.startValue = start;
-        this._rangeModel.endValue = end;
-        this._headerRangeModel.startValue = start;
-        this._headerRangeModel.endValue = end;
-        this.updateYearsRangeModel(start, end);
+        let startValue = start;
+        let endValue = end;
+        // Если передать null в качестве начала и конца периода, то выделится
+        // период от -бесконечности до +бесконечности.
+        // В режиме выбора одного дня мы не должны выбирать ни один день.
+        if (this._options.selectionType === IRangeSelectable.SELECTION_TYPES.single) {
+            if (start === null || end === null) {
+                startValue = undefined;
+                endValue = undefined;
+            }
+        }
+        this._rangeModel.startValue = startValue;
+        this._rangeModel.endValue = endValue;
+        this._headerRangeModel.startValue = startValue;
+        this._headerRangeModel.endValue = endValue;
+        this.updateYearsRangeModel(start, endValue);
         this._updateResetButtonVisible(this._options);
     }
 

@@ -820,7 +820,7 @@ const _private = {
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
                     display.getChildren(display.getRoot()).getCount() :
-                    self._items.getCount();
+                    display.getCount();
             } else {
                 loadedDataCount = 0;
             }
@@ -1691,6 +1691,10 @@ const _private = {
                 }
             }
 
+            if (action === IObservable.ACTION_RESET) {
+                _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
+            }
+
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
                 self._itemActionsMenuId) {
                 _private.closeItemActionsMenuForActiveItem(self, removedItems);
@@ -1960,8 +1964,6 @@ const _private = {
          * у которого открываем меню. Потом передадим его для события actionClick.
          */
         self._targetItem = clickEvent.target.closest('.controls-ListView__itemV');
-        clickEvent.stopImmediatePropagation();
-        clickEvent.nativeEvent.preventDefault();
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose(): void {
@@ -2019,6 +2021,7 @@ const _private = {
 
         // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
         if (!!self._itemActionsController) {
+            event.nativeEvent.preventDefault();
             const item = self._listViewModel.getItemBySourceKey(key) || itemData;
             _private.openItemActionsMenu(self, null, event, item, true);
         }
@@ -3883,13 +3886,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
         }
 
-        // если будут перезагружены данные, то нужно снова добавить отступ сверху, чтобы не было сразу загрузки данных вверх
-        if (needReloadByOptions) {
-            if (_private.attachLoadTopTriggerToNullIfNeed(this, newOptions)) {
-                self._hideTopTrigger = true;
-            }
-        }
-
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
             (needReloadByOptions || searchValueChanged && newOptions.searchValue || rootChanged);
@@ -3932,10 +3928,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const oldViewModelConstructorChanged = newOptions.viewModelConstructor !== this._viewModelConstructor;
 
-        if (this.isEditing() && (oldViewModelConstructorChanged || needReload)) {
-            // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
-            // без возможности отменить закрытие из вне.
-            this._cancelEdit(true);
+        if (this._editInPlaceController && (oldViewModelConstructorChanged || needReload)) {
+            if (this.isEditing()) {
+                // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
+                // без возможности отменить закрытие из вне.
+                this._cancelEdit(true).then(() => {
+                    this._destroyEditInPlaceController();
+                });
+            } else {
+                this._destroyEditInPlaceController();
+            }
         }
 
         if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
@@ -3989,18 +3991,17 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (_private.hasSelectionController(this)) {
-            const selectionController = _private.getSelectionController(self, newOptions);
+            _private.updateSelectionController(this, newOptions);
 
+            const selectionController = _private.getSelectionController(self, newOptions);
             const allowClearSelectionBySelectionViewMode =
                 this._options.selectionViewMode === newOptions.selectionViewMode ||
                 newOptions.selectionViewMode !== 'selected';
-            if ((filterChanged || this._options.root !== newOptions.root) && selectionController.isAllSelected(false) &&
+            const isAllSelected = selectionController.isAllSelected(false, selectionController.getSelection(), this._options.root);
+            if ((filterChanged || this._options.root !== newOptions.root) && isAllSelected &&
                 allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
-
-            // Обновлять контроллер нужно после проверки выше, иначе не правильно отработает метод isAllSelected
-            _private.updateSelectionController(this, newOptions);
         }
 
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
@@ -4067,6 +4068,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
+                _private.prepareFooter(this, newOptions, this._sourceController);
             }
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
@@ -4374,8 +4376,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (this._editInPlaceController) {
-            this._editInPlaceController.destroy();
-            this._editInPlaceInputHelper = null;
+            this._destroyEditInPlaceController();
         }
 
         if (this._listViewModel) {
@@ -4408,7 +4409,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         _private.closePopup(this, this._itemActionsMenuId);
 
+        // При разрушении списка нужно в ПМО сбросить счетчик выбранных записей
+        if (_private.hasSelectionController(this)) {
+            this._notify('listSelectedKeysCountChanged', [0, false], {bubbling: true});
+        }
+
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
+    },
+
+    _destroyEditInPlaceController() {
+        this._editInPlaceController.destroy();
+        this._editInPlaceController = null;
+        this._editInPlaceInputHelper = null;
     },
 
     _beforeRender(): void {
@@ -5132,7 +5144,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _resetValidation() {
-        this._validateController.setValidationResult(null);
+        this._validateController?.setValidationResult(null);
     },
 
     isEditing(): boolean {
@@ -5780,11 +5792,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateItemActionsOnce(this, this._options);
         }
 
-        if (this._documentDragging && !this._dndListController?.isDragging()) {
-            this._insideDragging = true;
-            this._notify('_removeDraggingTemplate', [], {bubbling: true});
-            this._listViewModel.setDragOutsideList(false);
-
+        if (this._documentDragging) {
             this._dragEnter(this._getDragObject());
         }
 
@@ -6337,6 +6345,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _dragEnter(dragObject): void {
+        this._insideDragging = true;
+        this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        this._listViewModel.setDragOutsideList(false);
+
+        // Не нужно начинать dnd, если и так идет процесс dnd
+        if (this._dndListController?.isDragging()) {
+            return;
+        }
+
         // если мы утащим в другой список, то в нем нужно создать контроллер
         if (!this._dndListController) {
             this._dndListController = _private.createDndListController(this._listViewModel, this._options);

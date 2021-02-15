@@ -247,6 +247,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
         let methodResult;
+        let sourceChanged;
 
         this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
@@ -261,6 +262,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         if (this._options.source !== newOptions.source) {
             this._source = newOptions.source;
+            sourceChanged = true;
         }
 
         if (newOptions.root !== this._options.root) {
@@ -287,6 +289,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             methodResult = this._reload(newOptions);
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
+        }
+
+        if (sourceChanged && this._inputSearchValue && !newOptions.searchValue) {
+            this._inputSearchValue = '';
         }
 
         if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
@@ -671,6 +677,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         );
     }
 
+    protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+        this._inputSearchValue = value;
+    }
+
     protected _searchDataLoad(result: RecordSet|Error, searchValue: string): void {
         if (result instanceof RecordSet) {
             this._afterSearch(result, searchValue);
@@ -679,6 +689,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _processSearchError(error: Error): void|Error {
         if (!error.isCancelled) {
+            this._loading = false;
+            this._filterChanged(null, this._searchController.getFilter());
             this._getErrorRegister().start({
                 error,
                 mode: dataSourceError.Mode.include

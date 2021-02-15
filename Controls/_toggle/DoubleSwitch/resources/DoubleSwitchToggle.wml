@@ -1,9 +1,9 @@
 <span class="controls-DoubleSwitch__toggle
-            {{_enabled ? 'controls-DoubleSwitch__toggle_enabled controls-DoubleSwitch__toggle_enabled' : 'controls-DoubleSwitch__toggle_disabled controls-DoubleSwitch__toggle_disabled'}}
-            {{_orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical controls-DoubleSwitch__toggle_vertical' :
-             'controls-DoubleSwitch__toggle_horizontal controls-DoubleSwitch__toggle_horizontal'}}
-            {{_value ? _orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical_checked controls-DoubleSwitch__toggle_vertical_checked' : 'controls-DoubleSwitch__toggle_horizontal_checked controls-DoubleSwitch__toggle_horizontal_checked'}}
-            {{!_value ? _orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical_notChecked controls-DoubleSwitch__toggle_vertical_notChecked' : 'controls-DoubleSwitch__toggle_horizontal_notChecked controls-DoubleSwitch__toggle_horizontal_notChecked'}}"
+            {{_enabled ? 'controls-DoubleSwitch__toggle_enabled' : 'controls-DoubleSwitch__toggle_disabled'}}
+            {{_orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical' :
+             'controls-DoubleSwitch__toggle_horizontal'}}
+            {{_value ? _orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical_checked' : 'controls-DoubleSwitch__toggle_horizontal_checked'}}
+            {{!_value ? _orientation === 'vertical' ? 'controls-DoubleSwitch__toggle_vertical_notChecked' : 'controls-DoubleSwitch__toggle_horizontal_notChecked'}}"
       on:click="_clickToggleHandler()">
    <ws:if data="{{ _orientation === 'vertical' }}">
       <span class="controls-DoubleSwitch__fake-element controls-DoubleSwitch__fake-element_{{ _value ? 'active' : 'inactive' }}"></span>

@@ -144,8 +144,6 @@ export default abstract class
 
     protected abstract _itemsChanged(items: SelectedItems): void;
 
-    static _theme: string[] = ['Controls/Classes'];
-
     static getDefaultOptions(): object {
         return {
             multiSelect: false,

@@ -319,10 +319,33 @@
    background-color: @item_editing_background-color_list;
 }
 
+/*
+   Сделать тень у перетаскиваемой записи, просто навесив box-shadow, не получится,
+   т.к. box-shadow всегда выходит слева и справа, а нужно только сверху и снизу.
+   Эту проблему можно решить, перебив тень слева и справа тенью цветом фона,
+   но тогда новая тень будет еще перекрывать контент, если внутри ячейки нет отступа слева или справа.
+ */
 .controls-ListView__item_dragging_theme-@{themeName} {
-   box-shadow: @item_dragging_box-shadow_list;
    // Чтобы тень отображалась у лесенки
    z-index: 2;
+}
+.controls-ListView__item_dragging_theme-@{themeName}:before {
+   height: @item_dragging_shadow-height_list;
+   box-shadow: 0 -@item_dragging_shadow-height_list @item_dragging_shadow-spread_list @item_dragging_shadow-color_list;
+   width: 100%;
+   position: absolute;
+   top: 0;
+   left: 0;
+   content: '\200b';
+}
+.controls-ListView__item_dragging_theme-@{themeName}:after {
+   height: @item_dragging_shadow-height_list;
+   box-shadow: 0 @item_dragging_shadow-height_list @item_dragging_shadow-spread_list @item_dragging_shadow-color_list;
+   width: 100%;
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   content: '\200b';
 }
 
 .controls-ListView__itemContent_dragging_theme-@{themeName} {
