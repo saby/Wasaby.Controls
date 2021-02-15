@@ -2787,7 +2787,6 @@ const _private = {
             disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig,
             needScrollCalculation: self._needScrollCalculation,
-            scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
@@ -5979,7 +5978,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _registerObserver(): void {
-        if (!this._observerRegistered && this._children.scrollObserver) {
+        if (!this._observerRegistered && this._listViewModel) {
             // @ts-ignore
             this._children.scrollObserver.startRegister([this._children.scrollObserver]);
             this._observerRegistered = true;
