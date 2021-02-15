@@ -37,12 +37,7 @@ export interface IItemActionsTemplateConfig {
     /*
      * @cfg {String} Style postfix of actions panel
      */
-    style?: string;
-
-    /**
-     * @cfg {String} Опция, позволяющая настраивать фон панели операций над записью в режиме редактирования.
-     */
-    editingBackgroundStyle?: string;
+    backgroundStyle?: string;
 
     /**
      * @cfg {String} Размер иконок опций записи
