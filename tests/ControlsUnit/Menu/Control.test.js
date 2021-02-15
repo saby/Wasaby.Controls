@@ -909,6 +909,30 @@ define(
                assert.isTrue(isOpened);
                assert.isOk(actualConfig.eventHandlers);
             });
+
+            it('_onItemActionsMenuResult', () => {
+               let isItemHandled = false;
+               let isClosed = false;
+               const actionModel = new entity.Model({
+                  rawData: {
+                     key: '1',
+                     handler: () => { isItemHandled = true; }
+                  },
+                  keyProperty: 'key'
+               });
+               let menuControl = getMenu();
+               menuControl._itemActionsController = {
+                  getActiveItem: () => ({ getContents: () => {} })
+               };
+               menuControl._itemActionSticky = {
+                  close: () => {
+                     isClosed = true;
+                  }
+               };
+               menuControl._onItemActionsMenuResult('itemClick', actionModel, null);
+               assert.isTrue(isItemHandled);
+               assert.isTrue(isClosed);
+            });
          });
 
          it('_changeIndicatorOverlay', function() {
