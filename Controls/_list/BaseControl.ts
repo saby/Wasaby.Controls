@@ -820,7 +820,7 @@ const _private = {
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
                     display.getChildren(display.getRoot()).getCount() :
-                    self._items.getCount();
+                    display.getCount();
             } else {
                 loadedDataCount = 0;
             }
@@ -4068,6 +4068,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
+                _private.prepareFooter(this, newOptions, this._sourceController);
             }
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);

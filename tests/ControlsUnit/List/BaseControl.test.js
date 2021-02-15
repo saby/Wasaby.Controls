@@ -1303,7 +1303,8 @@ define([
                   })
                }),
                getDisplay: () => ({
-                  '[Controls/_display/Tree]': false
+                  '[Controls/_display/Tree]': false,
+				  getCount: () => test.data[2].getLoadedDataCount(),
                })
             };
             lists.BaseControl._private.prepareFooter.apply(null, test.data);
