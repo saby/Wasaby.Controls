@@ -663,7 +663,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     }
 
     /**
-     * Получает стиль применяемый к операциям над записью.
+     * Получает стиль фона применяемый к операциям над записью.
      * Если запись в режиме редактирования - то по умолчанию editing_default, с учётом editingBackgroundStyle
      * Если запись не подсвечивается, то пустое значение
      * Если itemActions видимы всегда, то transparent
@@ -672,7 +672,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @param templateHighlightOnHover
      * @param theme
      */
-    getItemActionsBackgroundStyle(templateHighlightOnHover: boolean = true, theme?: string): string {
+    getItemActionsStylingClasses(templateHighlightOnHover: boolean = true, theme?: string): string {
         let backgroundStyle;
         if (this.isEditing()) {
             backgroundStyle = `editing_${this.getOwner().getEditingBackgroundStyle()}`;
