@@ -677,6 +677,27 @@ describe('Controls/suggest', () => {
 
          after(() => sandbox.restore());
 
+         it('indicator is hidden', async () => {
+            const inputSandbox = sinon.createSandbox();
+            let inidicatorHidden = false;
+            inputContainer._inputActive = true;
+            inputContainer._children = {
+               indicator: {
+                  show: () => {},
+                  hide: () => {
+                     inidicatorHidden = true;
+                  }
+               }
+            };
+            const error = new Error();
+            inputSandbox.stub(SourceController.prototype, 'load')
+               .callsFake(() => Promise.reject(error));
+
+            await inputContainer._resolveLoad();
+            assert.isTrue(inidicatorHidden);
+            inputSandbox.restore();
+         });
+
          it('value is not specified', async () => {
             inputContainer._inputActive = true;
             sandbox.stub(SourceController.prototype, 'load')
@@ -922,7 +943,7 @@ describe('Controls/suggest', () => {
          /* tabSelectedKey changed, filter must be changed */
          suggestComponent._suggestMarkedKey = 'test';
          suggestComponent._tabsSelectedKeyChanged('test');
-         assert.equal(suggestComponent._filter.currentTab, 'test');
+         assert.equal(suggestComponent._filter.currentTab, null);
          assert.isTrue(suggestActivated);
          assert.isTrue(suggestComponent._suggestMarkedKey === null);
       });

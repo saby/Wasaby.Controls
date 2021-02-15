@@ -36,7 +36,6 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
-import {descriptor} from 'Types/entity';
 
 type Key = string|number|null;
 
@@ -106,7 +105,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _viewMode: TViewMode = undefined;
     private _inputSearchValue: string = '';
     private _searchValue: string = '';
-    private _searchInProgress: boolean = false;
     private _dataOptionsContext: typeof ContextOptions;
 
     private _itemsReadyCallback: Function;
@@ -304,6 +302,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                });
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
+        }
+
+        if (sourceChanged && this._inputSearchValue && !newOptions.searchValue) {
+            this._inputSearchValue = '';
         }
 
         if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
@@ -692,6 +694,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         );
     }
 
+    protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+        this._inputSearchValue = value;
+    }
+
     protected _searchDataLoad(result: RecordSet|Error, searchValue: string): void {
         if (result instanceof RecordSet) {
             this._afterSearch(result, searchValue);
@@ -700,6 +706,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _processSearchError(error: Error): void|Error {
         if (!error.isCancelled) {
+            this._loading = false;
+            this._filterChanged(null, this._searchController.getFilter());
             this._getErrorRegister().start({
                 error,
                 mode: dataSourceError.Mode.include
@@ -708,17 +716,17 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
     }
 
-    private _searchReset(event: SyntheticEvent): void {
+    private _searchReset(event: SyntheticEvent): Promise<void> {
         if (this._sourceController) {
             this._sourceController.cancelLoading();
         }
-        this._getSearchController().then((searchController) => {
-            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch) {
+        return this._getSearchController().then((searchController) => {
+            if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch && this._options.startingWith === 'current') {
                 this._root = this._rootBeforeSearch;
-                this._rootBeforeSearch = null;
                 searchController.setRoot(this._root);
                 this._notify('rootChanged', [this._root]);
             }
+            this._rootBeforeSearch = null;
             this._updateFilter(searchController);
         });
     }
@@ -778,7 +786,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._deepReload = undefined;
         }
 
-        if (this._searchController && this._searchController.getSearchValue() !== this._searchValue) {
+        if (this._searchController && (this._searchController.isSearchInProcess() || this._searchController.getSearchValue() !== this._searchValue)) {
             this._loading = false;
             this._searchDataLoad(data, this._searchController.getSearchValue());
         }
