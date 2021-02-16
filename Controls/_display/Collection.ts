@@ -2318,15 +2318,21 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         });
     }
 
-    protected _setItemPadding(itemPadding: IItemPadding): void {
+    protected _setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
         this._$topPadding = itemPadding.top || 'default';
         this._$bottomPadding = itemPadding.bottom || 'default';
         this._$leftPadding = itemPadding.left || 'default';
         this._$rightPadding = itemPadding.right || 'default';
+
+        this.getViewIterator().each((item: CollectionItem) => {
+            if (item.setItemPadding) {
+                item.setItemPadding(itemPadding, silent);
+            }
+        });
     }
 
     setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
-        this._setItemPadding(itemPadding);
+        this._setItemPadding(itemPadding, silent);
         if (!silent) {
             this._nextVersion();
         }
@@ -3015,6 +3021,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
+            options.theme = this._$theme;
+            options.leftPadding = this._$leftPadding;
+            options.rightPadding = this._$rightPadding;
+            options.topPadding = this._$topPadding;
+            options.bottomPadding = this._$bottomPadding;
             return create(options.itemModule || this._itemModule, options);
         };
     }
