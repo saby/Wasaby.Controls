@@ -38,6 +38,7 @@
             attr:class="controls-newBrowser__detail-list"
             root="{{root}}"
             on:rootChanged="_onDetailRootChanged()"
+            filter="{{_detailSourceOptions.filter}}"
 
             tileSize="{{_tileCfg.imageSize}}"
 
