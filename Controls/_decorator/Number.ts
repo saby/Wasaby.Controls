@@ -127,10 +127,10 @@ class NumberDecorator extends Control<INumberOptions> {
 
         if (typeof fractionSize === 'number') {
             switch (roundMode) {
-                case "round":
+                case 'round':
                     strNumber = NumberDecorator._round(strNumber, fractionSize);
                     break;
-                case "trunc":
+                case 'trunc':
                     strNumber = NumberDecorator._trunc(strNumber, fractionSize);
                     break;
             }
@@ -171,14 +171,20 @@ class NumberDecorator extends Control<INumberOptions> {
             roundMode: descriptor(String).oneOf([
                 'trunc',
                 'round'
-            ])
+            ]),
+            abbreviationType: descriptor(String),
+            stroked: descriptor(Boolean),
+            underline: descriptor(String)
         };
     }
 
     static getDefaultOptions() {
         return {
             useGrouping: true,
-            roundMode: 'trunc'
+            roundMode: 'trunc',
+            abbreviationType: 'none',
+            stroked: false,
+            underline: 'none'
         };
     }
 }

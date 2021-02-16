@@ -148,8 +148,8 @@ export function formatData(format: IFormat, cleanText: IText): IText {
 }
 
 export function abbreviateNumber(value: TValue, abbreviationType: TAbbreviationType): string {
-    if (abbreviationType === 'none') {
-        return value.toString();
+    if (!value) {
+        return '0';
     }
     if (value >= 1000000000000 || value <= -1000000000000) {
         return intlFormat(value / 1000000000000) + `${abbreviationType === 'long' ? ' трлн' : 'Т'}`;

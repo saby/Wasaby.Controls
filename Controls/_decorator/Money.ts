@@ -81,7 +81,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     private _value: TValue;
     private _useGrouping: boolean;
     protected _tooltip: string;
-    private _formattedNumber: IPaths;
+    private _formattedNumber: string | IPaths;
     private _fontColorStyle: string;
 
     readonly '[Controls/_interface/ITooltip]': boolean = true;
@@ -96,6 +96,11 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     // Used in template
     protected _isDisplayFractionPath(value: string, showEmptyDecimals: boolean): boolean {
         return showEmptyDecimals || value !== '.00';
+    }
+
+    // Used in template
+    protected _fractionClass(value: string): string {
+        return value !== '.00' ? 'controls-DecoratorMoney__fraction__colorStyle-' + this._fontColorStyle : 'controls-DecoratorMoney__fraction__colorStyle';
     }
 
     private _getTooltip(options: IMoneyOptions): string {
@@ -123,7 +128,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
         return false;
     }
 
-    private _formatNumber(options: IMoneyOptions): IPaths {
+    private _parseNumber(): IPaths {
         const value = Money.toFormat(Money.toString(this._value));
         let exec: RegExpExecArray | string[] = Money.SEARCH_PATHS.exec(value);
 
@@ -134,14 +139,20 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 
         const integer = this._useGrouping ? splitIntoTriads(exec[1]) : exec[1];
         const fraction = exec[2];
-        const abbreviatedNumber = abbreviateNumber(options.value, options.abbreviationType);
 
         return {
-            integer: integer,
-            fraction: fraction,
-            number: integer + fraction,
-            abbreviatedNumber
+            integer,
+            fraction,
+            number: integer + fraction
         };
+    }
+
+    private _formatNumber(options: IMoneyOptions): string | IPaths {
+        if (options.abbreviationType && options.abbreviationType !== 'none') {
+            return abbreviateNumber(options.value, options.abbreviationType);
+        } else {
+            return this._parseNumber();
+        }
     }
 
     private _setFontState(options: IMoneyOptions): void {
@@ -207,7 +218,12 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             fontSize: 'm',
             fontWeight: 'default',
             useGrouping: true,
-            showEmptyDecimals: true
+            showEmptyDecimals: true,
+            currencySize: 's',
+            currencyPosition: 'right',
+            abbreviationType: 'none',
+            stroked: false,
+            underline: 'none'
         };
     }
 
@@ -218,7 +234,12 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             fontSize: descriptor(String),
             useGrouping: descriptor(Boolean),
             showEmptyDecimals: descriptor(Boolean),
-            value: descriptor(String, Number, null)
+            value: descriptor(String, Number, null),
+            currencySize: descriptor(String),
+            currencyPosition: descriptor(String),
+            abbreviationType: descriptor(String),
+            stroked: descriptor(Boolean),
+            underline: descriptor(String)
         };
     }
 }

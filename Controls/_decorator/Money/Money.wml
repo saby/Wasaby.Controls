@@ -8,7 +8,7 @@
                  controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
                  controls-DecoratorMoney__integer_fontWeight_{{_options.fontWeight}}
                  {{ _options.stroked ? 'controls-DecoratorMoney__stroked' }}">
-            {{_formattedNumber.abbreviatedNumber}}
+            {{_formattedNumber}}
         </span>
     </ws:if>
     <ws:else>
@@ -18,8 +18,8 @@
                     controls-DecoratorMoney__integer_fontWeight_{{_options.fontWeight}}">
                 {{_formattedNumber.integer}}
             </span>
-            <ws:if data="{{_isDisplayFractionPath(_parsedNumber.fraction, _options.showEmptyDecimals)}}">
-                <span class="{{_formattedNumber.fraction !== '.00' ? 'controls-DecoratorMoney__fraction__colorStyle-{{_fontColorStyle}}' : 'controls-DecoratorMoney__fraction__colorStyle'}}
+            <ws:if data="{{_isDisplayFractionPath(_formattedNumber.fraction, _options.showEmptyDecimals)}}">
+                <span class="{{_fractionClass(_formattedNumber.fraction)}}
                             controls-fontsize-xs_theme-{{_options.theme}}">
                     {{_formattedNumber.fraction}}
                 </span>
