@@ -17,8 +17,34 @@
                         </ws:else>
                     </ws:template>
                 </ws:Object>
-                <ws:Object displayProperty="rating" width="100px"/>
-                <ws:Object displayProperty="country" width="100px"/>
+                <ws:Object displayProperty="rating" width="100px" align="right">
+                    <ws:template>
+                        <ws:if data="{{ template.item.GroupNode }}">
+                            <ws:partial template="Controls/gridNew:ColumnTemplate">
+                                <ws:contentTemplate>
+                                    <Controls.decorator:Money value="{{contentTemplate.itemData.getDefaultDisplayValue()}}" fontColorStyle="group" useGrouping="{{false}}"/>
+                                </ws:contentTemplate>
+                            </ws:partial>
+                        </ws:if>
+                        <ws:else>
+                            <ws:partial template="Controls/gridNew:ColumnTemplate"/>
+                        </ws:else>
+                    </ws:template>
+                </ws:Object>
+                <ws:Object displayProperty="country" width="100px" align="right" fontSize="s">
+                    <ws:template>
+                        <ws:if data="{{ template.item.GroupNode }}">
+                            <ws:partial template="Controls/gridNew:ColumnTemplate">
+                                <ws:contentTemplate>
+                                    <Controls.decorator:Money value="{{contentTemplate.itemData.getDefaultDisplayValue()}}" fontColorStyle="group" useGrouping="{{false}}"/>
+                                </ws:contentTemplate>
+                            </ws:partial>
+                        </ws:if>
+                        <ws:else>
+                            <ws:partial template="Controls/gridNew:ColumnTemplate"/>
+                        </ws:else>
+                    </ws:template>
+                </ws:Object>
             </ws:Array>
         </ws:columns>
     </Controls.treeGridNew:View>

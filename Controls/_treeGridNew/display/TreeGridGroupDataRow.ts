@@ -11,6 +11,14 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
 
     // region Expander
 
+    getExpanderIcon(expanderIcon?: string): string {
+        return 'hiddenNode';
+    }
+
+    getExpanderSize(expanderSize?: string): string {
+        return 's';
+    }
+
     shouldDisplayExpanderBlock(column: GridCell<T, TreeGridDataRow<T>>): boolean {
         return false;
     }
