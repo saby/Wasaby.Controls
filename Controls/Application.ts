@@ -164,7 +164,11 @@ export default class Application extends Control<IApplication> {
       // везде, где есть visualViewport
       const timeTester = new TimeTesterInv(this.RUMEnabled, this.pageName);
       timeTester.load();
-      window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
+      if (Application._isIOS13()) {
+         window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
+      }
+      window.document.addEventListener('resize', this._resizePage.bind(this))
+      window.document.addEventListener('scroll', this._scrollPage.bind(this))
       const channelPopupManager = Bus.channel('popupManager');
       channelPopupManager.subscribe('managerPopupCreated', this._popupCreatedHandler, this);
       channelPopupManager.subscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
