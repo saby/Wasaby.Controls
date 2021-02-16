@@ -15,6 +15,7 @@
               attr:style="width: {{_options.width ? _options.width + 'px'}};
                           max-width: {{_options.width ? _options.width + 'px'}}"
               icon="{{_headingIcon}}"
+              headingIconSize="{{_headingIconSize}}"
               caption="{{_headingCaption}}"
               searchHeaderTheme="{{_options.theme}}"
               headingCaption="{{!_options.headerTemplate ? _headingCaption : ''}}"
@@ -52,6 +53,7 @@
                <ws:if data="{{_options.headerTemplate}}">
                   <ws:partial template="{{_options.headerTemplate}}"
                               iconSize="{{_options.iconSize}}"
+                              headingIconSize="{{_headingIconSize}}"
                               iconStyle="{{_options.iconStyle}}"
                               icon="{{_headingIcon}}"
                               caption="{{_headingCaption}}"
