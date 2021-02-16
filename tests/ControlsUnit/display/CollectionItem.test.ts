@@ -751,14 +751,14 @@ describe('Controls/_display/CollectionItem', () => {
         it('should return default editing class', () => {
             const contents = item.getContents();
             item.setEditing(true, contents, true);
-            CssClassesAssert.include(item.getItemActionsStylingClasses(null, 'default'), 'controls-itemActionsV_style_editing_default_theme-default');
+            CssClassesAssert.include(item.getItemActionsStylingClasses(null, 'default'), 'controls-itemActionsV_style_editing_theme-default');
         });
 
         it('should return editing class considering editingBackgroundStyle', () => {
             collection.getEditingBackgroundStyle = () => 'custom';
             const contents = item.getContents();
             item.setEditing(true, contents, true);
-            CssClassesAssert.include(item.getItemActionsStylingClasses(null, 'default'), 'controls-itemActionsV_style_editing_custom_theme-default');
+            CssClassesAssert.include(item.getItemActionsStylingClasses(null, 'default'), 'controls-itemActionsV_style_custom_theme-default');
         });
 
         // Если запись не подсвечивается, то пустое значение
@@ -769,18 +769,18 @@ describe('Controls/_display/CollectionItem', () => {
         // Если itemActions видимы всегда, то transparent
         it('should return editing class considering editingBackgroundStyle', () => {
             collection.getItemActionsVisibility = () => 'visible';
-            CssClassesAssert.include(item.getItemActionsStylingClasses(null, 'default'), 'controls-itemActionsV_style_visible_theme-default');
+            CssClassesAssert.include(item.getItemActionsStylingClasses(true, 'default'), 'controls-itemActionsV_style_transparent_theme-default');
         });
 
         // Если есть HoverBackgroundStyle, то getHoverBackgroundStyle
         it('should return editing class considering editingBackgroundStyle', () => {
             collection.getHoverBackgroundStyle = () => 'custom';
-            CssClassesAssert.include(item.getItemActionsStylingClasses(null, 'default'), 'controls-itemActionsV_style_custom_theme-default');
+            CssClassesAssert.include(item.getItemActionsStylingClasses(true, 'default'), 'controls-itemActionsV_style_custom_theme-default');
         });
 
         // Иначе текущий Style
         it('should return editing class considering editingBackgroundStyle', () => {
-            CssClassesAssert.include(item.getItemActionsStylingClasses(null, 'default'), 'controls-itemActionsV_style_default_theme-default');
+            CssClassesAssert.include(item.getItemActionsStylingClasses(true, 'default'), 'controls-itemActionsV_style_default_theme-default');
         });
     });
 });

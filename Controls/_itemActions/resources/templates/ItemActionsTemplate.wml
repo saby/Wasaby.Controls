@@ -1,6 +1,6 @@
 <ws:template name="localItemActionsTemplate">
     <div attr:class="controls-itemActionsV
-        {{ itemData.getItemActionsStylingClasses(highlightOnHover) }}
+        {{ itemData.getItemActionsStylingClasses(highlightOnHover, theme) }}
         {{itemData.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemData.itemPadding, theme)}}
         {{itemData.getItemActionClasses(itemActionsPosition, theme, itemData.isLastRow, itemData.rowSeparatorSize)}}
         {{itemData.isEditing() && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
