@@ -37,6 +37,7 @@
    border-radius: 50%;
    top: (@group_height_filterViewPanel - @group-marker_size_filterViewPanel) / 2;
    left: (@padding-left_filterViewPanel - @group-marker_size_filterViewPanel) / 2;
+   padding-left: -@padding-left_filterViewPanel;
 }
 
 .controls-FilterViewPanel__group-content_theme-@{themeName} {
@@ -86,9 +87,6 @@
    color: @reset-button_icon-color_filterView;
    cursor: pointer;
    flex-shrink: 0;
-   position: absolute;
-   top: @group-close-button_padding-top_filterViewPanel;
-   right: @padding-right_filterViewPanel;
 }
 
 .controls-FilterViewPanel__group-wrapper_theme-@{themeName} {
@@ -99,6 +97,10 @@
 .controls-FilterViewPanel__group-wrapper-collapsed_theme-@{themeName},
 .controls-FilterViewPanel__propertyGrid_itemTemplate_theme-@{themeName} {
    margin-bottom: @padding-bottom_filterViewPanel;
+}
+
+.controls-FilterViewPanel__propertyGrid_itemTemplate_theme-@{themeName} {
+   margin-left: @padding-left_filterViewPanel;
 }
 
 .controls-FilterViewPanel__group-header_theme-@{themeName} {
