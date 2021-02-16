@@ -5,7 +5,6 @@
               keyProperty="key"
               caption="Create"
               source="{{_source}}"
-              popupBackgroundStyle="default"
               attr:class="controlsDemo-menuButton">
       </Controls.dropdown:Button>
    </div>
