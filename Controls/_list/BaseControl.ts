@@ -6071,6 +6071,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    // Уйдет когда будем наследоваться от baseControl
+    getItemsContainer() {
+        return this._getItemsContainer();
+    },
+
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         this._viewReady = true;
