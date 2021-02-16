@@ -720,7 +720,7 @@ class FormController extends Control<IFormController, IReceivedState> {
      * Нужно использовать, если вы каким-либо образом самостоятельно получаете запись и получаете ошибку от сервера.
      * @param {Error} error
      * @param {Controls/_dataSource/_error/Mode} [mode]
-     * @return {Promise.<object>}
+     * @return {Promise.<CrudResult>}
      */
     processError(error: Error, mode?: dataSourceError.Mode): Promise<ICrudResult> {
         return this.__errorController.process({
