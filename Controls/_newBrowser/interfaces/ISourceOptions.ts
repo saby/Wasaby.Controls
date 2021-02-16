@@ -1,4 +1,4 @@
-import {ICrudPlus} from 'Types/source';
+import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {RecordSet} from 'Types/collection';
 import {TKey} from 'Controls/_interface/IItems';
 
@@ -48,7 +48,7 @@ export interface ISourceOptions {
     /**
      * Данные фильтра, который будет применен при запросе данных
      */
-    filter?: {[key: string]: unknown};
+    filter?: QueryWhereExpression<unknown>;
 
     columns?: unknown;
 

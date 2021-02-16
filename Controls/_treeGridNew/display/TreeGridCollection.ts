@@ -133,6 +133,7 @@ export default class TreeGridCollection<
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
         }
+        this._$results = null;
     }
 
     protected _getItemsFactory(): ItemsFactory<T> {
@@ -150,7 +151,27 @@ export default class TreeGridCollection<
         return GridGroupItem;
     }
 
+    setEditing(editing: boolean): void {
+        super.setEditing(editing);
+
+        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+            this._$headerModel = null;
+        }
+        this._nextVersion();
+    }
+
     // endregion
+
+    // region HasNodeWithChildren
+
+    protected _setHasNodeWithChildren(hasNodeWithChildren: boolean): void {
+        super._setHasNodeWithChildren(hasNodeWithChildren);
+        if (this.getFooter()) {
+            this.getFooter().setHasNodeWithChildren(hasNodeWithChildren);
+        }
+    }
+
+    // endregion HasNodeWithChildren
 
     protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {
         return new TreeGridFooterRow({

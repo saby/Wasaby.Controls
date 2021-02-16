@@ -86,6 +86,7 @@
             <Controls.scroll:StickyHeader position="topbottom"
                                           mode="stackable"
                                           shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
+                                          backgroundStyle="{{ backgroundStyle }}"
                                           attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                           attr:style="{{ column.getWrapperStyles(containerSize) }}">
                <ws:partial template="COLUMN" gridColumn="{{ column }}"/>

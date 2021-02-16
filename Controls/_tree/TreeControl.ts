@@ -660,7 +660,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _afterMount: function() {
-        this._isMounted = true;
         const viewModel = this._children.baseControl.getViewModel();
         _private.initListViewModelHandler(this, viewModel);
         if (this._expandedItemsToNotify) {
@@ -693,7 +692,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             // Проблема возникает из-за того, что корень в модели меняется на callback загрузки данных
             // А при поиске запрос идёт за пределами списка
             if (searchValueChanged && newOptions.sourceController &&
-                newOptions.viewModelConstructor === this._options.viewModelConstructor) {
+                newOptions.viewModelConstructor === this._options.viewModelConstructor &&
+                newOptions.searchValue) {
                 viewModel.setRoot(newOptions.root);
             }
 
@@ -718,7 +718,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 this._updateExpandedItemsAfterReload = true;
             }
             if (newOptions.sourceController && !isEqual(newOptions.expandedItems, newOptions.sourceController.getExpandedItems())) {
-                updateSourceController = true;
+                newOptions.sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
         if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
@@ -1097,9 +1097,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(this._options.nodeProperty) !== null) {
-                if (this._isMounted) {
-                    this.toggleExpanded(curItem.get(this._options.keyProperty), model);
-                }
                 expanded.push(curItem.get(this._options.keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }

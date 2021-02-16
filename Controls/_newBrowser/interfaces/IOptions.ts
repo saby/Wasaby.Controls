@@ -1,4 +1,4 @@
-import {ICrudPlus} from 'Types/source';
+import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {TKey} from 'Controls/interface';
 import {IControlOptions, TemplateFunction} from 'UI/Base';
 import {IMasterOptions} from 'Controls/_newBrowser/interfaces/IMasterOptions';
@@ -82,6 +82,11 @@ export interface IOptions extends IControlOptions, ISourceOptions {
     detail?: IDetailOptions;
 
     /**
+     * Фильтр, который будет применен к detail-списку
+     */
+    detailFilter?: QueryWhereExpression<unknown>;
+
+    /**
      * Шаблон, который будет выведен над мастер-списком
      */
     masterHeaderTemplate?: TemplateFunction | string;
@@ -90,4 +95,9 @@ export interface IOptions extends IControlOptions, ISourceOptions {
      * Шаблон, который будет выведен под detail-списком
      */
     detailFooterTemplate?: TemplateFunction | string;
+
+    /**
+     * Шаблон, который будет выведен над detail-списком
+     */
+    detailHeaderTemplate?: TemplateFunction | string;
 }

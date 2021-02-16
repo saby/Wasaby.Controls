@@ -2,10 +2,12 @@
 define([
    'Controls/dataSource',
    'Env/Env',
+   'WasabyLoader/Library',
    'Browser/Transport'
 ], function(
    dataSource,
-   { constants }
+   { constants },
+   WasabyLib
 ) {
    const require = requirejs;
    describe('Controls/dataSource:error.Popup', () => {
@@ -137,7 +139,7 @@ define([
          });
 
          afterEach(() => {
-            sinon.resetHistory();
+            sinon.restore();
          });
 
          it('calls openPopup()', () => {
@@ -179,12 +181,30 @@ define([
             });
          });
 
+         it('combines dialogTemplate options with templateOptions', () => {
+            Popup.POPUP_MODULES = [fakeModuleNames[0]];
+            Popup.POPUP_THEMES = [fakeModuleNames[1]];
+            const dialogTmplOptions = { dialogOption: 'dialogTemplateOption' };
+            const dialogOptions = { templateOptions: dialogTmplOptions, handler: 42 };
+            const viewConfig = { options: { configOption: 'configTemplateOption' } };
+            const p = new Popup();
+            return p.openDialog(viewConfig, dialogOptions).then(() => {
+               const popup = require(fakeModuleNames[0]);
+               const cfg = popup.Dialog.openPopup.getCall(0).args[0];
+               assert.strictEqual(cfg.templateOptions.dialogOption, dialogTmplOptions.dialogOption);
+               assert.strictEqual(cfg.templateOptions.configOption, viewConfig.options.configOption);
+               assert.strictEqual(cfg.handler, dialogOptions.handler);
+            });
+         });
+
          it('if config contains string template, it will load this and opens popup', () => {
             const viewConfig = { template: fakeModuleNames[2], options: {} };
             return p.openDialog(viewConfig, {}).then(() => {
                const popup = require(fakeModuleNames[0]);
                assert.isTrue(popup.Dialog.openPopup.calledOnce, 'openPopup() called');
-               assert.isDefined(require(fakeModuleNames[2]), 'template module exists');
+               return WasabyLib.load(fakeModuleNames[2]).then((module) => {
+                  assert.isDefined(module, 'template module exists');
+               });
             });
          });
 
@@ -201,7 +221,10 @@ define([
                   Popup.showDefaultDialog.calledOnce,
                   'showDefaultDialog() called'
                );
-               assert.isUndefined(require(fakeModuleName), 'template module doesn\'t exist');
+               return WasabyLib.load(fakeModuleName).then(
+                  () => assert.fail('template module exists'),
+                  (error) => assert.isOk(error, 'template module doesn\'t exist')
+               );
             });
          });
       });

@@ -17,7 +17,7 @@
          <Controls.explorer:View
             scope="{{_masterExplorerOptions}}"
 
-            root="{{masterRoot}}"
+            root="{{_masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
             bind:markedKey="masterMarkedKey"
             dataLoadCallback="{{_onMasterLoaded}}"
@@ -30,7 +30,12 @@
          class="controls-newBrowser__detail"
          style="background-color: {{_detailBgColor}};"
       >
+         <ws:if data="{{_options.detailHeaderTemplate}}">
+            <ws:partial template="{{_options.detailHeaderTemplate}}"/>
+         </ws:if>
+
          <Controls.explorer:View
+            attr:class="controls-newBrowser__detail-list"
             root="{{root}}"
             on:rootChanged="_onDetailRootChanged()"
 
@@ -38,7 +43,12 @@
 
             viewMode="{{viewMode}}"
             scope="{{_detailExplorerOptions}}"
-            breadcrumbsVisibility="{{_masterVisibility === _masterVisibilityEnum.hidden ? 'visible' : 'hidden'}}"
+            breadcrumbsVisibility="{{
+               (_masterVisibility === _masterVisibilityEnum.visible || _appliedViewMode === _viewModeEnum.search)
+                  ? 'hidden'
+                  : 'visible'
+            }}"
+            searchValue="{{_searchValue}}"
 
             on:arrowClick="_onDetailArrowClick()"
             on:itemClick="_onDetailItemClick()"
@@ -57,7 +67,7 @@
 
             <ws:itemTemplate>
                <!-- В режиме "таблица" или "поиск" нужно использовать шаблон строки таблицы -->
-               <ws:if data="{{viewMode === _viewModeEnum.table || viewMode === 'search'}}">
+               <ws:if data="{{_appliedViewMode === _viewModeEnum.table || _appliedViewMode === _viewModeEnum.search}}">
                   <Controls.treeGrid:ItemTemplate
                      scope="{{itemTemplate}}"
                      listConfiguration="{{_listConfiguration}}"
@@ -82,6 +92,7 @@
                />
             </ws:tileItemTemplate>
          </Controls.explorer:View>
+
          <ws:if data="{{_options.detailFooterTemplate}}">
             <ws:partial template="{{_options.detailFooterTemplate}}"/>
          </ws:if>

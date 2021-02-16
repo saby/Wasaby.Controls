@@ -813,7 +813,7 @@ const _private = {
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
                     display.getChildren(display.getRoot()).getCount() :
-                    self._items.getCount();
+                    display.getCount();
             } else {
                 loadedDataCount = 0;
             }
@@ -1680,7 +1680,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET) {
+            if (action === IObservable.ACTION_RESET && newItems && newItems.length) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
             }
 
@@ -2787,7 +2787,6 @@ const _private = {
             disableVirtualScroll: options.disableVirtualScroll,
             virtualScrollConfig: options.virtualScrollConfig,
             needScrollCalculation: self._needScrollCalculation,
-            scrollObserver: self._children.scrollObserver,
             collection: self._listViewModel,
             activeElement: options.activeElement,
             useNewModel: options.useNewModel,
@@ -2899,7 +2898,9 @@ const _private = {
      * не должен ставить чекбокс
      */
     isItemsSelectionAllowed(options: object): boolean {
-        return options.selectedKeysCount !== null || options.selectedKeys.length;
+        return options.selectedKeysCount !== null ||
+               options.selectedKeys.length ||
+               options.multiSelectVisibility !== 'hidden';
     },
 
     /**
@@ -3121,13 +3122,17 @@ const _private = {
 
     activateEditingRow(self, enableScrollToElement: boolean = true): void {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
-        // В новом рендере эона не нужна
+        // В новом рендере она не нужна
         if (self._children.listView.activateEditingRow) {
-            if (self._children.listView.beforeRowActivated) {
-                self._children.listView.beforeRowActivated();
-            }
-            const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
-            self._editInPlaceInputHelper.activateInput(rowActivator);
+            const activator = () => {
+                if (self._children.listView.beforeRowActivated) {
+                    self._children.listView.beforeRowActivated();
+                }
+                const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
+                return rowActivator();
+            };
+
+            self._editInPlaceInputHelper.activateInput(activator);
         }
     },
 
@@ -3810,8 +3815,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
-            // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
-            (sourceChanged || searchValueChanged && newOptions.searchValue && !newOptions.sourceController.sourceControllerCreated);
+            (
+                sourceChanged ||
+                // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
+                searchValueChanged && newOptions.searchValue && !newOptions.sourceController.sourceControllerCreated ||
+                // loadedBySuggest опция до 21.2000, чтобы список не перезагружался лишний раз, т.к. в саггесте данные всегда грузятся на уровне контроллера инпута
+                newOptions.sourceController.loadedBySuggest ||
+                // Проверка до 21.2000, правит кейс, когда список обновляют с новым prefetchProxy,
+                // а оригинальный источник не меняется, из-за этого список может делать лишние запросы
+                filterChanged && !newOptions.loading && this._options.loading
+            );
 
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
@@ -3979,6 +3992,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
                 _private.resetScrollAfterLoad(self);
                 _private.resolveIsLoadNeededByNavigationAfterReload(self, newOptions, items);
+                _private.prepareFooter(this, newOptions, this._sourceController);
             }
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
@@ -5424,6 +5438,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
+     * Обработчик mouseUp по операции, необходимый для предотвращения срабатывания mouseUp на записи в списке
+     * @param event
+     * @private
+     */
+    _onItemActionMouseUp(event: SyntheticEvent<MouseEvent>): void {
+        event.stopPropagation();
+    },
+
+    /**
      * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
      * @param eventName название события, брошенного из Controls/menu:Popup.
      * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
@@ -5686,11 +5709,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateItemActionsOnce(this, this._options);
         }
 
-        if (this._documentDragging && !this._dndListController?.isDragging()) {
-            this._insideDragging = true;
-            this._notify('_removeDraggingTemplate', [], {bubbling: true});
-            this._listViewModel.setDragOutsideList(false);
-
+        if (this._documentDragging) {
             this._dragEnter(this._getDragObject());
         }
 
@@ -5981,7 +6000,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _registerObserver(): void {
-        if (!this._observerRegistered && this._children.scrollObserver) {
+        if (!this._observerRegistered && this._listViewModel) {
             // @ts-ignore
             this._children.scrollObserver.startRegister([this._children.scrollObserver]);
             this._observerRegistered = true;
@@ -6059,8 +6078,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
            :  shouldDisplayDownIndicator;
     },
 
-    _shouldDisplayPortionedSearch(): boolean {
-        return this._portionedSearchInProgress;
+    _shouldDisplayTopPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'up';
+    },
+
+    _shouldDisplayBottomPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'down';
     },
 
     _getLoadingIndicatorClasses(state?: string): string {
@@ -6234,6 +6257,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _dragEnter(dragObject): void {
+        this._insideDragging = true;
+        this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        this._listViewModel.setDragOutsideList(false);
+
+        // Не нужно начинать dnd, если и так идет процесс dnd
+        if (this._dndListController?.isDragging()) {
+            return;
+        }
+
         // если мы утащим в другой список, то в нем нужно создать контроллер
         if (!this._dndListController) {
             this._dndListController = _private.createDndListController(this._listViewModel, this._options);

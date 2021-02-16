@@ -238,6 +238,10 @@ describe('Controls/suggest', () => {
          inputController._suggestOpened = false;
          inputController._suggestDirectionChangedCallback('up');
          assert.isNull(inputController._suggestDirection);
+
+         inputController._suggestOpened = true;
+         inputController._sourceController = null;
+         assert.isNull(inputController._suggestDirection);
       });
 
       it('Suggest::_prepareFilter', () => {

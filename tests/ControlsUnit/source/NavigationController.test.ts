@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {RecordSet} from 'Types/collection';
-import {NavigationController} from 'Controls/source';
+import {NavigationController} from 'Controls/dataSource';
 import {IBasePageSourceConfig} from 'Controls/interface';
 const dataPrev = [
     {

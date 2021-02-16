@@ -258,7 +258,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _suggestDirectionChangedCallback(direction: TSuggestDirection): void {
       // Проверка на _suggestOpened нужна, т.к. уже может быть вызвано закрытие саггеста,
       // но попап ещё не разрушился, и может стрелять событиями, звать callback'b
-      if (this._suggestOpened) {
+      if (this._suggestOpened && this._sourceController) {
          this._suggestDirection = direction;
          if (direction === 'up') {
             this._setItems(this._sourceController.getItems());
@@ -327,8 +327,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
             theme: this._options.theme,
             mode: dataSourceError.Mode.include
          }).then((errorConfig: dataSourceError.ViewConfig|void): dataSourceError.ViewConfig|void => {
-            this._pendingErrorConfig = errorConfig;
-            this._open();
+            if (errorConfig) {
+               this._pendingErrorConfig = errorConfig;
+               this._open();
+            }
          });
       }
    }
@@ -887,6 +889,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    protected _getSourceController(options?: IInputControllerOptions): SourceController {
       if (!this._sourceController) {
          this._sourceController = new SourceController(this._getSourceControllerOptions(options));
+         this._sourceController.loadedBySuggest = true;
       }
       return this._sourceController;
    }
