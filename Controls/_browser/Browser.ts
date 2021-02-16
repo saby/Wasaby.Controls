@@ -308,7 +308,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._inputSearchValue = '';
         }
 
-        if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
+        const searchParamChanged = this._options.searchParam !== newOptions.searchParam;
+        if ((newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) || searchParamChanged) {
             if (this._options.searchValue !== newOptions.searchValue) {
                 this._inputSearchValue = newOptions.searchValue;
             }
