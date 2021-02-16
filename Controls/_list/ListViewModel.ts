@@ -700,9 +700,6 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     // Old method
     setEditingConfig(editingConfig: IEditingConfig): void {
-        if (this._display) {
-            this._display.setEditingConfig(editingConfig);
-        }
         if (!isEqual(editingConfig, this._options.editingConfig)) {
             this._options.editingConfig = editingConfig;
             this._nextModelVersion();
@@ -711,7 +708,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     // New Model compatibility
     getEditingConfig(): IEditingConfig {
-        return this._display ? this._display.getEditingConfig() : this._options?.editingConfig;
+        return this._options?.editingConfig;
     },
 
     // New Model compatibility
