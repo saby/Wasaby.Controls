@@ -1,12 +1,28 @@
 import { TreeGridFooterCell } from 'Controls/treeGridNew';
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 
-describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWrapperClasses', () => {
+describe('Controls/treeGrid_clean/Display/HasNodeWithChildren/TreeGridFooterCell', () => {
+    const mockedOwner = {
+        getColumnsConfig: () => [{}],
+        getColumnsCount: () => 2,
+        getStickyColumnsCount: () => 0,
+        getExpanderSize: () => '',
+        getActionsTemplateConfig: () => {},
+        hasMultiSelectColumn: () => false,
+        getMultiSelectVisibility: () => 'visible',
+        hasColumnScroll: () => false,
+        getLeftPadding: () => '',
+        getRightPadding: () => '',
+        hasItemActionsSeparatedCell: () => false,
+        getColumnIndex: () => 0
+    } as any;
 
     it('exists item with expander', () => {
+
         const footerCell = new TreeGridFooterCell({
             hasNodeWithChildren: true,
-            column: {}
+            column: {},
+            owner: mockedOwner
         });
 
         CssClassesAssert.include(
@@ -18,7 +34,8 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
     it('not exists item with expander', () => {
         const footerCell = new TreeGridFooterCell({
             hasNodeWithChildren: false,
-            column: {}
+            column: {},
+            owner: mockedOwner
         });
 
         CssClassesAssert.notInclude(
@@ -30,7 +47,8 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
     it('setHasNodeWithChildren', () => {
         const footerCell = new TreeGridFooterCell({
             hasNodeWithChildren: false,
-            column: {}
+            column: {},
+            owner: mockedOwner
         });
 
         CssClassesAssert.notInclude(
