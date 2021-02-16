@@ -1691,7 +1691,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET) {
+            if (action === IObservable.ACTION_RESET && newItems && newItems.length) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
             }
 
@@ -3132,13 +3132,17 @@ const _private = {
 
     activateEditingRow(self, enableScrollToElement: boolean = true): void {
         // Контакты используют новый рендер, на котором нет обертки для редактируемой строки.
-        // В новом рендере эона не нужна
+        // В новом рендере она не нужна
         if (self._children.listView.activateEditingRow) {
-            if (self._children.listView.beforeRowActivated) {
-                self._children.listView.beforeRowActivated();
-            }
-            const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
-            self._editInPlaceInputHelper.activateInput(rowActivator);
+            const activator = () => {
+                if (self._children.listView.beforeRowActivated) {
+                    self._children.listView.beforeRowActivated();
+                }
+                const rowActivator = self._children.listView.activateEditingRow.bind(self._children.listView, enableScrollToElement);
+                return rowActivator();
+            };
+
+            self._editInPlaceInputHelper.activateInput(activator);
         }
     },
 

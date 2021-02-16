@@ -166,6 +166,15 @@ export default class TreeGridCollection<
     protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
         return GridGroupItem;
     }
+    setEditing(editing: boolean): void {
+        super.setEditing(editing);
+
+        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+            this._$headerModel = null;
+        }
+        this._nextVersion();
+    }
+
     // endregion
 
     protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {

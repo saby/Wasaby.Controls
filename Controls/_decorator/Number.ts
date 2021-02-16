@@ -4,6 +4,7 @@ import splitIntoTriads from 'Controls/_decorator/inputUtils/splitIntoTriads';
 import toString from 'Controls/_decorator/inputUtils/toString';
 // @ts-ignore
 import * as template from 'wml!Controls/_decorator/Number/Number';
+import 'css!Controls/decorator';
 
 type RoundingFn = (number: string, fractionSize: number) => string;
 
@@ -142,8 +143,6 @@ class NumberDecorator extends Control<INumberOptions> {
             return  toString(Math.trunc(parseFloat(number)));
         }
     };
-
-    static _theme = ['Controls/decorator'];
 
     static getOptionTypes() {
         return {
