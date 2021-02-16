@@ -80,5 +80,33 @@ define(['Controls/_filterPopup/Panel/Lookup'
          });
          assert.isTrue(pLookup._passed);
       });
+
+      it('reset _passed when source or caption changed', () => {
+         const source = {};
+         const pLookup = new PanelLookup();
+         pLookup._beforeMount({
+            selectedKeys: [1],
+            source,
+            caption: 'testCaption'
+         });
+         assert.isTrue(pLookup._passed);
+
+         pLookup._beforeUpdate({
+            selectedKeys: [1],
+            source,
+            caption: 'newCaption'
+         });
+
+         assert.isFalse(pLookup._passed);
+
+         pLookup._passed = true;
+
+         pLookup._beforeUpdate({
+            selectedKeys: [1],
+            source: {},
+            caption: 'newCaption'
+         });
+         assert.isFalse(pLookup._passed);
+      });
    });
 });

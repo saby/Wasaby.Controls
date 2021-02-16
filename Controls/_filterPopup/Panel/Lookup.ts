@@ -98,6 +98,9 @@ var Lookup = Control.extend({
    },
 
    _beforeUpdate: function(newOptions) {
+      if (this._options.caption !== newOptions.caption || newOptions.source !== this._options.source) {
+         this._passed = false;
+      }
       this._caption = _private.getCaption(this, newOptions);
    },
 
