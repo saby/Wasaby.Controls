@@ -325,22 +325,15 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
                 return roots;
             })
-            // Обрабатываем смену root когда находимся в режиме поиска
+            // Обновим состояние чтобы загрузились новые данные
             .then((newRoots) => {
-                let resultPromise = Promise.resolve(newRoots);
-
                 // Если меняют root когда находимся в режиме поиска, то нужно
                 // сбросить поиск и отобразить содержимое нового root
                 if (this.viewMode === DetailViewMode.search) {
-                    resultPromise = this._detailDataSource
-                        .resetSearchString()
-                        .then(() => newRoots);
+                    this._resetSearch(newRoots);
+                    return;
                 }
 
-                return resultPromise;
-            })
-            // Обновим состояние чтобы загрузились новые данные
-            .then((newRoots) => {
                 this._changeRoot(newRoots);
             });
     }
@@ -435,6 +428,31 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         this._detailDataSource.updateFilterAfterSearch();
         this._setDetailFilter(this._detailDataSource.getFilter());
+    }
+
+    private _resetSearch(newRoots?: IRootsData): void {
+        this._detailDataSource.sourceController.cancelLoading();
+
+        this._detailDataSource
+            .resetSearchString()
+            .then(() => {
+                if (newRoots) {
+                    this._changeRoot(newRoots);
+                } else if (this._options.detail.searchStartingWith !== 'current') {
+                    this._changeRoot({
+                        detailRoot: this._rootBeforeSearch,
+                        masterRoot: this._masterRoot
+                    });
+                }
+
+                this._rootBeforeSearch = null;
+
+                this._detailDataSource.updateFilterAfterSearch();
+                this._setDetailFilter(this._detailDataSource.getFilter());
+
+                this._searchValue = null;
+                this._inputSearchString = null;
+            });
     }
 
     private _setDetailFilter(filter: QueryWhereExpression<unknown>): void {
@@ -560,23 +578,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     protected _onSearchReset(): void {
-        this._detailDataSource.sourceController.cancelLoading();
-
-        this._detailDataSource
-            .resetSearchString()
-            .then(() => {
-                if (this._options.detail.searchStartingWith !== 'current') {
-                    this._changeRoot({
-                        detailRoot: this._rootBeforeSearch,
-                        masterRoot: this._masterRoot
-                    });
-                    this._rootBeforeSearch = null;
-                }
-                this._detailDataSource.updateFilterAfterSearch();
-                this._setDetailFilter(this._detailDataSource.getFilter());
-                this._searchValue = null;
-                this._inputSearchString = null;
-            });
+        this._resetSearch();
     }
 
     // TODO: implement
