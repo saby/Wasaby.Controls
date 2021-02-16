@@ -6201,8 +6201,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
            :  shouldDisplayDownIndicator;
     },
 
-    _shouldDisplayPortionedSearch(): boolean {
-        return this._portionedSearchInProgress;
+    _shouldDisplayTopPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'up';
+    },
+
+    _shouldDisplayBottomPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'down';
     },
 
     _getLoadingIndicatorClasses(state?: string): string {
