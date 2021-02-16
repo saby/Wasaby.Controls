@@ -1,0 +1,26 @@
+<div class="controlsDemo__wrapper__padding-left">
+    <div class="controlsDemo__cell controlsDemo__inline-block demo-ItemPaddingAll__vertical">
+        <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+            <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo_treeGrid-iP-all-vertical-m controlsDemo_fixedWidth800">
+                <Controls.breadcrumbs:Container>
+                    <Controls.breadcrumbs:HeadingPath />
+                </Controls.breadcrumbs:Container>
+                <Controls.explorer:View
+                        bind:root="_root"
+                        breadcrumbsVisibility="hidden"
+                        source="{{_viewSource}}"
+                        attr:class="demo-Explorer ControlsDemo-Explorer"
+                        viewMode="table"
+                        keyProperty="id"
+                        displayProperty="title"
+                        parentProperty="parent"
+                        nodeProperty="parent@"
+                        markerVisibility="hidden"
+                        showEditArrow="{{true}}"
+                        showActionButton="{{true}}"
+                        columns="{{_columns}}">
+                </Controls.explorer:View>
+            </div>
+        </Controls.list:DataContainer>
+    </div>
+</div>
