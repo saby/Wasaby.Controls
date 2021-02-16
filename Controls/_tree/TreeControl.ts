@@ -622,7 +622,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _beforeMount(options): void {
-        this._isMounting = true;
         this._initKeyProperty(options);
         if (options.markerMoveMode === 'leaves') {
 
@@ -646,7 +645,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         this._applyMarkedLeaf(current.getKey(), viewModel, markerController);
                     }
                 }
-                this._isMounting = false;
             };
         }
         if (options.sourceController) {
@@ -1098,9 +1096,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(this._options.nodeProperty) !== null) {
-                if (!this._isMounting) {
-                    this.toggleExpanded(curItem.get(this._options.keyProperty), model);
-                }
                 expanded.push(curItem.get(this._options.keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }
