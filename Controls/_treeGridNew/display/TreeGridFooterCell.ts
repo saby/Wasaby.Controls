@@ -4,7 +4,7 @@ export default class TreeGridFooterCell<S> extends GridFooterCell<S> {
    /**
     * Признак, означающий что в списке есть узел с детьми
     */
-   protected _$hasNodeWithChildes: boolean;
+   protected _$hasNodeWithChildren: boolean;
 
    getWrapperClasses(
       theme: string,
@@ -22,21 +22,21 @@ export default class TreeGridFooterCell<S> extends GridFooterCell<S> {
       return classes;
    }
 
-   // region HasNodeWithChildes
+   // region HasNodeWithChildren
 
-   setHasNodeWithChildes(hasNodeWithChildes: boolean): void {
-      if (this._$hasNodeWithChildes !== hasNodeWithChildes) {
-         this._$hasNodeWithChildes = hasNodeWithChildes;
+   setHasNodeWithChildren(hasNodeWithChildren: boolean): void {
+      if (this._$hasNodeWithChildren !== hasNodeWithChildren) {
+         this._$hasNodeWithChildren = hasNodeWithChildren;
          this._nextVersion();
       }
    }
 
-   // endregion HasNodeWithChildes
+   // endregion HasNodeWithChildren
 
    private _shouldDrawExpanderPadding(): boolean {
       const isFirstColumnWithCorrectingForCheckbox = this._$owner.hasMultiSelectColumn() ?
           this.getColumnIndex() === 1 : this.isFirstColumn();
-      return isFirstColumnWithCorrectingForCheckbox && this._$hasNodeWithChildes;
+      return isFirstColumnWithCorrectingForCheckbox && this._$hasNodeWithChildren;
    }
 }
 
@@ -44,5 +44,5 @@ Object.assign(TreeGridFooterCell.prototype, {
    '[Controls/treeGrid:TreeGridFooterCell]': true,
    _moduleName: 'Controls/treeGrid:TreeGridFooterCell',
    _instancePrefix: 'tree-grid-footer-cell-',
-   _$hasNodeWithChildes: true
+   _$hasNodeWithChildren: true
 });

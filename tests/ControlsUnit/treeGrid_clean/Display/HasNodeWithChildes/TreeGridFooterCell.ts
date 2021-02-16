@@ -5,7 +5,7 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
 
     it('exists item with expander', () => {
         const footerCell = new TreeGridFooterCell({
-            hasNodeWithChildes: true,
+            hasNodeWithChildren: true,
             column: {}
         });
 
@@ -17,7 +17,7 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
 
     it('not exists item with expander', () => {
         const footerCell = new TreeGridFooterCell({
-            hasNodeWithChildes: false,
+            hasNodeWithChildren: false,
             column: {}
         });
 
@@ -27,9 +27,9 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
         );
     });
 
-    it('setHasNodeWithChildes', () => {
+    it('setHasNodeWithChildren', () => {
         const footerCell = new TreeGridFooterCell({
-            hasNodeWithChildes: false,
+            hasNodeWithChildren: false,
             column: {}
         });
 
@@ -38,7 +38,7 @@ describe('Controls/treeGrid_clean/Display/MultiSelectVisibility/FooterCell/getWr
             'controls-TreeGridView__footer__expanderPadding-default_theme-mockedTheme'
         );
 
-        footerCell.setHasNodeWithChildes(true);
+        footerCell.setHasNodeWithChildren(true);
         CssClassesAssert.include(
             footerCell.getWrapperClasses('mockedTheme', 'mockedBG', 'mockedStyle', false),
             'controls-TreeGridView__footer__expanderPadding-default_theme-mockedTheme'

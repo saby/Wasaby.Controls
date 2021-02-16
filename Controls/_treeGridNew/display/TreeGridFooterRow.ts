@@ -5,31 +5,31 @@ export default class TreeGridFooterRow<S> extends GridFooterRow<S> {
    /**
     * Признак, означающий что в списке есть узел с детьми
     */
-   protected _$hasNodeWithChildes: boolean;
+   protected _$hasNodeWithChildren: boolean;
 
    getExpanderSize(): string {
       return this.getOwner().getExpanderSize();
    }
 
-   // region HasNodeWithChildes
+   // region HasNodeWithChildren
 
-   setHasNodeWithChildes(hasNodeWithChildes: boolean): void {
-      if (this._$hasNodeWithChildes !== hasNodeWithChildes) {
-         this._$hasNodeWithChildes = hasNodeWithChildes;
+   setHasNodeWithChildren(hasNodeWithChildren: boolean): void {
+      if (this._$hasNodeWithChildren !== hasNodeWithChildren) {
+         this._$hasNodeWithChildren = hasNodeWithChildren;
 
-         this._updateColumnsHasNodeWithChildes(hasNodeWithChildes);
+         this._updateColumnsHasNodeWithChildren(hasNodeWithChildren);
 
          this._nextVersion();
       }
    }
 
-   protected _updateColumnsHasNodeWithChildes(hasNodeWithChildes: boolean): void {
+   protected _updateColumnsHasNodeWithChildren(hasNodeWithChildren: boolean): void {
       this._$columnItems.forEach((cell: TreeGridFooterCell<S>) => {
-         cell.setHasNodeWithChildes(hasNodeWithChildes);
+         cell.setHasNodeWithChildren(hasNodeWithChildren);
       });
    }
 
-   // endregion HasNodeWithChildes
+   // endregion HasNodeWithChildren
 }
 
 Object.assign(TreeGridFooterRow.prototype, {
@@ -37,5 +37,5 @@ Object.assign(TreeGridFooterRow.prototype, {
    _moduleName: 'Controls/treeGrid:TreeGridFooterRow',
    _instancePrefix: 'tree-grid-footer-row-',
    _cellModule: 'Controls/treeGrid:TreeGridFooterCell',
-   _$hasNodeWithChildes: true
+   _$hasNodeWithChildren: true
 });
