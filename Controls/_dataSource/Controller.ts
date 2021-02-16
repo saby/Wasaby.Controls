@@ -1,7 +1,6 @@
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {CrudWrapper} from './CrudWrapper';
-import {NavigationController} from 'Controls/source';
-import {INavigationControllerOptions} from 'Controls/_source/NavigationController';
+import {default as NavigationController, INavigationControllerOptions} from 'Controls/_dataSource/NavigationController';
 import {INavigationOptionValue,
         INavigationSourceConfig,
         Direction,

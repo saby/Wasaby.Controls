@@ -602,7 +602,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#emptyTemplateColumns
- * @cfg {Array.<IEmptyTemplateColumn>} Конфигурация колонок пустой таблицы.
+ * @cfg {Array.<Controls/_gridNew/display/mixins/Grid/IEmptyTemplateColumn.typedef>} Конфигурация колонок пустой таблицы.
  */
 
 /**

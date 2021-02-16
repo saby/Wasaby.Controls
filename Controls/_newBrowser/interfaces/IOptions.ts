@@ -95,4 +95,9 @@ export interface IOptions extends IControlOptions, ISourceOptions {
      * Шаблон, который будет выведен под detail-списком
      */
     detailFooterTemplate?: TemplateFunction | string;
+
+    /**
+     * Шаблон, который будет выведен над detail-списком
+     */
+    detailHeaderTemplate?: TemplateFunction | string;
 }

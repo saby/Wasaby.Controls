@@ -14,6 +14,7 @@ import {
    NewSourceController as SourceController
 } from 'Controls/dataSource';
 import {QueryWhereExpression} from 'Types/source';
+import * as getSwitcherStrFromData from 'Controls/_search/Misspell/getSwitcherStrFromData';
 
 /**
  * Контрол используют в качестве контроллера для организации поиска в реестрах.
@@ -308,9 +309,7 @@ export default class Container extends Control<IContainerOptions> {
       }
 
       if (this._searchController && (this._searchController.isSearchInProcess() || this._searchController.getSearchValue() !== this._searchValue)) {
-         this._updateParams(this._searchController.getSearchValue());
-         this._notify('filterChanged', [this._searchController.getFilter()]);
-         this._loading = false;
+         this._afterSearch(data);
       }
 
       this._path = data?.getMetaData().path ?? null;
@@ -320,6 +319,18 @@ export default class Container extends Control<IContainerOptions> {
          this._updateViewMode(this._previousViewMode);
          this._previousViewMode = null;
          this._misspellValue = '';
+      }
+   }
+
+   private _afterSearch(items: RecordSet): void {
+      this._updateParams(this._searchController.getSearchValue());
+      this._notify('filterChanged', [this._searchController.getFilter()]);
+      this._loading = false;
+
+      const switchedStr = getSwitcherStrFromData(items);
+      this._misspellValue = switchedStr;
+      if (this._searchController.needChangeSearchValueToSwitchedString(items)) {
+         this._setSearchValue(switchedStr);
       }
    }
 

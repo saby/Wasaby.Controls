@@ -103,16 +103,16 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     readonly '[Controls/_display/grid/mixins/Grid]': boolean;
 
     protected _$columns: TColumns;
-    protected _$headerConfig: THeader;
     protected _$colgroup: Colgroup<S>;
-    protected _$header: Header<S>;
+    protected _$header: THeader;
+    protected _$headerModel: Header<S>;
+    protected _$headerVisibility: THeaderVisibility;
     protected _$footer: FooterRow<S>;
     protected _$results: ResultsRow<S>;
     protected _$ladder: ILadderObject;
     protected _$ladderProperties: string[];
     protected _$stickyColumn: {};
     protected _$resultsPosition: TResultsPosition;
-    protected _$headerVisibility: THeaderVisibility;
     protected _$resultsVisibility: TResultsVisibility;
     protected _$showEditArrow: boolean;
     protected _$editArrowVisibilityCallback: TEditArrowVisibilityCallback;
@@ -137,8 +137,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         this._$resultsPosition = options.resultsPosition;
 
         if (this._headerIsVisible(options.header)) {
-            this._$headerConfig = options.header;
-            this._$header = this._initializeHeader(options);
+            this._initializeHeader(options);
         }
         if (options.footerTemplate || options.footer) {
             this._$footer = this._initializeFooter(options);
@@ -163,7 +162,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     getHeaderConfig(): THeader {
-        return this._$headerConfig;
+        return this._$header;
     }
 
     getColgroup(): Colgroup<S> {
@@ -171,7 +170,16 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     getHeader(): Header<S> {
-        return this._$header;
+        if (!this._$headerModel && this._headerIsVisible(this._$header)) {
+            this._initializeHeader({
+                columns: this._$columns,
+                owner: this,
+                header: this._$header,
+                sorting: this._$sorting
+            } as IOptions);
+        }
+
+        return this._$headerModel;
     }
 
     hasHeader(): boolean {
@@ -257,16 +265,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     setHeader(header: THeader): void {
-        this._$headerConfig = header;
-        if (this._headerIsVisible(header)) {
-            this._$headerConfig = header;
-            this._$header = this._initializeHeader({
-                columns: this._$columns,
-                owner: this,
-                header: header,
-                sorting: this._$sorting
-            } as IOptions);
-        }
+        this._$header = header;
+        this._$headerModel = null;
     }
 
     setColumns(newColumns: TColumns): void {
@@ -360,7 +360,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     protected _headerIsVisible(header: THeader): boolean {
         const hasHeader = header && header.length;
-        return hasHeader && (this._$headerVisibility === 'visible' || this.getCollectionCount() > 0);
+        return hasHeader && (this._$headerVisibility === 'visible' || this.getCount() > 0);
     }
 
     protected _resultsIsVisible(): boolean {
@@ -373,7 +373,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             owner: this,
             header: options.header
         };
-        return this._$isFullGridSupport ? new Header(_options) : new TableHeader(_options);
+        this._$headerModel = (this._$isFullGridSupport ? new Header(_options) : new TableHeader(_options));
     }
 
     protected _initializeFooter(options: IOptions): FooterRow<S> {
@@ -404,8 +404,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 
     getRowIndex(row: GridRow<T>): number {
         const getHeaderOffset = () => {
-            if (this._$header) {
-                const {start, end} = this._$header.getBounds().row;
+            if (this._$headerModel) {
+                const {start, end} = this._$headerModel.getBounds().row;
                 return end - start;
             } else {
                 return 0;
@@ -413,7 +413,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         };
 
         if (row instanceof TableHeaderRow) {
-            return this._$header.getRows().indexOf(row);
+            return this._$headerModel.getRows().indexOf(row);
         } else if (row instanceof HeaderRow) {
             return 0;
         } else if (row instanceof ResultsRow) {
@@ -480,6 +480,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
 Object.assign(Grid.prototype, {
     '[Controls/_display/grid/mixins/Grid]': true,
     _$columns: null,
+    _$header: null,
     _$headerVisibility: 'hasdata',
     _$resultsVisibility: 'hasdata',
     _$resultsPosition: null,

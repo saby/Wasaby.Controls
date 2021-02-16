@@ -30,7 +30,12 @@
          class="controls-newBrowser__detail"
          style="background-color: {{_detailBgColor}};"
       >
+         <ws:if data="{{_options.detailHeaderTemplate}}">
+            <ws:partial template="{{_options.detailHeaderTemplate}}"/>
+         </ws:if>
+
          <Controls.explorer:View
+            attr:class="controls-newBrowser__detail-list"
             root="{{root}}"
             on:rootChanged="_onDetailRootChanged()"
 
@@ -87,6 +92,7 @@
                />
             </ws:tileItemTemplate>
          </Controls.explorer:View>
+
          <ws:if data="{{_options.detailFooterTemplate}}">
             <ws:partial template="{{_options.detailFooterTemplate}}"/>
          </ws:if>

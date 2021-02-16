@@ -77,6 +77,7 @@ export default class View extends Control<IControlOptions> {
         FilterUtils.resetFilter(this._source);
         this._collapsedGroups = [];
         this._updateFilterParams();
+        this._setSource(this._source);
         this._notifyChanges();
     }
 
@@ -129,7 +130,9 @@ export default class View extends Control<IControlOptions> {
         this._source.forEach((item) => {
             const editingItem = editingObject[item.name];
             item.value = editingItem?.value || editingItem;
-            item.textValue = editingItem?.textValue || editingItem;
+            if (editingItem.textValue) {
+                item.textValue = editingItem.textValue;
+            }
             if (editingItem?.needColapse) {
                 this._colapseGroup(item.group);
             }
