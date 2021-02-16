@@ -867,11 +867,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
      * @protected
      */
     protected _notifyItemChangeToOwner(property: string): void {
-        if (this._$owner) {
-            this._$owner.notifyItemChange(
-                this,
-                property as any
-            );
+        if (this._$owner && !this._$owner.destroyed) {
+            this._$owner.notifyItemChange(this, property as any);
         }
     }
 
