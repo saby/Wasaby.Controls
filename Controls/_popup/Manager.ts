@@ -776,13 +776,15 @@ class Manager {
     }
 
     private _isIgnoreActivationArea(focusedContainer: HTMLElement): boolean {
+        const ignoredClasses = ['controls-Popup__isolatedFocusingContext', 'ws-window-overlay',
+            'ws-wait-indicator', 'controls-OpenDialogAction-overlay'];
         while (focusedContainer && focusedContainer.classList) {
             // TODO: Compatible
-            // Клик по старому оверлею и по старому индикатору не должен приводить к закрытию вдомных окон на старой странице
-            if (focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext') ||
-                focusedContainer.classList.contains('ws-window-overlay') ||
-                focusedContainer.classList.contains('ws-wait-indicator')) {
-                return true;
+            // Клик по старому оверлею не должен приводить к закрытию вдомных окон на старой странице
+            for (const ignoredClass of ignoredClasses) {
+                if (focusedContainer.classList.contains(ignoredClass)) {
+                    return true;
+                }
             }
             // У SVG в IE11 нет parentElement
             focusedContainer = focusedContainer.parentElement || focusedContainer.parentNode;
