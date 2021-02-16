@@ -1846,7 +1846,14 @@ var
                 };
 
             current.getCurrentColumnKey = function() {
-                return self._columnsVersion + '_' +
+                // key - передаем для того, чтобы обеспечить уникальность ключа колонки, иначе будут ошибки с дублированием ключей
+                // https://online.sbis.ru/opendoc.html?guid=ec8f4886-18a2-4827-afe7-4bd416429846
+                // в 20.1100 заводились ошибки на ядро:
+                // https://online.sbis.ru/opendoc.html?guid=5248b666-3498-4bf1-9051-1076a1caca95
+                // https://online.sbis.ru/opendoc.html?guid=5248b666-3498-4bf1-9051-1076a1caca95
+                // https://online.sbis.ru/opendoc.html?guid=61b44051-c747-4226-bfde-265eeaba2084
+                // на стороне ядра склейка ключей поддерживаться не будет и проблема будет вплоть до перехода на React
+                return current.key + '_' + self._columnsVersion + '_' +
                     (!self._hasMultiSelectColumn() ? current.columnIndex : current.columnIndex - 1);
             };
 

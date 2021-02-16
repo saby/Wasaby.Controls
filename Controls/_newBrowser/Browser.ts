@@ -197,7 +197,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         this._onMasterLoaded = this._onMasterLoaded.bind(this);
 
-        this._updateState(options);
+        this._initState(options);
         let result = Promise.resolve(undefined);
 
         if (receivedState) {
@@ -589,7 +589,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     /**
      * Обновляет текущее состояние контрола в соответствии с переданными опциями
      */
-    private _updateState(options: IOptions, oldOptions?: IOptions): void {
+    private _initState(options: IOptions, oldOptions?: IOptions): void {
         Browser.validateOptions(options);
 
         // Присваиваем во внутреннюю переменную, т.к. в данном случае не надо генерить событие

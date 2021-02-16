@@ -13,6 +13,7 @@ import template = require('wml!Controls/_input/Area/Area');
 import fieldTemplate = require('wml!Controls/_input/Area/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
 import 'Controls/decorator';
+import 'css!Controls/input';
 
 /**
  * Многострочное поле ввода текста.
@@ -294,8 +295,6 @@ export default class Area extends BaseText<IAreaOptions> {
             this._children.fakeField.innerText = this._viewModel.displayValue + this._field.scope.emptySymbol;
         }
     }
-
-    static _theme: string[] = BaseText._theme.concat(['Controls/input']);
 
     static getDefaultOptions(): object {
         const defaultOptions = BaseText.getDefaultOptions();

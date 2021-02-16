@@ -293,7 +293,13 @@ var
          * @param self
          */
         scrollToColumn(self): void {
-            self._columnScrollController.scrollToColumnWithinContainer(self._children.header || self._children.results);
+            let container;
+            if (self._listModel.getResultsPosition()) {
+                container = self._children.results;
+            } else {
+                container = self._children.header;
+            }
+            self._columnScrollController.scrollToColumnWithinContainer(container);
             self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
             self._updateColumnScrollData();
         },
@@ -547,15 +553,18 @@ var
         },
 
         getHeaderHeight(): number {
-            const headerContainer = this._children.header;
-            if (!headerContainer) {
+            if (!('header' in this._children)) {
                 return 0;
             }
-            return this._listModel._isMultiHeader ? _private.getMultiHeaderHeight(headerContainer) : headerContainer.getBoundingClientRect().height;
+            if (this._listModel._isMultiHeader) {
+                return _private.getMultiHeaderHeight(this._children.header);
+            } else {
+                return this._children.header.getBoundingClientRect().height;
+            }
         },
 
         getResultsHeight(): number {
-            return this._children.results ? getDimensions(this._children.results).height : 0;
+            return 'results' in this._children ? getDimensions(this._children.results).height : 0;
         },
 
         _getGridViewClasses(options): string {
