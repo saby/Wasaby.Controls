@@ -1067,6 +1067,20 @@ define([
             });
          });
 
+         it('_beforeUpdate with new expandedItems', async () => {
+            let options = {
+               expandedItems: [],
+               keyProperty: 'id',
+               source: new sourceLib.Memory()
+            };
+            const treeControl = await correctCreateTreeControlAsync(options);
+
+            options = {...treeControl._options};
+            options.expandedItems = ['testId'];
+            treeControl._beforeUpdate(options);
+            assert.deepStrictEqual(treeControl._options.sourceController.getExpandedItems(), ['testId']);
+         });
+
          it('_afterReloadCallback called after data loaded by sourceController', async () => {
             const source = new sourceLib.Memory();
             const items = new collection.RecordSet({
