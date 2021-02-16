@@ -1,7 +1,7 @@
 <div class="PageWrap" style="padding-top: 50px;">
     <div class="PageBlock">
         <div class="PageBlock__title">Controls.Calendar.PeriodDialog</div>
-        <div class="PageBlock__componentWrap controlsDemo__flexRow controlsDemo__flex-jc-sb">
+        <div class="PageBlock__componentWrap">
             <div class="controlsDemo__cell">
                 <Router.router:Reference attr:class="controls-text-label_theme-{{_options.theme}}"
                                          state="/Controls-demo/app/:app"
