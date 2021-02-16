@@ -7,7 +7,6 @@ import { Model } from 'Types/entity';
 
 export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {
     owner: TreeGridCollection<T>;
-    nodeTypeProperty: string;
 }
 
 export default class TreeGridDataRow<T extends Model>
