@@ -664,7 +664,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     /**
      * Получает стиль фона применяемый к операциям над записью.
-     * Если запись в режиме редактирования - то по умолчанию editing_default, с учётом editingBackgroundStyle
+     * Если запись в режиме редактирования - то по умолчанию editing, но настраивается в editingBackgroundStyle
      * Если запись не подсвечивается, то пустое значение
      * Если itemActions видимы всегда, то transparent
      * Если есть HoverBackgroundStyle, то getHoverBackgroundStyle
@@ -679,7 +679,8 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
 
         if (this.isEditing()) {
-            backgroundStyle = `editing_${this.getOwner().getEditingBackgroundStyle()}`;
+            const editingBackgroundStyle = this.getOwner().getEditingBackgroundStyle();
+            backgroundStyle = editingBackgroundStyle !== 'default' ? editingBackgroundStyle : 'editing';
         } else {
             if (this.getOwner().getItemActionsVisibility() === 'visible') {
                 backgroundStyle = 'transparent';
