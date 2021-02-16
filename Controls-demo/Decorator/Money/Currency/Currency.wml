@@ -1,10 +1,10 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">value = 10, currency = 'Dollar'</div>
-        <Controls.decorator:Money value={{10}} currency="Dollar"/>
+        <Controls.decorator:Money value="{{10}}" currency="Dollar"/>
     </div>
     <div class="controlsDemo__cell">
         <div class="controls-text-label_theme-{{_options.theme}}">value = 10.10, currency = 'Dollar', currencyPosition = 'left'</div>
-        <Controls.decorator:Money value={{10.10}} currency="Dollar" currencyPosition="left"/>
+        <Controls.decorator:Money value="{{10.10}}" currency="Dollar" currencyPosition="left"/>
     </div>
 </div>
