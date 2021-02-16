@@ -44,4 +44,24 @@ describe('Controls/filterPanel:View', () => {
             assert.isTrue(itemToggled);
         });
     });
+
+    describe('_resetFilter', () => {
+        const viewControl = new View({});
+        viewControl._beforeMount({
+            source: [{
+                name: 'test',
+                value: 'test',
+                textValue: 'test'
+            }]
+        });
+
+        it('_setSource was called', () => {
+            let sourceUpdated = false;
+            viewControl._setSource = () => {
+                sourceUpdated = true;
+            };
+            viewControl._resetFilter();
+            assert.isTrue(sourceUpdated);
+        });
+    });
 });
