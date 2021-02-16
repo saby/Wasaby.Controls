@@ -3813,9 +3813,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
-            // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
-            // loadedBySuggest опция до 21.2000, чтобы список не перезагружался лишний раз, т.к. в саггесте данные всегда грузятся на уровне контроллера инпута
-            (sourceChanged || searchValueChanged && newOptions.searchValue && !newOptions.sourceController.sourceControllerCreated || newOptions.sourceController.loadedBySuggest);
+            (
+                sourceChanged ||
+                // sourceControllerFromOptions опция до 21.2000, чтобы корректно работали кейсы с кастомным поиском
+                searchValueChanged && newOptions.searchValue && !newOptions.sourceController.sourceControllerCreated ||
+                // loadedBySuggest опция до 21.2000, чтобы список не перезагружался лишний раз, т.к. в саггесте данные всегда грузятся на уровне контроллера инпута
+                newOptions.sourceController.loadedBySuggest ||
+                // Проверка до 21.2000, правит кейс, когда список обновляют с новым prefetchProxy,
+                // а оригинальный источник не меняется, из-за этого список может делать лишние запросы
+                filterChanged && !newOptions.loading && this._options.loading
+            );
 
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
