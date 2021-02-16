@@ -15,8 +15,6 @@ import ButtonGroupBase from 'Controls/_toggle/ButtonGroupBase';
 class ButtonGroup extends ButtonGroupBase {
     protected _template: TemplateFunction = template;
     protected _buttonTemplate: TemplateFunction = ButtonTemplate;
-
-    static _theme: string[] = ['Controls/Classes'];
 }
 
 Object.defineProperty(ButtonGroup, 'defaultProps', {

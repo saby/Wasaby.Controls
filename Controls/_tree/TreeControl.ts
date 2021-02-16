@@ -660,7 +660,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _afterMount: function() {
-        this._isMounted = true;
         const viewModel = this._children.baseControl.getViewModel();
         _private.initListViewModelHandler(this, viewModel);
         if (this._expandedItemsToNotify) {
@@ -1076,9 +1075,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(this._options.nodeProperty) !== null) {
-                if (this._isMounted) {
-                    this.toggleExpanded(curItem.get(this._options.keyProperty), model);
-                }
                 expanded.push(curItem.get(this._options.keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }

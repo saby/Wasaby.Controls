@@ -4,13 +4,13 @@
                                 {{_height ? ' controls-Button__wrapper_' + _viewMode + '_' + _height}}" tabindex="0">
         <ws:if data="{{!!_icon}}">
             <i attr:class="controls-Button__icon controls-BaseButton__icon controls-icon {{_icon}}
-                                    {{_iconSize ? 'controls-icon_size-' + _iconSize + '_theme-' + _options.theme + ' controls-icon_size-' + _iconSize}}
-                                    {{_iconStyle ? 'controls-icon_style-' + _iconStyle + '_theme-' + _options.theme + ' controls-icon_style-' + _iconStyle}}"/>
+                                    {{_iconSize ? 'controls-icon_size-' + _iconSize}}
+                                    {{_iconStyle ? 'controls-icon_style-' + _iconStyle}}"/>
         </ws:if>
         <ws:if data="{{!!_caption}}">
             <span attr:class="controls-BaseButton__text
                     {{_options.readOnly ? ' controls-Button__text_readonly_' + _viewMode :
-                     (_fontColorStyle ?  ' controls-text-' + _fontColorStyle + '_theme-' + _options.theme +  ' controls-text-' + _fontColorStyle +
+                     (_fontColorStyle ?  ' controls-text-' + _fontColorStyle +
                                     ' controls-Button__text-' + _fontColorStyle + '_viewMode-' + _viewMode :
                                                                     'controls-Button__text_clickable')}}
                                         {{_hasIcon ? ' controls-Button__text_captionPosition_' + _captionPosition}}
@@ -42,10 +42,10 @@
                 {{_toggled ? ' controls-Button_toggled' : ''}}
                 controls-Button_{{_viewMode}}_style-{{_buttonStyle}}{{_toggled ? '_toggled' : ''}}
                 controls-Button_bg{{_contrastBackground ? '-contrast' : '-same'}}
-                {{_height ? ' controls-inlineheight-' + _height + '_theme-' + _options.theme + ' controls-inlineheight-' + _height}}
+                {{_height ? ' controls-inlineheight-' + _height}}
                 {{_height ? ' controls-Button-inlineheight-' + _height}}
                 {{_height ? ' controls-Button_' + _viewMode + '_' + _height}}
-                controls-fontsize-{{_fontSize}}_theme-{{_options.theme}}
+                controls-fontsize-{{_fontSize}}
                 controls-Button_{{_viewMode}}__wrapper-fontsize-{{_fontSize}}
                 controls_theme-{{_options.theme}}"
             attr:title="{{_options.tooltip}}"

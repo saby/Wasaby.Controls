@@ -2903,7 +2903,9 @@ const _private = {
      * не должен ставить чекбокс
      */
     isItemsSelectionAllowed(options: object): boolean {
-        return options.selectedKeysCount !== null || options.selectedKeys.length;
+        return options.selectedKeysCount !== null ||
+               options.selectedKeys.length ||
+               options.multiSelectVisibility !== 'hidden';
     },
 
     /**
@@ -3431,11 +3433,37 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.addShowActionsClass(this);
         }
 
-        return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
-            return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
-        })).then((res) => {
-            return this._tryStartInitialEditing(this._getEditingConfig(newOptions)) || res;
-        }).then((res) => {
+        return this._doBeforeMount(newOptions, receivedState);
+    },
+
+    _doBeforeMount(newOptions, receivedState): Promise<unknown> | void {
+        let result = null;
+        let state: 'sync' | 'async' = 'sync';
+
+        const addOperation = (cb) => {
+            if (state === 'sync') {
+                result = cb(result);
+                state = result instanceof Promise ? 'async' : 'sync';
+            } else {
+                result.then(cb);
+            }
+        };
+
+        // Prepare collapsed groups if need.
+        addOperation(() => this._prepareGroups(newOptions));
+
+        // Prepare items on mount
+        addOperation((collapsedGroups) => this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups));
+
+        // Try to start initial editing
+        addOperation(() => {
+            if (newOptions.useNewModel ? this._listViewModel : this._listViewModel?.getDisplay()) {
+                return this._tryStartInitialEditing(newOptions);
+            }
+        });
+
+        // Init model state if need
+        addOperation(() => {
             const needInitModelState =
                 this._listViewModel &&
                 this._listViewModel.getCollection() &&
@@ -3462,8 +3490,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     });
                 }
             }
-            return res;
         });
+
+        return state === 'sync' ? void 0 : result;
     },
 
     _initNewModel(cfg, data, viewModelConfig) {
@@ -3487,7 +3516,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.prepareFooter(this, cfg, this._sourceController);
     },
 
-    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
+    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups): Promise<unknown> | void {
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
 
@@ -3528,9 +3557,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.initListViewModelHandler(self, self._listViewModel, newOptions.useNewModel);
         }
 
-            if (newOptions.source) {
-                if (receivedData) {
-                    _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
+        if (newOptions.source) {
+            if (receivedData) {
+                _private.setHasMoreData(self._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController), true);
 
                 if (newOptions.useNewModel) {
                     self._items = self._listViewModel.getCollection();
@@ -3560,37 +3589,36 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                     _private.needAttachLoadTopTriggerToNull(self)) {
                     self._hideTopTrigger = true;
                 }
-                return Promise.resolve();
             }
-                if (receivedState.errorConfig) {
-                    return Promise.resolve(_private.showError(self, receivedState.errorConfig));
-                } else if (self._sourceController && self._sourceController.getLoadError()) {
-                    return _private.processError(self, {error: self._sourceController.getLoadError()})
-                        .then((errorConfig) => {
-                            return getState(errorConfig);
-                        });
-                }
-            } else {
-                _private.createScrollController(self, newOptions);
-                return Promise.resolve();
+
+            if (receivedState.errorConfig) {
+                _private.showError(self, receivedState.errorConfig);
+            } else if (self._sourceController && self._sourceController.getLoadError()) {
+                return _private.processError(self, {error: self._sourceController.getLoadError()}).then((errorConfig) => {
+                    return getState(errorConfig);
+                });
             }
+        } else {
+            _private.createScrollController(self, newOptions);
+        }
     },
 
-    _prepareGroups(newOptions, callback: Function) {
+    _prepareGroups(newOptions, callback?: (...args: unknown[]) => unknown): Promise<TCollapsedGroups> | unknown {
         let result = null;
         if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
-            result = new Deferred();
-            groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
-                result.callback(collapsedGroupsFromStore || newOptions.collapsedGroups);
+            result = new Promise((resolve) => {
+                groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback((collapsedGroupsFromStore) => {
+                    resolve(collapsedGroupsFromStore || newOptions.collapsedGroups);
+                });
             });
         } else if (newOptions.collapsedGroups) {
-            result = new Deferred();
-            result.callback(newOptions.collapsedGroups);
+            result = newOptions.collapsedGroups;
         }
-        if (result) {
-            return result.addCallback(callback);
+
+        if (result instanceof Promise) {
+            return callback ? result.then(callback) : result;
         } else {
-            return callback(undefined);
+            return (callback && callback(result)) || result;
         }
     },
 
@@ -4973,12 +5001,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _getEditInPlaceController(): EditInPlaceController {
         if (!this._editInPlaceController) {
-            this._editInPlaceController = this._createEditInPlaceController(this._options);
+            this._createEditInPlaceController();
         }
         return this._editInPlaceController;
     },
 
-    _createEditInPlaceController(options = {}): EditInPlaceController {
+    _createEditInPlaceController(options = this._options): void {
         this._editInPlaceInputHelper = new EditInPlaceInputHelper();
 
         // При создании редактирования по мсесту до маунта, регистрация в formController
@@ -4988,9 +5016,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.registerFormOperation(this);
         }
 
-        return new EditInPlaceController({
-            mode: this._getEditingConfig().mode,
-            collection: this._options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
+        this._editInPlaceController = new EditInPlaceController({
+            mode: this._getEditingConfig(options).mode,
+            collection: options.useNewModel ? this._listViewModel : this._listViewModel.getDisplay(),
             onBeforeBeginEdit: this._beforeBeginEditCallback.bind(this),
             onAfterBeginEdit: this._afterBeginEditCallback.bind(this),
             onBeforeEndEdit: this._beforeEndEditCallback.bind(this),
@@ -5175,16 +5203,19 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return this._commitEdit();
     },
 
-    _tryStartInitialEditing(editingConfig: Required<IEditableListOption['editingConfig']>) {
+    _tryStartInitialEditing(options) {
+        const editingConfig: Required<IEditableListOption['editingConfig']> = this._getEditingConfig(options);
         const hasItems = !!(this._loadedItems && this._loadedItems.getCount() || this._items && this._items.getCount());
 
         if (editingConfig.autoAddOnInit && !!this._sourceController && !hasItems) {
+            this._createEditInPlaceController(options);
             return this._beginAdd({}, editingConfig.addPosition);
         } else if (editingConfig.item) {
-            if (!this._items.getRecordById(editingConfig.item.getKey())) {
-                return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
-            } else {
+            this._createEditInPlaceController(options);
+            if (this._items && this._items.getRecordById(editingConfig.item.getKey())) {
                 return this._beginEdit({ item: editingConfig.item });
+            } else {
+                return this._beginAdd({ item: editingConfig.item }, { addPosition: editingConfig.addPosition });
             }
         }
     },
@@ -5459,6 +5490,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
      * @private
      */
     _onItemActionClick(event: SyntheticEvent<MouseEvent>): void {
+        event.stopPropagation();
+    },
+
+    /**
+     * Обработчик mouseUp по операции, необходимый для предотвращения срабатывания mouseUp на записи в списке
+     * @param event
+     * @private
+     */
+    _onItemActionMouseUp(event: SyntheticEvent<MouseEvent>): void {
         event.stopPropagation();
     },
 
@@ -6024,6 +6064,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    // Уйдет когда будем наследоваться от baseControl
+    getItemsContainer() {
+        return this._getItemsContainer();
+    },
+
     _itemsContainerReadyHandler(_: SyntheticEvent<Event>, itemsContainerGetter: Function): void {
         this._getItemsContainer = itemsContainerGetter;
         this._viewReady = true;
@@ -6154,8 +6199,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
            :  shouldDisplayDownIndicator;
     },
 
-    _shouldDisplayPortionedSearch(): boolean {
-        return this._portionedSearchInProgress;
+    _shouldDisplayTopPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'up';
+    },
+
+    _shouldDisplayBottomPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'down';
     },
 
     _getLoadingIndicatorClasses(state?: string): string {

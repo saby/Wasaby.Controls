@@ -4,6 +4,7 @@ import {RecordSet} from 'Types/collection';
 import {Record} from 'Types/entity';
 import 'css!Controls/toolbars';
 import 'css!Controls/buttons';
+import 'css!Controls/CommonClasses';
 
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {
@@ -97,8 +98,6 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
     protected _getTemplateByItem(item: TItem): TemplateFunction {
         return getTemplateByItem(item, this._options);
     }
-
-    static _theme: string[] = ['Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
