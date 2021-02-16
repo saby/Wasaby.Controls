@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper ws-flexbox">
     <Controls.datePopup
             attr:class="controls-PeriodDialog_4"
             startValue="{{_startValue}}"
