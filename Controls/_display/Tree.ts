@@ -27,6 +27,7 @@ import { IDragPosition } from './interface/IDragPosition';
 import TreeDrag from './itemsStrategy/TreeDrag';
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { isEqual } from 'Types/object';
+import { IObservable } from 'Types/collection';
 
 export interface ISerializableState<S, T> extends IDefaultSerializableState<S, T> {
     _root: T;
@@ -45,6 +46,7 @@ interface IItemsFactoryOptions<S> {
     hasChildren?: boolean;
     node?: boolean;
     expanderTemplate?: TemplateFunction;
+    hasNodeWithChildes?: boolean;
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
@@ -91,6 +93,12 @@ function onCollectionChange<T>(
     // Check state of all nodes. They can change children count (include hidden by filter).
     this.instance._finishUpdateSession(session, false);
     this.instance._checkItemsDiff(session, nodes, state);
+
+    if (action === IObservable.ACTION_RESET || action === IObservable.ACTION_ADD) {
+        if (this.getExpanderVisibility() === 'hasChildren') {
+            this._recountHasNodeWithChildes();
+        }
+    }
 }
 
 /**
@@ -250,6 +258,12 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     private _expandedItems: CrudEntityKey[] = [];
     private _collapsedItems: CrudEntityKey[] = [];
 
+    /**
+     * Признак, означающий что есть узел с детьми
+     * @private
+     */
+    private _hasNodeWithChildes: boolean;
+
     constructor(options?: IOptions<S, T>) {
         super(validateOptions<S, T>(options));
 
@@ -267,6 +281,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
         if (options.collapsedItems instanceof Array) {
             this.setCollapsedItems(options.collapsedItems);
+        }
+
+        if (this.getExpanderVisibility() === 'hasChildren') {
+            this._recountHasNodeWithChildes();
         }
     }
 
@@ -314,6 +332,17 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
 
     getExpanderVisibility(): string {
         return this._$expanderVisibility;
+    }
+
+    setExpanderVisibility(expanderVisibility: string): void {
+        if (this._$expanderVisibility !== expanderVisibility) {
+            this._$expanderVisibility = expanderVisibility;
+            this._nextVersion();
+
+            if (expanderVisibility === 'hasChildren') {
+                this._recountHasNodeWithChildes();
+            }
+        }
     }
 
     getExpanderIcon(): string {
@@ -727,6 +756,7 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
         return function TreeItemsFactory(options: IItemsFactoryOptions<S>): T {
             options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
             options.expanderTemplate = this._$expanderTemplate;
+            options.hasNodeWithChildes = this._hasNodeWithChildes;
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
@@ -957,6 +987,37 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     // endregion
+
+    // region HasNodeWithChildes
+
+    private _recountHasNodeWithChildes(): void {
+        const itemsInRoot = this.getChildren(this.getRoot());
+
+        let hasNodeWithChildes = false;
+        for (let i = 0; i < itemsInRoot.getCount(); i++) {
+            const item = itemsInRoot.at(i);
+            if (item.isNode() && item.isHasChildren()) {
+                hasNodeWithChildes = true;
+                break;
+            }
+        }
+
+        this._setHasNodeWithChildes(hasNodeWithChildes);
+    }
+
+    protected _setHasNodeWithChildes(hasNodeWithChildes: boolean): void {
+        if (this._hasNodeWithChildes !== hasNodeWithChildes) {
+            this._hasNodeWithChildes = hasNodeWithChildes;
+            this.getViewIterator().each((item: TreeItem) => {
+                if (item.setHasNodeWithChildes) {
+                    item.setHasNodeWithChildes(hasNodeWithChildes);
+                }
+            });
+            this._nextVersion();
+        }
+    }
+
+    // endregion HasNodeWithChildes
 }
 
 Object.assign(Tree.prototype, {

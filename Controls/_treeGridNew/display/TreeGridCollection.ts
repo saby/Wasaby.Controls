@@ -162,6 +162,17 @@ export default class TreeGridCollection<
 
     // endregion
 
+    // region HasNodeWithChildes
+
+    protected _setHasNodeWithChildes(hasNodeWithChildes: boolean): void {
+        super._setHasNodeWithChildes(hasNodeWithChildes);
+        if (this.getFooter()) {
+            this.getFooter().setHasNodeWithChildes(hasNodeWithChildes);
+        }
+    }
+
+    // endregion HasNodeWithChildes
+
     protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {
         return new TreeGridFooterRow({
             ...options,
