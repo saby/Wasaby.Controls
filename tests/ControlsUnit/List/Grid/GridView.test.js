@@ -210,7 +210,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
 
          it('no headerContainer', function () {
-             gridView._children.header = null;
+            delete gridView._children.header;
             assert.equal(0, gridView.getHeaderHeight());
          });
 
@@ -276,8 +276,8 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                return false
             }
          };
-         gridView._children.header = undefined;
-         gridView._children.results = undefined;
+         delete gridView._children.header;
+         delete gridView._children.results;
 
          assert.equal(0, gridView.getHeaderHeight());
          assert.equal(0, gridView.getResultsHeight());
