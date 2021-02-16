@@ -252,6 +252,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
+        if (this._options.searchValue !== newOptions.searchValue) {
+            this._inputSearchValue = newOptions.searchValue;
+
+            if (!newOptions.searchValue && sourceChanged && this._searchController) {
+                this._updateFilter(this._searchController);
+            }
+        }
+
         const isFilterOptionsChanged = this._filterController.update(this._getFilterControllerOptions(newOptions));
 
         if (isFilterOptionsChanged) {
@@ -292,10 +300,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
                    this._processLoadError(error);
                    return error;
                })
-               .finally((result) => {
+               .finally(() => {
                    this._loading = false;
                    this._afterSourceLoad(sourceController, newOptions);
-                   return result;
                })
                .then((result) => {
                    return this._updateSearchController(newOptions).then(() => result);
@@ -309,9 +316,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         }
 
         if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
-            if (this._options.searchValue !== newOptions.searchValue) {
-                this._inputSearchValue = newOptions.searchValue;
-            }
             if (!methodResult) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
@@ -744,7 +748,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         const switchedStr = getSwitcherStrFromData(recordSet);
         this._misspellValue = switchedStr;
-        if (Browser._needChangeSearchValueToSwitchedString(recordSet)) {
+        if (this._searchController.needChangeSearchValueToSwitchedString(recordSet)) {
             this._setSearchValue(switchedStr);
         }
     }
@@ -842,11 +846,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._filterController.resetPrefetch();
         this._filter = this._filterController.getFilter() as QueryWhereExpression<unknown>;
         this._notify('filterChanged', [this._filter]);
-    }
-
-    private static _needChangeSearchValueToSwitchedString(recordSet: RecordSet): boolean {
-        const metaData = recordSet && recordSet.getMetaData();
-        return metaData ? metaData.returnSwitched : false;
     }
 
     static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {

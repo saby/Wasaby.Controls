@@ -433,6 +433,26 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(!browser._inputSearchValue);
             });
 
+            it('update source and reset searchValue', async () => {
+                let options = getBrowserOptions();
+                options.searchValue = 'testSearchValue';
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+                await browser._getSearchController(options);
+
+                assert.ok(browser._searchValue === 'testSearchValue');
+                assert.ok(browser._inputSearchValue === 'testSearchValue');
+                assert.ok(browser._filter.name === 'testSearchValue');
+
+                options = {...options};
+                options.source = new Memory();
+                options.searchValue = '';
+                browser._beforeUpdate(options);
+                assert.ok(!browser._inputSearchValue);
+                assert.ok(!browser._filter.name);
+            });
+
         });
 
         describe('operationsController', () => {

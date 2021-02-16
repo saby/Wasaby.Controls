@@ -693,7 +693,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             // Проблема возникает из-за того, что корень в модели меняется на callback загрузки данных
             // А при поиске запрос идёт за пределами списка
             if (searchValueChanged && newOptions.sourceController &&
-                newOptions.viewModelConstructor === this._options.viewModelConstructor) {
+                newOptions.viewModelConstructor === this._options.viewModelConstructor &&
+                newOptions.searchValue) {
                 viewModel.setRoot(newOptions.root);
             }
 
@@ -718,7 +719,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 this._updateExpandedItemsAfterReload = true;
             }
             if (newOptions.sourceController && !isEqual(newOptions.expandedItems, newOptions.sourceController.getExpandedItems())) {
-                updateSourceController = true;
+                newOptions.sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
         if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {

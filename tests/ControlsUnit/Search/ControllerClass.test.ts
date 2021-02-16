@@ -4,6 +4,7 @@ import {NewSourceController as SourceController} from 'Controls/dataSource';
 import {Memory, QueryWhereExpression} from 'Types/source';
 import {createSandbox, SinonSpy} from 'sinon';
 import {IControllerOptions} from 'Controls/_dataSource/Controller';
+import {RecordSet} from 'Types/collection';
 
 const getMemorySource = (): Memory => {
    return new Memory({
@@ -105,6 +106,14 @@ describe('Controls/search:ControllerClass', () => {
       };
       controllerClass._searchValue = 'testSearchValue';
       assert.deepEqual(controllerClass.getFilter(), resultFilter);
+   });
+
+   it('needChangeSearchValueToSwitchedString', () => {
+      const rs = new RecordSet();
+      rs.setMetaData({
+         returnSwitched: true
+      });
+      assert.ok(controllerClass.needChangeSearchValueToSwitchedString(rs));
    });
 
    describe('with hierarchy', () => {

@@ -144,6 +144,9 @@ describe('Controls/list_clean/BaseControl', () => {
 
         beforeEach(() => {
             baseControl = new BaseControl(baseControlCfg);
+            baseControl._children = {
+                scrollObserver: { startRegister: () => null }
+            };
         });
 
         afterEach(() => {
