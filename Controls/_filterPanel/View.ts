@@ -77,6 +77,7 @@ export default class View extends Control<IControlOptions> {
         FilterUtils.resetFilter(this._source);
         this._collapsedGroups = [];
         this._updateFilterParams();
+        this._setSource(this._source);
         this._notifyChanges();
     }
 

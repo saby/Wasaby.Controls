@@ -219,6 +219,11 @@ export default class ControllerClass {
       this._path = path;
    }
 
+   needChangeSearchValueToSwitchedString(items: RecordSet): boolean {
+      const metaData = items && items.getMetaData();
+      return metaData ? metaData.returnSwitched : false;
+   }
+
    private _getFilter(searchValue: string): QueryWhereExpression<unknown> {
       if (searchValue) {
          return this._getFilterWithSearchValue();
@@ -302,6 +307,14 @@ export default class ControllerClass {
       }
    }
 
+   private _searchStarted() {
+      this._searchInProgress = true;
+   }
+
+   private _searchEnded() {
+      this._searchInProgress = false;
+   }
+
    private static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {
      let root;
 
@@ -312,14 +325,6 @@ export default class ControllerClass {
      }
 
      return root;
-   }
-
-   private _searchStarted() {
-      this._searchInProgress = true;
-   }
-
-   private _searchEnded() {
-      this._searchInProgress = false;
    }
 }
 

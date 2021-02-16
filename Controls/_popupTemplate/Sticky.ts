@@ -8,7 +8,6 @@ import IBackgroundStyle, {IBackgroundStyleOptions} from 'Controls/_interface/IBa
 interface IStickyTemplateOptions extends IControlOptions, IPopupTemplateBaseOptions,
     IBackgroundStyle, IBackgroundStyleOptions {
     shadowVisible?: boolean;
-    backgroundStyle?: string;
 }
 
 /**
