@@ -56,7 +56,9 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _beforeMount: function (options) {
-        this._monthsPosition = new Date(options.position.getFullYear(), 0);
+        if (options.position) {
+            this._monthsPosition = new Date(options.position.getFullYear(), 0);
+        }
         _private.updateView(this, options);
     },
 
