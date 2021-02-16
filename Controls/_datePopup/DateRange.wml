@@ -1,6 +1,6 @@
 <div class="controls-PeriodDialog-DateRange">
    <div class="controls-PeriodDialog-DateRange__header controls-PeriodDialog-DateRange__header_theme-{{_options.theme}}">
-      <div class="controls-PeriodDialog-DateRange__year controls-PeriodDialog-DateRange__year_theme-{{_options.theme}}">{{_options.position.getFullYear()}}</div>
+      <div class="controls-PeriodDialog-DateRange__year controls-PeriodDialog-DateRange__year_theme-{{_options.theme}}">{{_monthsPosition.getFullYear()}}</div>
       <div class="controls-PeriodDialog-DateRange-header-weekdays controls-PeriodDialog-DateRange-header-weekdays_theme-{{_options.theme}}">
          <div for="weekday in _weekdaysCaptions"
               class="{{ _prepareCssClass('controls-PeriodDialog-DateRange-header-weekdays', null,
@@ -50,7 +50,8 @@
                  attachLoadTopTriggerToNull="{{ false }}"
                  name="monthList"
                  shadowStyle="datePopup"
-                 virtualPageSize="{{4}}"
+                 virtualPageSize="{{12}}"
+                 segmentSize="12"
                  position="{{_position}}"
                  displayedRanges="{{ displayedRanges }}"
                  viewMode="month"

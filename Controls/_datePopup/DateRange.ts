@@ -36,6 +36,7 @@ export default class DateRange extends Control<IControlOptions> {
     }
 
     protected _beforeMount(options): void {
+        this._monthsPosition = new Date(options.position.getFullYear(), 0);
         this._updateView(options);
     }
 
@@ -54,6 +55,9 @@ export default class DateRange extends Control<IControlOptions> {
     protected _monthObserverHandler(event, entries): void {
         // Меняем маркер выбранного месяца если месяц стал полностью видимым.
         if (entries.nativeEntry.intersectionRatio === 1) {
+            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
+                this._monthsPosition = new Date(entries.data.getFullYear(), 0);
+            }
             this._markedKey = this._dateToId(entries.data);
         }
     }
@@ -114,14 +118,12 @@ export default class DateRange extends Control<IControlOptions> {
    protected _onPositionChanged(e: Event, position: Date): void {
         this._position = position;
         this._notifyPositionChanged(position);
-        if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._monthsPosition = new Date(position.getFullYear(), 0);
-        }
     }
 
     protected _onMonthsPositionChanged(e: Event, position: Date): void {
-        if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._notifyPositionChanged(position);
+        if (position.getFullYear() !== this._position.getFullYear()) {
+            const newPosition = new Date(position.getFullYear(), 0);
+            this._notifyPositionChanged(newPosition);
         }
     }
 
@@ -144,14 +146,7 @@ export default class DateRange extends Control<IControlOptions> {
                 options.ranges.months[0] === 1));
         if (this._position !== options.position) {
             this._position = options.position;
-            if (!this._monthsPosition || this._position.getFullYear() !== this._monthsPosition.getFullYear()) {
-                this._monthsPosition = new Date(this._position.getFullYear(), 0);
-            }
             this._markedKey = this._dateToId(this._position);
-        }
-        if (this._position?.getFullYear() !== this._monthsPosition?.getFullYear()) {
-            const newPosition = new Date(this._monthsPosition.getFullYear(), 0);
-            this._notifyPositionChanged(newPosition);
         }
     }
 
