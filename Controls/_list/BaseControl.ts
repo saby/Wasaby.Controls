@@ -2898,7 +2898,9 @@ const _private = {
      * не должен ставить чекбокс
      */
     isItemsSelectionAllowed(options: object): boolean {
-        return options.selectedKeysCount !== null || options.selectedKeys.length;
+        return options.selectedKeysCount !== null ||
+               options.selectedKeys.length ||
+               options.multiSelectVisibility !== 'hidden';
     },
 
     /**

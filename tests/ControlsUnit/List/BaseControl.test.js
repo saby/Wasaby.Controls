@@ -4518,7 +4518,7 @@ define([
                   assert.equal(item, instance._selectionController.getAnimatedItem());
                });
             });
-             it('_onItemSwipe() animated item null', () => {
+             it('_onItemSwipe() animated item with multiSelectVisibility: "visible"', () => {
                  return initTest({
                      multiSelectVisibility: 'visible',
                      selectedKeysCount: null,
@@ -4546,9 +4546,41 @@ define([
                      lists.BaseControl._private.updateItemActions(instance, instance._options);
                      const item = instance._listViewModel.at(0);
                      instance._onItemSwipe({}, item, swipeEvent);
-                     assert.isNull(instance._selectionController.getAnimatedItem());
+                     assert.ok(instance._selectionController.getAnimatedItem() === item);
                  });
              });
+
+            it('_onItemSwipe() animated item null', () => {
+               return initTest({
+                  multiSelectVisibility: 'hidden',
+                  selectedKeysCount: null,
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  itemActions: [
+                     {
+                        id: 1,
+                        showType: 2,
+                        'parent@': true
+                     },
+                     {
+                        id: 2,
+                        showType: 0,
+                        parent: 1
+                     },
+                     {
+                        id: 3,
+                        showType: 0,
+                        parent: 1
+                     }
+                  ]
+               }).then(() => {
+                  lists.BaseControl._private.createSelectionController(instance, instance._options);
+                  lists.BaseControl._private.updateItemActions(instance, instance._options);
+                  const item = instance._listViewModel.at(0);
+                  instance._onItemSwipe({}, item, swipeEvent);
+                  assert.isNull(instance._selectionController.getAnimatedItem());
+               });
+            });
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
