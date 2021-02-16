@@ -9,29 +9,6 @@ import {EventUtils} from 'UI/Events';
 import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
 
-const _private = {
-    updateView: function (self, options) {
-        self._rangeModel.update(options);
-        self._monthSelectionEnabled = !options.readOnly && (options.selectionType === 'range' ||
-            (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.ranges) &&
-                options.ranges.months[0] === 1));
-        if (self._position !== options.position) {
-            self._position = options.position;
-            if (!self._monthsPosition || self._position.getFullYear() !== self._monthsPosition.getFullYear()) {
-                self._monthsPosition = new Date(self._position.getFullYear(), 0);
-            }
-            this._markedKey = self._dateToId(self._position);
-        }
-        if (self._position?.getFullYear() !== self._monthsPosition?.getFullYear()) {
-            const newPosition = new Date(self._monthsPosition.getFullYear(), 0);
-            _private.notifyPositionChanged(self, newPosition);
-        }
-    },
-
-    notifyPositionChanged: function(self, position) {
-        self._notify('positionChanged', [position]);
-    }
-};
 /**
  * Component that allows you to select periods of multiple days.
  *
@@ -184,9 +161,9 @@ export default class DateRange extends Control<IControlOptions> {
             this._position = options.position;
             this._markedKey = this._dateToId(this._position);
         }
-        if (!self._singleDayHover) {
-            self._hoveredStartValue = options.hoveredStartValue;
-            self._hoveredEndValue = options.hoveredEndValue;
+        if (!this._singleDayHover) {
+            this._hoveredStartValue = options.hoveredStartValue;
+            this._hoveredEndValue = options.hoveredEndValue;
         }
     }
 
