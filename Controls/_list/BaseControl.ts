@@ -2891,7 +2891,9 @@ const _private = {
      * не должен ставить чекбокс
      */
     isItemsSelectionAllowed(options: object): boolean {
-        return options.selectedKeysCount !== null || options.selectedKeys.length;
+        return options.selectedKeysCount !== null ||
+               options.selectedKeys.length ||
+               options.multiSelectVisibility !== 'hidden';
     },
 
     /**
@@ -5429,6 +5431,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     /**
+     * Обработчик mouseUp по операции, необходимый для предотвращения срабатывания mouseUp на записи в списке
+     * @param event
+     * @private
+     */
+    _onItemActionMouseUp(event: SyntheticEvent<MouseEvent>): void {
+        event.stopPropagation();
+    },
+
+    /**
      * Обработчик событий, брошенных через onResult в выпадающем/контекстном меню
      * @param eventName название события, брошенного из Controls/menu:Popup.
      * Варианты значений itemClick, applyClick, selectorDialogOpened, pinClick, menuOpened
@@ -6060,8 +6071,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
            :  shouldDisplayDownIndicator;
     },
 
-    _shouldDisplayPortionedSearch(): boolean {
-        return this._portionedSearchInProgress;
+    _shouldDisplayTopPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'up';
+    },
+
+    _shouldDisplayBottomPortionedSearch(): boolean {
+        return this._portionedSearchInProgress && this._loadingIndicatorState === 'down';
     },
 
     _getLoadingIndicatorClasses(state?: string): string {
