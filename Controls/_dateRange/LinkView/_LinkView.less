@@ -2,6 +2,7 @@
    display: inline-block;
    .user-select();
    white-space: nowrap;
+   width: 100%;
 }
 
 .controls-DateLinkView_theme-@{themeName} {
@@ -68,6 +69,7 @@
    align-items: flex-end;
    flex-grow: 1;
    text-align: center;
+   width: 100%;
 }
 
 .controls-DateLinkView__value-wrapper-minWidth_theme-@{themeName} {
@@ -76,6 +78,10 @@
 
 .controls-DateLinkView__value_theme-@{themeName} {
    font-weight: @font-weight_dateRangeSelector;
+}
+
+.controls-DateLinkView__value {
+   .text-overflow();
 }
 
 .controls-DateLinkView__resetButton_theme-@{themeName} {
