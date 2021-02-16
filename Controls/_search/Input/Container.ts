@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_search/Input/Container';
 import {SyntheticEvent} from 'UI/Vdom';
 import SearchResolver from 'Controls/_search/SearchResolver';
-import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
 
 export interface ISearchInputContainerOptions extends IControlOptions {
@@ -105,7 +104,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
             searchResolver.clearTimer();
          }
       }
-      searchResolver.setSearchStarted(!!this._value);
+      searchResolver.setSearchStarted(this._value && this._value.length >= this._options.minSearchLength);
    }
 
    private _resolve(value: string, event: 'searchReset' | 'search'): void {
