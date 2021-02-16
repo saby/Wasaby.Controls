@@ -76,8 +76,6 @@ class Checkbox extends Control<ICheckboxOptions> implements ICaption,
       }
    }
 
-   static _theme: string[] = ['Controls/Classes'];
-
    static getDefaultOptions(): object {
       return {
          value: false,

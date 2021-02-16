@@ -5800,11 +5800,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.updateItemActionsOnce(this, this._options);
         }
 
-        if (this._documentDragging && !this._dndListController?.isDragging()) {
-            this._insideDragging = true;
-            this._notify('_removeDraggingTemplate', [], {bubbling: true});
-            this._listViewModel.setDragOutsideList(false);
-
+        if (this._documentDragging) {
             this._dragEnter(this._getDragObject());
         }
 
@@ -6357,6 +6353,15 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _dragEnter(dragObject): void {
+        this._insideDragging = true;
+        this._notify('_removeDraggingTemplate', [], {bubbling: true});
+        this._listViewModel.setDragOutsideList(false);
+
+        // Не нужно начинать dnd, если и так идет процесс dnd
+        if (this._dndListController?.isDragging()) {
+            return;
+        }
+
         // если мы утащим в другой список, то в нем нужно создать контроллер
         if (!this._dndListController) {
             this._dndListController = _private.createDndListController(this._listViewModel, this._options);

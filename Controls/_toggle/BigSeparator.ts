@@ -55,7 +55,6 @@ class BigSeparator extends Control<IBigSeparatorOptions> implements ICheckable, 
       this._notify('valueChanged', [!this._options.value]);
    }
 
-   static _theme: string[] = ['Controls/Classes'];
    static getDefaultOptions(): IBigSeparatorOptions {
       return {
          value: false,

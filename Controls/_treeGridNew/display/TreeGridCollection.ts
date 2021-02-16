@@ -133,6 +133,7 @@ export default class TreeGridCollection<
             this._prepareLadder(this._$ladderProperties, this._$columns);
             this._updateItemsLadder();
         }
+        this._$results = null;
     }
 
     protected _getItemsFactory(): ItemsFactory<T> {
