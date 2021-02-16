@@ -5,6 +5,7 @@ import StringValueConverter from 'Controls/_input/DateTime/StringValueConverter'
 import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import {EventUtils} from 'UI/Events';
 import {Popup as PopupUtil} from 'Controls/dateUtils';
+import 'css!Controls/input';
 
 import template = require('wml!Controls/_input/Date/Picker/Picker');
 
@@ -52,7 +53,7 @@ class Picker extends Control<IControlOptions> {
             ...PopupUtil.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
-            className: 'controls-PeriodDialog__picker_theme-' + this._options.theme,
+            className: 'controls-PeriodDialog__picker',
             templateOptions: {
                 ...PopupUtil.getTemplateOptions(this),
                 startValue: value,
@@ -108,7 +109,7 @@ class Picker extends Control<IControlOptions> {
         return coreMerge({}, IDateTimeMask.getOptionTypes());
     }
 
-    static _theme: string[] = ['Controls/Classes', 'Controls/input'];
+    static _theme: string[] = ['Controls/Classes'];
 }
 
 Object.defineProperty(Picker, 'defaultProps', {
