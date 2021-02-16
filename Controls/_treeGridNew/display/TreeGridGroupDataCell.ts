@@ -12,17 +12,28 @@ export default class TreeGridGroupDataCell<T extends Model>
         GridGroupCellMixin.call(this, options);
     }
 
+    // region groupItem
+
     getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
         return 'controls-ListView__groupContent' +
             (expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '');
     }
 
+    // endregion groupItem
+
+    // region Cell
+
+    protected _getWrapperSeparatorClasses(theme: string): string {
+        let classes = '';
+        classes += ' controls-Grid__no-rowSeparator';
+        classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
+        return classes;
+    }
+
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
         let classes = '';
-        const preparedStyle = style;
-
-        classes += ` controls-Grid__row-cell controls-Grid__cell_${preparedStyle}`;
-        classes += ` controls-Grid__row-cell_${preparedStyle}_theme-${theme}`;
+        classes += ` controls-Grid__row-cell controls-Grid__cell_${style}`;
+        classes += ` controls-Grid__row-cell_${style}_theme-${theme}`;
         classes += ` controls-Grid__row-cell_small_min_height-theme-${theme} `;
 
         return classes;
@@ -31,4 +42,6 @@ export default class TreeGridGroupDataCell<T extends Model>
     protected _getVerticalPaddingClasses(theme: string): string {
         return '';
     }
+
+    // endregion Cell
 }

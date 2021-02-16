@@ -1,27 +1,29 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeTypeProperty/TreeGridView/TreeGridView';
 import {Memory} from 'Types/source';
-import {Gadgets} from '../../DemoHelpers/DataCatalog';
+import {data} from '../resourses';
+import {TColspanCallbackResult} from 'Controls/gridNew';
+import {Model} from 'Types/entity';
+
+const NODE_TYPE_PROPERTY = 'nodeType';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: Memory;
-    protected _columns: unknown[] = Gadgets.getGridColumnsForFlat();
+    protected _nodeTypeProperty: string = NODE_TYPE_PROPERTY;
 
     protected _beforeMount(): void {
         this._viewSource = new Memory({
             keyProperty: 'id',
-            data: this._prepareData()
+            data
         });
     }
 
-    private _prepareData(): any {
-        return Gadgets.getFlatData().map((data) => {
-            if ([1, 2, 3, 4, 5].indexOf(data.id) !== -1) {
-                data.nodeType = 'group';
-            }
-            return data;
-        });
+    protected _colspanCallback(item: Model, column, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+        if (item.get(NODE_TYPE_PROPERTY) === 'group' && columnIndex === 0) {
+            return 3;
+        }
+        return 1;
     }
 
     static _styles: string[] = ['Controls-demo/Controls-demo'];

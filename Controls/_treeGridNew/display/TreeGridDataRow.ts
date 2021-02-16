@@ -126,6 +126,19 @@ export default class TreeGridDataRow<T extends Model>
     }
 
     // endregion overrides
+
+    // region treeItem
+
+    // Убираем ExpanderPadding для подуровней TreeGridGroupRow
+    shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
+        let should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
+        if (should && this._$parent['[Controls/treeGrid:TreeGridGroupDataRow]']) {
+            should = false;
+        }
+        return should;
+    }
+
+    // endregion treeItem
 }
 
 Object.assign(TreeGridDataRow.prototype, {
