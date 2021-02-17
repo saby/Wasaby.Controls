@@ -168,8 +168,15 @@ interface IPosition {
          return position;
       },
 
-      calculateOverflowModePosition: function(popupCfg, property, targetCoords, position, positionOverflow) {
+      calculateOverflowModePosition: function(popupCfg, property, targetCoords, position, positionOverflow, direction) {
          _private.moveContainer(popupCfg, position, property, positionOverflow);
+
+         // Если после перепозиционирования попап всё равно не влезает, то уменьшаем ему высоту до высоты окна
+         const newOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+         _private.restrictContainer(position, property, popupCfg, newOverflow);
+
+         // Фиксируем высоту, т.к. некоторые браузеры(ie) не могут понять высоту родителя без заданного height
+         position[property] = popupCfg.sizes[property];
          return position;
       },
 
@@ -196,7 +203,7 @@ interface IPosition {
             if (popupCfg.fittingMode[direction] === 'fixed') {
                resultPosition = _private.calculateFixedModePosition(popupCfg, property, targetCoords, position, positionOverflow);
             } else if (popupCfg.fittingMode[direction] === 'overflow') {
-               resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow);
+               resultPosition = _private.calculateOverflowModePosition(popupCfg, property, targetCoords, position, positionOverflow, direction);
             } else {
                _private.invertPosition(popupCfg, direction);
                const revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
@@ -391,17 +398,6 @@ interface IPosition {
          }
          if (popupCfg.config.height) {
             position.height = popupCfg.config.height;
-         } else if (position.maxHeight) {
-
-            /*
-               Если мы ограничиваем высоту при overflow нужно проставлять height,
-               ie не может определить высоту родительского контейнера без явного задания height
-             */
-            const maxHeight = position.maxHeight;
-            const containerHeight = popupCfg.sizes.height;
-            if (containerHeight > maxHeight) {
-               position.height = maxHeight;
-            }
          }
       },
 
