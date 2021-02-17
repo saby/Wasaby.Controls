@@ -228,7 +228,7 @@ const _private = {
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
-        const items = viewModel.getItems();
+        const items = viewModel.getCollection();
         const dispItem = viewModel.getItemBySourceKey(nodeKey);
         const loadedChildren = dispItem && (self._options.useNewModel ?
             viewModel.getChildren(dispItem, items).getCount() :
