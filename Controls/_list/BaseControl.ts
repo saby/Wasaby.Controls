@@ -676,7 +676,7 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean) {
+    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
         const scrollCallback = (index, result) => {
 
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
@@ -5075,22 +5075,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
         // Завершение запуска редактирования по месту проиходит после построения редактора.
-        // Исключение - запуск редактирования при построении списка. В таком случае, уведомлений о запуске редактирования
-        // происходить не должно, а дождаться построение редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
+        // Исключение - запуск редактирования при построении списка. В таком случае,
+        // уведомлений о запуске редактирования происходить не должно, а дождаться построение
+        // редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
         return new Promise((resolve) => {
-            /*
-             * TODO: KINGO
-             * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-             * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-             * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-             * _canUpdateItemsActions приведет к показу неактуальных операций.
-             */
+            // Операции над записью должны быть обновлены до отрисовки строки редактирования,
+            // иначе будет "моргание" операций.
             _private.updateItemActions(this, this._options, item);
 
             if (this._isMounted) {
                 this._resolveAfterBeginEdit = resolve;
             } else {
-                resolve()
+                resolve();
             }
         }).then(() => {
             // Редактирование может запуститься при построении.
@@ -5112,7 +5108,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._isMounted) {
                 return _private.scrollToItem(this, item.contents.getKey(), false, false);
             }
-        })
+        });
     },
 
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean, force: boolean = false) {
