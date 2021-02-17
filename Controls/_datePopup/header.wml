@@ -121,5 +121,6 @@
    />
 
    <Controls.popupTemplate:CloseButton attr:title="{[Закрыть]}" on:click="_closeClick()" viewMode="linkButton"
-                                       attr:class="controls-PeriodDialog__closeButton_theme-{{theme}}"/>
+                                       attr:class="controls-PeriodDialog__closeButton
+                                                   controls-PeriodDialog__closeButton_theme-{{theme}}"/>
 </div>
