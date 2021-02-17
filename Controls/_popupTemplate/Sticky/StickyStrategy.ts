@@ -391,6 +391,17 @@ interface IPosition {
          }
          if (popupCfg.config.height) {
             position.height = popupCfg.config.height;
+         } else if (detection.isIE) {
+
+            /*
+               Если мы ограничиваем высоту при overflow нужно проставлять height,
+               ie не может определить высоту родительского контейнера без явного задания height
+             */
+            const maxHeight = position.maxHeight;
+            const containerHeight = popupCfg.sizes.height;
+            if (containerHeight > maxHeight) {
+               position.height = maxHeight;
+            }
          }
       },
 
