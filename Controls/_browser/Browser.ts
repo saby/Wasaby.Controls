@@ -36,6 +36,7 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
+import {isEqual} from 'Types/object';
 
 type Key = string|number|null;
 
@@ -739,7 +740,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _updateFilter(searchController: SearchController): void {
         const filter = searchController.reset(true);
-        this._filterChanged(null, filter);
+        if (!isEqual(this._filter, filter)) {
+            this._filterChanged(null, filter);
+        }
         this._setSearchValue('');
     }
 
