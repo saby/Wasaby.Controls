@@ -169,6 +169,7 @@ export default class Application extends Control<IApplication> {
       }
       window.document.addEventListener('resize', this._resizePage.bind(this))
       window.document.addEventListener('scroll', this._scrollPage.bind(this))
+      window.document.addEventListener('keydown', this._keyDownHandler.bind(this))
       const channelPopupManager = Bus.channel('popupManager');
       channelPopupManager.subscribe('managerPopupCreated', this._popupCreatedHandler, this);
       channelPopupManager.subscribe('managerPopupDestroyed', this._popupDestroyedHandler, this);
