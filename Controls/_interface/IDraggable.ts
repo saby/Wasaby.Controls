@@ -19,7 +19,7 @@ export default interface IDraggable {
 
 /**
  * @name Controls/_interface/IDraggable#itemsDragNDrop
- * @cfg {Boolean} Определяет, может ли пользователь перемещать элементы в списке с помощью drag'n'drop. Когда опция установлена в значение true, перемещение разрешено.
+ * @cfg {Boolean} Определяет, может ли пользователь перемещать элементы в списке с помощью {@link /doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/ drag'n'drop}. Когда опция установлена в значение true, перемещение разрешено.
  * @default false
  * @example
  * <pre class="brush: html; highlight: [5]">
@@ -50,7 +50,7 @@ export default interface IDraggable {
  * @name Controls/_interface/IDraggable#draggingTemplate
  * @cfg {Function} Шаблон перемещаемого элемента.
  * @default undefined
- * @remark В процессе перемещения рядом с курсором отображается эскиз перемещаемого объекта.
+ * @remark В процессе перемещения рядом с курсором отображается эскиз перемещаемого объекта. Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/ здесь}.
  * @example
  * В следующем примере показано, как использовать базовый шаблон перемещения элементов {@link Controls/dragnDrop:DraggingTemplate}.
  * <pre class="brush: html; highlight: [5,7,8,9,10,11,12,13]">
