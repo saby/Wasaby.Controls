@@ -454,7 +454,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#columnSeparatorSize
- * @cfg {Controls/_grid/interface/IGridControl/ColumnSeparatorSize.typedef} Ширина линии-разделителя колонок.
+ * @cfg {Controls/_grid/interface/IGridControl/ColumnSeparatorSize.typedef} Ширина {@link /doc/platform/developmentapl/interface-development/controls/list/grid/line-separator/#column линии-разделителя колонок}.
  * @remark В значении null линия-разделители не отображается.
  * @default null
  * @see rowSeparatorSize
@@ -470,7 +470,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#resultsTemplate
- * @cfg {Function} Шаблон отображения строки итогов.
+ * @cfg {Function} Шаблон отображения {@link /doc/platform/developmentapl/interface-development/controls/list/grid/results/ строки итогов}.
  * @default undefined
  * @demo Controls-demo/grid/Results/ResultsTemplate/Index
  * @markdown
