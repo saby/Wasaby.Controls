@@ -4720,7 +4720,8 @@ define([
                   }]
                }),
                isMarked: () => false,
-               isSwiped: () => false
+               isSwiped: () => false,
+               isEditing: () => false
             };
             instance.saveOptions(cfg);
             instance._scrollController = {
