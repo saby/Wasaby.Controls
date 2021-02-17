@@ -73,7 +73,7 @@ export interface IItemActionsOptions {
     itemActions?: IItemAction[];
 
     /**
-     * @cfg {Controls/itemActions.TItemActionsPosition} Позиционирование панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ опциями записи}.
+     * @cfg {Controls/itemActions.TItemActionsPosition} Позиционирование панели {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ опций записи}.
      * @remark
      * Пример использования значения custom можно посмотреть в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#custom-position статье}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Outside/Index Панель с опциями записи отображается под элементом.
