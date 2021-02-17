@@ -1,6 +1,7 @@
 import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
-import {GridCell, IItemTemplateParams} from "Controls/gridNew";
+import {GridCell, IGridDataCellOptions, IItemTemplateParams} from "Controls/gridNew";
 import { Model } from 'Types/entity';
+import {IColumn} from "Controls/_grid/interface/IColumn";
 
 export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataRow<T>{
     '[Controls/treeGrid:TreeGridGroupDataRow]': boolean;
@@ -9,7 +10,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
     readonly DraggableItem: boolean = false;
     readonly GroupNode: boolean = true;
 
-    // region Row
+    // region overrides
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
         let classes = super.getItemClasses(params);
@@ -17,25 +18,21 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
         return classes;
     }
 
-    // endregion Row
-
-    // region Expander
-
-    getExpanderIcon(expanderIcon?: string): string {
-        return 'hiddenNode';
-    }
-
-    getExpanderSize(expanderSize?: string): string {
-        return 's';
+    setExpanded(expanded: boolean, silent?: boolean): void {
+        super.setExpanded(expanded, silent);
+        this._reinitializeColumns();
     }
 
     shouldDisplayExpanderBlock(column: GridCell<T, TreeGridDataRow<T>>): boolean {
         return false;
     }
 
-    // endregion Expander
-
-    // region treeItem
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGridDataCellOptions<T>> {
+        return {
+            ...super._getColumnFactoryParams(column, columnIndex),
+            isExpanded: this.isExpanded()
+        };
+    }
 
     // Смещаем все дочерние уровни на -1
     getLevel(): number {
@@ -43,7 +40,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
         return level - 1;
     }
 
-    // endregion treeItem
+    // endregion overrides
 }
 
 Object.assign(TreeGridGroupDataRow.prototype, {

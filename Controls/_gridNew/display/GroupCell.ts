@@ -1,59 +1,67 @@
-import {OptionsToPropertyMixin} from 'Types/entity';
-import {mixin} from 'Types/util';
+import { TemplateFunction } from 'UI/Base';
+import { OptionsToPropertyMixin } from 'Types/entity';
+import { mixin } from 'Types/util';
 
-import {IColspanParams, IColumn} from 'Controls/_grid/interface/IColumn';
-import {default as GridGroupCellMixin} from 'Controls/_gridNew/display/mixins/GroupCell';
+import { IColspanParams, IColumn } from 'Controls/_grid/interface/IColumn';
+import { default as GridGroupCellMixin } from 'Controls/_gridNew/display/mixins/GroupCell';
 
 import Cell from './Cell';
-import GroupItem from './GroupItem';
+import GroupRow from './GroupRow';
 
 export interface IOptions<T> {
-    owner: GroupItem<T>;
+    owner: GroupRow<T>;
     column: IColumn;
-    columns: IColumn[];
+    columnsLength: number;
+    contents: string;
 }
 
-const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
+const GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
 
 export default class GroupCell<T>
-    extends mixin<Cell<any, GroupItem<any>>, GridGroupCellMixin<any>>(Cell, GridGroupCellMixin) {
-    protected _$columns: IColumn[];
+    extends mixin<Cell<any, GroupRow<any>>, GridGroupCellMixin<any>>(Cell, GridGroupCellMixin) {
+    protected _$columnsLength: number;
+    protected _$contents: string;
 
     constructor(options?: IOptions<T>) {
         super(options);
         OptionsToPropertyMixin.call(this, options);
     }
 
-    getWrapperClasses(): string {
-        return '';
-    }
+    // region overrides
 
     getWrapperStyles(): string {
         return this.getColspan();
-    }
-
-    getContentClasses(): string {
-        return '';
     }
 
     getContentStyles(): string {
         return 'display: contents;';
     }
 
-    // region Аспект "Объединение колонок"
     _getColspanParams(): IColspanParams {
         const hasMultiSelect = this._$owner.hasMultiSelectColumn();
         const ladderStickyColumn = this._$owner.getStickyColumn();
         const ladderColumnLength = ladderStickyColumn ? ladderStickyColumn.property.length : 0;
         const startColumn = hasMultiSelect ? 2 : 1;
-        const endColumn = startColumn + this.getOwner().getColumnsConfig().length + ladderColumnLength;
+        const endColumn = startColumn + this._$columnsLength + ladderColumnLength;
         return {
             startColumn,
             endColumn
         };
     }
 
-    // endregion
+    getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
+        return GROUP_CONTENT_TEMPLATE;
+    }
+
+    // endregion overrides
+
+    // region Аспект "Рендер"
+
+    getDefaultDisplayValue(): string {
+        return this._$contents;
+    }
+
+    // endregion Аспект "Рендер"
 
     // region Аспект "Ячейка группы"
 
@@ -78,25 +86,17 @@ export default class GroupCell<T>
         return classes;
     }
 
-    // endregion Aspect GridGroupCellMixin
-
-    getCaption(): T {
-        return this._$owner.getCaption();
-    }
-
     isExpanded(): boolean {
         return this._$owner.isExpanded();
-    }
-
-    getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
-        return this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE;
     }
 
     protected _shouldFixGroupOnColumn(columnAlignGroup: number, textVisible: boolean): boolean {
         return textVisible !== false &&
             columnAlignGroup !== undefined &&
-            columnAlignGroup < this._$columns.length - (this._$owner.hasMultiSelectColumn() ? 1 : 0);
+            columnAlignGroup < this._$columnsLength - (this._$owner.hasMultiSelectColumn() ? 1 : 0);
     }
+
+    // endregion Аспект "Ячейка группы"
 }
 
 Object.assign(GroupCell.prototype, {
@@ -104,5 +104,6 @@ Object.assign(GroupCell.prototype, {
     _moduleName: 'Controls/gridNew:GridGroupCell',
     _instancePrefix: 'grid-group-cell-',
     _$owner: null,
-    _$columns: null
+    _$columnsLength: null,
+    _$contents: null
 });

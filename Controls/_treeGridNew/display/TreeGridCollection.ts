@@ -9,7 +9,7 @@ import {
     ITreeCollectionOptions, IItemActionsTemplateConfig
 } from 'Controls/display';
 import {
-    GridGroupItem,
+    GridGroupRow,
     GridMixin,
     IGridCollectionOptions
 } from 'Controls/gridNew';
@@ -163,8 +163,8 @@ export default class TreeGridCollection<
         };
     }
 
-    protected _getGroupItemConstructor(): new() => GridGroupItem<T> {
-        return GridGroupItem;
+    protected _getGroupItemConstructor(): new() => GridGroupRow<T> {
+        return GridGroupRow;
     }
     setEditing(editing: boolean): void {
         super.setEditing(editing);

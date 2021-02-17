@@ -91,7 +91,7 @@ import GridResultsCell, {IOptions as IGridResultsCellOptions} from 'Controls/_gr
 
 import GridFooterRow, {IOptions as IGridFooterRowOptions} from 'Controls/_gridNew/display/FooterRow';
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from 'Controls/_gridNew/display/FooterCell';
-import GridGroupItem, {IOptions as IGridGroupItemOptions} from 'Controls/_gridNew/display/GroupItem';
+import GridGroupRow, {IOptions as IGridGroupRowOptions} from 'Controls/_gridNew/display/GroupRow';
 import GridGroupCell, {IOptions as IGridGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
 
 import { IDisplaySearchValueOptions, IDisplaySearchValue } from 'Controls/_gridNew/display/interface/IDisplaySearchValue';
@@ -111,7 +111,7 @@ register('Controls/gridNew:GridDataCell', GridDataCell, {instantiate: false});
 register('Controls/gridNew:GridFooterCell', GridFooterCell, {instantiate: false});
 register('Controls/gridNew:GridResultsCell', GridResultsCell, {instantiate: false});
 register('Controls/gridNew:GridGroupCell', GridGroupCell, {instantiate: false});
-register('Controls/gridNew:GridGroupItem', GridGroupItem, {instantiate: false});
+register('Controls/gridNew:GridGroupRow', GridGroupRow, {instantiate: false});
 
 export {
     GridCollection, IGridCollectionOptions,
@@ -131,7 +131,7 @@ export {
     GridResultsCell, IGridResultsCellOptions,
     GridFooterRow, IGridFooterRowOptions,
     GridFooterCell, IGridFooterCellOptions,
-    GridGroupItem, IGridGroupItemOptions,
+    GridGroupRow, IGridGroupRowOptions,
     GridGroupCell, IGridGroupCellOptions,
     IDisplaySearchValueOptions, IDisplaySearchValue
 }

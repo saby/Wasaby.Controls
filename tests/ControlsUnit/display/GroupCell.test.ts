@@ -5,7 +5,7 @@ import { IColumn } from 'Controls/grid';
 
 import {
     GridGroupCell as GroupCell,
-    GridGroupItem as GroupItem
+    GridGroupRow as GroupItem
 } from 'Controls/gridNew';
 
 describe('Controls/_display/GroupCell', () => {

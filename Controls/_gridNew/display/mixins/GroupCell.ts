@@ -5,23 +5,17 @@ export default abstract class GroupCell<T> {
 
     protected _$owner: Row<T>;
 
-    getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
-        const leftPadding = this._$owner.getLeftPadding().toLowerCase();
-        const rightPadding = this._$owner.getRightPadding().toLowerCase();
-
-        return 'controls-ListView__groupContent' +
-            (expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '') +
-            ` controls-Grid__groupContent__spacingLeft_${leftPadding}_theme-${theme}` +
-            ` controls-Grid__groupContent__spacingRight_${rightPadding}_theme-${theme}`;
+    getContentClasses(theme: string): string {
+        return 'controls-ListView__groupContent';
     }
 
-    getGroupCaptionClasses(theme: string): string {
+    getCenterContentClasses(theme: string): string {
         return 'controls-ListView__groupContent-text ' +
             `controls-ListView__groupContent-text_theme-${theme} ` +
             `controls-ListView__groupContent-text_default_theme-${theme} `;
     }
 
-    getGroupExpanderClasses(expanderVisible: boolean, expanderAlign: string, theme: string): string {
+    getExpanderClasses(expanderVisible: boolean, expanderAlign: string, theme: string): string {
         let classes = '';
         const expander = expanderAlign === 'right' ? 'right' : 'left';
         if (expanderVisible !== false) {

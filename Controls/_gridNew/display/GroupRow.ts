@@ -11,14 +11,15 @@ import {
 import Row from './Row';
 import Cell from './Cell';
 import Collection from './Collection';
-import {IColumn} from "Controls/_grid/interface/IColumn";
-import {TColspanCallbackResult} from "Controls/_gridNew/display/mixins/Grid";
+import {IColumn} from 'Controls/grid';
+import {TColspanCallbackResult} from 'Controls/_gridNew/display/mixins/Grid';
+import {IOptions as IGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
 
 export interface IOptions<T> extends IBaseCollectionItemOptions<T>, IExpandableMixinOptions {
     owner: Collection<T>;
 }
 
-export default class GroupItem<T> extends mixin<
+export default class GroupRow<T> extends mixin<
     Row<any>,
     ExpandableMixin
     >(
@@ -31,7 +32,7 @@ export default class GroupItem<T> extends mixin<
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly DraggableItem: boolean = false;
-    readonly '[Controls/_display/grid/GroupItem]': true;
+    readonly '[Controls/_display/grid/GroupRow]': true;
 
     protected _$columnItems: Array<Cell<T>>;
     protected _groupTemplate: TemplateFunction|string;
@@ -81,10 +82,6 @@ export default class GroupItem<T> extends mixin<
         return this._$owner.getStickyColumn();
     }
 
-    getCaption(): T {
-        return this.contents;
-    }
-
     getItemClasses(): string {
         return 'controls-ListView__itemV controls-Grid__row controls-ListView__group' +
                 (this.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group');
@@ -113,12 +110,20 @@ export default class GroupItem<T> extends mixin<
             this._processStickyLadderCells();
         }
     }
+
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGroupCellOptions<T>> {
+        return {
+            ...super._getColumnFactoryParams(column, columnIndex),
+            columnsLength: this._$columns.length,
+            contents: this.getContents()
+        };
+    }
 }
 
-Object.assign(GroupItem.prototype, {
+Object.assign(GroupRow.prototype, {
     '[Controls/_display/GroupItem]': true,
-    '[Controls/_display/grid/GroupItem]': true,
-    _moduleName: 'Controls/gridNew:GridGroupItem',
+    '[Controls/_display/grid/GroupRow]': true,
+    _moduleName: 'Controls/gridNew:GridGroupRow',
     _cellModule: 'Controls/gridNew:GridGroupCell',
     _instancePrefix: 'grid-group-item-',
     _$columns: null

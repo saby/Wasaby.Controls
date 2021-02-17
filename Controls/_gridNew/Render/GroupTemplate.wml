@@ -1,10 +1,10 @@
-<div class="{{ gridColumn.getGroupWrapperClasses(expanderVisible, theme) }}">
+<div class="{{ (gridColumn || itemData).getContentClasses(theme) }}">
     <ws:if data="{{ gridColumn.shouldDisplayLeftSeparator(separatorVisibility, textVisible, columnAlignGroup, textAlign) }}">
         <div class="controls-ListView__groupSeparator_theme-{{theme}} controls-ListView__groupSeparator-left_theme-{{ theme }}">&nbsp;</div>
     </ws:if>
     <ws:if data="{{ textVisible !== false }}">
-        <div class="{{ gridColumn.getGroupCaptionClasses(theme) }}
-                    {{ gridColumn.getGroupExpanderClasses(expanderAlign, expanderVisible, theme) }}">
+        <div class="{{ (gridColumn || itemData).getCenterContentClasses(theme) }}
+                    {{ gridColumn.getExpanderClasses(expanderAlign, expanderVisible, theme) }}">
             <ws:if data="{{ contentTemplate }}">
                 <ws:partial template="{{ contentTemplate }}" itemData="{{ item || itemData }}"/>
             </ws:if>

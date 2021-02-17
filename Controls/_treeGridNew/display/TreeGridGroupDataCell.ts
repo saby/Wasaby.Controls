@@ -7,21 +7,14 @@ export default class TreeGridGroupDataCell<T extends Model>
     extends mixin<TreeGridDataCell<T>, GridGroupCellMixin<any>>(TreeGridDataCell, GridGroupCellMixin) {
     readonly '[Controls/treeGrid:TreeGridGroupDataCell]': boolean;
 
+    readonly _$isExpanded: boolean;
+
     constructor(options?: IGridRowOptions<T>) {
         super(options);
         GridGroupCellMixin.call(this, options);
     }
 
-    // region groupItem
-
-    getGroupWrapperClasses(expanderVisible: boolean, theme: string): string {
-        return 'controls-ListView__groupContent' +
-            (expanderVisible === false ? ' controls-ListView__groupContent_cursor-default' : '');
-    }
-
-    // endregion groupItem
-
-    // region Cell
+    // region overrides
 
     protected _getWrapperSeparatorClasses(theme: string): string {
         let classes = '';
@@ -43,5 +36,20 @@ export default class TreeGridGroupDataCell<T extends Model>
         return '';
     }
 
-    // endregion Cell
+    // endregion overrides
+
+    // region Аспект "Ячейка группы"
+
+    isExpanded(): boolean {
+        return this._$isExpanded;
+    }
+
+    // endregion Аспект "Ячейка группы"
 }
+
+Object.assign(TreeGridGroupDataCell.prototype, {
+    '[Controls/treeGrid:TreeGridGroupDataCell]': true,
+    _moduleName: 'Controls/treeGrid:TreeGridGroupDataCell',
+    _instancePrefix: 'tree-grid-group-data-cell-',
+    _$isExpanded: null
+});
