@@ -21,16 +21,17 @@
       </ws:if>
       <div
          name="customContentWrapper"
-         class="controls-SlidingPanel__customContent-wrapper">
+         class="controls-SlidingPanel__body">
          <div
             name="customContent"
-            attr:class="controls-SlidingPanel__customContent
+            attr:class="controls-SlidingPanel__customContent-wrapper
                   controls-SlidingPanel__customContent-scroll-{{ _scrollAvailable ? 'available' : 'disabled' }}"
             on:touchstart="_touchStartHandler()"
             on:touchmove="_touchMoveHandler()"
             on:touchend="_touchEndHandler()">
             <ws:partial
                on:scrollStateChanged="_scrollStateChanged()"
+               attr:class="controls-SlidingPanel__customContent"
                template="{{ _options.bodyContentTemplate }}">
                <ws:controllerButtonTemplate>
                   <ws:partial
