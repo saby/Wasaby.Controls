@@ -247,7 +247,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         const sourceChanged = this._options.source !== newOptions.source;
         const hasSearchValueInOptions = newOptions.searchValue !== undefined;
         const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue && this._inputSearchValue.length >= this._options.minSearchLength;
-        const searchValueCleared = hasSearchValueInOptions && !newOptions.searchValue && this._options.searchValue;
         let methodResult;
 
         this._getOperationsController().update(newOptions);
@@ -255,7 +254,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
-        if (this._options.searchValue !== newOptions.searchValue) {
+        if ((this._options.searchValue !== newOptions.searchValue) && (this._searchValue !== newOptions.searchValue)) {
             this._inputSearchValue = newOptions.searchValue;
 
             if (!newOptions.searchValue && sourceChanged && this._searchController) {
@@ -294,9 +293,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
            this._getSourceControllerOptions(newOptions as ISourceControllerOptions));
 
         if (sourceChanged) {
-            if (searchValueCleared && this._searchController) {
-                this._updateFilter(this._searchController);
-            }
             this._loading = true;
             methodResult = sourceController.reload()
                .then((items) => {
