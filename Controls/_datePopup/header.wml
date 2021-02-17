@@ -7,7 +7,7 @@
          tabindex="0"
          class="controls-PeriodDialog__stateButton controls-PeriodDialog__stateButton_theme-{{theme}}"
          title="{{state === 'year' ? rk('Месячный режим') : rk('Годовой режим')}}">
-            <span class="{{ state === 'year' ? 'icon-ArrangeList' : 'icon-ArrangePreview' }} controls-icon controls-icon_size-s_theme-{{ theme }}
+            <span class="{{ state === 'year' ? 'icon-ArrangeList' : 'icon-ArrangePreview' }}
                 controls-PeriodDialog_stateButton_icon_theme-{{ theme }} {{ keyboardActive? 'controls-PeriodDialog_stateButton_icon_focus_theme-' + theme }}">
             </span>
     </div>
