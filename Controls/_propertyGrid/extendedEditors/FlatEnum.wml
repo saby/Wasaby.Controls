@@ -2,7 +2,8 @@
     <ws:for data="index, button in _buttons">
         <Controls.toggle:Button
                 value="{{button.id === selectedKey}}"
-                attr:class="controls-PropertyGrid__editor_enum_item{{index === _buttons.length - 1 ? '-last' : ''}} {{button.className}}"
+                attr:class="controls-PropertyGrid__editor_enum_item{{index === _buttons.length - 1 ? '-last' : ''}}"
+                attr:data-qa="controls-PropertyGrid__flatEnumEditor_{{button.id}}"
                 fontSize="m"
                 inlineHeight="default"
                 viewMode="pushButton"
