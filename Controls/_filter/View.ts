@@ -994,6 +994,39 @@ var Filter = Control.extend({
         _private.updateText(this, this._source, this._configs);
     },
 
+    _openSelector: function(filterItem: IFilterItem, selectedKeys: string[]): Promise<void> {
+        const selectedItems = [];
+        const items = this._configs[filterItem.name]?.popupItems || this._configs[filterItem.name]?.items;
+        factory(selectedKeys).each((key) => {
+            if (key !== undefined && key !== null) {
+                const index = items.getIndexByValue(this._configs[filterItem.name].keyProperty, key);
+                if (index !== -1) {
+                    selectedItems.push(items.at(index));
+                }
+            }
+        });
+        const selectorTemplate = filterItem.editorOptions.selectorTemplate;
+        const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
+        templateOptions.multiSelect = filterItem.editorOptions.multiSelect;
+        templateOptions.selectedItems = new List({
+            items: selectedItems
+        });
+        this._idOpenSelector = filterItem.name;
+        this._configs[filterItem.name].initSelectorItems = templateOptions.selectedItems;
+        return this._getStackOpener().open({
+            opener: this,
+            template: filterItem.editorOptions.selectorTemplate.templateName,
+            templateOptions,
+            eventHandlers: {
+                onSelectComplete: (event, result): void => {
+                    this._onSelectorTemplateResul(result);
+                    this._getStackOpener().close();
+                },
+                onResult: this._onSelectorTemplateResult.bind(this)
+            }
+        });
+    },
+
     _showSelector(filterName?: string): void {
         let item = null;
         if (filterName && filterName !== DEFAULT_FILTER_NAME) {
@@ -1003,41 +1036,19 @@ var Filter = Control.extend({
         }
         if (item) {
             const name = item.name;
-
             if (!this._configs[name]) {
                 _private.getConfigByItem(this, item);
             }
             if (item?.editorOptions.selectorTemplate) {
-                const selectedItems = [];
                 const items = this._configs[name]?.popupItems || this._configs[name]?.items;
                 const selectedKeys = item.editorOptions.multiSelect ? item.value : [item.value];
-                const selectorTemplate = item.editorOptions.selectorTemplate;
-                const templateOptions = object.clone(selectorTemplate.templateOptions) || {};
                 if (items) {
-                    factory(selectedKeys).each((key) => {
-                        if (key !== undefined && key !== null) {
-                            selectedItems.push(items.at(items.getIndexByValue(this._configs[name].keyProperty, key)));
-                        }
+                    return this._openSelector(item, selectedKeys);
+                } else {
+                    return _private.loadItems(this, item).then(() => {
+                        return this._openSelector(item, selectedKeys);
                     });
                 }
-                templateOptions.multiSelect = item.editorOptions.multiSelect;
-                templateOptions.selectedItems = new List({
-                    items: selectedItems
-                });
-                this._idOpenSelector = name;
-                this._configs[name].initSelectorItems = templateOptions.selectedItems;
-                return this._getStackOpener().open({
-                    opener: this,
-                    template: item.editorOptions.selectorTemplate.templateName,
-                    templateOptions,
-                    eventHandlers: {
-                        onSelectComplete: (event, result): void => {
-                            this._onSelectorTemplateResul(result);
-                            this._getStackOpener().close();
-                        },
-                        onResult: this._onSelectorTemplateResult.bind(this)
-                    }
-                });
             }
         }
     },
