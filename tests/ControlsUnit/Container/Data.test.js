@@ -117,6 +117,22 @@ define(
             assert.ok(!data._loading);
          });
 
+         it('cancel loading while loading data from new source', async function() {
+            let dataOptions = { source: source, keyProperty: 'id' };
+
+            const data = getDataWithConfig(dataOptions);
+            await data._beforeMount(dataOptions);
+
+            const newSource = new sourceLib.Memory();
+            dataOptions = {...dataOptions};
+            dataOptions.source = newSource;
+            const loadPromise = data._beforeUpdate(dataOptions);
+            data._sourceController.cancelLoading();
+            await loadPromise;
+
+            assert.ok(data._dataOptionsContext.source === newSource)
+         });
+
          it('filter, navigation, sorting changed', async () => {
             const dataOptions = {source: source, keyProperty: 'id'};
             const data = getDataWithConfig(dataOptions);
