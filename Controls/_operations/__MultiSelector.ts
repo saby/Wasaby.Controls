@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {TKeysSelection, ISelectionObject} from 'Controls/interface';
 import {default as getCountUtil, IGetCountCallParams} from 'Controls/_operations/MultiSelector/getCount';
 import {LoadingIndicator} from 'Controls/LoadingIndicator';
+import 'css!Controls/operations';
 
 const DEFAULT_CAPTION = rk('Отметить');
 const DEFAULT_ITEMS = [
@@ -235,8 +236,6 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
    protected _beforeUnmount(): void {
       this._cancelCountPromise();
    }
-
-   static _theme: string[] = ['Controls/operations'];
 
    static getDefaultOptions(): object {
       return {
