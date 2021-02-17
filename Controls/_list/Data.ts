@@ -193,9 +193,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                    this._sourceController.setRoot(currentRoot);
                 }
                 this._items = this._sourceController.getItems();
-
-                const controllerState = this._sourceController.getState();
-                this._updateContext(controllerState);
                 return reloadResult;
              })
              .catch((error) => {
@@ -209,6 +206,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                 return error;
              })
              .finally(() => {
+                const controllerState = this._sourceController.getState();
+                this._updateContext(controllerState);
                 this._loading = false;
              });
       } else if (isChanged) {
