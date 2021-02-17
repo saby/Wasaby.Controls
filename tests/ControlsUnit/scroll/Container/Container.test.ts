@@ -552,6 +552,25 @@ describe('Controls/scroll:Container', () => {
             assert.strictEqual(component._shadows.getVersion(), version);
             sinon.restore();
         });
+        it('should\'t synchronize view if optimized shadows enabled.', () => {
+            const component = createComponent(Container, {});
+            const version: number = component._shadows.getVersion();
+            sinon.stub(component, '_updateStateAndGenerateEvents');
+            component._isOptimizeShadowEnabled = true;
+            component._wasMouseEnter = true;
+            component._shadows._models.top._scrollState.canVerticalScroll = true;
+            component._shadows._models.bottom._scrollState.canVerticalScroll = true;
+            component._shadows._models.top._isVisible = false;
+            component._shadows._models.bottom._isVisible = false;
+            component._updateShadowVisibility(
+                event, { top: SHADOW_VISIBILITY.VISIBLE, bottom: SHADOW_VISIBILITY.VISIBLE });
+            assert.isTrue(component._shadows._models.top.isVisible);
+            assert.isTrue(component._shadows._models.bottom.isVisible);
+            assert.isTrue(component._stickyHeaderController._isShadowVisible.top);
+            assert.isTrue(component._stickyHeaderController._isShadowVisible.bottom);
+            assert.strictEqual(component._shadows.getVersion(), version);
+            sinon.restore();
+        });
         it('should init headers if mouse has not been hover and shadows are forced enabled.', () => {
             const component = createComponent(Container, {});
             sinon.stub(component, '_updateStateAndGenerateEvents');
