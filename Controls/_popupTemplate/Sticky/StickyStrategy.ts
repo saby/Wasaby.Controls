@@ -391,7 +391,7 @@ interface IPosition {
          }
          if (popupCfg.config.height) {
             position.height = popupCfg.config.height;
-         } else if (detection.isIE) {
+         } else if (position.maxHeight) {
 
             /*
                Если мы ограничиваем высоту при overflow нужно проставлять height,
