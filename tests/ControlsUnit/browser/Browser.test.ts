@@ -702,6 +702,20 @@ describe('Controls/browser:Browser', () => {
            assert.equal(browser._searchController._root, 'test123');
        });
 
+       it('root changed, browser is in search mode', async () => {
+           let options = getBrowserOptions();
+           options.parentProperty = 'parentProperty';
+           const browser = getBrowser(options);
+           await browser._beforeMount(options);
+           browser.saveOptions(options);
+           await browser._search({}, 'testSearchValue');
+
+           browser._handleItemOpen('testRoot', undefined, null);
+           assert.ok(!browser._inputSearchValue);
+           assert.equal(browser._root, 'testRoot');
+           assert.deepStrictEqual(browser._filter, {parentProperty: null});
+       });
+
         it ('root is changed, shearchController is not created', async () => {
             const options = getBrowserOptions();
             const browser = getBrowser(options);
