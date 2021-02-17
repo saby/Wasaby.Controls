@@ -596,7 +596,7 @@ var
             // или "tile" будет перезагрузка. Этот код нужен до тех пор, пока не будут спускаться данные сверху-вниз.
             // https://online.sbis.ru/opendoc.html?guid=f90c96e6-032c-404c-94df-cc1b515133d6
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
-            const recreateSource = cfg.source !== this._options.source || (isSourceControllerLoading);
+            const recreateSource = cfg.source !== this._options.source || (isSourceControllerLoading && this._options.viewMode === 'search');
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
             if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !loadedBySourceController) {
                _private.setPendingViewMode(this, cfg.viewMode, cfg);

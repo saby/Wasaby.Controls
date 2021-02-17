@@ -96,9 +96,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * Идентификатор текущего корневой узла относительно которого
      * отображаются данные в detail-колонке
      */
-    get root(): TKey {
-        return this._detailDataSource ? this._detailDataSource.root : null;
-    }
+    protected root: TKey = null;
 
     /**
      * Идентификатор текущего корневого узла относительно которого
@@ -107,8 +105,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     protected _masterRoot: TKey;
 
     masterMarkedKey: TKey;
-
-    protected _loading: boolean = false;
 
     private _masterLoadPromise: Promise<unknown>;
     private _masterLoadResolver: () => void;
@@ -139,6 +135,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      * проставляется после того как получены результаты поиска
      */
     protected _searchValue: string;
+
+    private _search: 'search' | 'reset' | false = false;
 
     /**
      * В случае если для detail-списка указана опция searchStartingWith === 'root'
@@ -225,20 +223,41 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
-        // this._updateState(newOptions);
+        // Все что нужно применится в detailDataLoadCallback
+        if (this._search === 'search') {
+            return;
+        }
 
-        this._userViewMode = newOptions.userViewMode;
+        // при сбросе поиска прокидываем фильтр в explorer что бы вызвать перезагрузку списка
+        if (this._search === 'reset') {
+            const detailOptions = compileSourceOptions(newOptions, true);
+
+            this.root = detailOptions.root;
+            this._detailSourceOptions.filter = this._detailDataSource.extendFilter(detailOptions.filter);
+
+            return;
+        }
+
         this._detailSourceOptions = compileSourceOptions(newOptions, true);
         this._masterSourceOptions = compileSourceOptions(newOptions, false);
 
         const isDetailRootChanged = this.root !== this._detailSourceOptions.root;
 
+        this.root = this._detailSourceOptions.root;
+        this.masterMarkedKey = this.root;
         this._detailDataSource.updateOptions(
             this._buildDetailDataSourceOptions(newOptions)
         );
         this._detailDataSource.setFilter(this._detailSourceOptions.filter);
 
         this._detailExplorerOptions = this._buildDetailExplorerOptions(newOptions);
+
+        // Обновляем фон только если не менялся root. В противном случае фон обновится после
+        // загрузки данных в detail
+        if (!isDetailRootChanged && this._userViewMode !== newOptions.userViewMode) {
+            this._userViewMode = newOptions.userViewMode;
+            this._updateDetailBgColor(newOptions);
+        }
 
         //region update master
         const newMasterVisibility = Browser.calcMasterVisibility(newOptions);
@@ -325,22 +344,15 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
                 return roots;
             })
-            // Обрабатываем смену root когда находимся в режиме поиска
+            // Обновим состояние чтобы загрузились новые данные
             .then((newRoots) => {
-                let resultPromise = Promise.resolve(newRoots);
-
                 // Если меняют root когда находимся в режиме поиска, то нужно
                 // сбросить поиск и отобразить содержимое нового root
                 if (this.viewMode === DetailViewMode.search) {
-                    resultPromise = this._detailDataSource
-                        .resetSearchString()
-                        .then(() => newRoots);
+                    this._resetSearch(newRoots);
+                    return;
                 }
 
-                return resultPromise;
-            })
-            // Обновим состояние чтобы загрузились новые данные
-            .then((newRoots) => {
                 this._changeRoot(newRoots);
             });
     }
@@ -400,10 +412,11 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     /**
-     * Запоминает значение, введенное в строку поиска, и запускает запрос данных поиска
+     * Запоминает значение, введенное в строку поиска, и запускает запрос
+     * для получения результатов поиска
      */
     private _setSearchString(searchString: string): void {
-        this._loading = true;
+        this._search = 'search';
         this._inputSearchString = searchString;
 
         this._detailDataSource
@@ -419,22 +432,59 @@ export default class Browser extends Control<IOptions, IReceivedState> {
      *  * обновим фильтр
      */
     private _afterSearchDataLoaded(): void {
-        this._loading = false;
         this._searchValue = this._inputSearchString;
 
-        this._setViewMode(DetailViewMode.search);
-        this._updateDetailBgColor();
-
         if (this._options.detail.searchStartingWith !== 'current') {
-            this._rootBeforeSearch = this.root;
+            if (this.viewMode !== DetailViewMode.search) {
+                this._rootBeforeSearch = this.root;
+            }
+
             this._changeRoot(
                 { detailRoot: null, masterRoot: this._masterRoot},
                 true
             );
+            this._detailDataSource.setRoot(null);
         }
+
+        this._setViewMode(DetailViewMode.search);
+        this._updateDetailBgColor();
 
         this._detailDataSource.updateFilterAfterSearch();
         this._setDetailFilter(this._detailDataSource.getFilter());
+    }
+
+    /**
+     * Сбрасывает в _detailDataSource параметры фильтра, отвечающие за поиск,
+     * и если нужно меняет у него root.
+     */
+    private _resetSearch(newRoots?: IRootsData): void {
+        this._search = 'reset';
+        this._detailDataSource.sourceController.cancelLoading();
+
+        this._detailDataSource
+            .resetSearchString()
+            .then(() => {
+                let root = this.root;
+
+                if (newRoots) {
+                    root = newRoots.detailRoot;
+                    this._changeRoot(newRoots);
+                } else if (this._options.detail.searchStartingWith !== 'current') {
+                    root = this._rootBeforeSearch;
+                    this._changeRoot({
+                        detailRoot: this._rootBeforeSearch,
+                        masterRoot: this._masterRoot
+                    });
+                    this._rootBeforeSearch = null;
+                }
+
+                this._detailDataSource.setRoot(root);
+                this._detailDataSource.updateFilterAfterSearch();
+                this._setDetailFilter(this._detailDataSource.getFilter());
+
+                this._searchValue = null;
+                this._inputSearchString = null;
+            });
     }
 
     private _setDetailFilter(filter: QueryWhereExpression<unknown>): void {
@@ -481,6 +531,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         if (this._inputSearchString) {
             this._afterSearchDataLoaded();
         }
+        this._search = false;
 
         this.masterMarkedKey = this.root;
         this._processItemsMetadata(items);
@@ -560,23 +611,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     protected _onSearchReset(): void {
-        this._detailDataSource.sourceController.cancelLoading();
-
-        this._detailDataSource
-            .resetSearchString()
-            .then(() => {
-                if (this._options.detail.searchStartingWith !== 'current') {
-                    this._changeRoot({
-                        detailRoot: this._rootBeforeSearch,
-                        masterRoot: this._masterRoot
-                    });
-                    this._rootBeforeSearch = null;
-                }
-                this._detailDataSource.updateFilterAfterSearch();
-                this._setDetailFilter(this._detailDataSource.getFilter());
-                this._searchValue = null;
-                this._inputSearchString = null;
-            });
+        this._resetSearch();
     }
 
     // TODO: implement
@@ -602,19 +637,21 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             this._isTileLoaded = true;
         }
 
-        //region update master fields
-        this._masterRoot = this._masterSourceOptions.root;
-        // На основании полученного состояния соберем опции для master-списка
-        this._masterExplorerOptions = this._buildMasterExplorerOption(options);
-        //endregion
-
         //region update detail fields
+        this.root = this._detailSourceOptions.root;
         this._detailDataSource = new DataSource(
             this._buildDetailDataSourceOptions(options)
         );
 
         // На основании полученного состояния соберем опции для detail-explorer
         this._detailExplorerOptions = this._buildDetailExplorerOptions(options);
+        //endregion
+
+        //region update master fields
+        this._masterRoot = this._masterSourceOptions.root;
+        this.masterMarkedKey = this.root;
+        // На основании полученного состояния соберем опции для master-списка
+        this._masterExplorerOptions = this._buildMasterExplorerOption(options);
         //endregion
 
         // Если передан кастомный идентификатор хранилища, то на основании него собираем

@@ -64,4 +64,41 @@ describe('Controls/filterPanel:View', () => {
             assert.isTrue(sourceUpdated);
         });
     });
+
+    describe('_updateSource', () => {
+        const viewControl = new View({});
+
+        it('without textValue', () => {
+            const editingObject = {
+                testName: 'testValue'
+            };
+            viewControl._source = [
+                {
+                    name: 'testName',
+                    value: 'testValue',
+                    textValue: 'testTextValue'
+                }
+            ];
+            viewControl._updateSource(editingObject);
+            assert.equal(viewControl._source[0].textValue, 'testTextValue');
+        });
+
+        it('with textValue', () => {
+            const editingObject = {
+                testName: {
+                    value: 'newTestValue',
+                    textValue: 'newTestTextValue'
+                }
+            };
+            viewControl._source = [
+                {
+                    name: 'testName',
+                    value: 'testValue',
+                    textValue: 'testTextValue'
+                }
+            ];
+            viewControl._updateSource(editingObject);
+            assert.equal(viewControl._source[0].textValue, 'newTestTextValue');
+        });
+    });
 });
