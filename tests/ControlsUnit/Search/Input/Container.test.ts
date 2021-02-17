@@ -19,13 +19,53 @@ describe('Controls/_search/Input/Container', () => {
       assert.equal(cont._value, 'test');
    });
 
-   it('_beforeUpdate', () => {
-      const cont = new InputContainer({});
-      cont.saveOptions({});
-      cont._value = '';
+   describe('_beforeUpdate', () => {
 
-      cont._beforeUpdate({inputSearchValue: 'test'});
-      assert.equal(cont._value, 'test');
+      it('inputSearchValue.length > minSearchLength', () => {
+         let options = {
+            inputSearchValue: '',
+            minSearchLength: 3
+         };
+         const cont = new InputContainer(options);
+         cont.saveOptions(options);
+
+         options = {...options};
+         options.inputSearchValue = 'test';
+         cont._beforeUpdate(options);
+         assert.equal(cont._value, 'test');
+         assert.ok(cont._getSearchResolverController()._searchStarted);
+      });
+
+      it('inputSearchValue.length === minSearchLength', () => {
+         let options = {
+            inputSearchValue: '',
+            minSearchLength: 3
+         };
+         const cont = new InputContainer(options);
+         cont.saveOptions(options);
+
+         options = {...options};
+         options.inputSearchValue = 'tes';
+         cont._beforeUpdate(options);
+         assert.equal(cont._value, 'tes');
+         assert.ok(cont._getSearchResolverController()._searchStarted);
+      });
+
+      it('inputSearchValue.length < minSearchLength', () => {
+         let options = {
+            inputSearchValue: '',
+            minSearchLength: 3
+         };
+         const cont = new InputContainer(options);
+         cont.saveOptions(options);
+
+         options = {...options};
+         options.inputSearchValue = 'te';
+         cont._beforeUpdate(options);
+         assert.equal(cont._value, 'te');
+         assert.ok(!cont._getSearchResolverController()._searchStarted);
+      });
+
    });
 
    describe('_resolve', () => {
