@@ -458,6 +458,20 @@ describe('Controls/browser:Browser', () => {
                 assert.ok(!browser._filter.name);
             });
 
+            it('cancel query while searching', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                browser._search(null, 'testSearchValue');
+                await browser._getSearchController(options);
+                assert.ok(browser._loading);
+
+                browser._sourceController.cancelLoading();
+                assert.ok(browser._loading);
+            });
+
         });
 
         describe('operationsController', () => {
