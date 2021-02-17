@@ -15,6 +15,7 @@ import {
     IFontWeight,
     IFontWeightOptions
 } from 'Controls/interface';
+import 'css!Controls/decorator';
 
 type TValue = string | number | null;
 type TAbbreviationType = 'none' | 'short' | 'long';
@@ -160,8 +161,6 @@ class NumberDecorator extends Control<INumberOptions> {
             return  toString(Math.trunc(parseFloat(number)));
         }
     };
-
-    static _theme = ['Controls/decorator'];
 
     static getOptionTypes() {
         return {

@@ -538,6 +538,10 @@ var
             // см. https://online.sbis.ru/opendoc.html?guid=d3a0a646-9a22-4a61-be98-7c8570c7a295
             // см. https://online.sbis.ru/opendoc.html?guid=458ac3b7-b899-4fff-8fcf-ae8168b67b80
             self.resetCachedItemData();
+            // без nextModelVersion не обновляется itemData и возникают ошибки
+            // https://online.sbis.ru/opendoc.html?guid=fc64fa58-7cb7-4bca-a691-f2ed2acf648c
+            // https://online.sbis.ru/opendoc.html?guid=98a4f247-3efa-4d3a-a83f-8994678ec335
+            self._nextModelVersion();
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
@@ -1842,7 +1846,14 @@ var
                 };
 
             current.getCurrentColumnKey = function() {
-                return self._columnsVersion + '_' +
+                // key - передаем для того, чтобы обеспечить уникальность ключа колонки, иначе будут ошибки с дублированием ключей
+                // https://online.sbis.ru/opendoc.html?guid=ec8f4886-18a2-4827-afe7-4bd416429846
+                // в 20.1100 заводились ошибки на ядро:
+                // https://online.sbis.ru/opendoc.html?guid=5248b666-3498-4bf1-9051-1076a1caca95
+                // https://online.sbis.ru/opendoc.html?guid=5248b666-3498-4bf1-9051-1076a1caca95
+                // https://online.sbis.ru/opendoc.html?guid=61b44051-c747-4226-bfde-265eeaba2084
+                // на стороне ядра склейка ключей поддерживаться не будет и проблема будет вплоть до перехода на React
+                return current.key + '_' + self._columnsVersion + '_' +
                     (!self._hasMultiSelectColumn() ? current.columnIndex : current.columnIndex - 1);
             };
 
@@ -2408,6 +2419,11 @@ var
         },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();
+
+            if (_private.hasStickyColumn(this)) {
+                this._nextModelVersion();
+            }
+
             // Если есть прилипающая колонка, то нужно пересчитать футер,
             // т.к. прилипающая колонка во время днд скрывается и кол-во grid cтолбцов уменьшается
             if (_private.hasStickyColumn(this) && this._footerColumns) {

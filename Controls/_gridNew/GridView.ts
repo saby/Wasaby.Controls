@@ -10,6 +10,7 @@ import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
 import ColumnScrollViewController, {COLUMN_SCROLL_JS_SELECTORS} from './ViewControllers/ColumnScroll';
+import { _Options } from 'UI/Vdom';
 
 const GridView = ListView.extend({
     _template: GridTemplate,
@@ -83,7 +84,10 @@ const GridView = ListView.extend({
             this._listModel.setSorting(newOptions.sorting);
         }
 
-        if (this._isFooterChanged(this._options, newOptions) || columnsChanged) {
+        // Нужно проверять именно все опции, т.к. проверка на newOptions.footer будет всегда возвращать наличие изменений
+        // https://online.sbis.ru/opendoc.html?guid=0f506fcf-2230-4d08-b902-50445e290727
+        const changes = _Options.getChangedOptions(newOptions, this._options);
+        if (changes && (changes.footer || changes.footerTemplate)) {
             this._listModel.setFooter(newOptions.footerTemplate, newOptions.footer);
         }
 
@@ -200,11 +204,9 @@ const GridView = ListView.extend({
         // https://online.sbis.ru/doc/cefa8cd9-6a81-47cf-b642-068f9b3898b7
         if (!e.preventItemEvent) {
             const contents = dispItem.getContents();
-            if (this._options.useNewModel) {
-                if (dispItem['[Controls/_display/GroupItem]']) {
-                    this._notify('groupClick', [contents, e, dispItem], {bubbling: true});
-                    return;
-                }
+            if (dispItem['[Controls/_display/GroupItem]']) {
+                this._notify('groupClick', [contents, e, dispItem], {bubbling: true});
+                return;
             }
             this._notify('itemClick', [contents, e, this._getCellIndexByEventTarget(e)]);
         }
@@ -422,26 +424,6 @@ const GridView = ListView.extend({
     _resizeHandler(): void {
         if (this._columnScrollViewController && this.isColumnScrollVisible()) {
             this._actualizeColumnScroll(this._options, this._options);
-        }
-    },
-
-    _isFooterChanged(oldOptions, newOptions): boolean {
-        if (
-           // Подвал появился/скрылся или индикатор загрузки в подвале появился, скрылся
-           (!oldOptions.footer && newOptions.footer) ||
-           (oldOptions.footer && !newOptions.footer) ||
-           (!oldOptions.footerTemplate && newOptions.footerTemplate) ||
-           (oldOptions.footerTemplate && !newOptions.footerTemplate)
-        ) {
-            return true;
-        } else if (
-           // Подвала не было и нет
-           !oldOptions.footer && !newOptions.footer &&
-           !oldOptions.footerTemplate && !newOptions.footerTemplate
-        ) {
-            return false;
-        } else {
-            return false;
         }
     }
 

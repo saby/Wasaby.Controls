@@ -41,10 +41,12 @@ export default class MultiSelectorCheckBox extends Control<IMultiSelectorCheckbo
     }
 
     protected _onCheckBoxClick(): void {
-        const eventName = this._checkboxValue === false ? 'selectAll' : 'unselectAll';
-        this._notify('selectedTypeChanged', [eventName], {
-            bubbling: true
-        });
+        if (!this._options.readOnly) {
+            const eventName = this._checkboxValue === false ? 'selectAll' : 'unselectAll';
+            this._notify('selectedTypeChanged', [eventName], {
+                bubbling: true
+            });
+        }
     }
 
     private _getCheckBoxState(options: IMultiSelectorCheckboxOptions): TCheckboxValue {

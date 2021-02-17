@@ -330,7 +330,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._gridAutoShadows = false;
             this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
         }
-        const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
+        const needUpdate = this._wasMouseEnter || !this._isOptimizeShadowEnabled;
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, needUpdate);
 
         // Если принудительно включили тени изнутри, то надо инициализировать заголовки что бы отрисовать тени на них.
@@ -564,8 +564,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // После отключения оптимизации проблема почему то уходит.
         this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
             this._wasMouseEnter || detection.isIE);
-        this._children.scrollBar?.setViewportSize(
-            this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
+        if (this._scrollbars.vertical && this._scrollbars.vertical.isVisible && this._children.hasOwnProperty('scrollBar')) {
+            this._children.scrollBar.setViewportSize(
+                this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
+        }
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {

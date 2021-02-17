@@ -26,12 +26,12 @@ export interface IInputMaskValueOptions {
  *
  * <pre class="brush: js">
  * // JavaScript
- * Control.extend({
+ * class MyControl extends Control<IControlOptions> {
  *    _inputValue: '',
  *    _sendButtonClick(event) {
  *       this._sendData(this._inputValue);
  *    }
- * });
+ * }
  * </pre>
  * @see valueChanged
  * @see inputCompleted
@@ -60,14 +60,14 @@ export interface IInputMaskValueOptions {
  *
  * <pre class="brush: js">
  * // JavaScript
- * Control.extend({
+ * class MyControl extends Control<IControlOptions> {
  *    _fieldValue: '',
  *    _valueChangedHandler(event, value, displayValue) {
  *       this._fieldValue = value;
  *       this._fieldValueWithDelimiters = displayValue;
  *    },
  *    _anotherFieldValue: ''
- * });
+ * }
  * </pre>
  * @see value
  */
@@ -89,11 +89,11 @@ export interface IInputMaskValueOptions {
  *
  * <pre class="brush: js">
  * // JavaScript
- * Control.extend({
+ * class MyControl extends Control<IControlOptions> {
  *    _inputCompletedHandler(event, value) {
  *       this._saveEnteredValueToDatabase(value);
  *    }
- * });
+ * };
  * </pre>
  * @see value
  */

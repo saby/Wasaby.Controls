@@ -24,7 +24,7 @@ export interface IInputDateTimeOptions {
  *    <Controls.Button on:click="_sendButtonClick()" />
  * </pre>
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions>{
  *       ...
  *       _inputValue: new Date(),
  *
@@ -32,7 +32,7 @@ export interface IInputDateTimeOptions {
  *          this._sendData(this._inputValue);
  *       }
  *       ...
- *  });
+ *  };
  * </pre>
  */
 
@@ -56,14 +56,14 @@ export interface IInputDateTimeOptions {
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
- * Control.extend({
+ * class MyControl extends Control<IControlOptions> {
  *    _fieldValue: null,
  *    _valueChangedHandler(value, displayValue) {
  *       this._fieldValue = value;
  *       this._saveToDatabase(displayValue);
  *    },
  *    _anotherFieldValue: null
- * });
+ * }
  * </pre>
  */
 
@@ -82,12 +82,12 @@ export interface IInputDateTimeOptions {
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
- * Control.extend({
+ * class MyControl extends Control<IControlOptions> {
  *    _inputCompletedHandler(value, displayValue) {
  *       this._saveEnteredValueToDabase1(value);
  *       this._saveEnteredValueToDabase2(displayValue);
  *    }
- * })
+ * }
  * </pre>
  */
 

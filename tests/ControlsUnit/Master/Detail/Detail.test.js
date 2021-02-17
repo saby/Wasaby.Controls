@@ -270,6 +270,7 @@ define(['Controls/masterDetail'], function (masterDetail) {
          assert.equal(isEndDragCalled, false);
 
          control._needHandleTouch = () => true;
+         control._canResizing = true;
          control._touchstartHandler(getFakeEvent(10, 'body', 'body'));
          control._touchMoveHandler(getFakeEvent(20, 'body', 'body'));
          control._touchendHandler(getFakeEvent(31, 'body', 'body'));

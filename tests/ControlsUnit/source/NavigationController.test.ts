@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {RecordSet} from 'Types/collection';
-import {NavigationController} from 'Controls/source';
+import {NavigationController} from 'Controls/dataSource';
 import {IBasePageSourceConfig} from 'Controls/interface';
 const dataPrev = [
     {
@@ -904,6 +904,52 @@ describe('Controls/_source/NavigationController', () => {
                 assert.equal(2, params.length, 'Wrong query properties');
                 assert.equal('id', params[0].field, 'Wrong query properties');
                 assert.equal('id', params[1].field, 'Wrong query properties');
+            });
+
+            it ('Position, id type was changed in meta', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        field: 'id',
+                        direction: 'forward'
+                    }
+                });
+
+                const rs = new RecordSet({
+                    rawData: data,
+                    keyProperty: 'id'
+                });
+
+                let metaRS = new RecordSet({
+                    rawData: [
+                        {
+                            id: '1',
+                            nav_result: true
+                        },
+                        {
+                            id: '2',
+                            nav_result: false
+                        }
+                    ]
+                });
+
+                rs.setMetaData({more: metaRS});
+                assert.equal(2, nc.updateQueryProperties(rs).length, 'Wrong query properties');
+
+                let metaRS = new RecordSet({
+                    rawData: [
+                        {
+                            id: 1,
+                            nav_result: true
+                        },
+                        {
+                            id: '2',
+                            nav_result: false
+                        }
+                    ]
+                });
+                rs.setMetaData({more: metaRS});
+                assert.equal(2, nc.updateQueryProperties(rs).length, 'Wrong query properties');
             });
         });
     });

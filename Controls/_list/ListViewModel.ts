@@ -155,9 +155,9 @@ const _private = {
             itemsModelCurrent.dispItem.getItemActionClasses ?
                 itemsModelCurrent.dispItem.getItemActionClasses(itemActionsPosition, theme, isLastRow, rowSeparatorSize) : ''
         );
-        itemsModelCurrent.getItemActionPositionClasses = (itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string, useNewModel?: boolean): string => (
+        itemsModelCurrent.getItemActionPositionClasses = (itemActionsPosition: string, itemActionsClass: string, itemPadding: {top?: string, bottom?: string}, theme: string): string => (
             itemsModelCurrent.dispItem.getItemActionPositionClasses ?
-                itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme, useNewModel) : ''
+                itemsModelCurrent.dispItem.getItemActionPositionClasses(itemActionsPosition, itemActionsClass, itemPadding, theme) : ''
         );
         itemsModelCurrent.getSwipeAnimation = (): string => itemsModelCurrent.dispItem.getSwipeAnimation();
         itemsModelCurrent.isAdd = itemsModelCurrent.dispItem.isAdd;

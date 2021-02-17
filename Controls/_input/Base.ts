@@ -14,6 +14,7 @@ import fieldTemplate = require('wml!Controls/_input/Base/Field');
 import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
 import Field from 'Controls/_input/resources/Field';
 import {IViewModelOptions} from 'Controls/_input/Text/ViewModel';
+import 'css!Controls/input';
 
 import {getOptionPaddingTypes, getDefaultPaddingOptions} from './interface/IPadding';
 
@@ -642,8 +643,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     paste(text: string): void {
         this._getField().paste(text);
     }
-
-    static _theme: string[] = ['Controls/input'];
 
     static getDefaultOptions(): object {
         return {

@@ -104,16 +104,16 @@ var List = Control.extend({
         const selectorOpener = this._options.selectorOpener;
         const selectorTemplate = this._options.selectorTemplate;
         const selectorDialogResult = this._options.selectorDialogResult;
-        let selectedItems = [];
+        const selectedItems = [];
 
         // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
         factory(this._options.selectedKeys).each(function(key) {
-            if (key !== undefined && key !== null && self._options.items.getRecordById(key)) {
-                selectedItems.push(self._options.items.getRecordById(key));
+            if (key !== undefined && key !== null && self._options.selectorItems.getRecordById(key)) {
+                selectedItems.push(self._options.selectorItems.getRecordById(key));
             }
         });
 
-        var templateConfig = {
+        const templateConfig = {
             selectedItems: new collection.List({items: selectedItems}),
             multiSelect: this._options.multiSelect,
             handlers: {

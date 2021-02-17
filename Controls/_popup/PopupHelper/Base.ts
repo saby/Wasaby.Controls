@@ -20,7 +20,7 @@ interface IOpenerStaticMethods {
 
 export default class Base {
     protected _popupId: string;
-    private _opener: IOpenerStaticMethods;
+    protected _opener: IOpenerStaticMethods;
     private _indicatorId: string;
     protected _options: IBasePopupOptions;
 

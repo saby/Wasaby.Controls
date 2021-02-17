@@ -9,7 +9,9 @@
  * @includes ColumnTemplate Controls/_grid/interface/ColumnTemplate
  * @includes ResultColumnTemplate Controls/_grid/interface/ResultColumnTemplate
  * @includes EditingEmptyTemplate Controls/_grid/interface/EditingEmptyTemplate
+ * @includes RowEditor Controls/_grid/interface/RowEditor
  * @includes IPropStorage Controls/_grid/interface/IPropStorage
+ * @includes ITagColumn Controls/_grid/interface/ITagColumn
  * @public
  * @author Крайнов Д.О.
  */

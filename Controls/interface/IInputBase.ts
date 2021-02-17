@@ -6,7 +6,7 @@ type IInputBase =
         textAlign: 'left' | 'right' | 'center';
         style: 'info' | 'invalid' | 'danger' | 'success' | 'warning' | 'primary';
         // TODO: https://online.sbis.ru/opendoc.html?guid=1183a619-2f46-4c78-a2bc-09d41095e744
-        autoComplete: 'on' | 'off' | 'username' | 'current-password';
+        autoComplete: string;
         value: string | null;
     }
 };

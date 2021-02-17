@@ -1,12 +1,10 @@
 import {Record} from 'Types/entity';
 
 export interface IViewOptions {
-    autoEdit: boolean;
-    editObject: Record;
-    toolbarVisible: boolean;
-    beginEdit: () => void;
-    commitEdit: () => Promise<void>;
-    cancelEdit: () => Promise<void>;
+    autoEdit?: boolean;
+    editObject?: Record;
+    toolbarVisible?: boolean;
+    backgroundStyle?: string;
 }
 
 /**

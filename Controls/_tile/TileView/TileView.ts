@@ -115,7 +115,7 @@ var TileView = ListView.extend({
         itemData
     ): Record<string, any> {
         const isActionMenu = !!action && !action.isMenu;
-        if (this._shouldOpenExtendedMenu(isActionMenu, isContextMenu, item)) {
+        if (this._shouldOpenExtendedMenu(isActionMenu, isContextMenu, item) && menuConfig) {
             const MENU_MAX_WIDTH = 200;
             const menuOptions = menuConfig.templateOptions;
             const itemContainer = clickEvent.target.closest('.controls-TileView__item');
@@ -332,7 +332,7 @@ var TileView = ListView.extend({
 
     _beforeUnmount: function () {
         this._notify('unregister', ['controlResize', this], {bubbling: true});
-        this._notify('unregister', ['scroll', this], {bubbling: true});
+        this._notify('unregister', ['scroll', this, {listenAll: true}], {bubbling: true});
     },
 
     _onTileViewKeyDown: function () {

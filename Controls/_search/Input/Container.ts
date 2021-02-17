@@ -2,7 +2,6 @@ import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_search/Input/Container';
 import {SyntheticEvent} from 'UI/Vdom';
 import SearchResolver from 'Controls/_search/SearchResolver';
-import {default as Store} from 'Controls/Store';
 import {constants} from 'Env/Env';
 
 export interface ISearchInputContainerOptions extends IControlOptions {
@@ -97,10 +96,15 @@ export default class Container extends Control<ISearchInputContainerOptions> {
    }
 
    private _updateSearchData(inputSearchValue: string): void {
+      const searchResolver = this._getSearchResolverController();
       if (this._value !== inputSearchValue) {
          this._value = inputSearchValue;
+
+         if (!inputSearchValue) {
+            searchResolver.clearTimer();
+         }
       }
-      this._getSearchResolverController().setSearchStarted(true);
+      searchResolver.setSearchStarted(this._value && this._value.length >= this._options.minSearchLength);
    }
 
    private _resolve(value: string, event: 'searchReset' | 'search'): void {
@@ -118,6 +122,7 @@ export default class Container extends Control<ISearchInputContainerOptions> {
       if (this._value !== value) {
          this._value = value;
          this._getSearchResolverController().resolve(value);
+         this._notify('inputSearchValueChanged', [value], {bubbling: true});
       }
    }
 

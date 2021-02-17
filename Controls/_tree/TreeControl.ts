@@ -660,11 +660,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _afterMount: function() {
-        this._isMounted = true;
         const viewModel = this._children.baseControl.getViewModel();
         _private.initListViewModelHandler(this, viewModel);
         if (this._expandedItemsToNotify) {
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
+            this._expandedItemsToNotify = null;
         }
     },
     _beforeUpdate: function(newOptions) {
@@ -708,14 +708,14 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             _private.resetExpandedItems(this);
         }
 
-        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems())) {
+        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems()) && newOptions.source) {
             if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
                 (searchValueChanged && newOptions.sourceController)) {
                 viewModel.setExpandedItems(newOptions.expandedItems);
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
-            if (sourceController) {
+            if (sourceController && !isEqual(newOptions.expandedItems, sourceController.getExpandedItems())) {
                 sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
@@ -750,12 +750,21 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
             viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
         }
-
+        if (sourceController) {
+            const sourceControllerState = sourceController.getState();
+            if (newOptions.parentProperty && sourceControllerState.parentProperty !== newOptions.parentProperty) {
+                updateSourceController = true;
+            }
+        }
         if (sourceController && updateSourceController) {
             sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
     },
     _afterUpdate: function(oldOptions) {
+        if (this._expandedItemsToNotify) {
+            this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
+            this._expandedItemsToNotify = null;
+        }
         if (oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
@@ -845,7 +854,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._children.baseControl.setMarkedKey(key);
     },
     scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
-        this._children.baseControl.scrollToItem(key, toBottom, force);
+        return this._children.baseControl.scrollToItem(key, toBottom, force);
     },
     reloadItem: function(key, readMeta, direction):Deferred {
         let baseControl = this._children.baseControl;
@@ -1066,9 +1075,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(this._options.nodeProperty) !== null) {
-                if (this._isMounted) {
-                    this.toggleExpanded(curItem.get(this._options.keyProperty), model);
-                }
                 expanded.push(curItem.get(this._options.keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }
@@ -1092,7 +1098,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         return hasPrevLeaf ? 'middle' : 'first';
     },
-    goToNext(listModel?, mController?): void {
+    goToNext(listModel?, mController?): Promise {
         return new Promise((resolve) => {
             const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
@@ -1122,6 +1128,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                     }
                 } else {
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    this.scrollToItem(this._tempItem, true);
                     resolve();
                 }
             } else {
@@ -1130,7 +1137,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         });
     },
-    goToPrev(listModel?, mController?): void {
+    goToPrev(listModel?, mController?): Promise {
         return new Promise((resolve) => {
             const item = this.getPrevItem(this._tempItem || this._currentItem, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
@@ -1162,6 +1169,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
+                    this.scrollToItem(itemKey, false);
                     resolve();
                 }
             } else {

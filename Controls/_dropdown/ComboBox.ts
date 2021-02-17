@@ -45,7 +45,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/_input/interface/ITag
  * @implements Controls/_interface/IValidationStatus
  * @implements Controls/_interface/IFontSize
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/ITooltip
  * @implements Controls/_interface/IHeight
  * @implements Controls/_input/interface/IBorderVisibility

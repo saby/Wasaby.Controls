@@ -10,9 +10,12 @@
    .flexbox();
    .flex-direction(column);
    border: @border-thickness_sticky solid @border-color_sticky;
-   background: @background-color_sticky;
    box-sizing: border-box;
    overflow: hidden;
+}
+
+.controls-Menu__popup-background-default_theme-@{themeName} {
+   background: @background-color_sticky;
 }
 
 .controls-Menu__popup-list {
@@ -83,6 +86,18 @@
    align-items: center;
    overflow: hidden;
    cursor: default;
+}
+
+.controls-Menu__popup-headerIcon_wrapper {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+}
+
+.controls-Menu__popup-icon_wrapper_width-m_theme-@{themeName} {
+   width: @icon-size_m;
+   height: @icon-size_m;
 }
 
 .controls-Menu__popup_headerIcon_padding_theme-@{themeName} {

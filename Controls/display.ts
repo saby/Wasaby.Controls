@@ -96,11 +96,6 @@ export {TileCollection};
 import {default as TileCollectionItem} from './_display/TileCollectionItem';
 export {TileCollectionItem};
 
-import {default as ColumnsCollection} from './_display/ColumnsCollection';
-export {ColumnsCollection};
-import {default as ColumnsCollectionItem} from './_display/ColumnsCollectionItem';
-export {ColumnsCollectionItem};
-
 import * as GridLadderUtil from './_display/utils/GridLadderUtil';
 export {GridLadderUtil};
 export {ILadderObject, IStickyColumn, ILadderConfig, IStickyLadderConfig, TLadderElement} from './_display/utils/GridLadderUtil';
@@ -129,8 +124,6 @@ export {IItemsStrategy, IItemsStrategyOptions};
 
 register('Controls/display:Collection', Collection, {instantiate: false});
 register('Controls/display:CollectionItem', CollectionItem, {instantiate: false});
-register('Controls/display:ColumnsCollection', ColumnsCollection, {instantiate: false});
-register('Controls/display:ColumnsCollectionItem', ColumnsCollectionItem, {instantiate: false});
 register('Controls/display:Enum', Enum, {instantiate: false});
 register('Controls/display:Flags', Flags, {instantiate: false});
 register('Controls/display:FlagsItem', FlagsItem, {instantiate: false});

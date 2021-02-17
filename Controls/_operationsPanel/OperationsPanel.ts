@@ -261,10 +261,10 @@ OperationsPanel._theme = ['Controls/operationsPanel'];
  * @default null
  * @example
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions> {
  *       _selectionViewMode: 'all'
  *       ...
- *    });
+ *    }
  * </pre>
  * <pre>
  *    <Controls.operations:Panel bind:selectionViewMode="_selectionViewMode"/>

@@ -272,11 +272,14 @@ var
                 };
 
                 footer.classes = footer.getColumnClasses(0);
-
                 const colspanCfg = {
                     columnStart: self._hasMultiSelectColumn() ? 1 : 0,
                     columnSpan: (self._options.columnScroll ? self._columns.length + 1 : self._columns.length) + this.stickyLadderCellsCount(),
                 };
+                if (self._options.task1181099336 && footer.isFullGridSupport) {
+                    colspanCfg.columnStart += this.stickyLadderCellsCount();
+                    colspanCfg.columnSpan -= this.stickyLadderCellsCount();
+                }
                 if (current.columnScroll) {
                     footer.rowIndex = current.rowIndex + index + 1;
 
@@ -305,18 +308,25 @@ var
                         }
                         if (self._ladder.stickyLadder[lastLadderIndex][property].ladderLength) {
                             // разделяем лесенку на до и после футера.
-                            const ladderLength = self._ladder.stickyLadder[lastLadderIndex][property].ladderLength;
-                            const firstPart = current.index - lastLadderIndex + 1;
-                            const secondPart = ladderLength - firstPart;
-                            const next = current.index + 1;
-                            self._ladder.stickyLadder[lastLadderIndex][property].ladderLength = firstPart;
-                            self._ladder.ladder[lastLadderIndex][property].ladderLength = firstPart;
-                            self._ladder.stickyLadder[lastLadderIndex][property].headingStyle = 'grid-row: span ' + firstPart;
+                            const ladderLength = self._ladder.stickyLadder[lastLadderIndex][property].ladderLength + current.nodeFooters.length;
+                            if (self._options.task1181099336) {
+                                self._ladder.stickyLadder[lastLadderIndex][property].ladderLength = ladderLength;
+                                self._ladder.ladder[lastLadderIndex][property].ladderLength = ladderLength;
+                                self._ladder.stickyLadder[lastLadderIndex][property].headingStyle = 'grid-row: span ' + ladderLength;
 
-                            if (self._ladder.stickyLadder[next] && !self._ladder.stickyLadder[next][property].ladderLength) {
-                                self._ladder.stickyLadder[next][property].ladderLength = secondPart;
-                                self._ladder.ladder[next][property].ladderLength = secondPart;
-                                self._ladder.stickyLadder[next][property].headingStyle = 'grid-row: span ' + secondPart;
+                            } else {
+                                const firstPart = current.index - lastLadderIndex + 1;
+                                const secondPart = ladderLength - firstPart;
+                                const next = current.index + 1;
+                                self._ladder.stickyLadder[lastLadderIndex][property].ladderLength = firstPart;
+                                self._ladder.ladder[lastLadderIndex][property].ladderLength = firstPart;
+                                self._ladder.stickyLadder[lastLadderIndex][property].headingStyle = 'grid-row: span ' + firstPart;
+
+                                if (self._ladder.stickyLadder[next] && !self._ladder.stickyLadder[next][property].ladderLength) {
+                                    self._ladder.stickyLadder[next][property].ladderLength = secondPart;
+                                    self._ladder.ladder[next][property].ladderLength = secondPart;
+                                    self._ladder.stickyLadder[next][property].headingStyle = 'grid-row: span ' + secondPart;
+                                }
                             }
                         }
                     });

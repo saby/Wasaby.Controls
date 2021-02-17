@@ -49,5 +49,6 @@
         on:misspellCaptionClick="_misspellCaptionClick()"
         on:filterItemsChanged="_filterItemsChanged()"
         on:filterHistoryApply="_filterHistoryApply()"
+        on:inputSearchValueChanged="_inputSearchValueChanged()"
 />
 

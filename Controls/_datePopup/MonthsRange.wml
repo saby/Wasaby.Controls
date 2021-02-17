@@ -2,7 +2,8 @@
 <Controls.calendar:MonthList
    attachLoadTopTriggerToNull="{{ false }}"
    attr:class="controls-PeriodDialog-MonthsRange"
-   virtualPageSize="{{3}}"
+   segmentSize="4"
+   virtualPageSize="{{4}}"
    position="{{_options.position}}"
    shadowStyle="datePopup"
    _limit="{{1}}"

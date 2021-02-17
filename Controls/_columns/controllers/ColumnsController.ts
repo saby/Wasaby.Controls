@@ -1,5 +1,6 @@
 import {Control, IControlOptions} from 'UI/Base';
-import {ColumnsCollection} from 'Controls/display';
+import Collection from 'Controls/_columns/display/Collection';
+
 import {IColumnsCalculator} from 'Controls/_columns/interface/IColumnsCalculator';
 import {AutoColumns} from 'Controls/_columns/controllers/AutoColumns';
 import {FixedColumns} from 'Controls/_columns/controllers/FixedColumns';
@@ -24,7 +25,7 @@ export default class ColumnsController extends Control {
         }
     }
 
-    calcColumn(collection: ColumnsCollection<unknown>, index: number, columnsCount?: number): number {
+    calcColumn(collection: Collection<unknown>, index: number, columnsCount?: number): number {
         return this._columnsCalculator.calcColumn(collection, index, columnsCount);
     }
 }

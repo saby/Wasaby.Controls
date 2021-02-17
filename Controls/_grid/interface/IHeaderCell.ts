@@ -7,64 +7,56 @@ export interface IRowspanParams {
     rowspan?: number;
 }
 
-/**
- * @typedef {String} THeader
- * @description Тип опции header в таблице
- * @public
- * @author Авраменко А.С.
- */
 export type THeader = IHeaderCell[];
 
 /**
- * Интерфейс для конфигурации ячеек заголовка в контроле {@link Controls/grid:View Таблица}.
- *
- * @interface Controls/_grid/interface/IHeaderCell
+ * Интерфейс для конфигурации ячеек {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ заголовка} в {@link Controls/grid:View Таблице}.
  * @public
  * @author Авраменко А.С.
  */
 export interface IHeaderCell extends IControlOptions, IRowspanParams, IColspanParams {
     /**
-     * @description Текст заголовка ячейки.
+     * @cfg {String} Текст заголовка ячейки.
      */
     caption?: string;
     /**
      * @typedef {String} TOverflow
-     * @description Поведение текста, если он не умещается в ячейке
+     * @description Допустимые значения для опции {@link textOverflow}.
      * @variant ellipsis Текст обрезается многоточием.
      * @variant none Текст разбивается на несколько строк.
      */
     /**
-     * @name Controls/_grid/interface/IHeaderCell#textOverflow
-     * @cfg {TOverflow} Поведение текста, если он не умещается в ячейке
+     * @cfg {TOverflow} Поведение текста, если он не умещается в ячейке.
      * @default none
      */
     textOverflow?: 'none' | 'ellipsis'
     /**
      * @typedef {String} TCellAlign
+     * @description Допустимые значения для опции {@link align}.
      * @variant left По левому краю.
      * @variant center По центру.
      * @variant right По правому краю.
      */
     /**
-     * @name Controls/_grid/interface/IHeaderCell#align
      * @cfg {TCellAlign} Выравнивание содержимого ячейки по горизонтали.
      * @default left
+     * @see valign
      */
     align?: TCellAlign;
     /**
      * @typedef {String} TCellVerticalAlign
+     * @description Допустимые значения для опции {@link valign}.
      * @variant top По верхнему краю.
      * @variant center По центру.
      * @variant bottom По нижнему краю.
      */
     /**
-     * @name Controls/_grid/interface/IHeaderCell#valign
      * @cfg {TCellVerticalAlign} Выравнивание содержимого ячейки по вертикали.
+     * @see align
      */
     valign?: TCellVerticalAlign;
     /**
-     * @name Controls/_grid/interface/IHeaderCell#template
-     * @cfg {String|Function} Шаблон заголовка ячейки.
+     * @cfg {String|Function} Шаблон отображения заголовка ячейки.
      * @default Controls/grid:HeaderContent
      * @remark
      * Параметры шаблона Controls/grid:HeaderContent доступны {@link Controls/grid:HeaderContent здесь}.
@@ -157,13 +149,12 @@ export interface IHeaderCell extends IControlOptions, IRowspanParams, IColspanPa
      *    </ws:header>
      * </Controls.grid:View>
      * </pre>
+     * @see templateOptions
      */
     template?: TemplateFunction|string;
     /**
-     * @name Controls/_grid/interface/IHeaderCell#sortingProperty
-     * @cfg {String} Свойство, по которому выполняется сортировка.
+     * @cfg {String} Имя поля, по которому выполняется сортировка.
      * @remark
-     * В качестве значения принимает имя поля.
      * Одновременно можно сортировать только по одному полю.
      * Если в конфигурации ячейки задать это свойство, то в заголовке таблицы в конкретной ячейке будет отображаться кнопка для изменения сортировки.
      * Клик по кнопке будет менять порядок сортировки элементов на противоположный.
@@ -196,27 +187,32 @@ export interface IHeaderCell extends IControlOptions, IRowspanParams, IColspanPa
      */
     sortingProperty?: string;
     /**
-     * @description Порядковый номер строки, на которой начинается ячейка.
+     * @cfg {Number} Порядковый номер строки, на которой начинается ячейка.
+     * @see endRow
      */
     startRow?: number;
     /**
-     * @description Порядковый номер строки, на которой заканчивается ячейка.
+     * @cfg {Number} Порядковый номер строки, на которой заканчивается ячейка.
+     * @see startRow
      */
     endRow?: number;
     /**
-     * @description Порядковый номер колонки, на которой начинается ячейка.
+     * @cfg {Number} Порядковый номер колонки, на которой начинается ячейка.
+     * @see endColumn
      */
     startColumn?: number;
     /**
-     * @description Порядковый номер колонки, на которой заканчивается ячейка.
+     * @cfg {Number} Порядковый номер колонки, на которой заканчивается ячейка.
+     * @see startColumn
      */
     endColumn?: number;
     /**
-     * @description Опции, передаваемые в шаблон ячейки заголовка.
+     * @cfg {Number} Опции, передаваемые в шаблон отображения ячейки заголовка.
+     * @see template
      */
     templateOptions?: object;
     /**
-     * @description Поле, для определения ячейки действий
+     * @cfg {Boolean} Поле, для определения ячейки действий.
      */
     isActionCell?: boolean;
 }

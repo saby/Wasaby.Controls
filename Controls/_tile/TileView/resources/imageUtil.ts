@@ -87,22 +87,21 @@ export function getImageRestrictions(
     tileWidth: number
 ): IImageRestrictions {
     if (imageHeight && imageWidth) {
-        const tileDeltaW = Number((tileWidth / tileHeight).toFixed(2));
-        const imageDeltaW = Number((imageWidth / imageHeight).toFixed(2));
-        const imageDeltaH = Number((imageHeight / imageWidth).toFixed(2));
-        const tileDeltaH = Number((tileHeight / tileWidth).toFixed(2));
+        const tileDeltaW = Number((tileWidth / tileHeight).toFixed(1));
+        const imageDeltaW = Number((imageWidth / imageHeight).toFixed(1));
+        const imageDeltaH = Number((imageHeight / imageWidth).toFixed(1));
+        const tileDeltaH = Number((tileHeight / tileWidth).toFixed(1));
         const restrictions = {
             width: false,
             height: false
         };
-        if (tileDeltaW === imageDeltaW && tileDeltaH === imageDeltaH) {
+        if (imageDeltaW > tileDeltaW) {
+            restrictions.height = true;
+        } else if (imageDeltaH <= tileDeltaH) {
             restrictions.width = true;
-        } else if (imageDeltaW > tileDeltaW) {
-            restrictions.width = true;
-            if (imageDeltaH >= tileDeltaH) {
-                restrictions.height = true;
-            }
-        } else if (tileDeltaH <= imageDeltaH) {
+        } else if (imageDeltaW === tileDeltaW && imageDeltaW <= 1) {
+            restrictions.height = true;
+        } else if (imageDeltaW <= 1) {
             restrictions.width = true;
         } else {
             restrictions.height = true;

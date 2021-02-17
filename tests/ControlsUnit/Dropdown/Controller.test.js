@@ -363,6 +363,20 @@ define(
                dropdownController.update(readOnlyConfig);
                assert.isTrue(isClosed);
             });
+
+            it('_reloadSelectedItems', () => {
+               let isReloaded = false;
+               let configSelectedKeys = clone(config);
+               configSelectedKeys.navigation = true;
+               configSelectedKeys.selectedKeys = ['20'];
+               dropdownController._items = itemsRecords;
+               dropdownController._reloadSelectedItems = () => {
+                  isReloaded = true;
+               };
+
+               dropdownController.update({...configSelectedKeys});
+               assert.isTrue(isReloaded);
+            });
          });
 
          it('getItemByKey', () => {
@@ -419,15 +433,31 @@ define(
             };
 
             // emptyText + selectedKeys = [null]
-            dropdownController._updateSelectedItems([null], 'id', '123', null, selectedItemsChangedCallback);
+            dropdownController._updateSelectedItems({
+               selectedKeys: [null],
+               keyProperty: 'id',
+               emptyText: '123',
+               emptyKey: null,
+               selectedItemsChangedCallback: selectedItemsChangedCallback
+            });
             assert.deepEqual(selectedItems, [null]);
 
             // emptyText + selectedKeys = []
-            dropdownController._updateSelectedItems([], 'id', '123', null, selectedItemsChangedCallback);
+            dropdownController._updateSelectedItems({
+               selectedKeys: [],
+               keyProperty: 'id',
+               emptyText: '123',
+               emptyKey: null,
+               selectedItemsChangedCallback: selectedItemsChangedCallback});
             assert.deepEqual(selectedItems, [null]);
 
             // emptyText + selectedKeys = [] + emptyKey = 100
-            dropdownController._updateSelectedItems([], 'id', '123', 100, selectedItemsChangedCallback);
+            dropdownController._updateSelectedItems({
+               selectedKeys: [],
+               keyProperty: 'id',
+               emptyText: '123',
+               emptyKey: 100,
+               selectedItemsChangedCallback: selectedItemsChangedCallback});
             assert.deepEqual(selectedItems, [null]);
 
             // selectedKeys = []
@@ -439,7 +469,13 @@ define(
                ]
             });
             dropdownController._items = newItems;
-            dropdownController._updateSelectedItems([], 'id', undefined, null, selectedItemsChangedCallback);
+            dropdownController._updateSelectedItems({
+               selectedKeys: [],
+               keyProperty: 'id',
+               emptyText: undefined,
+               emptyKey: null,
+               selectedItemsChangedCallback: selectedItemsChangedCallback
+            });
             assert.deepEqual(selectedItems, [newItems.at(0)]);
          });
 

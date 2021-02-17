@@ -8,7 +8,7 @@ import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import {getHistorySource} from 'Controls/_filter/HistoryUtils';
 import {_assignServiceFilters} from '../_search/Utils/FilterUtils';
 import {selectionToRecord} from 'Controls/operations';
-import {TKeysSelection} from 'Controls/interface';
+import {TKeysSelection, TFilter} from 'Controls/interface';
 
 import * as clone from 'Core/core-clone';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
@@ -29,7 +29,7 @@ type THistoryData = IFilterHistoryData | IFilterItem[];
 
 export interface IFilterControllerOptions {
     prefetchParams?: IPrefetchHistoryParams;
-    filter: object;
+    filter?: TFilter;
     useStore?: boolean;
     filterButtonSource: IFilterItem[];
     fastFilterSource?: IFilterItem[];
@@ -57,7 +57,7 @@ export default class FilterControllerClass {
     private _crudWrapper: CrudWrapper;
     private _filterButtonItems: IFilterItem[] = null;
     private _fastFilterItems: IFilterItem[] = null;
-    private _filter: object = {};
+    private _filter: TFilter = {};
 
     /* Флаг необходим, т.к. добавлять запись в историю после изменения фильтра
    необходимо только после загрузки данных, т.к. только в ответе списочного метода
@@ -223,7 +223,7 @@ export default class FilterControllerClass {
         }
     }
 
-    getFilter(): object {
+    getFilter(): TFilter {
         return this._filter;
     }
 
@@ -386,6 +386,13 @@ export default class FilterControllerClass {
         let minimizedItemFromOption;
 
         const historySource = getHistorySource({historyId});
+        /* На сервере historySource не кэшируется и история никогда не будет проинициализирована
+           Нужно переводить кэширование на сторы Санникова
+           https://online.sbis.ru/opendoc.html?guid=4ca5d3b8-65a7-4d98-8ca4-92ed1fbcc0fc
+         */
+        if (!historySource.historyReady()) {
+            return;
+        }
         const historyItems = historySource.getItems();
         if (historyItems && historyItems.getCount()) {
             historyItems.each((item, index) => {

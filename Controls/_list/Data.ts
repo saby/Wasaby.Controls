@@ -327,7 +327,6 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                 this._sourceController.setRoot(currentRoot);
              }
              this._items = this._sourceController.getItems();
-             this._loading = false;
              return reloadResult;
           })
           .catch((error) => {
@@ -339,6 +338,9 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
                  }
              );
              return error;
+          })
+          .finally(() => {
+             this._loading = false;
           });
    }
 

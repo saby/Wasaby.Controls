@@ -7,6 +7,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {TKeysSelection, ISelectionObject} from 'Controls/interface';
 import {default as getCountUtil, IGetCountCallParams} from 'Controls/_operations/MultiSelector/getCount';
 import {LoadingIndicator} from 'Controls/LoadingIndicator';
+import {isEqual} from 'Types/object';
 
 const DEFAULT_CAPTION = rk('Отметить');
 const DEFAULT_ITEMS = [
@@ -88,7 +89,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
                                  options.excludedKeys !== newOptions.excludedKeys;
       const viewModeChanged = options.selectionViewMode !== newOptions.selectionViewMode;
       const isAllSelectedChanged = options.isAllSelected !== newOptions.isAllSelected;
-      const selectionCfgChanged = options.selectedCountConfig !== newOptions.selectedCountConfig;
+      const selectionCfgChanged = !isEqual(options.selectedCountConfig, newOptions.selectedCountConfig);
       const selectionCountChanged = options.selectedKeysCount !== newOptions.selectedKeysCount;
 
       if (selectionIsChanged || viewModeChanged || isAllSelectedChanged || selectionCfgChanged) {
@@ -131,7 +132,7 @@ export default class MultiSelector extends Control<IMultiSelectorOptions> {
       const selectedKeys = options.selectedKeys;
       const excludedKeys = options.excludedKeys;
       const selection = this._getSelection(selectedKeys, excludedKeys);
-      const count = counterConfigChanged ? null : options.selectedKeysCount;
+      const count = (counterConfigChanged && options.selectedKeysCount !== 0) ? null : options.selectedKeysCount;
       const getCountCallback = (count, isAllSelected) => {
          this._menuCaption = this._getMenuCaption(selection, count, isAllSelected);
          this._sizeChanged = true;

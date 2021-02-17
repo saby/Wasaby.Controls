@@ -95,7 +95,11 @@ define(
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
 
-               options.source.query = () => Promise.reject(new Error());
+               options.source.query = () => {
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
+               };
 
                await menuControl._loadItems(options).catch(() => {
                   assert.isNotNull(menuControl._errorConfig);
@@ -107,10 +111,14 @@ define(
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
                menuControl._options.dataLoadErrback = () => {
-                  isDataLoadErrbackCalled = true
-               }
+                  isDataLoadErrbackCalled = true;
+               };
 
-               options.source.query = () => Promise.reject(new Error());
+               options.source.query = () => {
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
+               };
 
                await menuControl._loadItems(options).catch(() => {
                   assert.isNotNull(menuControl._errorConfig);
@@ -185,7 +193,9 @@ define(
 
             it('_loadItems return error', async() => {
                menuControl._loadItems = () => {
-                  return Promise.reject(new Error());
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
                };
                await menuControl._beforeMount(menuOptions);
 
@@ -898,6 +908,30 @@ define(
                menuControl._openItemActionMenu('item', {}, null);
                assert.isTrue(isOpened);
                assert.isOk(actualConfig.eventHandlers);
+            });
+
+            it('_onItemActionsMenuResult', () => {
+               let isItemHandled = false;
+               let isClosed = false;
+               const actionModel = new entity.Model({
+                  rawData: {
+                     key: '1',
+                     handler: () => { isItemHandled = true; }
+                  },
+                  keyProperty: 'key'
+               });
+               let menuControl = getMenu();
+               menuControl._itemActionsController = {
+                  getActiveItem: () => ({ getContents: () => {} })
+               };
+               menuControl._itemActionSticky = {
+                  close: () => {
+                     isClosed = true;
+                  }
+               };
+               menuControl._onItemActionsMenuResult('itemClick', actionModel, null);
+               assert.isTrue(isItemHandled);
+               assert.isTrue(isClosed);
             });
          });
 
