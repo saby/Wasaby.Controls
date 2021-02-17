@@ -676,7 +676,7 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean) {
+    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
         const scrollCallback = (index, result) => {
 
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
@@ -5078,7 +5078,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // уведомлений о запуске редактирования происходить не должно, а дождаться построение
         // редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
         return new Promise((resolve) => {
-
             // Операции над записью должны быть обновлены до отрисовки строки редактирования,
             // иначе будет "моргание" операций.
             _private.updateItemActions(this, this._options, item);
@@ -5108,7 +5107,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._isMounted) {
                 return _private.scrollToItem(this, item.contents.getKey(), false, false);
             }
-        })
+        });
     },
 
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean, force: boolean = false) {
