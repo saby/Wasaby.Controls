@@ -111,14 +111,14 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#moreFontColorStyle
- * @cfg {IFontColorStyle} Опция управляет стилем цвета текста для кнопки ещё.
+ * @cfg {Controls/interface:IFontColorStyle} Опция управляет стилем цвета текста для {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/button-more/ кнопки "Ещё"}.
  * @default listMore
  * @see IFontColorStyle
  */
 
 /**
  * @name Controls/_list/interface/IList#pagingContentTemplate
- * @cfg {Function} Опция управляет отображением {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/#button-number счетчика непрочитанных сообщений}.
+ * @cfg {Function} Шаблон отображения слева от кнопки навигации. Используется для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/#button-number счетчика непрочитанных сообщений}.
  * @demo Controls-demo/list_new/Navigation/Paging/End/ContentTemplate/Index
  * @see pagingMode
  */
@@ -139,7 +139,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#continueSearchTemplate
- * @cfg {string|Function} Шаблон отображения блока, который отображается при прерывании итеративного поиска.
+ * @cfg {string|Function} Шаблон отображения блока, который отображается при прерывании {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#batch-filtration-search итеративного поиска}.
  * @default Controls/list:ContinueSearchTemplate
  * @demo Controls-demo/list_new/Searching/PortionedSearch/Index
  * @example
@@ -660,7 +660,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * @cfg {ItemPadding} Конфигурация отступов внутри элементов списка.
+ * @cfg {ItemPadding} {@link /doc/platform/developmentapl/interface-development/controls/list/list/paddings/ Конфигурация отступов} внутри элементов списка.
  * @name Controls/_list/interface/IList#itemPadding
  * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
  * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
@@ -688,7 +688,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#backgroundStyle
- * @cfg {BackgroundStyle} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @cfg {BackgroundStyle} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/ Префикс стиля для настройки фона} внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
  * @default default
  * @remark
  * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
@@ -708,7 +708,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#rowSeparatorSize
- * @cfg {RowSeparatorSize} Высота линии-разделителя строк.
+ * @cfg {RowSeparatorSize} Высота {@link /doc/platform/developmentapl/interface-development/controls/list/grid/line-separator/#row линии-разделителя строк).
  * @default s
  */
 
@@ -723,7 +723,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#hoverBackgroundStyle
- * @cfg {String} Стиль подсветки строки при наведении курсора мыши.
+ * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#hover Стиль подсветки строки} при наведении курсора мыши.
  * @default default
  * @remark
  * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.
