@@ -19,7 +19,7 @@
                 {{_formattedNumber.integer}}
             </span>
             <ws:if data="{{_isDisplayFractionPath(_formattedNumber.fraction, _options.showEmptyDecimals)}}">
-                <span class="{{_fractionClass(_formattedNumber.fraction)}}
+                <span class="{{_calcFractionClass(_formattedNumber.fraction)}}
                             controls-fontsize-xs_theme-{{_options.theme}}">
                     {{_formattedNumber.fraction}}
                 </span>

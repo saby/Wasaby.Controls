@@ -172,7 +172,11 @@ class NumberDecorator extends Control<INumberOptions> {
                 'trunc',
                 'round'
             ]),
-            abbreviationType: descriptor(String),
+            abbreviationType: descriptor(String).oneOf([
+                'none',
+                'short',
+                'long'
+            ]),
             stroked: descriptor(Boolean),
             underline: descriptor(String)
         };

@@ -99,7 +99,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     }
 
     // Used in template
-    protected _fractionClass(value: string): string {
+    protected _calcFractionClass(value: string): string {
         return value !== '.00' ? 'controls-DecoratorMoney__fraction__colorStyle-' + this._fontColorStyle : 'controls-DecoratorMoney__fraction__colorStyle';
     }
 
@@ -237,7 +237,10 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             value: descriptor(String, Number, null),
             currencySize: descriptor(String),
             currencyPosition: descriptor(String),
-            abbreviationType: descriptor(String),
+            abbreviationType: descriptor(String).oneOf([
+                'none',
+                'long'
+            ]),
             stroked: descriptor(Boolean),
             underline: descriptor(String)
         };
