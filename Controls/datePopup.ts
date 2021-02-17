@@ -184,9 +184,9 @@ export default class DatePopup extends Control implements EventProxyMixin {
             } else {
                 this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
             }
-            if ('months' in options.ranges) {
+            if ('months' in options.ranges || 'quarters' in options.ranges || 'halfyears' in options.ranges) {
                 this._monthRangeSelectionType = options.selectionType;
-                this._monthRangeQuantum = {'months': options.ranges.months};
+                this._monthRangeQuantum = options.ranges;
             } else {
                 this._monthRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
             }
