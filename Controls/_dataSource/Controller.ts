@@ -510,7 +510,7 @@ export default class Controller {
                     return crudWrapper.query(params, this._options.keyProperty);
                 }));
 
-            this._loadPromise.promise
+            return this._loadPromise.promise
                 .then((result: RecordSet) => {
                     this._loadPromise = null;
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
@@ -526,10 +526,8 @@ export default class Controller {
                         this._loadPromise = null;
                         this._processQueryError(error);
                     }
-                    return error;
+                    return Promise.reject(error);
                 });
-
-            return this._loadPromise.promise;
         } else {
             Logger.error('source/Controller: Source option has incorrect type');
             return Promise.reject(new Error('source/Controller: Source option has incorrect type'));
