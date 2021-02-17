@@ -1161,7 +1161,8 @@ const _private = {
                 }
             });
         } else if (direction === 'up') {
-            self._notify('doScroll', ['top'], { bubbling: true });
+            self._needScrollToFirstItem = true;
+            self._scrollToFirstItemIfNeed();
             if (self._scrollPagingCtr) {
                 self._currentPage = 1;
                 self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
