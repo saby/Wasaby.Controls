@@ -3869,10 +3869,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
                 // без возможности отменить закрытие из вне.
                 this._cancelEdit(true).then(() => {
-                    this._destroyEditInPlaceController();
+                    if (oldViewModelConstructorChanged) {
+                        this._destroyEditInPlaceController();
+                    }
                 });
             } else {
-                this._destroyEditInPlaceController();
+                if (oldViewModelConstructorChanged) {
+                    this._destroyEditInPlaceController();
+                }
             }
         }
 
