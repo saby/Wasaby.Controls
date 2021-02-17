@@ -32,14 +32,31 @@ export class DataSource {
         this.sourceController.setFilter(filter);
     }
 
+    extendFilter(filter: QueryWhereExpression<unknown>): QueryWhereExpression<unknown> {
+        return this.sourceController.setFilter({
+            ...this.sourceController.getFilter(),
+            ...filter
+        });
+    }
+
+    /**
+     * Записывает текущий фильтр из searchController в sourceController
+     */
     updateFilterAfterSearch(): void {
         this.sourceController.setFilter(
             this.searchController.getFilter()
         );
     }
 
+    /**
+     * Проставляет переданный root в sourceController
+     */
     setRoot(root: TKey): void {
         this.sourceController.setRoot(root);
+
+        // Синхронизируем root в searchController только если указано, что искать нужно
+        // относительно текущего узла. В противном случае оставляем null, что бы искалось
+        // от корня
         if (this.searchController && this.sourceOptions.searchStartingWith === 'current') {
             this.searchController.setRoot(root);
         }
@@ -92,13 +109,17 @@ export class DataSource {
 
         return import('Controls/search').then((result) => {
             return this.searchController = new result.ControllerClass({
-                root: this.sourceOptions.searchStartingWith === 'current' ? this.sourceController.getRoot() : null,
+                startingWith: this.sourceOptions.searchStartingWith,
+                // Если указан режим поиска от текущего узла, то прокидываем текущий root
+                // в противном случае передаем null и в последствии не меняем что бы искалось от корня
+                root: this.sourceOptions.searchStartingWith === 'current'
+                    ? this.sourceController.getRoot()
+                    : null,
                 parentProperty: this.sourceOptions.parentProperty,
                 sourceController: this.sourceController,
                 searchValue: '',
                 searchDelay: 300,
                 minSearchLength: 3,
-                startingWith: this.sourceOptions.searchStartingWith,
                 searchValueTrim: true,
                 searchParam: (this.sourceOptions as any).searchParam,
                 searchNavigationMode: (this.sourceOptions as any).searchNavigationMode

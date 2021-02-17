@@ -246,20 +246,17 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
+        const sourceChanged = this._options.source !== newOptions.source;
+        const hasSearchValueInOptions = newOptions.searchValue !== undefined;
+        const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue && this._inputSearchValue.length >= this._options.minSearchLength;
         let methodResult;
-        let sourceChanged;
 
         this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
-        if (this._options.source !== newOptions.source) {
-            this._source = newOptions.source;
-            sourceChanged = true;
-        }
-
-        if (this._options.searchValue !== newOptions.searchValue) {
+        if ((this._options.searchValue !== newOptions.searchValue) && (this._searchValue !== newOptions.searchValue)) {
             this._inputSearchValue = newOptions.searchValue;
 
             if (!newOptions.searchValue && sourceChanged && this._searchController) {
@@ -299,11 +296,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._afterSourceLoad(sourceController, newOptions);
         }
 
-        if (sourceChanged && this._inputSearchValue && !newOptions.searchValue) {
+        if (isChanged && isInputSearchValueLongerThenMinSearchLength && hasSearchValueInOptions && !newOptions.searchValue) {
             this._inputSearchValue = '';
         }
 
-        if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
+        if (hasSearchValueInOptions && this._searchValue !== newOptions.searchValue) {
             if (!methodResult) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
