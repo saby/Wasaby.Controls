@@ -242,6 +242,10 @@ export default class Container extends Control<IContainerOptions> {
           });
    }
 
+   protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+      this._inputSearchValue = value;
+   }
+
    private _isSearchViewMode(): boolean {
       return this._viewMode === 'search';
    }

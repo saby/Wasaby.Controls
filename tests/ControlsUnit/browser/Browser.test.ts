@@ -418,19 +418,24 @@ describe('Controls/browser:Browser', () => {
                 assert.deepStrictEqual(browser._filter.name, 'test');
             });
 
-            it('update source without new searchValue should reset inputSearchValue', async () => {
+            it('update source and searchValue should reset inputSearchValue', async () => {
                 let options = getBrowserOptions();
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
                 browser.saveOptions(options);
 
                 await browser._search({}, 'testSearchValue');
+                options.searchValue = 'testSearchValue';
+                browser.saveOptions(options);
                 assert.ok(browser._inputSearchValue === 'testSearchValue');
+                assert.deepStrictEqual(browser._filter, {name: 'testSearchValue'});
 
                 options = {...options};
                 options.source = new Memory();
+                options.searchValue = '';
                 browser._beforeUpdate(options);
                 assert.ok(!browser._inputSearchValue);
+                assert.deepStrictEqual(browser._filter, {});
             });
 
             it('update source and reset searchValue', async () => {
