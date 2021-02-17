@@ -6507,17 +6507,13 @@ define([
                 checkCase(index, caseData, baseControl._shouldDisplayTopLoadingIndicator);
              });
 
-             baseControl._loadingIndicatorState = 'all';
-             baseControl.__needShowEmptyTemplate = () => false;
-             baseControl._children = {
-                listView: {
-                   isColumnScrollVisible: () => true
-                }
-             };
-             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
-
              baseControl._loadingIndicatorState = 'up';
              baseControl._portionedSearchInProgress = true;
+             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+
+             baseControl._portionedSearchInProgress = false;
+             baseControl._loadingIndicatorState = 'bottom';
+             baseControl.__needShowEmptyTemplate = () => true;
              assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
           });
 
@@ -6569,6 +6565,10 @@ define([
              testCases.forEach((caseData, index) => {
                 checkCase(index, caseData, baseControl._shouldDisplayBottomLoadingIndicator);
              });
+
+             baseControl._loadingIndicatorState = 'bottom';
+             baseControl.__needShowEmptyTemplate = () => true;
+             assert.equal(baseControl._shouldDisplayBottomLoadingIndicator(), false);
           });
 
           it('attachToNull, onCollectionChanged', () => {
