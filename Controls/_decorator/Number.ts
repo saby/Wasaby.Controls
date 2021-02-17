@@ -17,7 +17,13 @@ import {
 } from 'Controls/interface';
 import 'css!Controls/decorator';
 
-type TValue = string | number | null;
+/**
+ * Тип данных для аббревиатуры
+ * @typedef {string} TAbbreviationType
+ * @variant short
+ * @variant long
+ * @variant none
+ */
 type TAbbreviationType = 'none' | 'short' | 'long';
 type RoundingFn = (number: string, fractionSize: number) => string;
 
@@ -41,7 +47,7 @@ export interface INumberOptions extends IControlOptions, INumberFormatOptions, I
      * @cfg {String|Number|null} Декорируемое число.
      * @demo Controls-demo/Decorator/Number/Value/Index
      */
-    value: TValue;
+    value: string;
     /**
      * @name Controls/_decorator/INumber#fractionSize
      * @cfg {Number} Количество знаков после запятой. Диапазон от 0 до 20.
@@ -55,6 +61,12 @@ export interface INumberOptions extends IControlOptions, INumberFormatOptions, I
      * @demo Controls-demo/Decorator/Number/RoundMode/Index
      */
     roundMode: RoundMode;
+    /**
+     * Тип аббревиатуры.
+     * @type TAbbreviationType
+     * @default 'none'
+     * @demo Controls-demo/Decorator/Number/Abbreviation/Index
+     */
     abbreviationType?: TAbbreviationType;
 }
 

@@ -21,10 +21,37 @@ import { abbreviateNumber } from 'Controls/_decorator/resources/Formatter';
 import * as template from 'wml!Controls/_decorator/Money/Money';
 import 'css!Controls/decorator';
 
-type TValue = string | number | null;
+/**
+ * Тип данных для аббревиатуры
+ * @typedef {string} TAbbreviationType
+ * @variant long
+ * @variant none
+ */
 type TAbbreviationType = 'long' | 'none';
+/**
+ * Тип данных для отображаемой валюты
+ * @typedef {string} TCurrency
+ * @variant Ruble
+ * @variant Euro
+ * @variant Dollar
+ */
 type TCurrency = 'Ruble' | 'Euro' | 'Dollar';
+/**
+ * Тип данных для позиции отображаемой валюты
+ * @typedef {string} TAbbreviationType
+ * @variant right
+ * @variant left
+ */
 type TCurrencyPosition = 'right' | 'left';
+/**
+ * Тип данных для размера отображаемой валюты
+ * @typedef {string} TCurrency
+ * @variant 2xs
+ * @variant xs
+ * @variant s
+ * @variant m
+ * @variant l
+ */
 type TCurrencySize = '2xs' | 'xs' | 's' | 'm' | 'l';
 
 interface IPaths {
@@ -43,14 +70,35 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
     IFontColorStyleOptions, IFontWeightOptions, IFontSizeOptions {
     /**
      * Декорируемое число.
-     * @type string|number|null
+     * @type string
      * @default null
      * @demo Controls-demo/Decorator/Money/Value/Index
      */
-    value: TValue;
+    value: string;
+    /**
+     * Тип аббревиатуры.
+     * @type TAbbreviationType
+     * @default 'none'
+     * @demo Controls-demo/Decorator/Money/Abbreviation/Index
+     */
     abbreviationType?: TAbbreviationType;
+    /**
+     * Отображаемая валюта.
+     * @type TCurrency
+     * @demo Controls-demo/Decorator/Money/Currency/Index
+     */
     currency?: TCurrency;
+    /**
+     * Размер отображаемой валюты.
+     * @type TCurrencySize
+     * @default 's'
+     */
     currencySize?: TCurrencySize;
+    /**
+     * Позиция отображаемой валюты относительно суммы.
+     * @type TCurrencyPosition
+     * @default 'right'
+     */
     currencyPosition?: TCurrencyPosition;
 }
 
@@ -79,7 +127,7 @@ export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, IT
  */
 
 class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, IFontColorStyle, IFontSize, IFontWeight {
-    private _value: TValue;
+    private _value: string;
     private _useGrouping: boolean;
     protected _tooltip: string;
     private _formattedNumber: string | IPaths;
@@ -182,7 +230,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 
     static _theme: string[] = ['Controls/Classes'];
 
-    private static toString(value: TValue): string {
+    private static toString(value: string): string {
         if (value === null) {
             return '0.' + Money.ZERO_FRACTION_PATH;
         }
