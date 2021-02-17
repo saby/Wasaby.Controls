@@ -529,6 +529,7 @@ define('Controls/interface/IEditableList', [
     * @demo Controls-demo/list_new/EditInPlace/EmptyActionsWithToolBar/Index
     * @name Controls/interface/IEditableList#editingConfig
     * @example
+    * В следующем примере в режиме редактирования по месту отображаются кнопки "Сохранить" и "Отмена" на панели опций записи.
     * <pre class="brush: html; highlight: [3]">
     * <!-- WML -->
     * <Controls.list:View name="list" keyProperty="id" source="{{_viewSource}}">
