@@ -267,14 +267,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._source = newOptions.source;
         }
 
-        if ((this._options.searchValue !== newOptions.searchValue) && (this._searchValue !== newOptions.searchValue)) {
-            this._inputSearchValue = newOptions.searchValue;
-
-            if (!newOptions.searchValue && sourceChanged && this._searchController) {
-                this._updateFilter(this._searchController);
-            }
-        }
-
         if (newOptions.root !== this._options.root) {
             this._root = newOptions.root;
 
@@ -294,6 +286,14 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         const sourceController = this._getSourceController(newOptions);
         const isChanged = sourceController.updateOptions(
            this._getSourceControllerOptions(newOptions as ISourceControllerOptions));
+
+        if ((this._options.searchValue !== newOptions.searchValue) && (this._searchValue !== newOptions.searchValue)) {
+            this._inputSearchValue = newOptions.searchValue;
+
+            if (!newOptions.searchValue && sourceChanged && this._searchController) {
+                this._updateFilter(this._searchController);
+            }
+        }
 
         if (isChanged) {
             methodResult = this._reload(newOptions);
