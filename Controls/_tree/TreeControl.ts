@@ -1210,7 +1210,12 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._markedLeaf = newMarkedLeaf;
         }
 
-        markerController.setMarkedKey(this._currentItem);
+        // TODO: отрефакторить после наследования (TreeControl <- BaseControl) Нужно вызывать BaseControl._private::changeMarkedKey
+        if (markerController.getMarkedKey() !== this._currentItem) {
+            markerController.setMarkedKey(this._currentItem);
+            this._notify('markedKeyChanged', [this._currentItem]);
+        }
+
         this._tempItem = null;
 
     },
