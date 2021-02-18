@@ -3808,7 +3808,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
         // todo При отказе от старой - выпилить проверку "useNewModel".
-        if (emptyTemplateChanged && newOptions.useNewModel) {
+        if (emptyTemplateChanged && newOptions.useNewModel && this._listViewModel) {
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
         }
 
