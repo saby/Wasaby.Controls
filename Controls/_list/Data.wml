@@ -13,6 +13,7 @@
             sourceController="{{_sourceController}}"
             filter="{{_sourceControllerState.filter}}"
             navigation="{{_sourceControllerState.navigation}}"
+            root="{{_root}}"
             sorting="{{_sourceControllerState.sorting}}"
             source="{{_sourceControllerState.source}}"
             sourceControllerCreated="{{!_options.sourceController}}"/>

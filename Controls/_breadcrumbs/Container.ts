@@ -13,7 +13,7 @@ interface IDataContext {
 export default class BreadCrumbsContainer extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
     protected _dataOptions: ISourceControllerState = null;
-    protected _items;
+    protected _items: null|Model[];
 
     protected _beforeMount(options: IControlOptions, context: IDataContext): void {
         this._dataOptions = context.dataOptions;
@@ -29,6 +29,7 @@ export default class BreadCrumbsContainer extends Control<IControlOptions> {
         const sourceController = this._dataOptions.sourceController || this._options.sourceController;
         if (sourceController) {
             sourceController.setRoot(item.getKey());
+            sourceController.reload();
         }
     }
 

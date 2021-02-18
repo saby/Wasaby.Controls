@@ -78,6 +78,7 @@ export interface IDataContextOptions extends ISourceOptions,
 
 class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype */{
    protected _template: TemplateFunction = template;
+   protected _root: string|number|null;
    private _isMounted: boolean;
    private _loading: boolean = false;
    private _itemsReadyCallback: Function = null;
@@ -102,6 +103,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       if (!options.hasOwnProperty('sourceController')) {
          this._errorRegister = new RegisterClass({register: 'dataError'});
       }
+      this._root = options.root;
 
       if (receivedState && options.source instanceof PrefetchProxy) {
          this._source = options.source.getOriginal();
@@ -111,6 +113,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       this._sourceController =
           options.sourceController ||
           new SourceController(this._getSourceControllerOptions(options));
+      this._sourceController.subscribe('rootChanged', this._rootChanged.bind(this));
       this._sourceController.sourceControllerCreated = !options.sourceController;
       this._fixRootForMemorySource(options);
 
@@ -155,6 +158,11 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
 
       if (this._options.sourceController !== newOptions.sourceController) {
          this._sourceController = newOptions.sourceController;
+         this._sourceController.subscribe('rootChanged', this._rootChanged.bind(this));
+      }
+
+      if (this._options.root !== newOptions.root) {
+         this._root = newOptions.root;
       }
 
       if (this._sourceController) {
@@ -293,6 +301,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _rootChanged(event, root): void {
+      this._root = root;
       this._notify('rootChanged', [root]);
    }
 

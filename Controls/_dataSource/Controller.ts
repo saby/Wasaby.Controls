@@ -15,11 +15,12 @@ import {INavigationOptionValue,
         INavigationOptions} from 'Controls/interface';
 import {TNavigationPagingMode} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {Record as EntityRecord, CancelablePromise, Model} from 'Types/entity';
+import {Record as EntityRecord, CancelablePromise, Model, EventRaisingMixin, ObservableMixin} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {default as groupUtil} from './GroupUtil';
 import {isEqual} from 'Types/object';
+import {mixin} from 'Types/util';
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
@@ -103,7 +104,13 @@ export function isEqualItems(oldList: RecordSet, newList: RecordSet): boolean {
         (getProtoOf(newList.getAdapter()).constructor == getProtoOf(oldList.getAdapter()).constructor);
 }
 
-export default class Controller {
+export default class Controller extends mixin<
+    ObservableMixin,
+    EventRaisingMixin
+    >(
+    ObservableMixin,
+    EventRaisingMixin
+) {
     private _options: IControllerOptions;
     private _filter: QueryWhereExpression<unknown>;
     private _items: RecordSet;
@@ -125,6 +132,8 @@ export default class Controller {
     private _deepReload: boolean;
 
     constructor(cfg: IControllerOptions) {
+        super();
+        EventRaisingMixin.call(this, cfg);
         this._options = cfg;
         this.setFilter(cfg.filter);
 
@@ -232,6 +241,9 @@ export default class Controller {
 
         if (rootChanged) {
             this.setRoot(newOptions.root);
+            if (!(this._options.root === undefined && newOptions.root === null)) {
+                this._notify('rootChanged', [newOptions.root]);
+            }
         }
 
         if (dataLoadCallbackChanged) {
