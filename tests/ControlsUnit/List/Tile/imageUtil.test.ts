@@ -56,8 +56,8 @@ describe('tileImageUtil', () => {
                 assert.isTrue(imageSizes.height === 1);
 
                 const imageSizes = getImageSize(200, 300, 'static', 1, 1, 'none');
-                assert.isTrue(imageSizes.width === 200);
-                assert.isTrue(imageSizes.height === 300);
+                assert.isTrue(imageSizes.width === 1);
+                assert.isTrue(imageSizes.height === 1);
             });
         });
 
