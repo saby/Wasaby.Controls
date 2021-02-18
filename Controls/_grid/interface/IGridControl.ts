@@ -77,7 +77,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Controls/grid:IHeaderCell} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ заголовка} таблицы.
+ * @cfg {Array.<Controls/grid:IHeaderCell>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ заголовка} таблицы.
  * @remark
  * В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек заголовка.
  * Для одноуровневого заголовка первый объект массива задаёт конфигурацию для первой ячейки.
