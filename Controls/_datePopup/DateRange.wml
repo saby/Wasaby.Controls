@@ -62,7 +62,7 @@
                      <Controls.scroll:IntersectionObserverContainer
                              data="{{ monthTemplate.date }}"
                              on:intersect="_monthObserverHandler()"
-                             threshold="{{[1]}}">
+                             threshold="{{[0.99, 1]}}">
                         <Controls.calendar:MonthView
                                 attr:class="controls-DateRangeBigChoose-DateRangePicker__item_theme-{{_options.theme}}"
                                 monthViewModel="{{_monthViewModel}}"
