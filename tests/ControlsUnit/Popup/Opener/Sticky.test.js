@@ -961,11 +961,11 @@ define(
                height
             });
 
-            StickyStrategy._private.calculatePosition(popupCfg, {topScroll: 0},'vertical');
-            StickyStrategy._private.calculatePosition(popupCfg, {topScroll: 0},'horizontal');
+            const verticalPosition = StickyStrategy._private.calculatePosition(popupCfg, {topScroll: 0},'vertical');
+            assert.equal(verticalPosition.height, height);
 
-            assert.equal(popupCfg.sizes.height, height);
-            assert.equal(popupCfg.sizes.width, width);
+            const horizontalPosition = StickyStrategy._private.calculatePosition(popupCfg, {topScroll: 0},'horizontal');
+            assert.equal(horizontalPosition.width, width);
 
             StickyStrategy._private.getWindowSizes = getWindowSizes;
             StickyStrategy._private.getMargins = getMargins;
