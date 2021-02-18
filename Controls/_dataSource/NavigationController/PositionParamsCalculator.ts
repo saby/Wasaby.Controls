@@ -89,7 +89,15 @@ class PositionParamsCalculator implements IParamsCalculator {
         const storeParams = store.getState();
 
         const queryField = PositionParamsCalculator._resolveField(storeParams.field);
-        const queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
+        let queryDirection = PositionParamsCalculator._resolveDirection(direction, storeParams.direction);
+
+        if (config && config.position && config.position[0] === EDGE_FORWARD_POSITION) {
+            queryDirection = PositionParamsCalculator._resolveDirectionForEdge(
+                queryDirection,
+                config.position,
+                config
+            );
+        }
 
         if (typeof metaMore === 'boolean') {
             if (queryDirection !== 'bothways') {
@@ -186,9 +194,10 @@ class PositionParamsCalculator implements IParamsCalculator {
         store: PositionNavigationStore,
         direction: TNavigationDirection,
         shiftMode: TNavigationPagingMode,
-        navigationQueryConfig: IBaseSourceConfig
+        navigationQueryConfig: IBasePositionSourceConfig
     ): IBaseSourceConfig {
         let position;
+        let queryDirection;
 
         if (direction === 'backward') {
             if (shiftMode === 'edge' || shiftMode === 'end') {
@@ -198,7 +207,16 @@ class PositionParamsCalculator implements IParamsCalculator {
             position = [EDGE_FORWARD_POSITION];
         }
 
-        return {...navigationQueryConfig, position};
+        queryDirection = PositionParamsCalculator._resolveDirectionForEdge(
+            direction,
+            position,
+            navigationQueryConfig
+        );
+
+        return {
+            ...navigationQueryConfig,
+            position,
+            direction: queryDirection};
     }
 
     updateQueryRange(store: PositionNavigationStore, list: RecordSet, firstItem: Model, lastItem: Model): void {
@@ -253,6 +271,22 @@ class PositionParamsCalculator implements IParamsCalculator {
             navPosition.push(item.get(field[i]));
         }
         return navPosition;
+    }
+
+    private static _resolveDirectionForEdge(
+        direction: TNavigationDirection,
+        position: unknown[],
+        navigationQueryConfig: IBasePositionSourceConfig
+    ): TNavigationDirection {
+        let queryDirection;
+
+        if (navigationQueryConfig.task1181218142 && direction === 'forward' && position[0] === EDGE_FORWARD_POSITION) {
+            queryDirection = 'backward';
+        } else {
+            queryDirection = direction;
+        }
+
+        return queryDirection;
     }
 
 }
