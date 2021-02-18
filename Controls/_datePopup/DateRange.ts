@@ -9,6 +9,26 @@ import {EventUtils} from 'UI/Events';
 import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
 
+const _private = {
+    updateView: function (self, options) {
+        self._rangeModel.update(options);
+        self._monthSelectionEnabled = !options.readOnly && (options.selectionType === 'range' ||
+            (options.selectionType === 'quantum' && quantumUtils.monthSelectionEnabled(options.ranges) &&
+                options.ranges.months[0] === 1));
+        if (self._position !== options.position) {
+            self._position = options.position;
+            this._markedKey = self._dateToId(self._position);
+        }
+        if (!self._singleDayHover) {
+            self._hoveredStartValue = options.hoveredStartValue;
+            self._hoveredEndValue = options.hoveredEndValue;
+        }
+    },
+
+    notifyPositionChanged: function(self, position) {
+        self._notify('positionChanged', [position]);
+    }
+};
 /**
  * Component that allows you to select periods of multiple days.
  *
@@ -51,10 +71,6 @@ export default class DateRange extends Control<IControlOptions> {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
         }
         this._updateView(options);
-    }
-
-    protected _afterMount(options): void {
-        this._markedKey = this._dateToId(this._position);
     }
 
     protected _beforeUpdate(options): void {
