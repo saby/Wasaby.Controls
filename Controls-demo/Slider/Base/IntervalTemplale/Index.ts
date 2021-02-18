@@ -26,8 +26,8 @@ class Base extends Control<IControlOptions> {
     }
 
     protected _getInterval(interval: IPositionedInterval): IPositionedInterval {
-        if (interval.width < 1) {
-            interval.width = 1;
+        if (interval.width < 5) {
+            interval.width = 5;
         }
         return interval;
     }

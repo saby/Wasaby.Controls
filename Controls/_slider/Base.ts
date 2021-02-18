@@ -7,13 +7,13 @@ import {default as Utils, ILineData, IPointDataList, IPositionedInterval, IScale
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IInterval} from './interface/IInterval';
 import {constants} from 'Env/Env';
+import * as SliderTemplate from 'wml!Controls/_slider/sliderTemplate';
 import * as intervalTemplate from 'wml!Controls/_slider/BaseIntervalTemplate';
-import SliderTemplate = require('wml!Controls/_slider/sliderTemplate');
 
 export interface ISliderBaseOptions extends IControlOptions, ISliderOptions {
-    value: number;
-    intervals: IInterval[];
-    intervalTemplate: Function;
+   value: number;
+   intervals: IInterval[];
+   intervalTemplate: Function;
 }
 
 const maxPercentValue = 100;
@@ -47,149 +47,149 @@ const maxPercentValue = 100;
  */
 
 class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
-    protected _template: TemplateFunction = SliderTemplate;
-    private _value: number = undefined;
-    private _lineData: ILineData = undefined;
-    private _pointData: IPointDataList = undefined;
-    protected _scaleData: IScaleData[] = undefined;
-    private _tooltipPosition: number | null = null;
-    protected _tooltipValue: string | null = null;
-    protected _isDrag: boolean = false;
-    protected _intervals: IPositionedInterval[] = [];
+   protected _template: TemplateFunction = SliderTemplate;
+   private _value: number = undefined;
+   private _lineData: ILineData = undefined;
+   private _pointData: IPointDataList = undefined;
+   protected _scaleData: IScaleData[] = undefined;
+   private _tooltipPosition: number | null = null;
+   protected _tooltipValue: string | null = null;
+   protected _isDrag: boolean = false;
+   protected _intervals: IPositionedInterval[] = [];
 
-    private _render(minValue: number, maxValue: number, value: number): void {
-        const rangeLength = maxValue - minValue;
-        const right = Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
-        this._pointData[0].position = right;
-        this._lineData.width = right;
-    }
+   private _render(minValue: number, maxValue: number, value: number): void {
+      const rangeLength = maxValue - minValue;
+      const right = Math.min(Math.max((value - minValue), 0), rangeLength) / rangeLength * maxPercentValue;
+      this._pointData[0].position = right;
+      this._lineData.width = right;
+   }
 
-    private _renderTooltip(minValue: number, maxValue: number, value: number): void {
-        const rangeLength = maxValue - minValue;
-        this._pointData[1].position =
-            Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
-    }
+   private _renderTooltip(minValue: number, maxValue: number, value: number): void {
+      const rangeLength = maxValue - minValue;
+      this._pointData[1].position =
+         Math.min(Math.max(value - minValue, 0), rangeLength) / rangeLength * maxPercentValue;
+   }
 
-    private _needUpdate(oldOpts: ISliderBaseOptions, newOpts: ISliderBaseOptions): boolean {
-        return (oldOpts.scaleStep !== newOpts.scaleStep ||
-            oldOpts.minValue !== newOpts.minValue ||
-            oldOpts.maxValue !== newOpts.maxValue ||
-            oldOpts.value !== newOpts.value);
-    }
+   private _needUpdate(oldOpts: ISliderBaseOptions, newOpts: ISliderBaseOptions): boolean {
+      return (oldOpts.scaleStep !== newOpts.scaleStep ||
+         oldOpts.minValue !== newOpts.minValue ||
+         oldOpts.maxValue !== newOpts.maxValue ||
+         oldOpts.value !== newOpts.value);
+   }
 
-    private _checkOptions(opts: ISliderBaseOptions): void {
-        const {minValue, maxValue, value, intervals} = opts;
-        Utils.checkOptions(opts);
-        if (value < minValue || value > maxValue) {
-            Logger.error('Slider: value must be in the range [minValue..maxValue].', this);
-        }
+   private _checkOptions(opts: ISliderBaseOptions): void {
+      const {minValue, maxValue, value, intervals} = opts;
+      Utils.checkOptions(opts);
+      if (value < minValue || value > maxValue) {
+         Logger.error('Slider: value must be in the range [minValue..maxValue].', this);
+      }
 
-        if (intervals?.length) {
-            intervals.forEach(({start, end}) => {
-                if (start > end) {
-                    Logger.error('Slider: start of the interval must be less than end.');
-                }
-                if (start < minValue || start > maxValue) {
-                    Logger.error('Slider: start of the interval must be between minValue and maxValue.');
-                }
-                if (end < minValue || end > maxValue) {
-                    Logger.error('Slider: end of the interval must be between minValue and maxValue.');
-                }
-            });
-        }
-    }
+      if (intervals?.length) {
+         intervals.forEach(({start, end}) => {
+            if (start > end) {
+               Logger.error('Slider: start of the interval must be less than end.');
+            }
+            if (start < minValue || start > maxValue) {
+               Logger.error('Slider: start of the interval must be between minValue and maxValue.');
+            }
+            if (end < minValue || end > maxValue) {
+               Logger.error('Slider: end of the interval must be between minValue and maxValue.');
+            }
+         });
+      }
+   }
 
-    private _setValue(val: number): void {
-        if (this._value !== val) {
-            this._notify('valueChanged', [val]);
-        }
-    }
+   private _setValue(val: number): void {
+      if (this._value !== val) {
+         this._notify('valueChanged', [val]);
+      }
+   }
 
-    protected _beforeMount(options: ISliderBaseOptions): void {
-        super._beforeMount(options);
-        this._checkOptions(options);
-        this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
-            options.scaleLabelFormatter);
-        this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
-        this._value = options.value === undefined ? options.maxValue : options.value;
-        this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
-        this._lineData = {position: 0, width: 100};
-        this._render(options.minValue, options.maxValue, this._value);
-    }
+   protected _beforeMount(options: ISliderBaseOptions): void {
+      super._beforeMount(options);
+      this._checkOptions(options);
+      this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+          options.scaleLabelFormatter);
+      this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
+      this._value = options.value === undefined ? options.maxValue : options.value;
+      this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
+      this._lineData = {position: 0, width: 100};
+      this._render(options.minValue, options.maxValue, this._value);
+   }
 
-    protected _beforeUpdate(options: ISliderBaseOptions): void {
-        super._beforeUpdate(options);
-        if (this._needUpdate(this._options, options)) {
-            this._checkOptions(options);
-            this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
-                options.scaleLabelFormatter);
-        }
+   protected _beforeUpdate(options: ISliderBaseOptions): void {
+      super._beforeUpdate(options);
+      if (this._needUpdate(this._options, options)) {
+         this._checkOptions(options);
+         this._scaleData = Utils.getScaleData(options.minValue, options.maxValue, options.scaleStep,
+             options.scaleLabelFormatter);
+      }
 
-        if (this._options.intervals !== options.intervals) {
-            this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
-        }
+      if (this._options.intervals !== options.intervals) {
+         this._intervals = Utils.convertIntervals(options.intervals, options.minValue, options.maxValue);
+      }
 
-        this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
-        this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._tooltipPosition;
-        this._render(options.minValue, options.maxValue, this._value);
-        this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
-    }
+      this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
+      this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._tooltipPosition;
+      this._render(options.minValue, options.maxValue, this._value);
+      this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
+   }
 
-    protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
-        if (!this._options.readOnly) {
-            const newValue = this._getValue(event);
-            this._setValue(newValue);
-            this._children.dragNDrop.startDragNDrop(this._children.point, event);
-        }
-    }
+   protected _mouseDownAndTouchStartHandler(event: SyntheticEvent<MouseEvent | TouchEvent>): void {
+      if (!this._options.readOnly) {
+         const newValue = this._getValue(event);
+         this._setValue(newValue);
+        this._children.dragNDrop.startDragNDrop(this._children.point, event);
+      }
+   }
 
-    protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject) {
-        if (!this._options.readOnly) {
-            const box = this._children.area.getBoundingClientRect();
-            const target = this._options.direction === 'vertical' ? dragObject.position.y : dragObject.position.x;
-            const ratio = this._getRatio(this._options.direction, target, box, window.pageXOffset, window.pageYOffset);
-            const newValue = Utils.calcValue(
-                this._options.minValue,
-                this._options.maxValue,
-                ratio,
-                this._options.precision
-            );
-            this._setValue(newValue);
-        }
-    }
+   protected _onDragNDropHandler(e: SyntheticEvent<Event>, dragObject) {
+      if (!this._options.readOnly) {
+         const box = this._children.area.getBoundingClientRect();
+         const target = this._options.direction === 'vertical' ? dragObject.position.y : dragObject.position.x;
+         const ratio = this._getRatio(this._options.direction, target, box, window.pageXOffset, window.pageYOffset);
+         const newValue = Utils.calcValue(
+             this._options.minValue,
+             this._options.maxValue,
+             ratio,
+             this._options.precision
+         );
+         this._setValue(newValue);
+      }
+   }
 
-    static _theme: string[] = ['Controls/slider'];
+   static _theme: string[] = ['Controls/slider'];
 
-    static getDefaultOptions(): object {
-        return {
-            ...{
-                theme: 'default',
-                value: undefined,
-                intervals: [],
-                intervalTemplate
-            }, ...SliderBase.getDefaultOptions()
-        };
+   static getDefaultOptions(): object {
+      return {
+         ...{
+             theme: 'default',
+             value: undefined,
+             intervals: [],
+             intervalTemplate
+         }, ...SliderBase.getDefaultOptions()
+      };
 
-    }
+   }
 
-    static getOptionTypes(): object {
-        return {
-            ...{
-                value: EntityDescriptor(Number),
-                intervals: EntityDescriptor(Array)
-            }, ...SliderBase.getOptionTypes()
-        };
+   static getOptionTypes(): object {
+      return {
+         ...{
+             value: EntityDescriptor(Number),
+             intervals: EntityDescriptor(Array)
+         }, ...SliderBase.getOptionTypes()
+      };
 
-    }
+   }
 }
 
 Object.defineProperty(Base, 'defaultProps', {
-    enumerable: true,
-    configurable: true,
+   enumerable: true,
+   configurable: true,
 
-    get(): object {
-        return Base.getDefaultOptions();
-    }
+   get(): object {
+      return Base.getDefaultOptions();
+   }
 });
 
 /**
