@@ -23,6 +23,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
     DataCellCompatibility
 ) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell, IDisplaySearchValue {
 
+    readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;
     readonly Draggable: boolean = true;
     readonly TagCell: boolean = true;
