@@ -38,7 +38,7 @@ describe('Controls/grid_clean/Display/ZIndex/GroupItem', () => {
         assert.strictEqual(zIndex, GROUP_Z_INDEX_DEFAULT);
     });
     it('getStickyHeaderZIndex without header and results', () => {
-        const gridGroupItem = getGroupItem({hasHeader: false, resultsPosition: null);
+        const gridGroupItem = getGroupItem({hasHeader: false, resultsPosition: null});
         const zIndex = gridGroupItem.getStickyHeaderZIndex();
         assert.strictEqual(zIndex, GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS);
     });
