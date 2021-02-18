@@ -57,7 +57,7 @@
                </div>
                <ws:if data="{{_options.intervals}}">
                   <ws:for data="key, interval in _intervals">
-                     <ws:partial template="{{_intervalTemplate}}" interval="{{interval}}" options="{{_options}}"/>
+                     <ws:partial template="{{_options.intervalTemplate}}" interval="{{interval}}" options="{{_options}}"/>
                   </ws:for>
                </ws:if>
             </div>

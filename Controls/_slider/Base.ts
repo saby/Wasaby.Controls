@@ -56,7 +56,6 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
     protected _tooltipValue: string | null = null;
     protected _isDrag: boolean = false;
     protected _intervals: IPositionedInterval[] = [];
-    protected _intervalTemplate: Function;
 
     private _render(minValue: number, maxValue: number, value: number): void {
         const rangeLength = maxValue - minValue;
@@ -106,14 +105,6 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
         }
     }
 
-    private _setIntervalTemplate(options: ISliderBaseOptions) {
-        if (options.intervalTemplate) {
-            this._intervalTemplate = options.intervalTemplate;
-        } else {
-            this._intervalTemplate = intervalTemplate;
-        }
-    }
-
     protected _beforeMount(options: ISliderBaseOptions): void {
         super._beforeMount(options);
         this._checkOptions(options);
@@ -123,7 +114,6 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
         this._value = options.value === undefined ? options.maxValue : options.value;
         this._pointData = [{name: 'point', position: 100}, {name: 'tooltip', position: 0}];
         this._lineData = {position: 0, width: 100};
-        this._setIntervalTemplate(options);
         this._render(options.minValue, options.maxValue, this._value);
     }
 
@@ -141,9 +131,6 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
 
         this._value = options.value === undefined ? options.maxValue : Math.min(options.maxValue, options.value);
         this._tooltipPosition = constants.browser.isMobilePlatform ? this._value : this._tooltipPosition;
-        if (options.intervalTemplate !== this._options.intervalTemplate) {
-            this._setIntervalTemplate(options);
-        }
         this._render(options.minValue, options.maxValue, this._value);
         this._renderTooltip(options.minValue, options.maxValue, this._tooltipPosition);
     }
@@ -178,7 +165,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
             ...{
                 theme: 'default',
                 value: undefined,
-                intervals: []
+                intervals: [],
+                intervalTemplate
             }, ...SliderBase.getDefaultOptions()
         };
 
