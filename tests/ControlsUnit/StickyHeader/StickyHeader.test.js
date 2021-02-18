@@ -502,6 +502,26 @@ define([
 
 
       });
+
+      describe('getOffset', function() {
+         it('should should`t take into account gap fix if fixed but changes but the changes are not applied to DOM', function () {
+            const getOffsetValue = 0;
+            const component = createComponent(StickyHeader, {});
+            const isMobilePlatform = EnvLib.detection.isMobilePlatform;
+            EnvLib.detection.isMobilePlatform = true;
+            component._model = { isFixed: () => true };
+            component._container = {
+               style: { top: '' }
+            };
+
+            sinon.stub(StickyHeaderUtils, 'getOffset').returns(getOffsetValue);
+
+            assert.strictEqual(component.getOffset({}, {}), getOffsetValue);
+
+            EnvLib.detection.isMobilePlatform = isMobilePlatform;
+            sinon.restore();
+         });
+      });
    });
 
 });
