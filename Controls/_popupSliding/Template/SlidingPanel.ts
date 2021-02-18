@@ -24,6 +24,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     };
     private _currentTouchYPosition: number = null;
     private _scrollState: object = null;
+    private _touchAvailable: boolean = false;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
         this._scrollAvailable = this._isScrollAvailable(options);
@@ -95,6 +96,11 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         }
         event.stopPropagation();
         this._notifyDragStart(this._touchDragOffset);
+
+        // Чтобы скролл внутри и снаружи при таче не срабатывал(Нужно чтобы боди не тянулся при свайпах по шторке)
+        if (!this._touchAvailable) {
+            event.preventDefault();
+        }
     }
 
     protected _touchEndHandler(): void {
@@ -102,6 +108,12 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             this._notifyDragEnd();
             this._touchDragOffset = null;
         }
+
+        /*
+           Размораживаем свайп после окончания тача в котором стал доступен скролл,
+           чтобы при достижении максимальной высоты не начал скроллиться боди
+        */
+        this._touchAvailable = this._scrollAvailable;
     }
 
     private _notifyDragStart(offset: IDragObject['offset']): void {
