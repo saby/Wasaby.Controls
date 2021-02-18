@@ -421,7 +421,7 @@ export default class ScrollController {
             }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
-                collection.setIndexes(start, stop);
+                collection.setIndexes(start, Math.min(stop, collection.getCount()));
             }
         }
     }
@@ -579,7 +579,6 @@ export default class ScrollController {
     isAppliedVirtualScroll(): boolean {
         return !!this._virtualScroll;
     }
-
 
     handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
         let result = {}
