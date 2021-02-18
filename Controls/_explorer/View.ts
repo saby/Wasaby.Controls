@@ -607,7 +607,14 @@ var
              this._pendingViewMode &&
              cfg.viewMode === this._pendingViewMode &&
              loadedBySourceController) {
-            _private.setViewModeSync(this, this._pendingViewMode, cfg);
+            // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
+            if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
+               _private.loadTileViewMode(this).then(() => {
+                  _private.setViewModeSync(this, this._pendingViewMode, cfg);
+               });
+            } else {
+               _private.setViewModeSync(this, this._pendingViewMode, cfg);
+            }
          } else {
             _private.applyNewVisualOptions(this);
          }
