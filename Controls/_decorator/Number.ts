@@ -113,8 +113,13 @@ class NumberDecorator extends Control<INumberOptions> {
     }
 
     private _setFontState(options: INumberOptions): void {
-        this._fontColorStyle = options.readOnly ? 'readonly'
-            : options.stroked ? 'unaccented' : options.fontColorStyle;
+        if (options.readOnly) {
+            this._fontColorStyle = 'readonly';
+        } else if (options.stroked) {
+            this._fontColorStyle = 'unaccented';
+        } else {
+            this._fontColorStyle = options.fontColorStyle;
+        }
     }
 
     protected _beforeMount(options: INumberOptions): void {

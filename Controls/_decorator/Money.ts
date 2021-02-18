@@ -147,11 +147,6 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
         return showEmptyDecimals || value !== '.00';
     }
 
-    // Used in template
-    protected _calcFractionClass(value: string): string {
-        return value !== '.00' ? 'controls-DecoratorMoney__fraction__colorStyle-' + this._fontColorStyle : 'controls-DecoratorMoney__fraction__colorStyle';
-    }
-
     private _getTooltip(options: IMoneyOptions): string {
 
         if (options.hasOwnProperty('tooltip')) {
@@ -197,7 +192,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     }
 
     private _formatNumber(options: IMoneyOptions): string | IPaths {
-        if (options.abbreviationType && options.abbreviationType !== 'none') {
+        if (options.abbreviationType !== 'none') {
             return abbreviateNumber(options.value, options.abbreviationType);
         } else {
             return this._parseNumber();
@@ -205,8 +200,13 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     }
 
     private _setFontState(options: IMoneyOptions): void {
-        this._fontColorStyle = options.readOnly ? 'readonly'
-            : options.stroked ? 'unaccented' : options.fontColorStyle;
+        if (options.readOnly) {
+            this._fontColorStyle = 'readonly';
+        } else if (options.stroked) {
+            this._fontColorStyle = 'unaccented';
+        } else {
+            this._fontColorStyle = options.fontColorStyle;
+        }
     }
 
     protected _beforeMount(options: IMoneyOptions): void {

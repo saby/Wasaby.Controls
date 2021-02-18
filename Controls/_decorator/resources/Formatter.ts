@@ -1,5 +1,6 @@
 import {IText, pasteWithRepositioning} from './Util';
 import {IFormat, IDelimiterGroups, IPairDelimiterData, ISingleDelimiterData} from './FormatBuilder';
+import rk = require('i18n!Controls');
 
 type TValue = string | number | null;
 type TAbbreviationType = 'none' | 'short' | 'long';
@@ -152,16 +153,16 @@ export function abbreviateNumber(value: TValue, abbreviationType: TAbbreviationT
         return '0';
     }
     if (value >= 1000000000000 || value <= -1000000000000) {
-        return intlFormat(value / 1000000000000) + `${abbreviationType === 'long' ? ' трлн' : 'Т'}`;
+        return intlFormat(value / 1000000000000) + `${abbreviationType === 'long' ? rk(' трлн') : 'Т'}`;
     }
     if (value >= 1000000000 || value <= -1000000000) {
-        return intlFormat(value / 1000000000) + `${abbreviationType === 'long' ? ' млрд' : 'Г'}`;
+        return intlFormat(value / 1000000000) + `${abbreviationType === 'long' ? rk(' млрд') : rk('Г')}`;
     }
     if (value >= 1000000 || value <= -1000000) {
-        return intlFormat(value / 1000000) + `${abbreviationType === 'long' ? ' млн' : 'М'}`;
+        return intlFormat(value / 1000000) + `${abbreviationType === 'long' ? rk(' млн') : 'М'}`;
     }
     if (value >= 1000 || value <= -1000) {
-        return intlFormat(value / 1000) + `${abbreviationType === 'long' ? ' тыс.' : 'К'}`;
+        return intlFormat(value / 1000) + `${abbreviationType === 'long' ? rk(' тыс.') : 'К'}`;
     }
 }
 
