@@ -173,10 +173,12 @@ interface IPosition {
 
          // Если после перепозиционирования попап всё равно не влезает, то уменьшаем ему высоту до высоты окна
          const newOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
-         _private.restrictContainer(position, property, popupCfg, newOverflow);
+         if (newOverflow > 0) {
+            _private.restrictContainer(position, property, popupCfg, newOverflow);
+         }
 
          // Фиксируем высоту, т.к. некоторые браузеры(ie) не могут понять высоту родителя без заданного height
-         position[property] = popupCfg.sizes[property];
+         popupCfg.sizes[property] = position[property];
          return position;
       },
 
