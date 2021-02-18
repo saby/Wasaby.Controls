@@ -18,7 +18,7 @@ export default class extends Control {
         source: 'page',
         view: 'demand',
         sourceConfig: {
-            pageSize: 10,
+            pageSize: 3,
             page: 0,
             hasMore: false
         },
@@ -30,8 +30,7 @@ export default class extends Control {
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
-            data,
-            filter: (): boolean => true
+            data
         });
     }
 

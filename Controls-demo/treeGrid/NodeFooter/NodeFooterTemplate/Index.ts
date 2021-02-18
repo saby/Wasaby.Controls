@@ -3,19 +3,31 @@ import * as Template from 'wml!Controls-demo/treeGrid/NodeFooter/NodeFooterTempl
 import {HierarchicalMemory} from 'Types/source';
 import {Gadgets} from '../../DemoHelpers/DataCatalog';
 import { IColumn } from 'Controls/grid';
-import { TExpandOrColapsItems } from 'Controls-demo/types';
+import {INavigation, TExpandOrColapsItems} from 'Controls-demo/types';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
     protected _columns: IColumn[] = Gadgets.getColumnsForFlat();
-    protected _expandedItems: TExpandOrColapsItems = [null];
+    protected _expandedItems: TExpandOrColapsItems = [];
+
+    protected _navigation: INavigation = {
+        source: 'page',
+        view: 'demand',
+        sourceConfig: {
+            pageSize: 3,
+            page: 0,
+            hasMore: false
+        },
+        viewConfig: {
+            pagingMode: 'basic'
+        }
+    };
 
     protected _beforeMount(): void {
         this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
-            data: Gadgets.getFlatData(),
-            filter: (): boolean => true
+            data: Gadgets.getFlatData()
         });
     }
 
