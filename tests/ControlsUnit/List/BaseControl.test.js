@@ -5527,7 +5527,7 @@ define([
                isEIPDestroyed = true;
             }
          };
-         instance._beforeUpdate({...cfg, filter: {qw: ''}});
+         instance._beforeUpdate({...cfg, filter: {qw: ''}, sourceController: null});
          return cancelPromise.then(() => {
             assert.isTrue(isEditingCanceled);
             assert.isFalse(isEIPDestroyed);
