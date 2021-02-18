@@ -1934,21 +1934,15 @@ const _private = {
     /**
      * Открывает меню операций
      * @param self
-     * @param action
      * @param clickEvent
      * @param item
-     * @param isContextMenu
+     * @param menuConfig
      */
     openItemActionsMenu(
         self: any,
-        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        isContextMenu: boolean): Promise<void> {
-        const menuConfig = _private.getItemActionsMenuConfig(self, item, clickEvent, action, isContextMenu);
-        if (!menuConfig) {
-            return Promise.resolve();
-        }
+        menuConfig: Record<string, any>): Promise<void> {
         /**
          * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
          * у которого открываем меню. Потом передадим его для события actionClick.
@@ -2000,6 +1994,8 @@ const _private = {
         if (itemData['[Controls/_display/GroupItem]']) {
             return;
         }
+
+        event.stopPropagation();
         // TODO нужно заменить на item.getContents() при переписывании моделей.
         //  item.getContents() должен возвращать Record
         //  https://online.sbis.ru/opendoc.html?guid=acd18e5d-3250-4e5d-87ba-96b937d8df13
@@ -2009,10 +2005,12 @@ const _private = {
 
         // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
         if (!!self._itemActionsController) {
-            event.stopPropagation();
-            event.nativeEvent.preventDefault();
             const item = self._listViewModel.getItemBySourceKey(key) || itemData;
-            _private.openItemActionsMenu(self, null, event, item, true);
+            const menuConfig = _private.getItemActionsMenuConfig(self, item, event, null, true);
+            if (menuConfig) {
+                event.nativeEvent.preventDefault();
+                _private.openItemActionsMenu(self, event, item, menuConfig);
+            }
         }
     },
 
@@ -5428,7 +5426,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (action && !action.isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item, false);
         } else {
-            _private.openItemActionsMenu(this, action, event, item, false);
+            const menuConfig = _private.getItemActionsMenuConfig(this, item, event, action, false);
+            if (menuConfig) {
+                _private.openItemActionsMenu(this, event, item, menuConfig);
+            }
         }
     },
 
