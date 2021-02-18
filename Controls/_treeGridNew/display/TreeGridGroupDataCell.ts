@@ -15,7 +15,7 @@ export default class TreeGridGroupDataCell<T extends Model>
 
     // region overrides
 
-    protected getContentClasses(theme: string): string {
+    getContentClasses(theme: string): string {
         let classes = super.getContentClasses(theme);
         classes += ' controls-ListView__groupContent';
         return classes;

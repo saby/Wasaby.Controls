@@ -1,9 +1,7 @@
-import Row from './Row';
-
 export default abstract class GroupCell<T> {
     readonly '[Controls/_display/grid/mixins/GroupCell]': boolean;
 
-    getCenterContentClasses(theme: string): string {
+    getContentTextClasses(theme: string): string {
         return 'controls-ListView__groupContent-text ' +
             `controls-ListView__groupContent-text_theme-${theme} ` +
             `controls-ListView__groupContent-text_default_theme-${theme} `;
