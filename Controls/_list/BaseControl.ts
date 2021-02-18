@@ -2221,7 +2221,9 @@ const _private = {
         if (!direction) {
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
-            return this.isEditing() ? this._cancelEdit(true) : void 0;
+            return this.isEditing() && !this._getEditInPlaceController().isEndEditProcessing() ?
+                this._cancelEdit(true) :
+                void 0;
         }
 
         const navigation = this._options.navigation;
