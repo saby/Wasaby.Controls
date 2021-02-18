@@ -19,7 +19,7 @@ const _private = {
                 options.ranges.months[0] === 1));
         if (self._position !== options.position) {
             self._position = options.position;
-            this._markedKey = self._dateToId(self._position);
+            self._markedKey = self._dateToId(self._position);
         }
         if (!self._singleDayHover) {
             self._hoveredStartValue = options.hoveredStartValue;
@@ -75,10 +75,6 @@ var Component = BaseControl.extend([EventProxy], {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
         }
         _private.updateView(this, options);
-    },
-
-    _afterMount: function(options) {
-        this._markedKey = this._dateToId(this._position);
     },
 
     _beforeUpdate: function (options) {
