@@ -138,6 +138,17 @@ class Field<Value, ModelOptions>
     }
 
     private _selectionFromFieldToModel(): void {
+        /*
+           В случае если после предыдущей синхронизации selection была изменена модель,
+           но ее изменения еще не были синхронизированы в поле не нужно забирать значение из поля
+           и сеттить его в модель, т.к. оно уже не актуально
+           Такое может случиться, если сразу после маунта позовут изменение selection.
+           Кейс: Маунт -> первое установление фокуса и selection -> событие о изменении selection
+         */
+        if (this._model.selectionChanged) {
+            return;
+        }
+
         const fieldSelection: ISelection = this._getFieldSelection();
         const selection: ISelection = {...this._model.selection};
         this._updateModel({
@@ -432,6 +443,7 @@ class Field<Value, ModelOptions>
         const selection: ISelection = {start, end};
 
         this._notifySelection(selection);
+        this._model.selectionChanged = false;
 
         return this._workWithSelection.setSelectionRange(field, selection);
     }
