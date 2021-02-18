@@ -257,6 +257,12 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
+        const isFilterOptionsChanged = this._filterController.update(this._getFilterControllerOptions(newOptions));
+
+        if (isFilterOptionsChanged) {
+            this._updateFilterAndFilterItems();
+        }
+
         if (sourceChanged) {
             this._source = newOptions.source;
         }
@@ -267,12 +273,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (!newOptions.searchValue && sourceChanged && this._searchController) {
                 this._updateFilter(this._searchController);
             }
-        }
-
-        const isFilterOptionsChanged = this._filterController.update(this._getFilterControllerOptions(newOptions));
-
-        if (isFilterOptionsChanged) {
-            this._updateFilterAndFilterItems();
         }
 
         if (newOptions.root !== this._options.root) {
