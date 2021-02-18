@@ -5,7 +5,7 @@ const column = { displayProperty: 'col1' };
 const GROUP_Z_INDEX_DEFAULT = 2;
 const GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS = 3;
 
-describe('Controls/grid_clean/Display/ZIndex/GroupItem', () => {
+describe('Controls/grid_clean/Display/StickyHeader/GroupItem/getStickyHeaderZIndex', () => {
     function getGroupItem({hasHeader, resultsPosition}) {
         return new GridGroupItem({
             owner: {

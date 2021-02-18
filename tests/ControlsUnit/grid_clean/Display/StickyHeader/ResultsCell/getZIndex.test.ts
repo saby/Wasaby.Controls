@@ -7,7 +7,7 @@ const resultsColumn = {};
 const FIXED_RESULTS_Z_INDEX = 4;
 const STICKY_RESULTS_Z_INDEX = 3;
 
-describe('Controls/grid_clean/Display/ZIndex/ResultsCell', () => {
+describe('Controls/grid_clean/Display/StickyHeader/ResultsCell/getZIndex', () => {
     function createResultsCell({hasColumnsScroll, isFixed}): GridResultsCell<any> {
         return new GridResultsCell({
             owner: {

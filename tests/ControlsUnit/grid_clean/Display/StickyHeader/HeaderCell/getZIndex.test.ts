@@ -7,7 +7,7 @@ const headerColumn = {};
 const FIXED_HEADER_Z_INDEX = 4;
 const STICKY_HEADER_Z_INDEX = 3;
 
-describe('Controls/grid_clean/Display/ZIndex/HeaderCell', () => {
+describe('Controls/grid_clean/Display/StickyHeader/HeaderCell/getZIndex', () => {
     function createHeaderCell({hasColumnsScroll, isFixed}): GridHeaderCell<any> {
         return new GridHeaderCell({
             owner: {

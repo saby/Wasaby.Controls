@@ -5,7 +5,7 @@ const column = { displayProperty: 'col1' };
 
 const TEST_Z_INDEX = 3;
 
-describe('Controls/grid_clean/Display/ZIndex/GroupCell', () => {
+describe('Controls/grid_clean/Display/StickyHeader/GroupCell/getZIndex', () => {
     it('getZIndex returns value from options ', () => {
         const gridGroupCell = new GridGroupCell({
             owner: {
