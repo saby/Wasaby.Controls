@@ -401,6 +401,19 @@ describe('Controls/browser:Browser', () => {
                 assert.deepStrictEqual(browser._searchController._options.filter, filter);
             });
 
+            it('searchParam is changed', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+                await browser._getSearchController();
+
+                options = {...options};
+                options.searchParam = 'newSearchParam';
+                await browser._beforeUpdate(options);
+                assert.ok(browser._searchController._options.searchParam === 'newSearchParam');
+            });
+
             it('update with searchValue', async () => {
                 let options = getBrowserOptions();
                 const filter = {
@@ -418,19 +431,24 @@ describe('Controls/browser:Browser', () => {
                 assert.deepStrictEqual(browser._filter.name, 'test');
             });
 
-            it('update source without new searchValue should reset inputSearchValue', async () => {
+            it('update source and searchValue should reset inputSearchValue', async () => {
                 let options = getBrowserOptions();
                 const browser = getBrowser(options);
                 await browser._beforeMount(options);
                 browser.saveOptions(options);
 
                 await browser._search({}, 'testSearchValue');
+                options.searchValue = 'testSearchValue';
+                browser.saveOptions(options);
                 assert.ok(browser._inputSearchValue === 'testSearchValue');
+                assert.deepStrictEqual(browser._filter, {name: 'testSearchValue'});
 
                 options = {...options};
                 options.source = new Memory();
+                options.searchValue = '';
                 browser._beforeUpdate(options);
                 assert.ok(!browser._inputSearchValue);
+                assert.deepStrictEqual(browser._filter, {});
             });
 
             it('update source and reset searchValue', async () => {
@@ -451,6 +469,20 @@ describe('Controls/browser:Browser', () => {
                 browser._beforeUpdate(options);
                 assert.ok(!browser._inputSearchValue);
                 assert.ok(!browser._filter.name);
+            });
+
+            it('cancel query while searching', async () => {
+                let options = getBrowserOptions();
+                const browser = getBrowser(options);
+                await browser._beforeMount(options);
+                browser.saveOptions(options);
+
+                browser._search(null, 'testSearchValue');
+                await browser._getSearchController(options);
+                assert.ok(browser._loading);
+
+                browser._sourceController.cancelLoading();
+                assert.ok(browser._loading);
             });
 
         });
@@ -700,6 +732,20 @@ describe('Controls/browser:Browser', () => {
 
            assert.equal(browser._root, 'test123');
            assert.equal(browser._searchController._root, 'test123');
+       });
+
+       it('root changed, browser is in search mode', async () => {
+           let options = getBrowserOptions();
+           options.parentProperty = 'parentProperty';
+           const browser = getBrowser(options);
+           await browser._beforeMount(options);
+           browser.saveOptions(options);
+           await browser._search({}, 'testSearchValue');
+
+           browser._handleItemOpen('testRoot', undefined, null);
+           assert.ok(!browser._inputSearchValue);
+           assert.equal(browser._root, 'testRoot');
+           assert.deepStrictEqual(browser._filter, {parentProperty: null});
        });
 
         it ('root is changed, shearchController is not created', async () => {

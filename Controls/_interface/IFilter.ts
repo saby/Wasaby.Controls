@@ -15,7 +15,7 @@ export default interface IFilter {
 
 /**
  * @name Controls/_interface/IFilter#filter
- * @cfg {Object} Конфигурация объекта фильтра. Фильтр отправляется в запрос к источнику для получения данных.
+ * @cfg {Object} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter/ объекта фильтра}. Фильтр отправляется в запрос к источнику для получения данных.
  * @remark
  * При изменении фильтра важно передавать новый объект фильтра, изменение объекта по ссылке не приведет к желаемому результату.
  * @example

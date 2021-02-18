@@ -68,7 +68,7 @@ export default class View extends Control<IControlOptions> {
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         if (this._options.source !== newOptions.source) {
-            this._setSource(options.source);
+            this._setSource(newOptions.source);
             this._updateFilterParams();
         }
     }
