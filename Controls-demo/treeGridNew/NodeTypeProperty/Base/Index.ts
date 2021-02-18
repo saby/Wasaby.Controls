@@ -1,17 +1,18 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeTypeProperty/Base/Base';
-import {Memory} from 'Types/source';
+import {HierarchicalMemory} from 'Types/source';
 import {data} from '../resourses';
 import {TColspanCallbackResult} from 'Controls/gridNew';
 import {Model} from 'Types/entity';
-import {INavigation} from 'Controls-demo/types';
+import {INavigation, TExpandOrColapsItems} from 'Controls-demo/types';
 
 const NODE_TYPE_PROPERTY = 'nodeType';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _viewSource: Memory;
+    protected _viewSource: HierarchicalMemory;
     protected _nodeTypeProperty: string = NODE_TYPE_PROPERTY;
+    protected _expandedItems: TExpandOrColapsItems = [null];
 
     protected _navigation: INavigation = {
         source: 'page',
@@ -27,14 +28,11 @@ export default class extends Control {
     };
 
     protected _beforeMount(): void {
-        this._viewSource = new Memory({
+        this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
-            data
+            data,
+            filter: (): boolean => true
         });
-    }
-
-    protected _afterMount(): void {
-        this._children.tree.toggleExpanded(1);
     }
 
     protected _colspanCallback(item: Model, column, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
