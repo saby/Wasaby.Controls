@@ -18,7 +18,6 @@ import ViewModel = require('Controls/_treeGrid/TreeGridView/TreeGridViewModel');
 import SearchGridViewModel = require('Controls/_treeGrid/SearchView/SearchGridViewModel');
 import {SearchView, SearchItemTpl} from 'Controls/_treeGrid/SearchView';
 import * as SearchBreadCrumbsItemTemplate from 'wml!Controls/_treeGrid/SearchView/SearchBreadCrumbsItemTemplate';
-import * as SearchSeparatorTemplate from 'wml!Controls/_treeGrid/SearchView/SearchSeparatorTemplate';
 import TreeGridView = require('Controls/_treeGrid/TreeGridView/TreeGridView');
 import RowEditor = require('wml!Controls/_treeGrid/TreeGrid/RowEditor');
 
@@ -46,7 +45,6 @@ export {
     SearchView,
     SearchItemTpl,
     SearchBreadCrumbsItemTemplate,
-    SearchSeparatorTemplate,
     TreeGridView,
     RowEditor
 };

@@ -46,17 +46,16 @@ var
          data.breadCrumbs = data.item && !!data.item.forEach;
          data.breadCrumbsDisplayProperty = this._options.displayProperty;
          data.searchBreadCrumbsItemTemplate = this._options.searchBreadCrumbsItemTemplate || 'Controls/treeGrid:SearchBreadCrumbsItemTemplate';
-         data.searchSeparatorTemplate = this._options.searchSeparatorTemplate || 'Controls/treeGrid:SearchSeparatorTemplate';
          data.searchBreadCrumbsItemContent = "Controls/breadcrumbs:ItemTemplate";
          data.breadcrumbsItemClickCallback = this._breadcrumbsItemClickCallback;
 
-         data.getColspan = (tmplColspan, isColumnScrollVisible: boolean) => {
-             if (data.columnScroll && isColumnScrollVisible) {
+         data.getColspan = (tmplColspan, isColumnScrollVisible: boolean, getSeparatorForColumn?: string) => {
+             if ((data.columnScroll && isColumnScrollVisible) || getSeparatorForColumn) {
                  return false;
              }
              return typeof tmplColspan === 'undefined' ? true : tmplColspan;
          };
-         data.getColspanLength = (tmplColspan, isColumnScrollVisible) => {
+         data.getColspanLength = (tmplColspan, isColumnScrollVisible, getSeparatorForColumn?: string) => {
              /*
              * Если в списке с горизонтальным скроллом в режиме поиска весь контент таблицы умещается в родителе и не нужно ничего скроллировать,
              * то можно растянуть хлебные крошки на всю строку.
@@ -65,7 +64,7 @@ var
              if (data.columnScroll && isColumnScrollVisible) {
                  return data.stickyColumnsCount;
              } else {
-                 return tmplColspan !== false ? undefined : 1;
+                 return !getSeparatorForColumn && tmplColspan !== false ? undefined : 1;
              }
          };
          data.shouldHideColumnSeparator = (tmplColspan, isColumnScrollVisible): boolean => {
