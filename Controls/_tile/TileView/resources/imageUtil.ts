@@ -42,23 +42,25 @@ export function getImageSize(
 ): IImageSize {
     let width = imageWidth;
     let height = imageHeight;
-    if (imageFit !== IMAGE_FIT.NONE && imageWidth && imageHeight) {
-        if (imageHeight <= tileHeight && imageWidth <= tileWidth) {
-            height = imageHeight;
-            width = imageWidth;
-        } else if (imageWidth > tileWidth && imageHeight > tileHeight) {
+    if (imageFit === IMAGE_FIT.COVER && imageWidth && imageHeight) {
+        const imageDeltaW = imageWidth / imageHeight;
+        const tileDeltaW =  tileWidth / tileHeight;
+        if (imageDeltaW > tileDeltaW && imageDeltaW < tileDeltaW * DEFAULT_SCALE_COEFFICIENT) {
             height = tileHeight * DEFAULT_SCALE_COEFFICIENT;
+            width = 0;
+        } else if (tileDeltaW < DEFAULT_SCALE_COEFFICIENT * imageDeltaW) {
+            height = 0;
             width = tileWidth * DEFAULT_SCALE_COEFFICIENT;
-        } else if (imageWidth < tileWidth && imageHeight > tileHeight) {
+        } else if (imageDeltaW < DEFAULT_SCALE_COEFFICIENT * tileDeltaW) {
             height = tileHeight * DEFAULT_SCALE_COEFFICIENT;
             width = 0;
         } else {
-            height = 0;
-            width = tileWidth * DEFAULT_SCALE_COEFFICIENT;
+            height = tileHeight * DEFAULT_SCALE_COEFFICIENT;
+            width = 0;
         }
     } else {
-        height = tileHeight;
-        width = tileWidth;
+        height = imageHeight;
+        width = imageWidth;
     }
     return {
         height,
