@@ -57,8 +57,10 @@
                 </ws:Object>
             </ws:Array>
         </ws:columns>
-        <ws:partial template="Controls/treeGridNew:NodeFooterTemplate">
-            <Controls.list:AddButton caption="Добавить товар"/>
-        </ws:partial>
+        <ws:nodeFooterTemplate>
+            <ws:partial template="Controls/treeGridNew:NodeFooterTemplate">
+                <Controls.list:AddButton caption="Добавить товар"/>
+            </ws:partial>
+        </ws:nodeFooterTemplate>
     </Controls.treeGridNew:View>
 </div>

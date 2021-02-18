@@ -20,7 +20,8 @@
                         </ws:else>
                     </ws:template>
                 </ws:Object>
-                <ws:Object displayProperty="count" width="100px" align="right">
+                <ws:Object displayProperty="count" width="100px" align="right"/>
+                <ws:Object displayProperty="price" width="100px" align="right">
                     <ws:template>
                         <ws:if data="{{ template.item.GroupNode }}">
                             <ws:partial template="Controls/treeGridNew:GroupColumnTemplate"
@@ -31,7 +32,6 @@
                         </ws:else>
                     </ws:template>
                 </ws:Object>
-                <ws:Object displayProperty="price" width="100px" align="right"/>
                 <ws:Object displayProperty="price1" width="100px" align="right">
                     <ws:template>
                         <ws:if data="{{ template.item.GroupNode }}">

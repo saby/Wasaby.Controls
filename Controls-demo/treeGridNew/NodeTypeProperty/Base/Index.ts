@@ -12,13 +12,13 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
     protected _nodeTypeProperty: string = NODE_TYPE_PROPERTY;
-    protected _expandedItems: TExpandOrColapsItems = [null];
+    protected _expandedItems: TExpandOrColapsItems = [];
 
     protected _navigation: INavigation = {
         source: 'page',
         view: 'demand',
         sourceConfig: {
-            pageSize: 3,
+            pageSize: 10,
             page: 0,
             hasMore: false
         },

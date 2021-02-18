@@ -17,12 +17,12 @@ export interface IOptions<T> {
 }
 
 const GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
-    protected _$zIndex: number;
 
 export default class GroupCell<T>
     extends mixin<Cell<any, GroupRow<any>>, GridGroupCellMixin<any>>(Cell, GridGroupCellMixin) {
     protected _$columnsLength: number;
     protected _$contents: string;
+    protected _$zIndex: number;
 
     constructor(options?: IOptions<T>) {
         super(options);
