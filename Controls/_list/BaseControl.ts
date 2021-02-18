@@ -4470,7 +4470,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             if (this._syncLoadingIndicatorTimeout) {
                 clearTimeout(this._syncLoadingIndicatorTimeout);
-                this.changeIndicatorStateHandler(false, 'up');
+                if (!this._shouldDisplayTopLoadingIndicator()) {
+                    this.changeIndicatorStateHandler(false, 'up');
+                }
                 this.changeIndicatorStateHandler(false, 'down');
                 this._syncLoadingIndicatorState = null;
             }
