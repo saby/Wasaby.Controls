@@ -21,6 +21,7 @@
                     swipeTemplate="{{ swipeTemplate }}">
                 <ws:multiSelectTemplate>
                     <ws:partial template="{{ multiSelectTpl }}"
+                                _$preventMergeOptions="{{ true }}"
                                 if="{{ multiSelectVisibility && multiSelectVisibility !== 'hidden' && multiSelectPosition === 'custom' }}"
                                 attr:class="{{ (item || itemData).getMultiSelectClasses(theme) }}">
                         <ws:templateOptions item="{{item}}" checkboxReadOnly="{{checkboxReadOnly}}"/>

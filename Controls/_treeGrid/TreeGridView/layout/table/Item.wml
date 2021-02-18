@@ -20,7 +20,7 @@
 </ws:template>
 
 <ws:template name="multiSelectTemplate">
-    <ws:partial template="{{multiSelectTpl}}">
+    <ws:partial template="{{multiSelectTpl}}" _$preventMergeOptions="{{ preventMergeOptions }}">
         <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                             readOnly="{{itemData.isAdd || checkboxReadOnly}}"
                             item="{{ itemData.dispItem }}"
@@ -35,7 +35,7 @@
        {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}">
         <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}">
             <ws:multiSelectTemplate>
-                <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+                <ws:partial template="multiSelectTemplate" preventMergeOptions="{{ true }}" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
             </ws:multiSelectTemplate>
         </ws:partial>
     </div>
@@ -65,7 +65,7 @@
                         expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
         </ws:afterItemTemplate>
         <ws:multiSelectTemplate>
-            <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+            <ws:partial template="multiSelectTemplate" preventMergeOptions="{{ true }}" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
         </ws:multiSelectTemplate>
     </ws:partial>
 </ws:template>
