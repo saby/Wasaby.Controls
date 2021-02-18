@@ -5,7 +5,6 @@
             columns="{{_columns}}"
             parentProperty="parent"
             nodeProperty="type"
-            navigation="{{_navigation}}"
             bind:expandedItems="_expandedItems">
         <ws:nodeFooterTemplate>
             <Controls.list:AddButton caption="Добавить товар"/>
