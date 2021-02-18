@@ -255,18 +255,18 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._listMarkedKey = this._getOperationsController().setListMarkedKey(newOptions.markedKey);
         }
 
+        const isFilterOptionsChanged = this._filterController.update(this._getFilterControllerOptions(newOptions));
+
+        if (isFilterOptionsChanged) {
+            this._updateFilterAndFilterItems();
+        }
+
         if ((this._options.searchValue !== newOptions.searchValue) && (this._searchValue !== newOptions.searchValue)) {
             this._inputSearchValue = newOptions.searchValue;
 
             if (!newOptions.searchValue && sourceChanged && this._searchController) {
                 this._updateFilter(this._searchController);
             }
-        }
-
-        const isFilterOptionsChanged = this._filterController.update(this._getFilterControllerOptions(newOptions));
-
-        if (isFilterOptionsChanged) {
-            this._updateFilterAndFilterItems();
         }
 
         if (sourceChanged) {
