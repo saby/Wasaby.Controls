@@ -421,6 +421,11 @@ export default class ScrollController {
             }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
+
+                // При удалении нескольких групп записей из коллекции с использованием setEventRaising(false),
+                // приходит нескольно событий удаления, причем после того, как все записи уже удалены.
+                // Проставлять индексы на событие afterCollectionChange не решило проблему, так как
+                // до того, как это событие дойдет до baseControl, вызывается итератор коллекции со старыми индексами
                 collection.setIndexes(start, Math.min(stop, collection.getCount()));
             }
         }
