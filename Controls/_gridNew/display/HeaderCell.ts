@@ -141,18 +141,22 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     // endregion
 
     getWrapperStyles(): string {
+        let styles = super.getWrapperStyles();
+        if (this._$owner.isFullGridSupport()) {
+            styles += this.getRowspan();
+        }
+        styles += ` z-index: ${this.getZIndex()};`;
+        return styles;
+    }
+
+    getZIndex(): number {
         let zIndex;
         if (this._$owner.hasColumnScroll()) {
             zIndex = this._$isFixed ? FIXED_HEADER_Z_INDEX : STICKY_HEADER_Z_INDEX;
         } else {
             zIndex = FIXED_HEADER_Z_INDEX;
         }
-        let styles = super.getWrapperStyles();
-        if (this._$owner.isFullGridSupport()) {
-            styles += this.getRowspan();
-        }
-        styles += ` z-index: ${zIndex};`;
-        return styles;
+        return zIndex;
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {

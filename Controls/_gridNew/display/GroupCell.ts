@@ -9,10 +9,12 @@ export interface IOptions<T> {
     owner: GroupItem<T>;
     column: IColumn;
     columns: IColumn[];
+    zIndex?: number;
 }
 
 export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
     protected _$columns: IColumn[];
+    protected _$zIndex: number;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -25,6 +27,10 @@ export default class GroupCell<T> extends Cell<T, GroupItem<T>> {
 
     getWrapperStyles(): string {
         return this.getColspan();
+    }
+
+    getZIndex(): number {
+        return this._$zIndex;
     }
 
     getContentClasses(): string {
@@ -94,5 +100,6 @@ Object.assign(GroupCell.prototype, {
     _moduleName: 'Controls/display:GridGroupCell',
     _instancePrefix: 'grid-group-cell-',
     _$owner: null,
+    _$zIndex: 2,
     _$columns: null
 });

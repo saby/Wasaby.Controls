@@ -114,15 +114,17 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
     }
 
     getWrapperStyles(): string {
+        return `${super.getWrapperStyles()} z-index: ${this.getZIndex()};`;
+    }
+    getZIndex(): number {
         let zIndex;
         if (this._$owner.hasColumnScroll()) {
             zIndex = this._$isFixed ? FIXED_RESULTS_Z_INDEX : STICKY_RESULTS_Z_INDEX;
         } else {
             zIndex = FIXED_RESULTS_Z_INDEX;
         }
-        return `${super.getWrapperStyles()} z-index: ${zIndex};`;
+        return zIndex;
     }
-
     getContentClasses(theme: string): string {
         return `controls-Grid__results-cell__content controls-Grid__results-cell__content_theme-${theme}`;
     }
