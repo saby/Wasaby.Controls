@@ -103,8 +103,8 @@ export default class Container extends Control<ISearchInputContainerOptions> {
          if (!inputSearchValue) {
             searchResolver.clearTimer();
          }
+         searchResolver.setSearchStarted(this._value && this._value.length >= minSearchLength);
       }
-      searchResolver.setSearchStarted(this._value && this._value.length >= minSearchLength);
    }
 
    private _resolve(value: string, event: 'searchReset' | 'search'): void {
