@@ -12,6 +12,7 @@
    </div>
    <div class="controls-PeriodDialog-DateRange__body">
       <Controls.calendar:MonthList shadowStyle="datePopup"
+                                   bottomShadowVisibility="{{false}}"
                                    attachLoadTopTriggerToNull="{{ false }}"
                                    bind:markedKey="_markedKey"
                                    markerVisibility="visible"
@@ -45,6 +46,7 @@
                  attachLoadTopTriggerToNull="{{ false }}"
                  name="monthList"
                  shadowStyle="datePopup"
+                 bottomShadowVisibility="{{false}}"
                  virtualPageSize="{{12}}"
                  segmentSize="12"
                  position="{{_position}}"
