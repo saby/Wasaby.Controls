@@ -6419,6 +6419,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._insideDragging = false;
         this._documentDragging = false;
         this._draggedKey = null;
+        this._listViewModel.setDragOutsideList(false);
     },
 
     _getDragObject(mouseEvent?, startEvent?): object {
