@@ -74,6 +74,7 @@
                                               theme="{{theme}}"
                                               shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                               backgroundStyle="{{ backgroundStyle }}"
+                                              fixedZIndex="{{ column.getZIndex()}}"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                               attr:style="{{ column.getWrapperStyles() }}">
                     <ws:partial template="COLUMN" gridColumn="{{ column }}"/>
