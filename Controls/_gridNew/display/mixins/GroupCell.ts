@@ -3,12 +3,6 @@ import Row from './Row';
 export default abstract class GroupCell<T> {
     readonly '[Controls/_display/grid/mixins/GroupCell]': boolean;
 
-    protected _$owner: Row<T>;
-
-    getContentClasses(theme: string): string {
-        return 'controls-ListView__groupContent';
-    }
-
     getCenterContentClasses(theme: string): string {
         return 'controls-ListView__groupContent-text ' +
             `controls-ListView__groupContent-text_theme-${theme} ` +

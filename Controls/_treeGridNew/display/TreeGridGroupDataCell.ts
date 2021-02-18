@@ -11,10 +11,15 @@ export default class TreeGridGroupDataCell<T extends Model>
 
     constructor(options?: IGridRowOptions<T>) {
         super(options);
-        GridGroupCellMixin.call(this, options);
     }
 
     // region overrides
+
+    protected getContentClasses(theme: string): string {
+        let classes = super.getContentClasses(theme);
+        classes += ' controls-ListView__groupContent';
+        return classes;
+    }
 
     protected _getWrapperSeparatorClasses(theme: string): string {
         let classes = '';

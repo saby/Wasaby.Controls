@@ -1,12 +1,15 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth500 controlsDemo_wrapper-treeGrid-base-treeGridView">
     <Controls.treeGridNew:View
+            name="tree"
             keyProperty="id"
             source="{{ _viewSource }}"
             parentProperty="parent"
             nodeProperty="type"
             nodeTypeProperty="{{ _nodeTypeProperty }}"
             rowSeparatorSize="s"
-            colspanCallback="{{ _colspanCallback }}">
+            colspanCallback="{{ _colspanCallback }}"
+            useNewNodeFooters="{{ true }}"
+            navigation="{{_navigation}}">
         <ws:columns>
             <ws:Array>
                 <ws:Object displayProperty="title" width="300px">
@@ -53,5 +56,6 @@
                 </ws:Object>
             </ws:Array>
         </ws:columns>
+
     </Controls.treeGridNew:View>
 </div>
