@@ -3043,7 +3043,8 @@ const _private = {
             }
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
-                if (self._options.draggingTemplate && !self._insideDragging) {
+                const hasSorting = self._options.sorting && self._options.sorting.length;
+                if (self._options.draggingTemplate && (!self._insideDragging || hasSorting)) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
             }
@@ -5853,7 +5854,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._documentDragging) {
             this._insideDragging = false;
             this._dragLeave();
-            this._listViewModel.setDragOutsideList(true);
         }
     },
 
@@ -6401,12 +6401,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._dndListController.endDrag();
             }
         }
+        const hasSorting = this._options.sorting && this._options.sorting.length;
+        if (!hasSorting) {
+            this._listViewModel.setDragOutsideList(true);
+        }
     },
 
     _dragEnter(dragObject): void {
         this._insideDragging = true;
-        this._notify('_removeDraggingTemplate', [], {bubbling: true});
-        this._listViewModel.setDragOutsideList(false);
+
+        const hasSorting = this._options.sorting && this._options.sorting.length;
+        if (!hasSorting) {
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
+            this._listViewModel.setDragOutsideList(false);
+        }
 
         // Не нужно начинать dnd, если и так идет процесс dnd
         if (this._dndListController?.isDragging()) {
