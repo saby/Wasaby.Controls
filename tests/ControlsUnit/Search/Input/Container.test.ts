@@ -11,12 +11,15 @@ describe('Controls/_search/Input/Container', () => {
    afterEach(() => sandbox.restore());
 
    it('_beforeMount', () => {
-      const cont = new InputContainer({});
-      cont.saveOptions({});
+      const options = {
+         inputSearchValue: 'test',
+         minSearchLength: 3
+      };
+      const cont = new InputContainer(options);
       cont._value = '';
-
-      cont._beforeMount({inputSearchValue: 'test'});
+      cont._beforeMount(options);
       assert.equal(cont._value, 'test');
+      assert.ok(cont._getSearchResolverController()._searchStarted);
    });
 
    describe('_beforeUpdate', () => {

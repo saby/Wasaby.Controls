@@ -73,7 +73,7 @@ export interface IItemActionsOptions {
     itemActions?: IItemAction[];
 
     /**
-     * @cfg {Controls/itemActions.TItemActionsPosition} Позиционирование панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ опциями записи}.
+     * @cfg {Controls/itemActions.TItemActionsPosition} Позиционирование панели {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/ опций записи}.
      * @remark
      * Пример использования значения custom можно посмотреть в {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/position/#custom-position статье}.
      * @demo Controls-demo/list_new/ItemActions/ItemActionsPosition/Outside/Index Панель с опциями записи отображается под элементом.
@@ -147,7 +147,7 @@ export interface IItemActionsOptions {
     itemActionsPosition?: TItemActionsPosition;
 
     /**
-     * @cfg {String} Имя свойства, которое содержит конфигурацию для панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи}.
+     * @cfg {String} Имя поля записи, в котором хранится конфигурация для панели с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/ опциями записи}.
      * @remark
      * С помощью этой опции можно задать конфигурацию набора опций для каждой записи.
      * Подробнее об использовании функционала читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/item-actions/separate-set-options/#item-actions-property здесь}.

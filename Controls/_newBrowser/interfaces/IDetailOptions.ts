@@ -104,6 +104,10 @@ export
      */
     gradientColorProperty?: string;
 
+    displayProperty?: string;
+
+    hasChildrenProperty?: string;
+
     /**
      * Конфигурация колонок таблицы.
      */
