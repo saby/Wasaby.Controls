@@ -330,7 +330,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._gridAutoShadows = false;
             this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
         }
-        const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
+        const needUpdate = this._wasMouseEnter || !this._isOptimizeShadowEnabled;
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, needUpdate);
 
         // Если принудительно включили тени изнутри, то надо инициализировать заголовки что бы отрисовать тени на них.

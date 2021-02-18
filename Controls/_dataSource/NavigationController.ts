@@ -227,7 +227,7 @@ export default class NavigationController {
 
                 // Фикс, пока Витя Абрамов не починит изменения типа идентификатора в множестенной навигации
                 // https://online.sbis.ru/opendoc.html?guid=9f0b2454-3234-43f2-8a69-811d19cd8443
-                if (storeId !== null && list.getRecordById(storeIdInvertType)) {
+                if (storeId !== null && (list.getRecordById(storeIdInvertType) || storeIdInvertType === id)) {
                     storeId = storeIdInvertType;
                 }
 

@@ -660,7 +660,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _afterMount: function() {
-        this._isMounted = true;
         const viewModel = this._children.baseControl.getViewModel();
         _private.initListViewModelHandler(this, viewModel);
         if (this._expandedItemsToNotify) {
@@ -855,7 +854,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._children.baseControl.setMarkedKey(key);
     },
     scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
-        this._children.baseControl.scrollToItem(key, toBottom, force);
+        return this._children.baseControl.scrollToItem(key, toBottom, force);
     },
     reloadItem: function(key, readMeta, direction):Deferred {
         let baseControl = this._children.baseControl;
@@ -1077,9 +1076,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(this._options.nodeProperty) !== null) {
-                if (this._isMounted) {
-                    this.toggleExpanded(curItem.get(this._options.keyProperty), model);
-                }
                 expanded.push(curItem.get(this._options.keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }
@@ -1193,7 +1189,12 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._markedLeaf = newMarkedLeaf;
         }
 
-        markerController.setMarkedKey(this._currentItem);
+        // TODO: отрефакторить после наследования (TreeControl <- BaseControl) Нужно вызывать BaseControl._private::changeMarkedKey
+        if (markerController.getMarkedKey() !== this._currentItem) {
+            markerController.setMarkedKey(this._currentItem);
+            this._notify('markedKeyChanged', [this._currentItem]);
+        }
+
         this._tempItem = null;
 
     },

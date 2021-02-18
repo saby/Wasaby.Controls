@@ -9,6 +9,7 @@ import {TKey} from 'Controls/interface';
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
 import 'css!Controls/lookup';
+import 'css!Controls/CommonClasses';
 
 type LookupReceivedState = SelectedItems|null;
 

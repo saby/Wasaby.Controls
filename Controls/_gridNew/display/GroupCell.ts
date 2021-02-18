@@ -13,9 +13,11 @@ export interface IOptions<T> {
     column: IColumn;
     columnsLength: number;
     contents: string;
+    zIndex?: number;
 }
 
 const GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
+    protected _$zIndex: number;
 
 export default class GroupCell<T>
     extends mixin<Cell<any, GroupRow<any>>, GridGroupCellMixin<any>>(Cell, GridGroupCellMixin) {
@@ -31,6 +33,10 @@ export default class GroupCell<T>
 
     getWrapperStyles(): string {
         return this.getColspan();
+    }
+
+    getZIndex(): number {
+        return this._$zIndex;
     }
 
     getContentStyles(): string {
@@ -109,5 +115,6 @@ Object.assign(GroupCell.prototype, {
     _instancePrefix: 'grid-group-cell-',
     _$owner: null,
     _$columnsLength: null,
+    _$zIndex: 2,
     _$contents: null
 });

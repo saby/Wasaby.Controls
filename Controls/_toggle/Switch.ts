@@ -4,6 +4,7 @@ import {descriptor as EntityDescriptor} from 'Types/entity';
 import {ICheckable, ICheckableOptions} from './interface/ICheckable';
 import {ITooltip, ITooltipOptions, IValidationStatus, IValidationStatusOptions} from 'Controls/interface';
 import 'css!Controls/toggle';
+import 'css!Controls/CommonClasses';
 
 export interface ISwitchOptions extends IControlOptions, ICheckableOptions, ITooltipOptions, IValidationStatusOptions {
    caption: string;

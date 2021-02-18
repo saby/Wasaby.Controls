@@ -421,7 +421,17 @@ export default class ScrollController {
             }
 
             if (collectionStartIndex !== start || collectionStopIndex !== stop || force) {
-                collection.setIndexes(start, stop);
+
+                // При удалении нескольких групп записей из коллекции с использованием setEventRaising(false),
+                // приходит нескольно событий удаления, причем после того, как все записи уже удалены.
+                // Получается, что после первого события, индексы виртуального скролла превышают размер коллекции.
+                // А правильные индексы будут проставлены только после обработки последнего события.
+                // А до того момента, вызов итератора приводит к ошибке переполнения индексов.
+                // Проставление индексов в коллекцию по событию afterCollectionChange не решило проблему, так как
+                // до того, как это событие дойдет до baseControl, вызывается итератор коллекции со старыми индексами,
+                // что приводит к той же проблеме.
+                // Самый надежный вариант - не ставить в коллекцию stopIndex, который заведомо превышает ее размер.
+                collection.setIndexes(start, Math.min(stop, collection.getCount()));
             }
         }
     }
@@ -579,7 +589,6 @@ export default class ScrollController {
     isAppliedVirtualScroll(): boolean {
         return !!this._virtualScroll;
     }
-
 
     handleMoveItems(addIndex: number, addedItems: object[], removeIndex: number, removedIitems: object[],  direction?: IDirection): IScrollControllerResult {
         let result = {}

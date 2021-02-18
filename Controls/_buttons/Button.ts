@@ -26,6 +26,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import ButtonTemplate = require('wml!Controls/_buttons/Button');
 import 'wml!Controls/_buttons/ButtonBase';
 import 'css!Controls/buttons';
+import 'css!Controls/CommonClasses';
 
 export type IViewMode = 'button' | 'link' | 'linkButton' | 'toolButton' | 'functionalButton';
 

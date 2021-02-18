@@ -107,6 +107,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     protected _$header: THeader;
     protected _$headerModel: Header<S>;
     protected _$headerVisibility: THeaderVisibility;
+    protected _$multiSelectVisibility: string;
     protected _$footer: FooterRow<S>;
     protected _$results: ResultsRow<S>;
     protected _$ladder: ILadderObject;
@@ -211,6 +212,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
                 owner: this,
                 columns: this._$columns,
                 metaResults: this.getMetaResults(),
+                multiSelectVisibility: this._$multiSelectVisibility,
                 resultsColspanCallback: this._$resultsColspanCallback,
                 resultsTemplate: this._$resultsTemplate
             });
@@ -387,7 +389,8 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     }
 
     protected _initializeResults(options: IOptions): void {
-        this._$results = new ResultsRow({
+        const resultsRowClass = this.getResultsRowClass();
+        this._$results = new resultsRowClass({
             ...options,
             owner: this,
             metaResults: this.getMetaResults(),
@@ -400,6 +403,10 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         return new Colgroup({
             owner: this
         });
+    }
+
+    getResultsRowClass() {
+        return ResultsRow;
     }
 
     getRowIndex(row: GridRow<T>): number {
@@ -416,7 +423,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
             return this._$headerModel.getRows().indexOf(row);
         } else if (row instanceof HeaderRow) {
             return 0;
-        } else if (row instanceof ResultsRow) {
+        } else if (row instanceof this.getResultsRowClass()) {
             let index = getHeaderOffset();
             if (this.getResultsPosition() !== 'top') {
                 index += this.getCount();

@@ -4,7 +4,7 @@ import {ISelectionObject} from 'Controls/interface';
 import {IMoverDialogTemplateOptions} from 'Controls/moverDialog';
 
 /**
- * Интерфейс настройки диалогового окна выбора целевой записи для перемещения.
+ * Интерфейс настройки {@link /doc/platform/developmentapl/interface-development/controls/list/actions/mover/#move-items-with-dialog диалогового окна} выбора целевой записи для перемещения.
  * @public
  * @author Аверкиев П.А.
  */
@@ -27,11 +27,6 @@ export interface IMoveDialogTemplate {
  * @author Аверкиев П.А.
  */
 export interface IMovableOptions {
-    /**
-     * @cfg {IMoveDialogTemplate} moveDialogTemplate Шаблон диалогового окна выбора целевой записи для перемещения.
-     * Рекомендуется использовать стандартный шаблон {@link Controls/moverDialog:Template}.
-     * @see Controls/moverDialog:Template
-     */
     moveDialogTemplate?: IMoveDialogTemplate
 }
 

@@ -2417,6 +2417,9 @@ var
                 this._nextModelVersion();
             }
         },
+        isDragOutsideList(): boolean {
+            return this._model.isDragOutsideList();
+        },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();
 

@@ -284,6 +284,27 @@ define([
          assert.equal(instance._menuCaption, 'Отметить');
       });
 
+      it('_beforeUpdate with old selectionCountConfig', () => {
+         let menuCaptionUpdated = false;
+         let instance = new MultiSelector.default();
+
+         instance._updateMenuCaptionByOptions = () => {
+            menuCaptionUpdated = true;
+         };
+         instance._options = {
+            selectionCountConfig: {
+               command: 'ListCounter'
+            }
+         };
+         const newOptions = {
+            selectionCountConfig: {
+               command: 'ListCounter'
+            }
+         };
+         instance._beforeUpdate(newOptions);
+         assert.isFalse(menuCaptionUpdated);
+      });
+
       it('_afterUpdate', function() {
          var instance = new MultiSelector.default();
          instance._notify = mockNotify();

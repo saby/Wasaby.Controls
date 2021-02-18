@@ -15,6 +15,8 @@ import {IColumn} from 'Controls/grid';
 import {TColspanCallbackResult} from 'Controls/_gridNew/display/mixins/Grid';
 import {IOptions as IGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
 
+const GROUP_Z_INDEX_DEFAULT = 2;
+const GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS = 3;
 export interface IOptions<T> extends IBaseCollectionItemOptions<T>, IExpandableMixinOptions {
     owner: Collection<T>;
 }
@@ -83,8 +85,8 @@ export default class GroupRow<T> extends mixin<
     }
 
     getItemClasses(): string {
-        return 'controls-ListView__itemV controls-Grid__row controls-ListView__group' +
-                (this.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-Grid__row controls-ListView__group');
+        return 'controls-ListView__itemV controls-Grid__row controls-ListView__group ' +
+                (this.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-Grid__row ');
     }
 
     getStickyHeaderMode(): string {
@@ -95,6 +97,9 @@ export default class GroupRow<T> extends mixin<
         return 'top';
     }
 
+    getStickyHeaderZIndex(): number {
+        return (this.hasHeader() || this.getResultsPosition()) ? GROUP_Z_INDEX_DEFAULT : GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS;
+    }
     setExpanded(expanded: boolean, silent?: boolean): void {
         super.setExpanded(expanded, silent);
         this._nextVersion();
@@ -115,7 +120,8 @@ export default class GroupRow<T> extends mixin<
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             columnsLength: this._$columns.length,
-            contents: this.getContents()
+            contents: this.getContents(),
+			zIndex: this.getStickyHeaderZIndex()
         };
     }
 }
