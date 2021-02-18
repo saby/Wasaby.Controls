@@ -51,9 +51,6 @@ export interface IDateOptions extends IControlOptions, IFontColorStyleOptions, I
  * @author Сиряков М.К.
  */
 class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IFontSize, IFontWeight {
-    private _value: object;
-    private _format: string;
-    private _timeZoneOffset: number;
     private _formattedDate: string;
     private _fontColorStyle: string;
 
@@ -66,22 +63,19 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
 
     protected _beforeMount(options: IDateOptions): void {
         this._setFontState(options);
-        this._value = options.value;
-        this._format = options.format;
-        this._timeZoneOffset = options.timeZoneOffset;
         this._formattedDate = this._formatDate(options);
     }
 
     protected _beforeUpdate(newOptions: IDateOptions): void {
         this._setFontState(newOptions);
         if (
-            this._value !== newOptions.value
-            || this._format !== newOptions.format
-            || this._timeZoneOffset !== newOptions.timeZoneOffset
+            this._options.value !== newOptions.value
+            || this._options.format !== newOptions.format
+            || this._options.timeZoneOffset !== newOptions.timeZoneOffset
         ) {
-            this._value = newOptions.value;
-            this._format = newOptions.format;
-            this._timeZoneOffset = newOptions.timeZoneOffset;
+            this._options.value = newOptions.value;
+            this._options.format = newOptions.format;
+            this._options.timeZoneOffset = newOptions.timeZoneOffset;
             this._formattedDate = this._formatDate(newOptions);
         }
     }
