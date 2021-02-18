@@ -167,7 +167,7 @@ export default class Application extends Control<IApplication> {
       if (Application._isIOS13()) {
          window.visualViewport.addEventListener('resize', this._resizePage.bind(this));
       }
-      window.document.addEventListener('resize', this._resizePage.bind(this))
+      window.addEventListener('resize', this._resizePage.bind(this))
       window.document.addEventListener('scroll', this._scrollPage.bind(this))
       window.document.addEventListener('keydown', (event) => {
          this._keyDownHandler(new SyntheticEvent<KeyboardEvent>(event))
