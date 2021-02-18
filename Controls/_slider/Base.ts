@@ -139,7 +139,7 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
       if (!this._options.readOnly) {
          const newValue = this._getValue(event);
          this._setValue(newValue);
-        this._children.dragNDrop.startDragNDrop(this._children.point, event);
+         this._children.dragNDrop.startDragNDrop(this._children.point, event);
       }
    }
 
@@ -163,10 +163,10 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    static getDefaultOptions(): object {
       return {
          ...{
-             theme: 'default',
-             value: undefined,
-             intervals: [],
-             intervalTemplate
+            theme: 'default',
+            value: undefined,
+            intervals: [],
+            intervalTemplate
          }, ...SliderBase.getDefaultOptions()
       };
 
@@ -175,8 +175,8 @@ class Base extends SliderBase<ISliderBaseOptions> implements ISlider {
    static getOptionTypes(): object {
       return {
          ...{
-             value: EntityDescriptor(Number),
-             intervals: EntityDescriptor(Array)
+            value: EntityDescriptor(Number),
+            intervals: EntityDescriptor(Array)
          }, ...SliderBase.getOptionTypes()
       };
 
