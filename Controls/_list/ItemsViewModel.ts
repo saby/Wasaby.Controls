@@ -235,7 +235,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     _getItemVersion(item) {
         // records have defined method getVersion, groups haven't
-        if (item.getVersion) {
+        if (item && item.getVersion) {
             return '' + item.getVersion();
         }
         return '' + item;
