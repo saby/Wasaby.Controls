@@ -64,6 +64,12 @@
    position: relative;
 }
 
+.controls-TileView__richTemplate_imageWrapper::after {
+   content: '';
+   display: block;
+   padding-bottom: 100%;
+}
+
 .controls-TileView_richTemplate_image_spacing_viewMode_circle_theme-@{themeName},
 .controls-TileView_richTemplate_image_spacing_viewMode_ellipse_theme-@{themeName} {
    margin: @offset_m;
@@ -73,15 +79,15 @@
    margin-bottom: @offset_m;
 }
 
-.controls-TileView__richTemplate_image_size_s_position_top_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_s_position_viewMode_rectangle_theme-@{themeName} {
    height: @image_height_s_position_top_rich_tile;
 }
 
-.controls-TileView__richTemplate_image_size_m_position_top_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_m_position_top_viewMode_rectangle_theme-@{themeName} {
    height: @image_height_m_position_top_rich_tile;
 }
 
-.controls-TileView__richTemplate_image_size_l_position_top_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_l_position_top_viewMode_rectangle_theme-@{themeName} {
    height: @image_height_l_position_top_rich_tile;
 }
 
@@ -101,18 +107,12 @@
 }
 
 .controls-TileView__richTemplate_image_size_s_position_top_viewMode_circle_theme-@{themeName},
-.controls-TileView__richTemplate_image_size_s_position_top_viewMode_ellipse_theme-@{themeName} {
-   width: @image_width_s_position_vertical_rich_tile;
-}
-
+.controls-TileView__richTemplate_image_size_s_position_top_viewMode_ellipse_theme-@{themeName},
 .controls-TileView__richTemplate_image_size_m_position_top_viewMode_circle,
-.controls-TileView__richTemplate_image_size_m_position_top_viewMode_ellipse {
-   width: @image_height_m_position_top_rich_tile;
-}
-
 .controls-TileView__richTemplate_image_size_l_position_top_viewMode_circle,
-.controls-TileView__richTemplate_image_size_l_position_top_viewMode_ellipse {
-   width: @image_height_l_position_top_rich_tile;
+.controls-TileView__richTemplate_image_size_l_position_top_viewMode_ellipse,
+.controls-TileView__richTemplate_image_size_m_position_top_viewMode_ellipse {
+   width: 100%;
 }
 
 .controls-TileView__richTemplate {
