@@ -749,7 +749,7 @@
   "--message_text-color_operationsReportDialog": "var(--label_text-color)",
   "--errors_font-size_operationsReportDialog": "var(--font-size_default)",
   "--errors_padding-top_operationsReportDialog": "var(--offset_s)",
-  "--errors_item_offset_operationsReportDialog": "var(--offset_2xs)"
+  "--errors_item_offset_operationsReportDialog": "var(--offset_2xs)",
   "--border-color_searchInput": "transparent",
   "--border-color_hover_searchInput": "#dfdfdf #dfdfdf #dfdfdf #dfdfdf",
   "--border-color_focus_searchInput": "#dfdfdf #dfdfdf #dfdfdf #dfdfdf",
