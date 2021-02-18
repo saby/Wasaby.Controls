@@ -516,7 +516,7 @@ export default class Controller {
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
                 })
                 .catch((error) => {
-                    if (!error.isCanceled && !error.canceled) {
+                    if (error && !error.isCanceled && !error.canceled) {
                         // Если упала ошибка при загрузке в каком-то направлении,
                         // то контроллер навигации сбрасывать нельзя,
                         // Т.к. в этом направлении могут продолжить загрухзку
