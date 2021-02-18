@@ -3041,7 +3041,7 @@ const _private = {
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
                 const hasSorting = self._options.sorting && self._options.sorting.length;
-                if (self._options.draggingTemplate && (!self._insideDragging || hasSorting)) {
+                if (self._options.draggingTemplate && (self._listViewModel.isDragOutsideList() || hasSorting)) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
             }
@@ -6549,6 +6549,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._insideDragging = false;
         this._documentDragging = false;
         this._draggedKey = null;
+        this._listViewModel.setDragOutsideList(false);
     },
 
     _getDragObject(mouseEvent?, startEvent?): object {

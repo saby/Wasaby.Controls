@@ -4329,6 +4329,12 @@ describe('Controls/_display/Collection', () => {
             display.resetDraggedItems();
             assert.isTrue(notifyLaterSpy.called);
         });
+
+        it('DragOutsideList', () => {
+           assert.isFalse(display.isDragOutsideList());
+           display.setDragOutsideList(true);
+           assert.isTrue(display.isDragOutsideList());
+        });
     });
 
     describe('multiSelectAccessibility', () => {
