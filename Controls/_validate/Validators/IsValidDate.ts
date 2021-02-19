@@ -3,7 +3,7 @@ import cInstance = require('Core/core-instance');
 
 interface IArgs {
     value: Date;
-    doNotValidate: boolean;
+    doNotValidate?: boolean;
 }
 
 /**
@@ -42,7 +42,7 @@ function isValidDateDefault(date: Date): boolean {
     return date instanceof Date && !isNaN(date.getTime()) && (date.getFullYear() > 1400);
 }
 
-export default function (args: IArgs): boolean | string {
+export default function(args: IArgs): boolean | string {
     if (args.doNotValidate || !args.value || isValidDateDefault(args.value)) {
         return true;
     }

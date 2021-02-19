@@ -18,7 +18,7 @@ describe('Controls.Validators.IsValidDate', () => {
         value: new DateTime('Invalid'),
         resp: 'Дата или время заполнены некорректно'
     }, {
-        value: Date(1300, 0, 1),
+        value: new Date(1300, 0, 1),
         resp: 'Дата заполнена некорректно'
     }
     ].forEach((test) => {
