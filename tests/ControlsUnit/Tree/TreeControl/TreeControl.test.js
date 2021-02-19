@@ -233,7 +233,7 @@ define([
                appendItems: function() {},
                mergeItems: function() {},
                getItemBySourceKey: () => undefined,
-               getItems: () => new collection.RecordSet()
+               getCollection: () => new collection.RecordSet()
             };
          };
 
