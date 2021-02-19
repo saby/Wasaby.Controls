@@ -246,11 +246,10 @@ var Component = BaseControl.extend([EventProxyMixin], {
     },
 
     _prepareItemClass: function (itemValue) {
-        var css = [],
-            start = this._options.startValue,
-            end = this._options.endValue;
-
-        if (rangeSelectionUtils.isSelected(itemValue, start, end, this._options.selectionProcessing,
+        const css = [];
+        const startValue = this._options.startValue;
+        const endValue = this._options.endValue;
+        if (rangeSelectionUtils.isSelected(itemValue, startValue, endValue, this._options.selectionProcessing,
                 this._options.selectionBaseValue, this._options.selectionHoveredValue) &&
             this._selectionViewType === SELECTION_VIEW_TYPES.months) {
             css.push('controls-PeriodDialog-MonthsRange__item-selected');
@@ -263,8 +262,8 @@ var Component = BaseControl.extend([EventProxyMixin], {
         if (this._selectionViewType === SELECTION_VIEW_TYPES.months) {
             css.push(rangeSelectionUtils.prepareSelectionClass(
                 itemValue,
-                start,
-                end,
+                startValue,
+                endValue,
                 this._options.selectionProcessing,
                 this._options.selectionBaseValue,
                 this._options.selectionHoveredValue,
