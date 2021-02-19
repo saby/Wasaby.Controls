@@ -1,10 +1,7 @@
-import {TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IList, ListControl} from 'Controls/list';
+import {BaseControl, IBaseControlOptions} from 'Controls/list';
 import Collection from 'Controls/_columns/display/Collection';
-import ListControlTpl = require('wml!Controls/_columns/ColumnsControl');
 import ColumnsController from 'Controls/_columns/controllers/ColumnsController';
-import {MarkerController} from 'Controls/marker';
 import {Model} from 'Types/entity';
 import CollectionItem from 'Controls/_columns/display/CollectionItem';
 import {scrollToElement} from 'Controls/scroll';
@@ -16,7 +13,7 @@ const DEFAULT_MIN_WIDTH = 270;
 const DEFAULT_MAX_WIDTH = 400;
 const DEFAULT_COLUMNS_COUNT = 2;
 
-export interface IColumnsControlOptions extends IList {
+export interface IColumnsControlOptions extends IBaseControlOptions {
     columnMinWidth: number;
     columnMaxWidth: number;
     columnsMode: 'auto' | 'fixed';
@@ -24,22 +21,22 @@ export interface IColumnsControlOptions extends IList {
     initialWidth: number;
 }
 
-export default class ColumnsControl extends ListControl {
-    protected _template: TemplateFunction = ListControlTpl;
+export default class ColumnsControl<TOptions extends IColumnsControlOptions = IColumnsControlOptions> extends BaseControl<TOptions> {
     private _keyDownHandler: Function;
     private _columnsCount: number;
-    private _markerController: MarkerController;
+    private _columnsController: ColumnsController;
     private _spacing: number = SPACING;
-    protected _options: IColumnsControlOptions;
     protected _model: Collection<Model>;
-    protected _addingColumnsCounter: number = 0;
 
-    protected _beforeMount(options: IColumnsControlOptions): void {
-        this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
+    constructor(options: TOptions) {
+        super(options);
         this._keyDownHandler = this._keyDownHandler.bind(this);
+    }
+
+    protected _beforeMount(options: TOptions): void {
+        this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
         this._beforeMountCallback = ({viewModel, markerController}) => {
             this._model = viewModel;
-            this._markerController = markerController;
             if (options.columnsMode === 'auto' && options.initialWidth) {
                 this._recalculateColumnsCountByWidth(options.initialWidth, options.columnMinWidth);
             } else {
@@ -51,16 +48,32 @@ export default class ColumnsControl extends ListControl {
                 this._model.setColumnsCount(this._columnsCount);
             }
         };
+        return super._beforeMount(...arguments);
     }
 
     protected _afterMount(): void {
+        super._afterMount();
         this._resizeHandler();
     }
 
-    protected _beforeUpdate(options: IColumnsControlOptions): void {
+    protected _beforeUpdate(options: TOptions): void {
+        super._beforeUpdate(options);
         if (options.columnsMode === 'fixed' && options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
         }
+    }
+
+    protected _shouldMoveMarkerOnScrollPaging(): boolean {
+        return false;
+    }
+
+    protected _isPlainItemsContainer(): boolean {
+        return false;
+    }
+
+    protected _viewResize(): void {
+        super._viewResize();
+        this._resizeHandler();
     }
 
     protected _resizeHandler(): void {
@@ -79,10 +92,6 @@ export default class ColumnsControl extends ListControl {
             this._columnsCount = newColumnsCount;
             this._model.setColumnsCount(this._columnsCount);
         }
-    }
-
-    protected _getItemsContainer() {
-        return this._children.baseControl.getItemsContainer();
     }
 
     private moveMarker(direction: string): void {
@@ -154,8 +163,17 @@ export default class ColumnsControl extends ListControl {
         }
     }
 
+    protected _getColumnsCount(): number {
+        return this._columnsCount;
+    }
+
+    protected _getSpacing(): number {
+        return this._spacing;
+    }
+
     static getDefaultOptions(): Partial<IColumnsControlOptions> {
         return {
+            ...BaseControl.getDefaultOptions(),
             columnMinWidth: DEFAULT_MIN_WIDTH,
             columnMaxWidth: DEFAULT_MAX_WIDTH,
             columnsMode: 'auto',
