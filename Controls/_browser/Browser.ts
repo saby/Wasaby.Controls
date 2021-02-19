@@ -155,7 +155,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._source = options.source;
         }
         if (options.useStore) {
-            this._inputSearchValue = this._searchValue = Store.getState().searchValue as unknown as string;
+            this._inputSearchValue = this._searchValue = Store.getState().searchValue as unknown as string || '';
         } else if (options.searchValue) {
             this._inputSearchValue = this._searchValue = options.searchValue;
         }
