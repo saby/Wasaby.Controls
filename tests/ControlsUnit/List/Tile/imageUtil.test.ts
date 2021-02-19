@@ -79,12 +79,12 @@ describe('tileImageUtil', () => {
                 assert.isTrue(restrictions.height);
             });
             it('Картинка пропорционально выше плитки', () => {
-                const restrictions = getImageRestrictions(300, 100, 400, 100);
+                const restrictions = getImageRestrictions(300, 100, 200, 100);
                 assert.isTrue(restrictions.width);
             });
             it('Картинка полностью пропорциональна плитке', () => {
                 const restrictions = getImageRestrictions(300, 300, 500, 500);
-                assert.isTrue(restrictions.width);
+                assert.isTrue(restrictions.height);
             });
         });
     });
