@@ -296,6 +296,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         return '';
     }
 
+    getZIndex(): number {
+        return 2;
+    }
+
     setColumnSeparatorSize(columnSeparatorSize: TColumnSeparatorSize): void {
         this._$columnSeparatorSize = columnSeparatorSize;
         this._nextVersion();

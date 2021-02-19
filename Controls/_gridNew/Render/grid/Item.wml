@@ -32,7 +32,7 @@
         <ws:templateOptions multiSelectStatus="{{ (item || itemData).isSelected() }}"
                             checkboxReadOnly="{{ checkboxReadOnly }}"/>
         <ws:multiSelectTemplate>
-            <ws:partial template="{{multiSelectTpl}}" _$preventMergeOptions="{{ true }}">
+            <ws:partial template="{{multiSelectTpl}}" _preventMergeOptions="{{ true }}">
                 <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
             </ws:partial>
         </ws:multiSelectTemplate>
@@ -73,6 +73,7 @@
                                               style="{{style}}"
                                               theme="{{theme}}"
                                               shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
+                                              fixedZIndex="{{ column.getZIndex()}}"
                                               attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                               attr:style="{{ column.getWrapperStyles() }}">
                     <ws:partial template="COLUMN" gridColumn="{{ column }}"/>

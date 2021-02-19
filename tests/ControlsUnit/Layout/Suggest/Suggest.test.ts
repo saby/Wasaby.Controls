@@ -1267,6 +1267,13 @@ describe('Controls/suggest', () => {
             assert.isTrue(suggestOpened);
          });
 
+         it('suggestState = true, value is reseted', () => {
+            inputContainer._options.autoDropDown = false;
+            inputContainer._options.suggestState = true;
+            inputContainer._updateSuggestState(true);
+            assert.isFalse(suggestOpened);
+         });
+
          it('without items and history', () => {
             stub.callsFake(() => ({
                getCount: () => 0

@@ -4948,7 +4948,8 @@ define([
                _notify: () => {}
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            return lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            return lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.equal(fake._itemActionsMenuId, 'ekaf');
                })
@@ -4974,7 +4975,8 @@ define([
                _notify: () => {}
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.equal(activeItem, item);
                   done();
@@ -5114,11 +5116,13 @@ define([
                   }
                });
 
+               const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(localInstance, item, fakeEvent, null, false);
+
                // имитируем клик правой кнопкой мыши несколько раз подряд.
                await Promise.all([
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent, item, false),
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent2, item, false),
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent3, item, false)
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent, item, menuConfig),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent2, item, menuConfig),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent3, item, menuConfig)
                ]);
             });
 
@@ -5239,7 +5243,8 @@ define([
                }
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.exists(lastFiredEvent, 'ListenerUtils did not fire any event');
                   assert.equal(lastFiredEvent.eventName, 'register', 'Last fired event is wrong');
@@ -5527,7 +5532,7 @@ define([
                isEIPDestroyed = true;
             }
          };
-         instance._beforeUpdate({...cfg, filter: {qw: ''}});
+         instance._beforeUpdate({...cfg, filter: {qw: ''}, sourceController: null});
          return cancelPromise.then(() => {
             assert.isTrue(isEditingCanceled);
             assert.isFalse(isEIPDestroyed);

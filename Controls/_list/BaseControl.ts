@@ -1945,21 +1945,15 @@ const _private = {
     /**
      * Открывает меню операций
      * @param self
-     * @param action
      * @param clickEvent
      * @param item
-     * @param isContextMenu
+     * @param menuConfig
      */
     openItemActionsMenu(
         self: any,
-        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        isContextMenu: boolean): Promise<void> {
-        const menuConfig = _private.getItemActionsMenuConfig(self, item, clickEvent, action, isContextMenu);
-        if (!menuConfig) {
-            return Promise.resolve();
-        }
+        menuConfig: Record<string, any>): Promise<void> {
         /**
          * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
          * у которого открываем меню. Потом передадим его для события actionClick.
@@ -2022,9 +2016,12 @@ const _private = {
 
         // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
         if (!!self._itemActionsController) {
-            event.nativeEvent.preventDefault();
             const item = self._listViewModel.getItemBySourceKey(key) || itemData;
-            _private.openItemActionsMenu(self, null, event, item, true);
+            const menuConfig = _private.getItemActionsMenuConfig(self, item, event, null, true);
+            if (menuConfig) {
+                event.nativeEvent.preventDefault();
+                _private.openItemActionsMenu(self, event, item, menuConfig);
+            }
         }
     },
 
@@ -3044,7 +3041,7 @@ const _private = {
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
                 const hasSorting = self._options.sorting && self._options.sorting.length;
-                if (self._options.draggingTemplate && (!self._insideDragging || hasSorting)) {
+                if (self._options.draggingTemplate && (self._listViewModel.isDragOutsideList() || hasSorting)) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
             }
@@ -3915,7 +3912,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
         // todo При отказе от старой - выпилить проверку "useNewModel".
-        if (emptyTemplateChanged && newOptions.useNewModel) {
+        if (emptyTemplateChanged && newOptions.useNewModel && this._listViewModel) {
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
         }
 
@@ -4545,7 +4542,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             if (this._syncLoadingIndicatorTimeout) {
                 clearTimeout(this._syncLoadingIndicatorTimeout);
-                this.changeIndicatorStateHandler(false, 'up');
+                if (!this._shouldDisplayTopLoadingIndicator()) {
+                    this.changeIndicatorStateHandler(false, 'up');
+                }
                 this.changeIndicatorStateHandler(false, 'down');
                 this._syncLoadingIndicatorState = null;
             }
@@ -5444,7 +5443,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         itemData: CollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        clickEvent.stopPropagation();
         _private.openContextMenu(this, clickEvent, itemData);
     },
 
@@ -5489,7 +5487,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (action && !action.isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item, false);
         } else {
-            _private.openItemActionsMenu(this, action, event, item, false);
+            const menuConfig = _private.getItemActionsMenuConfig(this, item, event, action, false);
+            if (menuConfig) {
+                _private.openItemActionsMenu(this, event, item, menuConfig);
+            }
         }
     },
 
@@ -6550,6 +6551,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._insideDragging = false;
         this._documentDragging = false;
         this._draggedKey = null;
+        this._listViewModel.setDragOutsideList(false);
     },
 
     _getDragObject(mouseEvent?, startEvent?): object {
