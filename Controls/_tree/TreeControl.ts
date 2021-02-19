@@ -687,7 +687,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const sourceControllerRoot = sourceController.getState().root;
 
             this._root = newOptions.root;
-            this._updatedRoot = true;
+
+            this._updatedRoot = !(newOptions.task1181246826 && sourceControllerRoot === this._root && sourceController.isLoading());
 
             if (sourceControllerRoot === undefined || sourceControllerRoot !== newOptions.root) {
                 updateSourceController = true;
