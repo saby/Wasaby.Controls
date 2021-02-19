@@ -1,5 +1,12 @@
 import rk = require('i18n!Controls');
 import cInstance = require('Core/core-instance');
+
+interface IIsValidDate {
+    value: Date;
+    startValue?: Date;
+    endValue?: Date;
+    doNotValidate?: boolean;
+}
 /**
  * Функция проверяет дату и время на валидность.
  * @class Controls/_validate/Validators/IsValidDate
@@ -11,6 +18,8 @@ import cInstance = require('Core/core-instance');
  * Аргументы функции:
  *
  * * value — проверяемое значение.
+ * * startValue - начало границы допустимых значений
+ * * endValue - конец границы допустимых значений.
  * * doNotValidate:Boolean — требуется ли валидация.
  *
  * Типы возвращаемых значений:
@@ -30,14 +39,22 @@ import cInstance = require('Core/core-instance');
  * </Controls.validate:InputContainer>
  * </pre>
  */
-//todo: will be fixed by https://online.sbis.ru/opendoc.html?guid=9aea41a1-bac1-47b9-a2b5-fa81a3a2e979
+// todo: will be fixed by https://online.sbis.ru/opendoc.html?guid=9aea41a1-bac1-47b9-a2b5-fa81a3a2e979
 function isValidDateDefault(date: Date): boolean {
    // If date is Invalid Date, "instanceof Date" will return true, so check getTime
    return date instanceof Date && !isNaN(date.getTime());
 }
 
-export = function (args) {
-   if (args.doNotValidate || !args.value || isValidDateDefault(args.value)) {
+function isValidDateInRange(date: Date, startDate: Date, endDate: Date): boolean {
+    if (startDate && date < startDate) {
+        return false;
+    }
+    return !(endDate && date > endDate);
+}
+
+export default function(args: IIsValidDate): boolean | string {
+   if (args.doNotValidate || !args.value ||
+       (isValidDateDefault(args.value) && isValidDateInRange(args.value, args.startValue, args.endValue))) {
       return true;
    }
 
@@ -48,4 +65,4 @@ export = function (args) {
    }
 
    return rk('Дата или время заполнены некорректно');
-};
+}
