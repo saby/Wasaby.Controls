@@ -663,6 +663,6 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
 /**
  * @name Controls/_scroll/Container#shadowStyle
- * @cfg {String} Постфикс у класса тени
+ * @cfg {String} Определяет постфикс у класса тени
  * @default default
  */
