@@ -1,5 +1,5 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import * as template from 'wml!Controls-demo/PropertyGridNew/HierarchicalSource/Index';
+import * as template from 'wml!Controls-demo/PropertyGridNew/ParentProperty/Index';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
