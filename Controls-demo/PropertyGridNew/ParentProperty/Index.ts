@@ -1,5 +1,5 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import * as template from 'wml!Controls-demo/PropertyGridNew/Source/Index';
+import * as template from 'wml!Controls-demo/PropertyGridNew/ParentProperty/Index';
 
 export default class Demo extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
@@ -8,8 +8,8 @@ export default class Demo extends Control<IControlOptions> {
 
     protected _beforeMount(): void {
         this._editingObject = {
-            description: true,
-            tileView: false,
+            description: null,
+            tileView: null,
             showBackgroundImage: true,
             showVideo: true
         };
@@ -17,19 +17,28 @@ export default class Demo extends Control<IControlOptions> {
         this._source = [
             {
                 name: 'description',
-                caption: 'Описание'
+                caption: 'Описание',
+                editorClass: 'controls-demo-pg-text-editor',
+                '@parent': true,
+                parent: null
             },
             {
                 name: 'tileView',
-                caption: 'Список плиткой'
+                caption: 'Список плиткой',
+                '@parent': true,
+                parent: null
             },
             {
                 name: 'showVideo',
-                caption: 'Показывать видео'
+                caption: 'Показывать видео',
+                '@parent': null,
+                parent: 'tileView'
             },
             {
                 name: 'showBackgroundImage',
-                caption: 'Показывать изображение'
+                caption: 'Показывать изображение',
+                '@parent': null,
+                parent: 'description'
             }
         ];
     }
