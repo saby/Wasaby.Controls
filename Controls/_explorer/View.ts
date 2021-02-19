@@ -247,7 +247,14 @@ export default class Explorer extends Control<IControlOptions> {
             this._pendingViewMode &&
             cfg.viewMode === this._pendingViewMode &&
             cfg.sourceController) {
-            this._setViewModeSync(this._pendingViewMode, cfg);
+            // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
+            if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
+                this._loadTileViewMode().then(() => {
+                    this._setViewModeSync(this._pendingViewMode, cfg);
+                });
+            } else {
+                this._setViewModeSync(this._pendingViewMode, cfg);
+            }
         } else {
             this._applyNewVisualOptions();
         }

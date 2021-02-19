@@ -4948,7 +4948,8 @@ define([
                _notify: () => {}
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            return lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            return lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.equal(fake._itemActionsMenuId, 'ekaf');
                })
@@ -4974,7 +4975,8 @@ define([
                _notify: () => {}
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.equal(activeItem, item);
                   done();
@@ -5114,11 +5116,13 @@ define([
                   }
                });
 
+               const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(localInstance, item, fakeEvent, null, false);
+
                // имитируем клик правой кнопкой мыши несколько раз подряд.
                await Promise.all([
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent, item, false),
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent2, item, false),
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent3, item, false)
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent, item, menuConfig),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent2, item, menuConfig),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent3, item, menuConfig)
                ]);
             });
 
@@ -5239,7 +5243,8 @@ define([
                }
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.exists(lastFiredEvent, 'ListenerUtils did not fire any event');
                   assert.equal(lastFiredEvent.eventName, 'register', 'Last fired event is wrong');
@@ -5464,16 +5469,16 @@ define([
 
       it('close and destroy editInPlace if model changed', async () => {
          const cfg = {
-                viewName: 'Controls/List/ListView',
-                viewModelConfig: {
-                   items: [],
-                   keyProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                keyProperty: 'id',
-                source: source
-             },
-             instance = correctCreateBaseControl(cfg);
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = correctCreateBaseControl(cfg);
          let isEditingCanceled = false;
          let isEIPDestroyed = false;
          instance.saveOptions(cfg);
@@ -5496,6 +5501,42 @@ define([
             assert.isTrue(isEditingCanceled);
             assert.isTrue(isEIPDestroyed);
             assert.isNull(instance._editInPlaceController);
+         });
+      });
+
+      it('close and but not destroy editInPlace if reloaded', async () => {
+         const cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = correctCreateBaseControl(cfg);
+         let isEditingCanceled = false;
+         let isEIPDestroyed = false;
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         const cancelPromise = Promise.resolve();
+         instance._cancelEdit = () => {
+            isEditingCanceled = true;
+            return cancelPromise;
+         };
+         instance._editInPlaceController = {
+            isEditing: () => true,
+            updateOptions: () => {},
+            destroy: () => {
+               isEIPDestroyed = true;
+            }
+         };
+         instance._beforeUpdate({...cfg, filter: {qw: ''}, sourceController: null});
+         return cancelPromise.then(() => {
+            assert.isTrue(isEditingCanceled);
+            assert.isFalse(isEIPDestroyed);
+            assert.isNotNull(instance._editInPlaceController);
          });
       });
 
