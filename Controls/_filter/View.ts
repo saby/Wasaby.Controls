@@ -22,7 +22,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {DependencyTimer} from 'Controls/popup';
 import {load} from 'Core/library';
 import {IFilterItem} from './View/interface/IFilterView';
-import {StickyOpener, StackOpener} from 'Controls/popup';
+import {StickyOpener, StackOpener, DialogOpener} from 'Controls/popup';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import Store from 'Controls/Store';
 
@@ -126,6 +126,7 @@ var _private = {
                     popupItem.hasMoreButton = configs[item.name].sourceController.hasMoreData('down');
                     popupItem.sourceController = configs[item.name].sourceController;
                     popupItem.selectorOpener = self._getStackOpener();
+                    popupItem.dialogOpener = self._getDialogOpener();
                     popupItem.selectorDialogResult = self._onSelectorTemplateResult.bind(self);
                     popupItem.opener = self;
                 }
@@ -783,6 +784,9 @@ var Filter = Control.extend({
         if (this._stackOpener) {
             this._stackOpener.destroy();
         }
+        if (this._dialogOpener) {
+            this._dialogOpener.destroy();
+        }
         if (this._options.useStore) {
             Store.unsubscribe(this._openCallbackId);
             Store.unsubscribe(this._resetCallbackId);
@@ -910,6 +914,13 @@ var Filter = Control.extend({
         }
         return this._stackOpener;
     },
+
+    _getDialogOpener(): DialogOpener {
+        if (!this._dialogOpener) {
+            this._dialogOpener = new DialogOpener();
+        }
+        return this._dialogOpener;
+    }
 
     _rangeTextChangedHandler: function(event, textValue) {
         let dateRangeItem = _private.getDateRangeItem(this._source);
