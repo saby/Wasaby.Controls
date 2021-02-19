@@ -110,6 +110,7 @@
 /**
  * @name Controls/_form/interface/IFormController#initializingWay
  * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
+ * @variant 'preload' В этом режиме FormController строится без данных, ожидая что запись появится на фазе обновления. Используется совместно с режимом предзагрузки данных при построении контрола. Подробнее см опцию {@link Controls/popup:IBaseOpener#dataLoaders}
  * @variant 'local' Верстка контрола строится по записи, переданной в опцию {@link Controls/_form/interface/IFormController#record record}, запроса на БЛ нет.
  * @variant 'read' Перед построением верстки выполняется метод "Прочитать" по ключу, переданному в опцию {@link Controls/_form/interface/IFormController#key key}. Построение <b>откладывается</b> до ответа БЛ.
  * @variant 'create' Перед построением верстки выполняется метод "Создать", построение <b>откладывается</b> до ответа БЛ.
