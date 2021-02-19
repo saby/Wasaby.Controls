@@ -10,6 +10,7 @@ import {Base as dateUtils} from 'Controls/dateUtils';
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
 import * as monthHeaderTmpl from 'wml!Controls/_datePopup/DateRangeMonthHeaderTemplate';
+import {detection} from 'Env/Env';
 
 const _private = {
     updateView: function (self, options) {
@@ -91,7 +92,9 @@ var Component = BaseControl.extend([EventProxy], {
 
     _monthObserverHandler: function(event, entries) {
         // Меняем маркер выбранного месяца если месяц стал полностью видимым.
-        if (entries.nativeEntry.intersectionRatio === 1) {
+        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
+        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
+        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
             if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
                 this._monthsPosition = new Date(entries.data.getFullYear(), 0);
             }
