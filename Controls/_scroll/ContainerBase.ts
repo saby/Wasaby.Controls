@@ -98,7 +98,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             // ResizeObserver при инициализации контрола стрелнет событием ресайза.
             // Вызваем метод при инициализации сами если браузер не поддерживает ResizeObserver
             this._controlResizeHandler();
-        } else {
+        } else if (this._options.scrollMode === SCROLL_MODE.VERTICAL_HORIZONTAL) {
             // Из-за особенности верстки, контейнер, с которого мы считываем размеры скролла, растягивается только
             // по высоте. По ширине он совпадает с размерами своего родителя. Из-за этого невозможно определить ширину
             // скролла и нужно пользоваться scrollWidth. Т.к. ResizeObserver не будет стрелять,
