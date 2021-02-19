@@ -7,6 +7,7 @@
             collectionItem="{{item}}"
             item="{{item.getContents()}}"
             toggledEditors="{{listModel.getToggledEditors()}}"
+            keyProperty="{{listModel.getKeyProperty()}}"
             collapsedGroups="{{collapsedGroups}}"
             on:mouseenter="_mouseEnterHandler(item)"
             on:mouseleave="_mouseLeaveHandler()"
