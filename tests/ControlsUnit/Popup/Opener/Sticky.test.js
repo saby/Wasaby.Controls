@@ -926,6 +926,53 @@ define(
             StickyStrategy._private.invertPosition = invertPosition;
          });
 
+         it('fittingMode vertical overflow', () => {
+            let popupCfg = {
+               direction: {
+                  vertical: 'bottom'
+               },
+               sizes: {
+                  width: 1500,
+                  height: 1000
+               },
+               fittingMode: {
+                  vertical: 'overflow',
+                  horizontal: 'overflow'
+               }
+            };
+
+            let getMargins = StickyStrategy._private.getMargins;
+            StickyStrategy._private.getMargins = () => -20;
+
+            // Таргет находится в верхней части экрана, но имеется отрицательный отступ
+            let getTargetCoords = StickyStrategy._private.getTargetCoords;
+            StickyStrategy._private.getTargetCoords = () => { return 20;};
+
+            let invertPosition = StickyStrategy._private.invertPosition;
+            StickyStrategy._private.invertPosition = () => { popupCfg.direction.vertical = 'top' };
+
+            const getWindowSizes = StickyStrategy._private.getWindowSizes;
+            const width = 1000;
+            const height = 665;
+            StickyStrategy._private.getWindowSizes = () => ({width, height});
+            StickyStrategy._private.getVisualViewport = () => ({...BASE_VIEWPORT, ...{width, height}});
+            StickyStrategy._private.getBody = () => ({
+               width,
+               height
+            });
+
+            const verticalPosition = StickyStrategy._private.calculatePosition(popupCfg, {topScroll: 0},'vertical');
+            assert.equal(verticalPosition.height, height);
+
+            const horizontalPosition = StickyStrategy._private.calculatePosition(popupCfg, {topScroll: 0},'horizontal');
+            assert.equal(horizontalPosition.width, width);
+
+            StickyStrategy._private.getWindowSizes = getWindowSizes;
+            StickyStrategy._private.getMargins = getMargins;
+            StickyStrategy._private.getTargetCoords = getTargetCoords;
+            StickyStrategy._private.invertPosition = invertPosition;
+         });
+
          it('update sizes from options', () => {
             let popupCfg = {
                config: {
