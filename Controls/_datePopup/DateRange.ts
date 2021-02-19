@@ -54,10 +54,6 @@ export default class DateRange extends Control<IControlOptions> {
         this._updateView(options);
     }
 
-    protected _afterMount(options): void {
-        this._markedKey = this._dateToId(this._position);
-    }
-
     protected _beforeUpdate(options): void {
         this._updateView(options);
     }
