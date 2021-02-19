@@ -136,7 +136,7 @@ export {
 
 /**
  * Набор констант, используемых при работе с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактированием по месту}.
- * @class
+ * @class Controls/list/editing
  * @public
  */
 const editing = {
