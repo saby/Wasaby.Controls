@@ -64,9 +64,9 @@
    position: relative;
 }
 
-.controls-TileView__richTemplate_imageWrapper::after {
-   content: '';
+.controls-TileView__richTemplate_imageWrapper__ellipse_proportion::after {
    display: block;
+   content: '';
    padding-bottom: 100%;
 }
 
@@ -79,7 +79,7 @@
    margin-bottom: @offset_m;
 }
 
-.controls-TileView__richTemplate_image_size_s_position_viewMode_rectangle_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_s_position_top_viewMode_rectangle_theme-@{themeName} {
    height: @image_height_s_position_top_rich_tile;
 }
 
@@ -107,11 +107,22 @@
 }
 
 .controls-TileView__richTemplate_image_size_s_position_top_viewMode_circle_theme-@{themeName},
-.controls-TileView__richTemplate_image_size_s_position_top_viewMode_ellipse_theme-@{themeName},
+.controls-TileView__richTemplate_image_size_s_position_top_viewMode_ellipse_theme-@{themeName} {
+   width: @image_width_s_position_vertical_rich_tile;
+}
+
 .controls-TileView__richTemplate_image_size_m_position_top_viewMode_circle,
-.controls-TileView__richTemplate_image_size_l_position_top_viewMode_circle,
-.controls-TileView__richTemplate_image_size_l_position_top_viewMode_ellipse,
 .controls-TileView__richTemplate_image_size_m_position_top_viewMode_ellipse {
+   width: @image_height_m_position_top_rich_tile;
+}
+
+.controls-TileView__richTemplate_image_size_l_position_top_viewMode_circle,
+.controls-TileView__richTemplate_image_size_l_position_top_viewMode_ellipse {
+   width: @image_height_l_position_top_rich_tile;
+}
+// TODO костыль для imageSize, убрать https://online.sbis.ru/opendoc.html?guid=2986407e-574b-476e-861e-5c14099eab22
+.controls-TileView__richTemplate_image_size_xl_position_top_viewMode_circle,
+.controls-TileView__richTemplate_image_size_xl_position_top_viewMode_ellipse {
    width: 100%;
 }
 
