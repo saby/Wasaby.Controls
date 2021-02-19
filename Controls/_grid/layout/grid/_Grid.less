@@ -274,10 +274,6 @@
 .controls-ColumnScroll_visible .controls-GridNew__cell_fixed_theme-@{themeName},
 .controls-Grid__cell_fixed_theme-@{themeName} {
    z-index: 3;
-   // stickyHeader считает что колонка не зафиксированна если повесить overflow-y: hidden;, а без overflow-x: hidden оявляется горизонтальный скролл
-   &:not(.controls-StickyHeader) {
-      overflow: hidden;
-   }
 }
 
 // Строка редактирования имеет свой z-index, который вешается на все ячейки.
@@ -285,6 +281,11 @@
 .controls-ColumnScroll_visible .controls-GridNew__cell_fixed.controls-Grid__row-cell-background-editing_theme-@{themeName},
 .controls-Grid__cell_fixed.controls-Grid__row-cell-background-editing_theme-@{themeName} {
    z-index: 3;
+}
+
+// Чтобы перетаскиваемая запись при днд была выше всех и соседние записи не перекрывали тень у неё
+.controls-Grid__cell_fixed.controls-ListView__item_dragging_theme-@{themeName} {
+   z-index: 4;
 }
 
 // In IE z-index on positioned elements and transform by itself create new "stacking contexts" on elements.

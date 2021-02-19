@@ -1,7 +1,6 @@
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {CrudWrapper} from './CrudWrapper';
-import {NavigationController} from 'Controls/source';
-import {INavigationControllerOptions} from 'Controls/_source/NavigationController';
+import {default as NavigationController, INavigationControllerOptions} from 'Controls/_dataSource/NavigationController';
 import {INavigationOptionValue,
         INavigationSourceConfig,
         Direction,
@@ -511,13 +510,13 @@ export default class Controller {
                     return crudWrapper.query(params, this._options.keyProperty);
                 }));
 
-            this._loadPromise.promise
+            return this._loadPromise.promise
                 .then((result: RecordSet) => {
                     this._loadPromise = null;
                     return this._processQueryResult(result, key, navigationSourceConfig, direction);
                 })
                 .catch((error) => {
-                    if (!error.isCanceled && !error.canceled) {
+                    if (error && !error.isCanceled && !error.canceled) {
                         // Если упала ошибка при загрузке в каком-то направлении,
                         // то контроллер навигации сбрасывать нельзя,
                         // Т.к. в этом направлении могут продолжить загрухзку
@@ -527,10 +526,8 @@ export default class Controller {
                         this._loadPromise = null;
                         this._processQueryError(error);
                     }
-                    return error;
+                    return Promise.reject(error);
                 });
-
-            return this._loadPromise.promise;
         } else {
             Logger.error('source/Controller: Source option has incorrect type');
             return Promise.reject(new Error('source/Controller: Source option has incorrect type'));

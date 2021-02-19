@@ -228,7 +228,7 @@ const _private = {
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
-        const items = viewModel.getItems();
+        const items = viewModel.getCollection();
         const dispItem = viewModel.getItemBySourceKey(nodeKey);
         const loadedChildren = dispItem && (self._options.useNewModel ?
             viewModel.getChildren(dispItem, items).getCount() :
@@ -383,6 +383,11 @@ const _private = {
                     }
                 });
             }
+        }
+
+        // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
+        if (options.markerMoveMode === 'leaves') {
+            self.goToNext();
         }
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
@@ -660,7 +665,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
 
     _afterMount: function() {
-        this._isMounted = true;
         const viewModel = this._children.baseControl.getViewModel();
         _private.initListViewModelHandler(this, viewModel);
         if (this._expandedItemsToNotify) {
@@ -693,7 +697,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             // Проблема возникает из-за того, что корень в модели меняется на callback загрузки данных
             // А при поиске запрос идёт за пределами списка
             if (searchValueChanged && newOptions.sourceController &&
-                newOptions.viewModelConstructor === this._options.viewModelConstructor) {
+                newOptions.viewModelConstructor === this._options.viewModelConstructor &&
+                newOptions.searchValue) {
                 viewModel.setRoot(newOptions.root);
             }
 
@@ -718,7 +723,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 this._updateExpandedItemsAfterReload = true;
             }
             if (newOptions.sourceController && !isEqual(newOptions.expandedItems, newOptions.sourceController.getExpandedItems())) {
-                updateSourceController = true;
+                newOptions.sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
         if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
@@ -876,7 +881,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._children.baseControl.setMarkedKey(key);
     },
     scrollToItem(key: string|number, toBottom: boolean, force: boolean): void {
-        this._children.baseControl.scrollToItem(key, toBottom, force);
+        return this._children.baseControl.scrollToItem(key, toBottom, force);
     },
     reloadItem: function(key, readMeta, direction):Deferred {
         let baseControl = this._children.baseControl;
@@ -1097,9 +1102,6 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(this._options.nodeProperty) !== null) {
-                if (this._isMounted) {
-                    this.toggleExpanded(curItem.get(this._options.keyProperty), model);
-                }
                 expanded.push(curItem.get(this._options.keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }
@@ -1125,7 +1127,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
     goToNext(listModel?, mController?): Promise {
         return new Promise((resolve) => {
-            const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
+            // Это исправляет ошибку плана 0 || null
+            const key = this._tempItem === undefined || this._tempItem === null ? this._currentItem : this._tempItem;
+            const item = this.getNextItem(key, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
             const markerController = mController || this._children.baseControl.getMarkerController();
             if (item) {
@@ -1213,7 +1217,12 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._markedLeaf = newMarkedLeaf;
         }
 
-        markerController.setMarkedKey(this._currentItem);
+        // TODO: отрефакторить после наследования (TreeControl <- BaseControl) Нужно вызывать BaseControl._private::changeMarkedKey
+        if (markerController.getMarkedKey() !== this._currentItem) {
+            markerController.setMarkedKey(this._currentItem);
+            this._notify('markedKeyChanged', [this._currentItem]);
+        }
+
         this._tempItem = null;
 
     },

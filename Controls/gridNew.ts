@@ -88,6 +88,7 @@ import GridResultsCell, {IOptions as IGridResultsCellOptions} from 'Controls/_gr
 import GridFooterRow, {IOptions as IGridFooterRowOptions} from 'Controls/_gridNew/display/FooterRow';
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from 'Controls/_gridNew/display/FooterCell';
 import GridGroupItem, {IOptions as IGridGroupItemOptions} from 'Controls/_gridNew/display/GroupItem';
+import GridGroupCell, {IOptions as IGridGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
 
 import { IDisplaySearchValueOptions, IDisplaySearchValue } from 'Controls/_gridNew/display/interface/IDisplaySearchValue';
 
@@ -105,6 +106,7 @@ register('Controls/gridNew:GridDataRow', GridDataRow, {instantiate: false});
 register('Controls/gridNew:GridDataCell', GridDataCell, {instantiate: false});
 register('Controls/gridNew:GridFooterCell', GridFooterCell, {instantiate: false});
 register('Controls/gridNew:GridResultsCell', GridResultsCell, {instantiate: false});
+register('Controls/display:GridGroupCell', GridGroupCell, {instantiate: false});
 
 export {
     GridCollection, IGridCollectionOptions,
@@ -125,5 +127,6 @@ export {
     GridFooterRow, IGridFooterRowOptions,
     GridFooterCell, IGridFooterCellOptions,
     GridGroupItem, IGridGroupItemOptions,
+    GridGroupCell, IGridGroupCellOptions,
     IDisplaySearchValueOptions, IDisplaySearchValue
 }

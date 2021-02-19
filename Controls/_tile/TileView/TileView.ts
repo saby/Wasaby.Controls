@@ -115,7 +115,7 @@ var TileView = ListView.extend({
         itemData
     ): Record<string, any> {
         const isActionMenu = !!action && !action.isMenu;
-        if (this._shouldOpenExtendedMenu(isActionMenu, isContextMenu, item)) {
+        if (this._shouldOpenExtendedMenu(isActionMenu, isContextMenu, item) && menuConfig) {
             const MENU_MAX_WIDTH = 200;
             const menuOptions = menuConfig.templateOptions;
             const itemContainer = clickEvent.target.closest('.controls-TileView__item');

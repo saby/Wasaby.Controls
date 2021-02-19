@@ -1,6 +1,7 @@
 .controls-PeriodDialog-MonthsRange {
    flex-shrink: 1;
    min-height: 1px;
+   border-radius: 0 0 @border-radius_datePicker @border-radius_datePicker;
 }
 
 .controls-PeriodDialog-MonthsRange__header {
@@ -14,7 +15,7 @@
    font-size: @yearlist_heading_font-size_datePicker;
    font-weight: @yearlist_heading_font-weight_datePicker;
    border-top: (@yearlist_block-separator_thickness_datePicker - @yearlist_item_border-thickness_datePicker) solid @yearlist_block-separator_color_datePicker;
-   border-bottom: (@yearlist_block-separator_thickness_datePicker - @yearlist_item_border-thickness_datePicker - @yearlist_item_border-thickness_datePicker) solid @yearlist_block-separator_color_datePicker;
+   border-bottom: (@yearlist_block-separator_thickness_datePicker - @yearlist_item_border-thickness_datePicker) solid @yearlist_block-separator_color_datePicker;
 }
 
 .controls-PeriodDialog-MonthsRange__body {
@@ -27,7 +28,7 @@
 
 .controls-PeriodDialog-MonthsRange__halfYears_theme-@{themeName} {
    background-color: @yearlist_block-separator_color_datePicker;
-   border-top: (@yearlist_item_border-thickness_datePicker +  @yearlist_item_border-thickness_datePicker) solid @yearlist_block-separator_color_datePicker;
+   border-top: @yearlist_item_border-thickness_datePicker solid @yearlist_block-separator_color_datePicker;
    flex-grow: 1;
 }
 
@@ -207,6 +208,14 @@
    font-weight: normal;
 }
 
+.controls-MonthView__textColor-currentMonthDay-workday_theme-@{themeName}_style-monthRangeItem {
+   color: @yearlist_monthview_item_text-color_datePicker;
+}
+
+.controls-MonthView__textColor-currentMonthDay-weekend_theme-@{themeName}_style-monthRangeItem {
+   color: @yearlist_monthview_weekend_text-color_datePicker;
+}
+
 .controls-MonthViewVDOM__item_style-monthRangeItem_theme-@{themeName} {
    width: @yearlist_monthview_item_width_datePicker;
    height: @yearlist_monthview_item_height_datePicker;
@@ -269,9 +278,6 @@
 
 .ws-is-hover {
    .controls-PeriodDialog-MonthsRange__month {
-      .controls-MonthViewVDOM__item:hover {
-         outline: none;
-      }
       .controls-MonthView__backgroundColor-currentMonthDay-unselected_theme-@{themeName}:hover {
          background: transparent;
       }

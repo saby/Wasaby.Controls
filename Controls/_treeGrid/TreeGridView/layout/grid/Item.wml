@@ -20,7 +20,7 @@
 </ws:template>
 
 <ws:template name="multiSelectTemplate">
-   <ws:partial template="{{multiSelectTpl}}">
+   <ws:partial template="{{multiSelectTpl}}" _preventMergeOptions="{{ preventMergeOptions }}">
       <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                           readOnly="{{itemData.isAdd || checkboxReadOnly}}"
                           item="{{ itemData.dispItem }}"
@@ -37,7 +37,7 @@
          {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}">
         <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}" expanderTemplate="{{itemData.expanderTemplate}}">
            <ws:multiSelectTemplate>
-              <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+              <ws:partial template="multiSelectTemplate" preventMergeOptions="{{ true }}" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
            </ws:multiSelectTemplate>
         </ws:partial>
     </div>
@@ -70,7 +70,7 @@
                      expanderSize="{{itemData.getExpanderSize(expanderSize)}}"/>
       </ws:afterItemTemplate>
        <ws:multiSelectTemplate>
-          <ws:partial template="multiSelectTemplate" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
+          <ws:partial template="multiSelectTemplate" preventMergeOptions="{{ true }}" if="{{ itemData.multiSelectPosition === 'custom' }}"/>
        </ws:multiSelectTemplate>
     </ws:partial>
 </ws:template>

@@ -141,18 +141,22 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     // endregion
 
     getWrapperStyles(): string {
+        let styles = super.getWrapperStyles();
+        if (this._$owner.isFullGridSupport()) {
+            styles += this.getRowspan();
+        }
+        styles += ` z-index: ${this.getZIndex()};`;
+        return styles;
+    }
+
+    getZIndex(): number {
         let zIndex;
         if (this._$owner.hasColumnScroll()) {
             zIndex = this._$isFixed ? FIXED_HEADER_Z_INDEX : STICKY_HEADER_Z_INDEX;
         } else {
             zIndex = FIXED_HEADER_Z_INDEX;
         }
-        let styles = super.getWrapperStyles();
-        if (this._$owner.isFullGridSupport()) {
-            styles += this.getRowspan();
-        }
-        styles += ` z-index: ${zIndex};`;
-        return styles;
+        return zIndex;
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {
@@ -277,6 +281,12 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
 
     protected _getWrapperPaddingClasses(theme: string): string {
+        // Для ячейки, создаваемой в связи с множественной лесенкой не нужны отступы, иначе будут проблемы с наложением
+        // тени: https://online.sbis.ru/opendoc.html?guid=758f38c7-f5e7-447e-ab79-d81546b9f76e
+        if (this._$ladderCell) {
+            return '';
+        }
+
         let paddingClasses = '';
         const leftPadding = this._$owner.getLeftPadding();
         const rightPadding = this._$owner.getRightPadding();

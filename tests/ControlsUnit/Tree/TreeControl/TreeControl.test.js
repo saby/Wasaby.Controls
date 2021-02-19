@@ -10,7 +10,6 @@ define([
    'Types/source',
    'Controls/Application/SettingsController',
    'Controls/listDragNDrop',
-   'Controls/source',
    'Controls/dataSource'
 ], function(
    tree,
@@ -24,7 +23,6 @@ define([
    sourceLib,
    SettingsController,
    listDragNDrop,
-   cSource,
    dataSource
 ) {
    function correctCreateTreeControl(cfg, returnCreatePromise) {
@@ -181,7 +179,7 @@ define([
 
          //по сценарию https://online.sbis.ru/opendoc.html?guid=8237131f-3294-4704-92a5-fe448e40bf50
          const treeInst = new tree.TreeControl({viewModelConstructor: treeGrid.ViewModel});
-         tree.TreeControl._private.afterReloadCallback(treeInst);
+         tree.TreeControl._private.afterReloadCallback(treeInst, {});
       });
       it('TreeControl._private.toggleExpanded', async function() {
          var
@@ -235,7 +233,7 @@ define([
                appendItems: function() {},
                mergeItems: function() {},
                getItemBySourceKey: () => undefined,
-               getItems: () => new collection.RecordSet()
+               getCollection: () => new collection.RecordSet()
             };
          };
 
@@ -1187,6 +1185,20 @@ define([
             assert.doesNotThrow(() => {
                treeControl._beforeUpdate(options);
             });
+         });
+
+         it('_beforeUpdate with new expandedItems', async () => {
+            let options = {
+               expandedItems: [],
+               keyProperty: 'id',
+               source: new sourceLib.Memory()
+            };
+            const treeControl = await correctCreateTreeControlAsync(options);
+
+            options = {...treeControl._options};
+            options.expandedItems = ['testId'];
+            treeControl._beforeUpdate(options);
+            assert.deepStrictEqual(treeControl._options.sourceController.getExpandedItems(), ['testId']);
          });
 
          it('_afterReloadCallback called after data loaded by sourceController', async () => {

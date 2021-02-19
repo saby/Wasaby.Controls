@@ -19,6 +19,7 @@ import InputRenderLookup from './BaseLookupView/InputRender';
 import {DependencyTimer} from 'Controls/popup';
 import {_InputController as LayoutInputContainer} from 'Controls/suggest';
 import {load} from 'WasabyLoader/Library';
+import {RecordSet} from 'Types/collection';
 
 const KEY_CODE_F2 = 113;
 
@@ -33,6 +34,10 @@ export interface ILookupInputOptions extends
     multiLine?: boolean;
     autoDropDown?: boolean;
     comment?: string;
+    toolbarItems?: RecordSet;
+    toolbarKeyProperty?: string;
+    toolbarParentProperty?: string;
+    toolbarNodeProperty?: string;
 }
 
 export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOptions> {
@@ -129,6 +134,11 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
                 }
             }
         }
+    }
+
+    protected _toolbarItemClickHandler(event: SyntheticEvent<null>, item: Record, nativeEvent: MouseEvent): void {
+        this.closeSuggest();
+        this._notify('toolbarItemClick', [item, nativeEvent]);
     }
 
     protected _getFieldWrapper(): HTMLElement {

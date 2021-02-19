@@ -4518,7 +4518,7 @@ define([
                   assert.equal(item, instance._selectionController.getAnimatedItem());
                });
             });
-             it('_onItemSwipe() animated item null', () => {
+             it('_onItemSwipe() animated item with multiSelectVisibility: "visible"', () => {
                  return initTest({
                      multiSelectVisibility: 'visible',
                      selectedKeysCount: null,
@@ -4546,9 +4546,41 @@ define([
                      lists.BaseControl._private.updateItemActions(instance, instance._options);
                      const item = instance._listViewModel.at(0);
                      instance._onItemSwipe({}, item, swipeEvent);
-                     assert.isNull(instance._selectionController.getAnimatedItem());
+                     assert.ok(instance._selectionController.getAnimatedItem() === item);
                  });
              });
+
+            it('_onItemSwipe() animated item null', () => {
+               return initTest({
+                  multiSelectVisibility: 'hidden',
+                  selectedKeysCount: null,
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  itemActions: [
+                     {
+                        id: 1,
+                        showType: 2,
+                        'parent@': true
+                     },
+                     {
+                        id: 2,
+                        showType: 0,
+                        parent: 1
+                     },
+                     {
+                        id: 3,
+                        showType: 0,
+                        parent: 1
+                     }
+                  ]
+               }).then(() => {
+                  lists.BaseControl._private.createSelectionController(instance, instance._options);
+                  lists.BaseControl._private.updateItemActions(instance, instance._options);
+                  const item = instance._listViewModel.at(0);
+                  instance._onItemSwipe({}, item, swipeEvent);
+                  assert.isNull(instance._selectionController.getAnimatedItem());
+               });
+            });
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
@@ -4688,7 +4720,8 @@ define([
                   }]
                }),
                isMarked: () => false,
-               isSwiped: () => false
+               isSwiped: () => false,
+               isEditing: () => false
             };
             instance.saveOptions(cfg);
             instance._scrollController = {
@@ -4918,7 +4951,8 @@ define([
                _notify: () => {}
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            return lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            return lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.equal(fake._itemActionsMenuId, 'ekaf');
                })
@@ -4944,7 +4978,8 @@ define([
                _notify: () => {}
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.equal(activeItem, item);
                   done();
@@ -5084,11 +5119,13 @@ define([
                   }
                });
 
+               const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(localInstance, item, fakeEvent, null, false);
+
                // имитируем клик правой кнопкой мыши несколько раз подряд.
                await Promise.all([
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent, item, false),
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent2, item, false),
-                  lists.BaseControl._private.openItemActionsMenu(localInstance, null, fakeEvent3, item, false)
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent, item, menuConfig),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent2, item, menuConfig),
+                  lists.BaseControl._private.openItemActionsMenu(localInstance, fakeEvent3, item, menuConfig)
                ]);
             });
 
@@ -5209,7 +5246,8 @@ define([
                }
             };
             stubGetItemActionsController.callsFake((self) => self._itemActionsController);
-            lists.BaseControl._private.openItemActionsMenu(fake, null, fakeEvent, item, false)
+            const menuConfig = lists.BaseControl._private.getItemActionsMenuConfig(fake, null, fakeEvent, item, false);
+            lists.BaseControl._private.openItemActionsMenu(fake, fakeEvent, item, menuConfig)
                .then(() => {
                   assert.exists(lastFiredEvent, 'ListenerUtils did not fire any event');
                   assert.equal(lastFiredEvent.eventName, 'register', 'Last fired event is wrong');
@@ -5442,16 +5480,16 @@ define([
 
       it('close and destroy editInPlace if model changed', async () => {
          const cfg = {
-                viewName: 'Controls/List/ListView',
-                viewModelConfig: {
-                   items: [],
-                   keyProperty: 'id'
-                },
-                viewModelConstructor: lists.ListViewModel,
-                keyProperty: 'id',
-                source: source
-             },
-             instance = correctCreateBaseControl(cfg);
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = correctCreateBaseControl(cfg);
          let isEditingCanceled = false;
          let isEIPDestroyed = false;
          instance.saveOptions(cfg);
@@ -5474,6 +5512,42 @@ define([
             assert.isTrue(isEditingCanceled);
             assert.isTrue(isEIPDestroyed);
             assert.isNull(instance._editInPlaceController);
+         });
+      });
+
+      it('close and but not destroy editInPlace if reloaded', async () => {
+         const cfg = {
+               viewName: 'Controls/List/ListView',
+               viewModelConfig: {
+                  items: [],
+                  keyProperty: 'id'
+               },
+               viewModelConstructor: lists.ListViewModel,
+               keyProperty: 'id',
+               source: source
+            },
+            instance = correctCreateBaseControl(cfg);
+         let isEditingCanceled = false;
+         let isEIPDestroyed = false;
+         instance.saveOptions(cfg);
+         await instance._beforeMount(cfg);
+         const cancelPromise = Promise.resolve();
+         instance._cancelEdit = () => {
+            isEditingCanceled = true;
+            return cancelPromise;
+         };
+         instance._editInPlaceController = {
+            isEditing: () => true,
+            updateOptions: () => {},
+            destroy: () => {
+               isEIPDestroyed = true;
+            }
+         };
+         instance._beforeUpdate({...cfg, filter: {qw: ''}});
+         return cancelPromise.then(() => {
+            assert.isTrue(isEditingCanceled);
+            assert.isFalse(isEIPDestroyed);
+            assert.isNotNull(instance._editInPlaceController);
          });
       });
 
@@ -6475,17 +6549,13 @@ define([
                 checkCase(index, caseData, baseControl._shouldDisplayTopLoadingIndicator);
              });
 
-             baseControl._loadingIndicatorState = 'all';
-             baseControl.__needShowEmptyTemplate = () => false;
-             baseControl._children = {
-                listView: {
-                   isColumnScrollVisible: () => true
-                }
-             };
-             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
-
              baseControl._loadingIndicatorState = 'up';
              baseControl._portionedSearchInProgress = true;
+             assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
+
+             baseControl._portionedSearchInProgress = false;
+             baseControl._loadingIndicatorState = 'bottom';
+             baseControl.__needShowEmptyTemplate = () => true;
              assert.equal(baseControl._shouldDisplayTopLoadingIndicator(), false);
           });
 
@@ -6537,6 +6607,31 @@ define([
              testCases.forEach((caseData, index) => {
                 checkCase(index, caseData, baseControl._shouldDisplayBottomLoadingIndicator);
              });
+
+             baseControl._loadingIndicatorState = 'bottom';
+             baseControl.__needShowEmptyTemplate = () => true;
+             assert.equal(baseControl._shouldDisplayBottomLoadingIndicator(), false);
+          });
+
+          it('attachToNull, onCollectionChanged', () => {
+            const control = new lists.BaseControl();
+            control.saveOptions({
+               navigation: {
+                  view: 'infinity'
+               },
+               getHasMoreData: () => true
+            });
+            control._sourceController = {};
+            control._isMounted = true;
+            control._listViewModel = {
+               isActionsAssigned: () => false
+            };
+
+            lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [], 0, [], 0);
+            assert.isFalse(control._attachLoadTopTriggerToNull);
+
+            lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [1], 0, [], 0);
+            assert.isTrue(control._attachLoadTopTriggerToNull);
           });
        });
 

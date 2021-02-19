@@ -23,6 +23,7 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
     DataCellCompatibility
 ) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell, IDisplaySearchValue {
 
+    readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;
     readonly Draggable: boolean = true;
     readonly TagCell: boolean = true;
@@ -81,7 +82,7 @@ export default class DataCell<T, TOwner extends DataRow<T>> extends mixin<
             return this._$owner.shouldDisplayMarker(marker) && this.isLastColumn();
         } else {
             return this._$owner.shouldDisplayMarker(marker) &&
-                this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
+                !this._$owner.hasMultiSelectColumn() && this.isFirstColumn();
         }
     }
     // endregion

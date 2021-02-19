@@ -1,6 +1,6 @@
 import {assert} from 'chai';
 import {RecordSet} from 'Types/collection';
-import {NavigationController} from 'Controls/source';
+import {NavigationController} from 'Controls/dataSource';
 import {IBasePageSourceConfig} from 'Controls/interface';
 const dataPrev = [
     {
@@ -634,6 +634,32 @@ describe('Controls/_source/NavigationController', () => {
                 rs.setMetaData({nextPosition : null, iterative: true});
                 params = nc.updateQueryProperties(rs, null, null, 'forward');
                 assert.deepEqual([null], params[0].forwardPosition, 'Wrong query properties');
+            });
+
+            it('updateQueryRange + edge forward position', () => {
+                const nc = new NavigationController({
+                    navigationType: 'position',
+                    navigationConfig: {
+                        field: 'id',
+                        direction: 'forward',
+                        task1181218142: true
+                    }
+                });
+
+                const rs = new RecordSet({
+                    keyProperty: 'id'
+                });
+                const navigationConfig = {
+                    field: 'id',
+                    direction: 'forward',
+                    position: [-1],
+                    task1181218142: true
+                };
+
+                rs.setMetaData({more : true});
+                nc.updateQueryProperties(rs, null, navigationConfig);
+                assert.isFalse(nc.hasMoreData('forward'));
+                assert.isTrue(nc.hasMoreData('backward'));
             });
 
             it('updateQueryRange', () => {

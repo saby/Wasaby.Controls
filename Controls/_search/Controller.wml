@@ -14,4 +14,5 @@
             on:search="_search()"
             on:searchReset="_searchReset()"
             on:listExpandedItemsChanged="_tmplNotify('expandedItemsChanged')"
-            on:misspellCaptionClick="_misspellCaptionClick()"/>
+            on:misspellCaptionClick="_misspellCaptionClick()"
+            on:inputSearchValueChanged="_inputSearchValueChanged()"/>

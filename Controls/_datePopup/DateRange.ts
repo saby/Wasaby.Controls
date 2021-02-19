@@ -9,6 +9,8 @@ import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
 import datePopupUtils from './Utils';
 import componentTmpl = require('wml!Controls/_datePopup/DateRange');
+import * as monthHeaderTmpl from 'wml!Controls/_datePopup/DateRangeMonthHeaderTemplate';
+import {detection} from 'Env/Env';
 
 const _private = {
     updateView: function (self, options) {
@@ -18,14 +20,11 @@ const _private = {
                 options.ranges.months[0] === 1));
         if (self._position !== options.position) {
             self._position = options.position;
-            if (!self._monthsPosition || self._position.getFullYear() !== self._monthsPosition.getFullYear()) {
-                self._monthsPosition = new Date(self._position.getFullYear(), 0);
-            }
-            this._markedKey = self._dateToId(self._position);
+            self._markedKey = self._dateToId(self._position);
         }
-        if (self._position?.getFullYear() !== self._monthsPosition?.getFullYear()) {
-            const newPosition = new Date(self._monthsPosition.getFullYear(), 0);
-            _private.notifyPositionChanged(self, newPosition);
+        if (!self._singleDayHover) {
+            self._hoveredStartValue = options.hoveredStartValue;
+            self._hoveredEndValue = options.hoveredEndValue;
         }
     },
 
@@ -44,6 +43,7 @@ const _private = {
  */
 var Component = BaseControl.extend([EventProxy], {
     _template: componentTmpl,
+    _monthHeaderTmpl: monthHeaderTmpl,
 
     _monthViewModel: MonthModel,
 
@@ -53,6 +53,8 @@ var Component = BaseControl.extend([EventProxy], {
     _monthSelectionEnabled: true,
     _selectionProcessing: false,
 
+    _singleDayHover: true,
+
     // We store the position locally in the component, and don't use the value from options
     // to be able to quickly switch it on the mouse wheel.
 
@@ -60,14 +62,20 @@ var Component = BaseControl.extend([EventProxy], {
         Component.superclass.constructor.apply(this, arguments);
         this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         EventUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
+        // Нет необходимости передавать опцию hoveredStartValue и hoveredEndValue, если ховер работает только по одному
+        // итему, а не по нескольким, как в квантах.
+        const isQuantumSelection = options.selectionType === 'quantum' && options.ranges;
+        if (isQuantumSelection) {
+            const isSingleDayQuantum = 'days' in options.ranges && options.ranges.days.indexOf(1) !== -1;
+            this._singleDayHover = isSingleDayQuantum;
+        }
     },
 
     _beforeMount: function (options) {
+        if (options.position) {
+            this._monthsPosition = new Date(options.position.getFullYear(), 0);
+        }
         _private.updateView(this, options);
-    },
-
-    _afterMount: function(options) {
-        this._markedKey = this._dateToId(this._position);
     },
 
     _beforeUpdate: function (options) {
@@ -80,7 +88,12 @@ var Component = BaseControl.extend([EventProxy], {
 
     _monthObserverHandler: function(event, entries) {
         // Меняем маркер выбранного месяца если месяц стал полностью видимым.
-        if (entries.nativeEntry.intersectionRatio === 1) {
+        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
+        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
+        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
+            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
+                this._monthsPosition = new Date(entries.data.getFullYear(), 0);
+            }
             this._markedKey = this._dateToId(entries.data);
         }
     },
@@ -149,14 +162,12 @@ var Component = BaseControl.extend([EventProxy], {
     _onPositionChanged: function(e: Event, position: Date) {
         this._position = position;
         _private.notifyPositionChanged(this, position);
-        if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._monthsPosition = new Date(position.getFullYear(), 0);
-        }
     },
 
     _onMonthsPositionChanged: function(e: Event, position: Date) {
-        if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
-            _private.notifyPositionChanged(this, position);
+        if (position.getFullYear() !== this._position.getFullYear()) {
+            const newPosition = new Date(position.getFullYear(), 0);
+            _private.notifyPositionChanged(this, newPosition);
         }
     },
 

@@ -68,4 +68,37 @@ describe('Controls/grid_clean/Display/SearchValue/DataRow/UpdateOption', () => {
 
         sandbox.restore();
     });
+
+    it('Initialize with multiSelectVisibility="visible", without searchValue and set searchValue', () => {
+        const gridDataRow = new GridDataRow({
+            contents: model,
+            multiSelectVisibility: 'visible',
+            owner: {
+                getStickyColumnsCount: () => 0,
+                getColumnsConfig: () => columns,
+                hasMultiSelectColumn: () => true,
+                hasItemActionsSeparatedCell: () => false
+            } as any,
+            columns
+        });
+
+        const sandbox = sinon.createSandbox();
+        let columnItems = gridDataRow.getColumns();
+        columnItems.forEach((column) => {
+            if (column.hasOwnProperty('setSearchValue')) {
+                sandbox.spy(column, 'setSearchValue');
+            }
+        });
+
+        gridDataRow.setSearchValue(TEST_SEARCH_VALUE);
+
+        gridDataRow.getColumns().forEach((column) => {
+            if (column.hasOwnProperty('setSearchValue')) {
+                assert(column.setSearchValue.calledOnce);
+                assert.strictEqual(column.setSearchValue.getCall(0).args[0], TEST_SEARCH_VALUE);
+            }
+        });
+
+        sandbox.restore();
+    });
 });
