@@ -98,7 +98,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             // ResizeObserver при инициализации контрола стрелнет событием ресайза.
             // Вызваем метод при инициализации сами если браузер не поддерживает ResizeObserver
             this._controlResizeHandler();
-        } else if (this._options.scrollMode === SCROLL_MODE.VERTICAL_HORIZONTAL) {
+        } else if (this._options.scrollMode === SCROLL_MODE.VERTICAL_HORIZONTAL && this._contentType === CONTENT_TYPE.regular) {
             // Из-за особенности верстки, контейнер, с которого мы считываем размеры скролла, растягивается только
             // по высоте. По ширине он совпадает с размерами своего родителя. Из-за этого невозможно определить ширину
             // скролла. Будем считать ширину скролла с дочернего элемента.
@@ -466,7 +466,9 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             if (entry.target === this._children.content) {
                 newState.clientHeight = entry.contentRect.height;
                 newState.clientWidth = entry.contentRect.width;
-            } else if (entry.target === this._children.userContent) {
+            } else if (entry.target === this._children.userContent.children[0]) {
+                newState.scrollWidth = entry.contentRect.width;
+            } else {
                 this._updateContentType();
                 // Свойство borderBoxSize учитывает размеры отступов при расчете. Поддерживается не во всех браузерах.
                 if (entry.borderBoxSize) {
@@ -487,8 +489,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 if (this._contentType === CONTENT_TYPE.restricted) {
                     newState.scrollHeight = this._getContentHeightByChildren();
                 }
-            } else {
-                newState.scrollWidth = entry.contentRect.width;
             }
         }
 
