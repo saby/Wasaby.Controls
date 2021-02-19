@@ -44,7 +44,7 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * 
+ *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @public
  */
@@ -2075,9 +2075,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
      * @return {String}
      */
     setKeyProperty(keyProperty: string): void {
-        this._$keyProperty = keyProperty;
-        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
-        this.nextVersion();
+        if (keyProperty !== this._$keyProperty) {
+            this._$keyProperty = keyProperty;
+            this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
+            this.nextVersion();
+        }
     }
 
     /**

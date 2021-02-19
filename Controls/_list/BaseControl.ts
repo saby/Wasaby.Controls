@@ -2872,7 +2872,7 @@ const _private = {
      * @private
      */
     updateItemActionsOnce(self, options: any): void {
-        if (self._options.itemActionsVisibility !== 'visible' && !self._listViewModel.isActionsAssigned()) {
+        if (self._listViewModel && self._options.itemActionsVisibility !== 'visible' && !self._listViewModel.isActionsAssigned()) {
             _private.updateItemActions(self, options);
         }
     },
@@ -2884,7 +2884,7 @@ const _private = {
      * @private
      */
     updateInitializedItemActions(self, options: any): void {
-        if (self._listViewModel.isActionsAssigned()) {
+        if (self._listViewModel && self._listViewModel.isActionsAssigned()) {
             _private.updateItemActions(self, options);
         }
     },
@@ -3896,6 +3896,81 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
     },
 
+    _updateListModel(newOptions): void {
+        // Не нужно обновлять модель, если она была пересоздана или не создана вообще
+        if (this._modelRecreated || !this._listViewModel) {
+            return;
+        }
+
+        const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
+        const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
+        const groupPropertyChanged = newOptions.groupProperty !== this._options.groupProperty;
+        const sourceChanged = newOptions.source !== this._options.source;
+
+        // todo При отказе от старой - выпилить проверку "useNewModel".
+        if (emptyTemplateChanged && newOptions.useNewModel) {
+            this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
+        }
+
+        if (this._listViewModel.setSupportVirtualScroll) {
+            this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
+        }
+
+        if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
+            this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
+        }
+
+        this._listViewModel.setKeyProperty(this._keyProperty);
+
+        if (!newOptions.useNewModel) {
+            this._listViewModel.setBackgroundStyle(newOptions.backgroundStyle);
+        }
+
+        if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
+            GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
+        }
+
+        if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
+            this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
+        }
+
+        if (newOptions.theme !== this._options.theme && !newOptions.useNewModel) {
+            this._listViewModel.setTheme(newOptions.theme);
+        }
+
+        if (newOptions.editingConfig !== this._options.editingConfig) {
+            this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
+        }
+
+        if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
+            this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
+        }
+
+        if (newOptions.multiSelectPosition !== this._options.multiSelectPosition) {
+            this._listViewModel.setMultiSelectPosition(newOptions.multiSelectPosition);
+        }
+
+        if (newOptions.multiSelectAccessibilityProperty !== this._options.multiSelectAccessibilityProperty) {
+            this._listViewModel.setMultiSelectAccessibilityProperty(newOptions.multiSelectAccessibilityProperty);
+        }
+
+        if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
+            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+        }
+
+        if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
+            this._listViewModel.setItemPadding(newOptions.itemPadding);
+        }
+
+        if (sortingChanged && !newOptions.useNewModel) {
+            this._listViewModel.setSorting(newOptions.sorting);
+        }
+
+        if (groupPropertyChanged) {
+            this._listViewModel.setGroupProperty(newOptions.groupProperty);
+        }
+    },
+
     _beforeUpdate(newOptions) {
         this._updateInProgress = true;
         const filterChanged = !isEqual(newOptions.filter, this._options.filter);
@@ -3909,12 +3984,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const needReloadByOptions = sourceChanged || filterChanged || sortingChanged || recreateSource;
         let isItemsResetFromSourceController = false;
         const self = this;
-
-        const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
-        // todo При отказе от старой - выпилить проверку "useNewModel".
-        if (emptyTemplateChanged && newOptions.useNewModel && this._listViewModel) {
-            this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
-        }
 
         this._loadedBySourceController = newOptions.sourceController &&
             // Если изменился поиск, то данные меняет контроллер поиска через sourceController
@@ -3935,17 +4004,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // При смене страницы, должно закрыться редактирование записи.
             _private.closeEditingIfPageChanged(this, this._options.navigation, newOptions.navigation);
             _private.initializeNavigation(this, newOptions);
-            if (this._listViewModel && this._listViewModel.setSupportVirtualScroll) {
-                this._listViewModel.setSupportVirtualScroll(!!this._needScrollCalculation);
-            }
 
             if (this._pagingVisible) {
                 this._pagingVisible = false;
             }
-        }
-
-        if (this._options.rowSeparatorSize !== newOptions.rowSeparatorSize) {
-            this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
 
         if (this._removeController) {
@@ -3977,10 +4039,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if ((newOptions.keyProperty !== this._options.keyProperty) || sourceChanged) {
             this._initKeyProperty(newOptions);
             _private.checkRequiredOptions(this, newOptions);
-            this._listViewModel.setKeyProperty(this._keyProperty);
         }
 
-        if (oldViewModelConstructorChanged) {
+        if (oldViewModelConstructorChanged && this._listViewModel) {
             self._viewModelConstructor = newOptions.viewModelConstructor;
             const items = this._loadedBySourceController
                ? newOptions.sourceController.getItems()
@@ -4011,9 +4072,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             // https://online.sbis.ru/opendoc.html?guid=caa331de-c7df-4a58-b035-e4310a1896df
             this._updateScrollController(newOptions);
         } else {
-            if (!newOptions.useNewModel) {
-                this._listViewModel.setBackgroundStyle(newOptions.backgroundStyle);
-            }
             this._updateScrollController(newOptions);
         }
 
@@ -4036,22 +4094,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 allowClearSelectionBySelectionViewMode) {
                 _private.changeSelection(this, { selected: [], excluded: [] });
             }
-        }
-
-        if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
-            GroupingController.setCollapsedGroups(this._listViewModel, newOptions.collapsedGroups);
-        }
-
-        if (newOptions.markerVisibility !== this._options.markerVisibility && !newOptions.useNewModel) {
-            this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
-        }
-
-        if (newOptions.theme !== this._options.theme && !newOptions.useNewModel) {
-            this._listViewModel.setTheme(newOptions.theme);
-        }
-
-        if (newOptions.editingConfig !== this._options.editingConfig) {
-            this._listViewModel.setEditingConfig(this._getEditingConfig(newOptions));
         }
 
         if (newOptions.sourceController) {
@@ -4107,34 +4149,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         this._needBottomPadding = _private.needBottomPadding(newOptions, self._listViewModel);
 
-        if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
-            this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
-        }
-        if (newOptions.multiSelectPosition !== this._options.multiSelectPosition) {
-            this._listViewModel.setMultiSelectPosition(newOptions.multiSelectPosition);
-        }
-        if (newOptions.multiSelectAccessibilityProperty !== this._options.multiSelectAccessibilityProperty) {
-            this._listViewModel.setMultiSelectAccessibilityProperty(newOptions.multiSelectAccessibilityProperty);
-        }
-
-        if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-        }
-
-        if (!isEqual(this._options.itemPadding, newOptions.itemPadding)) {
-            this._listViewModel.setItemPadding(newOptions.itemPadding);
-        }
-
-        if (sortingChanged && !newOptions.useNewModel) {
-            this._listViewModel.setSorting(newOptions.sorting);
-        }
-
         const groupPropertyChanged = newOptions.groupProperty !== this._options.groupProperty;
         const needGroupingLoader = !!newOptions.groupProperty && !_private.isDemandNavigation(newOptions.navigation);
         const hasGroupingLoader = !!this._groupingLoader;
-        if (groupPropertyChanged && this._listViewModel) {
-            this._listViewModel.setGroupProperty(newOptions.groupProperty);
-        }
         if (needGroupingLoader) {
             if (hasGroupingLoader) {
                 if (groupPropertyChanged) {
@@ -4232,7 +4249,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         if (!needReload) {
-            _private.doAfterUpdate(self, () => {
+            _private.doAfterUpdate(this, () => {
                 if (this._listViewModel) {
                     this._listViewModel.setSearchValue(newOptions.searchValue);
                 }
@@ -4251,7 +4268,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 this._prepareGroups(newOptions, (collapsedGroups) => {
-                    self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                    if (self._listViewModel) {
+                        self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
+                    }
                 });
             }
         }
@@ -4292,6 +4311,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
 
         this._spaceBlocked = false;
+
+        this._updateListModel(newOptions);
     },
 
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
