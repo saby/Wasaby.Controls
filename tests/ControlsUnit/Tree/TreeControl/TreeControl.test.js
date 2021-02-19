@@ -179,7 +179,7 @@ define([
 
          //по сценарию https://online.sbis.ru/opendoc.html?guid=8237131f-3294-4704-92a5-fe448e40bf50
          const treeInst = new tree.TreeControl({viewModelConstructor: treeGrid.ViewModel});
-         tree.TreeControl._private.afterReloadCallback(treeInst);
+         tree.TreeControl._private.afterReloadCallback(treeInst, {});
       });
       it('TreeControl._private.toggleExpanded', async function() {
          var
