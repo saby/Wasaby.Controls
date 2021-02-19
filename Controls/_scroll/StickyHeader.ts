@@ -266,7 +266,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
         let offset = getOffset(parentElement, this._container, position);
-        if (this._model?.isFixed()) {
+        // Проверяем действительно ли устновлен top. Иногда мы производим замеры когда модель уже поменяли,
+        // а изменения еще не применились к dom дереву и просто проверка на isFixed проходит, а блок еще не смещен.
+        if (this._model?.isFixed() && this._container.style.top !== '') {
             offset += getGapFixSize();
         }
         return offset;

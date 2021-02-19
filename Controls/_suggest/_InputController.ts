@@ -434,7 +434,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._inputActive && this._isValueLengthLongerThenMinSearchLength(value, this._options);
    }
 
-   private _updateSuggestState(): boolean {
+   private _updateSuggestState(isValueReseted: boolean = false): boolean {
       const shouldSearch = this._shouldSearch(this._searchValue);
       const shouldShowSuggest = this._shouldShowSuggest(this._getSourceController().getItems());
       let state = false;
@@ -444,7 +444,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          state = true;
       } else if ((shouldSearch ||
           this._options.autoDropDown && !this._options.suggestState ||
-          !this._options.autoDropDown && this._options.suggestState) && shouldShowSuggest) {
+          !this._options.autoDropDown && this._options.suggestState && !isValueReseted) && shouldShowSuggest) {
          this._setFilter(this._options.filter, this._options);
          this._open();
          state = true;
@@ -850,7 +850,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    private _searchResetCallback(): Promise<void> {
       return this._getSearchController().then((searchController) => {
          if (searchController) {
-            if (this._updateSuggestState() || this._options.autoDropDown) {
+            if (this._updateSuggestState(true) || this._options.autoDropDown) {
                return new Promise((resolve) => {
                   const resetResult = searchController.reset();
                   if (resetResult instanceof Promise) {

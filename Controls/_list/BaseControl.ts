@@ -676,7 +676,7 @@ const _private = {
         return itemsContainer.children[startChildrenIndex + index] as HTMLElement;
     },
 
-    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean) {
+    scrollToItem(self, key: TItemKey, toBottom?: boolean, force?: boolean): Promise<void> {
         const scrollCallback = (index, result) => {
 
             // TODO: Сейчас есть проблема: ключи остутствуют на всех элементах, появившихся на странице ПОСЛЕ первого построения.
@@ -1172,7 +1172,8 @@ const _private = {
                 }
             });
         } else if (direction === 'up') {
-            self._notify('doScroll', ['top'], { bubbling: true });
+            self._needScrollToFirstItem = true;
+            self._scrollToFirstItemIfNeed();
             if (self._scrollPagingCtr) {
                 self._currentPage = 1;
                 self._scrollPagingCtr.shiftToEdge(direction, hasMoreData);
@@ -1944,21 +1945,15 @@ const _private = {
     /**
      * Открывает меню операций
      * @param self
-     * @param action
      * @param clickEvent
      * @param item
-     * @param isContextMenu
+     * @param menuConfig
      */
     openItemActionsMenu(
         self: any,
-        action: IShownItemAction,
         clickEvent: SyntheticEvent<MouseEvent>,
         item: CollectionItem<Model>,
-        isContextMenu: boolean): Promise<void> {
-        const menuConfig = _private.getItemActionsMenuConfig(self, item, clickEvent, action, isContextMenu);
-        if (!menuConfig) {
-            return Promise.resolve();
-        }
+        menuConfig: Record<string, any>): Promise<void> {
         /**
          * Не во всех раскладках можно получить DOM-элемент, зная только индекс в коллекции, поэтому запоминаем тот,
          * у которого открываем меню. Потом передадим его для события actionClick.
@@ -2021,9 +2016,12 @@ const _private = {
 
         // Этот метод вызывается также и в реестрах, где не инициализируется this._itemActionsController
         if (!!self._itemActionsController) {
-            event.nativeEvent.preventDefault();
             const item = self._listViewModel.getItemBySourceKey(key) || itemData;
-            _private.openItemActionsMenu(self, null, event, item, true);
+            const menuConfig = _private.getItemActionsMenuConfig(self, item, event, null, true);
+            if (menuConfig) {
+                event.nativeEvent.preventDefault();
+                _private.openItemActionsMenu(self, event, item, menuConfig);
+            }
         }
     },
 
@@ -2229,9 +2227,12 @@ const _private = {
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
         if (!direction) {
+            const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
-            return this.isEditing() ? this._cancelEdit(true) : void 0;
+            return this.isEditing() && !isEndEditProcessing ?
+                this._cancelEdit(true) :
+                void 0;
         }
 
         const navigation = this._options.navigation;
@@ -3042,7 +3043,8 @@ const _private = {
             }
             if (self._documentDragging) {
                 self._notify('dragMove', [dragObject]);
-                if (self._options.draggingTemplate && !self._insideDragging) {
+                const hasSorting = self._options.sorting && self._options.sorting.length;
+                if (self._options.draggingTemplate && (self._listViewModel.isDragOutsideList() || hasSorting)) {
                     self._notify('_updateDraggingTemplate', [dragObject, self._options.draggingTemplate], {bubbling: true});
                 }
             }
@@ -3913,7 +3915,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
         // todo При отказе от старой - выпилить проверку "useNewModel".
-        if (emptyTemplateChanged && newOptions.useNewModel) {
+        if (emptyTemplateChanged && newOptions.useNewModel && this._listViewModel) {
             this._listViewModel.setEmptyTemplate(newOptions.emptyTemplate);
         }
 
@@ -3964,10 +3966,14 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // При перезагрузке или при смене модели(например, при поиске), редактирование должно завершаться
                 // без возможности отменить закрытие из вне.
                 this._cancelEdit(true).then(() => {
-                    this._destroyEditInPlaceController();
+                    if (oldViewModelConstructorChanged) {
+                        this._destroyEditInPlaceController();
+                    }
                 });
             } else {
-                this._destroyEditInPlaceController();
+                if (oldViewModelConstructorChanged) {
+                    this._destroyEditInPlaceController();
+                }
             }
         }
 
@@ -4539,7 +4545,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
             if (this._syncLoadingIndicatorTimeout) {
                 clearTimeout(this._syncLoadingIndicatorTimeout);
-                this.changeIndicatorStateHandler(false, 'up');
+                if (!this._shouldDisplayTopLoadingIndicator()) {
+                    this.changeIndicatorStateHandler(false, 'up');
+                }
                 this.changeIndicatorStateHandler(false, 'down');
                 this._syncLoadingIndicatorState = null;
             }
@@ -5074,22 +5082,18 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
     _afterBeginEditCallback(item: IEditableCollectionItem, isAdd: boolean): Promise<void> {
         // Завершение запуска редактирования по месту проиходит после построения редактора.
-        // Исключение - запуск редактирования при построении списка. В таком случае, уведомлений о запуске редактирования
-        // происходить не должно, а дождаться построение редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
+        // Исключение - запуск редактирования при построении списка. В таком случае,
+        // уведомлений о запуске редактирования происходить не должно, а дождаться построение
+        // редактора невозможно(построение списка не будет завершено до выполнения данного промиса).
         return new Promise((resolve) => {
-            /*
-             * TODO: KINGO
-             * При начале редактирования нужно обновить операции наз записью у редактируемого элемента списка, т.к. в режиме
-             * редактирования и режиме просмотра они могут отличаться. На момент события beforeBeginEdit еще нет редактируемой
-             * записи. В данном месте цикл синхронизации itemActionsControl'a уже случился и обновление через выставление флага
-             * _canUpdateItemsActions приведет к показу неактуальных операций.
-             */
+            // Операции над записью должны быть обновлены до отрисовки строки редактирования,
+            // иначе будет "моргание" операций.
             _private.updateItemActions(this, this._options, item);
 
             if (this._isMounted) {
                 this._resolveAfterBeginEdit = resolve;
             } else {
-                resolve()
+                resolve();
             }
         }).then(() => {
             // Редактирование может запуститься при построении.
@@ -5111,7 +5115,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._isMounted) {
                 return _private.scrollToItem(this, item.contents.getKey(), false, false);
             }
-        })
+        });
     },
 
     _beforeEndEditCallback(item: Model, willSave: boolean, isAdd: boolean, force: boolean = false) {
@@ -5442,7 +5446,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         itemData: CollectionItem<Model>,
         clickEvent: SyntheticEvent<MouseEvent>
     ): void {
-        clickEvent.stopPropagation();
         _private.openContextMenu(this, clickEvent, itemData);
     },
 
@@ -5487,7 +5490,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (action && !action.isMenu && !action['parent@']) {
             _private.handleItemActionClick(this, action, event, item, false);
         } else {
-            _private.openItemActionsMenu(this, action, event, item, false);
+            const menuConfig = _private.getItemActionsMenuConfig(this, item, event, action, false);
+            if (menuConfig) {
+                _private.openItemActionsMenu(this, event, item, menuConfig);
+            }
         }
     },
 
@@ -5856,7 +5862,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._documentDragging) {
             this._insideDragging = false;
             this._dragLeave();
-            this._listViewModel.setDragOutsideList(true);
         }
     },
 
@@ -6404,12 +6409,20 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._dndListController.endDrag();
             }
         }
+        const hasSorting = this._options.sorting && this._options.sorting.length;
+        if (!hasSorting) {
+            this._listViewModel.setDragOutsideList(true);
+        }
     },
 
     _dragEnter(dragObject): void {
         this._insideDragging = true;
-        this._notify('_removeDraggingTemplate', [], {bubbling: true});
-        this._listViewModel.setDragOutsideList(false);
+
+        const hasSorting = this._options.sorting && this._options.sorting.length;
+        if (!hasSorting) {
+            this._notify('_removeDraggingTemplate', [], {bubbling: true});
+            this._listViewModel.setDragOutsideList(false);
+        }
 
         // Не нужно начинать dnd, если и так идет процесс dnd
         if (this._dndListController?.isDragging()) {
@@ -6541,6 +6554,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         this._insideDragging = false;
         this._documentDragging = false;
         this._draggedKey = null;
+        this._listViewModel.setDragOutsideList(false);
     },
 
     _getDragObject(mouseEvent?, startEvent?): object {

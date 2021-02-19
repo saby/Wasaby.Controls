@@ -228,7 +228,7 @@ const _private = {
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
-        const items = self._options.useNewModel ? viewModel.getCollection() : viewModel.getItems();
+        const items = viewModel.getCollection();
         const dispItem = viewModel.getItemBySourceKey(nodeKey);
         const loadedChildren = dispItem && (self._options.useNewModel ?
             viewModel.getChildren(dispItem, items).getCount() :
@@ -383,6 +383,11 @@ const _private = {
                     }
                 });
             }
+        }
+
+        // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
+        if (options.markerMoveMode === 'leaves') {
+            self.goToNext();
         }
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
@@ -1100,7 +1105,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
     goToNext(listModel?, mController?): Promise {
         return new Promise((resolve) => {
-            const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
+            // Это исправляет ошибку плана 0 || null
+            const key = this._tempItem === undefined || this._tempItem === null ? this._currentItem : this._tempItem;
+            const item = this.getNextItem(key, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
             const markerController = mController || this._children.baseControl.getMarkerController();
             if (item) {
@@ -1188,7 +1195,12 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._markedLeaf = newMarkedLeaf;
         }
 
-        markerController.setMarkedKey(this._currentItem);
+        // TODO: отрефакторить после наследования (TreeControl <- BaseControl) Нужно вызывать BaseControl._private::changeMarkedKey
+        if (markerController.getMarkedKey() !== this._currentItem) {
+            markerController.setMarkedKey(this._currentItem);
+            this._notify('markedKeyChanged', [this._currentItem]);
+        }
+
         this._tempItem = null;
 
     },

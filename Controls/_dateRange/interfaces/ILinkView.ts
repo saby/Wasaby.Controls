@@ -75,12 +75,11 @@ export default {
              * @cfg {Boolean} Display the control arrow to switch to the previous period
              * @default false
              */
-            prevArrowVisibility: false,
+            prevArrowVisibility: false
 
             /**
              * @name Controls/_dateRange/interfaces/ILinkView#emptyCaption
              * @cfg {String} Отображаемый текст, когда в контроле не выбран период.
-             * @default Не указан
              */
 
             /*
@@ -90,19 +89,23 @@ export default {
 
             /*
              * @name Controls/_dateRange/interfaces/ILinkView#resetStartValue
-             * @cfg {Date} Дата начала периода по умолчанию
+             * @cfg {Date} Начало периода, которое будет установлено после сброса значения
+             * @remark
              * При использовании опции, рядом с контролом появится крестик, нажав на который, пользователь перейдет к
              * периоду, указанному в resetStartValue и resetEndValue. Если задана только resetEndValue - resetStartValue
              * будет установлен как null.
+             * @demo Controls-demo/dateRange/RangeSelector/ResetValues/Index
              * @see Controls/_dateRange/interfaces/ILinkView#resetEndValue
              */
 
             /*
              * @name Controls/_dateRange/interfaces/ILinkView#resetEndValue
-             * @cfg {Date} Дата конца периода по умолчанию
+             * @cfg {Date} Конец периода, которое будет установлено после сброса значения
+             * @remark
              * При использовании опции, рядом с контролом появится крестик, нажав на который, пользователь перейдет к
              * периоду, указанному в resetStartValue и resetEndValue. Если задана только resetStartValue - resetEndValue
              * будет установлен как null.
+             * @demo Controls-demo/dateRange/RangeSelector/ResetValues/Index
              * @see Controls/_dateRange/interfaces/ILinkView#resetStartValue
              */
         };

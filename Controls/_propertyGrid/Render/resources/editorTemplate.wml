@@ -14,6 +14,7 @@
             <ws:content>
                <Controls.Container.Async
                   templateName="{{collectionItem.getEditorTemplateName()}}"
+                  attr:data-qa="controls-PropertyGrid__editor_{{item[keyProperty]}}"
                   class="{{item.editorClass}}">
                   <ws:templateOptions
                      validationStatus="{{content.validationStatus}}"/>
@@ -36,6 +37,7 @@
       <Controls.Container.Async templateName="{{collectionItem.getEditorTemplateName()}}"
                                 class="{{item.editorClass}}">
          <ws:partial
+            attr:data-qa="controls-PropertyGrid__editor_{{item[keyProperty]}}"
             propertyValue="{{collectionItem.getPropertyValue()}}"
             attr:key="{{collectionItem.getUid()}}"
             template="{{content.resolvedTemplate}}"
