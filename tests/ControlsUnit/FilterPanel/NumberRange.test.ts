@@ -7,11 +7,6 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
         const numberRangeEditor = new NumberRangeEditor({});
         let changesNotified = false;
         let textValue = null;
-        numberRangeEditor._children = {
-            numberRangeValidate: {
-                validate: () => {}
-            }
-        };
         numberRangeEditor._notify = (eventName, extendedValue) => {
             textValue = extendedValue[0].textValue;
             changesNotified = true;
@@ -29,6 +24,21 @@ describe('Controls/filterPanel:NumberRangeEditor', () => {
             numberRangeEditor._handleInputCompleted(null, 0);
             assert.equal(textValue, '0 - 5');
             assert.isTrue(changesNotified);
+        });
+    });
+
+    describe('_handleMinValueChanged', () => {
+        const numberRangeEditor = new NumberRangeEditor({});
+
+        it('minValue is less than maxValue', () => {
+            numberRangeEditor._maxValue = 5;
+            numberRangeEditor._handleMinValueChanged(null, 1);
+            assert.equal(numberRangeEditor._minValue, 1);
+        });
+
+        it('minValue is bigger than maxValue', () => {
+            numberRangeEditor._handleInputCompleted(null, 16);
+            assert.equal(numberRangeEditor._minValue, 1);
         });
     });
 });
