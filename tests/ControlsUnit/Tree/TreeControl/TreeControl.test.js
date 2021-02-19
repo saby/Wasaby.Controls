@@ -2194,29 +2194,22 @@ define([
          });
          treeControl._afterMount();
          assert.equal(treeControl._markedLeaf, 'last');
-         return treeControl.goToPrev().then(() => {
-            treeControl._beforeUpdate(newCfg);
-            treeControl.saveOptions(newCfg);
-            assert.equal(treeControl._markedLeaf, 'middle');
-
-            return treeControl.goToPrev().then(() => {
-               treeControl._beforeUpdate(newCfg);
-               treeControl.saveOptions(newCfg);
-               assert.equal(treeControl._markedLeaf, 'first');
-
-               return treeControl.goToNext().then(() => {
-                  treeControl._beforeUpdate(newCfg);
-                  treeControl.saveOptions(newCfg);
-                  assert.equal(treeControl._markedLeaf, 'middle');
-
-                  return treeControl.goToNext().then(() => {
-                     treeControl._beforeUpdate(newCfg);
-                     treeControl.saveOptions(newCfg);
-                     assert.equal(treeControl._markedLeaf, 'last');
-                  });
-               });
-            });
-         });
+         await treeControl.goToPrev();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'middle');
+         await treeControl.goToPrev();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'first');
+         await treeControl.goToNext();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'middle');
+         await treeControl.goToNext();
+         treeControl._beforeUpdate(newCfg);
+         treeControl.saveOptions(newCfg);
+         assert.equal(treeControl._markedLeaf, 'last');
       });
    });
 });
