@@ -17,6 +17,9 @@ abstract class BaseViewModel<TValue, TOptions extends {} = {}> extends Versionab
 
     displayValueBeforeUpdate: string = '';
 
+    // Означает, что selection был изменен, но еще не был синхронизирован в поле
+    private _selectionChanged: boolean = false;
+
     constructor(options: TOptions, value: TValue | null) {
         super();
 
@@ -51,6 +54,14 @@ abstract class BaseViewModel<TValue, TOptions extends {} = {}> extends Versionab
     set selection(value: ISelection) {
         this._setSelection(value);
         this._nextVersion();
+    }
+
+    get selectionChanged(): boolean {
+        return this._selectionChanged;
+    }
+
+    set selectionChanged(value: boolean) {
+        this._selectionChanged = value;
     }
 
     get value(): TValue {
@@ -103,6 +114,7 @@ abstract class BaseViewModel<TValue, TOptions extends {} = {}> extends Versionab
             this._selection.start = selection.start;
             this._selection.end = selection.end;
         }
+        this.selectionChanged = true;
     }
 
     protected _handleConvertedValue(displayValue: string): TValue {
