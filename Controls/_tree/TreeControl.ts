@@ -483,8 +483,10 @@ const _private = {
     },
 
     initListViewModelHandler(self, listModel): void {
-        listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
-        listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
+        if (listModel) {
+            listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+            listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
+        }
     },
 
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
@@ -753,7 +755,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             _private.resetExpandedItems(this);
         }
 
-        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems()) && newOptions.source) {
+        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, this._options.expandedItems) && newOptions.source) {
             if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
                 (searchValueChanged && newOptions.sourceController)) {
                 if (viewModel) {

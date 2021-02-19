@@ -696,7 +696,7 @@ const _private = {
             }
         };
         return new Promise((resolve) => {
-            self._scrollController ?
+            self._scrollController && self._listViewModel ?
                 self._scrollController.scrollToItem(key, toBottom, force, scrollCallback).then(() => {
                     resolve();
                 }) : resolve();
