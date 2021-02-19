@@ -12,7 +12,7 @@
  */
 export function isValidDate(date: Date): boolean {
     // If date is Invalid Date, "instanceof Date" will return true, so check getTime
-    return date instanceof Date && !isNaN(date.getTime());
+    return date instanceof Date && !isNaN(date.getTime()) && (date.getFullYear() > 1400);
 }
 
 /**
