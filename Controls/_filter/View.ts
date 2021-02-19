@@ -25,6 +25,7 @@ import {IFilterItem} from './View/interface/IFilterView';
 import {StickyOpener, StackOpener} from 'Controls/popup';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import Store from 'Controls/Store';
+import 'css!Controls/filter';
 
 const DEFAULT_FILTER_NAME = 'all_frequent';
 const FILTER_PANEL_POPUP_STACK = 'Controls/filterPanelPopup:Stack';
@@ -1091,8 +1092,6 @@ Object.defineProperty(Filter, 'defaultProps', {
       return Filter.getDefaultOptions();
    }
 });
-
-Filter._theme = ['Controls/filter'];
 
 Filter._private = _private;
 
