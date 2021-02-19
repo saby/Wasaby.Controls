@@ -179,7 +179,7 @@ define([
 
          //по сценарию https://online.sbis.ru/opendoc.html?guid=8237131f-3294-4704-92a5-fe448e40bf50
          const treeInst = new tree.TreeControl({viewModelConstructor: treeGrid.ViewModel});
-         tree.TreeControl._private.afterReloadCallback(treeInst);
+         tree.TreeControl._private.afterReloadCallback(treeInst, {});
       });
       it('TreeControl._private.toggleExpanded', async function() {
          var
@@ -2194,22 +2194,29 @@ define([
          });
          treeControl._afterMount();
          assert.equal(treeControl._markedLeaf, 'last');
-         await treeControl.goToPrev();
-         treeControl._beforeUpdate(newCfg);
-         treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._markedLeaf, 'middle');
-         await treeControl.goToPrev();
-         treeControl._beforeUpdate(newCfg);
-         treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._markedLeaf, 'first');
-         await treeControl.goToNext();
-         treeControl._beforeUpdate(newCfg);
-         treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._markedLeaf, 'middle');
-         await treeControl.goToNext();
-         treeControl._beforeUpdate(newCfg);
-         treeControl.saveOptions(newCfg);
-         assert.equal(treeControl._markedLeaf, 'last');
+         return treeControl.goToPrev().then(() => {
+            treeControl._beforeUpdate(newCfg);
+            treeControl.saveOptions(newCfg);
+            assert.equal(treeControl._markedLeaf, 'middle');
+
+            return treeControl.goToPrev().then(() => {
+               treeControl._beforeUpdate(newCfg);
+               treeControl.saveOptions(newCfg);
+               assert.equal(treeControl._markedLeaf, 'first');
+
+               return treeControl.goToNext().then(() => {
+                  treeControl._beforeUpdate(newCfg);
+                  treeControl.saveOptions(newCfg);
+                  assert.equal(treeControl._markedLeaf, 'middle');
+
+                  return treeControl.goToNext().then(() => {
+                     treeControl._beforeUpdate(newCfg);
+                     treeControl.saveOptions(newCfg);
+                     assert.equal(treeControl._markedLeaf, 'last');
+                  });
+               });
+            });
+         });
       });
    });
 });
