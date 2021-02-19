@@ -3905,6 +3905,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }));
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
+            this._shouldNotifyOnDrawItems = true;
 
             _private.setHasMoreData(this._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
 
