@@ -546,6 +546,7 @@ var
             const startIndex = self.getStartIndex();
             const stopIndex = hasVirtualScroll ? self.getStopIndex() : displayStopIndex;
             const newLadder: any = GridLadderUtil.prepareLadder({
+                task1181099336: self._options.task1181099336,
                 ladderProperties: self._options.ladderProperties,
                 startIndex,
                 stopIndex,
