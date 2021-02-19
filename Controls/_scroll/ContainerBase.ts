@@ -101,10 +101,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         } else if (this._options.scrollMode === SCROLL_MODE.VERTICAL_HORIZONTAL) {
             // Из-за особенности верстки, контейнер, с которого мы считываем размеры скролла, растягивается только
             // по высоте. По ширине он совпадает с размерами своего родителя. Из-за этого невозможно определить ширину
-            // скролла и нужно пользоваться scrollWidth. Т.к. ResizeObserver не будет стрелять,
-            // если изменятся размеры только дочернего элемента, подписываемся на событие controlResize.
-            RegisterUtil(this, 'controlResize', this._scrollWidthResizeHandler, { listenAll: true });
-            this._scrollWidthResizeHandler();
+            // скролла. Будем считать ширину скролла с дочернего элемента.
+            this._observeElementSize(this._children.userContent.children[0]);
         }
 
         this._observeElementSize(this._children.content);
@@ -122,11 +120,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             this._lockScrollPositionUntilKeyboardShown = this._lockScrollPositionUntilKeyboardShown.bind(this);
             Bus.globalChannel().subscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
         }
-    }
-
-    _scrollWidthResizeHandler() {
-        const scrollWidth = this._children.content.scrollWidth;
-        this._updateStateAndGenerateEvents({ scrollWidth });
     }
 
     _beforeUpdate(options: IContainerBaseOptions) {
@@ -473,7 +466,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             if (entry.target === this._children.content) {
                 newState.clientHeight = entry.contentRect.height;
                 newState.clientWidth = entry.contentRect.width;
-            } else {
+            } else if (entry.target === this._children.userContent) {
                 this._updateContentType();
                 // Свойство borderBoxSize учитывает размеры отступов при расчете. Поддерживается не во всех браузерах.
                 if (entry.borderBoxSize) {
@@ -494,6 +487,8 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 if (this._contentType === CONTENT_TYPE.restricted) {
                     newState.scrollHeight = this._getContentHeightByChildren();
                 }
+            } else {
+                newState.scrollWidth = entry.contentRect.width;
             }
         }
 
