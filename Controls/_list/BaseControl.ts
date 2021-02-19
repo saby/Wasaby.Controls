@@ -2371,8 +2371,11 @@ const _private = {
         const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
            ? 'attachToNull'
            : loadingIndicatorState;
+
+        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNull && detection.isIE;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${state}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}`, !isAbsoluteTopIndicator)
+            .add('controls-BaseControl__loadingIndicator__state-up-absolute', isAbsoluteTopIndicator)
             .add(`controls-BaseControl__loadingIndicator__state-${state}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                 !hasItems && loadingIndicatorState === 'down')
