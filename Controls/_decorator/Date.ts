@@ -73,9 +73,6 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
             || this._options.format !== newOptions.format
             || this._options.timeZoneOffset !== newOptions.timeZoneOffset
         ) {
-            this._options.value = newOptions.value;
-            this._options.format = newOptions.format;
-            this._options.timeZoneOffset = newOptions.timeZoneOffset;
             this._formattedDate = this._formatDate(newOptions);
         }
     }
