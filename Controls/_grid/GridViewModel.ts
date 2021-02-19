@@ -1895,8 +1895,7 @@ var
                         isSwiped: current.isSwiped,
                         getActions: current.getActions,
                         getContents: current.getContents,
-                        hasMultiSelectColumn: current.hasMultiSelectColumn,
-                        task1181001881: self._options.task1181001881
+                        hasMultiSelectColumn: current.hasMultiSelectColumn
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
 

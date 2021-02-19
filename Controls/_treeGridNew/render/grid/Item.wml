@@ -34,7 +34,8 @@
                itemActionsClass="{{ itemActionsClass }}"
                templateHighlightOnHover="{{ templateHighlightOnHover }}"
                tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
-               tagStyle="{{ gridColumn.TagCell ? tagStyle }}">
+               tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
+               editArrowTemplate="{{ editArrowTemplate }}">
       <ws:ladderWrapper>
          <ws:partial template="{{ladderWrapper.content}}"
                      if="{{ (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
@@ -49,10 +50,6 @@
          </ws:partial>
       </ws:multiSelectTemplate>
    </ws:partial>
-
-   <ws:if data="{{ gridColumn.shouldDisplayEditArrow() }}">
-      <ws:partial template="{{ editArrowTemplate }}" item="{{ item || itemData }}"/>
-   </ws:if>
 
    <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">
       <ws:if data="{{ (item || itemData).isSwiped() && itemActionsPosition !== 'outside' }}">
