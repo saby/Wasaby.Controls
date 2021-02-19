@@ -1,4 +1,4 @@
 <span class="controls-DecoratorDate controls-fontsize-{{_options.fontSize}}_theme-{{_options.theme}}
-            controls-text-{{_fontColorStyle}}_theme-{{_options.theme}} controls-DecoratorDate__fontWeight_{{_options.fontWeight}}" title="{{_formattedDate}}">
+            controls-text-{{_fontColorStyle}} controls-DecoratorDate__fontWeight_{{_options.fontWeight}}" title="{{_formattedDate}}">
     {{_formattedDate}}
 </span>
