@@ -224,7 +224,36 @@ Object.defineProperty(Base, 'defaultProps', {
 
 /**
  * @name Controls/_slider/Base#intervalTemplate
- * @cfg {String|Function} Шаблон, отображающий интервалы шкалы выбора значения.
+ * @cfg {String|Function} Устанавливает шаблон, отображающий интервалы шкалы выбора значения.
+ * @remark
+ * В шаблоне можно использовать объект interval, в котором хранятся:
+ *
+ * * start — определяет начало интервала в процентах.
+ * * width — определяет длину интервала в процентах.
+ * * color — определяет цвет интервала.
+ * @example
+ * Устанавливаем минимальную длину интервала в 5%.
+ * <pre class="brush: js">
+ * _getInterval(interval) {
+ *    if(interval.width < 5){
+ *       interval.width = 5;
+ *    }
+ *    return interval;
+ * }
+ * </pre>
+ *
+ * <pre class="brush: html">
+ * <Controls.slider:Base
+ *       maxValue="{{1000}}"
+ *       minValue="{{0}}"
+ *       bind:value="_value"
+ *       intervals="{{_intervals}}">
+ *    <ws:intervalTemplate>
+ *       <ws:partial template="Controls/slider:IntervalTemplate"
+ *                   interval="{{_getInterval(intervalTemplate.interval)}}" scope="{{intervalTemplate}}"/>
+ *       </ws:intervalTemplate>
+ * </Controls.slider:Base>
+ * </pre>
  * @demo Controls-demo/Slider/Base/IntervalTemplate/Index
  */
 /**
