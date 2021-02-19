@@ -98,7 +98,15 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             // ResizeObserver при инициализации контрола стрелнет событием ресайза.
             // Вызваем метод при инициализации сами если браузер не поддерживает ResizeObserver
             this._controlResizeHandler();
+        } else {
+            // Из-за особенности верстки, контейнер, с которого мы считываем размеры скролла, растягивается только
+            // по высоте. По ширине он совпадает с размерами своего родителя. Из-за этого невозможно определить ширину
+            // скролла и нужно пользоваться scrollWidth. Т.к. ResizeObserver не будет стрелять,
+            // если изменятся размеры только дочернего элемента, подписываемся на событие controlResize.
+            RegisterUtil(this, 'controlResize', this._scrollWidthResizeHandler, { listenAll: true });
+            this._scrollWidthResizeHandler();
         }
+
         this._observeElementSize(this._children.content);
 
         this._updateContentType();
@@ -114,6 +122,11 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
             this._lockScrollPositionUntilKeyboardShown = this._lockScrollPositionUntilKeyboardShown.bind(this);
             Bus.globalChannel().subscribe('MobileInputFocus', this._lockScrollPositionUntilKeyboardShown);
         }
+    }
+
+    _scrollWidthResizeHandler() {
+        const scrollWidth = this._children.content.scrollWidth;
+        this._updateStateAndGenerateEvents({ scrollWidth });
     }
 
     _beforeUpdate(options: IContainerBaseOptions) {
@@ -465,7 +478,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                 // Свойство borderBoxSize учитывает размеры отступов при расчете. Поддерживается не во всех браузерах.
                 if (entry.borderBoxSize) {
                     const scrollStateProperties = {
-                        scrollWidth: 'inlineSize',
+                        // scrollWidth: 'inlineSize',
                         scrollHeight: 'blockSize'
                     };
                     for (const property of Object.keys(scrollStateProperties)) {
@@ -474,7 +487,7 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
                             entry.borderBoxSize[0][borderBoxSizeProperty] : entry.borderBoxSize[borderBoxSizeProperty];
                     }
                 } else {
-                    newState.scrollWidth = entry.contentRect.width;
+                    // newState.scrollWidth = entry.contentRect.width;
                     newState.scrollHeight = entry.contentRect.height;
                 }
 
