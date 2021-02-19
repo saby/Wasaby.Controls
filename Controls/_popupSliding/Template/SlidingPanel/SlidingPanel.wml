@@ -32,6 +32,7 @@
             <ws:partial
                on:scrollStateChanged="_scrollStateChanged()"
                attr:class="controls-SlidingPanel__customContent"
+               attr:style="{{ _scrollAvailable ? '' : 'height: auto;' }}"
                template="{{ _options.bodyContentTemplate }}">
                <ws:controllerButtonTemplate>
                   <ws:partial
