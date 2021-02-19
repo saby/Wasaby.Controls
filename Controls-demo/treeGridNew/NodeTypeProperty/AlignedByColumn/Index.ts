@@ -1,6 +1,6 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeTypeProperty/AlignedByColumn/AlignedByColumn';
-import {Memory} from 'Types/source';
+import {HierarchicalMemory} from 'Types/source';
 import {data} from '../resourses';
 import {TColspanCallbackResult} from 'Controls/gridNew';
 import {Model} from 'Types/entity';
@@ -9,11 +9,11 @@ const NODE_TYPE_PROPERTY = 'nodeType';
 
 export default class extends Control {
     protected _template: TemplateFunction = Template;
-    protected _viewSource: Memory;
+    protected _viewSource: HierarchicalMemory;
     protected _nodeTypeProperty: string = NODE_TYPE_PROPERTY;
 
     protected _beforeMount(): void {
-        this._viewSource = new Memory({
+        this._viewSource = new HierarchicalMemory({
             keyProperty: 'id',
             data
         });

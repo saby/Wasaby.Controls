@@ -8,8 +8,6 @@
             nodeTypeProperty="{{ _nodeTypeProperty }}"
             rowSeparatorSize="s"
             colspanCallback="{{ _colspanCallback }}"
-            useNewNodeFooters="{{ true }}"
-            navigation="{{_navigation}}"
             bind:expandedItems="_expandedItems">
         <ws:columns>
             <ws:Array>
@@ -57,10 +55,5 @@
                 </ws:Object>
             </ws:Array>
         </ws:columns>
-        <ws:nodeFooterTemplate>
-            <ws:partial template="Controls/treeGridNew:NodeFooterTemplate">
-                <Controls.list:AddButton caption="Добавить товар"/>
-            </ws:partial>
-        </ws:nodeFooterTemplate>
     </Controls.treeGridNew:View>
 </div>
