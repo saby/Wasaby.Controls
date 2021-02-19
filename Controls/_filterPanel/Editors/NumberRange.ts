@@ -77,7 +77,11 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
     }
 
     protected _handleMinValueChanged(event: SyntheticEvent, value: number): void {
-        this._minValue = value;
+        if (value < this._maxValue || !this._maxValue) {
+            this._minValue = value;
+        } else {
+            this._notifyExtendedValue([this._minValue, this._maxValue]);
+        }
     }
 
     protected _handleMaxValueChanged(event: SyntheticEvent, value: number): void {
@@ -86,9 +90,6 @@ class NumberRangeEditor extends Control<INumberRangeOptions> implements INumberR
 
     protected _handleInputCompleted(event: SyntheticEvent, value: number): void {
         this._notifyExtendedValue([this._minValue, this._maxValue]);
-        if (this._minValue !== null && this._maxValue) {
-            this._children.numberRangeValidate.validate();
-        }
     }
 
     private _updateValues(newValue: number[]): void {
