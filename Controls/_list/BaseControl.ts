@@ -3905,7 +3905,6 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const emptyTemplateChanged = this._options.emptyTemplate !== newOptions.emptyTemplate;
         const sortingChanged = !isEqual(newOptions.sorting, this._options.sorting);
         const groupPropertyChanged = newOptions.groupProperty !== this._options.groupProperty;
-        const sourceChanged = newOptions.source !== this._options.source;
 
         // todo При отказе от старой - выпилить проверку "useNewModel".
         if (emptyTemplateChanged && newOptions.useNewModel) {
