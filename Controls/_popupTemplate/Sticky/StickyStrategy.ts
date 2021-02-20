@@ -196,7 +196,7 @@ const INVERTING_CONST = {
           */
          if (newOverflow >= 0) {
             _private.restrictContainer(position, property, popupCfg, newOverflow);
-            position[property] = windowSize - popupPosition;
+            position[property] = windowSize;
          }
          return position;
       },
