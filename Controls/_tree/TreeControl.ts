@@ -139,6 +139,13 @@ const _private = {
 
         const eventResult = self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
+        const expandToFirstLeafIfNeed = () => {
+            if (options.markerMoveMode === 'leaves') {
+                self._tempItem = nodeKey;
+                return self.goToNext();
+            }
+        };
+
         function doExpand() {
 
             // todo: удалить события itemExpand и itemCollapse в 20.2000.
@@ -201,12 +208,12 @@ const _private = {
             self._children.baseControl.showIndicator('all');
             return eventResult.then(() => {
                 self._children.baseControl.hideIndicator();
-                return doExpand();
+                return doExpand().then(expandToFirstLeafIfNeed);
             }, () => {
                 self._children.baseControl.hideIndicator();
             });
         } else {
-            return doExpand();
+            return doExpand().then(expandToFirstLeafIfNeed);
         }
     },
     hasInParents(collection: Collection, childKey, stepParentKey): boolean {
