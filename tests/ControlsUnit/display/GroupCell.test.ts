@@ -9,17 +9,17 @@ import {
 } from 'Controls/gridNew';
 
 describe('Controls/_display/GroupCell', () => {
-    let columns: IColumn[];
     let column: IColumn;
     let hasMultiSelectColumn: boolean;
 
     function getGroupCell(): GroupCell<Model> {
         const owner = {
             hasMultiSelectColumn: () => hasMultiSelectColumn,
-            getGroupPaddingClasses: () => 'controls-Grid__groupContent__spacingRight_s_theme-default'
+            getGroupPaddingClasses: () => 'controls-ListView__groupContent__rightPadding_s_theme-default'
         } as undefined as GroupItem<Model>;
         return new GroupCell({
-            columns,
+            contents: {},
+            columnsLength: 4,
             column,
             owner
         });
@@ -27,12 +27,6 @@ describe('Controls/_display/GroupCell', () => {
 
     beforeEach(() => {
         hasMultiSelectColumn = false;
-        columns = [
-            {width: '1px'},
-            {width: '1px'},
-            {width: '1px'},
-            {width: '1px'}
-        ];
         column = columns[1];
     });
 
