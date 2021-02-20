@@ -99,6 +99,10 @@ function onCollectionChange<T>(
             this.instance._recountHasNodeWithChildren();
         }
     }
+
+    if (action === IObservable.ACTION_RESET) {
+        this.instance.setExpandedItems(this.instance.getExpandedItems());
+    }
 }
 
 /**
