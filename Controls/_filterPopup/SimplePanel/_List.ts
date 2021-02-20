@@ -101,8 +101,8 @@ var List = Control.extend({
 
     _openSelectorDialog: function() {
         const self = this;
-        const selectorOpener = this._options.selectorOpener;
         const selectorTemplate = this._options.selectorTemplate;
+        const selectorOpener = this._options.selectorTemplate.mode === 'dialog' ? this._options.dialogOpener : this._options.selectorOpener;
         const selectorDialogResult = this._options.selectorDialogResult;
         const selectedItems = [];
 
