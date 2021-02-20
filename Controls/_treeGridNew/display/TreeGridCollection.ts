@@ -156,7 +156,7 @@ export default class TreeGridCollection<
             options.colspanCallback = this._$colspanCallback;
             options.columnSeparatorSize = this._$columnSeparatorSize;
             options.rowSeparatorSize = this._$rowSeparatorSize;
-            options.itemModule = this._resolveItemModule(options.contents);
+            options.itemModule = options.itemModule || this._resolveItemModule(options.contents);
             return superFactory.call(this, options);
         };
     }

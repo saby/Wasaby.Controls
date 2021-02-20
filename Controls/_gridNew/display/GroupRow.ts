@@ -35,6 +35,7 @@ export default class GroupRow<T> extends mixin<
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly DraggableItem: boolean = false;
+    readonly LadderSupport: boolean = false;
     readonly '[Controls/_display/grid/GroupRow]': true;
 
     protected _$columnItems: Array<DataCell<T>>;

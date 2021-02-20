@@ -8,6 +8,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly DraggableItem: boolean = false;
+    readonly LadderSupport: boolean = false;
     readonly GroupNode: boolean = true;
 
     // region overrides
