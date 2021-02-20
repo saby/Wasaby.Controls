@@ -2,6 +2,7 @@ import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Lookup/Lookup');
 import {EventUtils} from 'UI/Events';
 import {Logger} from 'UI/Utils';
+import 'css!Controls/filterPopup';
 
 var _private = {
    getLookup: function(self) {
@@ -133,7 +134,6 @@ var Lookup = Control.extend({
 });
 
 Lookup._private = _private;
-Lookup._theme = ['Controls/filterPopup'];
 Lookup.getDefaultOptions = function() {
    return {
       lookupTemplateName: 'Controls/lookup:Input'

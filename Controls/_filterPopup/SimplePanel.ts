@@ -2,11 +2,11 @@ import {Control} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/SimplePanel/SimplePanel');
 import CoreClone = require('Core/core-clone');
 import ParallelDeferred = require('Core/ParallelDeferred');
-import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/itemTemplate';
-
+import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/itemTemplate'
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
+import 'css!Controls/filterPopup';
 
 const DEFAULT_MIN_VISIBLE_ITEMS = 2;
 var _private = {
@@ -91,7 +91,7 @@ var _private = {
  * @extends UI/Base:Control
  * @public
  * @author Золотова Э.Е.
- * 
+ *
  * @example
  * <pre class="brush: html">
  * <!-- WML -->
@@ -108,7 +108,7 @@ var _private = {
  * @class Controls/_filterPopup/SimplePanel
  * @extends UI/Base:Control
  * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
- * 
+ *
  * @public
  * @author Золотова Э.Е.
  *
@@ -181,7 +181,7 @@ Object.defineProperty(Panel, 'defaultProps', {
    }
 });
 
-Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup', 'Controls/menu'];
+Panel._theme = ['Controls/dropdownPopup', 'Controls/menu'];
 
 Panel._private = _private;
 /**

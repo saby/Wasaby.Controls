@@ -14,6 +14,7 @@ import {HistoryUtils, FilterUtils} from 'Controls/filter';
 import 'Controls/form';
 import {Logger} from 'UI/Utils';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
+import 'css!Controls/filterPopup';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -221,9 +222,9 @@ var _private = {
  * @mixes Controls/_filterPopup/interface/IFilterPanel
  * @public
  * @author Золотова Э.Е.
- * 
+ *
  * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
- * 
+ *
  * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
  * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
  * @cssModifier controls-FilterPanel__width-l Большая ширина панели.
@@ -365,7 +366,6 @@ FilterPanel.contextTypes = function() {
       filterPanelOptionsField: _FilterPanelOptions
    };
 };
-FilterPanel._theme = ['Controls/filterPopup'];
 
 FilterPanel._private = _private;
 export = FilterPanel;

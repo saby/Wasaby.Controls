@@ -13,6 +13,7 @@ import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
 import {factory} from 'Types/chain';
 import {Constants} from 'Controls/history';
+import 'css!Controls/filterPopup';
 
 var MAX_NUMBER_ITEMS = 5;
 
@@ -243,6 +244,5 @@ var MAX_NUMBER_ITEMS = 5;
          this._notify('controlResize', [], {bubbling: true});
       }
    });
-   HistoryList._theme = ['Controls/filterPopup'];
    HistoryList._private = _private;
    export = HistoryList;

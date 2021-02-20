@@ -5,6 +5,7 @@ import {RecordSet} from 'Types/collection';
 import emptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
 import {DropdownViewModel} from 'Controls/dropdownPopup';
 import hierarchyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_HierarchyList/hierarchyItemTemplate');
+import 'css!Controls/filterPopup';
 
 var _private = {
 
@@ -156,8 +157,6 @@ Object.defineProperty(HierarchyList, 'defaultProps', {
       return HierarchyList.getDefaultOptions();
    }
 });
-
-HierarchyList._theme = ['Controls/filterPopup'];
 
 HierarchyList._private = _private;
 

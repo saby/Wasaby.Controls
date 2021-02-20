@@ -4,6 +4,7 @@ import Utils = require('Types/util');
 import Clone = require('Core/core-clone');
 import chain = require('Types/chain');
 import {isEqual} from 'Types/object';
+import 'css!Controls/filterPopup';
 
    const observableItemProps = ['value', 'textValue', 'visibility'];
 
@@ -89,7 +90,7 @@ import {isEqual} from 'Types/object';
  * @mixes Controls/interface/IPropertyGrid
  * @mixes Controls/_interface/ISource
  * @mixes Controls/interface/IItemTemplate
- * 
+ *
  * @private
  * @author Золотова Э.Е.
  */
@@ -157,8 +158,6 @@ import {isEqual} from 'Types/object';
          this._updateItem(index, 'visibility', visibility);
       }
    });
-
-   PropertyGrid._theme = ['Controls/filterPopup'];
    PropertyGrid._private = _private;
 
    export = PropertyGrid;

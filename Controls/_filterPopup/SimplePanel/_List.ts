@@ -7,6 +7,7 @@ import {DropdownViewModel} from 'Controls/dropdownPopup';
 import collection = require('Types/collection');
 import Merge = require('Core/core-merge');
 import {factory} from 'Types/chain';
+import 'css!Controls/filterPopup';
 
 var _private = {
     isNeedUpdateSelectedKeys: function(self, target, item) {
@@ -139,8 +140,6 @@ var List = Control.extend({
         }
     }
 });
-
-List._theme = ['Controls/filterPopup'];
 
 List._private = _private;
 
