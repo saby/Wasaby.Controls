@@ -7941,6 +7941,7 @@ define([
                getCollapsedGroups: () => {},
                unsubscribe: () => {},
                destroy: () => {},
+               setKeyProperty: () => {},
                getItemBySourceKey: () => collectionItem,
                isEditing: () => false
             };

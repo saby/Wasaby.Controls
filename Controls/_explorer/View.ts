@@ -627,10 +627,10 @@ export default class Explorer extends Control<IControlOptions> {
         }
     }
 
-    private _setViewConfig(viewMode): void {
+    private _setViewConfig(viewMode, useNewModel): void {
         // todo useNewModel - это ветка, к котой стремимся, условие (и всё что в else) можно убрать, когда везде
         // будет использоваться Controls/explorer:View на новой модели
-        if (this._options.useNewModel) {
+        if (useNewModel) {
             this._viewName = VIEW_NAMES_NEW[viewMode];
             this._useNewModel = USE_NEW_MODEL_VALUES_NEW[viewMode];
             this._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS_NEW[viewMode];
@@ -643,7 +643,7 @@ export default class Explorer extends Control<IControlOptions> {
 
     private _setViewModeSync(viewMode, cfg): void {
         this._viewMode = viewMode;
-        this._setViewConfig(this._viewMode);
+        this._setViewConfig(this._viewMode, cfg.useNewModel);
         this._applyNewVisualOptions();
 
         if (this._isMounted) {
