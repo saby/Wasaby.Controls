@@ -24,7 +24,6 @@ import rk = require('i18n!Controls');
  * @property {String} group Имя группы.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
- * @property {String} title Подсказка при наведении на группу.
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста при закрытии группы.
  * @property {Controls/_filter/View/interface/IFilterItem/EditorOptions.typedef} editorOptions Опции для редактора.
  * @property {String} editorTemplateName Имя редактора.
