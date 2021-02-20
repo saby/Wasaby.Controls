@@ -4,7 +4,7 @@
       <div class="controls-FilterViewPanel__group
               controls-FilterViewPanel__group_theme-{{theme}}" attr:key="group-{{item}}">
          <div class="controls-FilterViewPanel__group controls-FilterViewPanel__group-content_theme-{{theme}}"
-              title="{{_options.groupItems[item].title}}">
+              title="{{item}}">
             {{item}}
          </div>
          <div title="{{!collapsedGroups[item] ? 'Свернуть' : 'Развернуть'}}"

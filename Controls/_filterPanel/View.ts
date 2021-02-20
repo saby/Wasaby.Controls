@@ -147,7 +147,7 @@ export default class View extends Control<IControlOptions> {
     private _updateFilterParams(): void {
         this._source.forEach((item) => {
             this._setEditingParam(item.name, item.value);
-            this._setGroupItem(item.group, item.textValue, item.editorOptions?.afterEditorTemplate, item.title);
+            this._setGroupItem(item.group, item.textValue, item.editorOptions?.afterEditorTemplate);
         });
     }
 
@@ -155,8 +155,8 @@ export default class View extends Control<IControlOptions> {
         this._editingObject[paramName] = value;
     }
 
-    private _setGroupItem(groupName: string, textValue: string, afterEditorTemplate: TemplateFunction, title?: string): void {
-        this._groupItems[groupName] = {textValue, afterEditorTemplate, title};
+    private _setGroupItem(groupName: string, textValue: string, afterEditorTemplate: TemplateFunction): void {
+        this._groupItems[groupName] = {textValue, afterEditorTemplate};
     }
 
     private _notifyChanges(): void {
