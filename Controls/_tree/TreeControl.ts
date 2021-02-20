@@ -1119,7 +1119,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
         let hasPrevLeaf = false;
         for (let i = index - 1; i >= 0; i--) {
-            if (!model.at(i).isNode() || !this._isExpanded(model.at(i), model)) {
+            if (model.at(i).isNode() !== null || !this._isExpanded(model.at(i), model)) {
                 hasPrevLeaf = true;
                 break;
             }
