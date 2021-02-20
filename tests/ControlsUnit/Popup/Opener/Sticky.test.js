@@ -973,6 +973,21 @@ define(
             StickyStrategy._private.invertPosition = invertPosition;
          });
 
+         it('getPositionProperty', () => {
+            const positionRightBottom = {
+               right: 100,
+               bottom: 100
+            };
+            const positionTopLeft = {
+               top: 100,
+               left: 100
+            };
+            assert.equal(StickyStrategy._private.getPositionProperty(positionRightBottom, 'horizontal'), 'right');
+            assert.equal(StickyStrategy._private.getPositionProperty(positionRightBottom, 'vertical'), 'bottom');
+            assert.equal(StickyStrategy._private.getPositionProperty(positionTopLeft, 'horizontal'), 'left');
+            assert.equal(StickyStrategy._private.getPositionProperty(positionTopLeft, 'vertical'), 'top');
+         });
+
          it('update sizes from options', () => {
             let popupCfg = {
                config: {
