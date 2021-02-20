@@ -19,7 +19,9 @@ import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
 import {TemplateFunction} from "UI/Base";
 
 export interface IOptions<S extends Model, T extends TreeGridDataRow<S>>
-   extends IGridCollectionOptions<S, T>, ITreeCollectionOptions<S, T> {}
+   extends IGridCollectionOptions<S, T>, ITreeCollectionOptions<S, T> {
+    nodeTypeProperty?: string;
+}
 
 /**
  * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов

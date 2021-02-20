@@ -45,7 +45,9 @@ export {
     TreeGridDataRow,
     TreeGridDataCell,
     TreeGridNodeFooterRow,
-    TreeGridNodeFooterCell
+    TreeGridNodeFooterCell,
+    TreeGridGroupDataRow,
+    TreeGridGroupDataCell
 };
 
 register('Controls/treeGrid:TreeGridCollection', TreeGridCollection, {instantiate: false});

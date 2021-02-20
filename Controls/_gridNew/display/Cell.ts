@@ -254,7 +254,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         contentClasses += this._getHorizontalPaddingClasses(theme);
         contentClasses += this._getVerticalPaddingClasses(theme);
 
-        contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
+        contentClasses += ` controls-Grid__row-cell_withoutRowSeparator_size-null_theme-${theme}`;
 
         if (this._$column.align) {
             contentClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
