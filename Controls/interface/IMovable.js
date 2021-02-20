@@ -70,7 +70,7 @@ define('Controls/interface/IMovable', [
 
    /**
     * @name Controls/interface/IMovable#moveDialogTemplate
-    * @cfg {IMoveDialogTemplateProp|null} Шаблон диалогового окна выбора целевой записи для перемещения.
+    * @cfg {IMoveDialogTemplateProp|null} Шаблон {@link /doc/platform/developmentapl/interface-development/controls/list/actions/mover/#move-items-with-dialog диалогового окна} выбора целевой записи для перемещения.
     * Рекомендуется использовать стандартный шаблон {@link Controls/moverDialog:Template}.
     * @example
     * <pre class="brush: html; highlight: [3,4,5,6,7,8,9,10,11]">
