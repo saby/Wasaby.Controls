@@ -5,7 +5,7 @@ import { mixin } from 'Types/util';
 import { IColspanParams, IColumn } from 'Controls/_grid/interface/IColumn';
 import { default as GridGroupCellMixin } from 'Controls/_gridNew/display/mixins/GroupCell';
 
-import Cell from './Cell';
+import DataCell from './DataCell';
 import GroupRow from './GroupRow';
 
 export interface IOptions<T> {
@@ -19,7 +19,7 @@ export interface IOptions<T> {
 const GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
 
 export default class GroupCell<T>
-    extends mixin<Cell<any, GroupRow<any>>, GridGroupCellMixin<any>>(Cell, GridGroupCellMixin) {
+    extends mixin<DataCell<any, GroupRow<any>>, GridGroupCellMixin<any>>(DataCell, GridGroupCellMixin) {
     protected _$columnsLength: number;
     protected _$contents: string;
     protected _$zIndex: number;
@@ -44,7 +44,9 @@ export default class GroupCell<T>
     }
 
     getContentClasses(theme: string): string {
-        return 'controls-ListView__groupContent';
+        let classes = super.getContentClasses(theme);
+        classes += ' controls-ListView__groupContent';
+        return classes;
     }
 
     _getColspanParams(): IColspanParams {

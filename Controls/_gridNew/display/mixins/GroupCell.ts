@@ -39,5 +39,25 @@ export default abstract class GroupCell<T> {
             (columnAlignGroup !== undefined || textAlign !== 'right' || textVisible === false);
     }
 
+    protected _getWrapperSeparatorClasses(theme: string): string {
+        let classes = '';
+        classes += ' controls-Grid__no-rowSeparator';
+        classes += ' controls-Grid__row-cell_withRowSeparator_size-null';
+        return classes;
+    }
+
+    protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
+        let classes = '';
+        classes += ` controls-Grid__row-cell controls-Grid__cell_${style}`;
+        classes += ` controls-Grid__row-cell_${style}_theme-${theme}`;
+        classes += ` controls-Grid__row-cell_small_min_height-theme-${theme} `;
+
+        return classes;
+    }
+
+    protected _getVerticalPaddingClasses(theme: string): string {
+        return '';
+    }
+
     abstract isExpanded(): boolean;
 }

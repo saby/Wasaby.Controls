@@ -156,13 +156,16 @@ export default class TreeGridCollection<
             options.colspanCallback = this._$colspanCallback;
             options.columnSeparatorSize = this._$columnSeparatorSize;
             options.rowSeparatorSize = this._$rowSeparatorSize;
-
-            // TODO пока тут. Стратегия не подойдёт, т.к. стратегия работает с готовыми CollectionItem
-            if (options.contents.get(this._$nodeTypeProperty) === 'group') {
-                options.itemModule = 'Controls/treeGrid:TreeGridGroupDataRow';
-            }
+            options.itemModule = this._resolveItemModule(options.contents);
             return superFactory.call(this, options);
         };
+    }
+
+    protected _resolveItemModule(contents: T): string | Function {
+        if (contents && contents.get(this._$nodeTypeProperty) === 'group') {
+            return 'Controls/treeGrid:TreeGridGroupDataRow';
+        }
+        return this._itemModule;
     }
 
     protected _getGroupItemConstructor(): new() => GridGroupRow<T> {

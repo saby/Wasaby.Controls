@@ -8,12 +8,13 @@ import {
     GridLadderUtil
 } from 'Controls/display';
 
-import Row from './Row';
-import Cell from './Cell';
+import DataRow from './DataRow';
+import DataCell from './DataCell';
 import Collection from './Collection';
 import {IColumn} from 'Controls/grid';
 import {TColspanCallbackResult} from 'Controls/_gridNew/display/mixins/Grid';
 import {IOptions as IGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
+import {IItemTemplateParams} from "Controls/_gridNew/display/mixins/Row";
 
 const GROUP_Z_INDEX_DEFAULT = 2;
 const GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS = 3;
@@ -22,10 +23,10 @@ export interface IOptions<T> extends IBaseCollectionItemOptions<T>, IExpandableM
 }
 
 export default class GroupRow<T> extends mixin<
-    Row<any>,
+    DataRow<any>,
     ExpandableMixin
     >(
-    Row,
+    DataRow,
     ExpandableMixin
 ) {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
@@ -36,7 +37,7 @@ export default class GroupRow<T> extends mixin<
     readonly DraggableItem: boolean = false;
     readonly '[Controls/_display/grid/GroupRow]': true;
 
-    protected _$columnItems: Array<Cell<T>>;
+    protected _$columnItems: Array<DataCell<T>>;
     protected _groupTemplate: TemplateFunction|string;
 
     constructor(options?: IOptions<T>) {
@@ -84,9 +85,13 @@ export default class GroupRow<T> extends mixin<
         return this._$owner.getStickyColumn();
     }
 
-    getItemClasses(): string {
-        return 'controls-ListView__itemV controls-Grid__row controls-ListView__group ' +
-                (this.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-Grid__row ');
+    getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
+        let classes = super.getItemClasses(params);
+        classes += ' controls-ListView__group';
+        if (this.isHiddenGroup()) {
+            classes += ' controls-ListView__groupHidden';
+        }
+        return classes;
     }
 
     getStickyHeaderMode(): string {
