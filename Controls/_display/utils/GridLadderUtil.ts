@@ -72,12 +72,15 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         // isEqual works with any types
         if (isEqual(value, prevValue) && !hasMainLadder) {
             state.ladderLength++;
+            if (params.hasNodeFooter) {
+                state.ladderLength++;
+            }
         } else {
+            if (params.hasNodeFooter) {
+                state.ladderLength++;
+            }
             params.ladder.ladderLength = state.ladderLength;
             state.ladderLength = 1;
-        }
-        if (params.hasNodeFooter) {
-            state.ladderLength++;
         }
     }
 
