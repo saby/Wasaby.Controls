@@ -340,6 +340,8 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
              return error;
           })
           .finally(() => {
+             const controllerState = this._sourceController.getState();
+             this._updateContext(controllerState);
              this._loading = false;
           });
    }

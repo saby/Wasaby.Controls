@@ -8,6 +8,7 @@ import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumU
 import {EventUtils} from 'UI/Events';
 import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
+import {detection} from 'Env/Env';
 
 /**
  * Component that allows you to select periods of multiple days.
@@ -53,10 +54,6 @@ export default class DateRange extends Control<IControlOptions> {
         this._updateView(options);
     }
 
-    protected _afterMount(options): void {
-        this._markedKey = this._dateToId(this._position);
-    }
-
     protected _beforeUpdate(options): void {
         this._updateView(options);
     }
@@ -67,7 +64,9 @@ export default class DateRange extends Control<IControlOptions> {
 
     protected _monthObserverHandler(event, entries): void {
         // Меняем маркер выбранного месяца если месяц стал полностью видимым.
-        if (entries.nativeEntry.intersectionRatio === 1) {
+        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
+        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
+        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
             if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
                 this._monthsPosition = new Date(entries.data.getFullYear(), 0);
             }

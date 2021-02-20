@@ -46,11 +46,14 @@
 <ws:template name="richTemplateContent">
    <div class="controls-TileView__richTemplate controls-TileView__richTemplate_imagePosition_{{imagePosition || 'top'}}">
       <ws:if data="{{imageViewMode !== 'none'}}">
-         <div class="controls-TileView__richTemplate_imageWrapper controls-TileView_richTemplate_image_spacing_viewMode_{{imageViewMode || 'rectangle'}}_theme-{{theme}}">
+         <div class="controls-TileView__richTemplate_imageWrapper
+                     {{imageViewMode !== 'rectangle' && (!imagePosition || imagePosition === 'top') && itemData.getTileSizes ? 'controls-TileView__richTemplate_imageWrapper__ellipse_proportion'}}
+                     controls-TileView_richTemplate_image_spacing_viewMode_{{imageViewMode || 'rectangle'}}_theme-{{theme}}">
+            <!-- TODO костыль для imageSize, убрать https://online.sbis.ru/opendoc.html?guid=2986407e-574b-476e-861e-5c14099eab22 -->
             <ws:partial template="imageTemplate"
                         imagePosition="{{imagePosition || 'top'}}"
                         imageViewMode="{{imageViewMode || 'rectangle'}}"
-                        imageSize="{{imageSize || 's'}}"
+                        imageSize="{{itemData.getTileSizes && imageViewMode !== 'rectangle' ? 'xl' : (imageSize || 's')}}"
                         imageFit="{{imageFit || 'cover'}}"
                         imageProportion="{{imageProportion ? itemData.getImageProportion(imageProportion) : null}}"/>
          </div>

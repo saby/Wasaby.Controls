@@ -160,8 +160,11 @@ export default class Container extends Control<IContainerOptions> {
          }
       }
 
-      if (this._searchController && options.sourceController && searchValueChanged) {
-         this._inputSearchValue = newOptions.searchValue;
+      const searchParamChanged = this._options.searchParam !== newOptions.searchParam;
+      if (this._searchController && options.sourceController && (searchValueChanged || searchParamChanged)) {
+         if (searchValueChanged) {
+            this._inputSearchValue = newOptions.searchValue;
+         }
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
          }
@@ -240,6 +243,10 @@ export default class Container extends Control<IContainerOptions> {
                 return error;
              }
           });
+   }
+
+   protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+      this._inputSearchValue = value;
    }
 
    private _isSearchViewMode(): boolean {
