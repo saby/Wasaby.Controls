@@ -11,6 +11,7 @@
       <ws:if data="{{!isSearchSeparator && (item || itemData).shouldDisplayExpander(expanderIcon)}}">
          <ws:partial template="{{(item || itemData).getExpanderTemplate(expanderTemplate)}}"
                      itemData="{{ (item || itemData) }}"
+                     theme="{{ theme }}"
                      item="{{ (item || itemData) }}"
                      expanderIcon="{{(item || itemData).getExpanderIcon(expanderIcon)}}"
                      expanderSize="{{(item || itemData).getExpanderSize(expanderSize)}}"/>

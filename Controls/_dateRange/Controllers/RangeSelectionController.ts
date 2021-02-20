@@ -147,6 +147,15 @@ export default class RangeSelectionController extends Control<IControlOptions> {
       if (this._selectionProcessing) {
          this._selectionHoveredValue = item;
          if (this._updateDisplayedRange()) {
+            // Если выбор периода происходит через кванты, то мы должны выделить весь период целиком,
+            // а не только до того элемента, на который мы наводим в данный момент.
+            if (this._options.selectionType === 'quantum') {
+                if (item.getTime() < this._selectionBaseValue.getTime()) {
+                    this._selectionHoveredValue = this._displayedStartValue;
+                } else {
+                    this._selectionHoveredValue = this._displayedEndValue;
+                }
+            }
             this._notify('selectionHoveredValueChanged', [this._selectionHoveredValue]);
             this._notify('selectionChanged', [this._displayedStartValue, this._displayedEndValue]);
             this._startValue = this._displayedStartValue;

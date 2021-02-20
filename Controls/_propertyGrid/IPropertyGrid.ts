@@ -225,3 +225,15 @@ export interface IPropertyGrid {
  * @cfg {IPropertyGridColumnOptions} Конфигурации ширины колонки редактора.
  * @demo Controls-demo/PropertyGridNew/EditorColumnOptions/Index
  */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#parentProperty
+ * @cfg {String} Имя свойства, содержащего сведения о родительском узле.
+ * @demo Controls-demo/PropertyGridNew/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#nodeProperty
+ * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
+ * @demo Controls-demo/PropertyGridNew/ParentProperty/Index
+ */

@@ -576,7 +576,7 @@ export default class ScrollController {
             this._setCollectionIndices(
                 this._options.collection,
                 this._virtualScroll.getRange(),
-                false,
+                true,
                 this._options.needScrollCalculation
             );
         }

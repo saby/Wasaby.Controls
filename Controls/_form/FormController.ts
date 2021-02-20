@@ -69,6 +69,7 @@ interface IUpdateConfig {
 }
 
 export const enum INITIALIZING_WAY {
+    PRELOAD = 'preload',
     LOCAL = 'local',
     READ = 'read',
     CREATE = 'create',
@@ -151,7 +152,9 @@ class FormController extends Control<IFormController, IReceivedState> {
 
         const initializingWay = this._calcInitializingWay(options);
 
-        if (initializingWay !== INITIALIZING_WAY.LOCAL) {
+        if (initializingWay === INITIALIZING_WAY.PRELOAD) {
+            // В случае с предзагрузкой рекорда может не быть, но он придет на фазе обновления с prefetchData.
+        } else if (initializingWay !== INITIALIZING_WAY.LOCAL) {
             let recordPromise;
             if (initializingWay === INITIALIZING_WAY.READ || initializingWay === INITIALIZING_WAY.DELAYED_READ) {
                 const hasKey: boolean = options.key !== undefined && options.key !== null;
@@ -193,9 +196,10 @@ class FormController extends Control<IFormController, IReceivedState> {
                 this._createMetaDataOnUpdate = null;
             }
         }
+        const isPreloadWay = newOptions.initializingWay === INITIALIZING_WAY.PRELOAD;
         const createMetaData = newOptions.createMetaData;
-        const needRead: boolean = newOptions.key !== undefined && this._options.key !== newOptions.key;
-        const needCreate: boolean = newOptions.key === undefined &&
+        const needRead: boolean = !isPreloadWay && newOptions.key !== undefined && this._options.key !== newOptions.key;
+        const needCreate: boolean = !isPreloadWay && newOptions.key === undefined &&
             !newOptions.record && this._createMetaDataOnUpdate !== createMetaData;
 
         if (newOptions.record && this._record !== newOptions.record) {
