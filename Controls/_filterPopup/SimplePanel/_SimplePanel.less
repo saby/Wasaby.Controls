@@ -45,9 +45,10 @@
 }
 
 .controls-DropdownList__item-rightPadding_multiSelect {
-   padding-right: calc(var(--apply-button_offset-left_filterSimplePanel) + var(--inline_height_l) +
-                  var(--apply-button_offset-right_filterSimplePanel) + var(--width_closeButton_link) +
-                  var(--close-button_offset-right_sticky) + var(--border-thickness_sticky));
+   padding-right:
+           calc(var(--apply-button_offset-left_filterSimplePanel) + var(--inline_height_l) +
+           var(--apply-button_offset-right_filterSimplePanel) + var(--width_closeButton_link) +
+           var(--close-button_offset-right_sticky) + var(--border-thickness_sticky));
 }
 
 .controls-SimplePanel-folderItem {
@@ -63,13 +64,13 @@
 }
 
 .controls-FilterView-SimplePanel-popup {
-   margin-top: -(calc(var(--item_height_menu) - var(--inline_height_default_link_button) / 2 + var(--border-thickness_sticky) + var(--content_padding-top_sticky)));
-   margin-left: -(calc(var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu)));
+   margin-top: (calc(-1 * (var(--item_height_menu) - var(--inline_height_default_link_button) / 2 + var(--border-thickness_sticky) + var(--content_padding-top_sticky))));
+   margin-left: (calc(-1 * (var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu))));
 }
 
 .controls-FilterView-SimplePanel__buttonTarget-popup {
-   margin-top: -(calc(var(--item_height_menu) - var(--icon-size_filterButton_filterView) / 2 + var(--border-thickness_sticky) + var(--content_padding-top_sticky)));
+   margin-top: (calc(-1 * (var(--item_height_menu) - var(--icon-size_filterButton_filterView) / 2 + var(--border-thickness_sticky) + var(--content_padding-top_sticky))));
 
    // Чтобы при позиционировании над кнопкой, панель открывалась в том же месте, нужно сдвинуть ее на ширину иконки треугольника
-   margin-left: calc(-(var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu) + var(--item_icon-size_filterView)));
+   margin-left: calc(-1 * (var(--border-thickness_sticky) + var(--item_padding-horizontal_l_menu) + var(--item_icon-size_filterView)));
 }
