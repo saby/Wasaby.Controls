@@ -49,6 +49,7 @@ export default class TreeGridCollection<
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
 
+    protected _groupNodeItemModule: string;
     protected _$nodeTypeProperty: string;
 
     constructor(options: IOptions<S, T>) {
@@ -156,16 +157,8 @@ export default class TreeGridCollection<
             options.colspanCallback = this._$colspanCallback;
             options.columnSeparatorSize = this._$columnSeparatorSize;
             options.rowSeparatorSize = this._$rowSeparatorSize;
-            options.itemModule = options.itemModule || this._resolveItemModule(options.contents);
             return superFactory.call(this, options);
         };
-    }
-
-    protected _resolveItemModule(contents: T): string | Function {
-        if (contents && contents.get(this._$nodeTypeProperty) === 'group') {
-            return 'Controls/treeGrid:TreeGridGroupDataRow';
-        }
-        return this._itemModule;
     }
 
     protected _getGroupItemConstructor(): new() => GridGroupRow<T> {
@@ -207,6 +200,15 @@ export default class TreeGridCollection<
     protected _createComposer(): itemsStrategy.Composer<any, TreeItem<any>> {
         const composer = super._createComposer();
 
+        if (this._$nodeTypeProperty) {
+            composer.remove(itemsStrategy.Direct);
+            composer.prepend(itemsStrategy.GroupNode, {
+                display: this,
+                nodeTypeProperty: this._$nodeTypeProperty,
+                groupNodeItemModule: this._groupNodeItemModule
+            });
+        }
+
         // TODO нужно определить когда точно нужна эта стратегия и добавлять только в этом случае
         composer.append(itemsStrategy.NodeFooter, {
             display: this,
@@ -227,5 +229,6 @@ Object.assign(TreeGridCollection.prototype, {
     '[Controls/treeGrid:TreeGridCollection]': true,
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
     _itemModule: 'Controls/treeGrid:TreeGridDataRow',
+    _groupNodeItemModule: 'Controls/treeGrid:TreeGridGroupDataRow',
     _$nodeTypeProperty: null
 });
