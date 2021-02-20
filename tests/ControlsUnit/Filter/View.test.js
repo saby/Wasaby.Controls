@@ -874,7 +874,8 @@ define(
             let self = {
                _children: {},
                _onSelectorTemplateResult: () => {},
-               _getStackOpener: () => {}
+               _getStackOpener: () => {},
+               _getDialogOpener: () => {}
             };
 
             let resultItems = filter.View._private.getPopupConfig(self, configs, source);

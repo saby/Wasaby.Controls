@@ -920,7 +920,7 @@ var Filter = Control.extend({
             this._dialogOpener = new DialogOpener();
         }
         return this._dialogOpener;
-    }
+    },
 
     _rangeTextChangedHandler: function(event, textValue) {
         let dateRangeItem = _private.getDateRangeItem(this._source);
