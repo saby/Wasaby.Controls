@@ -185,20 +185,15 @@ const INVERTING_CONST = {
 
          // Если после перепозиционирования попап всё равно не влезает, то уменьшаем ему высоту до высоты окна
          const popupSize = position[property] || popupCfg.sizes[property] || 0;
-         const popupPosition = position[this.getPositionProperty(position, direction)];
          const windowSize = _private.getWindowSizes()[property];
-         const newOverflow = popupSize + popupPosition - windowSize;
 
          /*
             Фиксируем высоту, т.к. некоторые браузеры(ie) не могут понять высоту родителя без заданного height
             >= 0 из-за того, что висит max-height/max-width и в случае когда контейнер больше то у него размер
             будет равен размеру вью порта
           */
-         if (newOverflow >= 0) {
-            _private.restrictContainer(position, property, popupCfg, newOverflow);
-            if (popupSize >= windowSize) {
-               position[property] = windowSize;
-            }
+         if (popupSize >= windowSize) {
+            position[property] = windowSize;
          }
          return position;
       },
