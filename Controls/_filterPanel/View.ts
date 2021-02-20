@@ -21,7 +21,7 @@ import rk = require('i18n!Controls');
 /**
  * @typedef {Object} FilterPanelSource
  * @property {String} name Имя фильтра.
- * @property {String} group Имя Группг.
+ * @property {String} group Имя группы.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста при закрытии группы.

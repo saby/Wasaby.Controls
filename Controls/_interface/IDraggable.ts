@@ -48,7 +48,7 @@ export default interface IDraggable {
 
 /**
  * @name Controls/_interface/IDraggable#draggingTemplate
- * @cfg {Function} Шаблон перемещаемого элемента.
+ * @cfg {Function} Шаблон {@link https://fix-wi.sbis.ru/doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/ перемещаемого элемента}.
  * @default undefined
  * @remark В процессе перемещения рядом с курсором отображается эскиз перемещаемого объекта. Подробнее читайте {@link /doc/platform/developmentapl/interface-development/controls/tools/drag-n-drop/ здесь}.
  * @example
