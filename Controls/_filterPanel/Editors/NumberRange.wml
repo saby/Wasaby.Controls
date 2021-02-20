@@ -8,14 +8,15 @@
                                 placeholder="{{_options.minValueInputPlaceholder}}"
                                 value="{{_minValue}}"
                                 on:valueChanged="_handleMinValueChanged()"
-                                on:inputCompleted="_handleInputCompleted()"/>
+                                on:inputCompleted="_handleInputCompleted()"
+                                attr:class="controls-FilterEditors__numberRange-editor"/>
          <span class="controls-FilterEditors__numberRange_separator_theme-{{_options.theme}}">-</span>
          <Controls.input:Number scope="{{_options}}"
                                 placeholder="{{_options.maxValueInputPlaceholder}}"
                                 value="{{_maxValue}}"
                                 on:valueChanged="_handleMaxValueChanged()"
-                                on:inputCompleted="_handleInputCompleted()"/>
-
+                                on:inputCompleted="_handleInputCompleted()"
+                                attr:class="controls-FilterEditors__numberRange-editor"/>
          <ws:if data="{{_options.afterEditorTemplate}}">
             <Controls.Container.Async templateName="{{_options.afterEditorTemplate}}">
                <ws:partial template="{{ content.resolvedTemplate }}"/>
