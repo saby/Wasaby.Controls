@@ -342,7 +342,7 @@ const _private = {
             const modelRoot = viewModel.getRoot();
             const root = self._options.root !== undefined ? self._options.root : self._root;
             const viewModelRoot = modelRoot ? modelRoot.getContents() : root;
-            if (self._updateExpandedItemsAfterReload || self._options.useNewModel) {
+            if (self._updateExpandedItemsAfterReload) {
                 viewModel.setExpandedItems(options.expandedItems);
                 self._updateExpandedItemsAfterReload = false;
             }
