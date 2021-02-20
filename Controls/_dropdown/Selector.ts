@@ -27,9 +27,6 @@ interface IInputOptions extends IBaseDropdownOptions {
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
-interface IDropdownInputChildren {
-   infoboxTarget: InfoboxTarget;
-}
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
@@ -101,7 +98,9 @@ export default class Selector extends BaseDropdown {
    protected _tooltip: string;
    protected _selectedItems: Model[];
    protected _controller: Controller;
-   protected _children: IDropdownInputChildren;
+   protected _children: {
+      infoboxTarget: InfoboxTarget;
+   };
 
    _beforeMount(options: IInputOptions,
                 context: object,
