@@ -3031,11 +3031,11 @@ const _private = {
     onMove(self, nativeEvent): void {
         if (self._startEvent) {
             const dragObject = self._getDragObject(nativeEvent, self._startEvent);
-            if (!self._documentDragging && _private.isDragStarted(self._startEvent, nativeEvent)) {
+            if ((!self._dndListController || !self._dndListController.isDragging()) && _private.isDragStarted(self._startEvent, nativeEvent)) {
                 self._insideDragging = true;
                 self._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
-            if (self._documentDragging) {
+            if (self._dndListController && self._dndListController.isDragging()) {
                 self._notify('dragMove', [dragObject]);
                 const hasSorting = self._options.sorting && self._options.sorting.length;
                 if (self._options.draggingTemplate && (self._listViewModel.isDragOutsideList() || hasSorting)) {
@@ -5749,10 +5749,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _mouseLeave(event): void {
-        if (this._documentDragging) {
-            this._insideDragging = false;
-            this._dragLeave();
-        }
+        this._dragLeave();
     },
 
     __pagingChangePage(event, page) {
@@ -6271,9 +6268,16 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._unprocessedDragEnteredItem) {
             this._processItemMouseEnterWithDragNDrop(this._unprocessedDragEnteredItem);
         }
+
+        // Показываем плашку, если утащили мышь за пределы списка, до того как выполнился запрос за перетаскиваемыми записями
+        const hasSorting = this._options.sorting && this._options.sorting.length;
+        if (this._options.draggingTemplate && (this._listViewModel.isDragOutsideList() || hasSorting)) {
+            this._notify('_updateDraggingTemplate', [dragObject, this._options.draggingTemplate], {bubbling: true});
+        }
     },
 
     _dragLeave(): void {
+        this._insideDragging = false;
         // Это функция срабатывает при перетаскивании скролла, поэтому проверяем _dndListController
         if (this._dndListController && this._dndListController.isDragging()) {
             const draggableItem = this._dndListController.getDraggableItem();
@@ -6447,7 +6451,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _dragNDropEnded(event): void {
-        if (this._documentDragging) {
+        if (this._dndListController && this._dndListController.isDragging()) {
             this._notify('_documentDragEnd', [this._getDragObject(event.nativeEvent, this._startEvent)], {bubbling: true});
         }
         if (this._startEvent && this._startEvent.target) {
