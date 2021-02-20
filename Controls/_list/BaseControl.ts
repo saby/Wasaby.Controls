@@ -434,7 +434,10 @@ const _private = {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
-                        _private.assignItemsToModel(self, list, cfg);
+                        // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
+                        // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
+                        // выполняется в колбеке после обновления (doAfterUpdate).
+                        _private.assignItemsToModel(self, list, self._options);
 
                         if (self._sourceController) {
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
@@ -2368,8 +2371,11 @@ const _private = {
         const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
            ? 'attachToNull'
            : loadingIndicatorState;
+
+        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNull && detection.isIE;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
-            .add(`controls-BaseControl__loadingIndicator__state-${state}`)
+            .add(`controls-BaseControl__loadingIndicator__state-${state}`, !isAbsoluteTopIndicator)
+            .add('controls-BaseControl__loadingIndicator__state-up-absolute', isAbsoluteTopIndicator)
             .add(`controls-BaseControl__loadingIndicator__state-${state}_theme-${theme}`)
             .add(`controls-BaseControl_empty__loadingIndicator__state-down_theme-${theme}`,
                 !hasItems && loadingIndicatorState === 'down')
@@ -4006,6 +4012,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
             _private.initListViewModelHandler(this, this._listViewModel, newOptions.useNewModel);
             this._modelRecreated = true;
+            this._shouldNotifyOnDrawItems = true;
 
             _private.setHasMoreData(this._listViewModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
 

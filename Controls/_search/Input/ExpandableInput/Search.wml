@@ -33,7 +33,7 @@
                             on:searchClick="_tmplNotify('searchClick')"
                             on:resetClick="_tmplNotify('resetClick')"
                             on:valueChanged="_tmplNotify('valueChanged')"/>
-                <div class="controls-Search__expandable-reset-button controls-Search__expandable-reset-button icon-Close
+                <div class="controls-Search__expandable-reset-button icon-Close
                             controls-icon_size-m"
                      on:click="_handleCloseClick()">
                 </div>

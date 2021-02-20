@@ -57,15 +57,7 @@
                </div>
                <ws:if data="{{_options.intervals}}">
                   <ws:for data="key, interval in _intervals">
-                     <div
-                             class="controls-Slider__interval
-                                    controls-Slider__interval_{{interval.color}}_theme-{{_options.theme}}
-                                    controls-Slider__interval_{{_options.size=='m' ? 'big' : 'small'}}_theme-{{_options.theme}}"
-                             style="left: {{_options.direction === 'horizontal' ? interval.start + '%' : 'auto' }};
-                                    width: {{_options.direction === 'horizontal' ? interval.width + '%' : 'auto' }};
-                                    bottom: {{_options.direction === 'vertical' ? interval.start + '%' : 'auto' }};
-                                    height: {{_options.direction === 'vertical' ? interval.width + '%'}};">
-                     </div>
+                     <ws:partial template="{{_options.intervalTemplate}}" interval="{{interval}}" options="{{_options}}"/>
                   </ws:for>
                </ws:if>
             </div>

@@ -9,10 +9,20 @@
  */
 import * as parking from 'Controls/_dataSource/parking';
 import * as error from 'Controls/_dataSource/error';
-import requestDataUtil, {ISourceConfig, IRequestDataResult} from 'Controls/_dataSource/requestDataUtil';
+import requestDataUtil from 'Controls/_dataSource/requestDataUtil';
 import groupUtil from 'Controls/_dataSource/GroupUtil';
+import {ILoadDataConfig, ILoadDataResult} from './_dataSource/DataLoader';
 
-export {parking, error, requestDataUtil, ISourceConfig, IRequestDataResult, groupUtil};
+export {
+    parking,
+    error,
+    requestDataUtil,
+    ILoadDataConfig as ISourceConfig,
+    ILoadDataResult as IRequestDataResult,
+    groupUtil,
+    ILoadDataConfig,
+    ILoadDataResult
+};
 export { CrudWrapper } from 'Controls/_dataSource/CrudWrapper';
 export {
     default as NewSourceController,
@@ -22,4 +32,4 @@ export {
 export {default as calculatePath} from 'Controls/_dataSource/calculatePath';
 export {isEqualItems} from './_dataSource/Controller';
 export {default as NavigationController} from './_dataSource/NavigationController';
-export {default as DataLoader, ILoadDataConfig, ILoadDataResult} from './_dataSource/DataLoader';
+export {default as DataLoader} from './_dataSource/DataLoader';
