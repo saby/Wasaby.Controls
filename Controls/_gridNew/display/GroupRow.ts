@@ -111,7 +111,7 @@ export default class GroupRow<T> extends mixin<
 
     protected _initializeColumns(): void {
         if (this._$columns) {
-            this._$columnItems = this._prepareColumnItems(this._$columns, this._getColumnsFactory());
+            this._$columnItems = this._prepareColumnItems(this._$columns, this.getColumnsFactory());
             this._processStickyLadderCells();
         }
     }

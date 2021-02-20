@@ -8,7 +8,7 @@
             <ws:if data="{{ contentTemplate }}">
                 <ws:partial template="{{ contentTemplate }}" itemData="{{ item || itemData }}"/>
             </ws:if>
-            <ws:else>{{ gridColumn.getCaption() }}</ws:else>
+            <ws:else>{{ gridColumn.getDefaultDisplayValue() }}</ws:else>
         </div>
     </ws:if>
     <ws:if data="{{ columnAlignGroup === undefined || textVisible === false}}">
