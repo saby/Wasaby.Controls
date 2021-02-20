@@ -755,7 +755,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             _private.resetExpandedItems(this);
         }
 
-        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, this._options.expandedItems) && newOptions.source) {
+        // todo [useNewModel] viewModel.getExpandedItems() нужен, т.к. для старой модели установка expandedItems
+        // сделана некорректно. Как откажемся от неё, то можно использовать стандартное сравнение опций.
+        const currentExpandedItems = viewModel ? viewModel.getExpandedItems() : this._options.expandedItems;
+        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, currentExpandedItems) && newOptions.source) {
             if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
                 (searchValueChanged && newOptions.sourceController)) {
                 if (viewModel) {
