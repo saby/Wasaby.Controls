@@ -22,6 +22,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         customContent: Element;
         customContentWrapper: Element;
     };
+    private _isPanelMounted: boolean = false;
     private _currentTouchYPosition: number = null;
     private _scrollState: object = null;
     private _touchAvailable: boolean = false;
@@ -38,8 +39,22 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         }
     }
 
+    protected _afterMount(options: ISlidingPanelTemplateOptions): void {
+        /*
+            Если высотка контента максимальная, то нужно отпустить скролл,
+            т.к. внутри могут быть поля со своим скроллом, а мы превентим touchmove и не даем им скроллиться.
+         */
+        const scrollAvailable = this._isScrollAvailable(options);
+        if (scrollAvailable !== this._scrollAvailable) {
+            this._scrollAvailable = scrollAvailable;
+        }
+        this._isPanelMounted = true;
+    }
+
     protected _isScrollAvailable({slidingPanelOptions}: ISlidingPanelTemplateOptions): boolean {
-        return slidingPanelOptions.height === slidingPanelOptions.maxHeight;
+        const contentHeight = this._isPanelMounted ? this._getScrollAvailableHeight() : 0;
+        return slidingPanelOptions.height === slidingPanelOptions.maxHeight ||
+            slidingPanelOptions.height === contentHeight;
     }
 
     protected _dragEndHandler(): void {
