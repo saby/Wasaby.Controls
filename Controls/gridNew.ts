@@ -109,6 +109,7 @@ register('Controls/gridNew:GridDataRow', GridDataRow, {instantiate: false});
 register('Controls/gridNew:GridDataCell', GridDataCell, {instantiate: false});
 register('Controls/gridNew:GridFooterCell', GridFooterCell, {instantiate: false});
 register('Controls/gridNew:GridResultsCell', GridResultsCell, {instantiate: false});
+register('Controls/display:GridGroupCell', GridGroupCell, {instantiate: false});
 
 export {
     GridCollection, IGridCollectionOptions,

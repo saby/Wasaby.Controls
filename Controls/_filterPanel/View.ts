@@ -21,7 +21,7 @@ import rk = require('i18n!Controls');
 /**
  * @typedef {Object} FilterPanelSource
  * @property {String} name Имя фильтра.
- * @property {String} group Имя Группг.
+ * @property {String} group Имя группы.
  * @property {*} value Текущее значение фильтра.
  * @property {*} resetValue Значение фильтра по умолчанию.
  * @property {String} textValue Текстовое значение фильтра. Используется для отображения текста при закрытии группы.
@@ -130,7 +130,7 @@ export default class View extends Control<IControlOptions> {
         this._source.forEach((item) => {
             const editingItem = editingObject[item.name];
             item.value = editingItem?.value || editingItem;
-            if (editingItem.textValue) {
+            if (editingItem.textValue !== undefined) {
                 item.textValue = editingItem.textValue;
             }
             if (editingItem?.needColapse) {

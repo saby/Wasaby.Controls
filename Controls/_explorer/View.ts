@@ -247,7 +247,14 @@ export default class Explorer extends Control<IControlOptions> {
             this._pendingViewMode &&
             cfg.viewMode === this._pendingViewMode &&
             cfg.sourceController) {
-            this._setViewModeSync(this._pendingViewMode, cfg);
+            // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
+            if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
+                this._loadTileViewMode().then(() => {
+                    this._setViewModeSync(this._pendingViewMode, cfg);
+                });
+            } else {
+                this._setViewModeSync(this._pendingViewMode, cfg);
+            }
         } else {
             this._applyNewVisualOptions();
         }
@@ -620,10 +627,10 @@ export default class Explorer extends Control<IControlOptions> {
         }
     }
 
-    private _setViewConfig(viewMode): void {
+    private _setViewConfig(viewMode, useNewModel): void {
         // todo useNewModel - это ветка, к котой стремимся, условие (и всё что в else) можно убрать, когда везде
         // будет использоваться Controls/explorer:View на новой модели
-        if (this._options.useNewModel) {
+        if (useNewModel) {
             this._viewName = VIEW_NAMES_NEW[viewMode];
             this._useNewModel = USE_NEW_MODEL_VALUES_NEW[viewMode];
             this._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS_NEW[viewMode];
@@ -636,7 +643,7 @@ export default class Explorer extends Control<IControlOptions> {
 
     private _setViewModeSync(viewMode, cfg): void {
         this._viewMode = viewMode;
-        this._setViewConfig(this._viewMode);
+        this._setViewConfig(this._viewMode, cfg.useNewModel);
         this._applyNewVisualOptions();
 
         if (this._isMounted) {

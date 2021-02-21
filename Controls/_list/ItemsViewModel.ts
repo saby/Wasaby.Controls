@@ -184,11 +184,13 @@ var ItemsViewModel = BaseViewModel.extend({
     },
 
     setKeyProperty(keyProperty: string): void {
-        const display = this.getDisplay();
-        if (display) {
-            display.setKeyProperty(keyProperty);
-        } else {
-            this._options.keyProperty = keyProperty;
+        if (keyProperty !== this.getKeyProperty()) {
+            const display = this.getDisplay();
+            if (display) {
+                display.setKeyProperty(keyProperty);
+            } else {
+                this._options.keyProperty = keyProperty;
+            }
         }
     },
 
@@ -235,7 +237,7 @@ var ItemsViewModel = BaseViewModel.extend({
 
     _getItemVersion(item) {
         // records have defined method getVersion, groups haven't
-        if (item.getVersion) {
+        if (item && item.getVersion) {
             return '' + item.getVersion();
         }
         return '' + item;

@@ -32,6 +32,8 @@ interface IPrepareLadderParams extends IStickyColumnsParams{
     startIndex: number;
     stopIndex: number;
     display: any;
+
+    task1181099336?: boolean;
 }
 
 export function isSupportLadder(ladderProperties ?: string[]): boolean {
@@ -55,6 +57,8 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         ladder = {}, ladderState = {}, stickyLadder = {},
         stickyLadderState = {};
 
+    const nodeProperty = params.task1181099336 && params.display.getNodeProperty();
+
     if (!supportLadder && !stickyColumn) {
         return {};
     }
@@ -68,7 +72,13 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         // isEqual works with any types
         if (isEqual(value, prevValue) && !hasMainLadder) {
             state.ladderLength++;
+            if (params.hasNodeFooter) {
+                state.ladderLength++;
+            }
         } else {
+            if (params.hasNodeFooter) {
+                state.ladderLength++;
+            }
             params.ladder.ladderLength = state.ladderLength;
             state.ladderLength = 1;
         }
@@ -121,7 +131,8 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     prevValue: prevItem && prevItem.get ? prevItem.get(ladderProperties[fIdx]) : undefined,
                     state: ladderState[ladderProperties[fIdx]],
                     ladder: ladder[idx][ladderProperties[fIdx]],
-                    mainLadder: ladder[idx][ladderProperties[fIdx - 1]]
+                    mainLadder: ladder[idx][ladderProperties[fIdx - 1]],
+                    hasNodeFooter: params.task1181099336 && item.get && item.get(nodeProperty)
                 });
             }
         }
@@ -136,7 +147,8 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     prevValue: prevItem && prevItem.get ? prevItem.get(stickyProperties[fIdx]) : undefined,
                     state: stickyLadderState[stickyProperties[fIdx]],
                     ladder: stickyLadder[idx][stickyProperties[fIdx]],
-                    mainLadder: stickyLadder[idx][stickyProperties[fIdx - 1]]
+                    mainLadder: stickyLadder[idx][stickyProperties[fIdx - 1]],
+                    hasNodeFooter: params.task1181099336 && item.get && item.get(nodeProperty)
                 });
             }
         }

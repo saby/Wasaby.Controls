@@ -82,7 +82,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             return this._$owner.shouldDisplayMarker(marker) && this.isLastColumn();
         } else {
             return this._$owner.shouldDisplayMarker(marker) &&
-                this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
+                !this._$owner.hasMultiSelectColumn() && this.isFirstColumn();
         }
     }
     // endregion

@@ -11,12 +11,15 @@ describe('Controls/_search/Input/Container', () => {
    afterEach(() => sandbox.restore());
 
    it('_beforeMount', () => {
-      const cont = new InputContainer({});
-      cont.saveOptions({});
+      const options = {
+         inputSearchValue: 'test',
+         minSearchLength: 3
+      };
+      const cont = new InputContainer(options);
       cont._value = '';
-
-      cont._beforeMount({inputSearchValue: 'test'});
+      cont._beforeMount(options);
       assert.equal(cont._value, 'test');
+      assert.ok(cont._getSearchResolverController()._searchStarted);
    });
 
    describe('_beforeUpdate', () => {
@@ -64,6 +67,24 @@ describe('Controls/_search/Input/Container', () => {
          cont._beforeUpdate(options);
          assert.equal(cont._value, 'te');
          assert.ok(!cont._getSearchResolverController()._searchStarted);
+      });
+
+      it('inputSearchValue equals current value in input', () => {
+         let options = {
+            inputSearchValue: 'test',
+            minSearchLength: 3,
+            searchDelay: 500
+         };
+         const cont = new InputContainer(options);
+         cont._beforeMount(options);
+         cont.saveOptions(options);
+
+         options = {...options};
+         options.inputSearchValue = 'te';
+         cont._valueChanged(null, 'te');
+         cont._beforeUpdate(options);
+         assert.equal(cont._value, 'te');
+         assert.ok(cont._getSearchResolverController()._searchStarted);
       });
 
    });

@@ -22,8 +22,10 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         customContent: Element;
         customContentWrapper: Element;
     };
+    private _isPanelMounted: boolean = false;
     private _currentTouchYPosition: number = null;
     private _scrollState: object = null;
+    private _touchAvailable: boolean = false;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
         this._scrollAvailable = this._isScrollAvailable(options);
@@ -37,8 +39,22 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         }
     }
 
+    protected _afterMount(options: ISlidingPanelTemplateOptions): void {
+        /*
+            Если высотка контента максимальная, то нужно отпустить скролл,
+            т.к. внутри могут быть поля со своим скроллом, а мы превентим touchmove и не даем им скроллиться.
+         */
+        const scrollAvailable = this._isScrollAvailable(options);
+        if (scrollAvailable !== this._scrollAvailable) {
+            this._scrollAvailable = scrollAvailable;
+        }
+        this._isPanelMounted = true;
+    }
+
     protected _isScrollAvailable({slidingPanelOptions}: ISlidingPanelTemplateOptions): boolean {
-        return slidingPanelOptions.height === slidingPanelOptions.maxHeight;
+        const contentHeight = this._isPanelMounted ? this._getScrollAvailableHeight() : 0;
+        return slidingPanelOptions.height === slidingPanelOptions.maxHeight ||
+            slidingPanelOptions.height === contentHeight;
     }
 
     protected _dragEndHandler(): void {
@@ -95,6 +111,11 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         }
         event.stopPropagation();
         this._notifyDragStart(this._touchDragOffset);
+
+        // Чтобы скролл внутри и снаружи при таче не срабатывал(Нужно чтобы боди не тянулся при свайпах по шторке)
+        if (!this._touchAvailable) {
+            event.preventDefault();
+        }
     }
 
     protected _touchEndHandler(): void {
@@ -102,6 +123,12 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             this._notifyDragEnd();
             this._touchDragOffset = null;
         }
+
+        /*
+           Размораживаем свайп после окончания тача в котором стал доступен скролл,
+           чтобы при достижении максимальной высоты не начал скроллиться боди
+        */
+        this._touchAvailable = this._scrollAvailable;
     }
 
     private _notifyDragStart(offset: IDragObject['offset']): void {

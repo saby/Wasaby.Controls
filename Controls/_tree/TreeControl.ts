@@ -139,6 +139,13 @@ const _private = {
 
         const eventResult = self._notify(expanded ? 'beforeItemExpand' : 'beforeItemCollapse', [dispItem.getContents()]);
 
+        const expandToFirstLeafIfNeed = () => {
+            if (options.markerMoveMode === 'leaves') {
+                self._tempItem = nodeKey;
+                return self.goToNext();
+            }
+        };
+
         function doExpand() {
 
             // todo: удалить события itemExpand и itemCollapse в 20.2000.
@@ -201,12 +208,12 @@ const _private = {
             self._children.baseControl.showIndicator('all');
             return eventResult.then(() => {
                 self._children.baseControl.hideIndicator();
-                return doExpand();
+                return doExpand().then(expandToFirstLeafIfNeed);
             }, () => {
                 self._children.baseControl.hideIndicator();
             });
         } else {
-            return doExpand();
+            return doExpand().then(expandToFirstLeafIfNeed);
         }
     },
     hasInParents(collection: Collection, childKey, stepParentKey): boolean {
@@ -228,7 +235,7 @@ const _private = {
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
-        const items = self._options.useNewModel ? viewModel.getCollection() : viewModel.getItems();
+        const items = viewModel.getCollection();
         const dispItem = viewModel.getItemBySourceKey(nodeKey);
         const loadedChildren = dispItem && (self._options.useNewModel ?
             viewModel.getChildren(dispItem, items).getCount() :
@@ -384,6 +391,11 @@ const _private = {
                 });
             }
         }
+
+        // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
+        if (options.markerMoveMode === 'leaves') {
+            self.goToNext();
+        }
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
     },
@@ -483,8 +495,10 @@ const _private = {
     },
 
     initListViewModelHandler(self, listModel): void {
-        listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
-        listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
+        if (listModel) {
+            listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+            listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
+        }
     },
 
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
@@ -667,6 +681,51 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._expandedItemsToNotify = null;
         }
     },
+
+    _updateListModel(newOptions): void {
+        const baseControl = this._children.baseControl;
+        const viewModel = baseControl.getViewModel();
+
+        if (!viewModel) {
+            return;
+        }
+
+        if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
+            viewModel.setCollapsedItems(newOptions.collapsedItems);
+        }
+
+        if (this._options.markedKey !== newOptions.markedKey) {
+            if (newOptions.markerMoveMode === 'leaves') {
+                this._applyMarkedLeaf(newOptions.markedKey, viewModel, this._children.baseControl.getMarkerController());
+            }
+        }
+
+        if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
+            viewModel.setNodeFooterTemplate(newOptions.nodeFooterTemplate);
+        }
+
+        // TODO: Удалить #rea_1179794968
+        if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
+            viewModel.setExpanderDisplayMode(newOptions.expanderDisplayMode);
+        }
+
+        if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
+            viewModel.setExpanderVisibility(newOptions.expanderVisibility);
+        }
+
+        if (newOptions.nodeProperty !== this._options.nodeProperty) {
+            viewModel.setNodeProperty(newOptions.nodeProperty);
+        }
+
+        if (newOptions.parentProperty !== this._options.parentProperty) {
+            viewModel.setParentProperty(newOptions.parentProperty);
+        }
+
+        if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
+            viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
+        }
+    },
+
     _beforeUpdate: function(newOptions) {
         const baseControl = this._children.baseControl;
         const viewModel = baseControl.getViewModel();
@@ -708,10 +767,15 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             _private.resetExpandedItems(this);
         }
 
-        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems()) && newOptions.source) {
+        // todo [useNewModel] viewModel.getExpandedItems() нужен, т.к. для старой модели установка expandedItems
+        // сделана некорректно. Как откажемся от неё, то можно использовать стандартное сравнение опций.
+        const currentExpandedItems = viewModel ? viewModel.getExpandedItems() : this._options.expandedItems;
+        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, currentExpandedItems) && newOptions.source) {
             if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
                 (searchValueChanged && newOptions.sourceController)) {
-                viewModel.setExpandedItems(newOptions.expandedItems);
+                if (viewModel) {
+                    viewModel.setExpandedItems(newOptions.expandedItems);
+                }
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
@@ -719,37 +783,17 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
-        if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
-            viewModel.setCollapsedItems(newOptions.collapsedItems);
-        }
-        if (this._options.markedKey !== newOptions.markedKey) {
-            if (newOptions.markerMoveMode === 'leaves') {
-                this._applyMarkedLeaf(newOptions.markedKey, viewModel, this._children.baseControl.getMarkerController());
-            }
-        }
+
         if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
         }
-        if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
-            viewModel.setNodeFooterTemplate(newOptions.nodeFooterTemplate);
-        }
-        // TODO: Удалить #rea_1179794968
-        if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
-            viewModel.setExpanderDisplayMode(newOptions.expanderDisplayMode);
-        }
-        if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
-            viewModel.setExpanderVisibility(newOptions.expanderVisibility);
-        }
-        if (newOptions.nodeProperty !== this._options.nodeProperty) {
-            viewModel.setNodeProperty(newOptions.nodeProperty);
-        }
+
         if (newOptions.parentProperty !== this._options.parentProperty) {
-            viewModel.setParentProperty(newOptions.parentProperty);
             updateSourceController = true;
         }
-        if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
-            viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
-        }
+
+        this._updateListModel(newOptions);
+
         if (sourceController) {
             const sourceControllerState = sourceController.getState();
             if (newOptions.parentProperty && sourceControllerState.parentProperty !== newOptions.parentProperty) {
@@ -1100,7 +1144,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     },
     goToNext(listModel?, mController?): Promise {
         return new Promise((resolve) => {
-            const item = this.getNextItem(this._tempItem || this._currentItem, listModel);
+            // Это исправляет ошибку плана 0 || null
+            const key = this._tempItem === undefined || this._tempItem === null ? this._currentItem : this._tempItem;
+            const item = this.getNextItem(key, listModel);
             const model = listModel || this._children.baseControl.getViewModel();
             const markerController = mController || this._children.baseControl.getMarkerController();
             if (item) {
@@ -1188,7 +1234,12 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._markedLeaf = newMarkedLeaf;
         }
 
-        markerController.setMarkedKey(this._currentItem);
+        // TODO: отрефакторить после наследования (TreeControl <- BaseControl) Нужно вызывать BaseControl._private::changeMarkedKey
+        if (markerController.getMarkedKey() !== this._currentItem) {
+            markerController.setMarkedKey(this._currentItem);
+            this._notify('markedKeyChanged', [this._currentItem]);
+        }
+
         this._tempItem = null;
 
     },

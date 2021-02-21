@@ -1,6 +1,7 @@
 .controls-PeriodDialog-MonthsRange {
    flex-shrink: 1;
    min-height: 1px;
+   border-radius: 0 0 @border-radius_datePicker @border-radius_datePicker;
 }
 
 .controls-PeriodDialog-MonthsRange__header {
@@ -205,6 +206,14 @@
 .controls-PeriodDialog-MonthsRange__month {
    box-sizing: border-box;
    font-weight: normal;
+}
+
+.controls-MonthView__textColor-currentMonthDay-workday_theme-@{themeName}_style-monthRangeItem {
+   color: @yearlist_monthview_item_text-color_datePicker;
+}
+
+.controls-MonthView__textColor-currentMonthDay-weekend_theme-@{themeName}_style-monthRangeItem {
+   color: @yearlist_monthview_weekend_text-color_datePicker;
 }
 
 .controls-MonthViewVDOM__item_style-monthRangeItem_theme-@{themeName} {

@@ -19,8 +19,7 @@
 
             root="{{_masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
-            bind:markedKey="masterMarkedKey"
-            dataLoadCallback="{{_onMasterLoaded}}"
+            bind:markedKey="_masterMarkedKey"
          />
       </Controls.scroll:Container>
    </ws:master>
@@ -38,7 +37,6 @@
             attr:class="controls-newBrowser__detail-list"
             root="{{root}}"
             on:rootChanged="_onDetailRootChanged()"
-            filter="{{_detailSourceOptions.filter}}"
 
             tileSize="{{_tileCfg.imageSize}}"
 
