@@ -4073,6 +4073,8 @@ define([
             notifiedEntity = dragEntity && dragEntity[0];
          };
 
+         ctrl._documentDragging = true;
+
          assert.isNull(ctrl._dndListController);
          ctrl._dragEnter({}, undefined);
          assert.equal(notifiedEvent, '_removeDraggingTemplate');
@@ -7796,6 +7798,7 @@ define([
             secondBaseControl.saveOptions(cfg);
             await secondBaseControl._beforeMount(cfg);
             secondBaseControl._listViewModel.setItems(rs);
+            secondBaseControl._documentDragging = true;
 
             secondBaseControl._notify = () => true;
             const dragEntity = new dragNDrop.ItemsEntity({ items: [1] });
