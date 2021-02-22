@@ -4073,6 +4073,8 @@ define([
             notifiedEntity = dragEntity && dragEntity[0];
          };
 
+         ctrl._documentDragging = true;
+
          assert.isNull(ctrl._dndListController);
          ctrl._dragEnter({}, undefined);
          assert.equal(notifiedEvent, '_removeDraggingTemplate');
@@ -7738,7 +7740,9 @@ define([
                   }
                };
 
-               baseControl._documentDragging = true;
+               baseControl._dndListController = {
+                  isDragging: () => true
+               };
                const unregisterMouseMoveSpy = sinon.spy(baseControl, '_unregisterMouseMove');
                const unregisterMouseUpSpy = sinon.spy(baseControl, '_unregisterMouseUp');
 
@@ -7794,6 +7798,7 @@ define([
             secondBaseControl.saveOptions(cfg);
             await secondBaseControl._beforeMount(cfg);
             secondBaseControl._listViewModel.setItems(rs);
+            secondBaseControl._documentDragging = true;
 
             secondBaseControl._notify = () => true;
             const dragEntity = new dragNDrop.ItemsEntity({ items: [1] });
@@ -7952,6 +7957,41 @@ define([
             isDragging = true;
             baseControl._mouseEnter(null);
             assert.isFalse(notifySpy.withArgs('dragEnter').called);
+         });
+
+         it('move outside list while load draggable items', () => {
+            baseControl._dndListController = {
+               isDragging: () => true
+            };
+            baseControl._listViewModel = {
+               isDragOutsideList: () => true
+            };
+            baseControl._startEvent = {
+               pageX: 500,
+               pageY: 500
+            };
+            baseControl.saveOptions({draggingTemplate: {}});
+
+            baseControl._documentDragging = false;
+            const timeout = setTimeout(() => {
+               baseControl._documentDragging = true;
+            }, 2000);
+
+            const event = {
+               nativeEvent: {
+                  buttons: {},
+                  pageX: 501,
+                  pageY: 501,
+                  buttons: {}
+               },
+               target: {
+                  closest: () => null
+               }
+            };
+            baseControl._onMouseMove(event);
+
+            assert.isTrue(notifySpy.withArgs('_updateDraggingTemplate').called);
+            return timeout;
          });
       });
 
