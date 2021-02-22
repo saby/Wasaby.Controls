@@ -38,7 +38,6 @@ export default class ColumnsControl extends ListControl {
 
     protected _beforeMount(options: IColumnsControlOptions): void {
         this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
-        this._onCollectionChange = this._onCollectionChange.bind(this);
         this._keyDownHandler = this._keyDownHandler.bind(this);
         this._beforeMountCallback = ({viewModel, markerController}) => {
             this._model = viewModel;
@@ -51,24 +50,19 @@ export default class ColumnsControl extends ListControl {
                 } else {
                     this._columnsCount = DEFAULT_COLUMNS_COUNT;
                 }
-                this.updateColumns();
+                this._model.setColumnsCount(this._columnsCount);
             }
         };
     }
 
     protected _afterMount(): void {
         this._resizeHandler();
-        this._subscribeToModelChanges(this._model);
     }
 
     protected _beforeUpdate(options: IColumnsControlOptions): void {
         if (options.columnsMode === 'fixed' && options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
         }
-    }
-
-    protected _beforeUnmount(): void {
-        this._unsubscribeFromModelChanges(this._model);
     }
 
     private updateColumnIndexesByModel(): void {
@@ -81,12 +75,6 @@ export default class ColumnsControl extends ListControl {
         });
     }
 
-    private setColumnOnItem(item: CollectionItem<Model>, index: number): void {
-        const model = this._model;
-        const column = this._columnsController.calcColumn(model, index + this._addingColumnsCounter, this._columnsCount);
-        item.setColumn(column);
-    }
-
     private updateColumns(): void {
         this._addingColumnsCounter = 0;
         this._columnsIndexes = null;
@@ -94,67 +82,6 @@ export default class ColumnsControl extends ListControl {
         this.updateColumnIndexesByModel();
     }
 
-    private processRemovingItem(item: any): boolean {
-        let done = true;
-
-        if (!this._model.find((it) => it.getColumn() === item.column) && this._addingColumnsCounter > 0) {
-            this._addingColumnsCounter--;
-        }
-
-        if (item.columnIndex >= this._columnsIndexes[item.column].length) {
-            done = false;
-            while (!done && (item.column + 1) < this._columnsCount) {
-
-                if (this._columnsIndexes[item.column + 1].length > 0) {
-
-                    if (this._columnsIndexes[item.column + 1].length > 1) {
-                        done = true;
-                    }
-                    const nextIndex = this._columnsIndexes[item.column + 1].pop();
-                    this._columnsIndexes[item.column].push(nextIndex);
-                    const nextItem = this._model.getItemBySourceIndex(nextIndex) as CollectionItem<Model>;
-                    nextItem.setColumn(item.column);
-                }
-                item.column++;
-            }
-        }
-        return !done;
-    }
-    private processRemoving(removedItemsIndex: number, removedItems: [CollectionItem<Model>]): void {
-        const removedItemsIndexes = removedItems.map((item, index) => {
-            const column = item.getColumn();
-            const columnIndex = this._columnsIndexes[column].findIndex((elem) => elem === (index + removedItemsIndex));
-            return {
-                column,
-                columnIndex
-            };
-        });
-        this.updateColumnIndexesByModel();
-        const needLoadMore = removedItemsIndexes.some(this.processRemovingItem.bind(this));
-
-        if (needLoadMore) {
-            this._notify('loadMore', ['down']);
-        }
-    }
-    protected _onCollectionChange(_e: unknown,
-                                  action: string,
-                                  newItems: [CollectionItem<Model>],
-                                  newItemsIndex: number,
-                                  removedItems: [CollectionItem<Model>],
-                                  removedItemsIndex: number): void {
-        if (action === 'a') {
-            newItems.forEach(this.setColumnOnItem.bind(this));
-            if (this._options.columnsMode === 'auto' && newItems.length === 1) {
-                this._addingColumnsCounter++;
-            }
-        }
-        if (action === 'rm') {
-            this.processRemoving(removedItemsIndex, removedItems);
-        }
-        if (action === 'rs') {
-            this.updateColumns();
-        }
-    }
     protected _resizeHandler(): void {
         const itemsContainer = this._getItemsContainer();
         const currentWidth = itemsContainer.getBoundingClientRect().width;
@@ -169,7 +96,7 @@ export default class ColumnsControl extends ListControl {
         const newColumnsCount = Math.floor(width / ((columnMinWidth || DEFAULT_MIN_WIDTH) + this._spacing));
         if (newColumnsCount !== this._columnsCount) {
             this._columnsCount = newColumnsCount;
-            this.updateColumns();
+            this._model.setColumnsCount(this._columnsCount);
         }
     }
 
@@ -177,96 +104,12 @@ export default class ColumnsControl extends ListControl {
         return this._children.baseControl.getItemsContainer();
     }
 
-    private getItemToLeft(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
-        const curIndex = model.getIndex(item);
-        let newIndex: number = curIndex;
-        if (this._options.columnsMode === 'auto') {
-            if (curIndex > 0) {
-                newIndex = curIndex - 1;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const curColumnIndex = this._columnsIndexes[curColumn].indexOf(curIndex);
-            if (curColumn > 0) {
-                const prevColumn = this._columnsIndexes.slice().reverse().find(
-                    (col: number[], index: number) => index > this._columnsCount - curColumn - 1 && col.length > 0);
-
-                if (prevColumn instanceof Array) {
-                    newIndex = prevColumn[Math.min(prevColumn.length - 1, curColumnIndex)];
-                }
-            }
-        }
-        return model.at(newIndex);
-    }
-
-    private getItemToRight(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
-        const curIndex = model.getIndex(item);
-        let newIndex: number = curIndex;
-        if (this._options.columnsMode === 'auto') {
-            if (curIndex < model.getCount() - 1) {
-                newIndex = curIndex + 1;
-            } else if (curIndex > this._columnsCount) {
-                newIndex = curIndex + 1 - this._columnsCount;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const curColumnIndex = this._columnsIndexes[curColumn].indexOf(curIndex);
-            if (curColumn < this._columnsCount - 1) {
-                const nextColumn = this._columnsIndexes.find(
-                    (col: number[], index: number) => index > curColumn && col.length > 0);
-
-                if (nextColumn instanceof Array) {
-                    newIndex = nextColumn[Math.min(nextColumn.length - 1, curColumnIndex)];
-                }
-            }
-        }
-        return model.at(newIndex);
-    }
-
-    private getItemToUp(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
-        const curIndex = model.getIndex(item);
-        let newIndex: number = curIndex;
-        if (this._options.columnsMode === 'auto') {
-            if (Math.round(curIndex / this._columnsCount) > 0) {
-                newIndex = curIndex - this._columnsCount;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const curColumnIndex = this._columnsIndexes[curColumn].indexOf(curIndex);
-            if (curColumnIndex > 0) {
-                newIndex = this._columnsIndexes[curColumn][curColumnIndex - 1];
-            } else {
-                newIndex = curIndex;
-            }
-        }
-        return model.at(newIndex);
-    }
-
-    private getItemToDown(model: Collection<Model>, item: CollectionItem<Model>): CollectionItem<Model> {
-        const curIndex = model.getIndex(item);
-        let newIndex: number = curIndex;
-        if (this._options.columnsMode === 'auto') {
-            if (curIndex + this._columnsCount < model.getCount()) {
-                newIndex = curIndex + this._columnsCount;
-            }
-        } else {
-            const curColumn = item.getColumn();
-            const curColumnIndex = this._columnsIndexes[curColumn].indexOf(curIndex);
-            if (curColumnIndex < this._columnsIndexes[curColumn].length - 1) {
-                newIndex = this._columnsIndexes[curColumn][curColumnIndex + 1];
-            } else {
-                newIndex = curIndex;
-            }
-        }
-        return model.at(newIndex);
-    }
-
     private moveMarker(direction: string): void {
         const model = this._model;
         if (model && this._markerController) {
             const curMarkedItem = model.find((item) => item.isMarked());
             let newMarkedItem: CollectionItem<Model>;
-            newMarkedItem = this[`getItemTo${direction}`](model, curMarkedItem);
+            newMarkedItem = model[`getItemTo${direction}`](curMarkedItem);
             if (newMarkedItem && curMarkedItem !== newMarkedItem) {
                 this._changeMarkedKey(newMarkedItem.getContents().getKey());
                 const column = newMarkedItem.getColumn();
@@ -330,17 +173,6 @@ export default class ColumnsControl extends ListControl {
         }
     }
 
-    protected _unsubscribeFromModelChanges(model: Collection<Model>): void {
-        if (model && !model.destroyed) {
-            model.unsubscribe('onCollectionChange', this._onCollectionChange);
-        }
-    }
-
-    protected _subscribeToModelChanges(model: Collection<Model>): void {
-        if (model && !model.destroyed) {
-            model.subscribe('onCollectionChange', this._onCollectionChange);
-        }
-    }
     static getDefaultOptions(): Partial<IColumnsControlOptions> {
         return {
             columnMinWidth: DEFAULT_MIN_WIDTH,
