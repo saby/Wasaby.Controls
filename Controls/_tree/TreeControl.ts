@@ -238,13 +238,8 @@ const _private = {
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
         const items = viewModel.getCollection();
-        const dispItem = viewModel.getItemBySourceKey(nodeKey);
-        const loadedChildren = dispItem && (self._options.useNewModel ?
-            viewModel.getChildren(dispItem, items).getCount() :
-            viewModel.getChildren(nodeKey, items).length);
-        const isAlreadyLoaded =
-            baseControl.getSourceController().hasLoaded(nodeKey) ||
-            (self._options.taks1181268322 ? viewModel.getHasMoreStorage().hasOwnProperty(nodeKey) : loadedChildren);
+        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey) ||
+                                viewModel.getHasMoreStorage().hasOwnProperty(nodeKey);
 
         if (isAlreadyLoaded) {
             return false;
@@ -396,10 +391,9 @@ const _private = {
                     viewModel.setHasMoreStorage(hasMore);
                 }
             }
-            updateHasMoreStorage(viewModel);
-        } else if (baseControlViewModel && options.taks1181268322) {
-            updateHasMoreStorage(baseControlViewModel);
         }
+
+        updateHasMoreStorage(viewModel || baseControlViewModel);
 
         // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
         if (options.markerMoveMode === 'leaves') {
