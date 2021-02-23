@@ -911,15 +911,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._bindHandlers();
         this._initializeCollection();
 
-        if (options.itemPadding) {
-            this._setItemPadding(options.itemPadding);
-        }
-
         this._viewIterator = {
             each: this.each.bind(this),
             setIndices: () => false,
             isItemAtIndexHidden: () => false
         };
+
+        if (options.itemPadding) {
+            this._setItemPadding(options.itemPadding);
+        }
 
         if (this._isGrouped()) {
             // TODO What's a better way of doing this?
