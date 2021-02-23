@@ -40,7 +40,7 @@ const INVERTING_CONST = {
 
    var _private = {
       getPositionProperty(position: IPosition, direction: string): string {
-         return POSITION_PROPERTIES_BY_DIRECTION[direction].some((property) => {
+         return POSITION_PROPERTIES_BY_DIRECTION[direction].filter((property) => {
             return position.hasOwnProperty(property);
          });
       },
@@ -185,18 +185,15 @@ const INVERTING_CONST = {
 
          // Если после перепозиционирования попап всё равно не влезает, то уменьшаем ему высоту до высоты окна
          const popupSize = position[property] || popupCfg.sizes[property] || 0;
-         const newOverflow = popupSize +
-             position[this.getPositionProperty(position, direction)]
-             - _private.getWindowSizes()[property];
+         const windowSize = _private.getWindowSizes()[property];
 
          /*
             Фиксируем высоту, т.к. некоторые браузеры(ie) не могут понять высоту родителя без заданного height
             >= 0 из-за того, что висит max-height/max-width и в случае когда контейнер больше то у него размер
             будет равен размеру вью порта
           */
-         if (newOverflow >= 0) {
-            _private.restrictContainer(position, property, popupCfg, newOverflow);
-            position[property] = popupCfg.sizes[property];
+         if (popupSize >= windowSize) {
+            position[property] = windowSize;
          }
          return position;
       },
