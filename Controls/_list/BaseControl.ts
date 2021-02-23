@@ -3589,7 +3589,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 }
 
                 if (newOptions.afterReloadCallback) {
-                    newOptions.afterReloadCallback(newOptions, self._items);
+                    newOptions.afterReloadCallback(newOptions, self._items, self._listViewModel);
                 }
 
                 if (newOptions.serviceDataLoadCallback instanceof Function) {

@@ -242,7 +242,9 @@ const _private = {
         const loadedChildren = dispItem && (self._options.useNewModel ?
             viewModel.getChildren(dispItem, items).getCount() :
             viewModel.getChildren(nodeKey, items).length);
-        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey) || loadedChildren;
+        const isAlreadyLoaded =
+            baseControl.getSourceController().hasLoaded(nodeKey) ||
+            (self._options.taks1181268322 ? viewModel.getHasMoreStorage().hasOwnProperty(nodeKey) : loadedChildren);
 
         if (isAlreadyLoaded) {
             return false;
@@ -335,10 +337,26 @@ const _private = {
         }
     },
 
-    afterReloadCallback: function(self, options, loadedList: RecordSet) {
+    afterReloadCallback: function(self, options, loadedList: RecordSet, baseControlViewModel) {
         const baseControl = self._children.baseControl;
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         const viewModel = baseControl && baseControl.getViewModel();
+        const updateHasMoreStorage = (model) => {
+            if (loadedList) {
+                const modelHasMoreStorage = viewModel.getHasMoreStorage();
+                const sourceController = baseControl.getSourceController();
+
+                loadedList.each((item) => {
+                    if (item.get(options.nodeProperty) !== null) {
+                        const itemKey = item.getId();
+                        const dispItem = model.getItemBySourceKey(itemKey);
+                        if (dispItem && model.getChildren(dispItem, loadedList).length) {
+                            modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
+                        }
+                    }
+                });
+            }
+        };
 
         if (viewModel) {
             const modelRoot = viewModel.getRoot();
@@ -378,20 +396,9 @@ const _private = {
                     viewModel.setHasMoreStorage(hasMore);
                 }
             }
-            if (loadedList) {
-                const modelHasMoreStorage = viewModel.getHasMoreStorage();
-                const sourceController = baseControl.getSourceController();
-
-                loadedList.each((item) => {
-                    if (item.get(options.nodeProperty) !== null) {
-                        const itemKey = item.getId();
-                        const dispItem = viewModel.getItemBySourceKey(itemKey);
-                        if (dispItem && viewModel.getChildren(dispItem, loadedList).length) {
-                            modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
-                        }
-                    }
-                });
-            }
+            updateHasMoreStorage(viewModel);
+        } else if (baseControlViewModel && options.taks1181268322) {
+            updateHasMoreStorage(baseControlViewModel);
         }
 
         // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
