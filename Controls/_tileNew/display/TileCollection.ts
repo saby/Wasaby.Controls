@@ -3,10 +3,10 @@ import {Model} from 'Types/entity';
 import { Collection, ItemsFactory } from 'Controls/display';
 import {object} from "Types/util";
 
-const DEFAULT_TILE_HEIGHT = 200;
-const DEFAULT_TILE_WIDTH = 250;
-const DEFAULT_COMPRESSION_COEFF = 0.7;
-const DEFAULT_ZOOM_COEFF = 1.5;
+export const DEFAULT_TILE_HEIGHT = 200;
+export const DEFAULT_TILE_WIDTH = 250;
+export const DEFAULT_COMPRESSION_COEFF = 0.7;
+export const DEFAULT_SCALE_COEFFICIENT = 1.5;
 const AVAILABLE_CONTAINER_VERTICAL_PADDINGS = ['null', 'default'];
 const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 'xs', 's', 'm', 'l', 'xl', '2xl'];
 const AVAILABLE_ITEM_PADDINGS = ['null', 'default', '3xs', '2xs', 'xs', 's', 'm'];
@@ -45,7 +45,9 @@ export default class TileCollection<
 
     protected _$tileHeight: number;
 
-    protected _$imageProperty: string;
+    protected _$tileWidth: number;
+
+    protected _$tileWidthProperty: string;
 
     protected _$tileScalingMode: string;
 
@@ -53,7 +55,16 @@ export default class TileCollection<
 
     protected _$roundBorder: IRoundBorder;
 
+    protected _$imageProperty: string;
+
     protected _$imageFit: string;
+
+    protected _$imageHeightProperty: string;
+
+    protected _$imageWidthProperty: string;
+
+    // TODO указать нормальный тип функции с параметрами
+    protected _$imageUrlResolver: Function;
 
     protected _hoveredItem: T;
 
@@ -66,15 +77,35 @@ export default class TileCollection<
     }
 
     getTileWidth(): number {
-        return DEFAULT_TILE_WIDTH;
+        return this._$tileWidth;
+    }
+
+    getTileWidthProperty(): string {
+        return this._$tileWidthProperty;
+    }
+
+    getTileScalingMode(): string {
+        return this._$tileScalingMode;
     }
 
     getImageProperty(): string {
         return this._$imageProperty;
     }
 
-    getTileScalingMode(): string {
-        return this._$tileScalingMode;
+    getImageFit(): string {
+        return this._$imageFit;
+    }
+
+    getImageHeightProperty(): string {
+        return this._$imageHeightProperty;
+    }
+
+    getImageWidthProperty(): string {
+        return this._$imageWidthProperty;
+    }
+
+    getImageUrlResolver(): Function {
+        return this._$imageUrlResolver;
     }
 
     getCompressionCoefficient(): number {
@@ -85,9 +116,13 @@ export default class TileCollection<
         return 'visible';
     }
 
+    getRoundBorder(): IRoundBorder {
+        return this._$roundBorder;
+    }
+
     getZoomCoefficient(): number {
         if (this._$tileScalingMode !== 'none' && this._$tileScalingMode !== 'overlap') {
-            return DEFAULT_ZOOM_COEFF;
+            return DEFAULT_SCALE_COEFFICIENT;
         }
         return 1;
     }
@@ -245,11 +280,22 @@ export default class TileCollection<
         const parent = super._getItemsFactory();
 
         return function TileItemsFactory(options: IOptions<S>): T {
-            options.tileMode = this._$tileMode;
-            options.roundBorder = this._$roundBorder;
-            options.imageFit = this._$imageFit;
+            this._fillItemsFactoryOptions(options);
             return parent.call(this, options);
         };
+    }
+
+    protected _fillItemsFactoryOptions(options: IOptions<S>): void {
+        options.tileMode = this.getTileMode();
+        options.tileHeight = this.getTileHeight();
+        options.tileWidth = this.getTileWidth();
+        options.tileWidthProperty = this.getTileWidthProperty();
+        options.roundBorder = this.getRoundBorder();
+        options.imageProperty = this.getImageProperty();
+        options.imageFit = this.getImageFit();
+        options.imageHeightProperty = this.getImageHeightProperty();
+        options.imageWidthProperty = this.getImageWidthProperty();
+        options.imageUrlResolver = this.getImageUrlResolver();
     }
 }
 
@@ -260,10 +306,15 @@ Object.assign(TileCollection.prototype, {
     _itemModule: 'Controls/tileNew:TileCollectionItem',
     _$tileMode: 'static',
     _$tileHeight: DEFAULT_TILE_HEIGHT,
+    _$tileWidth: DEFAULT_TILE_WIDTH,
     _$imageProperty: '',
+    _$imageFit: 'none',
+    _$imageHeightProperty: '',
+    _$imageWidthProperty: '',
+    _$imageUrlResolver: null,
     _$tileScalingMode: 'none',
+    _$tileWidthProperty: '',
     _$itemsContainerPadding: null,
     _$roundBorder: null,
-    _$imageFit: 'none',
     _hoveredItem: null
 });

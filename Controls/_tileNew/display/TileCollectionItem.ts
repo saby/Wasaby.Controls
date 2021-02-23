@@ -1,11 +1,22 @@
 import { CollectionItem, ICollectionItemOptions } from 'Controls/display';
-import TileCollection, {IRoundBorder} from './TileCollection';
+import TileCollection, {DEFAULT_COMPRESSION_COEFF, DEFAULT_SCALE_COEFFICIENT, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, IRoundBorder} from './TileCollection';
 import {Model} from 'Types/entity';
+import { object } from 'Types/util';
+import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from '../utils/imageUtil';
+
+const DEFAULT_WIDTH_PROPORTION = 1;
 
 export interface IOptions<S extends Model = Model> extends ICollectionItemOptions<S> {
     tileMode: string;
+    tileHeight: number;
+    tileWidth: number;
+    tileWidthProperty: string;
     roundBorder: IRoundBorder;
+    imageProperty: string;
     imageFit: string;
+    imageHeightProperty: string;
+    imageWidthProperty: string;
+    imageUrlResolver: Function;
 }
 
 export default class TileCollectionItem<T extends Model = Model> extends CollectionItem<T> {
@@ -17,30 +28,80 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
     protected _$canShowActions: boolean;
 
+    protected _$tileScalingMode: string;
+
+    // TODO указать нормальный тип
     protected _$tileMode: string;
+
+    protected _$tileHeight: number;
+
+    protected _$tileWidth: number;
+
+    protected _$tileWidthProperty: string;
 
     protected _$roundBorder: IRoundBorder;
 
+    protected _$imageProperty: string;
+
+    // TODO указать нормальный тип
     protected _$imageFit: string;
 
-    getTileWidth(templateWidth?: number): number {
-        return templateWidth || this._$owner.getTileWidth();
-    }
+    protected _$imageHeightProperty: string;
 
-    getTileHeight(): number {
-        return this._$owner.getTileHeight();
-    }
+    protected _$imageWidthProperty: string;
+
+    // TODO указать нормальный тип функции с параметрами
+    protected _$imageUrlResolver: Function;
 
     getTileMode(): string {
         return this._$tileMode;
     }
 
+    getTileHeight(): number {
+        return this._$tileHeight || DEFAULT_TILE_HEIGHT;
+    }
+
+    getTileWidthProperty(): string {
+        return this._$tileWidthProperty;
+    }
+
+    getTileScalingMode(): string {
+        return this._$tileScalingMode;
+    }
+
+    getTileWidth(widthTpl?: number): number {
+        const imageHeight = this.getImageHeight();
+        const imageWidth = this.getImageWidth();
+        const itemWidth = object.getPropertyValue<number>(this.getContents(), this.getTileWidthProperty())
+            || this._$tileWidth || widthTpl || DEFAULT_TILE_WIDTH;
+        let widthProportion = DEFAULT_WIDTH_PROPORTION;
+
+        let resultWidth = null;
+        if (this.getTileMode() === 'dynamic') {
+            if (imageHeight && imageWidth) {
+                const imageProportion = imageWidth / imageHeight;
+                widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT,
+                    Math.max(imageProportion, this.getCompressionCoefficient()));
+            }
+            // TODO разобраться для чего это свойство нужно, в доке нет, демок нет
+            /* else if (this._options.tileFitProperty) {
+                return this._itemsHeight * (item.get(this._options.tileFitProperty) || DEFAULT_COMPRESSION_COEFF);
+            }*/
+        } else {
+            return itemWidth;
+        }
+        resultWidth = Math.floor(this.getTileHeight() * widthProportion);
+
+        return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
+    }
+
+    // TODO нужно адекватное название метода
     getDynamicPaddingTop(width?: number): string {
         return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width))} * 100%;`;
     }
 
     getCompressionCoefficient(): number {
-        return this._$owner.getCompressionCoefficient();
+        return DEFAULT_COMPRESSION_COEFF;
     }
 
     getShadowVisibility(templateShadowVisibility?: string): string {
@@ -48,7 +109,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     }
 
     isScaled(): boolean {
-        const scalingMode = this._$owner.getTileScalingMode();
+        const scalingMode = this.getTileScalingMode();
         return (
             (scalingMode !== 'none' || !!this.getDisplayProperty()) &&
             (this.isHovered() || this.isActive() || this.isSwiped())
@@ -119,27 +180,82 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     }
 
     isUnscaleable(): boolean {
-        return !this.getOwner().getTileScalingMode() || this.getOwner().getTileScalingMode() === 'none';
+        return !this.getTileScalingMode() || this.getTileScalingMode() === 'none';
     }
 
     // region Image
+
+    getImageProperty(): string {
+        return this._$imageProperty;
+    }
 
     getImageFit(): string {
         return this._$imageFit;
     }
 
-    getImageProperty(): string {
-        return this._$owner.getImageProperty();
+    getImageHeightProperty(): string {
+        return this._$imageHeightProperty;
     }
 
-    getImageHeight(): string {
-        const zoomCoeff = this.getOwner().getZoomCoefficient();
-        const height = this.isAnimated() &&  zoomCoeff ? zoomCoeff * this.getTileHeight() : this.getTileHeight();
+    getImageWidthProperty(): string {
+        return this._$imageWidthProperty;
+    }
+
+    getImageUrlResolver(): Function {
+        return this._$imageUrlResolver;
+    }
+
+    getImageHeight(): number {
+        return object.getPropertyValue<number>(this.getContents(), this.getImageHeightProperty());
+    }
+
+    getImageWidth(): number {
+        return object.getPropertyValue<number>(this.getContents(), this.getImageWidthProperty());
+    }
+
+    getImageUrl(widthTpl?: number): string {
+        const baseUrl = object.getPropertyValue<string>(this.getContents(), this.getImageProperty());
+        if (this.getImageFit() === 'cover') {
+            const imageSizes = getImageSize(
+                this.getTileWidth(widthTpl),
+                this.getTileHeight(),
+                this.getTileMode(),
+                this.getImageHeight(),
+                this.getImageWidth(),
+                this.getImageFit()
+            );
+            return getImageUrl(imageSizes.width, imageSizes.height, baseUrl, this.getContents(), this.getImageUrlResolver());
+        } else {
+            return baseUrl;
+        }
+    }
+
+    getImageClasses(widthTpl?: number): string {
+        const imageRestrictions = this.getImageFit() === 'cover'
+            ? getImageRestrictions(this.getImageHeight(), this.getImageWidth(), this.getTileHeight(), this.getTileWidth(widthTpl))
+            : {};
+        return getImageClasses(this.getImageFit(), imageRestrictions);
+    }
+
+    getImageWrapperClasses(templateHasTitle?: boolean, templateTitleStyle?: string): string {
+        const theme = `_theme-${this.getTheme()}`;
+        let classes = 'controls-TileView__imageWrapper';
+        if (this.isAnimated()) {
+            classes += ' controls-TileView__item_animated';
+        }
+        if ((templateTitleStyle === undefined && templateHasTitle) || templateTitleStyle === 'partial') {
+            classes += ` controls-TileView__imageWrapper_reduced${theme}`;
+        }
+
+        return classes;
+    }
+
+    getImageWrapperStyle(): string {
+        let height = this.getTileHeight();
+        if (this.isScaled() && this.isAnimated()) {
+            height *= this._$owner.getZoomCoefficient();
+        }
         return `height: ${height}px;`;
-    }
-
-    getImageClasses(): string {
-        const imageFi
     }
 
     // endregion Image
@@ -248,10 +364,10 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     // endregion Styles
 
     // region RoundBorder
-
     getTopLeftRoundBorder(): string {
         return this._$roundBorder?.tl || 'default';
     }
+
     getTopRightRoundBorder(): string {
         return this._$roundBorder?.tr || 'default';
     }
@@ -272,28 +388,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         classes += ` controls-TileView__item_roundBorder_bottomRight_${this.getBottomRightRoundBorder()}${theme}`;
         return classes;
     }
-
     // endregion RoundBorder
-
-    getImageWrapperClasses(templateHasTitle?: boolean, theme?: string): string {
-        const th = `_theme-${theme}`;
-        let classes = 'controls-TileView__imageWrapper';
-        if (this.isAnimated()) {
-            classes += ' controls-TileView__item_animated';
-        }
-        if (templateHasTitle) {
-            classes += ` controls-TileView__imageWrapper_reduced${th}`;
-        }
-        return classes;
-    }
-
-    getImageWrapperStyle(): string {
-        let height = this._$owner.getTileHeight();
-        if (this.isScaled() && this.isAnimated()) {
-            height *= this._$owner.getZoomCoefficient();
-        }
-        return `height: ${height}px;`;
-    }
 
     getTitleClasses(templateHasTitle?: boolean, theme?: string): string {
         let classes = `controls-TileView__title controls-TileView__title_theme-${theme}`;
@@ -331,6 +426,14 @@ Object.assign(TileCollectionItem.prototype, {
     _$animated: false,
     _$canShowActions: false,
     _$tileMode: 'static',
+    _$tileHeight: DEFAULT_TILE_HEIGHT,
+    _$tileWidth: DEFAULT_TILE_WIDTH,
+    _$tileWidthProperty: '',
+    _$tileScalingMode: 'none',
+    _$imageProperty: '',
     _$imageFit: 'none',
+    _$imageHeightProperty: '',
+    _$imageWidthProperty: '',
+    _$imageUrlResolver: null,
     _$roundBorder: null
 });
