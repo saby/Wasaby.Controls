@@ -27,6 +27,8 @@ function onCollectionChange<T>(
     }
     if (action === 'rs') {
         this.instance.updateColumns();
+    } else {
+        this.instance.updateColumnIndexesByItems();
     }
 }
 
@@ -154,6 +156,10 @@ export default class Collection<
         return this._$columnProperty;
     }
 
+    getIndexInColumnByIndex(index: number): number {
+        const column = this.at(index).getColumn();
+        return this._columnsIndexes[column].indexOf(index);
+    }
     //#region getItemToDirection
 
     private getItemToLeft(item: T): T {

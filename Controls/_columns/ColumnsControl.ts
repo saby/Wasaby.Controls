@@ -30,7 +30,6 @@ export default class ColumnsControl extends ListControl {
     private _columnsCount: number;
     private _columnsController: ColumnsController;
     private _markerController: MarkerController;
-    private _columnsIndexes: number[][];
     private _spacing: number = SPACING;
     protected _options: IColumnsControlOptions;
     protected _model: Collection<Model>;
@@ -65,23 +64,6 @@ export default class ColumnsControl extends ListControl {
         }
     }
 
-    private updateColumnIndexesByModel(): void {
-        this._columnsIndexes = new Array<number[]>(this._columnsCount);
-        for (let i = 0; i < this._columnsCount; i++) {
-            this._columnsIndexes[i] = [];
-        }
-        this._model.each( (item, index) => {
-            this._columnsIndexes[item.getColumn()].push(index as number);
-        });
-    }
-
-    private updateColumns(): void {
-        this._addingColumnsCounter = 0;
-        this._columnsIndexes = null;
-        this._model.each(this.setColumnOnItem.bind(this));
-        this.updateColumnIndexesByModel();
-    }
-
     protected _resizeHandler(): void {
         const itemsContainer = this._getItemsContainer();
         const currentWidth = itemsContainer.getBoundingClientRect().width;
@@ -114,7 +96,7 @@ export default class ColumnsControl extends ListControl {
                 this._changeMarkedKey(newMarkedItem.getContents().getKey());
                 const column = newMarkedItem.getColumn();
                 const curIndex = model.getIndex(newMarkedItem);
-                const columnIndex = this._columnsIndexes[column].indexOf(curIndex);
+                const columnIndex = model.getIndexInColumnByIndex(curIndex);
                 const itemsContainer = this._getItemsContainer();
                 const elem = itemsContainer.children[column].children[columnIndex + 1] as HTMLElement;
                 scrollToElement(elem, direction === 'Down');
