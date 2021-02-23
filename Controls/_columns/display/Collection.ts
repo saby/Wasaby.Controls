@@ -51,21 +51,37 @@ export default class Collection<
         this.updateColumns();
     }
 
-    protected _bindHandlers(): void {
-        super._bindHandlers();
-
-        this._onCollectionChange = onCollectionChange.bind({
-            instance: this,
-            prev: this._onCollectionChange
-        });
-    }
-
     setColumnsMode(columnsMode) {
         if (this._$columnsMode !== columnsMode) {
             this._columnsStrategy.setColumnsMode(columnsMode);
             this._$columnsMode = columnsMode;
             this.updateColumns();
             this._nextVersion();
+        }
+    }
+    
+    protected _notifyCollectionChange(
+        action: string,
+        newItems: T[],
+        newItemsIndex: number,
+        oldItems: T[],
+        oldItemsIndex: number
+    ): void {
+        super._notifyCollectionChange.apply(this, arguments);
+
+        if (action === 'a') {
+            newItems.forEach(this.setColumnOnItem.bind(this));
+            if (this._$columnsMode === 'auto' && newItems.length === 1) {
+                this._addingColumnsCounter++;
+            }
+        }
+        if (action === 'rm') {
+            this.processRemoving(oldItemsIndex, oldItems);
+        }
+        if (action === 'rs') {
+            this.updateColumns();
+        } else {
+            this.updateColumnIndexesByItems();
         }
     }
 
@@ -87,15 +103,17 @@ export default class Collection<
         });
     }
 
-    private setColumnOnItem(item: S, index: number): void {
-        const column = this._columnsStrategy.calcColumn(this, index + this._addingColumnsCounter, this._$columnsCount);
-        this.getItemBySourceItem(item).setColumn(column);
+    private setColumnOnItem(item: T, index: number): void {
+        if (!item.isDragged()) {
+            const column = this._columnsStrategy.calcColumn(this, index + this._addingColumnsCounter, this._$columnsCount);
+            item.setColumn(column);
+        }
     }
 
     private updateColumns(): void {
         this._addingColumnsCounter = 0;
         this._columnsIndexes = null;
-        this._$collection.each(this.setColumnOnItem.bind(this));
+        this.each(this.setColumnOnItem.bind(this));
         this.updateColumnIndexesByItems();
     }
 

@@ -1,11 +1,10 @@
 import { assert } from 'chai';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
-import Collection from 'Controls/_columns/display/Collection';
-import CollectionItem from 'Controls/_columns/display/CollectionItem';
+import {ColumnsCollection as Collection, ColumnsCollectionItem as CollectionItem} from 'Controls/columns';
 import ColumnsDrag from 'Controls/_columns/display/itemsStrategy/ColumnsDrag';
 
-describe('Controls/_display/Collection', () => {
+describe('Controls/columns/display/Drag/Collection/AvatarItemColumn', () => {
     let model;
     let items;
     let list;

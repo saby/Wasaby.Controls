@@ -7,7 +7,7 @@ import ColumnsController from 'Controls/_columns/controllers/ColumnsController';
 import {MarkerController} from 'Controls/marker';
 import {Model} from 'Types/entity';
 import CollectionItem from 'Controls/_columns/display/CollectionItem';
-import {scrollToElement} from 'Controls/_scroll/Utils/scrollToElement';
+import {scrollToElement} from 'Controls/scroll';
 import {CrudEntityKey} from 'Types/source';
 import {constants} from 'Env/Env';
 
@@ -28,7 +28,6 @@ export default class ColumnsControl extends ListControl {
     protected _template: TemplateFunction = ListControlTpl;
     private _keyDownHandler: Function;
     private _columnsCount: number;
-    private _columnsController: ColumnsController;
     private _markerController: MarkerController;
     private _spacing: number = SPACING;
     protected _options: IColumnsControlOptions;
