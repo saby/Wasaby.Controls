@@ -1,7 +1,7 @@
 import TileCollectionItem, { IOptions } from './TileCollectionItem';
 import {Model} from 'Types/entity';
 import { Collection, ItemsFactory } from 'Controls/display';
-import {object} from "Types/util";
+import {isEqual} from 'Types/object';
 
 export const DEFAULT_TILE_HEIGHT = 200;
 export const DEFAULT_TILE_WIDTH = 250;
@@ -72,48 +72,204 @@ export default class TileCollection<
         return this._$tileMode;
     }
 
+    setTileMode(tileMode: string): void {
+        if (this._$tileMode !== tileMode) {
+            this._$tileMode = tileMode;
+            this._updateItemsTileMode(tileMode);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsTileMode(tileMode: string): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setTileMode) {
+                item.setTileMode(tileMode);
+            }
+        });
+    }
+
     getTileHeight(): number {
         return this._$tileHeight;
+    }
+
+    setTileHeight(tileHeight: number): void {
+        if (this._$tileHeight !== tileHeight) {
+            this._$tileHeight = tileHeight;
+            this._updateItemsTileHeight(tileHeight);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsTileHeight(tileHeight: number): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setTileHeight) {
+                item.setTileHeight(tileHeight);
+            }
+        });
     }
 
     getTileWidth(): number {
         return this._$tileWidth;
     }
 
+    setTileWidth(tileWidth: number): void {
+        if (this._$tileWidth !== tileWidth) {
+            this._$tileWidth = tileWidth;
+            this._updateItemsTileWidth(tileWidth);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsTileWidth(tileWidth: number): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setTileWidth) {
+                item.setTileWidth(tileWidth);
+            }
+        });
+    }
+
     getTileWidthProperty(): string {
         return this._$tileWidthProperty;
+    }
+
+    setTileWidthProperty(tileWidthProperty: string): void {
+        if (this._$tileWidthProperty !== tileWidthProperty) {
+            this._$tileWidthProperty = tileWidthProperty;
+            this._updateItemsTileWidthProperty(tileWidthProperty);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsTileWidthProperty(tileWidthProperty: string): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setTileWidthProperty) {
+                item.setTileWidthProperty(tileWidthProperty);
+            }
+        });
     }
 
     getTileScalingMode(): string {
         return this._$tileScalingMode;
     }
 
+    setTileScalingMode(tileScalingMode: string): void {
+        if (this._$tileScalingMode !== tileScalingMode) {
+            this._$tileScalingMode = tileScalingMode;
+            this._updateItemsTileScalingMode(tileScalingMode);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsTileScalingMode(tileScalingMode: string): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setTileScalingMode) {
+                item.setTileScalingMode(tileScalingMode);
+            }
+        });
+    }
+
     getImageProperty(): string {
         return this._$imageProperty;
+    }
+
+    setImageProperty(imageProperty: string): void {
+        if (imageProperty !== this._$imageProperty) {
+            this._$imageProperty = imageProperty;
+            this._updateItemsImageProperty(imageProperty);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsImageProperty(imageProperty: string): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setImageProperty) {
+                item.setImageProperty(imageProperty);
+            }
+        });
     }
 
     getImageFit(): string {
         return this._$imageFit;
     }
 
+    setImageFit(imageFit: string): void {
+        if (imageFit !== this._$imageFit) {
+            this._$imageFit = imageFit;
+            this._updateItemsImageFit(imageFit);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsImageFit(imageFit: string): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setImageFit) {
+                item.setImageFit(imageFit);
+            }
+        });
+    }
+
     getImageHeightProperty(): string {
         return this._$imageHeightProperty;
+    }
+
+    setImageHeightProperty(imageHeightProperty: string): void {
+        if (imageHeightProperty !== this._$imageHeightProperty) {
+            this._$imageHeightProperty = imageHeightProperty;
+            this._updateItemsImageHeightProperty(imageHeightProperty);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsImageHeightProperty(imageHeightProperty: string): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setImageHeightProperty) {
+                item.setImageHeightProperty(imageHeightProperty);
+            }
+        });
     }
 
     getImageWidthProperty(): string {
         return this._$imageWidthProperty;
     }
 
+    setImageWidthProperty(imageWidthProperty: string): void {
+        if (imageWidthProperty !== this._$imageWidthProperty) {
+            this._$imageWidthProperty = imageWidthProperty;
+            this._updateItemsImageWidthProperty(imageWidthProperty);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsImageWidthProperty(imageWidthProperty: string): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setImageWidthProperty) {
+                item.setImageWidthProperty(imageWidthProperty);
+            }
+        });
+    }
+
     getImageUrlResolver(): Function {
         return this._$imageUrlResolver;
     }
 
-    getCompressionCoefficient(): number {
-        return DEFAULT_COMPRESSION_COEFF;
+    setImageUrlResolver(imageUrlResolver: Function): void {
+        if (imageUrlResolver !== this._$imageUrlResolver) {
+            this._$imageUrlResolver = imageUrlResolver;
+            this._updateItemsImageUrlResolver(imageUrlResolver);
+            this._nextVersion();
+        }
     }
 
-    getShadowVisibility(): string {
-        return 'visible';
+    private _updateItemsImageUrlResolver(imageUrlResolver: Function): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setImageUrlResolver) {
+                item.setImageUrlResolver(imageUrlResolver);
+            }
+        });
+    }
+
+    getCompressionCoefficient(): number {
+        return DEFAULT_COMPRESSION_COEFF;
     }
 
     getRoundBorder(): IRoundBorder {
@@ -201,6 +357,13 @@ export default class TileCollection<
         const bottom = targetItemPosition.bottom + documentRect.height - viewContainerRect.bottom;
 
         return this._createPositionInBounds(left, top, right, bottom);
+    }
+
+    setItemsContainerPadding(itemsContainerPadding: IItemPadding): void {
+        if (!isEqual(this._$itemsContainerPadding, itemsContainerPadding)) {
+            this._$itemsContainerPadding = itemsContainerPadding;
+            this._nextVersion();
+        }
     }
 
     getItemsContainerTopPadding(): string {

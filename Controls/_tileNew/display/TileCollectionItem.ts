@@ -1,5 +1,7 @@
 import { CollectionItem, ICollectionItemOptions } from 'Controls/display';
-import TileCollection, {DEFAULT_COMPRESSION_COEFF, DEFAULT_SCALE_COEFFICIENT, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, IRoundBorder} from './TileCollection';
+import TileCollection, {
+    DEFAULT_COMPRESSION_COEFF, DEFAULT_SCALE_COEFFICIENT, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, IRoundBorder
+} from './TileCollection';
 import {Model} from 'Types/entity';
 import { object } from 'Types/util';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from '../utils/imageUtil';
@@ -57,16 +59,44 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return this._$tileMode;
     }
 
+    setTileMode(tileMode: string): void {
+        if (this._$tileMode !== tileMode) {
+            this._$tileMode = tileMode;
+            this._nextVersion();
+        }
+    }
+
     getTileHeight(): number {
         return this._$tileHeight || DEFAULT_TILE_HEIGHT;
+    }
+
+    setTileHeight(tileHeight: number): void {
+        if (this._$tileHeight !== tileHeight) {
+            this._$tileHeight = tileHeight;
+            this._nextVersion();
+        }
     }
 
     getTileWidthProperty(): string {
         return this._$tileWidthProperty;
     }
 
+    setTileWidthProperty(tileWidthProperty: string): void {
+        if (this._$tileWidthProperty !== tileWidthProperty) {
+            this._$tileWidthProperty = tileWidthProperty;
+            this._nextVersion();
+        }
+    }
+
     getTileScalingMode(): string {
         return this._$tileScalingMode;
+    }
+
+    setTileScalingMode(tileScalingMode: string): void {
+        if (this._$tileScalingMode !== tileScalingMode) {
+            this._$tileScalingMode = tileScalingMode;
+            this._nextVersion();
+        }
     }
 
     getTileWidth(widthTpl?: number): number {
@@ -95,6 +125,13 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     }
 
+    setTileWidth(tileWidth: number): void {
+        if (this._$tileWidth !== tileWidth) {
+            this._$tileWidth = tileWidth;
+            this._nextVersion();
+        }
+    }
+
     // TODO нужно адекватное название метода
     getDynamicPaddingTop(width?: number): string {
         return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width))} * 100%;`;
@@ -105,7 +142,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     }
 
     getShadowVisibility(templateShadowVisibility?: string): string {
-        return templateShadowVisibility || this._$owner.getShadowVisibility();
+        return templateShadowVisibility || 'visible';
     }
 
     isScaled(): boolean {
@@ -133,7 +170,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
     setActive(active: boolean, silent?: boolean): void {
         // TODO This is copied from TileViewModel, but there must be a better
-        // place for it. For example, somewhere in ItemAcrions container
+        // place for it. For example, somewhere in ItemActions container
         if (!active && this.isActive() && this.isHovered()) {
             this._$owner.setHoveredItem(null);
         }
@@ -189,20 +226,55 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return this._$imageProperty;
     }
 
+    setImageProperty(imageProperty: string): void {
+        if (imageProperty !== this._$imageProperty) {
+            this._$imageProperty = imageProperty;
+            this._nextVersion();
+        }
+    }
+
     getImageFit(): string {
         return this._$imageFit;
+    }
+
+    setImageFit(imageFit: string): void {
+        if (imageFit !== this._$imageFit) {
+            this._$imageFit = imageFit;
+            this._nextVersion();
+        }
     }
 
     getImageHeightProperty(): string {
         return this._$imageHeightProperty;
     }
 
+    setImageHeightProperty(imageHeightProperty: string): void {
+        if (imageHeightProperty !== this._$imageHeightProperty) {
+            this._$imageHeightProperty = imageHeightProperty;
+            this._nextVersion();
+        }
+    }
+
     getImageWidthProperty(): string {
         return this._$imageWidthProperty;
     }
 
+    setImageWidthProperty(imageWidthProperty: string): void {
+        if (imageWidthProperty !== this._$imageWidthProperty) {
+            this._$imageWidthProperty = imageWidthProperty;
+            this._nextVersion();
+        }
+    }
+
     getImageUrlResolver(): Function {
         return this._$imageUrlResolver;
+    }
+
+    setImageUrlResolver(imageUrlResolver: Function): void {
+        if (imageUrlResolver !== this._$imageUrlResolver) {
+            this._$imageUrlResolver = imageUrlResolver;
+            this._nextVersion();
+        }
     }
 
     getImageHeight(): number {
