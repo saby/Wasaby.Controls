@@ -3,34 +3,6 @@ import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionIt
 import ColumnsDragStrategy from './itemsStrategy/ColumnsDrag';
 import { Model } from 'Types/entity';
 import ColumnsController from '../controllers/ColumnsController';
-import {Object as EventObject} from 'Env/Event';
-
-
-function onCollectionChange<T>(
-    event: EventObject,
-    action: string,
-    newItems: T[],
-    newItemsIndex: number,
-    oldItems: T[],
-    oldItemsIndex: number,
-    reason: string
-): void {
-    this.prev(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, reason);
-    if (action === 'a') {
-        newItems.forEach(this.instance.setColumnOnItem.bind(this.instance));
-        if (this.instance._$columnsMode === 'auto' && newItems.length === 1) {
-            this.instance._addingColumnsCounter++;
-        }
-    }
-    if (action === 'rm') {
-        this.instance.processRemoving(oldItemsIndex, oldItems);
-    }
-    if (action === 'rs') {
-        this.instance.updateColumns();
-    } else {
-        this.instance.updateColumnIndexesByItems();
-    }
-}
 
 export default class Collection<
     S extends Model = Model,
