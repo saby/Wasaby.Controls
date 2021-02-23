@@ -1661,7 +1661,6 @@ var
             current.getColspanForColumnScroll = () => _private.getColspanForColumnScroll(self);
             current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
             current.stickyColumnsCount = this._options.stickyColumnsCount;
-
             current.rowSeparatorSize = this._options.rowSeparatorSize;
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             if (current.hasMultiSelect) {
@@ -1893,7 +1892,8 @@ var
                         isSwiped: current.isSwiped,
                         getActions: current.getActions,
                         getContents: current.getContents,
-                        hasMultiSelectColumn: current.hasMultiSelectColumn
+                        hasMultiSelectColumn: current.hasMultiSelectColumn,
+                        task1181001881: self._options.task1181001881
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
 
