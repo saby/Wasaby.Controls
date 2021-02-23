@@ -2058,8 +2058,8 @@ define([
             expandedItems: [],
             markedKey: 4
          };
-         const treeControl = correctCreateTreeControl(cfg);
-         let newCfg = {...cfg};
+         const treeControl = await correctCreateTreeControlAsync(cfg);
+         let newCfg = {...treeControl._options};
          treeControl._notify = (event, args) => {
             if (event === 'expandedItemsChanged') {
                newCfg.expandedItems = args[0];

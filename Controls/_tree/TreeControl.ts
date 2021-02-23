@@ -345,7 +345,10 @@ const _private = {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
                         const dispItem = model.getItemBySourceKey(itemKey);
-                        if (dispItem && model.getChildren(dispItem, loadedList).length) {
+                        const hasChildren = self._options.useNewModel ?
+                            model.getChildren(dispItem, loadedList).getCount() :
+                            model.getChildren(itemKey, loadedList).length;
+                        if (dispItem && hasChildren) {
                             modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
                         }
                     }
