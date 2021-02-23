@@ -336,10 +336,10 @@ const _private = {
         const baseControl = self._children.baseControl;
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         const viewModel = baseControl && baseControl.getViewModel();
+        const sourceController = options.sourceController;
         const updateHasMoreStorage = (model) => {
             if (loadedList) {
-                const modelHasMoreStorage = viewModel.getHasMoreStorage();
-                const sourceController = baseControl.getSourceController();
+                const modelHasMoreStorage = model.getHasMoreStorage();
 
                 loadedList.each((item) => {
                     if (item.get(options.nodeProperty) !== null) {
@@ -373,7 +373,6 @@ const _private = {
                 viewModel.setRoot(root);
             }
             if (isDeepReload && modelExpandedItems.length && loadedList) {
-                const sourceController = baseControl.getSourceController();
                 const hasMore = {};
                 const expandedItems = _private.getExpandedItems(self, options, loadedList);
                 let hasMoreData: unknown;
