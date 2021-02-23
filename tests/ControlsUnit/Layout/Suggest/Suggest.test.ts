@@ -818,6 +818,22 @@ describe('Controls/suggest', () => {
             assert.isTrue(closeSpy.calledOnce);
          });
 
+         it('autoDropDown is False :: suggest should close', async () => {
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => false);
+            const closeSpy = sandbox.spy(inputContainer, '_close');
+
+            inputContainer._options.historyId = undefined;
+            inputContainer._options.autoDropDown = false;
+            inputContainer._getSourceController().setItems(new RecordSet({
+               rawData: [{id: 1}, {id: 2}],
+               keyProperty: 'id'
+            }));
+            await inputContainer._searchResetCallback();
+
+            assert.isFalse(setItemsSpy.called);
+            assert.isTrue(closeSpy.calledOnce);
+         });
+
          it('double called resetCallback should be caught on promise cancelled', async () => {
             sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => true);
 
