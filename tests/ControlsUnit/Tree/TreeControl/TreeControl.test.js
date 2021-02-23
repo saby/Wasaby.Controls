@@ -1835,7 +1835,9 @@ define([
          let isParentEventStopped = false;
 
          const treeControl = correctCreateTreeControl({ readOnly: true, keyProperty: 'id' });
-         const item = {};
+         const item = {
+            get: () => {}
+         };
          const nativeEvent = {};
          const event = {
             stopPropagation: () => {
