@@ -473,7 +473,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      * @private
      */
     protected _getField(): Field<String, IViewModelOptions> {
-        if (this._mounted) {
+        if (this._children.hasOwnProperty(this._fieldName)) {
             return this._children[this._fieldName] as Field<String, IViewModelOptions>;
         }
         return null;
