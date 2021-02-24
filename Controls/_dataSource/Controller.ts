@@ -182,10 +182,6 @@ export default class Controller {
         return this._items;
     }
 
-    setItemsAsQueryResult(items: RecordSet): void {
-        this._processQueryResult(items, this._root, undefined, undefined);
-    }
-
     getItems(): RecordSet {
         return this._items;
     }
