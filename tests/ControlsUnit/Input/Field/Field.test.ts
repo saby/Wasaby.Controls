@@ -97,20 +97,16 @@ describe('Controls/input:Field', () => {
             const field = ctrl._getField();
             field.selectionStart = 0;
             field.selectionEnd = 5;
-            model.selection = {
-                start: 0,
-                end: 7
-            };
             const isFieldFocusedOriginal = WorkWithSelection.isFieldFocused;
             WorkWithSelection.isFieldFocused = () => true;
+            ctrl._selectHandler();
+            ctrl.setSelectionRange(0, 7);
             ctrl._selectHandler();
 
             assert.deepEqual(model.selection, {
                 start: 0,
                 end: 7
             });
-
-            ctrl._beforeUpdate({model});
 
             assert.equal(field.selectionStart, 0);
             assert.equal(field.selectionEnd, 7);
