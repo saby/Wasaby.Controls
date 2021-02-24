@@ -608,7 +608,6 @@ const _private = {
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{
     _template: TreeControlTpl,
     _root: null,
-    _updatedRoot: false,
     _nodesSourceControllers: null,
     _needResetExpandedItems: false,
     _beforeReloadCallback: null,
