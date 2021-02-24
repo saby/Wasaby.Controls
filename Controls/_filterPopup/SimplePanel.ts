@@ -7,6 +7,7 @@ import {factory} from 'Types/chain';
 import {RecordSet} from 'Types/collection';
 import {isEqual} from 'Types/object';
 import {HistoryUtils, IFilterItem} from 'Controls/filter';
+import 'css!Controls/filterPopup';
 
 interface ISimplePanelOptions extends IControlOptions {
     itemTemplate: TemplateFunction;
@@ -169,8 +170,6 @@ class Panel extends Control<ISimplePanelOptions> {
         });
         return result;
     }
-
-    static _theme: string[] = ['Controls/filterPopup', 'Controls/dropdownPopup', 'Controls/menu'];
 
     static getDefaultOptions(): Partial<ISimplePanelOptions> {
         return {
