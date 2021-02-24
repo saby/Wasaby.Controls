@@ -1,6 +1,6 @@
 import { mixin } from 'Types/util';
 import { ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
-import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, ItemActionsCell } from 'Controls/gridNew';
+import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, GridItemActionsCell } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
@@ -15,6 +15,8 @@ export default class TreeGridDataRow<T extends Model>
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly DisplayItemActions: boolean = true;
+    readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly LadderSupport: boolean = true;
@@ -44,7 +46,7 @@ export default class TreeGridDataRow<T extends Model>
         super._initializeColumns();
 
         if (this._$columns && this.hasItemActionsSeparatedCell()) {
-            this._$columnItems.push(new ItemActionsCell({
+            this._$columnItems.push(new GridItemActionsCell({
                 owner: this,
                 isFixed: true,
                 column: {}
