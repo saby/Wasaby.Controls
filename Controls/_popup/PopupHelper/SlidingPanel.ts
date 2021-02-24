@@ -130,7 +130,8 @@ export default class SlidingPanel extends Base {
         const resultPopupOptions = {
             desktopMode: DEFAULT_DESKTOP_MODE,
             ...mergedConfig,
-            ...options
+            ...(options || {}),
+            slidingPanelOptions
         };
 
         /*
