@@ -1,0 +1,11 @@
+<div class="controlsDemo__wrapper">
+    <div class="controlsDemo__cell">
+        <Controls.buttons:Button
+                icon="commonIcons:icon-done"
+                iconSize="default"
+                iconStyle="danger"
+                viewMode="button"
+                caption="Button"
+        />
+    </div>
+</div>
