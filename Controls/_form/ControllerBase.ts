@@ -1,8 +1,14 @@
-import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
+import {Control, TemplateFunction} from 'UI/Base';
+import rk = require('i18n!Controls');
 import template = require('wml!Controls/_form/PrimaryAction/PrimaryAction');
 import {Model, Record} from 'Types/entity';
 import * as cInstance from 'Core/core-instance';
 import * as Deferred from "Core/Deferred";
+import {IControllerBaseOptions} from 'Controls/_form/interface/IControllerBaseOptions';
+import {IFormOperation} from 'Controls/interface';
+import {Confirmation} from 'Controls/popup';
+import {ControllerClass, IValidateResult} from 'Controls/validate';
+import {Logger} from 'UI/Utils';
 
 /**
  * Контроллер реализующий функциональность редактирования записи.
@@ -25,42 +31,207 @@ import * as Deferred from "Core/Deferred";
  *
  * @demo Controls-demo/Popup/Edit/Opener
  */
-export default class ControllerBase extends Control<IControlOptions> {
+export default class ControllerBase<T extends IControllerBaseOptions> extends Control<IControllerBaseOptions> {
     protected _template: TemplateFunction = template;
     private _pendingPromise: Promise<any>;
+    private _formOperationsStorage: IFormOperation[] = [];
     protected _record: Record;
+    private _validateController: ControllerClass = new ControllerClass();
+    private _isConfirmShowed: boolean = false;
 
-    protected _beforeMount(options?: IControlOptions): void {
-
+    protected _beforeMount(options?: T): void {
+        this._setRecord(options.record);
     }
 
     protected _afterMount(): void {
         this._createChangeRecordPending();
     }
 
-    protected _setRecord(record: Model): void {
+    protected _beforeUpdate(options?: T): void {
+        if (options.record && this._record !== options.record) {
+            const isEqualId = this._isEqualId(this._record, options.record);
+            if (isEqualId) {
+                this._setRecord(options.record);
+            } else {
+                this._confirmRecordChangeHandler(() => {
+                    this._setRecord(options.record);
+                });
+            }
+        }
+        this._setRecord(options.record);
+    }
+
+    private _isEqualId(oldRecord: Record, newRecord: Record): boolean {
+        // Пока не внедрили шаблон документа, нужно вручную на beforeUpdate понимать, что пытаются установить тот же
+        // рекорд (расширенный). Иначе при смене рекорда будем показывать вопрос о сохранении.
+        if (!this._checkRecordType(oldRecord) || !this._checkRecordType(newRecord)) {
+            return false;
+        }
+        const oldId: string = this._getRecordId(oldRecord) as string;
+        const newId: string = this._getRecordId(newRecord) as string;
+        return oldId === newId || parseInt(oldId, 10) === parseInt(newId, 10);
+    }
+
+    private _getRecordId(record?: Record | Model): number | string {
+        let checkedRecord = record;
+        if (!checkedRecord) {
+            checkedRecord = this._record;
+        }
+        if (!checkedRecord.getKey && !this._options.keyProperty) {
+            Logger.error('FormController: Рекорд не является моделью и не задана опция keyProperty, указывающая на ключевое поле рекорда', this);
+            return null;
+        }
+        return this._options.keyProperty ? checkedRecord.get(this._options.keyProperty) : checkedRecord.getKey();
+    }
+
+    protected _setRecord(record: Record): void {
         if (!record || this._checkRecordType(record)) {
             this._record = record;
         }
     }
 
-    private _checkRecordType(record: Model): boolean {
+    protected _checkRecordType(record: Record): boolean {
         return cInstance.instanceOfModule(record, 'Types/entity:Record');
     }
 
-    private _createChangeRecordPending(): void {
-        const self = this;
-        self._pendingPromise = new Deferred();
-        self._notify('registerPending', [self._pendingPromise, {
+    protected _createChangeRecordPending(): void {
+        this._pendingPromise = new Deferred();
+        this._notify('registerPending', [this._pendingPromise, {
             showLoadingIndicator: false,
-            validate(): boolean {
-                return self._needShowConfirmation();
+            validate: (): boolean => {
+                return this._needShowConfirmation();
             },
-            onPendingFail(forceFinishValue: boolean, deferred: Promise<boolean>): void {
-                self._startFormOperations('cancel').then(() => {
-                    self._showConfirmDialog(deferred, forceFinishValue);
+            onPendingFail: (forceFinishValue: boolean, deferred: Promise<boolean>): void => {
+                this._startFormOperations('cancel').then(() => {
+                    this._showConfirmDialog(deferred, forceFinishValue);
                 });
             }
         }], {bubbling: true});
+    }
+
+    protected _needShowConfirmation(): boolean {
+        if (this._options.confirmationShowingCallback) {
+            return this._options.confirmationShowingCallback();
+        } else {
+            return this._record && this._record.isChanged();
+        }
+    }
+
+    protected _startFormOperations(command: string): Promise<void> {
+        const resultPromises: Promise<void>[] = [];
+        this._formOperationsStorage = this._formOperationsStorage.filter((operation: IFormOperation) => {
+            if (operation.isDestroyed()) {
+                return false;
+            }
+            const result = operation[command]();
+            if (result instanceof Promise || result instanceof Deferred) {
+                resultPromises.push(result);
+            }
+            return true;
+        });
+
+        return Promise.all(resultPromises);
+    }
+
+    protected _showConfirmDialog(def: Promise<boolean>, forceFinishValue: boolean): void {
+        if (forceFinishValue !== undefined) {
+            this._confirmDialogResult(forceFinishValue, def);
+        } else {
+            this._showConfirmPopup(
+                'yesnocancel',
+                rk('Чтобы продолжить редактирование, нажмите \'Отмена\'')
+            ).then((answer) => {
+                this._confirmDialogResult(answer as boolean, def);
+                return answer;
+            });
+        }
+    }
+
+    protected _confirmDialogResult(answer: boolean, def: Promise<any>): void {
+        if (answer === true) {
+            this.update().then(
+                (res) => {
+                    if (!res.validationErrors) {
+                        // если нет ошибок в валидации, просто завершаем пендинг с результатом
+                        if (!def.isReady()) {
+                            this._pendingPromise = null;
+                            def.callback(res);
+                        }
+                    } else {
+                        /*
+                           если валидация не прошла, нам нужно оставить пендинг,
+                           но отменить ожидание завершения пендинга,чтобы оно не сработало, когда пендинг завершится.
+                           иначе попробуем закрыть панель,
+                           не получится, потом сохраним рекорд и панель закроется сама собой
+                         */
+                        this._notify('cancelFinishingPending', [], {bubbling: true});
+                    }
+                    return res;
+                },
+                () => {
+                    this._notify('cancelFinishingPending', [], {bubbling: true});
+                }
+            );
+        } else if (answer === false) {
+            if (!def.isReady()) {
+                this._pendingPromise = null;
+                def.callback(false);
+            }
+        } else {
+            // if user press 'cancel' button, then cancel finish pendings
+            this._notify('cancelFinishingPending', [], {bubbling: true});
+        }
+    }
+
+    protected _showConfirmPopup(type: string, details?: string): Promise<string | boolean> {
+        return Confirmation.openPopup({
+            message: rk('Сохранить изменения?'),
+            details,
+            type
+        });
+    }
+
+    protected _confirmRecordChangeHandler(defaultAnswerCallback: Function, negativeAnswerCallback?: Function): void {
+        if (this._isConfirmShowed) { // Защита от множ. вызова окна
+            return;
+        }
+        if (this._needShowConfirmation()) {
+            this._isConfirmShowed = true;
+            this._showConfirmPopup('yesno').then((answer) => {
+                if (answer === true) {
+                    this.update().then(() => {
+                        this._isConfirmShowed = false;
+                        defaultAnswerCallback();
+                    }, () => {
+                        // Промис с необработанным исключением кидает ошибку в консоль. Ставлю заглушку
+                    });
+                } else {
+                    this._isConfirmShowed = false;
+                    if (negativeAnswerCallback) {
+                        negativeAnswerCallback();
+                    } else {
+                        defaultAnswerCallback();
+                    }
+                }
+            });
+        } else {
+            return defaultAnswerCallback();
+        }
+    }
+
+    update(): Promise<undefined | Record> {
+        const updatePromise = this._startFormOperations('save').then(() => {
+            return this.validate().then(() => {
+                this._notify('updatesuccessed', [this._record]);
+            });
+        });
+        this._notify('registerPending', [updatePromise, { showLoadingIndicator: false }], { bubbling: true });
+        return updatePromise;
+    }
+
+    validate(): Promise<IValidateResult | Error> {
+        // Для чего нужен _forceUpdate см внутри метода deferSubmit
+        this._forceUpdate();
+        return this._validateController.deferSubmit();
     }
 }

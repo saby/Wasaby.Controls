@@ -1,6 +1,6 @@
 import rk = require('i18n!Controls');
 import tmpl = require('wml!Controls/_form/FormController/FormController');
-import { Control, IControlOptions, TemplateFunction } from 'UI/Base';
+import { TemplateFunction } from 'UI/Base';
 import * as cInstance from 'Core/core-instance';
 import { readWithAdditionalFields } from './crudProgression';
 import * as Deferred from 'Core/Deferred';
@@ -15,8 +15,10 @@ import { Confirmation } from 'Controls/popup';
 import { CRUD_EVENTS, default as CrudController } from 'Controls/_form/CrudController';
 import { DialogOpener } from 'Controls/error';
 import { Mode } from 'Controls/error';
+import ControllerBase from 'Controls/_form/ControllerBase';
+import {IControllerBaseOptions} from 'Controls/_form/interface/IControllerBaseOptions';
 
-interface IFormController extends IControlOptions {
+interface IFormController extends IControllerBaseOptions {
     readMetaData?: object;
     createMetaData?: object;
     destroyMetaData?: object;
@@ -114,7 +116,7 @@ export const enum INITIALIZING_WAY {
  * @author Красильников А.С.
  */
 
-class FormController extends Control<IFormController, IReceivedState> {
+class FormController extends ControllerBase<IFormController> {
     protected _template: TemplateFunction = tmpl;
     private _record: Model = null;
     private _isNewRecord: boolean = false;
@@ -173,7 +175,8 @@ class FormController extends Control<IFormController, IReceivedState> {
         }
     }
 
-    protected _afterMount(): void {
+    protected _afterMount(options: IFormController): void {
+        super._afterMount(options);
         this._isMount = true;
         // если рекорд был создан во время beforeMount, уведомим об этом
         if (this._createdInMounting) {
@@ -184,7 +187,6 @@ class FormController extends Control<IFormController, IReceivedState> {
         if (this._readInMounting) {
             this._readRecordBeforeMountNotify();
         }
-        this._createChangeRecordPending();
     }
 
     protected _beforeUpdate(newOptions: IFormController): void {
