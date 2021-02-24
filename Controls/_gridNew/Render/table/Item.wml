@@ -50,10 +50,10 @@
                         </ws:if>
 
                         <!-- Тэг -->
-                        <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(tagStyle) }}"
-                             class="{{ (gridColumn || itemData).getTagClasses(theme) }}">
-                            <ws:partial template="{{ tagTemplate }}"
-                                        tagStyle="{{ (gridColumn || itemData).getTagStyle(tagStyle) }}"
+                        <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(afterContentTemplate.tagStyle) }}"
+                             class="{{ (gridColumn || itemData).getTagClasses(afterContentTemplate.theme) }}">
+                            <ws:partial template="{{ afterContentTemplate.tagTemplate }}"
+                                        tagStyle="{{ (gridColumn || itemData).getTagStyle(afterContentTemplate.tagStyle) }}"
                                         dispItem="{{ (gridColumn || itemData).getOwner() }}"
                                         columnIndex="{{ (gridColumn || itemData).getColumnIndex() }}"/>
                         </div>

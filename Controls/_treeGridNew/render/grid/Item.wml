@@ -55,21 +55,21 @@
          </ws:if>
 
          <!-- Тэг -->
-         <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(tagStyle) }}"
-              class="{{ (gridColumn || itemData).getTagClasses(theme) }}">
-            <ws:partial template="{{ tagTemplate }}"
-                        tagStyle="{{ (gridColumn || itemData).getTagStyle(tagStyle) }}"
+         <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(afterContentTemplate.tagStyle) }}"
+              class="{{ (gridColumn || itemData).getTagClasses(afterContentTemplate.theme) }}">
+            <ws:partial template="{{ afterContentTemplate.tagTemplate }}"
+                        tagStyle="{{ (gridColumn || itemData).getTagStyle(afterContentTemplate.tagStyle) }}"
                         dispItem="{{ (gridColumn || itemData).getOwner() }}"
                         columnIndex="{{ (gridColumn || itemData).getColumnIndex() }}"/>
          </div>
 
          <!-- Экспандер -->
-         <ws:if data="{{ item.shouldDisplayExpanderBlock(gridColumn) && item.shouldDisplayExpander(expanderIcon, 'right') }}">
-            <ws:partial template="{{item.getExpanderTemplate(expanderTemplate)}}"
+         <ws:if data="{{ item.shouldDisplayExpanderBlock(gridColumn) && item.shouldDisplayExpander(afterContentTemplate.expanderIcon, 'right') }}">
+            <ws:partial template="{{item.getExpanderTemplate(afterContentTemplate.expanderTemplate)}}"
                         itemData="{{item}}"
                         item="{{item}}"
-                        expanderIcon="{{item.getExpanderIcon(expanderIcon)}}"
-                        expanderSize="{{item.getExpanderSize(expanderSize)}}"/>
+                        expanderIcon="{{item.getExpanderIcon(afterContentTemplate.expanderIcon)}}"
+                        expanderSize="{{item.getExpanderSize(afterContentTemplate.expanderSize)}}"/>
          </ws:if>
       </ws:afterContentTemplate>
    </ws:partial>

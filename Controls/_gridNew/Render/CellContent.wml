@@ -46,5 +46,13 @@
         </ws:else>
     </ws:else>
 
-    <ws:partial if="{{ afterContentTemplate }}" template="{{ afterContentTemplate }}"/>
+    <ws:partial if="{{ afterContentTemplate }}"
+                template="{{ afterContentTemplate }}"
+                theme="{{ theme }}"
+                tagTemplate="{{ tagTemplate }}"
+                tagStyle="{{ tagStyle }}"
+                editArrowTemplate="{{ editArrowTemplate }}"
+                expanderTemplate="{{ expanderTemplate }}"
+                expanderIcon="{{ expanderIcon }}"
+                expanderSize="{{ expanderSize }}"/>
 </div>
