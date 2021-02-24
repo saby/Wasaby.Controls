@@ -74,7 +74,7 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
         }
     }
 
-    private _calculateFontState(options: IDateOptions): string {
+    private _calculateFontColorStyle(options: IDateOptions): string {
         return options.readOnly ? 'readonly' : options.fontColorStyle;
     }
 
