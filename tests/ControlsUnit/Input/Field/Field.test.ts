@@ -95,8 +95,18 @@ describe('Controls/input:Field', () => {
             ctrl._beforeMount({model});
 
             const field = ctrl._getField();
+            const target = {
+                selectionStart: model.value.length,
+                selectionEnd: model.value.length
+            };
             const isFieldFocusedOriginal = WorkWithSelection.isFieldFocused;
             WorkWithSelection.isFieldFocused = () => true;
+            ctrl._focusHandler({
+                target,
+                nativeEvent: {
+                    target
+                }
+            });
             // Отстрельнуло после фокуса
             ctrl._selectHandler();
             ctrl.setSelectionRange(0, 7);
