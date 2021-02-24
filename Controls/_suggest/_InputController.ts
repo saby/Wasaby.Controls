@@ -865,6 +865,8 @@ export default class InputContainer extends Control<IInputControllerOptions> {
                      }).finally(() => resolve());
                   }
                });
+            } else if (this._showContent) {
+               this._close();
             }
          }
       });
