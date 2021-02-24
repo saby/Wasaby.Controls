@@ -2,7 +2,7 @@ import { ListView } from 'Controls/list';
 import { TemplateFunction } from 'UI/Base';
 import { TouchContextField as isTouch } from 'Controls/context';
 import { Logger} from 'UI/Utils';
-import { GridCollection, GridRow, GridLadderUtil, GridLayoutUtil } from 'Controls/display';
+import { GridCollection, GridRow, GridLadderUtil, GridLayoutUtil, isFullGridSupport } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
 import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
@@ -32,7 +32,7 @@ const GridView = ListView.extend({
     _beforeMount(options): void {
         let result = GridView.superclass._beforeMount.apply(this, arguments);
 
-        if (options.columnScroll && options.columnScrollStartPosition === 'end' && options.isFullGridSupport) {
+        if (options.columnScroll && options.columnScrollStartPosition === 'end' && isFullGridSupport()) {
             // В таблице с горизонтальным скроллом изначально прокрученным в конец используется фейковая таблица.
             // Т.к. для отрисовки горизонтального скролла требуется знать размеры таблицы, инициализация горизонтального скролла
             // происходит на afterMount, который не вызывается на сервере. Чтобы измежать скачка, при оживлении таблицы с
@@ -160,7 +160,7 @@ const GridView = ListView.extend({
             columnsWidths = ['max-content'].concat(columnsWidths);
         }
 
-        if (options.isFullGridSupport && !!options.columnScroll && options.itemActionsPosition !== 'custom') {
+        if (isFullGridSupport() && !!options.columnScroll && options.itemActionsPosition !== 'custom') {
             columnsWidths.push('0px');
         }
 
