@@ -160,7 +160,6 @@ export interface ISlider {
  * @cfg {string} Определяет расположения подсказки.
  * @variant top Подсказка расположена сверху.
  * @variant bottom Подсказка расположена снизу.
- * @demo Controls-demo/Slider/Base/TooltipPosition/Index
  * @example
  * <pre class="brush:html">
  *   <Controls.slider:Base tooltipPosition="bottom" maxValue="{{100}}" minValue="{{0}}" bind:value="_value"/>
