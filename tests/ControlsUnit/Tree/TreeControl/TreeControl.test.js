@@ -2211,5 +2211,28 @@ define([
          treeControl.saveOptions(newCfg);
          assert.equal(treeControl._markedLeaf, 'last');
       });
+
+      it('set expanded items after reload if changed root', () => {
+         const source = new sourceLib.Memory({
+            rawData: getHierarchyData(),
+            keyProperty: 'id',
+            filter: () => true
+         });
+
+         const cfg = {
+            source: source,
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+            markerMoveMode: 'leaves',
+            expandedItems: [],
+            markedKey: 4
+         };
+         const treeControl = correctCreateTreeControl(cfg);
+
+         treeControl._beforeUpdate({ ...cfg, root: 1, expandedItems: [1] });
+         assert.isTrue(treeControl._updateExpandedItemsAfterReload);
+      });
    });
 });

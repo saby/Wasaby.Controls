@@ -732,8 +732,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
 
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems()) && newOptions.source) {
-            if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
-                (searchValueChanged && newOptions.sourceController)) {
+            // Если обновился корень, то expandedItems нужно применить после релоада. Иначе из-за нового expandedItems
+            // может вызваться загрузка данных по скроллу, которая прервет загрузку по смене узла, и в TreeControl не отработает колбэк загрузки данных
+            if (((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
+                (searchValueChanged && newOptions.sourceController)) && !this._updatedRoot) {
                 viewModel.setExpandedItems(newOptions.expandedItems);
             } else {
                 this._updateExpandedItemsAfterReload = true;
