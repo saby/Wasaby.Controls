@@ -4939,9 +4939,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
-        if (this._itemActionIsClicked) {
+        if (this._itemActionClickItemKey === item.getKey()) {
             // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
-            this._itemActionIsClicked = false;
+            this._itemActionClickItemKey = null;
             e.stopPropagation();
             return;
         }
@@ -5527,8 +5527,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
+        this._itemActionClickItemKey = null;
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
-            this._itemActionIsClicked = true;
+            this._itemActionClickItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
             event.stopPropagation();
             return;
         }
