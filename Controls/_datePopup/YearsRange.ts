@@ -30,8 +30,10 @@ var Component = BaseControl.extend({
 
     _beforeMount: function (options) {
         this._year = options.year ? options.year.getFullYear() : (new Date()).getFullYear();
-
-        if (dateUtils.isValidDate(options.endValue)) {
+        if (dateUtils.isValidDate(options.endValue) && dateUtils.isValidDate(options.startValue) &&
+            options.startValue.getFullYear() === options.endValue.getFullYear()) {
+            this._lastYear = Math.max(this._year, options.endValue.getFullYear()) + 1;
+        } else if (dateUtils.isValidDate(options.endValue)) {
             this._lastYear = Math.max(this._year, options.endValue.getFullYear());
             if (this._lastYear - this._year >= BUTTONS_COUNT) {
                 this._lastYear = this._year + BUTTONS_COUNT - 1;
