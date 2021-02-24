@@ -1,24 +1,24 @@
 import {Control} from 'UI/Base';
+import {isEqual} from 'Types/object';
+import {RecordSet} from 'Types/collection';
+import {Model} from 'Types/entity';
+
+import {saveConfig} from 'Controls/Application/SettingsController';
+import {EventUtils} from 'UI/Events';
+import {MouseButtons, MouseUp} from 'Controls/popup';
+import {error as dataSourceError, NewSourceController} from 'Controls/dataSource';
+import {selectionToRecord} from 'Controls/operations';
+import {Collection, Tree, TreeItem} from 'Controls/display';
+import {ISelectionObject, TKey} from 'Controls/interface';
+import {CrudEntityKey, DataSet, LOCAL_MOVE_POSITION} from 'Types/source';
+import {SyntheticEvent} from 'UI/Vdom';
+import {constants} from 'Env/Env';
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
-import { isEqual } from 'Types/object';
-import {RecordSet} from 'Types/collection';
-import { Model } from 'Types/entity';
-
-import { saveConfig } from 'Controls/Application/SettingsController';
-import {EventUtils} from 'UI/Events';
-import { MouseButtons, MouseUp } from 'Controls/popup';
-import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
-import {selectionToRecord} from 'Controls/operations';
-import { Collection, Tree, TreeItem } from 'Controls/display';
 
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
-import {ISelectionObject, TKey} from 'Controls/interface';
-import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
-import { SyntheticEvent } from 'UI/Vdom';
-import {constants} from 'Env/Env';
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,
@@ -1166,11 +1166,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         const expandResult = this.toggleExpanded(this._tempItem, model);
                         if (expandResult instanceof Promise) {
                             expandResult.then(() => {
-                                this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
                                 resolve();
                             });
                         } else {
-                            this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
                             resolve();
                         }
                     }
