@@ -59,5 +59,9 @@ export default abstract class GroupCell<T> {
         return '';
     }
 
+    protected _getBaselineClasses(theme: string): string {
+        return '';
+    }
+
     abstract isExpanded(): boolean;
 }

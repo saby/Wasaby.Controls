@@ -248,7 +248,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
         let contentClasses = 'controls-Grid__row-cell__content';
 
-        contentClasses += ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
+        contentClasses += this._getBaselineClasses(theme);
         contentClasses += ` controls-Grid__row-cell_cursor-${cursor}`;
 
         contentClasses += this._getHorizontalPaddingClasses(theme);
@@ -308,6 +308,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     setRowSeparatorSize(rowSeparatorSize: string): void {
         this._$rowSeparatorSize = rowSeparatorSize;
         this._nextVersion();
+    }
+
+    protected _getBaselineClasses(theme: string): string {
+        return ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
     }
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {

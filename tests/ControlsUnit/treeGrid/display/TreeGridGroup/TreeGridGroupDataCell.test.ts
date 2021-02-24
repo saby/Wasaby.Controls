@@ -1,5 +1,3 @@
-import {assert} from 'chai';
-import {Model} from 'Types/entity';
 import {TreeGridGroupDataRow, TreeGridGroupDataCell} from 'Controls/treeGridNew';
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 
@@ -31,11 +29,15 @@ describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataCell', () => 
     it('getContentClasses should return group cell content classes', () => {
         CssClassesAssert.include(groupCell.getContentClasses('default'), [
             'controls-Grid__row-cell__content',
-            'controls-Grid__row-cell__content_baseline_default_theme-default',
             'controls-Grid__row-cell_cursor-pointer',
             'controls-Grid__cell_spacingRight_theme-default',
             'controls-TreeGrid__row-cell__firstColumn__contentSpacing_null',
             'controls-ListView__groupContent']);
+    });
+
+    it('getContentClasses should not include default baseline class', () => {
+        CssClassesAssert.notInclude(groupCell.getContentClasses('default'),
+            'controls-Grid__row-cell__content_baseline_default_theme-default');
     });
 
     it('getWrapperClasses should return group cell wrapper classes', () => {
