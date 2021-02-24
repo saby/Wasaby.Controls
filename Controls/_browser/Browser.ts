@@ -210,7 +210,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             }, true);
         }
     }
-        
+
     protected _createNewStoreObservers(): string[] {
         const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
                 this._filterItemsChanged(null, filterSource);
@@ -775,6 +775,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             })
             .finally(() => {
                 this._loading = false;
+                this._afterSourceLoad(sourceController, options);
             })
             .then((result) => {
                 return this._updateSearchController(options).then(() => result);
