@@ -154,7 +154,7 @@ class NumberDecorator extends Control<INumberOptions> {
             }
         }
 
-        if (abbreviationType) {
+        if (abbreviationType && abbreviationType !== 'none') {
             return abbreviateNumber(strNumber, abbreviationType);
         }
 
