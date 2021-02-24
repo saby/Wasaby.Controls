@@ -7709,6 +7709,19 @@ define([
             assert.isNotNull(baseControl._dndListController.getDragEntity());
          });
 
+         it('_documentDragStart', () => {
+            baseControl._insideDragging = true;
+
+            baseControl.saveOptions({...cfg, itemsDragNDrop: false});
+            baseControl._documentDragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) });
+            assert.isNull(baseControl._dndListController);
+
+            baseControl.saveOptions({...cfg, itemsDragNDrop: true});
+            baseControl._documentDragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) });
+            assert.isNotNull(baseControl._dndListController);
+            assert.isNotNull(baseControl._dndListController.getDragEntity());
+         });
+
          it('drag leave', () => {
             const newPos = {};
             baseControl._dndListController = {
