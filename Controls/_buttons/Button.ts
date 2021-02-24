@@ -1,5 +1,4 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
-import ActualApi from './ActualApi';
 import {IButton, IButtonOptions} from './interface/IButton';
 import {IClick} from './interface/IClick';
 import {
@@ -75,9 +74,10 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
         }
     }
     if (this._viewMode === 'linkButton') {
-        const actualState = ActualApi.actualLinkButton(this._viewMode, this._height);
-        this._viewMode = actualState.viewMode;
-        this._height = actualState.height;
+        this._viewMode = 'link';
+        if (!this._height) {
+            this._height = 'default';
+        }
     }
 }
 
