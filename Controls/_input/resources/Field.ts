@@ -311,7 +311,16 @@ class Field<Value, ModelOptions>
             value: newValue,
             carriagePosition: position
         };
-        const nativeInputType = event.nativeEvent.inputType;
+        let nativeInputType = event.nativeEvent.inputType;
+        /**
+         * В событиях браузера есть баг, связаный с inputType.
+         * Он возвращает не корректное значение если ввести текст, и после нажать del.
+         * На del должно приходить deleteContentForward, но приходит insertText.
+         * https://online.sbis.ru/opendoc.html?guid=6a69f94b-3e61-49bf-a6c7-6c856c7e935c
+         */
+        if (nativeInputType === 'insertText' && event.nativeEvent.data === null) {
+            nativeInputType = 'deleteContentForward';
+        }
         const inputType: InputType = calculateInputType(value, selection, text, nativeInputType);
         const splitValue: ISplitValue = split(value, newValue, position, selection, inputType);
 
