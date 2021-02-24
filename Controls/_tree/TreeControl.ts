@@ -345,11 +345,15 @@ const _private = {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
                         const dispItem = model.getItemBySourceKey(itemKey);
-                        const hasChildren = self._options.useNewModel ?
-                            model.getChildren(dispItem, loadedList).getCount() :
-                            model.getChildren(itemKey, loadedList).length;
-                        if (dispItem && hasChildren) {
-                            modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
+
+                        if (dispItem) {
+                            const hasChildren = self._options.useNewModel ?
+                                model.getChildren(dispItem).getCount() :
+                                model.getChildren(itemKey, loadedList).length;
+
+                            if (hasChildren) {
+                                modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
+                            }
                         }
                     }
                 });
