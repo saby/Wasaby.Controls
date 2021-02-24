@@ -5,6 +5,8 @@ import * as Deferred from 'Core/Deferred';
 import buttonsTemplate from 'Controls/_editableArea/Templates/Buttons';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import 'css!Controls/CommonClasses';
+import 'css!Controls/editableArea';
 
 'use strict';
 /**
@@ -188,7 +190,7 @@ export default class View extends Control<IViewControlOptions> {
       this._editObject = this._options.editObject;
    }
 
-   static _theme: string[] = ['Controls/list', 'Controls/editableArea', 'Controls/Classes'];
+   static _theme: string[] = ['Controls/list'];
 
    static getDefaultOptions(): IViewControlOptions {
       return {
