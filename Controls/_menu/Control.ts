@@ -511,7 +511,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _startClosingTimout(): void {
         // window для соотвествия типов
-        this._closingTimer = window.setTimeout(this._closeSubMenu.bind(this), SUB_DROPDOWN_DELAY);
+        this._closingTimer = setTimeout(this._closeSubMenu.bind(this), SUB_DROPDOWN_DELAY);
     }
 
     private _clearOpeningTimout(): void {
@@ -528,7 +528,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     private _startOpeningTimeout(): void {
         this._clearOpeningTimout();
-        this._openingTimer = window.setTimeout((): void => {
+        this._openingTimer = setTimeout((): void => {
             this._handleItemTimeoutCallback();
         }, SUB_DROPDOWN_DELAY);
     }
