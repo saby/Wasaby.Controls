@@ -16,10 +16,7 @@
                 highlightOnHover="{{ highlightOnHover }}"
                 itemActionsTemplate="{{ itemActionsTemplate }}"
                 itemActionsClass="{{ itemActionsClass }}"
-                templateHighlightOnHover="{{ templateHighlightOnHover }}"
-                tagTemplate="{{ gridColumn.TagCell ? tagTemplate }}"
-                tagStyle="{{ gridColumn.TagCell ? tagStyle }}"
-                editArrowTemplate="{{ editArrowTemplate }}">
+                templateHighlightOnHover="{{ templateHighlightOnHover }}">
         <ws:ladderWrapper>
             <ws:partial template="{{ladderWrapper.content}}"
                         if="{{ gridColumn.LadderContentCell && (item || itemData).shouldDrawLadderContent(ladderWrapper.ladderProperty, ladderWrapper.stickyProperty) }}"
@@ -32,6 +29,21 @@
                 <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
             </ws:partial>
         </ws:multiSelectTemplate>
+        <ws:afterContentTemplate>
+            <!-- Стрелка редактирования. Если шаблон прикладной, то не показываем -->
+            <ws:if data="{{ !contentTemplate && (gridColumn || itemData).shouldDisplayEditArrow() }}">
+                <ws:partial template="{{ editArrowTemplate }}" item="{{ (gridColumn || itemData).getOwner() }}"/>
+            </ws:if>
+
+            <!-- Тэг -->
+            <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(tagStyle) }}"
+                 class="{{ (gridColumn || itemData).getTagClasses(theme) }}">
+                <ws:partial template="{{ tagTemplate }}"
+                            tagStyle="{{ (gridColumn || itemData).getTagStyle(tagStyle) }}"
+                            dispItem="{{ (gridColumn || itemData).getOwner() }}"
+                            columnIndex="{{ (gridColumn || itemData).getColumnIndex() }}"/>
+            </div>
+        </ws:afterContentTemplate>
     </ws:partial>
 
     <ws:if data="{{ gridColumn.ItemActionsCell && gridColumn.shouldDisplayItemActions() }}">

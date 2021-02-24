@@ -46,17 +46,5 @@
         </ws:else>
     </ws:else>
 
-    <!-- Стрелка редактирования. Если шаблон прикладной, то не показываем -->
-    <ws:if data="{{ !contentTemplate && (gridColumn || itemData).shouldDisplayEditArrow() }}">
-        <ws:partial template="{{ editArrowTemplate }}" item="{{ (gridColumn || itemData).getOwner() }}"/>
-    </ws:if>
-
-    <!-- Тэг -->
-    <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(tagStyle) }}"
-         class="{{ (gridColumn || itemData).getTagClasses(theme) }}">
-        <ws:partial template="{{ tagTemplate }}"
-                    tagStyle="{{ (gridColumn || itemData).getTagStyle(tagStyle) }}"
-                    dispItem="{{ (gridColumn || itemData).getOwner() }}"
-                    columnIndex="{{ (gridColumn || itemData).getColumnIndex() }}"/>
-    </div>
+    <ws:partial if="{{ afterContentTemplate }}" template="{{ afterContentTemplate }}"/>
 </div>
