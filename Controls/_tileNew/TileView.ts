@@ -4,6 +4,7 @@ import defaultItemTpl = require('wml!Controls/_tileNew/render/TileTpl');
 import {TouchContextField} from 'Controls/context';
 import { TILE_SCALING_MODE, ZOOM_COEFFICIENT, ZOOM_DELAY } from './utils/Constants';
 import ItemSizeUtils = require('./utils/ItemSizeUtils');
+import {isEqual} from 'Types/object';
 
 var _private = {
     getPositionInContainer: function (itemNewSize, itemRect, containerRect, zoomCoefficient, withoutCorrection = false) {
@@ -171,6 +172,9 @@ var TileView = ListView.extend({
         }
         if (this._options.tileHeight !== newOptions.tileHeight) {
             this._listModel.setItemsHeight(newOptions.tileHeight);
+        }
+        if (!isEqual(this._options.roundBorder, newOptions.roundBorder)) {
+            this._listModel.setRoundBorder(newOptions.roundBorder);
         }
         TileView.superclass._beforeUpdate.apply(this, arguments);
     },
