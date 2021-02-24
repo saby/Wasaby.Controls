@@ -1,17 +1,19 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import rk = require('i18n!Controls');
-import template = require('wml!Controls/_form/PrimaryAction/PrimaryAction');
+import template = require('wml!Controls/_form/ControllerBase/ControllerBase');
 import {Model, Record} from 'Types/entity';
 import * as cInstance from 'Core/core-instance';
-import * as Deferred from "Core/Deferred";
-import {IControllerBaseOptions} from 'Controls/_form/interface/IControllerBaseOptions';
+import * as Deferred from 'Core/Deferred';
+import {IControllerBase} from 'Controls/_form/interface/IControllerBase';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
-import {ControllerClass, IValidateResult} from 'Controls/validate';
+import {Container as ValidateContainer, ControllerClass, IValidateResult} from 'Controls/validate';
 import {Logger} from 'UI/Utils';
 
 /**
- * Контроллер реализующий функциональность редактирования записи.
+ * Контроллер реализующий базовую функциональность редактирования записи.
+ * Следует использовать, если вы хотите редактировать запись без CRUD-источника.
+ * Если вам требуется работа с CRUD - используйте {@link Controls/form:Controller}.
  * @remark
  * Для того, чтобы дочерние контролы могли отреагировать на начало сохранения, либо уничтожения контрола, им необходимо зарегистрировать соответствующие обработчики.
  * Обработчики регистрируются через событие registerFormOperation, в аргументах которого ожидается объект с полями
@@ -23,21 +25,19 @@ import {Logger} from 'UI/Utils';
  *
  * @class Controls/_form/ControllerBase
  * @extends UI/Base:Control
- * @mixes Controls/_interface/ISource
- * @mixes Controls/_form/interface/IFormController
- * @implements Controls/_interface/IErrorController
+ * @mixes Controls/_form/interface/IControllerBase
  * @public
  * @author Красильников А.С.
  *
- * @demo Controls-demo/Popup/Edit/Opener
+ * @demo Controls-demo/FormController/ControllerBase/Index
  */
-export default class ControllerBase<T extends IControllerBaseOptions> extends Control<IControllerBaseOptions> {
+export default class ControllerBase<T extends IControllerBase> extends Control<T> {
     protected _template: TemplateFunction = template;
     private _pendingPromise: Promise<any>;
     private _formOperationsStorage: IFormOperation[] = [];
     protected _record: Record;
-    private _validateController: ControllerClass = new ControllerClass();
-    private _isConfirmShowed: boolean = false;
+    protected _validateController: ControllerClass = new ControllerClass();
+    protected _isConfirmShowed: boolean = false;
 
     protected _beforeMount(options?: T): void {
         this._setRecord(options.record);
@@ -61,7 +61,24 @@ export default class ControllerBase<T extends IControllerBaseOptions> extends Co
         this._setRecord(options.record);
     }
 
-    private _isEqualId(oldRecord: Record, newRecord: Record): boolean {
+    protected _afterUpdate(): void {
+        this._validateController.resolveSubmit();
+    }
+
+    protected _beforeUnmount(): void {
+        if (this._pendingPromise) {
+            this._pendingPromise.callback();
+            this._pendingPromise = null;
+        }
+        this._validateController.destroy();
+        this._validateController = null;
+    }
+
+    protected _registerFormOperationHandler(event: Event, operation: IFormOperation): void {
+        this._formOperationsStorage.push(operation);
+    }
+
+    protected _isEqualId(oldRecord: Record, newRecord: Record): boolean {
         // Пока не внедрили шаблон документа, нужно вручную на beforeUpdate понимать, что пытаются установить тот же
         // рекорд (расширенный). Иначе при смене рекорда будем показывать вопрос о сохранении.
         if (!this._checkRecordType(oldRecord) || !this._checkRecordType(newRecord)) {
@@ -72,7 +89,7 @@ export default class ControllerBase<T extends IControllerBaseOptions> extends Co
         return oldId === newId || parseInt(oldId, 10) === parseInt(newId, 10);
     }
 
-    private _getRecordId(record?: Record | Model): number | string {
+    protected _getRecordId(record?: Record | Model): number | string {
         let checkedRecord = record;
         if (!checkedRecord) {
             checkedRecord = this._record;
@@ -94,6 +111,10 @@ export default class ControllerBase<T extends IControllerBaseOptions> extends Co
         return cInstance.instanceOfModule(record, 'Types/entity:Record');
     }
 
+    /**
+     * Регистрируем пендинг для показа диалога о сохранении при попытке закрыть диалог с измененной записью
+     * @protected
+     */
     protected _createChangeRecordPending(): void {
         this._pendingPromise = new Deferred();
         this._notify('registerPending', [this._pendingPromise, {
@@ -117,6 +138,12 @@ export default class ControllerBase<T extends IControllerBaseOptions> extends Co
         }
     }
 
+    /**
+     * Запуск formOperation.
+     * Запускаются соответствующие обработчики всех зарегистрированных операций.
+     * @param command
+     * @protected
+     */
     protected _startFormOperations(command: string): Promise<void> {
         const resultPromises: Promise<void>[] = [];
         this._formOperationsStorage = this._formOperationsStorage.filter((operation: IFormOperation) => {
@@ -147,6 +174,15 @@ export default class ControllerBase<T extends IControllerBaseOptions> extends Co
         }
     }
 
+    /**
+     * Обработчик ввыбора ответа в диалоге подтверждения закрытия диалога.
+     * При положительном ответе - пытаемся сохранить.
+     * При отрицательном - даем закрыть без сохранения изменений.
+     * При отмее - прерываем закрытие..
+     * @param answer
+     * @param def
+     * @protected
+     */
     protected _confirmDialogResult(answer: boolean, def: Promise<any>): void {
         if (answer === true) {
             this.update().then(
@@ -219,10 +255,27 @@ export default class ControllerBase<T extends IControllerBaseOptions> extends Co
         }
     }
 
+    protected _onValidateCreated(e: Event, control: ValidateContainer): void {
+        this._validateController.addValidator(control);
+    }
+
+    protected _onValidateDestroyed(e: Event, control: ValidateContainer): void {
+        this._validateController.removeValidator(control);
+    }
+
     update(): Promise<undefined | Record> {
         const updatePromise = this._startFormOperations('save').then(() => {
-            return this.validate().then(() => {
-                this._notify('updatesuccessed', [this._record]);
+            return this.validate().then((results: IValidateResult) => {
+                if (results.hasErrors) {
+                    // если были ошибки валидации, уведомим о них
+                    const validationErrors = this._validateController.getValidationResult();
+                    this._notify('validationFailed', [validationErrors]);
+                } else {
+                    this._notify('validationSuccessed', []);
+                    this._record.acceptChanges();
+                    this._notify('updateSuccessed', [this._record]);
+                }
+                return results;
             });
         });
         this._notify('registerPending', [updatePromise, { showLoadingIndicator: false }], { bubbling: true });
