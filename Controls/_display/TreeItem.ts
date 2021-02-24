@@ -247,12 +247,13 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         }
     }
 
-    shouldDisplayExpander(expanderIcon?: string): boolean {
+    shouldDisplayExpander(expanderIcon?: string, position: 'default'|'right' = 'default'): boolean {
         if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === null) {
             return false;
         }
 
-        return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren());
+        const correctPosition = this.getOwner().getExpanderPosition() === position;
+        return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren()) && correctPosition;
     }
 
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
@@ -265,6 +266,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         } else {
             return !expanderSize && expanderIcon !== 'none' && expanderPosition === 'default';
         }
+    }
+
+    shouldDisplayLevelPadding(withoutLevelPadding?: boolean): boolean {
+        return !withoutLevelPadding && this.getLevel() > 1;
     }
 
     getExpanderPaddingClasses(tmplExpanderSize?: string, theme: string = 'default'): string {
