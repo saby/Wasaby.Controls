@@ -50,7 +50,7 @@ export interface IControllerOptions extends
     INavigationOptions<INavigationSourceConfig> {
     dataLoadErrback?: Function;
     dataLoadCallback?: Function;
-    root?: string;
+    root?: TKey;
     expandedItems?: TKey[];
     deepReload?: boolean;
     collapsedGroups?: TArrayGroupId;
@@ -180,6 +180,10 @@ export default class Controller {
         }
         this._setItems(items);
         return this._items;
+    }
+
+    setItemsAsQueryResult(items: RecordSet): void {
+        this._processQueryResult(items, this._root, undefined, undefined);
     }
 
     getItems(): RecordSet {
