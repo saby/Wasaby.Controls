@@ -525,33 +525,34 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         this._afterViewModeChanged();
     }
 
-    /**
-     * Обработчик клика по итему в detail-списке.
-     * Если клик идет по папке, то отменяем дефолтную обработку и сами меняем root.
-     */
-    protected _onDetailItemClick(
+    protected _onExplorerItemClick(
         event: SyntheticEvent,
+        isMaster: boolean,
         item: Model,
         clickEvent: unknown,
         columnIndex?: number
     ): unknown {
 
-        const isNode = item.get(this._detailExplorerOptions.nodeProperty) !== null;
+        const explorerOptions = isMaster ? this._masterExplorerOptions : this._detailExplorerOptions;
+
+        const isNode = item.get(explorerOptions.nodeProperty) !== null;
         if (isNode) {
-            this._setRoot(item.get(this._detailExplorerOptions.keyProperty)).then();
+            this._setRoot(item.get(explorerOptions.keyProperty)).then();
             return false;
         }
 
-        // Перегенерим событие, т.к. explorer его без bubbling шлет, что бы пользователи
-        // могли открыть карточку при клике по листу дерева
-        return this._notify('itemClick', [item, clickEvent, columnIndex]);
+        if (!isMaster) {
+            // Перегенерим событие, т.к. explorer его без bubbling шлет, что бы пользователи
+            // могли открыть карточку при клике по листу дерева
+            return this._notify('itemClick', [item, clickEvent, columnIndex]);
+        }
     }
 
     /**
      * Обработчик события которое генерит detail-explorer когда в нем меняется root.
      * Сюда попадем только при клике по хлебным крошкам, т.к. explorer сам обрабатывает клик
      * по ним и ни как его не протаскивает. А клик по итему списка обрабатывается в ф-ии
-     * {@link _onDetailItemClick}
+     * {@link _onExplorerItemClick}
      */
     protected _onDetailRootChanged(event: SyntheticEvent, root: TKey): void {
         this._setRoot(root).then();
@@ -710,7 +711,7 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         let masterVisibility = options.master?.visibility || MasterVisibilityEnum.hidden;
 
         if (options.listConfiguration && options.userViewMode) {
-            const nodesPosition = options.listConfiguration[options.userViewMode].node?.position;
+            const nodesPosition = options.listConfiguration[options.userViewMode]?.node?.position;
             masterVisibility = nodesPosition === NodesPosition.left
                 ? MasterVisibilityEnum.visible
                 : MasterVisibilityEnum.hidden;

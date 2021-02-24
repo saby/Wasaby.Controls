@@ -70,6 +70,7 @@ export { default as GridGroupCellMixin } from 'Controls/_gridNew/display/mixins/
 export { IItemTemplateParams } from 'Controls/_gridNew/display/mixins/Row';
 
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_gridNew/display/Row';
+import { default as GridItemActionsCell } from 'Controls/_gridNew/display/ItemActionsCell';
 import GridCell, {IOptions as IGridCellOptions} from 'Controls/_gridNew/display/Cell';
 import GridHeader, {IOptions as IGridHeaderOptions} from 'Controls/_gridNew/display/Header';
 import GridHeaderRow, {IOptions as IGridHeaderRowOptions} from 'Controls/_gridNew/display/HeaderRow';
@@ -117,7 +118,7 @@ register('Controls/gridNew:GridGroupRow', GridGroupRow, {instantiate: false});
 export {
     GridCollection, IGridCollectionOptions,
     GridRow, IGridRowOptions,
-    GridCell, IGridCellOptions,
+    GridItemActionsCell, GridCell, IGridCellOptions,
     GridHeader, IGridHeaderOptions,
     GridHeaderRow, IGridHeaderRowOptions,
     GridHeaderCell, IGridHeaderCellOptions,

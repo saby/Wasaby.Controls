@@ -6,9 +6,10 @@ define(
       'Types/collection',
       'Core/core-clone',
       'Core/Deferred',
-      'Env/Env'
+      'Env/Env',
+      'UI/Utils'
    ],
-   function(filterPopup, filter, history, collection, Clone, Deferred, Env) {
+   function(filterPopup, filter, history, collection, Clone, Deferred, Env, Utils) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -38,6 +39,7 @@ define(
 
          function getFilterPanel(FPconfig) {
             var panel2 = new filterPopup.DetailPanel(FPconfig);
+            panel2._items = FPconfig.items;
             panel2.saveOptions(FPconfig);
             return panel2;
          }
@@ -57,7 +59,7 @@ define(
                historyId: 'TEST_PANEL_HISTORY_ID'
             };
             var panel2 = getFilterPanel(config2);
-            filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID', false).addCallback(function(items) {
+            panel2._loadHistoryItems('TEST_PANEL_HISTORY_ID', false).addCallback(function(items) {
                assert.isOk(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'})._history);
                assert.isFalse(filter.HistoryUtils.getHistorySource({historyId: 'TEST_PANEL_HISTORY_ID'}).historySource._$favorite);
                assert.equal(items.getCount(), 2);
@@ -93,7 +95,7 @@ define(
             var panel2 = getFilterPanel(config2);
             let hUtilsLoader = filter.HistoryUtils.loadHistoryItems;
             filter.HistoryUtils.loadHistoryItems = () => { return new Deferred.fail(); };
-            filterPopup.DetailPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function() {
+            panel2._loadHistoryItems('TEST_PANEL_HISTORY_ID').addCallback(function() {
                assert.equal(panel2._historyItems.getCount(), 0);
                done();
             });
@@ -110,7 +112,8 @@ define(
          });
 
          it('getKeyProperty', () => {
-            const id = filterPopup.DetailPanel._private.getKeyProperty(items);
+            var panel = getFilterPanel(config);
+            const id = panel._getKeyProperty(items);
             const newItems = [{
                name: 'test',
                value: 1,
@@ -122,7 +125,7 @@ define(
                resetValue: 3
             }
             ];
-            const name = filterPopup.DetailPanel._private.getKeyProperty(newItems);
+            const name = panel._getKeyProperty(newItems);
             assert.isTrue(id === 'id');
             assert.isTrue(name === 'name');
          });
@@ -150,7 +153,7 @@ define(
             assert.equal(panel2._historyId, changedConfig.historyId);
          });
 
-         it('apply', function() {
+         it('apply', async function() {
             const panel = getFilterPanel(config);
             let isNotifyClose = false;
             let isHistoryApplyEventFired = false;
@@ -182,7 +185,7 @@ define(
                   submit: () => Deferred.success([false])
                }
             };
-            panel._applyFilter();
+            await panel._applyFilter();
             assert.deepEqual({ text: '123' }, filter);
             assert.isTrue(isNotifyClose);
             assert.isFalse(isHistoryApplyEventFired);
@@ -289,7 +292,7 @@ define(
                }
             };
             panel2._resetFilter();
-            assert.deepStrictEqual({'reseted': 'reset'}, filterPopup.DetailPanel._private.getFilter(panel2._items));
+            assert.deepStrictEqual({'reseted': 'reset'}, panel2._getFilter(panel2._items));
             assert.deepStrictEqual(panel2._items, resetedItems);
             assert.deepStrictEqual(itemsChangedResult, resetedItems);
             assert.isFalse(panel2._isChanged);
@@ -298,25 +301,24 @@ define(
          it('isChangeValue', function() {
             var panel = getFilterPanel(config);
             panel._resetFilter();
-            assert.isFalse(filterPopup.DetailPanel._private.isChangedValue(panel._items));
+            assert.isFalse(panel._isChangedValue(panel._items));
             panel._items.push(
                {
                   id: 'reseted',
                   value: 'reset'
                });
             panel._resetFilter();
-            assert.isFalse(filterPopup.Panel._private.isChangedValue(panel._items));
+            assert.isFalse(panel._isChangedValue(panel._items));
          });
 
          it('without add params', function() {
             var panel = getFilterPanel(config);
             panel._beforeMount(config);
             panel._items[2].visibility = true;
-            assert.isFalse(filterPopup.DetailPanel._private.hasAdditionalParams(panel._items));
+            assert.isFalse(panel._hasAddParams(panel._items));
          });
 
          it('recordSet', function() {
-
             var rs = new collection.RecordSet({
                   keyProperty: 'id',
                   rawData: items
@@ -348,8 +350,8 @@ define(
          });
 
          it('resolveItems', function() {
+            var panel = getFilterPanel(config);
             var items = ['test'];
-            var self = {};
             var options = {
                items: items
             };
@@ -362,23 +364,26 @@ define(
             };
             var errorCathed = false;
 
-            filterPopup.DetailPanel._private.resolveItems(self, options);
-            assert.isTrue(options.items !== self._items);
-            assert.equal(self._items[0], 'test');
+            panel._resolveItems(options);
+            assert.isTrue(options.items !== panel._items);
+            assert.equal(panel._items[0], 'test');
 
-            filterPopup.DetailPanel._private.resolveItems(self, {}, context);
-            assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
-            assert.equal(self._items[0], 'test');
+            var stubLoggerError = sinon.stub(Utils.Logger, 'error');
+
+            panel._resolveItems({}, context);
+            assert.isTrue(context.filterPanelOptionsField.options.items !== panel._items);
+            assert.equal(panel._items[0], 'test');
 
             try {
-               filterPopup.DetailPanel._private.resolveItems(self, {}, {});
+               panel._resolveItems({}, {});
             } catch (e) {
                errorCathed = true;
             }
             assert.isTrue(errorCathed);
+            stubLoggerError.restore();
          });
          it('resolveHistoryId', function() {
-            var self = {};
+            var panel = getFilterPanel(config);
             var options = { items: ['test'] };
             var context = {
                filterPanelOptionsField: {
@@ -387,34 +392,35 @@ define(
                   }
                }
             };
+            var stubLoggerError = sinon.stub(Utils.Logger, 'error');
 
-            filterPopup.DetailPanel._private.resolveItems(self, options, context);
-            assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
-            assert.equal(self._items[0], 'test');
-            filterPopup.DetailPanel._private.resolveHistoryId(self, {}, self._contextOptions);
-            assert.equal(self._historyId, 'testId');
+            panel._resolveItems(options, context);
+            assert.isTrue(context.filterPanelOptionsField.options.items !== panel._items);
+            assert.equal(panel._items[0], 'test');
+            panel._resolveHistoryId({}, panel._contextOptions);
+            assert.equal(panel._historyId, 'testId');
+
+            stubLoggerError.restore();
          });
 
          describe('Check history', function() {
-            let self, historyItems;
+            let panel = getFilterPanel(config), historyItems;
             beforeEach(function() {
-               self = {
-                  _items: [
-                     {
-                        id: 'Methods',
-                        value: '123',
-                        resetValue: '',
-                        visibility: true,
-                        textValue: null
-                     },
-                     {
-                        id: 'Faces',
-                        value: true,
-                        resetValue: false,
-                        visibility: false
-                     }
-                  ]
-               };
+               panel._items = [
+                  {
+                     id: 'Methods',
+                     value: '123',
+                     resetValue: '',
+                     visibility: true,
+                     textValue: null
+                  },
+                  {
+                     id: 'Faces',
+                     value: true,
+                     resetValue: false,
+                     visibility: false
+                  }
+               ];
                historyItems = new collection.RecordSet({
                   rawData: [
                      { ObjectData: null },
@@ -485,7 +491,7 @@ define(
             });
 
             it('filterHistoryItems', function() {
-               assert.equal(filterPopup.DetailPanel._private.filterHistoryItems(self, historyItems).getCount(), 1);
+               assert.equal(panel._filterHistoryItems(historyItems).getCount(), 1);
             });
 
             it('getFilter', () => {
@@ -515,24 +521,25 @@ define(
                      resetValue: null
                   }
                ];
-               assert.deepEqual(filterPopup.DetailPanel._private.getFilter(items), {
+               assert.deepEqual(panel._getFilter(items), {
                   list: 5,
                   text: '123',
                   object: {}
                });
             });
 
-            it('_private:reloadHistoryItems', function() {
+            it('_reloadHistoryItems', function() {
                if (Env.constants.isServerSide) { return; }
                filter.HistoryUtils.getHistorySource({historyId: 'TEST_RELOAD_ITEMS_HISTORY_ID'}).getItems = () => {
                   return historyItems;
                };
-               filterPopup.DetailPanel._private.reloadHistoryItems(self, 'TEST_RELOAD_ITEMS_HISTORY_ID');
+               panel._reloadHistoryItems(self, 'TEST_RELOAD_ITEMS_HISTORY_ID');
                assert.equal(self._historyItems.getCount(), 1);
             });
          });
 
-         it('_private:prepareItems', function() {
+         it('_prepareItems', function() {
+            var panel = getFilterPanel(config);
             var changeItems = [
                   {
                      id: 'list',
@@ -585,10 +592,11 @@ define(
                      visibility: false
                   }
                ];
-            assert.deepEqual(filterPopup.DetailPanel._private.prepareItems(changeItems), resetItems);
+            assert.deepEqual(panel._prepareItems(changeItems), resetItems);
          });
 
-         it('_private:prepareItems without resetValue', function() {
+         it('_prepareItems without resetValue', function() {
+            var panel = getFilterPanel(config);
             var changeItems = [
                   {
                      id: 'list',
@@ -633,26 +641,27 @@ define(
                      visibility: false
                   }
                ];
-            assert.deepEqual(filterPopup.DetailPanel._private.prepareItems(changeItems), resetItems);
+            assert.deepEqual(panel._prepareItems(changeItems), resetItems);
          });
 
          it('_historyItemsChanged', function() {
             if (Env.constants.isServerSide) { return; }
             var panel = getFilterPanel(config);
-            filterPopup.DetailPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
+            panel._loadHistoryItems = (historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
             panel._historyId = 'TEST_HISTORY_ID';
             panel._historyItemsChanged();
          });
 
-         it('_private:isPassedValidation', function() {
+         it('_isPassedValidation', function() {
+            var panel = getFilterPanel(config);
             var validationResult = [null];
-            assert.isTrue(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
+            assert.isTrue(panel._isPassedValidation(validationResult));
 
             validationResult = [null, 'Дата заполнена некорректно'];
-            assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
+            assert.isFalse(panel._isPassedValidation(validationResult));
 
             validationResult = ['Дата заполнена некорректно', null];
-            assert.isFalse(filterPopup.DetailPanel._private.isPassedValidation(validationResult));
+            assert.isFalse(panel._isPassedValidation(validationResult));
          });
       });
    }

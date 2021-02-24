@@ -16,7 +16,7 @@
                         on:moreButtonClick="_moreButtonClick(item)"/>
          </ws:for>
    </Controls.scroll:Container>
-   <ws:if data="{{_needShowApplyButton}}">
+   <ws:if data="{{_applyButtonVisible}}">
       <div class="controls-SimplePanel__applyButton controls-SimplePanel__applyButton_theme_{{_options.theme}}">
          <Controls.buttons:Button viewMode="functionalButton"
                                   icon="icon-Yes"

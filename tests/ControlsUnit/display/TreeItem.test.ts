@@ -172,11 +172,20 @@ describe('Controls/_display/TreeItem', () => {
 
     describe('expander', () => {
         it('.shouldDisplayExpander()', () => {
+            let expanderPosition = 'default';
+
             const owner = {
                 getExpanderVisibility: () => 'visible',
-                getExpanderIcon: () => undefined
+                getExpanderIcon: () => undefined,
+                getExpanderPosition: () => expanderPosition
             };
             const item = new TreeItem({ owner });
+
+            assert.isTrue(item.shouldDisplayExpander(null, 'default'));
+            expanderPosition = 'right';
+            assert.isFalse(item.shouldDisplayExpander(null, 'default'));
+            assert.isTrue(item.shouldDisplayExpander(null, 'right'));
+            expanderPosition = 'default';
 
             assert.isTrue(item.shouldDisplayExpander());
             assert.isFalse(item.shouldDisplayExpander('none'));
@@ -193,6 +202,24 @@ describe('Controls/_display/TreeItem', () => {
 
             item.setHasChildren(false);
             assert.isFalse(item.shouldDisplayExpander());
+        });
+
+        it('.shouldDisplayLevelPadding()', () => {
+            let level = 0;
+
+            const owner = {
+                getRootLevel: () => level
+            };
+            const item = new TreeItem({ owner });
+
+            assert.isFalse(item.shouldDisplayLevelPadding());
+            level = 1;
+            assert.isFalse(item.shouldDisplayLevelPadding());
+            level = 2;
+            assert.isTrue(item.shouldDisplayLevelPadding());
+            level = 3;
+            assert.isTrue(item.shouldDisplayLevelPadding());
+            assert.isFalse(item.shouldDisplayLevelPadding(true));
         });
 
         it('.shouldDisplayExpanderPadding()', () => {

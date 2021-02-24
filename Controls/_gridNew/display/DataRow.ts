@@ -22,6 +22,7 @@ export default class DataRow<T extends Model> extends Row<T> implements
     protected _$searchValue: string;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly DisplayItemActions: boolean = true;
     readonly DisplaySearchValue: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly Markable: boolean = true;

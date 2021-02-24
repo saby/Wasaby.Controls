@@ -1,24 +1,24 @@
 import {Control} from 'UI/Base';
+import {isEqual} from 'Types/object';
+import {RecordSet} from 'Types/collection';
+import {Model} from 'Types/entity';
+
+import {saveConfig} from 'Controls/Application/SettingsController';
+import {EventUtils} from 'UI/Events';
+import {MouseButtons, MouseUp} from 'Controls/popup';
+import {error as dataSourceError, NewSourceController} from 'Controls/dataSource';
+import {selectionToRecord} from 'Controls/operations';
+import {Collection, Tree, TreeItem} from 'Controls/display';
+import {ISelectionObject, TKey} from 'Controls/interface';
+import {CrudEntityKey, DataSet, LOCAL_MOVE_POSITION} from 'Types/source';
+import {SyntheticEvent} from 'UI/Vdom';
+import {constants} from 'Env/Env';
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import Deferred = require('Core/Deferred');
-import { isEqual } from 'Types/object';
-import {RecordSet} from 'Types/collection';
-import { Model } from 'Types/entity';
-
-import { saveConfig } from 'Controls/Application/SettingsController';
-import {EventUtils} from 'UI/Events';
-import { MouseButtons, MouseUp } from 'Controls/popup';
-import { error as dataSourceError, NewSourceController } from 'Controls/dataSource';
-import {selectionToRecord} from 'Controls/operations';
-import { Collection, Tree, TreeItem } from 'Controls/display';
 
 
 import TreeControlTpl = require('wml!Controls/_tree/TreeControl/TreeControl');
-import {ISelectionObject, TKey} from 'Controls/interface';
-import {DataSet, CrudEntityKey, LOCAL_MOVE_POSITION} from 'Types/source';
-import { SyntheticEvent } from 'UI/Vdom';
-import {constants} from 'Env/Env';
 
 const HOT_KEYS = {
     expandMarkedItem: Env.constants.key.right,
@@ -238,11 +238,8 @@ const _private = {
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
         const items = viewModel.getCollection();
-        const dispItem = viewModel.getItemBySourceKey(nodeKey);
-        const loadedChildren = dispItem && (self._options.useNewModel ?
-            viewModel.getChildren(dispItem, items).getCount() :
-            viewModel.getChildren(nodeKey, items).length);
-        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey) || loadedChildren;
+        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey) ||
+                                viewModel.getHasMoreStorage().hasOwnProperty(nodeKey);
 
         if (isAlreadyLoaded) {
             return false;
@@ -335,10 +332,33 @@ const _private = {
         }
     },
 
-    afterReloadCallback: function(self, options, loadedList: RecordSet) {
+    afterReloadCallback: function(self, options, loadedList: RecordSet, baseControlViewModel) {
         const baseControl = self._children.baseControl;
         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
         const viewModel = baseControl && baseControl.getViewModel();
+        const sourceController = options.sourceController;
+        const updateHasMoreStorage = (model) => {
+            if (loadedList) {
+                const modelHasMoreStorage = model.getHasMoreStorage();
+
+                loadedList.each((item) => {
+                    if (item.get(options.nodeProperty) !== null) {
+                        const itemKey = item.getId();
+                        const dispItem = model.getItemBySourceKey(itemKey);
+
+                        if (dispItem) {
+                            const hasChildren = self._options.useNewModel ?
+                                model.getChildren(dispItem).getCount() :
+                                model.getChildren(itemKey, loadedList).length;
+
+                            if (hasChildren) {
+                                modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
+                            }
+                        }
+                    }
+                });
+            }
+        };
 
         if (viewModel) {
             const modelRoot = viewModel.getRoot();
@@ -360,7 +380,6 @@ const _private = {
                 viewModel.setRoot(root);
             }
             if (isDeepReload && modelExpandedItems.length && loadedList) {
-                const sourceController = baseControl.getSourceController();
                 const hasMore = {};
                 const expandedItems = _private.getExpandedItems(self, options, loadedList);
                 let hasMoreData: unknown;
@@ -378,21 +397,9 @@ const _private = {
                     viewModel.setHasMoreStorage(hasMore);
                 }
             }
-            if (loadedList) {
-                const modelHasMoreStorage = viewModel.getHasMoreStorage();
-                const sourceController = baseControl.getSourceController();
-
-                loadedList.each((item) => {
-                    if (item.get(options.nodeProperty) !== null) {
-                        const itemKey = item.getId();
-                        const dispItem = viewModel.getItemBySourceKey(itemKey);
-                        if (dispItem && viewModel.getChildren(dispItem, loadedList).length) {
-                            modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
-                        }
-                    }
-                });
-            }
         }
+
+        updateHasMoreStorage(viewModel || baseControlViewModel);
 
         // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
         if (options.markerMoveMode === 'leaves') {
@@ -601,7 +608,6 @@ const _private = {
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{
     _template: TreeControlTpl,
     _root: null,
-    _updatedRoot: false,
     _nodesSourceControllers: null,
     _needResetExpandedItems: false,
     _beforeReloadCallback: null,
@@ -1168,11 +1174,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         const expandResult = this.toggleExpanded(this._tempItem, model);
                         if (expandResult instanceof Promise) {
                             expandResult.then(() => {
-                                this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
                                 resolve();
                             });
                         } else {
-                            this._expandToFirstLeaf(this._tempItem, model.getItems(), model);
                             resolve();
                         }
                     }
