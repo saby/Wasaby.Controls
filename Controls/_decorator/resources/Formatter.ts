@@ -167,5 +167,5 @@ export function abbreviateNumber(value: TValue, abbreviationType: TAbbreviationT
 }
 
 function intlFormat(num: number): string {
-    return new Intl.NumberFormat().format(Math.round(num * 10) / 10);
+    return new Intl.NumberFormat('ru-RU').format(Math.round(num * 10) / 10);
 }
