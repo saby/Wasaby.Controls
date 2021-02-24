@@ -16,7 +16,8 @@ define(
             it('value: null, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: null,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '0.00',
@@ -27,7 +28,8 @@ define(
             it('value: 0.035, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: 0.035,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '0.03',
@@ -38,7 +40,8 @@ define(
             it('value: 0.075, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: 0.075,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '0.07',
@@ -49,7 +52,8 @@ define(
             it('value: 20, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: 20,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '20.00',
@@ -60,7 +64,8 @@ define(
             it('value: 20.1, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: 20.1,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '20.10',
@@ -71,7 +76,8 @@ define(
             it('value: 20.18, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: 20.18,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '20.18',
@@ -82,7 +88,8 @@ define(
             it('value: 20.181, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: 20.181,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '20.18',
@@ -93,7 +100,8 @@ define(
             it('value: Infinity, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: Infinity,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '0.00',
@@ -104,7 +112,8 @@ define(
             it('value: 1000.00, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: 1000.00,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '1000.00',
@@ -115,7 +124,8 @@ define(
             it('value: 1000.00, useGrouping: true', function() {
                ctrl._beforeMount({
                   value: 1000.00,
-                  useGrouping: true
+                  useGrouping: true,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '1 000.00',
@@ -126,7 +136,8 @@ define(
             it('value: -1000.00, useGrouping: false', function() {
                ctrl._beforeMount({
                   value: -1000.00,
-                  useGrouping: false
+                  useGrouping: false,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '-1000.00',
@@ -137,7 +148,8 @@ define(
             it('value: -1000.00, useGrouping: true', function() {
                ctrl._beforeMount({
                   value: -1000.00,
-                  useGrouping: true
+                  useGrouping: true,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '-1 000.00',
@@ -148,7 +160,8 @@ define(
             it('value: 1234e20, useGrouping: true', function() {
                ctrl._beforeMount({
                   value: 1234e20,
-                  useGrouping: true
+                  useGrouping: true,
+                  abbreviationType: 'none'
                });
                assert.deepEqual(ctrl._formattedNumber, {
                   number: '123 400 000 000 000 000 000 000.00',
@@ -160,27 +173,31 @@ define(
          describe('tooltip', function() {
             it('value: "0.00"', function() {
                ctrl._beforeMount({
-                  value: '0.00'
+                  value: '0.00',
+                  abbreviationType: 'none'
                });
                assert.equal(ctrl._tooltip, '0');
             });
             it('value: "0.12"', function() {
                ctrl._beforeMount({
-                  value: '0.12'
+                  value: '0.12',
+                  abbreviationType: 'none'
                });
                assert.equal(ctrl._tooltip, '0.12');
             });
             it('value: "0.00", tooltip: ""', function() {
                ctrl._beforeMount({
                   value: '0.00',
-                  tooltip: ''
+                  tooltip: '',
+                  abbreviationType: 'none'
                });
                assert.equal(ctrl._tooltip, '');
             });
             it('value: "0.00", tooltip: "tooltip"', function() {
                ctrl._beforeMount({
                   value: '0.00',
-                  tooltip: 'tooltip'
+                  tooltip: 'tooltip',
+                  abbreviationType: 'none'
                });
                assert.equal(ctrl._tooltip, 'tooltip');
             });
