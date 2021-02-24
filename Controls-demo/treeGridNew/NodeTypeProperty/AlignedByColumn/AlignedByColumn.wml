@@ -11,7 +11,7 @@
             <ws:Array>
                 <ws:Object displayProperty="title" width="300px">
                     <ws:template>
-                        <ws:if data="{{ template.item.GroupNode }}">
+                        <ws:if data="{{ template.item.isGroupNode() }}">
                             <ws:partial template="Controls/treeGridNew:GroupColumnTemplate"
                                         textAlign="right"/>
                         </ws:if>
@@ -23,7 +23,7 @@
                 <ws:Object displayProperty="count" width="100px" align="right"/>
                 <ws:Object displayProperty="price" width="100px" align="right">
                     <ws:template>
-                        <ws:if data="{{ template.item.GroupNode }}">
+                        <ws:if data="{{ template.item.isGroupNode() }}">
                             <ws:partial template="Controls/treeGridNew:GroupColumnTemplate"
                                         textVisible="{{false}}"/>
                         </ws:if>
@@ -34,7 +34,7 @@
                 </ws:Object>
                 <ws:Object displayProperty="price1" width="100px" align="right">
                     <ws:template>
-                        <ws:if data="{{ template.item.GroupNode }}">
+                        <ws:if data="{{ template.item.isGroupNode() }}">
                             <ws:partial template="Controls/gridNew:ColumnTemplate">
                                 <ws:contentTemplate>
                                     <Controls.decorator:Money value="{{contentTemplate.itemData.getDefaultDisplayValue()}}" fontColorStyle="group" useGrouping="{{false}}"/>
@@ -50,7 +50,7 @@
                 <ws:Object displayProperty="tax" width="50px" align="right"/>
                 <ws:Object displayProperty="price3" width="100px" align="right" fontSize="s">
                     <ws:template>
-                        <ws:if data="{{ template.item.GroupNode }}">
+                        <ws:if data="{{ template.item.isGroupNode() }}">
                             <ws:partial template="Controls/gridNew:ColumnTemplate">
                                 <ws:contentTemplate>
                                     <Controls.decorator:Money value="{{contentTemplate.itemData.getDefaultDisplayValue()}}" fontColorStyle="group" useGrouping="{{false}}"/>

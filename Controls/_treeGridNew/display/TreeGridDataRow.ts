@@ -1,5 +1,5 @@
 import { mixin } from 'Types/util';
-import { ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
+import { ITreeItemOptions, TreeItem, IItemPadding, IGroupNode } from 'Controls/display';
 import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, GridItemActionsCell } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn, TMarkerClassName } from 'Controls/grid';
@@ -10,7 +10,7 @@ export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItem
 }
 
 export default class TreeGridDataRow<T extends Model>
-   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue {
+   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
@@ -21,6 +21,7 @@ export default class TreeGridDataRow<T extends Model>
     readonly SelectableItem: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly DraggableItem: boolean = true;
+    readonly GroupNode: boolean = false;
     protected _$searchValue: string;
 
     constructor(options: IOptions<T>) {
@@ -141,14 +142,15 @@ export default class TreeGridDataRow<T extends Model>
 
     // Убираем ExpanderPadding для подуровней TreeGridGroupRow
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
-        let should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
-        if (should && this._$parent['[Controls/treeGrid:TreeGridGroupDataRow]']) {
-            should = false;
-        }
-        return should;
+        const should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
+        return should && !this._$parent.isGroupNode();
     }
 
     // endregion overrides
+
+    isGroupNode(): boolean {
+        return this.GroupNode;
+    }
 }
 
 Object.assign(TreeGridDataRow.prototype, {

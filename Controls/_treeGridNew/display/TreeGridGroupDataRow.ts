@@ -1,9 +1,10 @@
 import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
-import {GridCell, IGridDataCellOptions, IItemTemplateParams} from "Controls/gridNew";
+import {GridCell, IGridDataCellOptions, IItemTemplateParams} from 'Controls/gridNew';
 import { Model } from 'Types/entity';
-import {IColumn} from "Controls/_grid/interface/IColumn";
+import {IColumn} from 'Controls/_grid/interface/IColumn';
+import {IGroupNode} from 'Controls/display';
 
-export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataRow<T>{
+export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataRow<T> implements IGroupNode {
     '[Controls/treeGrid:TreeGridGroupDataRow]': boolean;
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
@@ -35,7 +36,6 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
         };
     }
 
-    // Смещаем все дочерние уровни на -1
     getLevel(): number {
         const level = super.getLevel();
         return level - 1;
