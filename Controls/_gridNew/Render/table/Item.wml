@@ -49,15 +49,15 @@
                     </ws:multiSelectTemplate>
                     <ws:afterContentTemplate>
                         <!-- Стрелка редактирования. Если шаблон прикладной, то не показываем -->
-                        <ws:if data="{{ !contentTemplate && (gridColumn || itemData).shouldDisplayEditArrow() }} && editArrowTemplate">
+                        <ws:if data="{{ !contentTemplate && (gridColumn || itemData).shouldDisplayEditArrow() && editArrowTemplate }} ">
                             <ws:partial template="{{ editArrowTemplate }}" item="{{ (gridColumn || itemData).getOwner() }}" textOverflow="{{(gridColumn || itemData).getColumnConfig().textOverflow}}"/>
                         </ws:if>
 
                         <!-- Тэг -->
-                        <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(tagStyle) }}"
-                             class="{{ (gridColumn || itemData).getTagClasses(theme) }}">
-                            <ws:partial template="{{ tagTemplate }}"
-                                        tagStyle="{{ (gridColumn || itemData).getTagStyle(tagStyle) }}"
+                        <div if="{{ (gridColumn || itemData).TagCell && (gridColumn || itemData).shouldDisplayTag(afterContentTemplate.tagStyle) }}"
+                             class="{{ (gridColumn || itemData).getTagClasses(afterContentTemplate.theme) }}">
+                            <ws:partial template="{{ afterContentTemplate.tagTemplate }}"
+                                        tagStyle="{{ (gridColumn || itemData).getTagStyle(afterContentTemplate.tagStyle) }}"
                                         dispItem="{{ (gridColumn || itemData).getOwner() }}"
                                         columnIndex="{{ (gridColumn || itemData).getColumnIndex() }}"/>
                         </div>
