@@ -13,16 +13,16 @@ export interface IOptions<T> {
     column: IColumn;
     columnsLength: number;
     contents: string;
+    groupTemplate: TemplateFunction|string;
     zIndex?: number;
 }
-
-const GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupTemplate';
 
 export default class GroupCell<T>
     extends mixin<DataCell<any, GroupRow<any>>, GridGroupCellMixin<any>>(DataCell, GridGroupCellMixin) {
     protected _$columnsLength: number;
     protected _$contents: string;
     protected _$zIndex: number;
+    protected _$groupTemplate: TemplateFunction|string;
 
     constructor(options?: IOptions<T>) {
         super(options);
@@ -62,7 +62,7 @@ export default class GroupCell<T>
     }
 
     getTemplate(multiSelectTemplate?: TemplateFunction): TemplateFunction|string {
-        return GROUP_CONTENT_TEMPLATE;
+        return this._$groupTemplate;
     }
 
     // endregion overrides
@@ -118,5 +118,6 @@ Object.assign(GroupCell.prototype, {
     _$owner: null,
     _$columnsLength: null,
     _$zIndex: 2,
-    _$contents: null
+    _$contents: null,
+    _$groupTemplate: 'Controls/gridNew:GroupTemplate'
 });

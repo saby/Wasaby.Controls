@@ -127,7 +127,8 @@ export default class GroupRow<T> extends mixin<
             ...super._getColumnFactoryParams(column, columnIndex),
             columnsLength: this._$columns.length,
             contents: this.getContents(),
-			zIndex: this.getStickyHeaderZIndex()
+			zIndex: this.getStickyHeaderZIndex(),
+            groupTemplate: this._groupTemplate
         };
     }
 }

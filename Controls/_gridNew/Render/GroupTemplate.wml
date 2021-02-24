@@ -4,7 +4,7 @@
     </ws:if>
     <ws:if data="{{ textVisible !== false }}">
         <div class="{{ (gridColumn || itemData).getContentTextClasses(theme) }}
-                    {{ (gridColumn || itemData).getExpanderClasses(expanderAlign, expanderVisible, theme) }}">
+                    {{ (gridColumn || itemData).getExpanderClasses(expanderVisible, expanderAlign, theme) }}">
             <ws:if data="{{ contentTemplate }}">
                 <ws:partial template="{{ contentTemplate }}" itemData="{{ item || itemData }}"/>
             </ws:if>
