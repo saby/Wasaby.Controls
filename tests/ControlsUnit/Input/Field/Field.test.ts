@@ -107,10 +107,12 @@ describe('Controls/input:Field', () => {
                     target
                 }
             });
+            ctrl.setSelectionRange(0, 7);
             // Отстрельнуло после фокуса
             ctrl._selectHandler();
-            ctrl.setSelectionRange(0, 7);
             // После установки селекшена
+            ctrl._selectHandler();
+            // Это баг, из-за которого стреляет лишний раз, см FixBugs
             ctrl._selectHandler();
 
             assert.deepEqual(model.selection, {
