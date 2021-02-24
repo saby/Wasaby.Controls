@@ -3049,6 +3049,13 @@ const _private = {
                 self._notify('_documentDragStart', [dragObject], {bubbling: true});
             }
             if (self._dndListController && self._dndListController.isDragging()) {
+                // Проставляем правильное значение флага. Если в начале днд резко утащить за пределы списка,
+                // то может не отработать mouseLeave и флаг не проставится
+                const moveOutsideList = !(self._container[0] || self._container).contains(nativeEvent.target);
+                if (moveOutsideList !== self._listViewModel.isDragOutsideList()) {
+                    self._listViewModel.setDragOutsideList(moveOutsideList);
+                }
+
                 self._notify('dragMove', [dragObject]);
                 const hasSorting = self._options.sorting && self._options.sorting.length;
                 if (self._options.draggingTemplate && (self._listViewModel.isDragOutsideList() || hasSorting)) {

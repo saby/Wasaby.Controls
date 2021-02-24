@@ -7904,17 +7904,30 @@ define([
          });
 
          it('move outside list while load draggable items', () => {
+            const items = new collection.RecordSet({
+               keyProperty: 'id',
+               rawData: [{id: 1}, {id: 2}]
+            });
+            let cfg = {
+               viewName: 'Controls/List/ListView',
+               keyProperty: 'id',
+               viewModelConstructor: 'Controls/display:Collection',
+               useNewModel: true,
+               items,
+               draggingTemplate: {}
+            };
+            baseControl = correctCreateBaseControl(cfg);
+            baseControl.saveOptions(cfg);
+            baseControl._beforeMount(cfg, {}, {data: items});
+            notifySpy = sinon.spy(baseControl, '_notify');
+
             baseControl._dndListController = {
                isDragging: () => true
-            };
-            baseControl._listViewModel = {
-               isDragOutsideList: () => true
             };
             baseControl._startEvent = {
                pageX: 500,
                pageY: 500
             };
-            baseControl.saveOptions({draggingTemplate: {}});
 
             baseControl._documentDragging = false;
             const timeout = setTimeout(() => {
@@ -7932,9 +7945,15 @@ define([
                   closest: () => null
                }
             };
+
+            baseControl._container = {
+               contains: () => false
+            };
+
             baseControl._onMouseMove(event);
 
             assert.isTrue(notifySpy.withArgs('_updateDraggingTemplate').called);
+            assert.isTrue(baseControl.getViewModel().isDragOutsideList());
             return timeout;
          });
       });
