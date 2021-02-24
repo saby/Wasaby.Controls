@@ -7,7 +7,8 @@ describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataRow/Expander'
     const owner = {
         getStickyColumnsCount: () => 0,
         hasMultiSelectColumn: () => false,
-        notifyItemChange: () => {}
+        notifyItemChange: () => {},
+        hasItemActionsSeparatedCell: () => false
     } as undefined as TreeGridCollection<any>;
 
     const groupRow = new TreeGridGroupDataRow({

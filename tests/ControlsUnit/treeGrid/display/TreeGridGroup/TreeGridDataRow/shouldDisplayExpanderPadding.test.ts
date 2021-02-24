@@ -2,7 +2,7 @@ import {assert} from 'chai';
 import {RecordSet} from 'Types/collection';
 import {TreeGridCollection, TreeGridDataRow, TreeGridGroupDataRow} from 'Controls/treeGridNew';
 
-describe('Controls/treeGrid/display/TreeGridGroup/TreeGridDataRow/NodeTypeProperty', () => {
+describe('Controls/treeGrid/display/TreeGridGroup/TreeGridDataRow/shouldDisplayExpanderPadding', () => {
     const recordSet = new RecordSet({
         rawData: [
             {
@@ -30,7 +30,7 @@ describe('Controls/treeGrid/display/TreeGridGroup/TreeGridDataRow/NodeTypeProper
         keyProperty: 'id'
     });
 
-    it('shouldDisplayExpanderPadding return false when direct parent is TreeGridGroupDataRow', () => {
+    it('should return false when direct parent is TreeGridGroupDataRow', () => {
         const owner = {
             getExpanderIcon: () => 'testIcon',
             getExpanderPosition: () => 'default',
@@ -49,13 +49,29 @@ describe('Controls/treeGrid/display/TreeGridGroup/TreeGridDataRow/NodeTypeProper
             parent,
             owner
         });
-        const grandChild = new TreeGridDataRow({
-            contents: recordSet.at(2),
+        assert.isFalse(child.shouldDisplayExpanderPadding(null, null));
+    });
+
+    it('should return true when direct parent is not TreeGridGroupDataRow', () => {
+        const owner = {
+            getExpanderIcon: () => 'testIcon',
+            getExpanderPosition: () => 'default',
+            getExpanderSize: () => undefined,
+            getExpanderVisibility: () => 'visible'
+        } as undefined as TreeGridCollection<any>;
+
+        const parent = new TreeGridDataRow({
+            contents: recordSet.at(1),
             columns: [],
-            parent: child,
+            parent: null,
             owner
         });
-        assert.isFalse(child.shouldDisplayExpanderPadding(null, null));
-        assert.isTrue(grandChild.shouldDisplayExpanderPadding(null, null));
+        const child = new TreeGridDataRow({
+            contents: recordSet.at(2),
+            columns: [],
+            parent,
+            owner
+        });
+        assert.isTrue(child.shouldDisplayExpanderPadding(null, null));
     });
 });
