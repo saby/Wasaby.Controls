@@ -57,7 +57,6 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
     readonly '[Controls/_interface/IFontSize]': boolean = true;
     readonly '[Controls/_interface/IFontWeight]': boolean = true;
 
-    protected _options: IDateOptions;
     protected _template: TemplateFunction = template;
 
     protected _beforeMount(options: IDateOptions): void {
