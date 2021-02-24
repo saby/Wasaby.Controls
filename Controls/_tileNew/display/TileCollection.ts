@@ -276,6 +276,22 @@ export default class TileCollection<
         return this._$roundBorder;
     }
 
+    setRoundBorder(roundBorder: IRoundBorder): void {
+        if (!isEqual(this._$roundBorder, roundBorder)) {
+            this._$roundBorder = roundBorder;
+            this._updateItemsRoundBorder(roundBorder);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsRoundBorder(roundBorder: IRoundBorder): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setRoundBorder) {
+                item.setRoundBorder(roundBorder);
+            }
+        });
+    }
+
     getZoomCoefficient(): number {
         if (this._$tileScalingMode !== 'none' && this._$tileScalingMode !== 'overlap') {
             return DEFAULT_SCALE_COEFFICIENT;

@@ -5,6 +5,7 @@ import TileCollection, {
 import {Model} from 'Types/entity';
 import { object } from 'Types/util';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from '../utils/imageUtil';
+import {isEqual} from "Types/object";
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 
@@ -436,6 +437,14 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     // endregion Styles
 
     // region RoundBorder
+
+    setRoundBorder(roundBorder: IRoundBorder): void {
+        if (!isEqual(this._$roundBorder, roundBorder)) {
+            this._$roundBorder = roundBorder;
+            this._nextVersion();
+        }
+    }
+
     getTopLeftRoundBorder(): string {
         return this._$roundBorder?.tl || 'default';
     }
