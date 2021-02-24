@@ -8,7 +8,13 @@ import {IFilterItem} from 'Controls/filter';
 import * as Clone from 'Core/core-clone';
 import DialogTemplate = require('wml!Controls/_filterPopup/History/_Favorite/EditDialog');
 
-interface IEditDialog extends IControlOptions {
+export interface IEditDialogResult {
+    action: string;
+    record: Model;
+    isClient: boolean;
+}
+
+export interface IEditDialogOptions extends IControlOptions {
     items: IFilterItem[];
     isClient: boolean;
     isFavorite: boolean;
@@ -23,16 +29,16 @@ const globalConfig = new Memory({
     ]
 });
 
-class EditDialog extends Control<IEditDialog> {
+class EditDialog extends Control<IEditDialogOptions> {
     protected _template: TemplateFunction = DialogTemplate;
+    protected _globalSource: Memory = globalConfig;
+    protected _source: Memory;
 
     private _textValue: string;
     private _placeholder: string;
     private _isClient: boolean;
-    protected _globalSource: Memory = globalConfig;
     private _selectedFilters: string[];
     private _keyProperty: string;
-    protected _source: Memory;
 
     private _getKeyProperty(items: IFilterItem[]): string {
         const firstItem = items[0];
@@ -58,7 +64,7 @@ class EditDialog extends Control<IEditDialog> {
         });
     }
 
-    private prepareConfig(self: EditDialog, options: IEditDialog): void {
+    private prepareConfig(self: EditDialog, options: IEditDialogOptions): void {
         self._placeholder = options.editedTextValue;
         self._textValue = options.isFavorite ? options.editedTextValue : '';
         self._isClient = options.isClient;
@@ -66,12 +72,12 @@ class EditDialog extends Control<IEditDialog> {
         self._source = self.getItemsSource(self, options.items);
     }
 
-    protected _beforeMount(options: IEditDialog): void {
+    protected _beforeMount(options: IEditDialogOptions): void {
         this._keyProperty = this._getKeyProperty(options.items);
         this.prepareConfig(this, options);
     }
 
-    protected _beforeUpdate(newOptions: IEditDialog): void {
+    protected _beforeUpdate(newOptions: IEditDialogOptions): void {
         if (newOptions.items !== this._options.items ||
             newOptions.isClient !== this._options.isClient ||
             newOptions.isFavorite !== this._options.isFavorite ||
