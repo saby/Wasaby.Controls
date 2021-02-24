@@ -1,6 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IButton, IButtonOptions} from './interface/IButton';
 import {IClick} from './interface/IClick';
+import {isSVGIcon, getSVGIconURL} from '../Utils/getSVGIconURL';
 import {
     ICaption,
     ICaptionOptions,
@@ -63,8 +64,8 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
     // На сервере rk создает инстанс String'a, проверки на typeof недостаточно
     this._stringCaption = typeof options.caption === 'string' || options.caption instanceof String;
     this._captionPosition = options.captionPosition || 'right';
-
-    this._icon = options.icon;
+    this._isSVGIcon = isSVGIcon(options.icon);
+    this._icon = this._isSVGIcon ? getSVGIconURL(options.icon) : options.icon;
     if (options.icon) {
         this._iconSize = options.iconSize;
         if (options.readOnly) {
@@ -163,6 +164,7 @@ class Button extends Control<IButtonControlOptions> implements IHref, ICaption, 
     protected _iconSize: string;
     protected _iconStyle: string;
     protected _hoverIcon: boolean = true;
+    protected _isSVGIcon: boolean = false;
 
     protected _beforeMount(options: IButtonControlOptions): void {
         simpleCssStyleGeneration.call(this, options);
