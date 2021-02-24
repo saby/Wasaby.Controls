@@ -3383,12 +3383,12 @@ define([
                };
 
                ctrl.saveOptions(defaultCfg);
-               ctrl._onItemClick(event, {}, event.original);
+               ctrl._onItemClick(event, { getKey: () => null }, event.original);
                assert.isTrue(beginEditStarted);
                beginEditStarted = false;
 
                ctrl.saveOptions(readOnlyCfg);
-               ctrl._onItemClick(event, {}, event.original);
+               ctrl._onItemClick(event, { getKey: () => null }, event.original);
                assert.isFalse(beginEditStarted);
             });
          });
@@ -7429,7 +7429,7 @@ define([
                };
 
                // click not on checkbox
-               baseControl._onItemClick(e, {}, originalEvent);
+               baseControl._onItemClick(e, { getKey: () => null }, originalEvent);
                assert.isFalse(isStopped);
 
                // click on checkbox
