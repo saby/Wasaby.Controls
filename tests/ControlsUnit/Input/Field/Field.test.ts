@@ -95,12 +95,12 @@ describe('Controls/input:Field', () => {
             ctrl._beforeMount({model});
 
             const field = ctrl._getField();
-            field.selectionStart = 0;
-            field.selectionEnd = 5;
             const isFieldFocusedOriginal = WorkWithSelection.isFieldFocused;
             WorkWithSelection.isFieldFocused = () => true;
+            // Отстрельнуло после фокуса
             ctrl._selectHandler();
             ctrl.setSelectionRange(0, 7);
+            // После установки селекшена
             ctrl._selectHandler();
 
             assert.deepEqual(model.selection, {
