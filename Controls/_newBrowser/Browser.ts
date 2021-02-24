@@ -106,15 +106,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
     protected _masterMarkedKey: TKey;
 
-    //region source
-
-    /**
-     * Значение опции searchValue, которое прокидывается в explorer.
-     * Проставляется после того как получены результаты поиска
-     */
-    protected _searchValue: string;
-    //endregion
-
     //region templates options
     /**
      * Текущая конфигурация списков, полученная из метаданных последнего запроса
