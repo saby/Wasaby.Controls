@@ -171,6 +171,8 @@ class Panel extends Control<ISimplePanelOptions> {
         return result;
     }
 
+    static _theme: string[] = ['Controls/dropdownPopup', 'Controls/menu'];
+
     static getDefaultOptions(): Partial<ISimplePanelOptions> {
         return {
             itemTemplate: defaultItemTemplate
