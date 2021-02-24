@@ -4939,7 +4939,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
-        if (this._itemActionClickItemKey === (this._options.useNewModel ? item.getKey() : item.key)) {
+        if (this._itemActionClickItemKey && this._itemActionClickItemKey === item.getKey()) {
             // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
             this._itemActionClickItemKey = null;
             e.stopPropagation();
