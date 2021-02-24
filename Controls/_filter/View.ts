@@ -753,7 +753,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         });
         const newFolderItems = getItemsByParentKey(newItems).value();
         folderItems = getItemsWithHistory(folderItems, newFolderItems,
-            config.sourceController, item.editorOptions.source, config.keyProperty);
+            config.sourceController, item.editorOptions.source, config.keyProperty, folderId);
         folderItems.prepend([config.popupItems.getRecordById(folderId)]);
         return folderItems;
     }
