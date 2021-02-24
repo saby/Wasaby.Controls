@@ -1,7 +1,7 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <Controls.icon:Icon
-            icon="commonIcons:icon-done"
+            icon="commonIcons/icon-done"
             iconSize="default"
             iconStyle="danger"
         />
