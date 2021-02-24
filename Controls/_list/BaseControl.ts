@@ -4939,6 +4939,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
+        if (this._itemActionClickItemKey && this._itemActionClickItemKey === item.getKey()) {
+            // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
+            this._itemActionClickItemKey = null;
+            e.stopPropagation();
+            return;
+        }
         if (originalEvent.target.closest('.js-controls-ListView__checkbox') || this._onLastMouseUpWasDrag) {
             // Если нажали на чекбокс, то это не считается нажатием на элемент. В этом случае работает событие checkboxClick
             // Если на mouseUp, предшествующий этому клику, еще работало перетаскивание, то мы не должны нотифаить itemClick
@@ -5521,7 +5527,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
+        this._itemActionClickItemKey = null;
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
+            this._itemActionClickItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
             event.stopPropagation();
             return;
         }
