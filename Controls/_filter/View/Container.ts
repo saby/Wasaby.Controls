@@ -1,4 +1,4 @@
-import {Control} from 'UI/Base';
+import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_filter/View/Container';
 import {default as Store} from 'Controls/Store';
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
@@ -27,13 +27,13 @@ import {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
  * @class Controls/_filter/View/Container
  * @extends UI/Base:Control
  * @author Герасимов А.М.
- * 
+ *
  * @public
  */
 
-class Container extends Control {
+class Container extends Control<IControlOptions> {
 
-    protected _template: template;
+    protected _template: TemplateFunction = template;
     protected _source: IFilterItem[];
 
     protected _beforeMount(options): void {

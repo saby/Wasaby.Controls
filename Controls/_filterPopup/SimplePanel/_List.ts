@@ -85,7 +85,7 @@ class List extends Control<ISimplePanelListOptions> {
         const selectedItems = [];
 
         // TODO: Selector/Controller сейчас не поддерживает работу с ключами: https://online.sbis.ru/opendoc.html?guid=936f6546-2e34-4753-85af-8e644c320c8b
-        factory(this._options.selectedKeys).each(function(key) {
+        factory(this._options.selectedKeys).each((key) => {
             if (key !== undefined && key !== null && this._options.selectorItems.getRecordById(key)) {
                 selectedItems.push(this._options.selectorItems.getRecordById(key));
             }
