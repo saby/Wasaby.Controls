@@ -14,6 +14,8 @@ import {HistoryUtils, FilterUtils} from 'Controls/filter';
 import 'Controls/form';
 import {Logger} from 'UI/Utils';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
+import 'css!Controls/filterPopup';
+import 'css!Controls/CommonClasses';
 
 var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 var setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -365,7 +367,6 @@ FilterPanel.contextTypes = function() {
       filterPanelOptionsField: _FilterPanelOptions
    };
 };
-FilterPanel._theme = ['Controls/filterPopup'];
 
 FilterPanel._private = _private;
 export = FilterPanel;

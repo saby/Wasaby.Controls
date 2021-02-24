@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Text/Text');
+import 'css!Controls/filterPopup';
 
 /**
  * Контрол, отображающий текст с кнопкой сброса в виде крестика.
@@ -25,8 +26,6 @@ class Text extends Control<IControlOptions> {
       protected _resetHandler(): void {
          this._notify('visibilityChanged', [false]);
       }
-
-      static _theme: string[] = ['Controls/filterPopup'];
 
       static getDefaultOptions(): object {
          return {

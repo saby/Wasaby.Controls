@@ -2,6 +2,7 @@ import {Control, TemplateFunction} from 'UI/Base';
 import LookupTemplate = require('wml!Controls/_filterPopup/Panel/HierarchyLookup/HierarchyLookup');
 
 import {factory} from 'Types/chain';
+import 'css!Controls/filterPopup';
 
 /**
  * Обертка над контролом {@link Controls/_filterPopup/Panel/Lookup Controls/filterPopup:Lookup} для работы с иерархическим фильтром.
@@ -44,8 +45,6 @@ class HierarchyLookup extends Control {
             this._notify('selectedKeysChanged', [selectedKeys]);
         }
     }
-
-    static _theme: string[] = ['Controls/filterPopup'];
 }
 
 /**

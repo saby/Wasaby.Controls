@@ -3,6 +3,7 @@ import template = require('wml!Controls/_filterPopup/Panel/Dropdown/Dropdown');
 import {List} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import 'css!Controls/filterPopup';
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки и используется на панели фильтров.
@@ -48,8 +49,6 @@ class FilterDropdown extends Control<IControlOptions> {
       protected _dropDownClose(event: SyntheticEvent<Event>): void {
          this._notify('dropDownClose');
       }
-
-      static _theme: string[] = ['Controls/filterPopup'];
 
       static getDefaultOptions(): object {
          return {

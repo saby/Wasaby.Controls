@@ -7,6 +7,7 @@ import * as defaultItemTemplate from 'wml!Controls/_filterPopup/SimplePanel/item
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {HistoryUtils} from 'Controls/filter';
+import 'css!Controls/filterPopup';
 
 const DEFAULT_MIN_VISIBLE_ITEMS = 2;
 var _private = {
@@ -180,8 +181,6 @@ Object.defineProperty(Panel, 'defaultProps', {
       return Panel.getDefaultOptions();
    }
 });
-
-Panel._theme = ['Controls/filterPopup', 'Controls/dropdownPopup', 'Controls/menu'];
 
 Panel._private = _private;
 /**

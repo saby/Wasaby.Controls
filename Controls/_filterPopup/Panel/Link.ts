@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import template = require('wml!Controls/_filterPopup/Panel/Link/Link');
+import 'css!Controls/filterPopup';
 
 /**
  * Кнопка-ссылка на панели фильтров.
@@ -30,8 +31,6 @@ class FilterLink extends Control<IControlOptions> {
    protected  _clickHandler(): void {
       this._notify('visibilityChanged', [true]);
    }
-
-   static _theme: string[] = ['Controls/filterPopup'];
 }
 
 /**
