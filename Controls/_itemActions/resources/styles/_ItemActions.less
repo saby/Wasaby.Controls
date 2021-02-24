@@ -24,6 +24,10 @@
    padding-right: @offset-right_itemActions;
    height: @height_itemActions;
    overflow: hidden;
+
+   &.controls-itemActionsV_editingToolbarVisible {
+       height: @height_editing_itemActions;
+   }
 }
 
 .controls-itemActionsV_style_default_theme-@{themeName} {
@@ -57,6 +61,10 @@
   & .controls-itemActionsV__action-area_size {
     width: @item_area-size_outside_itemActions + (@item_padding_itemActions * 2);
     height: @item_area-size_outside_itemActions;
+  }
+
+  &.controls-itemActionsV_editingToolbarVisible {
+    height: @height_editing_outside_itemActions;
   }
 }
 
@@ -109,7 +117,6 @@
 
 .controls-itemActionsV_editingToolbarVisible {
   padding-right: 0;
-  height: @height_editing_itemActions;
 }
 // todo https://online.sbis.ru/opendoc.html?guid=803e1e7c-9e4d-4bc2-8627-0b732037d804
 .controls-itemActionsV__action .controls-itemActionsV__action_icon_theme-@{themeName} {
