@@ -107,6 +107,7 @@ class Popup extends Control<IPopupControlOptions> {
                 });
             } else {
                 this._prefetchData = null;
+                this._isPrefetchDataMode = false;
             }
         }
     }
