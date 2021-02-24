@@ -7,9 +7,26 @@ import {Model} from 'Types/entity';
 import {object} from 'Types/util';
 import {IOptions} from 'Controls/_display/grid/Collection';
 
+/**
+ * Элемент коллеции propertyGrid
+ *
+ * @class Controls/_propertyGrid/PropertyGridCollectionItem
+ * @extends Controls/_display/TreeItem
+ * @public
+ * @author Мельникова Е.А.
+ */
+
 export default class PropertyGridCollectionItem<T> extends TreeItem<T> {
     protected _$owner: PropertyGridCollection<T>;
+
+    /**
+     * Текущее значение элемента
+     */
     protected _$propertyValue: unknown;
+
+    /**
+     * Имя свойства, содержащего информацию об идентификаторе элемента
+     */
     protected _$keyProperty: string;
 
     constructor(options?: IOptions<T>) {
