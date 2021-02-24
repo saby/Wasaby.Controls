@@ -601,7 +601,6 @@ const _private = {
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{
     _template: TreeControlTpl,
     _root: null,
-    _updatedRoot: false,
     _nodesSourceControllers: null,
     _needResetExpandedItems: false,
     _beforeReloadCallback: null,
@@ -773,8 +772,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         // сделана некорректно. Как откажемся от неё, то можно использовать стандартное сравнение опций.
         const currentExpandedItems = viewModel ? viewModel.getExpandedItems() : this._options.expandedItems;
         if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, currentExpandedItems) && newOptions.source) {
-            if (((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
-                (searchValueChanged && newOptions.sourceController)) && !this._updatedRoot) {
+            if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
+                (searchValueChanged && newOptions.sourceController)) {
                 if (viewModel) {
                     viewModel.setExpandedItems(newOptions.expandedItems);
                 }
