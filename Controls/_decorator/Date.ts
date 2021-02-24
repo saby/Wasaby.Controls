@@ -52,7 +52,6 @@ export interface IDateOptions extends IControlOptions, IFontColorStyleOptions, I
  */
 class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IFontSize, IFontWeight {
     private _formattedDate: string;
-    private _fontColorStyle: string;
 
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
     readonly '[Controls/_interface/IFontSize]': boolean = true;
@@ -62,12 +61,10 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
     protected _template: TemplateFunction = template;
 
     protected _beforeMount(options: IDateOptions): void {
-        this._setFontState(options);
         this._formattedDate = this._formatDate(options);
     }
 
     protected _beforeUpdate(newOptions: IDateOptions): void {
-        this._setFontState(newOptions);
         if (
             this._options.value !== newOptions.value
             || this._options.format !== newOptions.format
@@ -77,8 +74,8 @@ class DateDecorator extends Control<IDateOptions> implements IFontColorStyle, IF
         }
     }
 
-    private _setFontState(options: IDateOptions): void {
-        this._fontColorStyle = options.readOnly ? 'readonly' : options.fontColorStyle;
+    private _calculateFontState(options: IDateOptions): string {
+        return options.readOnly ? 'readonly' : options.fontColorStyle;
     }
 
     private _formatDate(options: IDateOptions): string {
