@@ -79,8 +79,7 @@ export {default as IDraggable} from './_interface/IDraggable';
 export {IInputPlaceholder, IInputPlaceholderOptions} from './_interface/IInputPlaceholder';
 export {IInputTag, IInputTagOptions} from './_interface/IInputTag';
 
-
-// grid
+// region grid
 
 export {
     TColumns,
@@ -94,3 +93,10 @@ export {
     IColumnSeparatorSizeConfig,
     TColumnSeparatorSize
 } from './_interface/grid/IColumn';
+
+export {
+    THeader,
+    IHeaderCell
+} from './_interface/grid/IHeaderCell';
+
+// endregion grid

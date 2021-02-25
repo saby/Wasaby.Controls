@@ -3,8 +3,7 @@ import { create } from 'Types/di';
 import { isEqual } from 'Types/object';
 import { Model as EntityModel } from 'Types/entity';
 
-import { IColumn, TColumns, IColspanParams, TColumnSeparatorSize } from 'Controls/interface';
-import { THeader } from '../../../_grid/interface/IHeaderCell';
+import { THeader, IColumn, TColumns, IColspanParams, TColumnSeparatorSize } from 'Controls/interface';
 
 import {
     Collection,

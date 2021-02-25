@@ -1,8 +1,8 @@
 import { TemplateFunction } from 'UI/Base';
 import { Model as EntityModel } from 'Types/entity';
 
-import { THeader } from 'Controls/_grid/interface/IHeaderCell';
 import {
+    THeader,
     IColumn,
     TColumns,
     TColumnSeparatorSize

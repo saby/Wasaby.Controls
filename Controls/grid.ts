@@ -79,11 +79,6 @@ export {
 export {IGridControl} from './_grid/interface/IGridControl';
 
 export {
-    THeader,
-    IHeaderCell
-} from './_grid/interface/IHeaderCell';
-
-export {
     COLUMN_SCROLL_JS_SELECTORS,
     DRAG_SCROLL_JS_SELECTORS,
     ColumnScrollController as ColumnScroll,
@@ -100,5 +95,7 @@ export {
     TCellVerticalAlign,
     TOverflow,
     IColumnSeparatorSizeConfig,
-    TColumnSeparatorSize
+    TColumnSeparatorSize,
+    THeader,
+    IHeaderCell
 } from 'Controls/interface';
