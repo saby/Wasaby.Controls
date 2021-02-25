@@ -33,4 +33,4 @@ export {
 export {default as calculatePath} from 'Controls/_dataSource/calculatePath';
 export {isEqualItems} from './_dataSource/Controller';
 export {default as NavigationController} from './_dataSource/NavigationController';
-export {default as DataLoader} from './_dataSource/DataLoader';
+export {default as DataLoader, ILoadDataCustomConfig} from './_dataSource/DataLoader';
