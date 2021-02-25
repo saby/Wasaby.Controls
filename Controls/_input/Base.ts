@@ -482,10 +482,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     }
 
     protected _getReadOnlyField(): HTMLElement {
-        if (this._isMounted) {
-            return this._children.readOnlyField as HTMLElement;
-        }
-        return null;
+        return this._children.readOnlyField as HTMLElement;
     }
 
     /**
