@@ -39,16 +39,16 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridCollection/ItemsFac
     });
 
     describe('.items', () => {
-        it('should not add itemModule property', () => {
+        it('First element should be TreeGridGroupDataRow', () => {
             assert.instanceOf(collection.at(0), TreeGridGroupDataRow);
         });
 
-        it('should not add itemModule property', () => {
-            assert.instanceOf(collection.at(0), TreeGridDataRow);
+        it('Second element should be TreeGridDataRow', () => {
+            assert.instanceOf(collection.at(1), TreeGridDataRow);
         });
 
-        it('should add itemModule property', () => {
-            assert.instanceOf(collection.at(0), TreeGridDataRow);
+        it('Third element should be TreeGridDataRow', () => {
+            assert.instanceOf(collection.at(2), TreeGridDataRow);
         });
     });
 });
