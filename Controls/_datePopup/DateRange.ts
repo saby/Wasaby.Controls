@@ -167,6 +167,8 @@ var Component = BaseControl.extend([EventProxy], {
 
     _onPositionChanged: function(e: Event, position: Date) {
         this._position = position;
+        const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
+        this._markedKey = this._dateToId(markedKeyDate);
         _private.notifyPositionChanged(this, position);
     },
 
