@@ -2,7 +2,7 @@ import TreeGridDataRow from 'Controls/_treeGridNew/display/TreeGridDataRow';
 import {GridCell, IGridDataCellOptions, IItemTemplateParams} from 'Controls/gridNew';
 import { Model } from 'Types/entity';
 import {IColumn} from 'Controls/_grid/interface/IColumn';
-import IGroupNode from '../interfaces/IGroupNode';
+import IGroupNode from '../interface/IGroupNode';
 
 export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataRow<T> implements IGroupNode {
     '[Controls/treeGrid:TreeGridGroupDataRow]': boolean;

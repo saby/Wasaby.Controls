@@ -4,7 +4,7 @@ import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplayS
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
-import IGroupNode from '../interfaces/IGroupNode';
+import IGroupNode from '../interface/IGroupNode';
 
 export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {
     owner: TreeGridCollection<T>;
