@@ -525,10 +525,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._historyLoad;
    }
 
-   private _openSelector(templateOptions: object): void {
-      if (!this._notify('showSelector', [templateOptions])) {
+   private _openSelector(templateOptions: object): void|Promise<unknown> {
+      if (this._notify('showSelector', [templateOptions]) !== false) {
          // loading showAll templates_historyLoad
-         import('Controls/suggestPopup').then(() => {
+         return import('Controls/suggestPopup').then(() => {
             StackOpener.openPopup(this._getSelectorOptions(templateOptions));
          });
       }
@@ -676,7 +676,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._setFilter(newOptions.filter, newOptions);
       }
       if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
-         this._resolveLoad();
+         this._resolveSearch(this._searchValue, newOptions);
       }
 
       if (emptyTemplateChanged) {

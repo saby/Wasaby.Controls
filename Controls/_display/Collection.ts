@@ -46,6 +46,7 @@ const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated'
 /**
  *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
+ * @class
  * @public
  */
 const MultiSelectAccessibility = {

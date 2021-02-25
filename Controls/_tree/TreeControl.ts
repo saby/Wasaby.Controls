@@ -161,7 +161,7 @@ const _private = {
                 self._children.baseControl.showIndicator();
                 return baseSourceController
                     .load(undefined, nodeKey)
-                    .addCallbacks((list) => {
+                    .then((list) => {
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                         listViewModel.setHasMoreStorage(
                             _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
@@ -169,13 +169,13 @@ const _private = {
                         if (options.nodeLoadCallback) {
                             options.nodeLoadCallback(list, nodeKey);
                         }
-                    }, (error) => {
+                        self._children.baseControl.hideIndicator();
+                    }).catch((error: Error) => {
                         _private.processError(self, error);
                         // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
-                    })
-                    .addCallback(() => {
                         self._children.baseControl.hideIndicator();
+                        return error;
                     });
             } else {
 
@@ -401,12 +401,30 @@ const _private = {
 
         updateHasMoreStorage(viewModel || baseControlViewModel);
 
-        // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
-        if (options.markerMoveMode === 'leaves') {
-            self.goToNext();
-        }
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
+    },
+
+    afterSetItemsOnReloadCallback(self): void {
+        if (self._options.afterSetItemsOnReloadCallback instanceof Function) {
+            self._options.afterSetItemsOnReloadCallback();
+        }
+
+        // reset deepReload after loading data (see reload method or constructor)
+        self._deepReload = false;
+    },
+
+    afterSetItemsOnReloadCallback(self): void {
+        if (self._options.afterSetItemsOnReloadCallback instanceof Function) {
+            self._options.afterSetItemsOnReloadCallback();
+        }
+
+        // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
+        if (self._options.markerMoveMode === 'leaves') {
+            self._tempItem = null;
+            self._currentItem = null;
+            self.goToNext();
+        }
     },
 
     resetExpandedItems(self): void {
@@ -639,6 +657,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._keyDownHandler = this._keyDownHandler.bind(this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._getHasMoreData = _private.getHasMoreData.bind(null, this);
+        this._afterSetItemsOnReloadCallback = _private.afterSetItemsOnReloadCallback.bind(null, this);
         this._errorController = cfg.errorController || new dataSourceError.Controller({});
         return TreeControl.superclass.constructor.apply(this, arguments);
     },

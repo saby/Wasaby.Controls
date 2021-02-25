@@ -28,14 +28,15 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     private _touchAvailable: boolean = false;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
-        this._scrollAvailable = this._isScrollAvailable(options);
         this._position = options.slidingPanelOptions?.position;
+        this._scrollAvailable = this._isScrollAvailable(options);
+        this._touchAvailable = this._scrollAvailable;
     }
 
     protected _beforeUpdate(options: ISlidingPanelTemplateOptions): void {
         if (options.slidingPanelOptions !== this._options.slidingPanelOptions) {
-            this._scrollAvailable = this._isScrollAvailable(options);
             this._position = options.slidingPanelOptions?.position;
+            this._scrollAvailable = this._isScrollAvailable(options);
         }
     }
 
@@ -47,6 +48,9 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         const scrollAvailable = this._isScrollAvailable(options);
         if (scrollAvailable !== this._scrollAvailable) {
             this._scrollAvailable = scrollAvailable;
+
+            // Если при построении скролл доступен, то сразу же отпускаем тач.
+            this._touchAvailable = this._scrollAvailable;
         }
         this._isPanelMounted = true;
     }

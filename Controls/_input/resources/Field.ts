@@ -75,6 +75,9 @@ class Field<Value, ModelOptions>
     protected _isBrowserPlatform: boolean = constants.isBrowserPlatform;
     protected _inputKey: string;
 
+    // См. _selectHandler
+    private _selectionChangedByFocus: boolean;
+
     readonly '[Controls/input:IField]': boolean = true;
 
     constructor(cfg: IFieldOptions<Value, ModelOptions>) {
@@ -249,7 +252,9 @@ class Field<Value, ModelOptions>
         );
         this._fixBugs = new FixBugs({
             updatePositionCallback: () => {
-                return this.setSelectionRange(this._model.selection.start, this._model.selection.end);
+                const result = this.setSelectionRange(this._model.selection.start, this._model.selection.end);
+                this._selectionChangedByFocus = true;
+                return result;
             }
         }, this);
         this._fixBugs.beforeMount();
@@ -311,7 +316,16 @@ class Field<Value, ModelOptions>
             value: newValue,
             carriagePosition: position
         };
-        const nativeInputType = event.nativeEvent.inputType;
+        let nativeInputType = event.nativeEvent.inputType;
+        /**
+         * В событиях браузера есть баг, связаный с inputType.
+         * Он возвращает не корректное значение если ввести текст, и после нажать del.
+         * На del должно приходить deleteContentForward, но приходит insertText.
+         * https://online.sbis.ru/opendoc.html?guid=6a69f94b-3e61-49bf-a6c7-6c856c7e935c
+         */
+        if (nativeInputType === 'insertText' && event.nativeEvent.data === null) {
+            nativeInputType = 'deleteContentForward';
+        }
         const inputType: InputType = calculateInputType(value, selection, text, nativeInputType);
         const splitValue: ISplitValue = split(value, newValue, position, selection, inputType);
 
@@ -343,14 +357,14 @@ class Field<Value, ModelOptions>
     protected _selectHandler(): void {
 
         /*
-           В случае если после предыдущей синхронизации selection была изменена модель,
-           но ее изменения еще не были синхронизированы в поле не нужно забирать значение из поля
-           и сеттить его в модель, т.к. оно уже не актуально
-           Такое может случиться, если сразу после маунта позовут изменение selection.
+           В случае если после установки фокуса и первоначальной установки selection
+           меняют selection еще раз(через изменение модели),
+           то случается так, что событие от первоначальной установки стреляет
+           и мы затираем значение модели значением из инпута(т.к. beforeUpdate от изменения selection еще не наступил)
            Кейс: Маунт -> первое установление фокуса и selection ->
            еще одно изменение selection -> событие о изменении selection
          */
-        if (!this._model.selectionChanged) {
+        if (!this._selectionChangedByFocus) {
             this._workWithSelection.call(this._selectionFromFieldToModel);
         }
     }
@@ -458,7 +472,7 @@ class Field<Value, ModelOptions>
         const selection: ISelection = {start, end};
 
         this._notifySelection(selection);
-        this._model.selectionChanged = false;
+        this._selectionChangedByFocus = false;
 
         return this._workWithSelection.setSelectionRange(field, selection);
     }

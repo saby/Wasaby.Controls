@@ -16,8 +16,6 @@ import Field from 'Controls/_input/resources/Field';
 import {IViewModelOptions} from 'Controls/_input/Text/ViewModel';
 import 'css!Controls/input';
 
-import {getOptionPaddingTypes, getDefaultPaddingOptions} from './interface/IPadding';
-
 import 'wml!Controls/_input/Base/Stretcher';
 import 'wml!Controls/_input/Base/FixValueAttr';
 
@@ -196,6 +194,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     protected _focusByMouseDown: boolean;
     protected _leftFieldWrapper: IFieldTemplate;
     protected _rightFieldWrapper: IFieldTemplate;
+    protected _horizontalPadding: string;
     private _isBrowserPlatform: boolean;
 
     constructor(cfg: IBaseInputOptions) {
@@ -233,6 +232,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         );
         this._updateSelectionByOptions(options);
         this._initProperties(options);
+        this._updateHorizontalPadding(options);
 
         if (this._autoComplete !== 'off') {
             /**
@@ -268,6 +268,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         this._viewModel.displayValueBeforeUpdate = this._viewModel.displayValue;
         this._updateViewModel(newViewModelOptions, this._getValue(newOptions));
         this._updateSelectionByOptions(newOptions);
+        this._updateHorizontalPadding(newOptions);
     }
 
     /**
@@ -379,6 +380,18 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
          */
 
         this._calculateValueForTemplate();
+    }
+
+    private _updateHorizontalPadding(options: IBaseInputOptions): void {
+        let padding;
+        if (options.horizontalPadding) {
+            padding = options.horizontalPadding;
+        } else if (options.contrastBackground !== false) {
+            padding = 'xs';
+        } else {
+            padding = 'null';
+        }
+        this._horizontalPadding = padding;
     }
 
     /**
@@ -646,7 +659,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
 
     static getDefaultOptions(): object {
         return {
-            ...getDefaultPaddingOptions(),
             tooltip: '',
             inlineHeight: 'default',
             placeholder: '',
@@ -661,7 +673,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
 
     static getOptionTypes(): object {
         return {
-            ...getOptionPaddingTypes(),
             value: descriptor(String, null),
             selectionStart: descriptor(Number),
             selectionEnd: descriptor(Number),
