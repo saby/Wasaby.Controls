@@ -1,9 +1,3 @@
-/**
- * Интерфейс для ввода тегов (цветные индикаторы в правом верхнем углу поля).
- * @public
- * @author Красильников А.С.
- */
-
 export interface IInputTagOptions {
     tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
 }
@@ -97,6 +91,11 @@ export interface IInputTagOptions {
  * @see tagClick
  */
 
+/**
+ * Интерфейс для ввода тегов (цветные индикаторы в правом верхнем углу поля).
+ * @public
+ * @author Красильников А.С.
+ */
 export interface IInputTag {
     readonly '[Controls/_interface/IInputTag]': boolean;
 }
