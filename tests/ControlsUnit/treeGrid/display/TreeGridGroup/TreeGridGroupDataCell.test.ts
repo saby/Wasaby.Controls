@@ -28,8 +28,6 @@ describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataCell', () => 
 
     it('getContentClasses should return group cell content classes', () => {
         CssClassesAssert.include(groupCell.getContentClasses('default'), [
-            'controls-Grid__row-cell__content',
-            'controls-Grid__row-cell_cursor-pointer',
             'controls-Grid__cell_spacingRight_theme-default',
             'controls-TreeGrid__row-cell__firstColumn__contentSpacing_null',
             'controls-ListView__groupContent']);

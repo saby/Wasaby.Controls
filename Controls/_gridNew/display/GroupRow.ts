@@ -87,6 +87,7 @@ export default class GroupRow<T> extends mixin<
     }
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
+        params.highlightOnHover = false;
         let classes = super.getItemClasses(params);
         classes += ' controls-ListView__group';
         if (this.isHiddenGroup()) {

@@ -248,7 +248,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
         let contentClasses = 'controls-Grid__row-cell__content';
 
-        contentClasses += this._getBaselineClasses(theme);
+        contentClasses += ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
         contentClasses += ` controls-Grid__row-cell_cursor-${cursor}`;
 
         contentClasses += this._getHorizontalPaddingClasses(theme);
@@ -256,13 +256,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
         contentClasses += ` controls-Grid__row-cell_withoutRowSeparator_size-null_theme-${theme}`;
 
-        if (this._$column.align) {
-            contentClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
-        }
-
-        if (this._$column.valign) {
-            contentClasses += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
-        }
+        contentClasses += this._getContentAlignClasses();
 
         // todo Чтобы работало многоточие - нужна ещё одна обертка над contentTemplate. Задача пересекается с настройкой
         //      шаблона колонки (например, cursor на демо CellNoClickable)
@@ -308,10 +302,6 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     setRowSeparatorSize(rowSeparatorSize: string): void {
         this._$rowSeparatorSize = rowSeparatorSize;
         this._nextVersion();
-    }
-
-    protected _getBaselineClasses(theme: string): string {
-        return ` controls-Grid__row-cell__content_baseline_default_theme-${theme}`;
     }
 
     protected _getWrapperBaseClasses(theme: string, style: string, templateHighlightOnHover: boolean): string {
@@ -427,6 +417,18 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         classes += ` controls-Grid__row-cell_rowSpacingTop_${topPadding}_theme-${theme}`;
         classes += ` controls-Grid__row-cell_rowSpacingBottom_${bottomPadding}_theme-${theme}`;
 
+        return classes;
+    }
+
+    protected _getContentAlignClasses(): string {
+        let classes = '';
+        if (this._$column.align) {
+            classes += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
+        }
+
+        if (this._$column.valign) {
+            classes += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
+        }
         return classes;
     }
     // endregion

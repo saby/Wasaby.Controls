@@ -1,7 +1,7 @@
 import {Control, TemplateFunction} from 'UI/Base';
 import * as Template from 'wml!Controls-demo/treeGridNew/NodeTypeProperty/ChildNodes/ChildNodes';
 import {HierarchicalMemory} from 'Types/source';
-import {extendedData as data} from '../DataCatalog';
+import {extendedData as data} from '../data/NodeTypePropertyData';
 import {TColspanCallbackResult} from 'Controls/gridNew';
 import {Model} from 'Types/entity';
 import {INavigation, TExpandOrColapsItems} from 'Controls-demo/types';

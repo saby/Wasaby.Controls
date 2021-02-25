@@ -13,16 +13,6 @@ export default class TreeGridGroupDataCell<T extends Model>
         super(options);
     }
 
-    // region overrides
-
-    getContentClasses(theme: string): string {
-        let classes = super.getContentClasses(theme);
-        classes += ' controls-ListView__groupContent';
-        return classes;
-    }
-
-    // endregion overrides
-
     // region Аспект "Ячейка группы"
 
     isExpanded(): boolean {

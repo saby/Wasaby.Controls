@@ -15,6 +15,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
     // region overrides
 
     getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
+        params.highlightOnHover = false;
         let classes = super.getItemClasses(params);
         classes += ' controls-ListView__group';
         return classes;

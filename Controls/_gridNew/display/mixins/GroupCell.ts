@@ -1,5 +1,15 @@
+import {GridRow} from 'Controls/gridNew';
+
 export default abstract class GroupCell<T> {
     readonly '[Controls/_display/grid/mixins/GroupCell]': boolean;
+
+    getContentClasses(theme: string): string {
+        let classes = '';
+        classes += this._getHorizontalPaddingClasses(theme);
+        classes += this._getContentAlignClasses();
+        classes += ' controls-ListView__groupContent';
+        return classes;
+    }
 
     getContentTextClasses(theme: string): string {
         return 'controls-ListView__groupContent-text ' +
@@ -55,13 +65,9 @@ export default abstract class GroupCell<T> {
         return classes;
     }
 
-    protected _getVerticalPaddingClasses(theme: string): string {
-        return '';
-    }
-
-    protected _getBaselineClasses(theme: string): string {
-        return '';
-    }
-
     abstract isExpanded(): boolean;
+    abstract _getHorizontalPaddingClasses(theme: string): string;
+    abstract _getContentAlignClasses(): string;
+    abstract getOwner(): GridRow<any>;
+    abstract _getColumnScrollWrapperClasses(theme: string): string;
 }

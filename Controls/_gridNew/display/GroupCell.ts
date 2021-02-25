@@ -43,12 +43,6 @@ export default class GroupCell<T>
         return 'display: contents;';
     }
 
-    getContentClasses(theme: string): string {
-        let classes = super.getContentClasses(theme);
-        classes += ' controls-ListView__groupContent';
-        return classes;
-    }
-
     _getColspanParams(): IColspanParams {
         const hasMultiSelect = this._$owner.hasMultiSelectColumn();
         const ladderStickyColumn = this._$owner.getStickyColumn();
