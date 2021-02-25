@@ -59,3 +59,14 @@
       </ws:if>
    </div>
 </ws:else>
+
+<ws:partial template="wml!Controls/_tileNew/render/items/Default"
+            scope="{{_options}}"
+            itemType="small">
+   <ws:contentTemplate>
+      <div class="controls-TileView__mediumTemplate_content controls-TileView__mediumTemplate_content_theme-{{_options.theme}}">
+         <ws:partial template="wml!Controls/_tileNew/render/Image"/>
+         <ws:partial template="wml!Controls/_tileNew/render/Content"/>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>

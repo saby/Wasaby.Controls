@@ -35,13 +35,13 @@
                      template="{{itemActionsTemplate}}"
                      highlightOnHover="{{highlightOnHover}}"
                      actionPadding="{{itemActionsPadding}}"
-                     itemData="{{item}}"
-                     item="{{item}}"
+                     itemData="{{(item || itemData)}}"
+                     item="{{(item || itemData)}}"
                      itemActionsClass="{{ item.getItemActionsClasses(itemType) }}"/>
          <ws:partial if="{{ item.shouldDisplaySwipeTemplate() }}"
                      template="{{swipeTemplate}}"
-                     itemData="{{item}}"
-                     item="{{item}}"
+                     itemData="{{(item || itemData)}}"
+                     item="{{(item || itemData)}}"
                      itemActionsTemplate="{{itemActionsTemplate}}"/>
       </div>
    </div>

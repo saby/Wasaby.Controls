@@ -319,10 +319,29 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
                 break;
             case 'preview':
                 classes += 'controls-TileView__previewTemplate_itemActions';
+                // TODO {{itemData.dispItem.isNode() ? 'controls-TileView__previewTemplate_itemActions_node'}}
                 break;
         }
 
         return classes;
+    }
+
+    getActionMode(itemType: string = 'default'): string {
+        if (itemType === 'preview') {
+            // TODO itemData.dispItem.isNode() ? 'strict' : 'adaptive'
+            return 'adaptive';
+        }
+
+        return '';
+    }
+
+    getActionPadding(itemType: string = 'default'): string {
+        if (itemType === 'preview') {
+            // TODO itemData.dispItem.isNode() ? '' : 'null'
+            return 'null';
+        }
+
+        return '';
     }
 
     // endregion ItemActions
@@ -618,9 +637,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
         switch (itemType) {
             case 'default':
-                break;
             case 'small':
-                break;
             case 'medium':
                 break;
             case 'rich':

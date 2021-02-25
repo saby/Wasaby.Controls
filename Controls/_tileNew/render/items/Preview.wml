@@ -28,16 +28,15 @@
       </div>
    </ws:contentTemplate>
    <ws:itemActionsTemplate>
-      <ws:partial template="Controls/_tileNew/itemActions/Control"
-                  item="{{itemData.dispItem}}">
+      <ws:partial template="Controls/_tileNew/itemActions/Control" item="{{(item || itemData)}}" itemData="{{(item || itemData)}}">
          <ws:partial template="{{itemActionsTemplate}}"
-                     actionPadding="{{itemData.dispItem.isNode() ? '' : 'null'}}"
+                     actionPadding="{{ (item || itemData).getActionPadding(itemType) }}"
                      actionStyle="{{!titleStyle || titleStyle === 'light' ? 'tileLight' : 'tileDark'}}"
                      iconStyle="{{!titleStyle || titleStyle === 'light' ? 'contrast' : 'tileDark'}}"
-                     actionMode="{{itemData.dispItem.isNode() ? 'strict' : 'adaptive'}}"
+                     actionMode="{{ (item || itemData).getActionMode(itemType) }}"
                      highlightOnHover="{{false}}"
-                     itemData="{{itemData}}"
-                     itemActionsClass="controls-TileView__previewTemplate_itemActions {{itemData.dispItem.isNode() ? 'controls-TileView__previewTemplate_itemActions_node'}}"/>
+                     itemData="{{(item || itemData)}}"
+                     item="{{(item || itemData)}}"/>
       </ws:partial>
    </ws:itemActionsTemplate>
 </ws:partial>
