@@ -1,7 +1,8 @@
 define([
    'Controls/form',
-   'Types/entity'
-], (form, entity) => {
+   'Types/entity',
+   'Core/Deferred'
+], (form, entity, Deferred) => {
    'use strict';
    const { ControllerBase } = form;
    const { Model } = entity;

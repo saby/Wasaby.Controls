@@ -340,7 +340,7 @@ define([
          };
          let data;
          FC._record = {
-            getId: () => 'id1',
+            getKey: () => 'id1',
             isChanged: () => true
          };
          FC._isNewRecord = true;
