@@ -25,7 +25,6 @@ define(
                   }
                };
             };
-            ctrl._afterMount();
          });
          describe('_focusInHandler', function() {
             it('by tab', function() {

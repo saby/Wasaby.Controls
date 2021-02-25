@@ -196,7 +196,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     protected _leftFieldWrapper: IFieldTemplate;
     protected _rightFieldWrapper: IFieldTemplate;
     private _isBrowserPlatform: boolean;
-    protected _isMounted: boolean = false;
 
     constructor(cfg: IBaseInputOptions) {
         super(cfg);
@@ -260,7 +259,6 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     }
 
     protected _afterMount(): void {
-        this._isMounted = true;
         this._hidePlaceholder = false;
     }
 
@@ -475,10 +473,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      * @private
      */
     protected _getField(): Field<String, IViewModelOptions> {
-        if (this._isMounted) {
-            return this._children[this._fieldName] as Field<String, IViewModelOptions>;
-        }
-        return null;
+        return this._children[this._fieldName] as Field<String, IViewModelOptions>;
     }
 
     protected _getReadOnlyField(): HTMLElement {
@@ -571,7 +566,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
          * A field in focus when it is the active element on the page.
          * The active element is only on the client. The field cannot be focused on the server.
          */
-        if (this._isBrowserPlatform) {
+        if (this._isBrowserPlatform && this._mounted) {
             return this._getActiveElement() === this._getField();
         }
 
