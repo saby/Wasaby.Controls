@@ -639,18 +639,6 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
     // region Styles
 
-    getInvisibleClasses(): string {
-        let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()}`;
-        classes += ` ${this.getItemPaddingClasses()} controls-TileView__item_invisible`;
-        return classes;
-    }
-
-    getInvisibleStyles(templateWidth?: number): string {
-        const width = this.getTileWidth(templateWidth);
-        // TODO if isNode() then width = templateWidth || folderWidth || itemData.defaultFolderWidth
-        return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
-    }
-
     getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer'): string {
         let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()} controls-ListView__itemV`;
         if (templateClickable !== false) {

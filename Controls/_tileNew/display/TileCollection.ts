@@ -432,10 +432,20 @@ export default class TileCollection<
         return this._$itemsContainerPadding?.right;
     }
 
-    // TODO переписать этот момент
-    getTileItemData(): T {
-        const params = this._getItemsFactoryParams({});
-        return this.createItem(params);
+    getInvisibleClasses(): string {
+        let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()}`;
+        classes += ` controls-TileView__item_spacingLeft_${this.getLeftPadding()}_theme-${this.getTheme()}`;
+        classes += ` controls-TileView__item_spacingRight_${this.getRightPadding()}_theme-${this.getTheme()}`;
+        classes += ` controls-TileView__item_spacingTop_${this.getTopPadding()}_theme-${this.getTheme()}`;
+        classes += ` controls-TileView__item_spacingBottom_${this.getBottomPadding()}_theme-${this.getTheme()}`;
+        classes += ' controls-TileView__item_invisible';
+        return classes;
+    }
+
+    getInvisibleStyles(templateWidth?: number): string {
+        const width = templateWidth || this.getTileWidth();
+        // TODO if isNode() then width = templateWidth || folderWidth || itemData.defaultFolderWidth
+        return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
     }
 
     getItemsPaddingContainerClasses(): string {
