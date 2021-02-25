@@ -6,6 +6,7 @@ import {RecordSet} from 'Types/collection';
 import emptyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_List/emptyItemTemplate');
 import {DropdownViewModel} from 'Controls/dropdownPopup';
 import hierarchyItemTemplate = require('wml!Controls/_filterPopup/SimplePanel/_HierarchyList/hierarchyItemTemplate');
+import 'css!Controls/filterPopup';
 
 interface IHierarchyListFolder {
     [key: string]: Model;
@@ -148,8 +149,6 @@ class HierarchyList extends Control<IControlOptions> {
         });
         return nodeItems;
     }
-
-    static _theme: string[] = ['Controls/filterPopup'];
 
     static getDefaultOptions(): object {
         return {

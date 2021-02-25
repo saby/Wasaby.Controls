@@ -40,6 +40,7 @@ import mergeSource from 'Controls/_filter/Utils/mergeSource';
 import {IFilterItem, IEditorOptions, TKey} from './View/interface/IFilterView';
 import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
 import {Source as HistorySource} from 'Controls/history';
+import 'css!Controls/filter';
 
 interface IFilterViewOptions extends IControlOptions {
     source: IFilterItem[];
@@ -1172,8 +1173,6 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> {
             IoC.resolve('ILogger').error('_filter:View', e);
         }
     }
-
-    static _theme: string[] = ['Controls/filter'];
 
     static getDefaultOptions(): Partial<IFilterViewOptions> {
         return {

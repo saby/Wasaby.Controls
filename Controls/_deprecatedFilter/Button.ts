@@ -9,6 +9,7 @@ import Deferred = require('Core/Deferred');
 import libHelper = require('Core/library');
 import {isEqual} from 'Types/object';
 import {FilterUtils} from 'Controls/filter';
+import 'css!Controls/deprecatedFilter';
 
 var _private = {
    getText: function(items) {
@@ -134,7 +135,7 @@ var _private = {
  * @mixes Controls/_filter/interface/IFilterButton
  * @demo Controls-demo/Filter/Button/PanelVDom
  * @deprecated Данный контрол устарел и будет удалён. Вместо него используйте {@link Controls/filter:View}.
- * 
+ *
  * @public
  * @author Герасимов А.М.
  *
@@ -235,6 +236,5 @@ Object.defineProperty(FilterButton, 'defaultProps', {
    }
 });
 
-FilterButton._theme = ['Controls/deprecatedFilter'];
 FilterButton._private = _private;
 export = FilterButton;
