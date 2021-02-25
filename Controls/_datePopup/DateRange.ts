@@ -135,7 +135,7 @@ export default class DateRange extends Control<IControlOptions> {
     protected _onMonthsPositionChanged(e: Event, position: Date): void {
         if (position.getFullYear() !== this._position.getFullYear()) {
             const newPosition = new Date(position.getFullYear(), 0);
-            this._notifyPositionChanged(position);
+            this._notifyPositionChanged(newPosition);
         }
     }
 
