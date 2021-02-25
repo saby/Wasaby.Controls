@@ -43,8 +43,6 @@ import { isFullGridSupport } from 'Controls/display';
 import TreeGridGroupDataRow from 'Controls/_treeGridNew/display/TreeGridGroupDataRow';
 import TreeGridGroupDataCell from 'Controls/_treeGridNew/display/TreeGridGroupDataCell';
 
-export {default as IGroupNodeRow} from './_treeGridNew/interface/IGroupNodeRow';
-
 export {
     TreeGridFooterCell,
     TreeGridCollection,

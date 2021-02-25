@@ -81,6 +81,8 @@ export {ExpandableMixin, IExpandableMixinOptions};
 export {default as IMarkable} from './_display/interface/IMarkable';
 export {default as ISelectableItem} from './_display/interface/ISelectableItem';
 
+export {default as IGroupNode} from './_display/interface/IGroupNode';
+
 import {default as CollectionItem} from 'Controls/_display/CollectionItem';
 import BreadcrumbsItem from './_display/BreadcrumbsItem';
 export {BreadcrumbsItem};

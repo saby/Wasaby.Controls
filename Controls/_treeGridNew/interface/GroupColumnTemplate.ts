@@ -15,7 +15,7 @@
  *
  * Необходимо учесть, что применение данного типа группировки записей не совместимо с обычной группировкой, которая настраивается через groupProperty. Их нельзя использовать вместе.
  *
- * В {@link Controls/grid:IColumn#template шаблон колонки} платформа передаёт item, который реализует интерфейс {@link Controls/treeGridNew:IGroupNodeRow}.
+ * В {@link Controls/grid:IColumn#template шаблон колонки} платформа передаёт item, который реализует интерфейс {@link Controls/display:IGroupNode}.
  * При помощи метода isGroupNode() можно определить, что текущий item является узлом-группой.
  *
  * Для первого случая существует два основных варианта использования шаблона Controls/treeGridNew:GroupColumnTemplate.
