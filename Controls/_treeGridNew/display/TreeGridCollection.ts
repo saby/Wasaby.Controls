@@ -49,7 +49,6 @@ export default class TreeGridCollection<
 > extends mixin<Tree<any>, GridMixin<any, any>>(Tree, GridMixin) {
     readonly '[Controls/treeGrid:TreeGridCollection]': boolean;
 
-    protected _groupNodeItemModule: string;
     protected _$nodeTypeProperty: string;
 
     constructor(options: IOptions<S, T>) {
@@ -152,13 +151,32 @@ export default class TreeGridCollection<
 
     protected _getItemsFactory(): ItemsFactory<T> {
         const superFactory = super._getItemsFactory();
-        return function CollectionItemsFactory(options?: ITreeGridRowOptions<T>): T {
-            options.columns = this._$columns;
-            options.colspanCallback = this._$colspanCallback;
-            options.columnSeparatorSize = this._$columnSeparatorSize;
-            options.rowSeparatorSize = this._$rowSeparatorSize;
-            return superFactory.call(this, options);
+        return this._itemsFactoryResolver.bind(this, superFactory);
+    }
+
+    protected _itemsFactoryResolver(superFactory: ItemsFactory<T>, options?: ITreeGridRowOptions<S>): ItemsFactory<T> {
+        options.columns = this._$columns;
+        options.colspanCallback = this._$colspanCallback;
+        options.columnSeparatorSize = this._$columnSeparatorSize;
+        options.rowSeparatorSize = this._$rowSeparatorSize;
+
+        // Строит обычную фабрику
+        const CollectionItemsFactory = (factoryOptions?: ITreeGridRowOptions<S>): ItemsFactory<T> => {
+            return superFactory.call(this, factoryOptions);
         };
+
+        // Строит фабрику, которая работает с TreeGridGroupDataRow
+        const GroupNodeFactory = (factoryOptions?: ITreeGridRowOptions<S>): ItemsFactory<T> => {
+            factoryOptions.itemModule = 'Controls/treeGrid:TreeGridGroupDataRow';
+            return superFactory.call(this, factoryOptions);
+        };
+
+        if (this._$nodeTypeProperty &&
+            options.contents && typeof options.contents !== 'string' && !Array.isArray(options.contents) &&
+            options.contents.get(this._$nodeTypeProperty) === 'group') {
+            return GroupNodeFactory.call(this, options);
+        }
+        return CollectionItemsFactory.call(this, options);
     }
 
     protected _getGroupItemConstructor(): new() => GridGroupRow<T> {
@@ -200,15 +218,6 @@ export default class TreeGridCollection<
     protected _createComposer(): itemsStrategy.Composer<any, TreeItem<any>> {
         const composer = super._createComposer();
 
-        if (this._$nodeTypeProperty) {
-            composer.remove(itemsStrategy.Direct);
-            composer.prepend(itemsStrategy.GroupNode, {
-                display: this,
-                nodeTypeProperty: this._$nodeTypeProperty,
-                groupNodeItemModule: this._groupNodeItemModule
-            });
-        }
-
         // TODO нужно определить когда точно нужна эта стратегия и добавлять только в этом случае
         composer.append(itemsStrategy.NodeFooter, {
             display: this,
@@ -229,6 +238,5 @@ Object.assign(TreeGridCollection.prototype, {
     '[Controls/treeGrid:TreeGridCollection]': true,
     _moduleName: 'Controls/treeGrid:TreeGridCollection',
     _itemModule: 'Controls/treeGrid:TreeGridDataRow',
-    _groupNodeItemModule: 'Controls/treeGrid:TreeGridGroupDataRow',
     _$nodeTypeProperty: null
 });
