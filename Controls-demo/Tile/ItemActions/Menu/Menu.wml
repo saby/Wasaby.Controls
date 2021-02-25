@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-   <Controls.tile:View
+   <Controls.tileNew:View
       tileMode="dynamic"
       displayProperty="title"
       imageProperty="image"

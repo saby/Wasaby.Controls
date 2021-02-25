@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-   <Controls.tile:View
+   <Controls.tileNew:View
       displayProperty="title"
       parentProperty="parent"
       nodeProperty="parent@"
@@ -33,5 +33,5 @@
             </ws:bottomRightTemplate>
          </ws:partial>
       </ws:itemTemplate>
-   </Controls.tile:View>
+   </Controls.tileNew:View>
 </div>

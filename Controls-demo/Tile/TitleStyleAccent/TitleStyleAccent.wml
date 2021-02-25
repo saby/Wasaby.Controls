@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlDemo_Tile_styleAccent">
-<Controls.tile:View
+<Controls.tileNew:View
         displayProperty="title"
         imageProperty="image"
         keyProperty="id"
@@ -10,5 +10,5 @@
                         titleStyle="accent"
                         template="Controls/tile:ItemTemplate"/>
         </ws:itemTemplate>
-</Controls.tile:View>
+</Controls.tileNew:View>
 </div>

@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlDemo_Tile_diff-width">
-<Controls.tile:View
+<Controls.tileNew:View
         tileMode="dynamic"
         displayProperty="title"
         imageProperty="image"
@@ -11,5 +11,5 @@
                         template="Controls/tile:ItemTemplate"
                         hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
         </ws:itemTemplate>
-</Controls.tile:View>
+</Controls.tileNew:View>
 </div>

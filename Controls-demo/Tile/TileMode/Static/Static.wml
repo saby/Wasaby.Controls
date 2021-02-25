@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-   <Controls.tile:View
+   <Controls.tileNew:View
       tileMode="static"
       displayProperty="title"
       tileHeight="200"
@@ -15,5 +15,5 @@
             scope="{{itemTemplate}}"
             hasTitle="{{false}}"/>
       </ws:itemTemplate>
-   </Controls.tile:View>
+   </Controls.tileNew:View>
 </div>
