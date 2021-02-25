@@ -400,12 +400,21 @@ const _private = {
             updateHasMoreStorage(baseControlViewModel);
         }
 
-        // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
-        if (options.markerMoveMode === 'leaves') {
-            self.goToNext();
-        }
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
+    },
+
+    afterSetItemsOnReloadCallback(self): void {
+        if (self._options.afterSetItemsOnReloadCallback instanceof Function) {
+            self._options.afterSetItemsOnReloadCallback();
+        }
+
+        // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
+        if (self._options.markerMoveMode === 'leaves') {
+            self._tempItem = null;
+            self._currentItem = null;
+            self.goToNext();
+        }
     },
 
     resetExpandedItems(self): void {
@@ -637,6 +646,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._keyDownHandler = this._keyDownHandler.bind(this);
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._getHasMoreData = _private.getHasMoreData.bind(null, this);
+        this._afterSetItemsOnReloadCallback = _private.afterSetItemsOnReloadCallback.bind(null, this);
         this._errorController = cfg.errorController || new dataSourceError.Controller({});
         return TreeControl.superclass.constructor.apply(this, arguments);
     },

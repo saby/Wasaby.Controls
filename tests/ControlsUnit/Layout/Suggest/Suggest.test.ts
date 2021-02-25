@@ -1134,6 +1134,7 @@ describe('Controls/suggest', () => {
          suggestComponent._options.filter = {param: 'old_test'};
          suggestComponent._showContent = true;
          resolveLoadStub.reset();
+         const resolveSearchStub  = sandbox.stub(suggestComponent, '_resolveSearch').callsFake(() => Promise.resolve());
          suggestComponent._beforeUpdate({
             suggestState: true,
             searchParam: 'testSearchParam',
@@ -1142,7 +1143,7 @@ describe('Controls/suggest', () => {
             filter: {param: 'new_test'}
          });
 
-         assert.isTrue(resolveLoadStub.calledOnce);
+         assert.isTrue(resolveSearchStub.calledOnce);
 
          sandbox.restore();
       });
@@ -1528,6 +1529,34 @@ describe('Controls/suggest', () => {
 
          suggestComponent._openSelector(templateOptions);
          assert.isFalse(isOpenPopup);
+      });
+
+      describe('_openSelector', () => {
+         let isOpenPopup = false;
+         const suggestComponent = getComponentObject({
+            suggestTemplate: {}
+         });
+         suggestComponent._getSelectorOptions = () => {
+            isOpenPopup = true;
+         };
+
+         it('show selector', async () => {
+            suggestComponent._notify = () => {
+               return true;
+            };
+
+            await suggestComponent._openSelector({});
+            assert.isTrue(isOpenPopup);
+         });
+
+         it('dont show selector', async () => {
+            isOpenPopup = false;
+            suggestComponent._notify = () => {
+               return false;
+            };
+            await suggestComponent._openSelector({});
+            assert.isFalse(isOpenPopup);
+         });
       });
 
       it('changeValueHandler', async () => {
