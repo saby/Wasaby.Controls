@@ -43,6 +43,8 @@ export default class TileCollection<
 > extends Collection<S, T> {
     protected _$tileMode: string;
 
+    protected _$tileSize: 's'|'m'|'l';
+
     protected _$tileHeight: number;
 
     protected _$tileWidth: number;
@@ -84,6 +86,26 @@ export default class TileCollection<
         this.getViewIterator().each((item: TileCollectionItem<S>) => {
             if (item.setTileMode) {
                 item.setTileMode(tileMode);
+            }
+        });
+    }
+
+    getTileSize(): 's'|'m'|'l' {
+        return this._$tileSize;
+    }
+
+    setTileSize(tileSize: 's'|'m'|'l'): void {
+        if (this._$tileSize !== tileSize) {
+            this._$tileSize = tileSize;
+            this._updateItemsTileSize(tileSize);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsTileSize(tileSize: 's'|'m'|'l'): void {
+        this.getViewIterator().each((item: TileCollectionItem<S>) => {
+            if (item.setTileSize) {
+                item.setTileSize(tileSize);
             }
         });
     }
@@ -412,18 +434,22 @@ export default class TileCollection<
 
     getItemsPaddingContainerClasses(): string {
         const theme = `_theme-${this.getTheme()}`;
-        let classes = '';
-        if (this._$itemsContainerPadding) {
-            classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this.getItemsContainerLeftPadding()}_itemPadding_${this.getLeftPadding()}${theme}`;
-            classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this.getItemsContainerRightPadding()}_itemPadding_${this.getRightPadding()}${theme}`;
-            classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this.getItemsContainerTopPadding()}_itemPadding_${this.getTopPadding()}${theme}`;
-            classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this.getItemsContainerBottomPadding()}_itemPadding_${this.getBottomPadding()}${theme}`;
-        } else {
-            classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this.getLeftPadding()}${theme}`;
-            classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this.getRightPadding()}${theme}`;
-            classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this.getTopPadding()}${theme}`;
-            classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this.getBottomPadding()}${theme}`;
+        let classes = 'controls-TileView__itemPaddingContainer ';
+
+        if (this.getCount()) {
+            if (this._$itemsContainerPadding) {
+                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this.getItemsContainerLeftPadding()}_itemPadding_${this.getLeftPadding()}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this.getItemsContainerRightPadding()}_itemPadding_${this.getRightPadding()}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this.getItemsContainerTopPadding()}_itemPadding_${this.getTopPadding()}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this.getItemsContainerBottomPadding()}_itemPadding_${this.getBottomPadding()}${theme}`;
+            } else {
+                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this.getLeftPadding()}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this.getRightPadding()}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this.getTopPadding()}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this.getBottomPadding()}${theme}`;
+            }
         }
+
         return classes;
     }
 
@@ -459,22 +485,25 @@ export default class TileCollection<
         const parent = super._getItemsFactory();
 
         return function TileItemsFactory(options: IOptions<S>): T {
-            this._fillItemsFactoryOptions(options);
-            return parent.call(this, options);
+            const params = this._getItemsFactoryParams(options);
+            return parent.call(this, params);
         };
     }
 
-    protected _fillItemsFactoryOptions(options: IOptions<S>): void {
-        options.tileMode = this.getTileMode();
-        options.tileHeight = this.getTileHeight();
-        options.tileWidth = this.getTileWidth();
-        options.tileWidthProperty = this.getTileWidthProperty();
-        options.roundBorder = this.getRoundBorder();
-        options.imageProperty = this.getImageProperty();
-        options.imageFit = this.getImageFit();
-        options.imageHeightProperty = this.getImageHeightProperty();
-        options.imageWidthProperty = this.getImageWidthProperty();
-        options.imageUrlResolver = this.getImageUrlResolver();
+    protected _getItemsFactoryParams(params: IOptions<S>): IOptions<S> {
+        params.tileMode = this.getTileMode();
+        params.tileSize = this.getTileSize();
+        params.tileHeight = this.getTileHeight();
+        params.tileWidth = this.getTileWidth();
+        params.tileWidthProperty = this.getTileWidthProperty();
+        params.roundBorder = this.getRoundBorder();
+        params.imageProperty = this.getImageProperty();
+        params.imageFit = this.getImageFit();
+        params.imageHeightProperty = this.getImageHeightProperty();
+        params.imageWidthProperty = this.getImageWidthProperty();
+        params.imageUrlResolver = this.getImageUrlResolver();
+
+        return params;
     }
 }
 
@@ -484,6 +513,7 @@ Object.assign(TileCollection.prototype, {
     _instancePrefix: 'tile-item-',
     _itemModule: 'Controls/tileNew:TileCollectionItem',
     _$tileMode: 'static',
+    _$tileSize: null,
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$tileWidth: DEFAULT_TILE_WIDTH,
     _$imageProperty: '',

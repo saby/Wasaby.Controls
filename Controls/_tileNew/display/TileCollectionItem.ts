@@ -5,11 +5,46 @@ import TileCollection, {
 import {Model} from 'Types/entity';
 import { object } from 'Types/util';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from '../utils/imageUtil';
-import {isEqual} from "Types/object";
+import {isEqual} from 'Types/object';
+import { TemplateFunction } from 'UI/Base';
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 
+const TILE_SIZES = {
+    s: {
+        horizontal: {
+            width: 210,
+            imageHeight: 180
+        },
+        vertical: {
+            width: 390,
+            imageWidth: 300
+        }
+    },
+    m: {
+        horizontal: {
+            width: 310,
+            imageHeight: 240
+        },
+        vertical: {
+            width: 390,
+            imageWidth: 160
+        }
+    },
+    l: {
+        horizontal: {
+            width: 420,
+            imageHeight: 320
+        },
+        vertical: {
+            width: 640,
+            imageWidth: 300
+        }
+    }
+};
+
 export interface IOptions<S extends Model = Model> extends ICollectionItemOptions<S> {
+    tileSize: 's' | 'm' | 'l';
     tileMode: string;
     tileHeight: number;
     tileWidth: number;
@@ -35,6 +70,8 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
     // TODO указать нормальный тип
     protected _$tileMode: string;
+
+    protected _$tileSize: 's'|'m'|'l';
 
     protected _$tileHeight: number;
 
@@ -67,6 +104,17 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         }
     }
 
+    getTileSize(): 's'|'m'|'l' {
+        return this._$tileSize;
+    }
+
+    setTileSize(tileSize: 's'|'m'|'l'): void {
+        if (this._$tileSize !== tileSize) {
+            this._$tileSize = tileSize;
+            this._nextVersion();
+        }
+    }
+
     getTileHeight(): number {
         return this._$tileHeight || DEFAULT_TILE_HEIGHT;
     }
@@ -85,17 +133,6 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     setTileWidthProperty(tileWidthProperty: string): void {
         if (this._$tileWidthProperty !== tileWidthProperty) {
             this._$tileWidthProperty = tileWidthProperty;
-            this._nextVersion();
-        }
-    }
-
-    getTileScalingMode(): string {
-        return this._$tileScalingMode;
-    }
-
-    setTileScalingMode(tileScalingMode: string): void {
-        if (this._$tileScalingMode !== tileScalingMode) {
-            this._$tileScalingMode = tileScalingMode;
             this._nextVersion();
         }
     }
@@ -133,7 +170,37 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         }
     }
 
-    // TODO нужно адекватное название метода
+    getTileSizes(imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
+        if (!this.getTileSize()) {
+            return null;
+        }
+
+        const sizeParams = object.clone(TILE_SIZES[this.getTileSize()]);
+        const tileSizes = sizeParams[imagePosition === 'top' ? 'horizontal' : 'vertical'];
+        if (imagePosition === 'top') {
+            tileSizes.imageWidth = null;
+            if (imageViewMode !== 'rectangle') {
+                tileSizes.imageHeight = null;
+            }
+        } else if (imageViewMode !== 'rectangle') {
+            tileSizes.imageHeight = tileSizes.imageWidth;
+        }
+        return tileSizes;
+    }
+
+    getTileScalingMode(): string {
+        return this._$tileScalingMode;
+    }
+
+    setTileScalingMode(tileScalingMode: string): void {
+        if (this._$tileScalingMode !== tileScalingMode) {
+            this._$tileScalingMode = tileScalingMode;
+            this._nextVersion();
+        }
+    }
+
+    // TODO нужно адекватное название метода. (При tileMode!=dynamic зачем-то добавляется див с этим стилем
+    //  padding-top растягивает контент от ширины контейнера (нативное поведение)
     getDynamicPaddingTop(width?: number): string {
         return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width))} * 100%;`;
     }
@@ -221,6 +288,45 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return !this.getTileScalingMode() || this.getTileScalingMode() === 'none';
     }
 
+    // region ItemActions
+
+    shouldDisplayItemActions(): boolean {
+        const itemActionsPosition = this.getOwner().getActionsTemplateConfig().itemActionsPosition;
+        return !this.isSwiped() && (this.hasVisibleActions() || this.isEditing()) && itemActionsPosition !== 'custom';
+    }
+
+    shouldDisplaySwipeTemplate(): boolean {
+        return this.isSwiped() && (this.hasVisibleActions() || this.isEditing());
+    }
+
+    getItemActionsClasses(itemType: string = 'default'): string {
+        let classes = '';
+
+        switch (itemType) {
+            case 'default':
+                classes += `controls-TileView__itemActions_theme-${this.getTheme()}`;
+                classes += ' controls-TileView__itemActions_bottomRight';
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                classes += 'controls-TileView__itemActions_bottomRight';
+                classes += ` controls-TileView__mediumTemplate_itemActions_theme-${this.getTheme()}`;
+                break;
+            case 'rich':
+                classes += 'controls-TileView__richTemplate_itemActions controls-TileView__itemActions_topRight';
+                classes += ` controls-TileView__richTemplate_itemActions_theme-${this.getTheme()}`;
+                break;
+            case 'preview':
+                classes += 'controls-TileView__previewTemplate_itemActions';
+                break;
+        }
+
+        return classes;
+    }
+
+    // endregion ItemActions
+
     // region Image
 
     getImageProperty(): string {
@@ -303,35 +409,189 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         }
     }
 
-    getImageClasses(widthTpl?: number): string {
+    getImageProportion(proportion: string = '1:1'): number {
+        const [width, height]: string[] = proportion.split(':');
+        if (width && height) {
+            return +(Number(height) / Number(width)).toFixed(2);
+        }
+        return 1;
+    }
+
+    getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: string, imagePosition?: string, imageSize?: string): string {
         const imageRestrictions = this.getImageFit() === 'cover'
             ? getImageRestrictions(this.getImageHeight(), this.getImageWidth(), this.getTileHeight(), this.getTileWidth(widthTpl))
             : {};
-        return getImageClasses(this.getImageFit(), imageRestrictions);
+
+        let classes = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'medium':
+                classes += ' controls-TileView__image';
+                classes += ` controls-TileView__image_align_${imageAlign} `;
+                classes += getImageClasses(this.getImageFit(), imageRestrictions);
+                break;
+            case 'small':
+                break;
+            case 'rich':
+                classes += ' controls-TileView__richTemplate_image';
+                classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
+                if (!imageProportion || imageViewMode !== 'rectangle' || imagePosition !== 'top') {
+                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
+                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
+
+                }
+                break;
+            case 'preview':
+                break;
+        }
+
+        return classes ;
     }
 
-    getImageWrapperClasses(templateHasTitle?: boolean, templateTitleStyle?: string): string {
-        const theme = `_theme-${this.getTheme()}`;
+    getImageWrapperClasses(itemType: string = 'default', templateHasTitle?: boolean, templateTitleStyle?: string, imageViewMode: string = 'rectangle'): string {
         let classes = 'controls-TileView__imageWrapper';
-        if (this.isAnimated()) {
-            classes += ' controls-TileView__item_animated';
+        if (templateTitleStyle === 'accent') {
+            classes += ' controls-TileView__imageWrapper_accent';
         }
-        if ((templateTitleStyle === undefined && templateHasTitle) || templateTitleStyle === 'partial') {
-            classes += ` controls-TileView__imageWrapper_reduced${theme}`;
+
+        if (this.getTileMode() === 'dynamic') {
+            if (this.isAnimated()) {
+                classes += ' controls-TileView__item_animated';
+            }
+            if ((templateTitleStyle === undefined && templateHasTitle) || templateTitleStyle === 'partial') {
+                classes += ` controls-TileView__imageWrapper_reduced_theme-${this.getTheme()}`;
+            }
+        }
+
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                classes += ' controls-TileView__mediumTemplate_image ';
+                classes += ` controls-TileView__mediumTemplate_image_theme-${this.getTheme()}`;
+                break;
+            case 'rich':
+                classes += ' controls-TileView__richTemplate_imageWrapper';
+                classes += ` controls-TileView_richTemplate_image_spacing_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
+                break;
+            case 'preview':
+                classes += ' controls-TileView__previewTemplate_image';
+                classes += ` controls-TileView__previewTemplate_image_theme-${this.getTheme()}`;
+                break;
         }
 
         return classes;
     }
 
-    getImageWrapperStyle(): string {
-        let height = this.getTileHeight();
-        if (this.isScaled() && this.isAnimated()) {
-            height *= this._$owner.getZoomCoefficient();
+    getImageWrapperStyles(itemType: string = 'default'): string {
+        if (this.getTileMode() === 'dynamic') {
+            let height = this.getTileHeight();
+            if (this.isScaled() && this.isAnimated()) {
+                height *= this._$owner.getZoomCoefficient();
+            }
+            return `height: ${height}px;`;
+        } else {
+            return '';
         }
-        return `height: ${height}px;`;
+    }
+
+    getImageAlignClasses(imageAlign: string): string {
+        if (imageAlign === 'top') {
+            return 'controls-TileView__imageAlign_wrapper ws-flexbox ws-justify-content-center ws-align-items-center';
+        } else {
+            return '';
+        }
+    }
+
+    shouldDisplayImageResizer(itemType: string = 'default', imagePosition: string, imageViewMode: string, imageProportion: string, staticHeight: boolean): boolean {
+        switch (itemType) {
+            case 'default':
+                return !staticHeight && this.getTileMode() !== 'dynamic';
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                return imagePosition === 'top' && imageViewMode === 'rectangle' && !!imageProportion;
+            case 'preview':
+                break;
+        }
+    }
+
+    getImagePreserveAspectRatio(itemType: string = 'default'): string {
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'preview':
+            case 'medium':
+                return 'xMidYMid meet';
+            case 'rich':
+                return `xMidYMid ${this.getImageFit() === 'cover' ? 'slice' : 'meet'}`;
+        }
     }
 
     // endregion Image
+
+    // region ImageGradient
+
+    shouldDisplayImageGradient(itemType: string = 'default', imageEffect?: string, imageViewMode?: string, imagePosition?: string): boolean {
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'medium':
+                return false;
+            case 'rich':
+                return imageEffect === 'gradient' && imageViewMode === 'rectangle' && imagePosition === 'top';
+            case 'preview':
+                return true;
+        }
+    }
+
+    getImageGradientClasses(itemType: string = 'default', gradientType: string = 'dark'): string {
+        let classes = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'medium':
+                break;
+            case 'rich':
+                classes += ' controls-TileView__richTemplate_image_effect_gradient';
+                break;
+            case 'preview':
+                classes += ' controls-TileView__previewTemplate_gradient';
+                classes += ` controls-TileView__previewTemplate_gradient_${gradientType}_theme-${this.getTheme()}`;
+                break;
+        }
+
+        return classes;
+    }
+
+    getImageGradientStyles(itemType: string = 'default', gradientColor: string = '#ffffff', gradientType: string = 'dark'): string {
+        let styles = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'medium':
+                break;
+            case 'rich':
+                styles += ` background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, ${gradientColor} 100%);`;
+                break;
+            case 'preview':
+                if (gradientType === 'custom') {
+                    styles += ` background: linear-gradient(to top, ${gradientColor} 0%, ${gradientColor} calc(100% - 4px), rgba(255, 255, 255, 0) 100%);`;
+                }
+                break;
+        }
+
+        return styles;
+    }
+
+    // endregion ImageGradient
 
     // region Styles
 
@@ -346,7 +606,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
     }
 
-    getWrapperClasses(templateClickable?: boolean): string {
+    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean): string {
         let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()} controls-ListView__itemV`;
         if (templateClickable !== false) {
             classes += ' controls-ListView__itemV_cursor-pointer';
@@ -356,10 +616,32 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
         // TODO не забыть в Tree добавить {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}`
 
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                classes += ' controls-TileView__richTemplate_item';
+                break;
+            case 'preview':
+                classes += ' controls-TileView__previewTemplate';
+                // TODO {{itemData.dispItem && itemData.dispItem.isNode() ? 'js-controls-TileView__withoutZoom controls-TileView__previewTemplate_node' : ''}}
+                if (this.hasVisibleActions() && (this.isUnscaleable() || this.canShowActions())) {
+                    classes += ' controls-TileView__previewTemplate_actions_showed';
+                }
+                if (hasTitle === false) {
+                    classes += ' controls-TileView__previewTemplate_withoutTitle';
+                }
+                break;
+        }
+
         return classes;
     }
 
-    getWrapperStyle(templateWidth?: number, staticHeight?: number): string {
+    getItemStyles(templateWidth?: number, staticHeight?: number): string {
         // TODO staticHeight
 
         const width = this.getTileWidth(templateWidth);
@@ -372,14 +654,13 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         `;
     }
 
-    getContentClasses(
+    getWrapperClasses(
+        itemType: string = 'default',
         templateShadowVisibility?: string,
         templateMarker?: boolean,
         highlightOnHover?: boolean,
         backgroundColorStyle?: string
     ): string {
-        // TODO недокументированны titleStyle, height, border
-
         const theme = `_theme-${this.getTheme()}`;
 
         let classes = `controls-TileView__itemContent controls-TileView__itemContent${theme} js-controls-ListView__measurableContainer`;
@@ -434,7 +715,218 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return classes;
     }
 
+    getWrapperStyles(): string {
+        // TODO здесь должна возвращаться позиция hovered item. Это считается в TileView::getPositionStyle
+        return '';
+    }
+
     // endregion Styles
+
+    // region Content
+
+    getContentTemplate(contentTemplate: TemplateFunction): TemplateFunction|string {
+        return contentTemplate || 'Controls/tileNew:ContentTemplate';
+    }
+
+    getContentClasses(itemType: string = 'default', titleLines: number = 1, gradientType: string = 'dark', titleStyle: string = 'light'): string {
+        let classes = '';
+
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                classes += `controls-TileView__richTemplate_itemContent controls-TileView__richTemplate_itemContent_theme-${this.getTheme()} ws-ellipsis`;
+                break;
+            case 'preview':
+                classes += 'controls-TileView__previewTemplate_title';
+                // TODO {{itemData.dispItem.isNode() ? 'controls-fontweight-bold' : ''}}
+                classes += ` controls-fontsize-m_theme-${this.getTheme()}`; // TODO в дереве заменить m на l
+                const countLines = titleLines === 1 ? 'single' : 'multi';
+                classes += ` controls-TileView__previewTemplate_title_${countLines}Line_theme-${this.getTheme()}`;
+                classes += ` controls-TileView__previewTemplate_title_gradient_${gradientType}_theme-${this.getTheme()}`;
+                classes += ` controls-TileView__previewTemplate_title_text_${titleStyle}_theme-${this.getTheme()}`;
+                break;
+        }
+
+        return classes;
+    }
+
+    getContentStyles(itemType: string = 'default', imageViewMode: string, imagePosition: string, gradientColor: string = '#FFF'): string {
+        let styles = '';
+
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                if ((!imageViewMode || imageViewMode === 'rectangle') && imagePosition !== 'left' && imagePosition !== 'right') {
+                    styles += `background-color: ${gradientColor}`;
+                }
+                break;
+            case 'preview':
+                break;
+        }
+
+        return styles;
+    }
+
+    // endregion Content
+
+    // region Title
+
+    shouldDisplayTitle(itemType: string = 'default'): boolean {
+        switch (itemType) {
+            case 'default':
+                return !!this.getDisplayValue() || (this.hasVisibleActions() || this.isEditing());
+            case 'small':
+                break;
+            case 'medium':
+            case 'rich':
+                return true;
+            case 'preview':
+                return this.canShowActions() || this.hasVisibleActions(); // TODO || isNode();
+        }
+    }
+
+    getTitleClasses(itemType: string = 'default', titleStyle?: string, hasTitle?: boolean, titleLines: number = 1, titleColorStyle: string = 'default'): string {
+        let classes = '';
+        switch (itemType) {
+            case 'default':
+                if (titleStyle === 'accent') {
+                    classes += ` controls-TileView__title_accent_theme-${this.getTheme()}`;
+                    classes += ' controls-TileView__title_accent_ellipsis';
+                } else {
+                    classes += ` controls-TileView__title controls-TileView__title_theme-${this.getTheme()} `;
+                    if (titleStyle === 'onhover' || !titleStyle && !hasTitle) {
+                        classes += ' controls-TileView__title_invisible';
+                    }
+                }
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                classes += ' controls-TileView__mediumTemplate_title controls-fontweight-bold';
+                classes += ` controls-fontsize-l_theme-${this.getTheme()} controls-text-secondary_theme-${this.getTheme()}`;
+                classes += ` controls-TileView__mediumTemplate_title_theme-${this.getTheme()}`;
+                if (titleLines > 1) {
+                    classes += ' controls-TileView__text_ellipsis_multiLine';
+                } else {
+                    classes += ' ws-ellipsis';
+                }
+                break;
+            case 'rich':
+                classes += ' controls-TileView__richTemplate_title controls-fontweight-bold';
+                if (titleLines > 1) {
+                    classes += ' controls-TileView__text_ellipsis_multiLine';
+                } else {
+                    classes += ' ws-ellipsis';
+                }
+                classes += ` controls-TileView__richTemplate_title_theme-${this.getTheme()}`;
+                classes += ` controls-fontsize-xl_theme-${this.getTheme()}`; // TODO не забыть в дереве заменить xl на 4xl для узлов
+                classes += ` controls-text-${titleColorStyle}_theme-${this.getTheme()}`;
+                break;
+            case 'preview':
+                classes += ' controls-TileView__previewTemplate_title_text';
+                if (titleLines > 1) {
+                    classes += ' controls-TileView__text_ellipsis_multiLine';
+                } else {
+                    classes += ' ws-ellipsis';
+                }
+                break;
+        }
+
+        return classes;
+    }
+
+    getTitleStyles(itemType: string = 'default', titleLines: number = 1): string {
+        let styles = '';
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+            case 'preview':
+                styles = `-webkit-line-clamp: ${titleLines};`;
+                break;
+        }
+
+        return styles;
+    }
+
+    // endregion Title
+
+    // region Description
+
+    shouldDisplayDescription(itemType: string = 'default', description: string, descriptionLines: number): boolean {
+        switch (itemType) {
+            case 'default':
+                return false;
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                return description && descriptionLines !== 0;
+            case 'preview':
+                break;
+        }
+    }
+
+    getDescriptionClasses(itemType: string = 'default', descriptionLines: number): string {
+        let classes = '';
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                classes += 'controls-TileView__richTemplate_description';
+                if (descriptionLines > 1) {
+                    classes += ' controls-TileView__text_ellipsis_multiLine';
+                } else {
+                    classes += ' ws-ellipsis';
+                }
+                classes += ` controls-TileView__richTemplate_description_theme-${this.getTheme()}`;
+                break;
+            case 'preview':
+                break;
+        }
+
+        return classes;
+    }
+
+    getDescriptionStyles(itemType: string = 'default', descriptionLines: number = 1): string {
+        let styles = '';
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                styles = `-webkit-line-clamp: ${descriptionLines};`;
+                break;
+            case 'preview':
+                break;
+        }
+
+        return styles;
+    }
+
+    // endregion Description
 
     // region RoundBorder
 
@@ -471,14 +963,6 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     }
     // endregion RoundBorder
 
-    getTitleClasses(templateHasTitle?: boolean, theme?: string): string {
-        let classes = `controls-TileView__title controls-TileView__title_theme-${theme}`;
-        if (!templateHasTitle) {
-            classes += ' controls-TileView__title_invisible';
-        }
-        return classes;
-    }
-
     getMultiSelectClasses(theme: string): string {
         return (
             super.getMultiSelectClasses(theme) +
@@ -507,6 +991,7 @@ Object.assign(TileCollectionItem.prototype, {
     _$animated: false,
     _$canShowActions: false,
     _$tileMode: 'static',
+    _$tileSize: null,
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$tileWidth: DEFAULT_TILE_WIDTH,
     _$tileWidthProperty: '',

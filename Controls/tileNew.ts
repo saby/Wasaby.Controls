@@ -13,12 +13,12 @@
 import {register} from 'Types/di';
 
 import {default as View} from 'Controls/_tileNew/View';
-import ItemTemplate = require('wml!Controls/_tileNew/render/TileTpl');
-import TileItemTemplate = require("wml!Controls/_tileNew/render/TileTpl");
-import * as SmallItemTemplate from 'wml!Controls/_tileNew/render/SmallTemplate';
-import * as MediumTemplate from 'wml!Controls/_tileNew/render/MediumTemplate';
-import * as PreviewTemplate from 'wml!Controls/_tileNew/render/PreviewTemplate';
-import * as RichTemplate from 'wml!Controls/_tileNew/render/RichTemplate';
+import * as ItemTemplate from 'wml!Controls/_tileNew/render/items/Default';
+import * as ContentTemplate from 'wml!Controls/_tileNew/render/Content';
+import * as SmallItemTemplate from 'wml!Controls/_tileNew/render/items/Small';
+import * as MediumItemTemplate from 'wml!Controls/_tileNew/render/items/Medium';
+import * as PreviewItemTemplate from 'wml!Controls/_tileNew/render/items/Preview';
+import * as RichItemTemplate from 'wml!Controls/_tileNew/render/items/Rich';
 import {default as ActionsMenu} from 'Controls/_tileNew/itemActions/Menu';
 
 import TileCollection from 'Controls/_tileNew/display/TileCollection';
@@ -27,11 +27,11 @@ import TileCollectionItem from 'Controls/_tileNew/display/TileCollectionItem';
 export {
     View,
     ItemTemplate,
-    TileItemTemplate,
+    ContentTemplate,
     SmallItemTemplate,
-    MediumTemplate,
-    PreviewTemplate,
-    RichTemplate,
+    MediumItemTemplate,
+    PreviewItemTemplate,
+    RichItemTemplate,
     ActionsMenu,
     TileCollection,
     TileCollectionItem

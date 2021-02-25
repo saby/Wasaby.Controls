@@ -1,0 +1,48 @@
+<ws:if data="{{invisible}}">
+   <div attr:class="{{ item.getInvisibleClasses() }}" attr:style="{{ item.getInvisibleStyles() }}"></div>
+</ws:if>
+<ws:else>
+   <div attr:class="{{ item.getItemClasses(itemType, clickable, hasTitle) }}" attr:style="{{ item.getItemStyles(width, staticHeight) }}">
+      <ws:if data="{{!staticHeight && item.getTileMode() !== 'dynamic'}}">
+         <div style=" {{ item.getDynamicPaddingTop(width) }}"></div>
+      </ws:if>
+
+      <div attr:class="{{ item.getWrapperClasses(itemType, shadowVisibility, marker, highlightOnHover, backgroundColorStyle) }}"
+           attr:style="{{ item.getWrapperStyles() }}">
+
+         <ws:partial if="{{ item.shouldDisplayMultiSelectTemplate() }}"
+                     template="{{ multiSelectTpl }}">
+            <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
+         </ws:partial>
+
+         <!--Если задан contentTemplate, то изображение будет внутри него-->
+         <ws:partial if="{{ !contentTemplate }}" template="wml!Controls/_tileNew/render/Image"/>
+
+         <ws:partial template="{{ item.getContentTemplate(contentTemplate) }}"
+                     item="{{item}}"
+                     swipeTemplate="{{swipeTemplate}}"
+                     itemActionsTemplate="{{itemActionsTemplate}}"
+                     hasTitle="{{hasTitle}}"
+                     width="{{item.getTileWidth(width)}}">
+            <ws:multiSelectTemplate>
+               <ws:partial template="{{ multiSelectTpl }}">
+                  <ws:templateOptions item="{{ item }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
+               </ws:partial>
+            </ws:multiSelectTemplate>
+         </ws:partial>
+
+         <ws:partial if="{{ item.shouldDisplayItemActions() }}"
+                     template="{{itemActionsTemplate}}"
+                     highlightOnHover="{{highlightOnHover}}"
+                     actionPadding="{{itemActionsPadding}}"
+                     itemData="{{item}}"
+                     item="{{item}}"
+                     itemActionsClass="{{ item.getItemActionsClasses(itemType) }}"/>
+         <ws:partial if="{{ item.shouldDisplaySwipeTemplate() }}"
+                     template="{{swipeTemplate}}"
+                     itemData="{{item}}"
+                     item="{{item}}"
+                     itemActionsTemplate="{{itemActionsTemplate}}"/>
+      </div>
+   </div>
+</ws:else>

@@ -787,6 +787,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getMultiSelectPosition();
     }
 
+    shouldDisplayMultiSelectTemplate(): boolean {
+        return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+    }
+
     setRowSeparatorSize(rowSeparatorSize: string): boolean {
         const changed = this._$rowSeparatorSize !== rowSeparatorSize;
         if (changed) {

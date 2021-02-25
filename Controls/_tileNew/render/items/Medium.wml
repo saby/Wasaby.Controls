@@ -1,0 +1,13 @@
+<ws:partial template="wml!Controls/_tileNew/render/items/Default"
+            height="160"
+            highlightOnHover="{{false}}"
+            staticHeight="{{true}}"
+            scope="{{_options}}"
+            itemType="medium">
+   <ws:contentTemplate>
+      <div class="controls-TileView__mediumTemplate_content controls-TileView__mediumTemplate_content_theme-{{_options.theme}}">
+         <ws:partial template="wml!Controls/_tileNew/render/Image"/>
+         <ws:partial template="wml!Controls/_tileNew/render/Content"/>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>
