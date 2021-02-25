@@ -265,7 +265,7 @@ export default class Controller extends mixin<
         }
 
         if (rootChanged) {
-            this._setRoot(newOptions.root);
+            this.setRoot(newOptions.root);
 
             if (!isExpadedItemsChanged) {
                 this.setExpandedItems([]);

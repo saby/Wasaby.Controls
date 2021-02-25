@@ -197,7 +197,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _getSourceController(): SourceController {
-        return this._dataLoader.getSourceController();
+        const sourceController = this._dataLoader.getSourceController();
+        sourceController.subscribe('rootChanged', this._rootChanged.bind(this));
+        return sourceController;
     }
 
     protected _afterMount(options: IBrowserOptions): void {
