@@ -1134,6 +1134,7 @@ describe('Controls/suggest', () => {
          suggestComponent._options.filter = {param: 'old_test'};
          suggestComponent._showContent = true;
          resolveLoadStub.reset();
+         const resolveSearchStub  = sandbox.stub(suggestComponent, '_resolveSearch').callsFake(() => Promise.resolve());
          suggestComponent._beforeUpdate({
             suggestState: true,
             searchParam: 'testSearchParam',
@@ -1142,7 +1143,7 @@ describe('Controls/suggest', () => {
             filter: {param: 'new_test'}
          });
 
-         assert.isTrue(resolveLoadStub.calledOnce);
+         assert.isTrue(resolveSearchStub.calledOnce);
 
          sandbox.restore();
       });
