@@ -23,6 +23,7 @@ define(
                   }
                };
             };
+            ctrl._afterMount();
          });
 
          it('The model belongs to the "Controls/_input/Password/ViewModel" class.', function() {

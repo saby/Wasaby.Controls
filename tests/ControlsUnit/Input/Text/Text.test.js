@@ -29,6 +29,7 @@ define(
                   }
                };
             };
+            ctrl._afterMount();
          });
 
          it('getDefault', function() {

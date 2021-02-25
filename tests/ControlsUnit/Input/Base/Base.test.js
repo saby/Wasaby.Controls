@@ -17,6 +17,7 @@ define(
          var _private = inputMod.Base._private;
          makeInstanceCompatible(ctrl);
          ctrl._beforeMount({});
+         //ctrl._afterMount();
          ctrl._template(ctrl);
 
          beforeEach(function() {
@@ -42,6 +43,7 @@ define(
                   }
                };
             };
+            ctrl._afterMount();
          });
 
          it('getDefault', function() {

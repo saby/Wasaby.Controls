@@ -196,6 +196,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     protected _leftFieldWrapper: IFieldTemplate;
     protected _rightFieldWrapper: IFieldTemplate;
     private _isBrowserPlatform: boolean;
+    protected _isMounted: boolean = false;
 
     constructor(cfg: IBaseInputOptions) {
         super(cfg);
@@ -259,6 +260,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     }
 
     protected _afterMount(): void {
+        this._isMounted = true;
         this._hidePlaceholder = false;
     }
 
@@ -473,14 +475,14 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
      * @private
      */
     protected _getField(): Field<String, IViewModelOptions> {
-        if (this._children.hasOwnProperty(this._fieldName)) {
+        if (this._isMounted) {
             return this._children[this._fieldName] as Field<String, IViewModelOptions>;
         }
         return null;
     }
 
     protected _getReadOnlyField(): HTMLElement {
-        if (this._children.hasOwnProperty('readOnlyField')) {
+        if (this._isMounted) {
             return this._children.readOnlyField as HTMLElement;
         }
         return null;
