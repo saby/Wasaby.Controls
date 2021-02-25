@@ -200,11 +200,23 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         }
     }
 
+    // region AutoResizer
+
+    shouldDisplayAutoResizer(staticHeight: boolean): boolean {
+        return !staticHeight && this.getTileMode() !== 'dynamic';
+    }
+
     // TODO нужно адекватное название метода. (При tileMode!=dynamic зачем-то добавляется див с этим стилем
     //  padding-top растягивает контент от ширины контейнера (нативное поведение)
-    getDynamicPaddingTop(width?: number): string {
+    getAutoResizerStyles(width?: number): string {
         return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width))} * 100%;`;
     }
+
+    // endregion AutoResizer
+
+
+
+
 
     getCompressionCoefficient(): number {
         return DEFAULT_COMPRESSION_COEFF;
@@ -291,8 +303,8 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
     // region ItemActions
 
-    shouldDisplayItemActions(): boolean {
-        const itemActionsPosition = this.getOwner().getActionsTemplateConfig().itemActionsPosition;
+    shouldDisplayItemActions(itemActionsPositionTemplate: string): boolean {
+        const itemActionsPosition = itemActionsPositionTemplate || this.getOwner().getActionsTemplateConfig()?.itemActionsPosition;
         return !this.isSwiped() && (this.hasVisibleActions() || this.isEditing()) && itemActionsPosition !== 'custom';
     }
 
@@ -437,6 +449,10 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
             return +(Number(height) / Number(width)).toFixed(2);
         }
         return 1;
+    }
+
+    shouldDisplayImageTemplate(contentTemplate: TemplateFunction): boolean {
+        return !contentTemplate;
     }
 
     getImageTemplate(): TemplateFunction {
@@ -629,7 +645,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return classes;
     }
 
-    getInvisibleStyles(itemType: string = 'default', templateWidth?: number): string {
+    getInvisibleStyles(templateWidth?: number): string {
         const width = this.getTileWidth(templateWidth);
         // TODO if isNode() then width = templateWidth || folderWidth || itemData.defaultFolderWidth
         return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;

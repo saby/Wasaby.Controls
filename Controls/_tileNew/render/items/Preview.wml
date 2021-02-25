@@ -7,8 +7,8 @@
             itemType="preview">
    <ws:contentTemplate>
       <div class="controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-{{_options.theme}}">
-         <ws:partial template="{{ item.getImageTemplate() }}"
-                     imageAlign="{{imageAlign}}">
+         <ws:partial template="{{ (item || itemData).getImageTemplate() }}"
+                     scope="{{_options}}">
             <ws:topTemplate>
                <ws:partial template="{{topTemplate}}"
                            itemData="{{(item || itemData)}}"
@@ -24,7 +24,7 @@
                </ws:if>
             </ws:bottomRightTemplate>
          </ws:partial>
-         <ws:partial template="wml!Controls/_tileNew/render/Content"/>
+         <ws:partial template="wml!Controls/_tileNew/render/Content" scope="{{_options}}"/>
       </div>
    </ws:contentTemplate>
    <ws:itemActionsTemplate>

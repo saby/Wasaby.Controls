@@ -1,6 +1,6 @@
 import {ListView} from 'Controls/list';
 import template = require('wml!Controls/_tileNew/render/TileView');
-import defaultItemTpl = require('wml!Controls/_tileNew/render/TileTpl');
+import defaultItemTpl = require('wml!Controls/_tileNew/render/items/Default');
 import {TouchContextField} from 'Controls/context';
 import { TILE_SCALING_MODE, ZOOM_COEFFICIENT, ZOOM_DELAY } from './utils/Constants';
 import ItemSizeUtils = require('./utils/ItemSizeUtils');

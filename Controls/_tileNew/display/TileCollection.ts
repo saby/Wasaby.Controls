@@ -432,6 +432,12 @@ export default class TileCollection<
         return this._$itemsContainerPadding?.right;
     }
 
+    // TODO переписать этот момент
+    getTileItemData(): T {
+        const params = this._getItemsFactoryParams({});
+        return this.createItem(params);
+    }
+
     getItemsPaddingContainerClasses(): string {
         const theme = `_theme-${this.getTheme()}`;
         let classes = 'controls-TileView__itemPaddingContainer ';
