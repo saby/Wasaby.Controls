@@ -10,6 +10,7 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
     readonly SelectableItem: boolean = false;
     readonly DraggableItem: boolean = false;
     readonly LadderSupport: boolean = false;
+    readonly ItemActionsItem: boolean = false;
 
     // region overrides
 

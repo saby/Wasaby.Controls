@@ -14,6 +14,7 @@ export default class SearchSeparator<T> extends CollectionItem<T>  {
 
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
+    readonly ItemActionsItem: boolean = false;
 
     protected _instancePrefix: 'search-separator-item-';
 

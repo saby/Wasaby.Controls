@@ -16,7 +16,6 @@
             source="{{ _viewSource }}"
             parentProperty="parent"
             nodeProperty="type"
-            nodeTypeProperty="{{ _nodeTypeProperty }}"
             rowSeparatorSize="s"
             colspanCallback="{{ _colspanCallback }}"
             useNewNodeFooters="{{ true }}"
