@@ -3,12 +3,11 @@
  */
 import DataContext = require('Core/DataContext');
 
+export = class extends DataContext {
+  constructor(options) {
+      super(options);
+      this.options = options;
+  }
 
-
-   export = DataContext.extend({
-      constructor: function(options) {
-         this.options = options;
-      },
-      _moduleName: 'Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions'
-   });
-
+  protected _moduleName: string = 'Controls/_filterPopup/Panel/Wrapper/_FilterPanelOptions'
+};

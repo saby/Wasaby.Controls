@@ -1,7 +1,7 @@
 import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {IPopupOptions} from 'Controls/popup';
 import {INavigationOptionValue} from 'Controls/interface';
-import HistorySource from 'Controls/_history/Source';
+import {Source as HistorySource} from 'Controls/history';
 
 /**
  * Интерфейс для поддержки просмотра и редактирования полей фильтра.
