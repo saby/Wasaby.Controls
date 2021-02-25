@@ -1,12 +1,10 @@
 import { TemplateFunction } from 'UI/Base';
 import { mixin } from 'Types/util';
 
-import {CollectionItem} from 'Controls/display';
+import { CollectionItem, TMarkerClassName, IItemPadding } from 'Controls/display';
 
 import Collection from './Collection';
 import GridRowMixin, { IOptions as IGridRowMixinOptions } from './mixins/Row';
-import { TMarkerClassName } from 'Controls/_grid/interface/ColumnTemplate';
-import { IItemPadding } from 'Controls/list';
 
 export interface IOptions<T> extends IGridRowMixinOptions<T> {
     owner: Collection<T>;

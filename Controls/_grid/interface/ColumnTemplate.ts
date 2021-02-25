@@ -1,3 +1,5 @@
+import {TMarkerClassName} from 'Controls/display';
+
 /**
  * @typedef {String} TCursor
  * @description Значения для типа курсора, отображаемого при наведении на ячейку.
@@ -7,33 +9,17 @@
 export type TCursor = 'default' | 'pointer' | 'right';
 
 /**
- * @typedef {String} TMarkerClassName
- * @variant default Маркер по высоте растягивается на весь контейнер записи.
- * @variant image-l Используется для размещения маркера рядом с изображением размера "l".
- * @variant image-m Используется для размещения маркера рядом с изображением размера "m".
- * @variant image-s Используется для размещения маркера рядом с изображением размера "s".
- * @variant image-xs Используется для размещения маркера рядом с изображением размера "xs".
- * @variant text-2xl Используется для размещения маркера рядом с текстом размера "2xl".
- * @variant text-xl Используется для размещения маркера рядом с текстом размера "xl".
- * @variant text-l Используется для размещения маркера рядом с текстом размера "l".
- * @variant text-m Используется для размещения маркера рядом с текстом размера "m".
- * @variant text-xs Используется для размещения маркера рядом с текстом размера "xs".
- */
-export type TMarkerClassName = 'default' | 'image-l' | 'image-m' | 'image-s' | 'image-xl' |
-    'text-2xl' | 'text-xl' | 'text-l' | 'text-m' | 'text-xs';
-
-/**
  * Шаблон, который по умолчанию используется для отображения ячеек в {@link Controls/grid:View таблице}.
  *
  * @class Controls/_grid/interface/ColumnTemplate
  * @author Авраменко А.С.
- * 
+ *
  * @see Controls/_grid/interface/IGridControl/Column.typedef
  * @see Controls/grid:IGridControl#columns
- * 
+ *
  * @remark
  * Дополнительно о работе с шаблоном читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/template/#_2 здесь}.
- * 
+ *
  * @example
  * В следующем примере показано, как изменить параметры шаблона.
  * <pre class="brush: html; highlight: [6,7,8,9,10,11,12]">

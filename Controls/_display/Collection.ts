@@ -33,7 +33,7 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
-import {ICollection, ISourceCollection} from './interface/ICollection';
+import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import {INavigationOptionValue} from 'Controls/interface';
 
@@ -152,12 +152,6 @@ export interface IViewIterator {
 
 export type TGroupKey = string|number;
 export type TArrayGroupKey = TGroupKey[];
-export interface IItemPadding {
-    top?: string;
-    bottom?: string;
-    left?: string;
-    right?: string;
-}
 
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;

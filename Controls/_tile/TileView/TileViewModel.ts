@@ -1,3 +1,4 @@
+import {IItemPadding} from 'Controls/display';
 import {ListViewModel} from 'Controls/list';
 import cMerge = require('Core/core-merge');
 import {Logger} from 'UI/Utils';
@@ -13,12 +14,6 @@ const DEFAULT_WIDTH_PROPORTION = 1;
 const AVAILABLE_CONTAINER_VERTICAL_PADDINGS = ['null', 'default'];
 const AVAILABLE_CONTAINER_HORIZONTAL_PADDINGS = ['null', 'default', 'xs', 's', 'm', 'l', 'xl', '2xl'];
 const AVAILABLE_ITEM_PADDINGS = ['null', 'default', '3xs', '2xs', 'xs', 's', 'm'];
-interface IItemPadding {
-    left: string;
-    right: string;
-    bottom: string;
-    top: string;
-}
 
 const TILE_SIZES = {
     s: {

@@ -1,8 +1,8 @@
 import { mixin } from 'Types/util';
-import { ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
+import { ITreeItemOptions, TreeItem, IItemPadding, TMarkerClassName } from 'Controls/display';
 import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, GridItemActionsCell } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
-import { IColumn, TMarkerClassName } from 'Controls/grid';
+import { IColumn } from 'Controls/grid';
 import { Model } from 'Types/entity';
 
 export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {

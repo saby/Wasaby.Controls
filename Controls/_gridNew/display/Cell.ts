@@ -12,9 +12,8 @@ import { TemplateFunction } from 'UI/Base';
 
 import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
 
-import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
-import {IItemPadding} from 'Controls/_list/interface/IList';
-import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
+import { IItemPadding, TMarkerClassName } from 'Controls/display';
+import { COLUMN_SCROLL_JS_SELECTORS } from 'Controls/columnScroll';
 
 import Row from './Row';
 
