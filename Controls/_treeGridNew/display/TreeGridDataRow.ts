@@ -22,7 +22,6 @@ export default class TreeGridDataRow<T extends Model>
     readonly SelectableItem: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly DraggableItem: boolean = true;
-    readonly GroupNode: boolean = false;
     protected _$searchValue: string;
 
     constructor(options: IOptions<T>) {
@@ -150,7 +149,7 @@ export default class TreeGridDataRow<T extends Model>
     // endregion overrides
 
     isGroupNode(): boolean {
-        return this.GroupNode;
+        return false;
     }
 }
 

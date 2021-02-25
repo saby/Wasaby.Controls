@@ -5,12 +5,11 @@ import {IColumn} from 'Controls/_grid/interface/IColumn';
 import IGroupNode from '../interface/IGroupNode';
 
 export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataRow<T> implements IGroupNode {
-    '[Controls/treeGrid:TreeGridGroupDataRow]': boolean;
+    '[Controls/treeGrid:TreeGridGroupDataRow]': boolean = true;
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly DraggableItem: boolean = false;
     readonly LadderSupport: boolean = false;
-    readonly GroupNode: boolean = true;
 
     // region overrides
 
@@ -42,14 +41,14 @@ export default class TreeGridGroupDataRow<T extends Model> extends TreeGridDataR
         return level - 1;
     }
 
+    isGroupNode(): boolean {
+        return true;
+    }
+
     // endregion overrides
 }
 
 Object.assign(TreeGridGroupDataRow.prototype, {
-    '[Controls/treeGrid:TreeGridGroupDataRow]': true,
-    '[Controls/treeGrid:TreeGridDataRow]': true,
-    '[Controls/_display/grid/Row]': true,
-    '[Controls/_display/TreeItem]': true,
     _cellModule: 'Controls/treeGrid:TreeGridGroupDataCell',
     _moduleName: 'Controls/treeGrid:TreeGridDataRow',
     _$searchValue: '',
