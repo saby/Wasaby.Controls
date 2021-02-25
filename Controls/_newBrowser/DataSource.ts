@@ -40,6 +40,7 @@ export class DataSource {
 
     setRoot(root: TKey): void {
         this.loadSC.setRoot(root);
+        this.displaySC.setRoot(root);
         this.sourceOptions.root = root;
     }
 
@@ -49,6 +50,7 @@ export class DataSource {
 
     setFilter(filter: QueryWhereExpression<unknown>): void {
         this.loadSC.setFilter(filter);
+        this.displaySC.setFilter(filter);
         this.sourceOptions.filter = filter;
     }
 
@@ -80,11 +82,11 @@ export class DataSource {
      * @return Созданный SourceController
      */
     createDisplaySC(items: RecordSet): SourceController {
-        if (this.displaySC) {
+        /*if (this.displaySC) {
             this.displaySC.destroy();
         }
 
-        this.displaySC = new SourceController(this.sourceOptions);
+        this.displaySC = new SourceController(this.sourceOptions);*/
         this.displaySC.setItems(items);
         (this.displaySC as any).loadedBySuggest = true;
 

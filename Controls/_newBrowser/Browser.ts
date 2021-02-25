@@ -542,6 +542,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         if (detailItems) {
             this._processItemsMetadata(detailItems, options);
             this._detailExplorerOptions.sourceController = this._detailDS.createDisplaySC(detailItems);
+            this._detailDS.setRoot(this._detailDS.getRoot());
+            this._detailDS.setFilter(this._detailDS.getFilter());
 
             if (this._options.detail.dataLoadCallback) {
                 this._options.detail.dataLoadCallback(detailItems, undefined);
@@ -554,6 +556,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
         if (masterItems) {
             this._masterExplorerOptions.sourceController = this._masterDS.createDisplaySC(masterItems);
+            this._masterDS.setRoot(this._masterDS.getRoot());
+            this._masterDS.setFilter(this._masterDS.getFilter());
 
             if (this._options.master.dataLoadCallback) {
                 this._options.master.dataLoadCallback(masterItems, undefined);

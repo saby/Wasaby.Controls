@@ -711,7 +711,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
 
             // Если sourceController изменился и у него рут такой же как и в новых опциях, то считаем, что
             // в новом sourceController уже актуальные данные
-            if (isSourceControllerChanged && sourceControllerRoot === newOptions.root) {
+            if (sourceControllerRoot === newOptions.root) {
                 this._updatedRoot = false;
             }
 
