@@ -11,7 +11,7 @@ import * as parking from 'Controls/_dataSource/parking';
 import * as error from 'Controls/_dataSource/error';
 import requestDataUtil from 'Controls/_dataSource/requestDataUtil';
 import groupUtil from 'Controls/_dataSource/GroupUtil';
-import {ILoadDataConfig, ILoadDataResult} from './_dataSource/DataLoader';
+import {ILoadDataConfig, ILoadDataResult, IDataLoaderOptions} from './_dataSource/DataLoader';
 
 export {
     parking,
@@ -21,7 +21,8 @@ export {
     ILoadDataResult as IRequestDataResult,
     groupUtil,
     ILoadDataConfig,
-    ILoadDataResult
+    ILoadDataResult,
+    IDataLoaderOptions
 };
 export { CrudWrapper } from 'Controls/_dataSource/CrudWrapper';
 export {
