@@ -1,5 +1,6 @@
 import {assert} from 'chai';
 import {Model} from 'Types/entity';
+import {TreeItem} from 'Controls/display';
 import {TreeGridCollection, TreeGridDataRow, TreeGridGroupDataRow} from 'Controls/treeGridNew';
 
 describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridDataRow/ShouldDisplayExpanderPadding', () => {
@@ -9,6 +10,11 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridDataRow/ShouldDispl
         getExpanderSize: () => undefined,
         getExpanderVisibility: () => 'visible'
     } as undefined as TreeGridCollection<any>;
+
+    const root = new TreeItem({
+        contents: null,
+        owner
+    });
 
     it('should return false when direct parent is TreeGridGroupDataRow', () => {
         const parent = new TreeGridGroupDataRow({
@@ -23,7 +29,8 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridDataRow/ShouldDispl
                 keyProperty: 'id'
             }),
             columns: [],
-            owner
+            owner,
+            parent: root
         });
         const child = new TreeGridDataRow({
             contents: new Model({
@@ -49,14 +56,14 @@ describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridDataRow/ShouldDispl
                 rawData: {
                     id: 11,
                     nodeType: null,
-                    parent: 1,
+                    parent: null,
                     node: true,
                     hasChildren: true
                 },
                 keyProperty: 'id'
             }),
             columns: [],
-            parent: null,
+            parent: root,
             owner
         });
         const child = new TreeGridDataRow({
