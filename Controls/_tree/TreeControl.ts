@@ -161,7 +161,7 @@ const _private = {
                 self._children.baseControl.showIndicator();
                 return baseSourceController
                     .load(undefined, nodeKey)
-                    .addCallbacks((list) => {
+                    .then((list) => {
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
                         listViewModel.setHasMoreStorage(
                             _private.prepareHasMoreStorage(baseSourceController, listViewModel.getExpandedItems())
@@ -169,13 +169,13 @@ const _private = {
                         if (options.nodeLoadCallback) {
                             options.nodeLoadCallback(list, nodeKey);
                         }
-                    }, (error) => {
+                        self._children.baseControl.hideIndicator();
+                    }).catch((error: Error) => {
                         _private.processError(self, error);
                         // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
-                    })
-                    .addCallback(() => {
                         self._children.baseControl.hideIndicator();
+                        return error;
                     });
             } else {
 

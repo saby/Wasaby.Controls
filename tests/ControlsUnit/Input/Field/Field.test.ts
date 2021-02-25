@@ -95,22 +95,30 @@ describe('Controls/input:Field', () => {
             ctrl._beforeMount({model});
 
             const field = ctrl._getField();
-            field.selectionStart = 0;
-            field.selectionEnd = 5;
-            model.selection = {
-                start: 0,
-                end: 7
+            const target = {
+                selectionStart: model.value.length,
+                selectionEnd: model.value.length
             };
             const isFieldFocusedOriginal = WorkWithSelection.isFieldFocused;
             WorkWithSelection.isFieldFocused = () => true;
+            ctrl._focusHandler({
+                target,
+                nativeEvent: {
+                    target
+                }
+            });
+            ctrl.setSelectionRange(0, 7);
+            // Отстрельнуло после фокуса
+            ctrl._selectHandler();
+            // После установки селекшена
+            ctrl._selectHandler();
+            // Это баг, из-за которого стреляет лишний раз, см FixBugs
             ctrl._selectHandler();
 
             assert.deepEqual(model.selection, {
                 start: 0,
                 end: 7
             });
-
-            ctrl._beforeUpdate({model});
 
             assert.equal(field.selectionStart, 0);
             assert.equal(field.selectionEnd, 7);
