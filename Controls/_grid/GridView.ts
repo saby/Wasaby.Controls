@@ -303,26 +303,47 @@ var
             self._setHorizontalScrollPosition(self._columnScrollController.getScrollPosition());
             self._updateColumnScrollData();
         },
+        applyChangedOptionsToModel(listModel, options, changes): void {
+            if (changes.includes('columns')) {
+                // Если колонки изменились, например, их кол-во, а данные остались те же, то
+                // то без перерисовки мы не можем корректно отобразить данные в новых колонках.
+                // правка конфликтует с https://online.sbis.ru/opendoc.html?guid=a8429971-3a3c-44d0-8cca-098887c9c717
+                listModel.setColumns(options.columns, false);
+            }
+
+            if (changes.includes('footer')) {
+                listModel.setFooter(options.footer || [{template: options.footerTemplate}], true);
+            }
+
+            if (changes.includes('header')) {
+                listModel.setHeader(options.header);
+            }
+        },
         applyNewOptionsAfterReload(self, oldOptions, newOptions): void {
+            const changes = [];
+
             // todo remove isEqualWithSkip by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             self._columnsHaveBeenChanged = !GridIsEqualUtil.isEqualWithSkip(oldOptions.columns, newOptions.columns,
                 { template: true, resultTemplate: true });
             if (self._columnsHaveBeenChanged) {
-                if (oldOptions.task1179424529) {
-                    // Набор колонок необходимо менять после перезагрузки. Иначе возникает ошибка, когда список
-                    // перерисовывается с новым набором колонок, но со старыми данными. Пример ошибки:
-                    // https://online.sbis.ru/opendoc.html?guid=91de986a-8cb4-4232-b364-5de985a8ed11
-                    self._doAfterReload(() => {
-                        // Если колонки изменились, например, их кол-во, а данные остались те же, то
-                        // то без перерисовки мы не можем корректно отобразить данные в новых колонках.
-                        // правка конфликтует с https://online.sbis.ru/opendoc.html?guid=a8429971-3a3c-44d0-8cca-098887c9c717
-                        self._listModel.setColumns(newOptions.columns, false);
-                        self._listModel.setFooter(newOptions.footer || [{ template: newOptions.footerTemplate }], true);
-                    });
-                } else {
-                    self._listModel.setColumns(newOptions.columns);
-                    self._listModel.setFooter(newOptions.footer || [{ template: newOptions.footerTemplate }], true);
-                }
+                changes.push('columns');
+                changes.push('footer');
+            }
+
+            // Вычисления в setHeader зависят от columnScroll.
+            const isColumnsScrollChanged = oldOptions.columnScroll !== newOptions.columnScroll;
+            const headerChanged = isColumnsScrollChanged || !GridIsEqualUtil.isEqualWithSkip(oldOptions.header, newOptions.header, { template: true });
+            if (headerChanged) {
+                changes.push('header');
+            }
+
+            if (changes.length) {
+                // Набор колонок необходимо менять после перезагрузки. Иначе возникает ошибка, когда список
+                // перерисовывается с новым набором колонок, но со старыми данными. Пример ошибки:
+                // https://online.sbis.ru/opendoc.html?guid=91de986a-8cb4-4232-b364-5de985a8ed11
+                self._doAfterReload(() => {
+                    _private.applyChangedOptionsToModel(self._listModel, newOptions, changes);
+                });
             }
         },
         isFooterChanged(oldOptions, newOptions): boolean {
@@ -473,11 +494,6 @@ var
                 this._listModel.setResultsVisibility(newCfg.resultsVisibility);
             }
             _private.applyNewOptionsAfterReload(self, this._options, newCfg);
-            // Вычисления в setHeader зависят от columnScroll.
-            if (isColumnsScrollChanged ||
-                !GridIsEqualUtil.isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
-                this._listModel.setHeader(newCfg.header);
-            }
 
             if (!self._columnsHaveBeenChanged && (_private.isFooterChanged(this._options, newCfg) || (this._options.multiSelectVisibility !== newCfg.multiSelectVisibility))) {
                 this._listModel.setFooter(newCfg.footer || [{ template: newCfg.footerTemplate }]);
@@ -597,7 +613,7 @@ var
             let styles = '';
             if (GridLayoutUtil.isFullGridSupport()) {
                 const hasMultiSelect = this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
-                styles += _private.getGridTemplateColumns(this, this._options.columns, hasMultiSelect);
+                styles += this._listModel ? _private.getGridTemplateColumns(this, this._listModel.getColumns(), hasMultiSelect) : '';
             }
             return styles;
         },
