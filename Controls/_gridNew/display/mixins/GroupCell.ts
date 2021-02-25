@@ -68,6 +68,4 @@ export default abstract class GroupCell<T> {
     abstract isExpanded(): boolean;
     abstract _getHorizontalPaddingClasses(theme: string): string;
     abstract _getContentAlignClasses(): string;
-    abstract getOwner(): GridRow<any>;
-    abstract _getColumnScrollWrapperClasses(theme: string): string;
 }
