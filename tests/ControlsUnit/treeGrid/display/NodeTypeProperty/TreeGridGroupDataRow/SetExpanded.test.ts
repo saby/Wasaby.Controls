@@ -2,7 +2,7 @@ import {assert} from 'chai';
 import {Model} from 'Types/entity';
 import {TreeGridCollection, TreeGridGroupDataRow, TreeGridGroupDataCell} from 'Controls/treeGridNew';
 
-describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataRow/Expander', () => {
+describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/SetExpanded', () => {
 
     const owner = {
         getStickyColumnsCount: () => 0,
@@ -37,9 +37,5 @@ describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataRow/Expander'
         groupRow.getColumns().forEach((column: TreeGridGroupDataCell<Model>) => {
             assert.isTrue(column.isExpanded());
         });
-    });
-
-    it('shouldDisplayExpanderBlock always returns false', () => {
-        assert.isFalse(groupRow.shouldDisplayExpanderBlock(groupRow.getColumns()[0]));
     });
 });

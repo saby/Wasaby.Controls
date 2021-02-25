@@ -3,7 +3,7 @@ import {Model} from 'Types/entity';
 import {TreeGridCollection, TreeGridGroupDataRow} from 'Controls/treeGridNew';
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 
-describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataRow', () => {
+describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataRow/GetItemClasses', () => {
     let groupRow: TreeGridGroupDataRow<Model>;
     const owner = {
         getNavigation: () => {},
@@ -38,9 +38,5 @@ describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataRow', () => {
             'controls-Grid__row_highlightOnHover_undefined_theme-default',
             'controls-Grid__row_last',
             'controls-ListView__group'].join(' '));
-    });
-
-    it('getLevel() should return current level - 1', () => {
-        assert.strictEqual(groupRow.getLevel(), -1);
     });
 });

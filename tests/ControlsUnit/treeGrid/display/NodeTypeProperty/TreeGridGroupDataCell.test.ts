@@ -1,7 +1,7 @@
 import {TreeGridGroupDataRow, TreeGridGroupDataCell} from 'Controls/treeGridNew';
 import {CssClassesAssert} from 'ControlsUnit/CustomAsserts';
 
-describe('Controls/treeGrid/display/TreeGridGroup/TreeGridGroupDataCell', () => {
+describe('Controls/treeGrid/display/NodeTypeProperty/TreeGridGroupDataCell', () => {
 
     const owner = {
         getHoverBackgroundStyle: () => 'default',
