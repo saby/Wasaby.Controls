@@ -676,7 +676,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._setFilter(newOptions.filter, newOptions);
       }
       if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
-         this._resolveLoad();
+         this._resolveSearch(this._searchValue, newOptions);
       }
 
       if (emptyTemplateChanged) {
