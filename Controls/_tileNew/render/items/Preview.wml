@@ -7,7 +7,7 @@
             itemType="preview">
    <ws:contentTemplate>
       <div class="controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-{{_options.theme}}">
-         <ws:partial template="wml!Controls/_tileNew/render/Image"
+         <ws:partial template="{{ item.getImageTemplate() }}"
                      imageAlign="{{imageAlign}}">
             <ws:topTemplate>
                <ws:partial template="{{topTemplate}}"

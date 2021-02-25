@@ -9,7 +9,7 @@
             itemType="rich">
    <ws:contentTemplate>
        <div class="controls-TileView__richTemplate controls-TileView__richTemplate_imagePosition_{{imagePosition || 'top'}}">
-           <ws:partial template="wml!Controls/_tileNew/render/Image"
+           <ws:partial template="{{ item.getImageTemplate() }}"
                        imagePosition="{{ imagePosition || 'top' }}"
                        imageViewMode="{{ imageViewMode || 'rectangle' }}"
                        imageSize="{{ imageSize || 's' }}"

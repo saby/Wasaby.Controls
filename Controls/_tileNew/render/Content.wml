@@ -24,11 +24,4 @@
             {{description}}
         </div>
     </ws:if>
-
-    <ws:if data="{{footerTemplate}}">
-        <ws:partial template="{{footerTemplate}}"
-                    attr:class="controls-TileView__item_footer"
-                    itemData="{{(item || itemData)}}"
-                    item="{{(item || itemData)}}"/>
-    </ws:if>
 </div>

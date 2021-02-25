@@ -7,6 +7,7 @@ import { object } from 'Types/util';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from '../utils/imageUtil';
 import {isEqual} from 'Types/object';
 import { TemplateFunction } from 'UI/Base';
+import  * as ImageTemplate from 'wml!Controls/_tileNew/render/Image';
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 
@@ -304,21 +305,23 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
         switch (itemType) {
             case 'default':
-                classes += `controls-TileView__itemActions_theme-${this.getTheme()}`;
+                classes += ` controls-TileView__itemActions_theme-${this.getTheme()}`;
                 classes += ' controls-TileView__itemActions_bottomRight';
                 break;
             case 'small':
+                classes += ` controls-TileView__itemActions_theme-${this.getTheme()}`;
+                classes += ' controls-TreeTileView__itemActions_center';
                 break;
             case 'medium':
-                classes += 'controls-TileView__itemActions_bottomRight';
                 classes += ` controls-TileView__mediumTemplate_itemActions_theme-${this.getTheme()}`;
+                classes += ' controls-TileView__itemActions_bottomRight';
                 break;
             case 'rich':
-                classes += 'controls-TileView__richTemplate_itemActions controls-TileView__itemActions_topRight';
                 classes += ` controls-TileView__richTemplate_itemActions_theme-${this.getTheme()}`;
+                classes += ' controls-TileView__richTemplate_itemActions controls-TileView__itemActions_topRight';
                 break;
             case 'preview':
-                classes += 'controls-TileView__previewTemplate_itemActions';
+                classes += ' controls-TileView__previewTemplate_itemActions';
                 // TODO {{itemData.dispItem.isNode() ? 'controls-TileView__previewTemplate_itemActions_node'}}
                 break;
         }
@@ -436,6 +439,11 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return 1;
     }
 
+    getImageTemplate(): TemplateFunction {
+        return ImageTemplate;
+        // TODO if isNode() && itemType === 'small' то иконка папки <span attr:class="controls-TileView__smallTemplate_nodeIcon_theme-{{theme}} icon-large icon-Folder icon-disabled"></span>
+    }
+
     getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: string, imagePosition?: string, imageSize?: string): string {
         const imageRestrictions = this.getImageFit() === 'cover'
             ? getImageRestrictions(this.getImageHeight(), this.getImageWidth(), this.getTileHeight(), this.getTileWidth(widthTpl))
@@ -445,12 +453,15 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
 
         switch (itemType) {
             case 'default':
+            case 'preview':
             case 'medium':
                 classes += ' controls-TileView__image';
                 classes += ` controls-TileView__image_align_${imageAlign} `;
                 classes += getImageClasses(this.getImageFit(), imageRestrictions);
                 break;
             case 'small':
+                classes += ' controls-TileView__smallTemplate_image';
+                classes += ` controls-TileView__smallTemplate_image_size_${imageSize}_theme-${this.getTheme()}`;
                 break;
             case 'rich':
                 classes += ' controls-TileView__richTemplate_image';
@@ -460,8 +471,6 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
                     classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
 
                 }
-                break;
-            case 'preview':
                 break;
         }
 
@@ -487,6 +496,8 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
             case 'default':
                 break;
             case 'small':
+                // TODO в этом случае не нужны общие классы вверху, нужно написать так чтобы они не считались
+                classes = 'controls-TileView__smallTemplate_imageWrapper';
                 break;
             case 'medium':
                 classes += ' controls-TileView__mediumTemplate_image ';
@@ -528,15 +539,13 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
     shouldDisplayImageResizer(itemType: string = 'default', imagePosition: string, imageViewMode: string, imageProportion: string, staticHeight: boolean): boolean {
         switch (itemType) {
             case 'default':
+            case 'preview':
+            case 'medium':
                 return !staticHeight && this.getTileMode() !== 'dynamic';
             case 'small':
-                break;
-            case 'medium':
-                break;
+                return false;
             case 'rich':
                 return imagePosition === 'top' && imageViewMode === 'rectangle' && !!imageProportion;
-            case 'preview':
-                break;
         }
     }
 
@@ -620,24 +629,32 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         return classes;
     }
 
-    getInvisibleStyles(templateWidth?: number): string {
+    getInvisibleStyles(itemType: string = 'default', templateWidth?: number): string {
         const width = this.getTileWidth(templateWidth);
+        // TODO if isNode() then width = templateWidth || folderWidth || itemData.defaultFolderWidth
         return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
     }
 
-    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean): string {
+    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer'): string {
         let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()} controls-ListView__itemV`;
         if (templateClickable !== false) {
-            classes += ' controls-ListView__itemV_cursor-pointer';
+            classes += ` controls-ListView__itemV_cursor-${cursor}`;
         }
 
         classes += ` ${this.getItemPaddingClasses()}`;
 
-        // TODO не забыть в Tree добавить {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}`
+        /* TODO не забыть в Tree добавить {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}`
+            <ws:if data="{{!!itemData.dragTargetNode}}">
+               <div attr:class="controls-TileView__smallTemplate_dragTargetNode_theme-{{theme}}"></div>
+            </ws:if>
+        */
+
+        if (this.isDragged()) {
+            classes += ` controls-ListView__item_dragging_theme-${this.getTheme()}`;
+        }
 
         switch (itemType) {
             case 'default':
-            case 'small':
             case 'medium':
                 break;
             case 'rich':
@@ -653,6 +670,15 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
                     classes += ' controls-TileView__previewTemplate_withoutTitle';
                 }
                 break;
+            case 'small':
+                classes += ' controls-TileView__smallTemplate_item';
+                classes += ` controls-TileView__smallTemplate_item_theme-${this.getTheme()}`;
+                classes += ' js-controls-TileView__withoutZoom  js-controls-ListView__measurableContainer';
+                classes += ` controls-TileView__smallTemplate_listItem_theme-${this.getTheme()}`; // TODO если isNode то заменить listItem на node
+                if (this.isActive()) {
+                    classes += ` controls-TileView__smallTemplate_item_active_theme-${this.getTheme()}`;
+                }
+                break;
         }
 
         return classes;
@@ -662,6 +688,7 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
         // TODO staticHeight
 
         const width = this.getTileWidth(templateWidth);
+        // TODO if isNode() then width = templateWidth || folderWidth || itemData.defaultFolderWidth
         const compressedWidth = width * this.getCompressionCoefficient();
         return `
             -ms-flex-preferred-size: ${compressedWidth}px;
@@ -827,6 +854,8 @@ export default class TileCollectionItem<T extends Model = Model> extends Collect
                 }
                 break;
             case 'small':
+                classes += ` controls-TileView__smallTemplate_title_theme-${this.getTheme()}`;
+                // TODO {{itemData.dispItem.isNode() ? 'controls-TileView__smallTemplate_title_node_theme-' + _options.theme}}"
                 break;
             case 'medium':
                 classes += ' controls-TileView__mediumTemplate_title controls-fontweight-bold';

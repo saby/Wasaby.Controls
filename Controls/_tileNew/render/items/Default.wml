@@ -16,7 +16,7 @@
          </ws:partial>
 
          <!--Если задан contentTemplate, то изображение будет внутри него-->
-         <ws:partial if="{{ !contentTemplate }}" template="wml!Controls/_tileNew/render/Image"/>
+         <ws:partial if="{{ !contentTemplate }}" template="{{ item.getImageTemplate() }}"/>
 
          <ws:partial template="{{ item.getContentTemplate(contentTemplate) }}"
                      item="{{item}}"
@@ -43,6 +43,11 @@
                      itemData="{{(item || itemData)}}"
                      item="{{(item || itemData)}}"
                      itemActionsTemplate="{{itemActionsTemplate}}"/>
+         <ws:partial ша="{{footerTemplate}}"
+                     template="{{footerTemplate}}"
+                     attr:class="controls-TileView__item_footer"
+                     itemData="{{(item || itemData)}}"
+                     item="{{(item || itemData)}}"/>
       </div>
    </div>
 </ws:else>
