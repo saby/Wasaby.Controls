@@ -3,7 +3,7 @@ import * as Template from 'wml!Controls-demo/grid/ColumnTemplate/ColumnTemplate'
 import * as withBackgroundColorStyle from 'wml!Controls-demo/grid/ColumnTemplate/withBackgroundColorStyle';
 import {Memory} from 'Types/source';
 import {getCountriesStats} from '../DemoHelpers/DataCatalog';
-import { IColumn } from 'Controls/grid';
+import { IColumn } from 'Controls/interface';
 
 interface IColorColumn extends IColumn {
     getColor?: (n: number) => string;

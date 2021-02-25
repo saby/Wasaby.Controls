@@ -76,20 +76,6 @@ export {
     GridLayoutUtil
 };
 
-export {
-    TColumns,
-    IColumn,
-    IColspanParams,
-    IRowspanParams,
-    ICellPadding,
-    TCellAlign,
-    TCellPaddingVariant,
-    TCellVerticalAlign,
-    TOverflow,
-    IColumnSeparatorSizeConfig,
-    TColumnSeparatorSize
-} from './_grid/interface/IColumn';
-
 export {IGridControl} from './_grid/interface/IGridControl';
 
 export {
@@ -103,3 +89,16 @@ export {
     ColumnScrollController as ColumnScroll,
     IColumnScrollControllerOptions as IColumnScrollOptions
 } from 'Controls/columnScroll';
+
+export {
+    TColumns,
+    IColumn,
+    IColspanParams,
+    ICellPadding,
+    TCellAlign,
+    TCellPaddingVariant,
+    TCellVerticalAlign,
+    TOverflow,
+    IColumnSeparatorSizeConfig,
+    TColumnSeparatorSize
+} from 'Controls/interface';

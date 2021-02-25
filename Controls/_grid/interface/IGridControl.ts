@@ -1,4 +1,4 @@
-import { TColumns } from './IColumn';
+import { TColumns } from 'Controls/interface';
 import { IList } from 'Controls/list';
 /**
  * Интерфейс для контрола {@link Controls/grid:View Таблица}.
@@ -581,7 +581,7 @@ export interface IGridControl extends IList {
  * * {Controls/grid:IColumn} column Колонка таблицы.
  * * {Number} columnIndex Индекс колонки таблицы.
  * * {Boolean} isEditing Актуальное состояние редактирования элемента.
- * 
+ *
  * Функция возвращает {Controls/gridNew:TColspanCallbackResult} - количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
  * @markdown
  * @see resultsColspanCallback
@@ -594,7 +594,7 @@ export interface IGridControl extends IList {
  * Аргументы функции:
  * * {Controls/grid:IColumn} column Колонка грида
  * * {Number} columnIndex Индекс колонки грида
- * 
+ *
  * Функция возвращает {Controls/gridNew:TColspanCallbackResult} - количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
  * @markdown
  * @see colspanCallback

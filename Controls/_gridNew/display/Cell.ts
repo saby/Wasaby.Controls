@@ -10,7 +10,7 @@ import {
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 
-import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
+import { IColumn, IColspanParams, TColumnSeparatorSize } from 'Controls/interface';
 
 import { IItemPadding, TMarkerClassName } from 'Controls/display';
 import { COLUMN_SCROLL_JS_SELECTORS } from 'Controls/columnScroll';
@@ -23,7 +23,7 @@ const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
 const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
 const STRING_SEARCH_RENDER = 'Controls/gridNew:StringSearchTypeRender';
 
-export interface IOptions<T> extends IColspanParams, IRowspanParams {
+export interface IOptions<T> extends IColspanParams {
     owner: Row<T>;
     column: IColumn;
     instanceId?: string;

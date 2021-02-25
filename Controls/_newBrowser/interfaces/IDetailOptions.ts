@@ -1,6 +1,6 @@
 import {ICrudPlus} from 'Types/source';
 import {TemplateFunction} from 'UI/Base';
-import {IColumn, IHeaderCell} from 'Controls/grid';
+import {IColumn, IHeaderCell} from 'Controls/interface';
 import {
     IFilterOptions,
     IGroupingOptions,

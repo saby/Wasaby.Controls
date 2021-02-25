@@ -1,6 +1,6 @@
 import {OptionsToPropertyMixin} from 'Types/entity';
 
-import {IColspanParams, IColumn} from 'Controls/_grid/interface/IColumn';
+import {IColspanParams, IColumn}from 'Controls/interface';
 
 import Cell from './Cell';
 import GroupItem from './GroupItem';

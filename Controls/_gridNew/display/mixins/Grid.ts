@@ -6,7 +6,7 @@ import {
     IColumn,
     TColumns,
     TColumnSeparatorSize
-} from 'Controls/_grid/interface/IColumn';
+} from 'Controls/interface';
 
 import { IViewIterator, GridLadderUtil, ILadderObject} from 'Controls/display';
 

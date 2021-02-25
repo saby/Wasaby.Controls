@@ -78,3 +78,19 @@ export {default as IPromiseSelectable, IPromiseSelectableOptions} from './_inter
 export {default as IDraggable} from './_interface/IDraggable';
 export {IInputPlaceholder, IInputPlaceholderOptions} from './_interface/IInputPlaceholder';
 export {IInputTag, IInputTagOptions} from './_interface/IInputTag';
+
+
+// grid
+
+export {
+    TColumns,
+    IColumn,
+    IColspanParams,
+    ICellPadding,
+    TCellAlign,
+    TCellPaddingVariant,
+    TCellVerticalAlign,
+    TOverflow,
+    IColumnSeparatorSizeConfig,
+    TColumnSeparatorSize
+} from './_interface/grid/IColumn';
