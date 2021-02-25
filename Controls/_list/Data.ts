@@ -60,6 +60,27 @@ export interface IDataContextOptions extends ISourceOptions,
  * @author Герасимов А.М.
  */
 
+/**
+ * @name Controls/_list/Data#dataLoadCallback
+ * @cfg {Function} Функция, которая вызывается каждый раз после загрузки данных из источника контрола.
+ * Функцию можно использовать для изменения данных еще до того, как они будут отображены в контроле.
+ * @remark
+ * Функцию вызывается с двумя аргументами:
+ * - items коллекция, загруженная из источника данных с типом {@link Types/collection:RecordSet}.
+ * - direction направление загрузки данных (up/down), данный аргумент передаётся при подгрузке данных по скролу.
+ * @example
+ * <pre class="brush:html">
+ *    <Controls.list:DataContainer dataLoadCallback="{{_myDataLoadCallback}}" />
+ * </pre>
+ * <pre class="brush:js">
+ *    _myDataLoadCallback = function(items) {
+ *       items.each(function(item) {
+ *          item.set(field, value);
+ *       });
+ *    }
+ * </pre>
+ */
+
 /*
  * Container component that provides a context field "dataOptions" with necessary data for child containers.
  *
