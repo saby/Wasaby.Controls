@@ -410,6 +410,15 @@ const _private = {
             self._options.afterSetItemsOnReloadCallback();
         }
 
+        // reset deepReload after loading data (see reload method or constructor)
+        self._deepReload = false;
+    },
+
+    afterSetItemsOnReloadCallback(self): void {
+        if (self._options.afterSetItemsOnReloadCallback instanceof Function) {
+            self._options.afterSetItemsOnReloadCallback();
+        }
+
         // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
         if (self._options.markerMoveMode === 'leaves') {
             self._tempItem = null;
