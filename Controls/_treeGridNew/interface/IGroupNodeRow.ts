@@ -3,7 +3,7 @@
  * @author Аверкиев П.А.
  * @public
  */
-export default interface IGroupNode {
+export default interface IGroupNodeRow {
     /**
      * Возвращает true, если узел необходимо показать как группу.
      */

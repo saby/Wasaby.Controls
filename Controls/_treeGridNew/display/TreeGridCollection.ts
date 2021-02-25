@@ -1,4 +1,5 @@
 import { mixin } from 'Types/util';
+import {TemplateFunction} from 'UI/Base';
 import TreeGridDataRow, {IOptions as ITreeGridRowOptions} from './TreeGridDataRow';
 import {
     TreeItem,
@@ -16,7 +17,6 @@ import {
 import TreeGridFooterRow from './TreeGridFooterRow';
 import {Model as EntityModel, Model} from 'Types/entity';
 import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
-import {TemplateFunction} from "UI/Base";
 
 export interface IOptions<S extends Model, T extends TreeGridDataRow<S>>
    extends IGridCollectionOptions<S, T>, ITreeCollectionOptions<S, T> {
@@ -154,6 +154,33 @@ export default class TreeGridCollection<
         return this._itemsFactoryResolver.bind(this, superFactory);
     }
 
+    protected _getGroupItemConstructor(): new() => GridGroupRow<T> {
+        return GridGroupRow;
+    }
+    setEditing(editing: boolean): void {
+        super.setEditing(editing);
+
+        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
+            this._$headerModel = null;
+        }
+        this._nextVersion();
+    }
+
+    // endregion
+
+    // region HasNodeWithChildren
+
+    protected _setHasNodeWithChildren(hasNodeWithChildren: boolean): void {
+        super._setHasNodeWithChildren(hasNodeWithChildren);
+        if (this.getFooter()) {
+            this.getFooter().setHasNodeWithChildren(hasNodeWithChildren);
+        }
+    }
+
+    // endregion HasNodeWithChildren
+
+    // region itemsFactoryResolver
+
     protected _itemsFactoryResolver(superFactory: ItemsFactory<T>, options?: ITreeGridRowOptions<S>): ItemsFactory<T> {
         options.columns = this._$columns;
         options.colspanCallback = this._$colspanCallback;
@@ -179,30 +206,7 @@ export default class TreeGridCollection<
         return CollectionItemsFactory.call(this, options);
     }
 
-    protected _getGroupItemConstructor(): new() => GridGroupRow<T> {
-        return GridGroupRow;
-    }
-    setEditing(editing: boolean): void {
-        super.setEditing(editing);
-
-        if (this._$headerModel && !this._headerIsVisible(this._$header)) {
-            this._$headerModel = null;
-        }
-        this._nextVersion();
-    }
-
-    // endregion
-
-    // region HasNodeWithChildren
-
-    protected _setHasNodeWithChildren(hasNodeWithChildren: boolean): void {
-        super._setHasNodeWithChildren(hasNodeWithChildren);
-        if (this.getFooter()) {
-            this.getFooter().setHasNodeWithChildren(hasNodeWithChildren);
-        }
-    }
-
-    // endregion HasNodeWithChildren
+    // endregion itemsFactoryResolver
 
     protected _initializeFooter(options: IOptions<S, T>): TreeGridFooterRow<S> {
         return new TreeGridFooterRow({

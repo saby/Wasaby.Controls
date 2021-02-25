@@ -1,15 +1,17 @@
-export interface ITreeGridOptions {
+export interface IOptions {
     nodeTypeProperty?: string;
+    groupProperty?: string;
 }
 
 /**
  * Интерфейс дерева
+ * @mixes Controls/interface/IGroupedList
  *
  * @public
  * @author Аверкиев П.А.
  */
 export default interface ITreeGrid {
-    readonly '[Controls/_treeGridNew/interface/ITreeGrid]': boolean;
+    readonly '[Controls/_treeGridNew/interface/ITreeGrid]': true;
 }
 
 /**
