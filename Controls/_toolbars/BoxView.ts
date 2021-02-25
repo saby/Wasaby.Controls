@@ -39,12 +39,19 @@ export interface IToolbarBoxOptions extends IControlOptions, IHierarchyOptions, 
  *
  * @class Controls/_toolbars/BoxView
  * @extends UI/Base:Control
+ * @implements Controls/_interface/ISeparatorVisible
  * @implements Controls/interface/IItemTemplate
  * @demo Controls-demo/Toolbar/BoxView/Index
  *
  * @author Красильников А.С.
  * @public
  */
+
+/**
+ * @name Controls/_toolbars/BoxView#separatorVisible
+ * @demo Controls-demo/Toolbar/BoxView/SeparatorVisible/Index
+ */
+
 class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTemplate, IToolbarSource {
     protected _items: TItems = null;
     protected _source: ICrudPlus = null;
@@ -102,6 +109,7 @@ class ToolbarBox extends Control<IToolbarBoxOptions, TItems> implements IItemTem
     static getDefaultOptions(): object {
         return {
             iconSize: 's',
+            separatorVisible: true,
             itemTemplate: defaultItemTemplate
         };
     }

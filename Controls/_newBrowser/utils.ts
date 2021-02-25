@@ -37,7 +37,7 @@ export function buildMasterOptions(options: IOptions): IExplorerOptions {
     return {
         ...options.master,
 
-        root: options.masterRoot || options.root,
+        root: options.masterRoot === undefined ? options.root : options.masterRoot,
 
         source: master.source || options.source,
         keyProperty: master.keyProperty || options.keyProperty,

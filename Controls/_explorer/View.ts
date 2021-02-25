@@ -876,29 +876,30 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * @class Controls/_explorer/View
  * @extends UI/Base:Control
- * @implements Controls/_interface/IErrorController
- * @mixes Controls/_interface/ISource
+ * @implements Controls/interface:IErrorController
+ * @implements Controls/list:IReloadableList
+ * @mixes Controls/interface:ISource
  * @mixes Controls/interface/ITreeGridItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/interface/IGroupedList
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/interface:INavigation
+ * @mixes Controls/interface:IFilterChanged
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IList
- * @mixes Controls/_itemActions/interface/IItemActionsOptions
- * @mixes Controls/_interface/IHierarchy
- * @implements Controls/_tree/interface/ITreeControl
- * @mixes Controls/_explorer/interface/IExplorer
- * @mixes Controls/_interface/IDraggable
- * @mixes Controls/_tile/interface/ITile
- * @mixes Controls/_list/interface/IVirtualScrollConfig
+ * @mixes Controls/list:IList
+ * @mixes Controls/itemActions:IItemActionsOptions
+ * @mixes Controls/interface:IHierarchy
+ * @implements Controls/tree/ITreeControlOptions
+ * @mixes Controls/explorer:IExplorer
+ * @mixes Controls/interface:IDraggable
+ * @mixes Controls/tile:ITile
+ * @mixes Controls/list:IVirtualScrollConfig
  * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/_grid/interface/IGridControl
- * @mixes Controls/_list/interface/IClickableView
- * @mixes Controls/_list/interface/IMovableList
- * @mixes Controls/_list/interface/IRemovableList
- * @mixes Controls/_marker/interface/IMarkerList
+ * @mixes Controls/grid:IGridControl
+ * @mixes Controls/list:IClickableView
+ * @mixes Controls/list:IMovableList
+ * @mixes Controls/list:IRemovableList
+ * @mixes Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.
@@ -912,30 +913,30 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * @class Controls/_explorer/View
  * @extends UI/Base:Control
- * @implements Controls/_interface/IErrorController
- * @mixes Controls/_interface/ISource
+ * @implements Controls/interface:IErrorController
+ * @implements Controls/list:IReloadableList
+ * @mixes Controls/interface:ISource
  * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/interface/IGroupedList
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/interface:INavigation
+ * @mixes Controls/interface:IFilterChanged
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IList
- * @mixes Controls/_itemActions/interface/IItemActionsOptions
- * @mixes Controls/_interface/ISorting
- * @mixes Controls/_interface/IHierarchy
- * @implements Controls/_tree/interface/ITreeControl
- * @mixes Controls/_explorer/interface/IExplorer
- * @mixes Controls/_interface/IDraggable
- * @mixes Controls/_tile/interface/ITile
- * @mixes Controls/_list/interface/IVirtualScrollConfig
+ * @mixes Controls/list:IList
+ * @mixes Controls/itemActions:IItemActionsOptions
+ * @mixes Controls/interface:IHierarchy
+ * @implements Controls/tree/ITreeControlOptions
+ * @mixes Controls/explorer:IExplorer
+ * @mixes Controls/interface:IDraggable
+ * @mixes Controls/tile:ITile
+ * @mixes Controls/list:IVirtualScrollConfig
  * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/_grid/interface/IGridControl
- * @mixes Controls/_list/interface/IMovableList
- * @mixes Controls/_list/interface/IRemovableList
- * @mixes Controls/_marker/interface/IMarkerList
+ * @mixes Controls/grid:IGridControl
+ * @mixes Controls/list:IClickableView
+ * @mixes Controls/list:IMovableList
+ * @mixes Controls/list:IRemovableList
+ * @mixes Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.
