@@ -4,7 +4,7 @@ import {HierarchicalMemory} from 'Types/source';
 import {extendedData as data} from '../data/NodeTypePropertyData';
 import {TColspanCallbackResult} from 'Controls/gridNew';
 import {Model} from 'Types/entity';
-import {INavigation, TExpandOrColapsItems} from 'Controls-demo/types';
+import {INavigation} from 'Controls-demo/types';
 
 const NODE_TYPE_PROPERTY = 'nodeType';
 
@@ -12,7 +12,6 @@ export default class extends Control {
     protected _template: TemplateFunction = Template;
     protected _viewSource: HierarchicalMemory;
     protected _nodeTypeProperty: string = NODE_TYPE_PROPERTY;
-    protected _expandedItems: TExpandOrColapsItems = [];
     protected _navigation: INavigation = {
         source: 'page',
         view: 'demand',
