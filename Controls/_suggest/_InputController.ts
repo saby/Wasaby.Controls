@@ -525,10 +525,10 @@ export default class InputContainer extends Control<IInputControllerOptions> {
       return this._historyLoad;
    }
 
-   private _openSelector(templateOptions: object): void {
-      if (!this._notify('showSelector', [templateOptions])) {
+   private _openSelector(templateOptions: object): void|Promise<unknown> {
+      if (this._notify('showSelector', [templateOptions]) !== false) {
          // loading showAll templates_historyLoad
-         import('Controls/suggestPopup').then(() => {
+         return import('Controls/suggestPopup').then(() => {
             StackOpener.openPopup(this._getSelectorOptions(templateOptions));
          });
       }

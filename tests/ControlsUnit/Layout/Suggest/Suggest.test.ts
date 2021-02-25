@@ -1530,6 +1530,34 @@ describe('Controls/suggest', () => {
          assert.isFalse(isOpenPopup);
       });
 
+      describe('_openSelector', () => {
+         let isOpenPopup = false;
+         const suggestComponent = getComponentObject({
+            suggestTemplate: {}
+         });
+         suggestComponent._getSelectorOptions = () => {
+            isOpenPopup = true;
+         };
+
+         it('show selector', async () => {
+            suggestComponent._notify = () => {
+               return true;
+            };
+
+            await suggestComponent._openSelector({});
+            assert.isTrue(isOpenPopup);
+         });
+
+         it('dont show selector', async () => {
+            isOpenPopup = false;
+            suggestComponent._notify = () => {
+               return false;
+            };
+            await suggestComponent._openSelector({});
+            assert.isFalse(isOpenPopup);
+         });
+      });
+
       it('changeValueHandler', async () => {
          const suggestComponent = getComponentObject({
             suggestTemplate: {},
