@@ -1,5 +1,5 @@
 /**
- * Шаблон, который используется для отображения ячейки заголовка {@link /doc/platform/developmentapl/interface-development/controls/list/grouping/ группы} в {@link Controls/grid:View таблице}, {@link Controls/treeGrid:View дереве} и {@link Controls/explorer:View иерархическом проводнике}.
+ * Шаблон, который используется для отображения ячейки заголовка группы в {@link Controls/treeGridNew:View дереве} и {@link Controls/explorer:View иерархическом проводнике}.
  *
  * @class Controls/_treeGridNew/interface/GroupColumnTemplate
  * @mixes Controls/list:IBaseGroupTemplate
@@ -37,11 +37,23 @@
  *
  * @example
  *
- * В следующем примере показано, как изменить параметры шаблона.
+ * В следующем примере показано, как отобразить узел в виде группы.
+ *
+ * <pre class="brush: js">
+ * class MyControl extends Control<IControlOptions> {
+ *     protected _colspanCallback(item: Model, column, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+ *         if (item.get(NODE_TYPE_PROPERTY) === 'group' && columnIndex === 0) {
+ *             return 2;
+ *         }
+ *         return 1;
+ *     }
+ * }
+ * </pre>
  *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.treeGridNew:View
+ *    colspanCallback={{_colspanCallback}}
  *    nodeTypeProperty="customNodeType">
  *    <ws:columns>
  *       <ws:Array>
@@ -55,6 +67,10 @@
  *                   </ws:else>
  *               </ws:template>
  *           </ws:Object>
+ *           <ws:Object displayProperty="date" width="150px"/>
+ *           <ws:Object displayProperty="name" width="150px"/>
+ *           <ws:Object displayProperty="price" width="150px"/>
+ *           <ws:Object displayProperty="tax" width="150px"/>
  *       </ws:Array>
  *   </ws:columns>
  * </Controls.treeGridNew:View>
@@ -62,9 +78,21 @@
  *
  * В следующем примере показано, как в шаблоне настроить выравнивание текста заголовка группы относительно колонки
  *
+ * <pre class="brush: js">
+ * class MyControl extends Control<IControlOptions> {
+ *     protected _colspanCallback(item: Model, column, columnIndex: number, isEditing: boolean): TColspanCallbackResult {
+ *         if (item.get(NODE_TYPE_PROPERTY) === 'group' && columnIndex === 0) {
+ *             return 2;
+ *         }
+ *         return 1;
+ *     }
+ * }
+ * </pre>
+ *
  * <pre class="brush: html">
  * <!-- WML -->
  * <Controls.treeGridNew:View
+ *    colspanCallback={{_colspanCallback}}
  *    nodeTypeProperty="customNodeType">
  *    <ws:columns>
  *       <ws:Array>
@@ -79,6 +107,7 @@
  *                   </ws:else>
  *               </ws:template>
  *           </ws:Object>
+ *           <ws:Object displayProperty="date" width="150px"/>
  *           <ws:Object displayProperty="name" width="150px">
  *               <ws:template>
  *                   <ws:if data="{{ template.item.isGroupNode() }}">
@@ -90,6 +119,8 @@
  *                   </ws:else>
  *               </ws:template>
  *           </ws:Object>
+ *           <ws:Object displayProperty="price" width="150px"/>
+ *           <ws:Object displayProperty="tax" width="150px"/>
  *       </ws:Array>
  *   </ws:columns>
  * </Controls.treeGridNew:View>
