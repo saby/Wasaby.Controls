@@ -92,18 +92,6 @@ var Component = BaseControl.extend([EventProxy], {
         this._rangeModel.destroy();
     },
 
-    _monthObserverHandler: function(event, entries) {
-        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
-        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
-        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
-        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
-            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
-                this._monthsPosition = new Date(entries.data.getFullYear(), 0);
-            }
-            this._markedKey = this._dateToId(entries.data);
-        }
-    },
-
     _monthCaptionClick: function(e: SyntheticEvent, yearDate: Date, month: number): void {
         let date;
         if (this._monthSelectionEnabled) {
@@ -169,6 +157,9 @@ var Component = BaseControl.extend([EventProxy], {
         this._position = position;
         const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
         this._markedKey = this._dateToId(markedKeyDate);
+        if (markedKeyDate.getFullYear() !== this._monthsPosition.getFullYear()) {
+            this._monthsPosition = new Date(markedKeyDate.getFullYear(), 0);
+        }
         _private.notifyPositionChanged(this, position);
     },
 
