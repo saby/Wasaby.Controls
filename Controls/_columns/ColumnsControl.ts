@@ -155,14 +155,6 @@ export default class ColumnsControl<TOptions extends IColumnsControlOptions = IC
         }
     }
 
-    protected _getColumnsCount(): number {
-        return this._columnsCount;
-    }
-
-    protected _getSpacing(): number {
-        return this._spacing;
-    }
-
     static getDefaultOptions(): Partial<IColumnsControlOptions> {
         return {
             ...BaseControl.getDefaultOptions(),
