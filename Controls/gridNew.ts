@@ -33,9 +33,10 @@ import * as ItemActionsCellContent from 'wml!Controls/_gridNew/Render/ItemAction
 import * as MoneyTypeRender from 'wml!Controls/_gridNew/Render/types/money';
 import * as NumberTypeRender from 'wml!Controls/_gridNew/Render/types/number';
 import * as StringTypeRender from 'wml!Controls/_gridNew/Render/types/string';
+import * as StringSearchTypeRender from 'wml!Controls/_gridNew/Render/types/StringSearch';
 
 import SortingButton from 'Controls/_gridNew/SortingButton';
-import {register} from "Types/di";
+import {register} from 'Types/di';
 
 export {
     View,
@@ -54,6 +55,7 @@ export {
     MoneyTypeRender,
     NumberTypeRender,
     StringTypeRender,
+    StringSearchTypeRender,
     TableTemplate,
     SortingButton
 };
@@ -64,8 +66,10 @@ import {
 } from 'Controls/_gridNew/display/Collection';
 export { default as GridMixin, TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from 'Controls/_gridNew/display/mixins/Grid';
 export { default as GridRowMixin } from 'Controls/_gridNew/display/mixins/Row';
+export { IItemTemplateParams } from 'Controls/_gridNew/display/mixins/Row';
 
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_gridNew/display/Row';
+import { default as GridItemActionsCell } from 'Controls/_gridNew/display/ItemActionsCell';
 import GridCell, {IOptions as IGridCellOptions} from 'Controls/_gridNew/display/Cell';
 import GridHeader, {IOptions as IGridHeaderOptions} from 'Controls/_gridNew/display/Header';
 import GridHeaderRow, {IOptions as IGridHeaderRowOptions} from 'Controls/_gridNew/display/HeaderRow';
@@ -111,7 +115,7 @@ register('Controls/display:GridGroupCell', GridGroupCell, {instantiate: false});
 export {
     GridCollection, IGridCollectionOptions,
     GridRow, IGridRowOptions,
-    GridCell, IGridCellOptions,
+    GridItemActionsCell, GridCell, IGridCellOptions,
     GridHeader, IGridHeaderOptions,
     GridHeaderRow, IGridHeaderRowOptions,
     GridHeaderCell, IGridHeaderCellOptions,

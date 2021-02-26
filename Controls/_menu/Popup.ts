@@ -31,6 +31,7 @@ const SEARCH_DEPS = [
  * @mixes Controls/_interface/IIconStyle
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/interface:ISource
  *
  * @public
  * @author Герасимов А.М.
@@ -254,7 +255,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         return ManagerController.getPopupHeaderTheme();
     }
 
-    static _theme: string[] = ['Controls/menu'];
+    static _theme: string[] = ['Controls/menu', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {

@@ -12,6 +12,7 @@ import {IList} from 'Controls/list';
 import {IColumn} from 'Controls/grid';
 import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
+import 'css!Controls/toggle';
 
 export interface IListEditorOptions extends IControlOptions, IFilterOptions, ISourceOptions, INavigationOptions,
     IItemActionsOptions, IList, IColumn, ISelectorDialogOptions {
@@ -213,7 +214,7 @@ class ListEditor extends Control<IListEditorOptions> {
         return this._stackOpener;
     }
 
-    static _theme: string[] = ['Controls/filterPanel', 'Controls/toggle'];
+    static _theme: string[] = ['Controls/filterPanel'];
 
     static getDefaultOptions(): object {
         return {
@@ -225,4 +226,14 @@ class ListEditor extends Control<IListEditorOptions> {
         };
     }
 }
+
+Object.defineProperty(ListEditor, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return ListEditor.getDefaultOptions();
+   }
+});
+
 export default ListEditor;

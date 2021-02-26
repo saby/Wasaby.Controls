@@ -78,7 +78,7 @@ export interface IItemPadding {
  * @author Авраменко А.С.
  */
 
-export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovableOptions {
+export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovableOptions, IItemTemplateOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;

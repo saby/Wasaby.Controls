@@ -3,7 +3,7 @@ import template = require('wml!Controls/_popupTemplate/Dialog/Dialog');
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Controller as ManagerController} from 'Controls/popup';
 import {default as IPopupTemplate, IPopupTemplateOptions} from './interface/IPopupTemplate';
-import {goUpByControlTree} from 'UI/Focus';
+import 'css!Controls/popupTemplate';
 
 export interface IDialogTemplateOptions extends IControlOptions, IPopupTemplateOptions {
    draggable?: boolean;
@@ -24,7 +24,7 @@ interface IDragObject {
  *
  * @class Controls/_popupTemplate/Dialog
  * @extends UI/Base:Control
- * 
+ *
  * @public
  * @author Красильников А.С.
  * @implements Controls/_popupTemplate/interface/IPopupTemplate
@@ -75,7 +75,6 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         this._children.dragNDrop.startDragNDrop(null, event);
     }
 
-    static _theme: string[] = ['Controls/popupTemplate'];
     static getDefaultOptions(): IDialogTemplateOptions {
         return {
             headingFontColorStyle: 'secondary',
@@ -88,6 +87,15 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         };
     }
 }
+
+Object.defineProperty(DialogTemplate, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return DialogTemplate.getDefaultOptions();
+   }
+});
 
 /**
  * @name Controls/_popupTemplate/Dialog#draggable
@@ -103,7 +111,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
  * @default default
  * @demo Controls-demo/PopupTemplate/Dialog/headerBackgroundStyle/Index
  * @remark Данная опция определяет префикс стиля для настройки фона шапки диалогового окна.
- * На шапку будет установлен класс **.controls-DialogTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
+ * На шапку будет установлен класс **.controls-DialogTemplate&#95;&#95;top-area&#95;@{headerBackgroundStyle}**, который следует определить у себя в стилях.
  */
 
 /**
@@ -114,7 +122,7 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
  * @default default
  * @demo Controls-demo/PopupTemplate/Dialog/backgroundStyle/Index
  * @remark Данная опция определяет префикс стиля для настройки фона диалогового окна.
- * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-@{headerBackgroundStyle}&#95;theme&#95;@{themeName}**, который следует определить у себя в стилях.
+ * На шаблон будет установлен класс **.controls-DialogTemplate&#95;backgroundStyle-@{headerBackgroundStyle}**, который следует определить у себя в стилях.
  */
 
 export default DialogTemplate;

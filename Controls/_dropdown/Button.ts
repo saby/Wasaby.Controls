@@ -350,3 +350,12 @@ export default class Button extends BaseDropdown {
  * })
  * </pre>
  */
+
+Object.defineProperty(Button, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Button.getDefaultOptions();
+   }
+});

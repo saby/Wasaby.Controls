@@ -38,16 +38,17 @@ interface IReceivedState {
 }
 
 /**
- * Компонент реализует стандартную раскладку двухколоночного реестра с master и detail колонками.
+ * Компонент реализует стандартную раскладку и поведение двухколоночного реестра с master и detail списками:
+ *  * синхронное изменение списков при изменении корневой директории в одном из них
+ *  * возможность задавать режим отображения detail списка (список|плитка|дерево)
+ *  * возможность поиска с последующим отображением результатов в detail списке
+ *  * возможность конфигурирования стандартных шаблонов итема списка и плитки
  *
- * При получении списка записей для detail-колонки из метаданных ответа вычитывает поле
- * 'listConfiguration', в котором ожидается объект реализующий интерфейс {@link IBrowserViewConfig},
- * и применяет полученную конфигурацию к списку.
+ * @demo Controls-demo/NewBrowser/Index
  *
- * @class Controls/newBrowser:Browser
- * @extends UI/Base:Control
  * @public
  * @author Уфимцев Д.Ю.
+ * @class Controls/newBrowser:Browser
  */
 export default class Browser extends Control<IOptions, IReceivedState> {
 
@@ -708,16 +709,18 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     ];
 
     static calcMasterVisibility(options: IOptions): MasterVisibilityEnum {
-        let masterVisibility = options.master?.visibility || MasterVisibilityEnum.hidden;
+        if (options.master?.visibility) {
+            return options.master.visibility;
+        }
 
         if (options.listConfiguration && options.userViewMode) {
             const nodesPosition = options.listConfiguration[options.userViewMode]?.node?.position;
-            masterVisibility = nodesPosition === NodesPosition.left
+            return nodesPosition === NodesPosition.left
                 ? MasterVisibilityEnum.visible
                 : MasterVisibilityEnum.hidden;
         }
 
-        return masterVisibility;
+        return MasterVisibilityEnum.hidden;
     }
 
     static getDefaultOptions(): IOptions {
@@ -815,3 +818,12 @@ export default class Browser extends Control<IOptions, IReceivedState> {
  * @name Controls/newBrowser:Browser#detailRootChanged
  * @param {string} root Текущая корневая папка
  */
+
+Object.defineProperty(Browser, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Browser.getDefaultOptions();
+   }
+});

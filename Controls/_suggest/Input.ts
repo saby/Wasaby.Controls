@@ -131,9 +131,19 @@ Suggest._theme = ['Controls/suggest', 'Controls/Classes'];
 Suggest.getOptionTypes = getOptionTypes;
 Suggest.getDefaultOptions = function() {
    return {
+      borderVisibility: 'visible',
       minSearchLength: 3
    };
 };
+
+Object.defineProperty(Suggest, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return Suggest.getDefaultOptions();
+   }
+});
 
 // </editor-fold>
 /**

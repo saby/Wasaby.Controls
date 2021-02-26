@@ -202,7 +202,7 @@ define([
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
       });
 
-      it('beforeMount: right indexes with virtual scroll and receivedState', async function() {
+      it('beforeMount: right indexes with virtual scroll and receivedState', async () => {
          var cfg = {
             viewName: 'Controls/List/ListView',
             viewConfig: {
@@ -229,14 +229,9 @@ define([
          };
          var ctrl = await correctCreateBaseControlAsync(cfg);
          ctrl.saveOptions(cfg);
-         return new Promise(function(resolve) {
-            ctrl._beforeMount(cfg, null).then((res) => {
-               assert.equal(ctrl.getViewModel().getStartIndex(), 0);
-               assert.equal(ctrl.getViewModel().getStopIndex(), 6);
-               resolve();
-               return res;
-            });
-         });
+         ctrl._beforeMount(cfg, null);
+         assert.equal(ctrl.getViewModel().getStartIndex(), 0);
+         assert.equal(ctrl.getViewModel().getStopIndex(), 6);
       });
 
       it('_private::getSortingOnChange', function() {
@@ -2866,6 +2861,7 @@ define([
          const initTestBaseControl = (config) => {
             const _baseControl = new lists.BaseControl(config);
             _baseControl.saveOptions(config);
+            _baseControl._beginAdd = () => Promise.resolve();
             _baseControl._beforeMount(config);
             _baseControl._container = {
                clientHeight: 100,
@@ -3112,7 +3108,8 @@ define([
                isStopped: () => stopPropagationCalled,
                stopPropagation: function() {
                   stopPropagationCalled = true;
-               }
+               },
+               isBubbling: () => false
             };
             ctrl._onItemClick(event, ctrl._listViewModel.getItems().at(2), {
                target: { closest: () => null }
@@ -4370,7 +4367,7 @@ define([
                }
             };
             instance.saveOptions(cfg);
-            return instance._beforeMount(cfg).then(() => {
+            return (instance._beforeMount(cfg) || Promise.resolve()).then(() => {
                instance._listViewModel.setItems(rs, cfg);
                instance._items = rs;
             });
@@ -4586,7 +4583,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей списка при отображении опций свайпа
-         // Предполагаем, что контейнер содержит класс js-controls-ItemActions__swipeMeasurementContainer
+         // Предполагаем, что контейнер содержит класс js-controls-ListView__measurableContainer
          it('should correctly calculate row size for list', () => {
             // fake HTMLElement
             const fakeElement = {
@@ -4602,7 +4599,7 @@ define([
          });
 
          // Должен правильно рассчитывать ширину для записей таблицы при отображении опций свайпа
-         // Предполагаем, что сам контейнер не содержит класс js-controls-ItemActions__swipeMeasurementContainer,
+         // Предполагаем, что сам контейнер не содержит класс js-controls-ListView__measurableContainer,
          // а его потомки содержат
          it('should correctly calculate row size for grid', () => {
             // fake HTMLElement
@@ -5380,38 +5377,32 @@ define([
          baseCtrl.saveOptions(cfg);
 
          return new Promise(function(resolve) {
-            baseCtrl._beforeMount(cfg)
-               .addCallback(function() {
-                  assert.isTrue(baseCtrl._sourceController.hasMoreData('down'));
+            baseCtrl._beforeMount(cfg);
+            assert.isTrue(baseCtrl._sourceController.hasMoreData('down'));
 
-                  baseCtrl.reloadItem(1)
-                     .addCallback(function(item) {
-                        assert.equal(item.get('id'), 1);
-                        assert.equal(item.get('title'), 'Первый');
-                        assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
-                        assert.isTrue(baseCtrl._itemReloaded);
+            baseCtrl.reloadItem(1).addCallback(function(item) {
+               assert.equal(item.get('id'), 1);
+               assert.equal(item.get('title'), 'Первый');
+               assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
+               assert.isTrue(baseCtrl._itemReloaded);
 
-                        baseCtrl.reloadItem(1, null, true, 'query')
-                           .addCallback(function(items) {
-                              assert.isTrue(!!items.getCount);
-                              assert.equal(items.getCount(), 1);
-                              assert.equal(items.at(0)
-                                 .get('id'), 1);
-                              assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
+               baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
+                     assert.isTrue(!!items.getCount);
+                     assert.equal(items.getCount(), 1);
+                     assert.equal(items.at(0).get('id'), 1);
+                     assert.isTrue(baseCtrl._sourceController.hasMoreData('down'), 'wrong navigation after reload item');
 
-                              let recordSet = new collection.RecordSet({
-                                 keyProperty: 'id',
-                                 rawData: [{ id: 'test' }]
-                              });
-                              baseCtrl._listViewModel.setItems(recordSet);
-                              baseCtrl.reloadItem('test', null, true, 'query')
-                                 .addCallback(function(reloadedItems) {
-                                    assert.isTrue(reloadedItems.getCount() === 0);
-                                    resolve();
-                                 });
-                           });
+                     let recordSet = new collection.RecordSet({
+                        keyProperty: 'id',
+                        rawData: [{ id: 'test' }]
                      });
-               });
+                     baseCtrl._listViewModel.setItems(recordSet);
+                     baseCtrl.reloadItem('test', null, true, 'query').addCallback(function(reloadedItems) {
+                        assert.isTrue(reloadedItems.getCount() === 0);
+                        resolve();
+                     });
+                  });
+            });
          });
       });
 
@@ -5438,17 +5429,15 @@ define([
          baseCtrl.saveOptions(cfg);
 
          return new Promise(function(resolve) {
-            baseCtrl._beforeMount(cfg)
-               .addCallback(function() {
-                  assert.isTrue(baseCtrl._sourceController.hasMoreData('down'));
+            baseCtrl._beforeMount(cfg);
+            assert.isTrue(baseCtrl._sourceController.hasMoreData('down'));
 
-                  baseCtrl.reloadItem(1).addCallback((item) => {
-                     assert.equal(item.get('id'), 1);
-                     assert.equal(item.get('title'), 'Первый');
-                     assert.isFalse(baseCtrl._itemReloaded);
-                     resolve();
-                  });
-               });
+            baseCtrl.reloadItem(1).addCallback((item) => {
+               assert.equal(item.get('id'), 1);
+               assert.equal(item.get('title'), 'Первый');
+               assert.isFalse(baseCtrl._itemReloaded);
+               resolve();
+            });
          });
       });
 
@@ -5545,7 +5534,7 @@ define([
                isEIPDestroyed = true;
             }
          };
-         instance._beforeUpdate({...cfg, filter: {qw: ''}});
+         instance._beforeUpdate({...cfg, filter: {qw: ''}, sourceController: null});
          return cancelPromise.then(() => {
             assert.isTrue(isEditingCanceled);
             assert.isFalse(isEIPDestroyed);
@@ -5935,59 +5924,6 @@ define([
          assert.equal(instance._loadingState, 'down');
       });
 
-      it('_beforeUpdate with new sorting/filter', async function() {
-         let cfg = {
-            viewName: 'Controls/List/ListView',
-            sorting: [],
-            viewModelConfig: {
-               items: [],
-               keyProperty: 'id'
-            },
-            viewModelConstructor: lists.ListViewModel,
-            keyProperty: 'id',
-            source: source,
-            dataLoadCallback: sandbox.stub()
-         };
-         let instance = correctCreateBaseControl(cfg);
-         let cfgClone = { ...cfg };
-         let portionSearchReseted = false;
-
-         instance._portionedSearch = lists.BaseControl._private.getPortionedSearch(instance);
-         instance._portionedSearch.reset = () => {
-            portionSearchReseted = true;
-         };
-
-         instance.saveOptions(cfg);
-         await instance._beforeMount(cfg);
-
-         instance._beforeUpdate(cfg);
-         instance._afterUpdate(cfg);
-         instance._componentDidUpdate();
-
-         let clock = sandbox.useFakeTimers();
-         let loadPromise;
-
-         cfgClone.sorting = [{ title: 'ASC' }];
-         loadPromise = instance._beforeUpdate(cfgClone);
-         clock.tick(100);
-         instance._afterUpdate({});
-         instance._componentDidUpdate();
-         await loadPromise;
-         assert.isTrue(cfgClone.dataLoadCallback.calledOnce);
-         assert.isTrue(portionSearchReseted);
-
-         portionSearchReseted = false;
-         cfgClone = { ...cfg };
-         cfgClone.filter = { test: 'test' };
-         loadPromise = instance._beforeUpdate(cfgClone);
-         instance._afterUpdate({});
-         instance._componentDidUpdate();
-         clock.tick(100);
-         await loadPromise;
-         assert.isTrue(cfgClone.dataLoadCallback.calledTwice);
-         assert.isTrue(portionSearchReseted);
-      });
-
       it('_beforeUpdate with new viewModelConstructor', function() {
          let cfg = {
             viewName: 'Controls/List/ListView',
@@ -6004,10 +5940,9 @@ define([
          let instance = correctCreateBaseControl(cfg);
 
          instance.saveOptions(cfg);
-         return instance._beforeMount(cfg).then(() => {
-            instance._beforeUpdate({ ...cfg, viewModelConstructor: tree.TreeViewModel });
-            assert.isTrue(instance._listViewModel.getHasMoreData());
-         });
+         instance._beforeMount(cfg)
+         instance._beforeUpdate({ ...cfg, viewModelConstructor: tree.TreeViewModel });
+         assert.isTrue(instance._listViewModel.getHasMoreData());
       });
 
       it('_beforeUpdate with new searchValue', async function() {
@@ -6712,7 +6647,10 @@ define([
             };
             const instance = correctCreateBaseControl(cfg);
             const enterItemData = {
-               item: {}
+               item: {},
+               getContents: () => ({
+                  getKey: () => null
+               })
             };
             const enterNativeEvent = {};
             let called = false;
@@ -7259,7 +7197,12 @@ define([
                const dragObject = {
                   entity: {}
                };
-               const itemData = { item: {} };
+               const itemData = {
+                  item: {},
+                  getContents: () => ({
+                     getKey: () => null
+                  })
+               };
                baseControl._listViewModel.setDragItemData = () => {};
                baseControl._listViewModel.getItemDataByItem = () => { return { item: {} };};
                baseControl._dndListController = {
@@ -7419,7 +7362,8 @@ define([
 
                const e = {
                   isStopped: () => isStopped,
-                  stopPropagation() { isStopped = true; }
+                  stopPropagation() { isStopped = true; },
+                  isBubbling: () => false
                };
 
                const originalEvent = {
@@ -8069,6 +8013,7 @@ define([
                getCollapsedGroups: () => {},
                unsubscribe: () => {},
                destroy: () => {},
+               setKeyProperty: () => {},
                getItemBySourceKey: () => collectionItem,
                isEditing: () => false
             };
@@ -8177,10 +8122,9 @@ define([
                const newCfg = getCorrectBaseControlConfig({ ...cfg });
                newBaseControl = new lists.BaseControl();
                newBaseControl.saveOptions(newCfg);
-               return newBaseControl._beforeMount(newCfg).then(() => {
-                  const viewModel = newBaseControl.getViewModel();
-                  assert.isTrue(viewModel.getItemBySourceKey(1).isMarked());
-               });
+               newBaseControl._beforeMount(newCfg);
+               const viewModel = newBaseControl.getViewModel();
+               assert.isTrue(viewModel.getItemBySourceKey(1).isMarked());
             });
 
             it('afterMount', () => {
@@ -8558,7 +8502,7 @@ define([
             baseControl._getItemsContainer = () => ({
                children: []
             });
-            return baseControl._beforeMount(cfg).then(() => viewModel = baseControl.getViewModel());
+            return (baseControl._beforeMount(cfg) || Promise.resolve()).then(() => viewModel = baseControl.getViewModel());
          });
 
          describe('mount', () => {
@@ -8567,12 +8511,11 @@ define([
                const newCfg = getCorrectBaseControlConfig({ ...cfg, selectedKeys: [1] });
                newBaseControl = new lists.BaseControl();
                newBaseControl.saveOptions(newCfg);
-               return newBaseControl._beforeMount(newCfg).then(() => {
-                  const viewModel = newBaseControl.getViewModel();
-                  assert.isTrue(viewModel.getItemBySourceKey(1).isSelected());
-                  assert.isFalse(viewModel.getItemBySourceKey(2).isSelected());
-                  assert.isFalse(viewModel.getItemBySourceKey(2).isSelected());
-               });
+               newBaseControl._beforeMount(newCfg);
+               const viewModel = newBaseControl.getViewModel();
+               assert.isTrue(viewModel.getItemBySourceKey(1).isSelected());
+               assert.isFalse(viewModel.getItemBySourceKey(2).isSelected());
+               assert.isFalse(viewModel.getItemBySourceKey(2).isSelected());
             });
 
             it('afterMount', () => {
@@ -8587,9 +8530,8 @@ define([
                delete newCfg.sourceController;
                newBaseControl = new lists.BaseControl();
                newBaseControl.saveOptions(newCfg);
-               return newBaseControl._beforeMount(newCfg).then(() => {
-                  assert.isNotOk(newBaseControl._selectionController);
-               });
+               newBaseControl._beforeMount(newCfg);
+               assert.isNotOk(newBaseControl._selectionController);
             });
          });
 
@@ -8597,43 +8539,39 @@ define([
             it('clear by selection view mode', () => {
                const newCfg = { ...cfg, selectedKeys: [null] };
                baseControl.saveOptions(newCfg);
-               return baseControl._beforeMount(newCfg).then(() => {
-                  const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', filter: {} });
-                  assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
-               });
+               baseControl._beforeMount(newCfg);
+               const notifySpy = sinon.spy(baseControl, '_notify');
+               baseControl._beforeUpdate({ ...newCfg, selectionViewMode: '', filter: {} });
+               assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
             });
 
             it('change selection', () => {
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);
-               return baseControl._beforeMount(newCfg).then(() => {
-                  const notifySpy = sinon.spy(baseControl, '_notify');
-                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1, 2] });
-                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
-                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isSelected());
-                  assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
-               });
+               baseControl._beforeMount(newCfg);
+               const notifySpy = sinon.spy(baseControl, '_notify');
+               baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1, 2] });
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isSelected());
+               assert.isFalse(notifySpy.withArgs('selectedKeysChanged').called);
             });
 
             it('change visible on hidden and change selected keys on empty array', () => {
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);
-               return baseControl._beforeMount(newCfg).then(() => {
-                  assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
-                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [], multiSelectVisibility: 'hidden' });
-                  assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
-               });
+               baseControl._beforeMount(newCfg);
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
+               baseControl._beforeUpdate({ ...newCfg, selectedKeys: [], multiSelectVisibility: 'hidden' });
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isSelected());
             });
 
             it('destroy controller', () => {
                const newCfg = { ...cfg, selectedKeys: [1] };
                baseControl.saveOptions(newCfg);
-               return baseControl._beforeMount(newCfg).then(() => {
-                  assert.isOk(baseControl._selectionController);
-                  baseControl._beforeUpdate({ ...newCfg, multiSelectVisibility: 'hidden' });
-                  assert.isNotOk(baseControl._selectionController);
-               });
+               baseControl._beforeMount(newCfg);
+               assert.isOk(baseControl._selectionController);
+               baseControl._beforeUpdate({ ...newCfg, multiSelectVisibility: 'hidden' });
+               assert.isNotOk(baseControl._selectionController);
             });
 
             it('empty items', () => {
@@ -8643,23 +8581,21 @@ define([
                });
                const newCfg = getCorrectBaseControlConfig({ ...cfg, source, selectedKeys: [] });
                baseControl.saveOptions(newCfg);
-               return baseControl._beforeMount(newCfg).then(() => {
-                  assert.isNotOk(baseControl._selectionController);
-                  baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
-                  assert.isOk(baseControl._selectionController);
-               });
+               baseControl._beforeMount(newCfg);
+               assert.isNotOk(baseControl._selectionController);
+               baseControl._beforeUpdate({ ...newCfg, selectedKeys: [1] });
+               assert.isOk(baseControl._selectionController);
             });
 
             it('change root', () => {
                const spyNotify = sinon.spy(baseControl, '_notify');
                const newCfg = { ...cfg, selectedKeys: [null], excludedKeys: [null], root: null };
                baseControl.saveOptions(newCfg);
-               return baseControl._beforeMount(newCfg).then(() => {
-                  assert.isOk(baseControl._selectionController);
-                  baseControl._beforeUpdate({ ...newCfg, root: 2 });
-                  assert.isTrue(spyNotify.withArgs('selectedKeysChanged', [[], [], [null]]).called);
-                  assert.isTrue(spyNotify.withArgs('excludedKeysChanged', [[], [], [null]]).called);
-               });
+               baseControl._beforeMount(newCfg);
+               assert.isOk(baseControl._selectionController);
+               baseControl._beforeUpdate({ ...newCfg, root: 2 });
+               assert.isTrue(spyNotify.withArgs('selectedKeysChanged', [[], [], [null]]).called);
+               assert.isTrue(spyNotify.withArgs('excludedKeysChanged', [[], [], [null]]).called);
             });
          });
 
@@ -8721,12 +8657,9 @@ define([
             const baseControlConfig = { ...cfg, multiSelectVisibility: 'hidden' };
             const baseControl = correctCreateBaseControl(baseControlConfig);
             baseControl.saveOptions(baseControlConfig);
-            return baseControl._beforeMount(baseControlConfig)
-               .then(() => {
-                     const result = lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null })
-                     assert.isUndefined(result);
-                  }
-               );
+            baseControl._beforeMount(baseControlConfig);
+            const result = lists.BaseControl._private.spaceHandler(baseControl, { preventDefault: () => null });
+            assert.isUndefined(result);
          });
 
          it('_onItemSwipe', () => {
@@ -8770,11 +8703,10 @@ define([
             it('unselectAll', () => {
                const newCfg = { ...cfg, selectedKeys: [null] };
                baseControl.saveOptions(newCfg);
-               return baseControl._beforeMount(newCfg).then(() => {
-                  const notifySpy = sinon.spy(baseControl, '_notify');
-                  lists.BaseControl._private.onSelectedTypeChanged.apply(baseControl, ['unselectAll']);
-                  assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
-               });
+               baseControl._beforeMount(newCfg);
+               const notifySpy = sinon.spy(baseControl, '_notify');
+               lists.BaseControl._private.onSelectedTypeChanged.apply(baseControl, ['unselectAll']);
+               assert.isTrue(notifySpy.withArgs('selectedKeysChanged', [[], [], [null]]).called);
             });
 
             it('toggleAll', () => {
@@ -8798,8 +8730,7 @@ define([
             beforeEach(() => {
                const baseControlConfig = { ...cfg, selectedKeys: [1] };
                baseControl = correctCreateBaseControl(baseControlConfig);
-               return baseControl._beforeMount(baseControlConfig)
-                  .then(() => viewModel = baseControl.getViewModel());
+               return (baseControl._beforeMount(baseControlConfig) || Promise.resolve()).then(() => viewModel = baseControl.getViewModel());
             });
 
             it('add', () => {
@@ -8824,16 +8755,6 @@ define([
 
       // endregion
 
-      it('_getItemActionVisibilityClasses', () => {
-         const baseControl = new lists.BaseControl();
-         baseControl.saveOptions({ itemActionsVisibility: 'onhover' });
-         assert.equal(baseControl._getItemActionVisibilityClasses(),
-             'controls-BaseControl_showActions controls-BaseControl_showActions_onhover');
-
-         baseControl.saveOptions({ itemActionsVisibility: 'onhover', editingConfig: { mode: 'cell' } });
-         assert.equal(baseControl._getItemActionVisibilityClasses(),
-             'controls-BaseControl_showActions controls-BaseControl_showActions_onhovercell');
-      });
       it('change RecordSet with eventRaising=false', () => {
          const recordSet = new collection.RecordSet({
             keyProperty: 'id',
@@ -8848,20 +8769,19 @@ define([
 
          const baseControl = new lists.BaseControl();
          baseControl.saveOptions(cfg);
-         return baseControl._beforeMount(cfg, null, { data: recordSet }).then(() => {
-            const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
+         baseControl._beforeMount(cfg, null, { data: recordSet });
+         const newRecord = new entity.Model({ rawData: { id: 0 }, keyProperty: 'id' });
 
-            recordSet.setEventRaising(false, true);
-            recordSet.move(0, 1);
-            recordSet.add(newRecord, 0);
-            recordSet.move(0, 1);
-            recordSet.setEventRaising(true, true);
+         recordSet.setEventRaising(false, true);
+         recordSet.move(0, 1);
+         recordSet.add(newRecord, 0);
+         recordSet.move(0, 1);
+         recordSet.setEventRaising(true, true);
 
-            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(0).isMarked());
-            assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
-            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
-            assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
-         });
+         assert.isFalse(baseControl.getViewModel().getItemBySourceKey(0).isMarked());
+         assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+         assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+         assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
       });
    });
 });

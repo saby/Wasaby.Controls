@@ -51,7 +51,7 @@
  *     useNewModel="{{true}}"
  *     source="{{_viewSource}}">
  *     <ws:itemTemplate>
- *         <ws:partial template="Controls/listRender:ColumnsItemTemplate">
+ *         <ws:partial template="Controls/columns:ItemTemplate">
  *             <ws:contentTemplate>
  *                 {{itemTemplate.item.getContents().get('title')}}
  *             </ws:contentTemplate>

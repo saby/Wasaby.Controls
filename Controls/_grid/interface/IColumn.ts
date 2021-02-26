@@ -340,7 +340,7 @@ export interface IColumn extends IColspanParams {
      */
     textOverflow?: TOverflow;
     /**
-     * @cfg {Controls/_grid/interface/IColumn/IColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок.
+     * @cfg {Controls/grid:IColumnSeparatorSizeConfig} Ширина вертикальных разделителей колонок.
      * @default none
      * @remark
      * Ширину линии-разделителя между двумя колонками можно задать на любой из них (левую или правую соответственно).

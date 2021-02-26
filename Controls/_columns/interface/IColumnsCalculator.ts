@@ -1,4 +1,5 @@
-import {ColumnsCollection} from 'Controls/display';
+import Collection from 'Controls/_columns/display/Collection';
+
 export interface IColumnsCalculator {
-    calcColumn(collection: ColumnsCollection<unknown>, index: number, columnsCount?: number): number;
+    calcColumn(collection: Collection<unknown>, index: number, columnsCount?: number): number;
 }

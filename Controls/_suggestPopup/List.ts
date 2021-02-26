@@ -93,7 +93,7 @@ const _private = {
  *    ], function(Base, template) {
  *       'use strict';
  *
- *       return Base.Control.extend({
+ *       return class MyControl extends Control<IControlOptions> {
  *          _template: template
  *       });
  *    }

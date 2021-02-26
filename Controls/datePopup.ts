@@ -46,13 +46,11 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  *    <Controls.datePopup on:inputCompleted="_inputCompletedHandler()" />
  * </pre>
  * <pre>
- *    Base.Control.extend({
- *       ....
+ *    class MyControl extends Control<IControlOptions> {
  *       _inputCompletedHandler(event, startValue, endValue, displaydStartValue, displaydEndValue) {
  *          this._saveEnteredValueToDabase1(startValue, endValue);
  *          this._saveEnteredValueToDabase2(displaydStartValue, displaydEndValue);
- *       },
- *       ...
+ *       }
  *    })
  * </pre>
  */
@@ -548,8 +546,16 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     toggleState(date?: Date): void {
         this._state = this._state === STATES.year ? STATES.month : STATES.year;
-
-        const displayedDate = date || this._options.startValue || this._options.endValue || new Date();
+        let displayedDate;
+        if (date) {
+            displayedDate = date;
+        } else if (dateUtils.isValidDate(this._options.startValue)) {
+            displayedDate = this._options.startValue;
+        } else if (dateUtils.isValidDate(this._options.endDate)) {
+            displayedDate = this._options.endDate;
+        } else {
+            displayedDate = new Date();
+        }
         this._displayedDate = this._state === STATES.year ?
             dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);
     }
@@ -630,3 +636,12 @@ export default class DatePopup extends Control implements EventProxyMixin {
         }, IDateRangeSelectable.getOptionTypes());
     }
 }
+
+Object.defineProperty(DatePopup, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return DatePopup.getDefaultOptions();
+   }
+});

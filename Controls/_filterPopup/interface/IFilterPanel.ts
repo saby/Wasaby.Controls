@@ -1,3 +1,26 @@
+import {IControlOptions} from 'UI/Base';
+import {IFilterItem} from 'Controls/filter';
+
+export type THistorySaveMode = 'favorite'|'pinned';
+type TOrientation = 'vertical'|'horizontal';
+
+interface IFilterPanelTemplate {
+ templateName: string;
+ templateOptions: unknown;
+}
+
+export interface IFilterDetailPanelOptions extends IControlOptions {
+ items: IFilterItem[];
+ additionalTemplate: IFilterPanelTemplate;
+ additionalTemplateProperty: string;
+ historyId: string;
+ historySaveMode: THistorySaveMode;
+ orientation: TOrientation;
+ headingCaption: string;
+ headingStyle: string;
+ applyButtonCaption: string;
+}
+
 /**
  * Интерфейс панели фильтров.
  *

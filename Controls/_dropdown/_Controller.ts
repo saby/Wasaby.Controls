@@ -650,6 +650,15 @@ _Controller.getDefaultOptions = function getDefaultOptions() {
    };
 };
 
+Object.defineProperty(_Controller, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return _Controller.getDefaultOptions();
+   }
+});
+
 _Controller.getOptionTypes = function getOptionTypes() {
    return {
       selectedKeys: descriptor(Array)

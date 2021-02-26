@@ -238,13 +238,8 @@ const _private = {
         const baseControl = self._children.baseControl;
         const viewModel = baseControl.getViewModel();
         const items = viewModel.getCollection();
-        const dispItem = viewModel.getItemBySourceKey(nodeKey);
-        const loadedChildren = dispItem && (self._options.useNewModel ?
-            viewModel.getChildren(dispItem, items).getCount() :
-            viewModel.getChildren(nodeKey, items).length);
-        const isAlreadyLoaded =
-            baseControl.getSourceController().hasLoaded(nodeKey) ||
-            (self._options.taks1181268322 ? viewModel.getHasMoreStorage().hasOwnProperty(nodeKey) : loadedChildren);
+        const isAlreadyLoaded = baseControl.getSourceController().hasLoaded(nodeKey) ||
+                                viewModel.getHasMoreStorage().hasOwnProperty(nodeKey);
 
         if (isAlreadyLoaded) {
             return false;
@@ -350,8 +345,15 @@ const _private = {
                     if (item.get(options.nodeProperty) !== null) {
                         const itemKey = item.getId();
                         const dispItem = model.getItemBySourceKey(itemKey);
-                        if (dispItem && model.getChildren(dispItem, loadedList).length) {
-                            modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
+
+                        if (dispItem) {
+                            const hasChildren = self._options.useNewModel ?
+                                model.getChildren(dispItem).getCount() :
+                                model.getChildren(itemKey, loadedList).length;
+
+                            if (hasChildren) {
+                                modelHasMoreStorage[itemKey] = sourceController.hasMoreData('down', itemKey);
+                            }
                         }
                     }
                 });
@@ -395,10 +397,9 @@ const _private = {
                     viewModel.setHasMoreStorage(hasMore);
                 }
             }
-            updateHasMoreStorage(viewModel);
-        } else if (baseControlViewModel && options.taks1181268322) {
-            updateHasMoreStorage(baseControlViewModel);
         }
+
+        updateHasMoreStorage(viewModel || baseControlViewModel);
 
         // reset deepReload after loading data (see reload method or constructor)
         self._deepReload = false;
@@ -475,7 +476,7 @@ const _private = {
             nodes.concat(_private.getReloadableNodes(viewModel, key, self._keyProperty, nodeProperty));
 
         return baseSourceController.load(undefined, key, filter).addCallback((result) => {
-            _private.applyReloadedNodes(viewModel, key, self._keyProperty, nodeProperty, result);
+            _private.applyReloadedNodes(self, viewModel, key, self._keyProperty, nodeProperty, result);
             viewModel.setHasMoreStorage(
                 _private.prepareHasMoreStorage(baseSourceController, viewModel.getExpandedItems())
             );
@@ -491,9 +492,9 @@ const _private = {
         return nodes;
     },
 
-    applyReloadedNodes: function(viewModel, nodeKey, keyProp, nodeProp, newItems) {
+    applyReloadedNodes: function(self, viewModel, nodeKey, keyProp, nodeProp, newItems) {
         var itemsToRemove = [];
-        var items = viewModel.getItems();
+        var items = self._options.useNewModel ? viewModel.getCollection() : viewModel.getItems();
         var checkItemForRemove = function(item) {
             if (newItems.getIndexByValue(keyProp, item.get(keyProp)) === -1) {
                 itemsToRemove.push(item);
@@ -512,8 +513,10 @@ const _private = {
     },
 
     initListViewModelHandler(self, listModel): void {
-        listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
-        listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
+        if (listModel) {
+            listModel.subscribe('expandedItemsChanged', self._onExpandedItemsChanged.bind(self));
+            listModel.subscribe('collapsedItemsChanged', self._onCollapsedItemsChanged.bind(self));
+        }
     },
 
     nodeChildsIterator: function(viewModel, nodeKey, nodeProp, nodeCallback, leafCallback) {
@@ -614,7 +617,6 @@ const _private = {
 var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype */{
     _template: TreeControlTpl,
     _root: null,
-    _updatedRoot: false,
     _nodesSourceControllers: null,
     _needResetExpandedItems: false,
     _beforeReloadCallback: null,
@@ -697,6 +699,51 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             this._expandedItemsToNotify = null;
         }
     },
+
+    _updateListModel(newOptions): void {
+        const baseControl = this._children.baseControl;
+        const viewModel = baseControl.getViewModel();
+
+        if (!viewModel) {
+            return;
+        }
+
+        if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
+            viewModel.setCollapsedItems(newOptions.collapsedItems);
+        }
+
+        if (this._options.markedKey !== newOptions.markedKey) {
+            if (newOptions.markerMoveMode === 'leaves') {
+                this._applyMarkedLeaf(newOptions.markedKey, viewModel, this._children.baseControl.getMarkerController());
+            }
+        }
+
+        if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
+            viewModel.setNodeFooterTemplate(newOptions.nodeFooterTemplate);
+        }
+
+        // TODO: Удалить #rea_1179794968
+        if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
+            viewModel.setExpanderDisplayMode(newOptions.expanderDisplayMode);
+        }
+
+        if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
+            viewModel.setExpanderVisibility(newOptions.expanderVisibility);
+        }
+
+        if (newOptions.nodeProperty !== this._options.nodeProperty) {
+            viewModel.setNodeProperty(newOptions.nodeProperty);
+        }
+
+        if (newOptions.parentProperty !== this._options.parentProperty) {
+            viewModel.setParentProperty(newOptions.parentProperty);
+        }
+
+        if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
+            viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
+        }
+    },
+
     _beforeUpdate: function(newOptions) {
         const baseControl = this._children.baseControl;
         const viewModel = baseControl.getViewModel();
@@ -712,20 +759,21 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             const sourceControllerRoot = sourceController.getState().root;
 
             this._root = newOptions.root;
+            viewModel.setRoot(this._root);
 
-            this._updatedRoot = !(newOptions.task1181246826 && sourceControllerRoot === this._root && sourceController.isLoading());
+            if (this._options.itemsSetCallback) {
+                this._options.itemsSetCallback(sourceController.getItems(), newOptions);
+            }
+
+            // При смене корне, не надо запрашивать все открытые папки,
+            // т.к. их может не быть и мы загрузим много лишних данных.
+            // Так же учитываем, что вместе со сменой root могут поменять и expandedItems - тогда не надо их сбрасывать.
+            if (isEqual(newOptions.expandedItems, this._options.expandedItems)) {
+                this._needResetExpandedItems = true;
+            }
 
             if (sourceControllerRoot === undefined || sourceControllerRoot !== newOptions.root) {
                 updateSourceController = true;
-            }
-
-            // Костыль, до 21.2000
-            // Проблема возникает из-за того, что корень в модели меняется на callback загрузки данных
-            // А при поиске запрос идёт за пределами списка
-            if (searchValueChanged && newOptions.sourceController &&
-                newOptions.viewModelConstructor === this._options.viewModelConstructor &&
-                newOptions.searchValue) {
-                viewModel.setRoot(newOptions.root);
             }
 
             if (this.isEditing()) {
@@ -733,58 +781,37 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             }
         }
 
-        if (this._options.deepReload !== newOptions.deepReload) {
-            updateSourceController = true;
-        }
-
         if (searchValueChanged && newOptions.searchValue && !_private.isDeepReload(this, newOptions)) {
             _private.resetExpandedItems(this);
         }
 
-        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, viewModel.getExpandedItems()) && newOptions.source) {
-            // Если обновился корень, то expandedItems нужно применить после релоада. Иначе из-за нового expandedItems
-            // может вызваться загрузка данных по скроллу, которая прервет загрузку по смене узла, и в TreeControl не отработает колбэк загрузки данных
-            if (((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
-                (searchValueChanged && newOptions.sourceController)) && !this._updatedRoot) {
-                viewModel.setExpandedItems(newOptions.expandedItems);
+        // todo [useNewModel] viewModel.getExpandedItems() нужен, т.к. для старой модели установка expandedItems
+        // сделана некорректно. Как откажемся от неё, то можно использовать стандартное сравнение опций.
+        const currentExpandedItems = viewModel ? viewModel.getExpandedItems() : this._options.expandedItems;
+        if (newOptions.expandedItems && !isEqual(newOptions.expandedItems, currentExpandedItems) && newOptions.source) {
+            if ((newOptions.source === this._options.source || newOptions.sourceController) && isEqual(newOptions.filter, this._options.filter) ||
+                (searchValueChanged && newOptions.sourceController)) {
+                if (viewModel) {
+                    viewModel.setExpandedItems(newOptions.expandedItems);
+                }
             } else {
                 this._updateExpandedItemsAfterReload = true;
             }
-            if (newOptions.sourceController && !isEqual(newOptions.expandedItems, newOptions.sourceController.getExpandedItems())) {
-                newOptions.sourceController.setExpandedItems(newOptions.expandedItems);
+            if (sourceController && !isEqual(newOptions.expandedItems, sourceController.getExpandedItems())) {
+                sourceController.setExpandedItems(newOptions.expandedItems);
             }
         }
-        if (newOptions.collapsedItems && !isEqual(newOptions.collapsedItems, viewModel.getCollapsedItems())) {
-            viewModel.setCollapsedItems(newOptions.collapsedItems);
-        }
-        if (this._options.markedKey !== newOptions.markedKey) {
-            if (newOptions.markerMoveMode === 'leaves') {
-                this._applyMarkedLeaf(newOptions.markedKey, viewModel, this._children.baseControl.getMarkerController());
-            }
-        }
+
         if (newOptions.propStorageId && !isEqual(newOptions.sorting, this._options.sorting)) {
             saveConfig(newOptions.propStorageId, ['sorting'], newOptions);
         }
-        if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
-            viewModel.setNodeFooterTemplate(newOptions.nodeFooterTemplate);
-        }
-        // TODO: Удалить #rea_1179794968
-        if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
-            viewModel.setExpanderDisplayMode(newOptions.expanderDisplayMode);
-        }
-        if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
-            viewModel.setExpanderVisibility(newOptions.expanderVisibility);
-        }
-        if (newOptions.nodeProperty !== this._options.nodeProperty) {
-            viewModel.setNodeProperty(newOptions.nodeProperty);
-        }
+
         if (newOptions.parentProperty !== this._options.parentProperty) {
-            viewModel.setParentProperty(newOptions.parentProperty);
             updateSourceController = true;
         }
-        if (newOptions.hasChildrenProperty !== this._options.hasChildrenProperty) {
-            viewModel.setHasChildrenProperty(newOptions.hasChildrenProperty);
-        }
+
+        this._updateListModel(newOptions);
+
         if (sourceController) {
             const sourceControllerState = sourceController.getState();
             if (newOptions.parentProperty && sourceControllerState.parentProperty !== newOptions.parentProperty) {
@@ -796,33 +823,13 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
     },
     _afterUpdate: function(oldOptions) {
-        let afterUpdateResult;
         if (this._expandedItemsToNotify) {
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
             this._expandedItemsToNotify = null;
         }
-        if (this._updatedRoot) {
-            const sourceController = this._options.sourceController;
-            const isSourceControllerLoadingNewData = sourceController && sourceController.isLoading();
-            this._updatedRoot = false;
-            // При смене корне, не надо запрашивать все открытые папки,
-            // т.к. их может не быть и мы загрузим много лишних данных.
-            // Так же учитываем, что вместе со сменой root могут поменять и expandedItems - тогда не надо их сбрасывать.
-            if (isEqual(oldOptions.expandedItems, this._options.expandedItems)) {
-                this._needResetExpandedItems = true;
-            }
-            // If filter or source was changed, do not need to reload again, baseControl reload list in beforeUpdate
-            if (isEqual(this._options.filter, oldOptions.filter) &&
-                this._options.source === oldOptions.source &&
-                !isSourceControllerLoadingNewData) {
-                afterUpdateResult = this._children.baseControl.reload();
-            }
-        }
         if (oldOptions.viewModelConstructor !== this._options.viewModelConstructor) {
             _private.initListViewModelHandler(this, this._children.baseControl.getViewModel());
         }
-
-        return afterUpdateResult;
     },
     _beforeUnmount(): void {
         this._clearTimeoutForExpandOnDrag();
@@ -1283,6 +1290,15 @@ TreeControl.getDefaultOptions = () => {
         markerMoveMode: 'all'
     };
 };
+
+Object.defineProperty(TreeControl, 'defaultProps', {
+   enumerable: true,
+   configurable: true,
+
+   get(): object {
+      return TreeControl.getDefaultOptions();
+   }
+});
 
 TreeControl._private = _private;
 
