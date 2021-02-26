@@ -217,7 +217,7 @@ export type TCursor = 'default' | 'pointer' | 'right';
     tagStyle?: 'info' | 'danger' | 'primary' | 'success' | 'secondary';
 
     /**
-     * @cfg {TMarkerClassName} Размер маркера.
+     * @cfg {Controls/_display/interface/IMarkable/TMarkerClassName.typedef} Размер маркера.
      * @default default
      */
     markerClassName?: TMarkerClassName;

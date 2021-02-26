@@ -94,7 +94,7 @@ export default interface IBaseItemTemplateOptions {
  */
 /**
  * @name Controls/_list/interface/IBaseItemTemplate#markerClassName
- * @cfg {Controls/_list/interface/IBaseItemTemplate/TMarkerClassName.typedef} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
+ * @cfg {Controls/_display/interface/IMarkable/TMarkerClassName.typedef} Размер {@link /doc/platform/developmentapl/interface-development/controls/list/actions/marker/ маркера}.
  * @default default
  * @see marker
  */
