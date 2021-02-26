@@ -1,4 +1,4 @@
-import { IHeaderCell } from 'Controls/interface';
+import { IHeaderCell } from 'Controls/grid';
 import {RecordSet} from 'Types/collection';
 
 export interface IHeader extends IHeaderCell {
