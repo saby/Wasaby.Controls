@@ -4,7 +4,7 @@
         <div class="controls-Search__expandable-container
                     controls-Search__expandable-container-inlineWidth-{{_options.inlineWidth}}">
             <div class="controls-Search__expandable-input
-                        controls-Search__expandable-input-inlineWidth-{{_options.inlineWidth}}">
+                        {{_needShowSearchAnimation ? 'controls-Search__expandable-input-inlineWidth-' + _options.inlineWidth}}">
                 <ws:partial template="{{'Controls/search:Input'}}"
                             name="searchInput"
                             searchButtonVisible="{{_options.searchButtonVisible}}"
@@ -33,7 +33,8 @@
                             attr:class="controls-Search__expandable-input controls-Search__input-inlineWidth-{{_options.inlineWidth}}"
                             on:searchClick="_tmplNotify('searchClick')"
                             on:resetClick="_tmplNotify('resetClick')"
-                            on:valueChanged="_tmplNotify('valueChanged')"/>
+                            on:valueChanged="_tmplNotify('valueChanged')"
+                            on:deactivated="_handleDeactivate()"/>
                 <div class="controls-Search__expandable-reset-button icon-Close
                             controls-icon_size-m"
                      on:click="_handleCloseClick()">
