@@ -22,4 +22,5 @@
 
 export {default as PrimaryAction} from './_form/PrimaryAction';
 export {default as Controller, INITIALIZING_WAY} from './_form/FormController';
+export {default as ControllerBase} from './_form/ControllerBase';
 export {default as CrudController, CRUD_EVENTS} from './_form/CrudController';

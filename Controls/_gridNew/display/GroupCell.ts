@@ -2,7 +2,7 @@ import { TemplateFunction } from 'UI/Base';
 import { OptionsToPropertyMixin } from 'Types/entity';
 import { mixin } from 'Types/util';
 
-import { IColspanParams, IColumn } from 'Controls/_grid/interface/IColumn';
+import { IColspanParams, IColumn } from 'Controls/interface';
 import { default as GridGroupCellMixin } from 'Controls/_gridNew/display/mixins/GroupCell';
 
 import DataCell from './DataCell';

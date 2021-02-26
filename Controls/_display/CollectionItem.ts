@@ -13,15 +13,12 @@ import {IList} from 'Types/collection';
 import {mixin, object} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
-import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
+import {ANIMATION_STATE, ICollection, ISourceCollection, IItemPadding} from './interface/ICollection';
 import {ICollectionItem} from './interface/ICollectionItem';
-import IMarkable from './interface/IMarkable';
+import IMarkable, {TMarkerClassName} from './interface/IMarkable';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
-import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
-import {IItemPadding} from '../_list/interface/IList';
 import Collection from 'Controls/_display/Collection';
-import {TItemKey} from 'Controls/_display/interface';
 import IItemActionsItem from './interface/IItemActionsItem';
 
 export interface IOptions<T extends Model = Model> {
@@ -39,6 +36,11 @@ export interface IOptions<T extends Model = Model> {
     multiSelectVisibility?: string;
     multiSelectAccessibilityProperty?: string;
     rowSeparatorSize?: string;
+    theme?: string;
+    leftPadding: string;
+    rightPadding: string;
+    topPadding: string;
+    bottomPadding: string;
 }
 
 export interface ISerializableState<T extends Model = Model> extends IDefaultSerializableState {
@@ -134,6 +136,16 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     protected _$rowSeparatorSize: string;
 
     protected _$dragged: boolean;
+
+    protected _$theme: string;
+
+    protected _$leftPadding: string;
+
+    protected _$rightPadding: string;
+
+    protected _$topPadding: string;
+
+    protected _$bottomPadding: string;
 
     protected _dragOutsideList: boolean;
 
@@ -326,6 +338,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
 
     getDisplayProperty(): string {
         return this.getOwner().getDisplayProperty();
+    }
+
+    getDisplayValue(): string {
+        return this.getContents().get(this.getDisplayProperty());
     }
 
     getKeyProperty(): string {
@@ -678,6 +694,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getRowSeparatorSize();
     }
 
+    getTheme(): string {
+        return this._$theme;
+    }
+
     /**
      * Возвращает строку с классами, устанавливаемыми в шаблоне элемента div'а, расположенного внутри корневого div'a -
      * так называемого контентного div'a.
@@ -766,6 +786,10 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         return this.getOwner().getMultiSelectPosition();
     }
 
+    shouldDisplayMultiSelectTemplate(): boolean {
+        return this.getMultiSelectVisibility() !== 'hidden' && this.getMultiSelectPosition() !== 'custom';
+    }
+
     setRowSeparatorSize(rowSeparatorSize: string): boolean {
         const changed = this._$rowSeparatorSize !== rowSeparatorSize;
         if (changed) {
@@ -775,6 +799,40 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         }
         return false;
     }
+
+    // region ItemPadding
+
+    getTopPadding(): string {
+        return this._$topPadding;
+    }
+
+    getBottomPadding(): string {
+        return this._$bottomPadding;
+    }
+
+    getLeftPadding(): string {
+        return this._$leftPadding;
+    }
+
+    getRightPadding(): string {
+        return this._$rightPadding;
+    }
+
+    setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
+        this._setItemPadding(itemPadding);
+        if (!silent) {
+            this._nextVersion();
+        }
+    }
+
+    protected _setItemPadding(itemPadding: IItemPadding): void {
+        this._$topPadding = itemPadding.top || 'default';
+        this._$bottomPadding = itemPadding.bottom || 'default';
+        this._$leftPadding = itemPadding.left || 'default';
+        this._$rightPadding = itemPadding.right || 'default';
+    }
+
+    // endregion ItemPadding
 
     protected _getSpacingClasses(theme: string, style: string = 'default'): string {
         let classes = '';
@@ -904,6 +962,11 @@ Object.assign(CollectionItem.prototype, {
     _$multiSelectAccessibilityProperty: '',
     _$multiSelectVisibility: null,
     _$rowSeparatorSize: null,
+    _$theme: 'default',
+    _$leftPadding: 'default',
+    _$rightPadding: 'default',
+    _$topPadding: 'default',
+    _$bottomPadding: 'default',
     _contentsIndex: undefined,
     _version: 0,
     _counters: null,

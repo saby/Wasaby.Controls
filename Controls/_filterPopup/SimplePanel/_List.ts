@@ -11,6 +11,7 @@ import {isEqual} from 'Types/object';
 import {Model} from 'Types/entity';
 import {SyntheticEvent} from 'UI/Vdom';
 import {ISwipeEvent} from 'Controls/listRender';
+import 'css!Controls/filterPopup';
 
 interface ISimplePanelListOptions extends IControlOptions {
 
@@ -146,8 +147,6 @@ class List extends Control<ISimplePanelListOptions> {
     private _afterOpenDialogCallback(selectedItems): void {
         this._notify('moreButtonClick', [selectedItems]);
     }
-
-    static _theme: string[] = ['Controls/filterPopup'];
 }
 
 

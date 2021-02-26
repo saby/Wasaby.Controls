@@ -1,6 +1,6 @@
 <ws:template name="cross">
    <ws:if data="{{!_options.readOnly}}">
-      <span class="controls-FilterView__iconReset_theme-{{_options.theme}} icon-CloseNew"
+      <span class="controls-FilterView__iconReset icon-CloseNew"
             ws-no-focus="{{true}}"
             title="{[Сбросить]}"></span>
    </ws:if>
@@ -13,13 +13,13 @@
                moreText="{{moreText}}"
                item="{{item}}"
                itemName="{{itemName}}"
-               attr:class="{{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block_theme-' + _options.theme}}"/>
+               attr:class="{{_options.detailPanelTemplateName ? 'controls-FilterView-' + _options.alignment + '__block'}}"/>
 </ws:template>
 
-<div class="controls-FilterView controls-FilterView_theme-{{_options.theme}} controls-FilterView-{{_options.alignment}}
-            {{_options.readOnly ? 'controls-FilterView_readOnly_theme-' + _options.theme}}"
+<div class="controls_theme-{{_options.theme}} controls-FilterView controls-FilterView-{{_options.alignment}}
+            {{_options.readOnly ? 'controls-FilterView_readOnly'}}"
    on:mouseenter="_mouseEnterHandler()">
-   <div class="controls-FilterView__wrapper_theme-{{_options.theme}}">
+   <div class="controls-FilterView__wrapper">
       <ws:if data="{{_dateRangeItem}}">
          <ws:partial template="Controls/_filter/Editors/DateRange"
                      scope="{{_dateRangeItem.editorOptions}}"
@@ -73,9 +73,8 @@
    <ws:if data="{{(_options.detailPanelTemplateName || _isFastReseted()) && !_options.readOnly}}">
       <ws:if data="{{!_options.emptyText || _options.detailPanelTemplateName}}">
          <div name="detailPanelTarget" class="controls-FilterView__icon
-                                              controls-FilterView__icon_theme-{{_options.theme}}
-                                              controls-FilterView-button-{{_options.alignment}}_theme-{{_options.theme}}
-                                              controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}_theme-{{_options.theme}}
+                                              controls-FilterView-button-{{_options.alignment}}
+                                              controls-FilterView__icon_state_{{_options.readOnly ? 'disabled' : 'enabled' }}
                                               icon-FilterBig"
               on:mousedown="openDetailPanel()">
          </div>

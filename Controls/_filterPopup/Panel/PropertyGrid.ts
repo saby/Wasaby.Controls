@@ -5,6 +5,7 @@ import {object} from 'Types/util';
 import {factory} from 'Types/chain';
 import {isEqual} from 'Types/object';
 import {IFilterItem} from 'Controls/filter';
+import 'css!Controls/filterPopup';
 
 const observableItemProps = ['value', 'textValue', 'visibility'];
 
@@ -166,8 +167,6 @@ class PropertyGrid extends Control<IFilterPropertyGridOptions> {
       });
       return lastIndex;
    }
-
-   static _theme: string[] = ['Controls/filterPopup'];
 }
 
 export default PropertyGrid;

@@ -60,6 +60,7 @@ const popupMask = coreMerge({auto: 'auto'}, Range.dateMaskConstants);
  *
  * @class Controls/datePopup
  * @extends UI/Base:Control
+ * @mixes Controls/_interface/IResetValues
  * @mixes Controls/_dateRange/interfaces/IDateRangeSelectable
  * @mixes Controls/_interface/IDayTemplate
  * @mixes Controls/_interface/IDateMask
@@ -545,8 +546,16 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     toggleState(date?: Date): void {
         this._state = this._state === STATES.year ? STATES.month : STATES.year;
-
-        const displayedDate = date || this._options.startValue || this._options.endValue || new Date();
+        let displayedDate;
+        if (date) {
+            displayedDate = date;
+        } else if (dateUtils.isValidDate(this._options.startValue)) {
+            displayedDate = this._options.startValue;
+        } else if (dateUtils.isValidDate(this._options.endDate)) {
+            displayedDate = this._options.endDate;
+        } else {
+            displayedDate = new Date();
+        }
         this._displayedDate = this._state === STATES.year ?
             dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);
     }

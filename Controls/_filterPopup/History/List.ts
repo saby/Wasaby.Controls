@@ -14,6 +14,7 @@ import {IEditDialogResult, IEditDialogOptions} from './_EditDialog';
 import {Constants, FilterSource as FilterHistorySource} from 'Controls/history';
 import {StickyOpener} from 'Controls/popup';
 import {ISwipeEvent} from 'Controls/listRender';
+import 'css!Controls/filterPopup';
 
 const MAX_NUMBER_ITEMS = 5;
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
@@ -267,8 +268,6 @@ class HistoryList extends Control<IHistoryListOptions> {
       }
       this._stickyOpener.open(popupOptions);
    }
-
-   static _theme: string[] = ['Controls/filterPopup'];
 }
 
 export default HistoryList;

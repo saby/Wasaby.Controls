@@ -1,7 +1,7 @@
 import { assert } from 'chai';
 
 import { Model } from 'Types/entity';
-import { IColumn } from 'Controls/grid';
+import { IColumn } from 'Controls/interface';
 
 import {
     GridGroupCell as GroupCell,

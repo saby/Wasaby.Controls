@@ -44,7 +44,7 @@ import {default as View} from 'Controls/_list/List';
 import BaseAction from 'Controls/_list/BaseAction';
 import LoadingIndicatorTemplate = require('wml!Controls/_list/PortionedSearchTemplate');
 import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
-import {default as DataContainer} from 'Controls/_list/Data';
+import {default as DataContainer, IDataOptions} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
@@ -67,7 +67,7 @@ import InertialScrolling from 'Controls/_list/resources/utils/InertialScrolling'
 import {IVirtualScrollConfig} from './_list/interface/IVirtualScroll';
 import {VirtualScroll} from './_list/ScrollContainer/VirtualScroll';
 import {default as ScrollController} from './_list/ScrollController';
-import {IList, IItemPadding} from './_list/interface/IList';
+import {IList} from './_list/interface/IList';
 import IListNavigation from './_list/interface/IListNavigation';
 import { CssClassList, createClassListCollection} from 'Controls/_list/resources/utils/CssClassList';
 import {getItemsBySelection} from 'Controls/_list/resources/utils/getItemsBySelection';
@@ -101,6 +101,7 @@ export {
     Mover,
     Remover,
     DataContainer,
+    IDataOptions,
     _forTemplate,
 
     EditingTemplate,
@@ -127,7 +128,6 @@ export {
     HotKeysContainer,
     InertialScrolling,
     IVirtualScrollConfig,
-    IItemPadding,
     IList,
     VirtualScroll,
     ScrollController,
@@ -152,5 +152,6 @@ const editing = {
 
 import {groupConstants} from './display';
 import {MultiSelectAccessibility} from './display';
+import {IItemPadding} from './display';
 
-export {groupConstants, editing, MultiSelectAccessibility};
+export {groupConstants, editing, IItemPadding, MultiSelectAccessibility};

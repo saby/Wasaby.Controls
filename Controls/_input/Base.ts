@@ -491,7 +491,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
     }
 
     protected _getReadOnlyField(): HTMLElement {
-        return this._children.readOnlyField;
+        return this._children.readOnlyField as HTMLElement;
     }
 
     /**
@@ -580,7 +580,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
          * A field in focus when it is the active element on the page.
          * The active element is only on the client. The field cannot be focused on the server.
          */
-        if (this._isBrowserPlatform) {
+        if (this._isBrowserPlatform && this._mounted) {
             return this._getActiveElement() === this._getField();
         }
 

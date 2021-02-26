@@ -2231,6 +2231,7 @@ const _private = {
 
     dataLoadCallback(items: RecordSet, direction: IDirection): Promise<void> | void {
         if (!direction) {
+            _private.setReloadingState(this, false);
             const isEndEditProcessing = this._editInPlaceController && this._editInPlaceController.isEndEditProcessing && this._editInPlaceController.isEndEditProcessing();
             _private.callDataLoadCallbackCompatibility(this, items, direction, this._options);
             _private.executeAfterReloadCallbacks(this, items, this._options);
@@ -4008,6 +4009,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         const isSourceControllerLoadingNow = newOptions.sourceController &&
             newOptions.sourceController.isLoading() &&
             newOptions.sourceController.getState().source !== this._options.source;
+
+        if (isSourceControllerLoadingNow) {
+            _private.setReloadingState(this, true);
+        }
 
         const needReload =
             !this._loadedBySourceController &&

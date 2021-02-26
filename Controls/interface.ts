@@ -75,6 +75,29 @@ export {default as IBackgroundStyle, IBackgroundStyleOptions} from './_interface
 export {Direction, IQueryParamsMeta, IQueryParams} from './_interface/IQueryParams';
 export {default as IGrouping, IGroupingOptions} from './_interface/IGrouping';
 export {default as IPromiseSelectable, IPromiseSelectableOptions} from './_interface/IPromiseSelectable';
+export {default as IResetValues} from './_interface/IResetValues';
 export {default as IDraggable} from './_interface/IDraggable';
 export {IInputPlaceholder, IInputPlaceholderOptions} from './_interface/IInputPlaceholder';
 export {IInputTag, IInputTagOptions} from './_interface/IInputTag';
+
+// region grid
+
+export {
+    TColumns,
+    IColumn,
+    IColspanParams,
+    ICellPadding,
+    TCellAlign,
+    TCellPaddingVariant,
+    TCellVerticalAlign,
+    TOverflow,
+    IColumnSeparatorSizeConfig,
+    TColumnSeparatorSize
+} from './_interface/grid/IColumn';
+
+export {
+    THeader,
+    IHeaderCell
+} from './_interface/grid/IHeaderCell';
+
+// endregion grid

@@ -136,4 +136,19 @@ export {
     GridGroupRow, IGridGroupRowOptions,
     GridGroupCell, IGridGroupCellOptions,
     IDisplaySearchValueOptions, IDisplaySearchValue
-}
+};
+
+export {
+    TColumns,
+    IColumn,
+    IColspanParams,
+    ICellPadding,
+    TCellAlign,
+    TCellPaddingVariant,
+    TCellVerticalAlign,
+    TOverflow,
+    IColumnSeparatorSizeConfig,
+    TColumnSeparatorSize,
+    THeader,
+    IHeaderCell
+} from 'Controls/interface';
