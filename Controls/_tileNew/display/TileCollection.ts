@@ -444,7 +444,6 @@ export default class TileCollection<
 
     getInvisibleStyles(templateWidth?: number): string {
         const width = templateWidth || this.getTileWidth();
-        // TODO if isNode() then width = templateWidth || folderWidth || itemData.defaultFolderWidth
         return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
     }
 
