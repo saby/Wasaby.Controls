@@ -3976,9 +3976,14 @@ describe('Controls/_display/Collection', () => {
             top: 'topPadding',
             bottom: 'bottomPadding'
         };
+        const list = new RecordSet({
+            rawData: [{id: 1}],
+            keyProperty: 'id'
+        });
         const collection = new CollectionDisplay({
-            collection: [],
-            itemPadding
+            collection: list,
+            itemPadding,
+            keyProperty: 'id'
         });
         assert.strictEqual(collection.getLeftPadding(), itemPadding.left);
         assert.strictEqual(collection.getRightPadding(), itemPadding.right);

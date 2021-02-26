@@ -16,7 +16,7 @@
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
 import { TemplateFunction } from 'UI/Base';
-import {IColspanParams, IHeaderCell, IRowspanParams} from 'Controls/grid';
+import {IColspanParams, IHeaderCell} from 'Controls/interface';
 import { IItemPadding } from 'Controls/display';
 import HeaderRow from './HeaderRow';
 import Cell, {IOptions as ICellOptions} from './Cell';
@@ -113,7 +113,11 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     // endregion
 
     // region Аспект "Объединение строк"
-    _getRowspanParams(): Required<IRowspanParams> {
+    _getRowspanParams(): {
+        startRow: number,
+        endRow: number,
+        rowspan: number
+    } {
         const startRow = typeof this._$column.startRow === 'number' ? this._$column.startRow : (this._$owner.getIndex() + 1);
         let endRow;
 
@@ -133,7 +137,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
     getRowspan(): string {
         if (!this._$owner.isFullGridSupport()) {
-            return this._getRowspanParams().rowspan;
+            return '' + this._getRowspanParams().rowspan;
         }
         const {startRow, endRow} = this._getRowspanParams();
         return `grid-row: ${startRow} / ${endRow};`;

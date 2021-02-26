@@ -528,6 +528,19 @@ define(
             sinon.restore();
          });
 
+         it('_startOpeningTimeout', () => {
+            let isHandledItem = false;
+            const clock = sinon.useFakeTimers();
+            let menuControl = getMenu();
+            menuControl._handleCurrentItem = () => {
+               isHandledItem = true;
+            };
+            menuControl._startOpeningTimeout();
+            clock.tick(400);
+            assert.isTrue(isHandledItem);
+            clock.restore();
+         });
+
          it('getTemplateOptions', function() {
             let menuControl = getMenu();
             menuControl._isLoadedChildItems = () => true;

@@ -10,11 +10,10 @@ import {
 } from 'Types/entity';
 import { TemplateFunction } from 'UI/Base';
 
-import { IColumn, IColspanParams, IRowspanParams, TColumnSeparatorSize } from 'Controls/grid';
+import { IColumn, IColspanParams, TColumnSeparatorSize } from 'Controls/interface';
 
-import {TMarkerClassName} from 'Controls/_grid/interface/ColumnTemplate';
-import {IItemPadding} from 'Controls/_list/interface/IList';
-import {COLUMN_SCROLL_JS_SELECTORS} from 'Controls/columnScroll';
+import { IItemPadding, TMarkerClassName } from 'Controls/display';
+import { COLUMN_SCROLL_JS_SELECTORS } from 'Controls/columnScroll';
 
 import Row from './Row';
 
@@ -24,7 +23,7 @@ const NUMBER_RENDER = 'Controls/gridNew:NumberTypeRender';
 const STRING_RENDER = 'Controls/gridNew:StringTypeRender';
 const STRING_SEARCH_RENDER = 'Controls/gridNew:StringSearchTypeRender';
 
-export interface IOptions<T> extends IColspanParams, IRowspanParams {
+export interface IOptions<T> extends IColspanParams {
     owner: Row<T>;
     column: IColumn;
     instanceId?: string;
@@ -254,15 +253,9 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         contentClasses += this._getHorizontalPaddingClasses(theme);
         contentClasses += this._getVerticalPaddingClasses(theme);
 
-        contentClasses += ' controls-Grid__row-cell_withoutRowSeparator_size-null_theme-default';
+        contentClasses += ` controls-Grid__row-cell_withoutRowSeparator_size-null_theme-${theme}`;
 
-        if (this._$column.align) {
-            contentClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
-        }
-
-        if (this._$column.valign) {
-            contentClasses += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
-        }
+        contentClasses += this._getContentAlignClasses();
 
         // todo Чтобы работало многоточие - нужна ещё одна обертка над contentTemplate. Задача пересекается с настройкой
         //      шаблона колонки (например, cursor на демо CellNoClickable)
@@ -423,6 +416,18 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         classes += ` controls-Grid__row-cell_rowSpacingTop_${topPadding}_theme-${theme}`;
         classes += ` controls-Grid__row-cell_rowSpacingBottom_${bottomPadding}_theme-${theme}`;
 
+        return classes;
+    }
+
+    protected _getContentAlignClasses(): string {
+        let classes = '';
+        if (this._$column.align) {
+            classes += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
+        }
+
+        if (this._$column.valign) {
+            classes += ` controls-Grid__cell_valign_${this._$column.valign} controls-Grid__cell-content_full-height`;
+        }
         return classes;
     }
     // endregion

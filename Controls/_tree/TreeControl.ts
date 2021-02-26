@@ -579,7 +579,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
-    protected _updateTreeControlModel(newOptions): void {
+    private _updateTreeControlModel(newOptions): void {
         const viewModel = this.getViewModel();
 
         if (!viewModel) {
@@ -822,7 +822,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             // Если в проекции нет такого элемента, по которому произошел клик, то это хлебная крошка, а не запись.
             // После исправления ошибки событие itemClick не будет стрелять при клике на крошку.
             // https://online.sbis.ru/opendoc.html?guid=4017725f-9e22-41b9-adab-0d79ad13fdc9
-            if (dispItem) {
+            if (dispItem && (
+                (eventResult !== false && this._options.expandByItemClick && dispItem.isNode() !== null) ||
+                dispItem.isGroupNode())) {
                 const expandResult = _private.toggleExpanded(this, dispItem);
 
                 if (returnExpandResult) {
@@ -874,10 +876,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         this._mouseDownExpanderKey = undefined;
     }
 
-    handleKeyDown(event): void {
+    _onViewKeyDown(event): void {
         this._onTreeViewKeyDown(event);
         if (!event.stopped && event._bubbling !== false) {
-            super.handleKeyDown(event);
+            super._onViewKeyDown(event);
         }
     }
 

@@ -5858,11 +5858,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(itemData);
         }
-        // TODO Перевести на интерфейс I[какая то сущьность с поддуржкой экшенов]
-        //  https://online.sbis.ru/opendoc.html?guid=09821b73-685b-43ae-acd2-f7af6c74627d
-        if (!itemData['[Controls/treeGrid:TreeGridNodeFooterRow]'] &&
-            !itemData['[Controls/_display/GroupItem]'] &&
-            !itemData['[Controls/_display/SearchSeparator]']) {
+        if (itemData.ItemActionsItem) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
 

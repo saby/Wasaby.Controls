@@ -33,7 +33,7 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
-import {ICollection, ISourceCollection} from './interface/ICollection';
+import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import {INavigationOptionValue} from 'Controls/interface';
 
@@ -152,12 +152,6 @@ export interface IViewIterator {
 
 export type TGroupKey = string|number;
 export type TArrayGroupKey = TGroupKey[];
-export interface IItemPadding {
-    top?: string;
-    bottom?: string;
-    left?: string;
-    right?: string;
-}
 
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
@@ -913,15 +907,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._bindHandlers();
         this._initializeCollection();
 
-        if (options.itemPadding) {
-            this._setItemPadding(options.itemPadding);
-        }
-
         this._viewIterator = {
             each: this.each.bind(this),
             setIndices: () => false,
             isItemAtIndexHidden: () => false
         };
+
+        if (options.itemPadding) {
+            this._setItemPadding(options.itemPadding);
+        }
 
         if (this._isGrouped()) {
             // TODO What's a better way of doing this?
@@ -2329,15 +2323,21 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         });
     }
 
-    protected _setItemPadding(itemPadding: IItemPadding): void {
+    protected _setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
         this._$topPadding = itemPadding.top || 'default';
         this._$bottomPadding = itemPadding.bottom || 'default';
         this._$leftPadding = itemPadding.left || 'default';
         this._$rightPadding = itemPadding.right || 'default';
+
+        this.getViewIterator().each((item: CollectionItem) => {
+            if (item.setItemPadding) {
+                item.setItemPadding(itemPadding, silent);
+            }
+        });
     }
 
     setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
-        this._setItemPadding(itemPadding);
+        this._setItemPadding(itemPadding, silent);
         if (!silent) {
             this._nextVersion();
         }
@@ -3026,6 +3026,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
+            options.theme = this._$theme;
+            options.leftPadding = this._$leftPadding;
+            options.rightPadding = this._$rightPadding;
+            options.topPadding = this._$topPadding;
+            options.bottomPadding = this._$bottomPadding;
             return create(options.itemModule || this._itemModule, options);
         };
     }

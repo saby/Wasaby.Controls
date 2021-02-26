@@ -1,66 +1,13 @@
 import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
+import { IItemPadding } from 'Controls/display';
 import {IFontColorStyle} from 'Controls/interface';
 import {IMovableOptions} from './IMovableList';
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
 type TListStyle = 'master'|'default';
-
-/**
- * @typedef {String} TVerticalItemPadding
- * @variant S
- * @variant nyll
- */
-export type TVerticalItemPadding = 'S'|'null';
-
-/**
- * @typedef {String} THorizontalItemPadding
- * @variant XS
- * @variant S
- * @variant M
- * @variant L
- * @variant XL
- * @variant XXL
- * @variant null
- */
-export type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null';
-
-/**
- * Интерфейс настройки отступов записи
- * @Interface Controls/_list/interface/IList/IItemPadding
- * @public
- * @author Авраменко А.С.
- */
-/*ENG
- * Item padding settings interface
- * @interface Controls/_list/interface/IList/IItemPadding
- * @public
- * @author Авраменко А.С.
- */
-export interface IItemPadding {
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#top
-     * @cfg {TVerticalItemPadding} Отступ записи сверху
-     */
-    top?: TVerticalItemPadding;
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#bottom
-     * @cfg {TVerticalItemPadding} Отступ записи снизу
-     */
-    bottom?: TVerticalItemPadding;
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#left
-     * @cfg {THorizontalItemPadding} Отступ записи слева
-     */
-    left?: THorizontalItemPadding;
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#right
-     * @cfg {THorizontalItemPadding} Отступ записи справа
-     */
-    right?: THorizontalItemPadding;
-}
 
 /**
  * Интерфейс для списков.

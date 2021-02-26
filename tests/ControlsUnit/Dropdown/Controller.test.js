@@ -271,12 +271,12 @@ define(
                });
             });
 
-            it('_getloadItemsPromise', () => {
+            it('_getLoadItemsPromise', () => {
                let errorCathed = false;
                dropdownController._items = null;
                dropdownController._loadItemsPromise = null;
                dropdownController._options.source = null;
-               let promise = dropdownController._getloadItemsPromise();
+               let promise = dropdownController._getLoadItemsPromise();
 
                try {
                   promise.then(() => {});
@@ -423,6 +423,29 @@ define(
             actualOptions = null;
             await controller.loadDependencies();
             assert.isOk(actualOptions);
+         });
+
+         it('loadDependencies, load rejected', async() => {
+            let errorCatched = false;
+            const controller = getDropdownController(config);
+
+            sandbox.replace(controller, '_getLoadItemsPromise', () => {
+               return Promise.resolve(true);
+            });
+
+            sandbox.replace(controller, '_loadItemsTemplates', () => {
+               return Promise.resolve(true);
+            });
+
+            sandbox.replace(controller, '_loadMenuTemplates', () => {
+               return Promise.reject('error');
+            });
+
+            // items is loaded, loadItemsTemplates was called
+            await controller.loadDependencies().then(() => {}, () => {
+               errorCatched = true;
+            });
+            assert.isTrue(errorCatched);
          });
 
          it('check empty item update', () => {
