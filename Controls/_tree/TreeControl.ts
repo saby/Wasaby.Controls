@@ -680,8 +680,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     protected _beforeUnmount(): void {
-        super._beforeUnmount(...arguments);
         this._clearTimeoutForExpandOnDrag();
+        super._beforeUnmount(...arguments);
     }
 
     public resetExpandedItems(): void {

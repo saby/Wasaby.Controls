@@ -153,7 +153,7 @@ var
         shouldDrawExpander(itemData, tmplExpanderIcon): boolean {
             // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
             // В новых моделях такой код не нужен, там шаблон вынесен
-            if (itemData.breadCrumbs) {
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
                 return false;
             }
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
@@ -170,7 +170,7 @@ var
         shouldDrawExpanderPadding(itemData, tmplExpanderIcon, tmplExpanderSize): boolean {
             // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
             // В новых моделях такой код не нужен, там шаблон вынесен
-            if (itemData.breadCrumbs) {
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
                 return false;
             }
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
@@ -186,7 +186,7 @@ var
         getExpanderPaddingClasses(itemData, tmplExpanderSize, isNodeFooter): string {
             // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
             // В новых моделях такой код не нужен, там шаблон вынесен
-            if (itemData.breadCrumbs) {
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
                 return '';
             }
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
@@ -197,7 +197,7 @@ var
         getExpanderClasses(itemData, tmplExpanderIcon, tmplExpanderSize): string {
             // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
             // В новых моделях такой код не нужен, там шаблон вынесен
-            if (itemData.breadCrumbs) {
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
                 return '';
             }
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
