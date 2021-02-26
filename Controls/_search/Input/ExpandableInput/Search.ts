@@ -25,9 +25,15 @@ export default class ExpandableInput extends Control<IControlOptions> {
    protected _template: TemplateFunction = template;
    protected _tmplNotify: Function = EventUtils.tmplNotify;
    protected _needShowButtonAnimation: boolean = false;
+   protected _needShowSearchAnimation: boolean = false;
 
    protected _beforeMount(options: IExpandableInputOptions): void {
       this._expanded = this._getExpanded(options.expanded);
+      this._needShowSearchAnimation = this._expanded;
+   }
+
+   protected _handleDeactivate(): void {
+      this._needShowSearchAnimation = false;
    }
 
    private _getExpanded(expanedOption?: boolean): boolean {
@@ -42,6 +48,7 @@ export default class ExpandableInput extends Control<IControlOptions> {
 
    protected _handleOpenClick(): void {
       this._expanded = true;
+      this._needShowSearchAnimation = true;
    }
 
    protected _handleCloseClick(): void {
