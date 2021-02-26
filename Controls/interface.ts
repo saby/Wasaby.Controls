@@ -79,3 +79,25 @@ export {default as IResetValues} from './_interface/IResetValues';
 export {default as IDraggable} from './_interface/IDraggable';
 export {IInputPlaceholder, IInputPlaceholderOptions} from './_interface/IInputPlaceholder';
 export {IInputTag, IInputTagOptions} from './_interface/IInputTag';
+
+// region grid
+
+export {
+    TColumns,
+    IColumn,
+    IColspanParams,
+    ICellPadding,
+    TCellAlign,
+    TCellPaddingVariant,
+    TCellVerticalAlign,
+    TOverflow,
+    IColumnSeparatorSizeConfig,
+    TColumnSeparatorSize
+} from './_interface/grid/IColumn';
+
+export {
+    THeader,
+    IHeaderCell
+} from './_interface/grid/IHeaderCell';
+
+// endregion grid

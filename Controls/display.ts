@@ -78,14 +78,14 @@ export {ITreeItemOptions};
 import ExpandableMixin, {IOptions as IExpandableMixinOptions} from 'Controls/_display/ExpandableMixin';
 export {ExpandableMixin, IExpandableMixinOptions};
 
-export {default as IMarkable} from './_display/interface/IMarkable';
+export {default as IMarkable, TMarkerClassName} from './_display/interface/IMarkable';
 export {default as ISelectableItem} from './_display/interface/ISelectableItem';
 
 import {default as CollectionItem} from 'Controls/_display/CollectionItem';
 import BreadcrumbsItem from './_display/BreadcrumbsItem';
 export {BreadcrumbsItem};
 
-export {ANIMATION_STATE} from './_display/interface/ICollection';
+export {ANIMATION_STATE, IItemPadding} from './_display/interface/ICollection';
 export {IEditableCollection} from './_display/interface/IEditableCollection';
 export {IEditableCollectionItem} from './_display/interface/IEditableCollectionItem';
 export {ICollectionItem} from './_display/interface/ICollectionItem';
@@ -115,8 +115,6 @@ import {IDragPosition} from './_display/interface/IDragPosition';
 export {IDragPosition};
 export {groupConstants} from './_display/itemsStrategy/Group';
 export {MultiSelectAccessibility} from './_display/Collection';
-
-export { IItemPadding } from 'Controls/_display/Collection';
 
 import IItemsStrategy, {IOptions as IItemsStrategyOptions} from 'Controls/_display/IItemsStrategy';
 import TreeItemDecorator from 'Controls/_display/TreeItemDecorator';
