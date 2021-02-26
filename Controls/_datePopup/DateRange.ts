@@ -50,28 +50,23 @@ export default class DateRange extends Control<IControlOptions> {
     protected _beforeMount(options): void {
         if (options.position) {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
+            // При открытии календаря будут видны сразу 2 месяца. Поставим маркер на нижний видимый месяц, чтобы
+            // избежать моргания маркера.
+            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth() + 1);
+            this._markedKey = this._dateToId(markedKeyDate);
         }
         this._updateView(options);
     }
 
     protected _beforeUpdate(options): void {
+        if (this._position !== options.position) {
+            this._markedKey = this._dateToId(options.position);
+        }
         this._updateView(options);
     }
 
     protected _beforeUnmount(): void {
         this._rangeModel.destroy();
-    }
-
-    protected _monthObserverHandler(event, entries): void {
-        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
-        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
-        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
-        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
-            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
-                this._monthsPosition = new Date(entries.data.getFullYear(), 0);
-            }
-            this._markedKey = this._dateToId(entries.data);
-        }
     }
 
     protected _monthCaptionClick(e: SyntheticEvent, yearDate: Date, month: number): void {
@@ -129,13 +124,18 @@ export default class DateRange extends Control<IControlOptions> {
 
    protected _onPositionChanged(e: Event, position: Date): void {
         this._position = position;
+       const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
+       this._markedKey = this._dateToId(markedKeyDate);
+       if (markedKeyDate.getFullYear() !== this._monthsPosition.getFullYear()) {
+           this._monthsPosition = new Date(markedKeyDate.getFullYear(), 0);
+       }
         this._notifyPositionChanged(position);
     }
 
     protected _onMonthsPositionChanged(e: Event, position: Date): void {
         if (position.getFullYear() !== this._position.getFullYear()) {
             const newPosition = new Date(position.getFullYear(), 0);
-            this._notifyPositionChanged(position);
+            this._notifyPositionChanged(newPosition);
         }
     }
 
@@ -158,7 +158,6 @@ export default class DateRange extends Control<IControlOptions> {
                 options.ranges.months[0] === 1));
         if (this._position !== options.position) {
             this._position = options.position;
-            this._markedKey = this._dateToId(this._position);
         }
         if (!this._singleDayHover) {
             this._hoveredStartValue = options.hoveredStartValue;
