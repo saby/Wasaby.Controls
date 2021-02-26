@@ -20,6 +20,7 @@ import * as MediumItemTemplate from 'wml!Controls/_tileNew/render/items/Medium';
 import * as PreviewItemTemplate from 'wml!Controls/_tileNew/render/items/Preview';
 import * as RichItemTemplate from 'wml!Controls/_tileNew/render/items/Rich';
 import {default as ActionsMenu} from 'Controls/_tileNew/itemActions/Menu';
+import {getImageUrl, getImageSize, getImageClasses, getImageRestrictions, getItemSize} from 'Controls/_tileNew/utils/imageUtil';
 
 import TileCollection from 'Controls/_tileNew/display/TileCollection';
 import TileCollectionItem from 'Controls/_tileNew/display/TileCollectionItem';
@@ -34,7 +35,12 @@ export {
     RichItemTemplate,
     ActionsMenu,
     TileCollection,
-    TileCollectionItem
+    TileCollectionItem,
+    getImageUrl,
+    getImageSize,
+    getImageClasses,
+    getImageRestrictions,
+    getItemSize
 };
 
 register('Controls/tileNew:TileCollection', TileCollection, {instantiate: false});

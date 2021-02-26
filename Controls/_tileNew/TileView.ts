@@ -3,8 +3,8 @@ import template = require('wml!Controls/_tileNew/render/TileView');
 import defaultItemTpl = require('wml!Controls/_tileNew/render/items/Default');
 import {TouchContextField} from 'Controls/context';
 import { TILE_SCALING_MODE, ZOOM_COEFFICIENT, ZOOM_DELAY } from './utils/Constants';
-import ItemSizeUtils = require('./utils/ItemSizeUtils');
 import {isEqual} from 'Types/object';
+import { getItemSize } from './utils/imageUtil';
 
 var _private = {
     getPositionInContainer: function (itemNewSize, itemRect, containerRect, zoomCoefficient, withoutCorrection = false) {
@@ -256,13 +256,13 @@ var TileView = ListView.extend({
         const containerRect = container.getBoundingClientRect();
         let itemSize;
 
-        //If the hover on the checkbox does not increase the element
+        // If the hover on the checkbox does not increase the element
         if (event.target.closest('.js-controls-TileView__withoutZoom')) {
             if (itemData.dispItem.isNode() === false) {
                 if (documentForUnits) {
                     itemSize = itemContainerRect;
                 } else {
-                    itemSize = ItemSizeUtils.getItemSize(itemContainer, 1, this._options.tileMode);
+                    itemSize = getItemSize(itemContainer, 1, this._options.tileMode);
                 }
                 let position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
                 const documentRect = documentObject.documentElement.getBoundingClientRect();
@@ -272,7 +272,7 @@ var TileView = ListView.extend({
                 this._setHoveredItem(itemData, null, null, null, itemContainerRect.width);
             }
         } else {
-            itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
+            itemSize = getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
             this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
         }
     },
@@ -320,6 +320,27 @@ var TileView = ListView.extend({
         if (needUpdateActions) {
             this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
         }
+    },
+
+    getItemsPaddingContainerClasses(): string {
+        const theme = `_theme-${this._options.theme}`;
+        let classes = 'controls-TileView__itemPaddingContainer ';
+
+        if (this.getCount()) {
+            if (this._options.itemsContainerPadding) {
+                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this._options.itemsContainerPadding?.left}_itemPadding_${this._options.leftPadding}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this._options.itemsContainerPadding?.right}_itemPadding_${this._options.rightPadding}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this._options.itemsContainerPadding?.top}_itemPadding_${this._options.topPadding}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this._options.itemsContainerPadding?.bottom}_itemPadding_${this._options.bottomPadding}${theme}`;
+            } else {
+                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this._options.leftPadding}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this._options.rightPadding}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this._options.topPadding}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this._options.bottomPadding}${theme}`;
+            }
+        }
+
+        return classes;
     },
 
     _onItemWheel: function () {

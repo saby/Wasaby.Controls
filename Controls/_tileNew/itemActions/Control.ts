@@ -1,5 +1,5 @@
 import {TemplateFunction, Control, IControlOptions} from 'UI/Base';
-import * as template from 'wml!Controls/_tile/ItemActions/Control';
+import * as template from 'wml!Controls/_tileNew/itemActions/Control';
 
 export interface ITileItemActionsOptions extends IControlOptions {
     item: Record<string, any>;

@@ -1,5 +1,5 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
-import * as template from 'wml!Controls/_tile/ItemActions/Menu/Menu';
+import * as template from 'wml!Controls/_tileNew/itemActions/Menu/Menu';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
 

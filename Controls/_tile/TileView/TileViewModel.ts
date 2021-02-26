@@ -3,7 +3,7 @@ import cMerge = require('Core/core-merge');
 import {Logger} from 'UI/Utils';
 import {object} from 'Types/util';
 import {Model} from 'Types/entity';
-import {getImageUrl, getImageSize, getImageClasses, IMAGE_FIT, getImageRestrictions} from './resources/imageUtil';
+import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/tileNew';
 
 const DEFAULT_ITEM_WIDTH = 250;
 const DEFAULT_ITEM_HEIGHT = 200;
@@ -133,7 +133,7 @@ var TileViewModel = ListViewModel.extend({
         const imageHeight = item.get(imageHeightProperty) && Number(item.get(imageHeightProperty));
         const imageWidth = item.get(imageWidthProperty) && Number(item.get(imageWidthProperty));
         let baseUrl = item.get(imageProperty);
-        if (imageFit === IMAGE_FIT.COVER) {
+        if (imageFit === 'cover') {
             const sizes = getImageSize(
                 Number(itemWidth),
                 Number(itemsHeight),

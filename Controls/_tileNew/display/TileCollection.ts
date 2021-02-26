@@ -447,27 +447,6 @@ export default class TileCollection<
         return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
     }
 
-    getItemsPaddingContainerClasses(): string {
-        const theme = `_theme-${this.getTheme()}`;
-        let classes = 'controls-TileView__itemPaddingContainer ';
-
-        if (this.getCount()) {
-            if (this._$itemsContainerPadding) {
-                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this.getItemsContainerLeftPadding()}_itemPadding_${this.getLeftPadding()}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this.getItemsContainerRightPadding()}_itemPadding_${this.getRightPadding()}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this.getItemsContainerTopPadding()}_itemPadding_${this.getTopPadding()}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this.getItemsContainerBottomPadding()}_itemPadding_${this.getBottomPadding()}${theme}`;
-            } else {
-                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this.getLeftPadding()}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this.getRightPadding()}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this.getTopPadding()}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this.getBottomPadding()}${theme}`;
-            }
-        }
-
-        return classes;
-    }
-
     protected _createPositionInBounds(
         left: number,
         top: number,
