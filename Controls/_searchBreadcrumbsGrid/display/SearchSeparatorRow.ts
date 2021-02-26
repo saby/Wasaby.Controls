@@ -1,6 +1,6 @@
 import { GridRow, TColspanCallbackResult } from 'Controls/gridNew';
 import SearchGridCollection from './SearchGridCollection';
-import { IColumn }from 'Controls/interface';
+import { IColumn } from 'Controls/interface';
 
 export default class SearchSeparatorRow extends GridRow<string> {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;

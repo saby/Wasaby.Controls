@@ -1,7 +1,7 @@
 import { TemplateFunction } from 'UI/Base';
 import FooterRow from './FooterRow';
 import Cell, {IOptions as ICellOptions} from './Cell';
-import { IColspanParams }from 'Controls/interface';
+import { IColspanParams } from 'Controls/interface';
 
 export interface IOptions<T> extends ICellOptions<T> {
     owner: FooterRow<T>;
