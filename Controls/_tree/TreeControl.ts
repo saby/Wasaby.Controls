@@ -570,7 +570,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
-    protected _updateTreeControlModel(newOptions): void {
+    private _updateTreeControlModel(newOptions): void {
         const viewModel = this.getViewModel();
 
         if (!viewModel) {
@@ -702,8 +702,8 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     protected _beforeUnmount(): void {
-        super._beforeUnmount(...arguments);
         this._clearTimeoutForExpandOnDrag();
+        super._beforeUnmount(...arguments);
     }
 
     public resetExpandedItems(): void {
@@ -867,10 +867,10 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         this._mouseDownExpanderKey = undefined;
     }
 
-    handleKeyDown(event): void {
+    _onViewKeyDown(event): void {
         this._onTreeViewKeyDown(event);
         if (!event.stopped && event._bubbling !== false) {
-            super.handleKeyDown(event);
+            super._onViewKeyDown(event);
         }
     }
 

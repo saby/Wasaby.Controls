@@ -151,6 +151,11 @@ var
         },
 
         shouldDrawExpander(itemData, tmplExpanderIcon): boolean {
+            // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
+            // В новых моделях такой код не нужен, там шаблон вынесен
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
+                return false;
+            }
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
 
             // Hide expander icon if it is equal 'none' or render leafs
@@ -163,6 +168,11 @@ var
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem);
         },
         shouldDrawExpanderPadding(itemData, tmplExpanderIcon, tmplExpanderSize): boolean {
+            // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
+            // В новых моделях такой код не нужен, там шаблон вынесен
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
+                return false;
+            }
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
             const expanderPosition = itemData.getExpanderPosition();
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
@@ -174,12 +184,22 @@ var
             }
         },
         getExpanderPaddingClasses(itemData, tmplExpanderSize, isNodeFooter): string {
+            // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
+            // В новых моделях такой код не нужен, там шаблон вынесен
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
+                return '';
+            }
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
             let expanderPaddingClasses = `controls-TreeGrid__row-expanderPadding controls-TreeGrid__${isNodeFooter ? 'node-footer' : 'row'}-expanderPadding` + `_theme-${itemData.theme}`;
             expanderPaddingClasses += ' controls-TreeGrid__row-expanderPadding_size_' + (expanderSize || 'default') + `_theme-${itemData.theme}`;
             return expanderPaddingClasses;
         },
         getExpanderClasses(itemData, tmplExpanderIcon, tmplExpanderSize): string {
+            // Шаблонизатор вызывает в dirtyCheckingVars все подряд, даже то, что под условием if(false).
+            // В новых моделях такой код не нужен, там шаблон вынесен
+            if (itemData.breadCrumbs || itemData.dispItem['[Controls/_display/SearchSeparator]']) {
+                return '';
+            }
             const expanderIcon = itemData.getExpanderIcon(tmplExpanderIcon);
             const expanderSize = itemData.getExpanderSize(tmplExpanderSize);
             const expanderPosition = itemData.getExpanderPosition();

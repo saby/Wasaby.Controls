@@ -1950,7 +1950,11 @@ const _private = {
         menuConfig.eventHandlers = {
             onResult: self._onItemActionsMenuResult,
             onClose(): void {
-                self._onItemActionsMenuClose(this);
+                // При разрушении список сам закрывает меню, пока меню закроется и отстрелит колбек,
+                // список полностью разрушится.
+                if (!self._destroyed) {
+                    self._onItemActionsMenuClose(this);
+                }
             }
         };
         return Sticky.openPopup(menuConfig).then((popupId) => {
@@ -5621,9 +5625,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
      * @private
      */
     _onItemActionsMenuClose(currentPopup): void {
-        if (!this._destroyed) {
-            _private.closeActionsMenu(this, currentPopup);
-        }
+        _private.closeActionsMenu(this, currentPopup);
     }
 
     _handleMenuActionMouseEnter(event: SyntheticEvent): void {
