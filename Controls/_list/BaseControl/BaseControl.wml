@@ -117,8 +117,6 @@
                 listModel="{{_listViewModel}}"
                 startDragNDropCallback="{{ _options.itemsDragNDrop ? _startDragNDropCallback }}"
                 preventServerSideColumnScroll="{{ !_useServerSideColumnScroll }}"
-                columnsCount="{{ _getColumnsCount() }}"
-                spacing="{{ _getSpacing() }}"
                 on:arrowClick="_notifyHandler('arrowClick')"
                 on:closeSwipe="_onCloseSwipe()"
                 on:validateCreated="_onValidateCreated()"

@@ -4,6 +4,7 @@ import template = require('wml!Controls/_columns/render/Columns');
 import defaultItemTemplate = require('wml!Controls/_columns/render/resources/ItemTemplate');
 
 import {ListView, IList} from 'Controls/list';
+import Collection from 'Controls/_columns/display/Collection';
 
 export interface IColumnsRenderOptions extends IList {
     columnMinWidth: number;
@@ -11,11 +12,13 @@ export interface IColumnsRenderOptions extends IList {
     columnsMode: 'auto' | 'fixed';
     columnsCount: number;
     spacing: number;
+    listModel: Collection;
 }
 
 export default class Columns extends ListView {
     protected _options: IColumnsRenderOptions;
     protected _template: TemplateFunction = template;
+    protected _templateKeyPrefix: string;
 
     protected _beforeMount(options: IColumnsRenderOptions): void {
         super._beforeMount(options);
@@ -26,8 +29,10 @@ export default class Columns extends ListView {
     }
 
     protected _getItemsContainerStyle(): string {
-        const minmax = `minmax(${this._options.columnMinWidth + this._options.spacing}px, ${this._options.columnMaxWidth  + this._options.spacing}px) `;
-        const gridTemplate = minmax.repeat(this._options.columnsCount);
+        const spacing = this._options.listModel.getSpacing();
+        const columnsCount = this._options.listModel.getColumnsCount();
+        const minmax = `minmax(${this._options.columnMinWidth + spacing}px, ${this._options.columnMaxWidth  + spacing}px) `;
+        const gridTemplate = minmax.repeat(columnsCount);
         return  `grid-template-columns: ${gridTemplate};
                  -ms-grid-columns: ${gridTemplate};`;
     }
@@ -38,7 +43,8 @@ export default class Columns extends ListView {
         return  this._getMinMaxMidthStyle(this._options.columnMinWidth, this._options.columnMaxWidth);
     }
     protected _getColumnStyle(index: number): string {
-        return this._getMinMaxMidthStyle(this._options.columnMinWidth + this._options.spacing, this._options.columnMaxWidth + this._options.spacing) + `-ms-grid-column: ${index + 1};`
+        const spacing = this._options.listModel.getSpacing();
+        return this._getMinMaxMidthStyle(this._options.columnMinWidth + spacing, this._options.columnMaxWidth + spacing) + `-ms-grid-column: ${index + 1};`
     }
     static getDefaultOptions(): Partial<IColumnsRenderOptions> {
         return {

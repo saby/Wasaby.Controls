@@ -23,37 +23,35 @@ export interface IColumnsControlOptions extends IBaseControlOptions {
 
 export default class ColumnsControl<TOptions extends IColumnsControlOptions = IColumnsControlOptions> extends BaseControl<TOptions> {
     private _columnsCount: number;
-    private _columnsController: ColumnsController;
     private _spacing: number = SPACING;
     protected _model: Collection<Model>;
-
-    protected _beforeMount(options: TOptions): void {
-        this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
-        this._beforeMountCallback = ({viewModel, markerController}) => {
-            this._model = viewModel;
-            if (options.columnsMode === 'auto' && options.initialWidth) {
-                this._recalculateColumnsCountByWidth(options.initialWidth, options.columnMinWidth);
-            } else {
-                if (options.columnsCount) {
-                    this._columnsCount = options.columnsCount;
-                } else {
-                    this._columnsCount = DEFAULT_COLUMNS_COUNT;
-                }
-                this._model.setColumnsCount(this._columnsCount);
-            }
-        };
-        return super._beforeMount(...arguments);
-    }
 
     protected _afterMount(): void {
         super._afterMount();
         this._resizeHandler();
     }
 
+    protected _onItemsReady(options, items) {
+        super._onItemsReady(options, items);
+        if (options.columnsMode === 'auto' && options.initialWidth) {
+            this._recalculateColumnsCountByWidth(options.initialWidth, options.columnMinWidth);
+        } else {
+            if (options.columnsCount) {
+                this._columnsCount = options.columnsCount;
+            } else {
+                this._columnsCount = DEFAULT_COLUMNS_COUNT;
+            }
+        }
+        this._listViewModel.setColumnsCount(this._columnsCount);
+    }
+
     protected _beforeUpdate(options: TOptions): void {
         super._beforeUpdate(options);
         if (options.columnsMode === 'fixed' && options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
+            this._model.setColumnsCount(this._columnsCount);
+        } else {
+            this._resizeHandler();
         }
     }
 

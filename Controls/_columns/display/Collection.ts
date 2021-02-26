@@ -17,6 +17,7 @@ export default class Collection<
     protected _columnsIndexes: number[][];
     protected _$columnsCount: number;
     protected _$columnsMode: 'auto' | 'fixed';
+    protected _$spacing: number;
     constructor(options) {
         super(options);
         this._columnsStrategy = new ColumnsController({columnsMode: options.columnsMode});
@@ -64,6 +65,24 @@ export default class Collection<
             this._nextVersion();
         }
     }
+
+    getColumnsCount(): number {
+        return this._$columnsCount;
+    }
+
+    setSpacing(spacing: number): void {
+        if (this._$spacing !== spacing) {
+            this._$spacing = spacing;
+            this.updateColumns();
+            this._nextVersion();
+        }
+    }
+
+    getSpacing(): number {
+        return this._$spacing;
+    }
+
+    
 
     private updateColumnIndexesByItems(): void {
         this._columnsIndexes = new Array<number[]>(this._$columnsCount);
@@ -255,5 +274,6 @@ Object.assign(Collection.prototype, {
     _moduleName: 'Controls/columns:ColumnsCollection',
     _itemModule: 'Controls/columns:ColumnsCollectionItem',
     _$columnsCount: 2,
+    _$spacing: 0,
     _$columnsMode: 'auto'
 });

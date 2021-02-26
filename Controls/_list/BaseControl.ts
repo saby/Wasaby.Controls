@@ -507,9 +507,7 @@ const _private = {
             // полная замена (example: https://online.sbis.ru/opendoc.html?guid=75a21c00-35ec-4451-b5d7-29544ddd9c40).
             if (!isEqualItems(listModel.getCollection(), items)) {
                 listModel.setCollection(items);
-                if (self._options.itemsReadyCallback) {
-                    self._options.itemsReadyCallback(listModel.getCollection());
-                }
+                self._onItemsReady(newOptions, listModel.getCollection());
             }
             // При старой модели зовется из модели. Нужен чтобы в explorer поменять модель только уже при наличии данных
             if (self._options.itemsSetCallback) {
@@ -520,8 +518,8 @@ const _private = {
             listModel.setItems(items, newOptions);
             self._items = listModel.getCollection();
 
-            if (wasItemsReplaced && self._options.itemsReadyCallback) {
-                self._options.itemsReadyCallback(self._items);
+            if (wasItemsReplaced) {
+                self._onItemsReady(newOptions, self._items);
             }
 
             // todo Опция task1178907511 предназначена для восстановления скролла к низу списка после его перезагрузки.
@@ -3535,14 +3533,19 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         _private.setHasMoreData(this._listViewModel,
             _private.hasMoreDataInAnyDirection(this, this._sourceController), true);
 
-        if (cfg.itemsReadyCallback) {
-            cfg.itemsReadyCallback(this._listViewModel.getCollection());
-        }
+        this._onItemsReady(cfg, this._listViewModel.getCollection());
+
         if (this._listViewModel) {
             _private.initListViewModelHandler(this, this._listViewModel, true);
         }
         this._shouldNotifyOnDrawItems = true;
         _private.prepareFooter(this, cfg, this._sourceController);
+    }
+
+    protected _onItemsReady(options, items): void {
+        if (options.itemsReadyCallback) {
+            options.itemsReadyCallback(items);
+        }
     }
 
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups): Promise<unknown> | void {
@@ -3576,9 +3579,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                 viewModelConfig,
                 newOptions.viewModelConstructor
             );
-            if (newOptions.itemsReadyCallback) {
-                newOptions.itemsReadyCallback(self._listViewModel.getCollection());
-            }
+            self._onItemsReady(newOptions, self._listViewModel.getCollection());
         }
 
         if (self._listViewModel) {

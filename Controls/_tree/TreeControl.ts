@@ -49,6 +49,7 @@ export interface ITreeControlOptions extends IBaseControlOptions {
     selectDescendants?: boolean;
     markItemByExpanderClick?: boolean;
     expanderSize?: 's'|'m'|'l'|'xl';
+    markedLeafChangeCallback: Function;
 }
 
 const _private = {
@@ -501,12 +502,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _currentItem = null;
     private _tempItem = null;
     private _markedLeaf = '';
+    private _modeLeavesInitialized = false;
+    private _doAfterItemExpanded = null;
 
     private _itemOnWhichStartCountDown = null;
     private _timeoutForExpandOnDrag = null;
     private _deepReload;
-
-    private _beforeMountCallback: Function = null;
 
     constructor(options: TOptions) {
         this._expandNodeOnDrag = this._expandNodeOnDrag.bind(this);
@@ -528,24 +529,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
 
             // TODO: отрефакторить после наследования (TreeControl <- BaseControl)
             this._beforeMountCallback = ({viewModel, markerController}) => {
-                const items = viewModel.getItems();
-                const current = items.getRecordById(this._options.markedKey) || items.at(0);
-                if (current) {
-                    if (current.get(this._options.nodeProperty) !== null) {
-                        this._tempItem = current.getKey();
-                        this._currentItem = this._tempItem;
-                        this._doAfterItemExpanded = (itemKey) => {
-                            this._doAfterItemExpanded = null;
-                            this._applyMarkedLeaf(itemKey, viewModel, markerController);
-                        };
-                        this._expandedItemsToNotify = this._expandToFirstLeaf(this._tempItem, viewModel.getItems(), viewModel);
-                        if (this._expandedItemsToNotify) {
-                            viewModel.setExpandedItems(this._expandedItemsToNotify);
-                        }
-                    } else {
-                        this._applyMarkedLeaf(current.getKey(), viewModel, markerController);
-                    }
-                }
+               
             };
         }
         if (options.sourceController) {
@@ -567,6 +551,31 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (this._expandedItemsToNotify) {
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
             this._expandedItemsToNotify = null;
+        }
+    }
+
+    protected _onItemsReady(options, items) {
+        super._onItemsReady(options, items);
+        if (options.markerMoveMode === 'leaves' && !this._modeLeavesInitialized) {
+            this._modeLeavesInitialized = true;
+            const model = this._listViewModel;
+            const current = items.getRecordById(this._options.markedKey) || items.at(0);
+            if (current) {
+                if (current.get(this._options.nodeProperty) !== null) {
+                    this._tempItem = current.getKey();
+                    this._currentItem = this._tempItem;
+                    this._doAfterItemExpanded = (itemKey) => {
+                        this._doAfterItemExpanded = null;
+                        this._applyMarkedLeaf(itemKey, model, markerController);
+                    };
+                    this._expandedItemsToNotify = this._expandToFirstLeaf(this._tempItem, items, model);
+                    if (this._expandedItemsToNotify) {
+                        model.setExpandedItems(this._expandedItemsToNotify);
+                    }
+                } else {
+                    this._applyMarkedLeaf(current.getKey(), model, markerController);
+                }
+            }
         }
     }
 
