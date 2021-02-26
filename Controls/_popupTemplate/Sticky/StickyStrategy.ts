@@ -116,7 +116,11 @@ const INVERTING_CONST = {
             if (position[isHorizontal ? 'right' : 'bottom'] < 0) {
                return -(position[isHorizontal ? 'right' : 'bottom']);
             }
-            return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (_private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
+            let res = popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (_private.getTargetCoords(popupCfg, targetCoords, isHorizontal ? 'right' : 'bottom', direction) - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']);
+            if (!isHorizontal && popupCfg.targetPoint && popupCfg.targetPoint.vertical === 'bottom') {
+               res += targetCoords.height;
+            }
+            return res;
          }
          if (position[isHorizontal ? 'left' : 'top'] < 0) {
             return -(position[isHorizontal ? 'left' : 'top']);
