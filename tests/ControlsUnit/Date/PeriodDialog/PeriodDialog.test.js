@@ -142,6 +142,17 @@ define([
          });
 
          [
+            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, ranges: { quarters: [1] } },
+            { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.quantum, ranges: { halfyears: [1] } }
+         ].forEach((test) => {
+            it('should set correct _monthRangeSelectionType and _monthRangeQuantum', () => {
+               const component = calendarTestUtils.createComponent(PeriodDialog.default, test);
+               assert.strictEqual(component._monthRangeSelectionType, test.selectionType);
+               assert.strictEqual(JSON.stringify(component._monthRangeQuantum), JSON.stringify(test.ranges));
+            });
+         });
+
+         [
             { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.single },
             { selectionType: dateRange.IDateRangeSelectable.SELECTION_TYPES.range, ranges: { days: [1] } }
          ].forEach(function(options) {

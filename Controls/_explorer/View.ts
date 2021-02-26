@@ -236,7 +236,7 @@ export default class Explorer extends Control<IControlOptions> {
             // или "tile" будет перезагрузка. Этот код нужен до тех пор, пока не будут спускаться данные сверху-вниз.
             // https://online.sbis.ru/opendoc.html?guid=f90c96e6-032c-404c-94df-cc1b515133d6
             const filterChanged = !isEqual(cfg.filter, this._options.filter);
-            const recreateSource = cfg.source !== this._options.source || (isSourceControllerLoading);
+            const recreateSource = cfg.source !== this._options.source || (isSourceControllerLoading && this._options.viewMode === 'search');
             const sortingChanged = !isEqual(cfg.sorting, this._options.sorting);
             if ((filterChanged || recreateSource || sortingChanged || navigationChanged) && !cfg.sourceController) {
                 this._setPendingViewMode(cfg.viewMode, cfg);
@@ -247,7 +247,14 @@ export default class Explorer extends Control<IControlOptions> {
             this._pendingViewMode &&
             cfg.viewMode === this._pendingViewMode &&
             cfg.sourceController) {
-            this._setViewModeSync(this._pendingViewMode, cfg);
+            // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
+            if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
+                this._loadTileViewMode().then(() => {
+                    this._setViewModeSync(this._pendingViewMode, cfg);
+                });
+            } else {
+                this._setViewModeSync(this._pendingViewMode, cfg);
+            }
         } else {
             this._applyNewVisualOptions();
         }
@@ -620,10 +627,10 @@ export default class Explorer extends Control<IControlOptions> {
         }
     }
 
-    private _setViewConfig(viewMode): void {
+    private _setViewConfig(viewMode, useNewModel): void {
         // todo useNewModel - это ветка, к котой стремимся, условие (и всё что в else) можно убрать, когда везде
         // будет использоваться Controls/explorer:View на новой модели
-        if (this._options.useNewModel) {
+        if (useNewModel) {
             this._viewName = VIEW_NAMES_NEW[viewMode];
             this._useNewModel = USE_NEW_MODEL_VALUES_NEW[viewMode];
             this._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS_NEW[viewMode];
@@ -636,7 +643,7 @@ export default class Explorer extends Control<IControlOptions> {
 
     private _setViewModeSync(viewMode, cfg): void {
         this._viewMode = viewMode;
-        this._setViewConfig(this._viewMode);
+        this._setViewConfig(this._viewMode, cfg.useNewModel);
         this._applyNewVisualOptions();
 
         if (this._isMounted) {
@@ -869,29 +876,30 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * @class Controls/_explorer/View
  * @extends UI/Base:Control
- * @implements Controls/_interface/IErrorController
- * @mixes Controls/_interface/ISource
+ * @implements Controls/interface:IErrorController
+ * @implements Controls/list:IReloadableList
+ * @mixes Controls/interface:ISource
  * @mixes Controls/interface/ITreeGridItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/interface/IGroupedList
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/interface:INavigation
+ * @mixes Controls/interface:IFilterChanged
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IList
- * @mixes Controls/_itemActions/interface/IItemActionsOptions
- * @mixes Controls/_interface/IHierarchy
- * @implements Controls/_tree/interface/ITreeControl
- * @mixes Controls/_explorer/interface/IExplorer
- * @mixes Controls/_interface/IDraggable
- * @mixes Controls/_tile/interface/ITile
- * @mixes Controls/_list/interface/IVirtualScrollConfig
+ * @mixes Controls/list:IList
+ * @mixes Controls/itemActions:IItemActionsOptions
+ * @mixes Controls/interface:IHierarchy
+ * @implements Controls/tree/ITreeControlOptions
+ * @mixes Controls/explorer:IExplorer
+ * @mixes Controls/interface:IDraggable
+ * @mixes Controls/tile:ITile
+ * @mixes Controls/list:IVirtualScrollConfig
  * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/_grid/interface/IGridControl
- * @mixes Controls/_list/interface/IClickableView
- * @mixes Controls/_list/interface/IMovableList
- * @mixes Controls/_list/interface/IRemovableList
- * @mixes Controls/_marker/interface/IMarkerList
+ * @mixes Controls/grid:IGridControl
+ * @mixes Controls/list:IClickableView
+ * @mixes Controls/list:IMovableList
+ * @mixes Controls/list:IRemovableList
+ * @mixes Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.
@@ -905,30 +913,30 @@ Object.defineProperty(Explorer, 'defaultProps', {
  *
  * @class Controls/_explorer/View
  * @extends UI/Base:Control
- * @implements Controls/_interface/IErrorController
- * @mixes Controls/_interface/ISource
+ * @implements Controls/interface:IErrorController
+ * @implements Controls/list:IReloadableList
+ * @mixes Controls/interface:ISource
  * @mixes Controls/interface/ITreeGridItemTemplate
- * @mixes Controls/interface/IItemTemplate
  * @mixes Controls/interface/IPromisedSelectable
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/interface/IGroupedList
- * @mixes Controls/_interface/INavigation
- * @mixes Controls/_interface/IFilterChanged
+ * @mixes Controls/interface:INavigation
+ * @mixes Controls/interface:IFilterChanged
  * @mixes Controls/interface/IHighlighter
- * @mixes Controls/_list/interface/IList
- * @mixes Controls/_itemActions/interface/IItemActionsOptions
- * @mixes Controls/_interface/ISorting
- * @mixes Controls/_interface/IHierarchy
- * @implements Controls/_tree/interface/ITreeControl
- * @mixes Controls/_explorer/interface/IExplorer
- * @mixes Controls/_interface/IDraggable
- * @mixes Controls/_tile/interface/ITile
- * @mixes Controls/_list/interface/IVirtualScrollConfig
+ * @mixes Controls/list:IList
+ * @mixes Controls/itemActions:IItemActionsOptions
+ * @mixes Controls/interface:IHierarchy
+ * @implements Controls/tree/ITreeControlOptions
+ * @mixes Controls/explorer:IExplorer
+ * @mixes Controls/interface:IDraggable
+ * @mixes Controls/tile:ITile
+ * @mixes Controls/list:IVirtualScrollConfig
  * @mixes Controls/interface/IGroupedGrid
- * @mixes Controls/_grid/interface/IGridControl
- * @mixes Controls/_list/interface/IMovableList
- * @mixes Controls/_list/interface/IRemovableList
- * @mixes Controls/_marker/interface/IMarkerList
+ * @mixes Controls/grid:IGridControl
+ * @mixes Controls/list:IClickableView
+ * @mixes Controls/list:IMovableList
+ * @mixes Controls/list:IRemovableList
+ * @mixes Controls/marker:IMarkerList
  *
  * @public
  * @author Авраменко А.С.

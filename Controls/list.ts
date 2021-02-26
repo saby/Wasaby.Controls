@@ -44,7 +44,7 @@ import {default as View} from 'Controls/_list/List';
 import BaseAction from 'Controls/_list/BaseAction';
 import LoadingIndicatorTemplate = require('wml!Controls/_list/PortionedSearchTemplate');
 import ContinueSearchTemplate = require('wml!Controls/_list/resources/ContinueSearchTemplate');
-import {default as DataContainer} from 'Controls/_list/Data';
+import {default as DataContainer, IDataOptions} from 'Controls/_list/Data';
 import _forTemplate = require('wml!Controls/_list/resources/For');
 import EditingTemplate = require('wml!Controls/_list/EditingTemplateChooser');
 import BaseEditingTemplate = require('wml!Controls/_list/EditInPlace/baseEditingTemplate');
@@ -101,6 +101,7 @@ export {
     Mover,
     Remover,
     DataContainer,
+    IDataOptions,
     _forTemplate,
 
     EditingTemplate,
@@ -136,6 +137,7 @@ export {
 
 /**
  * Набор констант, используемых при работе с {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактированием по месту}.
+ * @class Controls/list:editing
  * @public
  */
 const editing = {

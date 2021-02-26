@@ -6,7 +6,7 @@
               <span
                     class="controls-RangeShortSelectorLink__value {{!_options.readOnly? 'controls-RangeShortSelectorLink__value-hovered'}}
                     {{_fontSize? 'controls-fontsize-' + _fontSize + '_theme-' + _options.theme }}
-                    {{_fontColorStyle ? 'controls-text-' + _fontColorStyle + '_theme-' + _options.theme }}
+                    {{_fontColorStyle ? 'controls-text-' + _fontColorStyle + '_theme-' + _options.theme + ' controls-text-' + _fontColorStyle}}
                     controls-RangeShortSelectorLink__value_theme-{{_options.theme}}
                     {{ _styleClass }} {{ _valueEnabledClass }}"
                     name="openPopupTarget"
@@ -19,6 +19,7 @@
               <Controls.buttons:Button
                     name="Link" caption="{{ _caption }}"
                     fontColorStyle="{{_fontColorStyle}}"
+                    attr:class="controls-RangeShortSelectorLink__value-viewMode-link"
                     fontSize="{{_fontSize}}"
                     viewMode="link"
                     tootltip="{{_options.tooltip}}"

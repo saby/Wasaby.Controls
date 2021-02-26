@@ -46,15 +46,21 @@
    flex-shrink: 0;
 }
 
-.controls-SlidingPanel__customContent-wrapper {
+.controls-SlidingPanel__body {
    flex: 1;
    min-height: 0;
    display: flex;
    flex-direction: column;
 }
 
-.controls-SlidingPanel__customContent {
+.controls-SlidingPanel__customContent-wrapper {
    min-height: 100%;
+   display: flex;
+   flex-direction: column;
+}
+
+.controls-SlidingPanel__customContent {
+   flex-grow: 1;
 }
 
 .controls-SlidingPanel__customContent-scroll-available {

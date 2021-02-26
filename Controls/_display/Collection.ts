@@ -44,8 +44,9 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * 
+ *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
+ * @class
  * @public
  */
 const MultiSelectAccessibility = {
@@ -830,6 +831,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
+    protected _isDragOutsideList: boolean = false;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2074,9 +2076,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
      * @return {String}
      */
     setKeyProperty(keyProperty: string): void {
-        this._$keyProperty = keyProperty;
-        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
-        this.nextVersion();
+        if (keyProperty !== this._$keyProperty) {
+            this._$keyProperty = keyProperty;
+            this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
+            this.nextVersion();
+        }
     }
 
     /**
@@ -2208,11 +2212,18 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
      * @param outside
      */
     setDragOutsideList(outside: boolean): void {
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
-        if (strategy) {
-            strategy.avatarItem.setDragOutsideList(outside);
-            this._nextVersion();
+        if (this._isDragOutsideList !== outside) {
+            this._isDragOutsideList = outside;
+            const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
+            if (strategy) {
+                strategy.avatarItem.setDragOutsideList(outside);
+                this._nextVersion();
+            }
         }
+    }
+
+    isDragOutsideList(): boolean {
+        return this._isDragOutsideList;
     }
 
     isDragging(): boolean {

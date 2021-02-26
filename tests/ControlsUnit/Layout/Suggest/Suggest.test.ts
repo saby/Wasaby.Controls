@@ -822,6 +822,22 @@ describe('Controls/suggest', () => {
             assert.isTrue(closeSpy.calledOnce);
          });
 
+         it('autoDropDown is False :: suggest should close', async () => {
+            sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => false);
+            const closeSpy = sandbox.spy(inputContainer, '_close');
+
+            inputContainer._options.historyId = undefined;
+            inputContainer._options.autoDropDown = false;
+            inputContainer._getSourceController().setItems(new RecordSet({
+               rawData: [{id: 1}, {id: 2}],
+               keyProperty: 'id'
+            }));
+            await inputContainer._searchResetCallback();
+
+            assert.isFalse(setItemsSpy.called);
+            assert.isTrue(closeSpy.calledOnce);
+         });
+
          it('double called resetCallback should be caught on promise cancelled', async () => {
             sandbox.stub(inputContainer, '_shouldSearch').callsFake(() => true);
 
@@ -1118,6 +1134,7 @@ describe('Controls/suggest', () => {
          suggestComponent._options.filter = {param: 'old_test'};
          suggestComponent._showContent = true;
          resolveLoadStub.reset();
+         const resolveSearchStub  = sandbox.stub(suggestComponent, '_resolveSearch').callsFake(() => Promise.resolve());
          suggestComponent._beforeUpdate({
             suggestState: true,
             searchParam: 'testSearchParam',
@@ -1126,7 +1143,7 @@ describe('Controls/suggest', () => {
             filter: {param: 'new_test'}
          });
 
-         assert.isTrue(resolveLoadStub.calledOnce);
+         assert.isTrue(resolveSearchStub.calledOnce);
 
          sandbox.restore();
       });
@@ -1265,6 +1282,13 @@ describe('Controls/suggest', () => {
             inputContainer._options.suggestState = true;
             inputContainer._updateSuggestState();
             assert.isTrue(suggestOpened);
+         });
+
+         it('suggestState = true, value is reseted', () => {
+            inputContainer._options.autoDropDown = false;
+            inputContainer._options.suggestState = true;
+            inputContainer._updateSuggestState(true);
+            assert.isFalse(suggestOpened);
          });
 
          it('without items and history', () => {
@@ -1505,6 +1529,34 @@ describe('Controls/suggest', () => {
 
          suggestComponent._openSelector(templateOptions);
          assert.isFalse(isOpenPopup);
+      });
+
+      describe('_openSelector', () => {
+         let isOpenPopup = false;
+         const suggestComponent = getComponentObject({
+            suggestTemplate: {}
+         });
+         suggestComponent._getSelectorOptions = () => {
+            isOpenPopup = true;
+         };
+
+         it('show selector', async () => {
+            suggestComponent._notify = () => {
+               return true;
+            };
+
+            await suggestComponent._openSelector({});
+            assert.isTrue(isOpenPopup);
+         });
+
+         it('dont show selector', async () => {
+            isOpenPopup = false;
+            suggestComponent._notify = () => {
+               return false;
+            };
+            await suggestComponent._openSelector({});
+            assert.isFalse(isOpenPopup);
+         });
       });
 
       it('changeValueHandler', async () => {

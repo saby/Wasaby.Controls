@@ -179,7 +179,7 @@ define([
 
          //по сценарию https://online.sbis.ru/opendoc.html?guid=8237131f-3294-4704-92a5-fe448e40bf50
          const treeInst = new tree.TreeControl({viewModelConstructor: treeGrid.ViewModel});
-         tree.TreeControl._private.afterReloadCallback(treeInst);
+         tree.TreeControl._private.afterReloadCallback(treeInst, {});
       });
       it('TreeControl._private.toggleExpanded', async function() {
          var
@@ -233,7 +233,7 @@ define([
                appendItems: function() {},
                mergeItems: function() {},
                getItemBySourceKey: () => undefined,
-               getItems: () => new collection.RecordSet()
+               getCollection: () => new collection.RecordSet()
             };
          };
 
@@ -2058,8 +2058,8 @@ define([
             expandedItems: [],
             markedKey: 4
          };
-         const treeControl = correctCreateTreeControl(cfg);
-         let newCfg = {...cfg};
+         const treeControl = await correctCreateTreeControlAsync(cfg);
+         let newCfg = {...treeControl._options};
          treeControl._notify = (event, args) => {
             if (event === 'expandedItemsChanged') {
                newCfg.expandedItems = args[0];

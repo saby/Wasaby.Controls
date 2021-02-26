@@ -191,11 +191,12 @@ describe('Controls/dataSource:SourceController', () => {
             const controller = getController();
             let loadPromiseWasCanceled = false;
 
-            controller.load().catch(() => {
+            const promiseCanceled = controller.load().catch(() => {
                 loadPromiseWasCanceled = true;
             });
 
             await controller.load();
+            await promiseCanceled;
             ok(loadPromiseWasCanceled);
         });
 
@@ -340,6 +341,23 @@ describe('Controls/dataSource:SourceController', () => {
 
             await controller.load('down', 'testRoot');
             ok(!dataLoadCallbackCalled);
+        });
+
+        it('dataLoadCallback from setter returns promise',  async () => {
+            const controller = getController();
+            let promiseResolver;
+
+            const promise = new Promise((resolve) => {
+                promiseResolver = resolve;
+            });
+            controller.setDataLoadCallback(() => {
+                return promise;
+            });
+            const reloadPromise = controller.reload().then(() => {
+                ok(controller.getItems().getCount() === 4);
+            });
+            promiseResolver();
+            await reloadPromise;
         });
 
         it('load with direction returns error',  () => {

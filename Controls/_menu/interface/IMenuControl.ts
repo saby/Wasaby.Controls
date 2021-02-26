@@ -114,6 +114,11 @@ export default interface IMenuControl {
  */
 
 /**
+ * @name Controls/_menu/interface/IMenuControl#backgroundStyle
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
+ */
+
+/**
  * @name Controls/_menu/interface/IMenuControl#additionalProperty
  * @cfg {String} Имя свойства, содержащего информацию о дополнительном пункте выпадающего меню.
  * Подробное описание <a href="/doc/platform/developmentapl/interface-development/controls/dropdown-menu/item-config/#additional">здесь</a>.

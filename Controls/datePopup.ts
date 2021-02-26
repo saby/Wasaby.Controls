@@ -182,10 +182,13 @@ export default class DatePopup extends Control implements EventProxyMixin {
             } else {
                 this._yearRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
             }
-            if ('months' in options.ranges) {
-                this._monthRangeSelectionType = options.selectionType;
-                this._monthRangeQuantum = {'months': options.ranges.months};
-            } else {
+            const monthsRangeQuantums = ['months', 'quarters', 'halfyears'];
+            for (const quantumRange of monthsRangeQuantums) {
+                if (quantumRange in options.ranges) {
+                    this._monthRangeQuantum[quantumRange] = options.ranges[quantumRange];
+                }
+            }
+            if (!Object.keys(this._monthRangeQuantum).length) {
                 this._monthRangeSelectionType = IDateRangeSelectable.SELECTION_TYPES.disable;
             }
         }
@@ -542,8 +545,16 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     toggleState(date?: Date): void {
         this._state = this._state === STATES.year ? STATES.month : STATES.year;
-
-        const displayedDate = date || this._options.startValue || this._options.endValue || new Date();
+        let displayedDate;
+        if (date) {
+            displayedDate = date;
+        } else if (dateUtils.isValidDate(this._options.startValue)) {
+            displayedDate = this._options.startValue;
+        } else if (dateUtils.isValidDate(this._options.endDate)) {
+            displayedDate = this._options.endDate;
+        } else {
+            displayedDate = new Date();
+        }
         this._displayedDate = this._state === STATES.year ?
             dateUtils.getStartOfYear(displayedDate) : dateUtils.getStartOfMonth(displayedDate);
     }

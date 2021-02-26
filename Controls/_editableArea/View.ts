@@ -5,6 +5,8 @@ import * as Deferred from 'Core/Deferred';
 import buttonsTemplate from 'Controls/_editableArea/Templates/Buttons';
 import {Record} from 'Types/entity';
 import {SyntheticEvent} from 'Vdom/Vdom';
+import 'css!Controls/CommonClasses';
+import 'css!Controls/editableArea';
 
 'use strict';
 /**
@@ -18,7 +20,7 @@ import {SyntheticEvent} from 'Vdom/Vdom';
  *
  * @remark
  * Если в качестве шаблона редактирования используются поля ввода, то при переключении в режим чтения может наблюдаться скачок текста.
- * Для того, чтобы избежать этого, рекомендуется навесить CSS-класс **controls-Input_negativeOffset_theme_{{_options.theme}}** на редактируемую область.
+ * Для того, чтобы избежать этого, рекомендуется навесить CSS-класс **controls-Input_negativeOffset** на редактируемую область.
  *
  * Полезные ссылки:
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_editableArea.less переменные тем оформления}
@@ -188,7 +190,7 @@ export default class View extends Control<IViewControlOptions> {
       this._editObject = this._options.editObject;
    }
 
-   static _theme: string[] = ['Controls/list', 'Controls/editableArea', 'Controls/Classes'];
+   static _theme: string[] = ['Controls/list'];
 
    static getDefaultOptions(): IViewControlOptions {
       return {

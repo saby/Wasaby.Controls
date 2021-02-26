@@ -165,6 +165,7 @@ Suggest.getOptionTypes = getOptionTypes;
 Suggest.getDefaultOptions = function() {
    return {
       minSearchLength: 3,
+      borderVisibility: 'visible',
       suggestState: false,
       suggestTemplate: {
          templateName: 'Controls/suggestPopup:SuggestTemplate'

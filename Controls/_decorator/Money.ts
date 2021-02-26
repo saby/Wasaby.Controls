@@ -19,6 +19,7 @@ import numberToString from 'Controls/_decorator/inputUtils/toString';
 // tslint:disable-next-line:ban-ts-ignore
 //@ts-ignore
 import * as template from 'wml!Controls/_decorator/Money/Money';
+import 'css!Controls/decorator';
 
 type TValue = string | number | null;
 
@@ -163,7 +164,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     private static ZERO_FRACTION_PATH: string = '0'.repeat(Money.FRACTION_LENGTH);
     private static SEARCH_PATHS: RegExp = new RegExp(`(-?[0-9]*?)(\\.[0-9]{${Money.FRACTION_LENGTH}})`);
 
-    static _theme: string[] = ['Controls/Classes', 'Controls/decorator'];
+    static _theme: string[] = ['Controls/Classes'];
 
     private static toString(value: TValue): string {
         if (value === null) {

@@ -45,6 +45,14 @@ export interface IPropertyGrid {
 }
 
 /**
+ * @event Происходит при клике на элемент.
+ * @name Controls/_propertyGrid/IPropertyGrid#itemClick
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
+ * @param {Controls/_propertyGrid/PropertyGridCollectionItem} item Элемент, по которому произвели клик.
+ * @param {Object} originalEvent Дескриптор исходного события.
+ */
+
+/**
  * @name Controls/_propertyGrid/IPropertyGrid#keyProperty
  * @cfg {String} Имя свойства, содержащего информацию об идентификаторе текущей строки.
  */
@@ -224,4 +232,16 @@ export interface IPropertyGrid {
  * @name Controls/_propertyGrid/IPropertyGrid#editorColumnOptions
  * @cfg {IPropertyGridColumnOptions} Конфигурации ширины колонки редактора.
  * @demo Controls-demo/PropertyGridNew/EditorColumnOptions/Index
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#parentProperty
+ * @cfg {String} Имя свойства, содержащего сведения о родительском узле.
+ * @demo Controls-demo/PropertyGridNew/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#nodeProperty
+ * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
+ * @demo Controls-demo/PropertyGridNew/ParentProperty/Index
  */

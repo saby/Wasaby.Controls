@@ -548,6 +548,7 @@ var
             const startIndex = self.getStartIndex();
             const stopIndex = hasVirtualScroll ? self.getStopIndex() : displayStopIndex;
             const newLadder: any = GridLadderUtil.prepareLadder({
+                task1181099336: self._options.task1181099336,
                 ladderProperties: self._options.ladderProperties,
                 startIndex,
                 stopIndex,
@@ -1662,7 +1663,6 @@ var
             current.getColspanForColumnScroll = () => _private.getColspanForColumnScroll(self);
             current.getColspanFor = (elementName: string) => self.getColspanFor.apply(self, [elementName]);
             current.stickyColumnsCount = this._options.stickyColumnsCount;
-
             current.rowSeparatorSize = this._options.rowSeparatorSize;
             current.columnSeparatorSize = this._options.columnSeparatorSize;
             if (current.hasMultiSelect) {
@@ -1846,7 +1846,14 @@ var
                 };
 
             current.getCurrentColumnKey = function() {
-                return self._columnsVersion + '_' +
+                // key - передаем для того, чтобы обеспечить уникальность ключа колонки, иначе будут ошибки с дублированием ключей
+                // https://online.sbis.ru/opendoc.html?guid=ec8f4886-18a2-4827-afe7-4bd416429846
+                // в 20.1100 заводились ошибки на ядро:
+                // https://online.sbis.ru/opendoc.html?guid=5248b666-3498-4bf1-9051-1076a1caca95
+                // https://online.sbis.ru/opendoc.html?guid=5248b666-3498-4bf1-9051-1076a1caca95
+                // https://online.sbis.ru/opendoc.html?guid=61b44051-c747-4226-bfde-265eeaba2084
+                // на стороне ядра склейка ключей поддерживаться не будет и проблема будет вплоть до перехода на React
+                return current.key + '_' + self._columnsVersion + '_' +
                     (!self._hasMultiSelectColumn() ? current.columnIndex : current.columnIndex - 1);
             };
 
@@ -2409,6 +2416,9 @@ var
                 this._dragOutsideList = outside;
                 this._nextModelVersion();
             }
+        },
+        isDragOutsideList(): boolean {
+            return this._model.isDragOutsideList();
         },
         resetDraggedItems(): void {
             this._model.resetDraggedItems();

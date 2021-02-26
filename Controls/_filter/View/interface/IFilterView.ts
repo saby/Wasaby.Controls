@@ -1,7 +1,7 @@
-import {ICrudPlus, ICrud} from 'Types/source';
+import {ICrudPlus, QueryWhereExpression} from 'Types/source';
 import {IPopupOptions} from 'Controls/popup';
 import {INavigationOptionValue} from 'Controls/interface';
-
+import HistorySource from 'Controls/_history/Source';
 
 /**
  * Интерфейс для поддержки просмотра и редактирования полей фильтра.
@@ -16,35 +16,42 @@ import {INavigationOptionValue} from 'Controls/interface';
  * @public
  * @author Золотова Э.Е.
  */
+
+export type TKey = null | string | number;
+
+export interface IEditorOptions {
+    source?: ICrudPlus | HistorySource;
+    keyProperty?: string;
+    displayProperty?: string;
+    parentProperty?: string;
+    nodeProperty?: string;
+    minVisibleItems?: number;
+    multiSelect?: boolean;
+    selectorTemplate?: {
+        templateName: string;
+        templateOptions?: Record<string, any>;
+        popupOptions?: IPopupOptions;
+    };
+    itemTemplate?: string;
+    editorMode?: string;
+    filter?: QueryWhereExpression<unknown>;
+    navigation?: INavigationOptionValue<any>;
+    itemTemplateProperty?: string;
+}
+
 export interface IFilterItem {
     name: string;
     id?: string;
-    value: any;
-    resetValue?: any;
+    value: unknown;
+    resetValue?: unknown;
     textValue: string;
     emptyText?: string;
-    emptyKey?: boolean | string | number;
+    emptyKey?: TKey;
     doNotSaveToHistory?: boolean;
     visibility?: boolean;
     viewMode?: 'basic' | 'frequent' | 'extended';
     type?: 'dateRange';
-    editorOptions?: {
-        source?: ICrudPlus | ICrud;
-        keyProperty?: string;
-        displayProperty?: string;
-        minVisibleItems?: number;
-        multiSelect?: boolean;
-        selectorTemplate?: {
-            templateName: string;
-            templateOptions?: Record<string, any>;
-            popupOptions?: IPopupOptions;
-        }
-        itemTemplate?: string;
-        editorMode?: string;
-        filter?: Record<string, any>;
-        navigation?: INavigationOptionValue<any>
-        itemTemplateProperty?: string;
-    };
+    editorOptions?: IEditorOptions;
     [key: string]: any;
 }
 /**

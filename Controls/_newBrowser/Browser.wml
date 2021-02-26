@@ -19,8 +19,8 @@
 
             root="{{_masterRoot}}"
             on:rootChanged="_onMasterRootChanged()"
-            bind:markedKey="masterMarkedKey"
-            dataLoadCallback="{{_onMasterLoaded}}"
+            bind:markedKey="_masterMarkedKey"
+            on:itemClick="_onExplorerItemClick(true)"
          />
       </Controls.scroll:Container>
    </ws:master>
@@ -51,7 +51,7 @@
             searchValue="{{_searchValue}}"
 
             on:arrowClick="_onDetailArrowClick()"
-            on:itemClick="_onDetailItemClick()"
+            on:itemClick="_onExplorerItemClick(false)"
             on:viewModeChanged="_onDetailExplorerChangedViewMode()"
          >
             <ws:afterBreadCrumbsTemplate>

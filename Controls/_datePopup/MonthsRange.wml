@@ -1,11 +1,12 @@
-<!-- virtualPageSize="{{3}}" - 1 item is displayed and one at a time from the top and bottom in stock  -->
 <Controls.calendar:MonthList
    attachLoadTopTriggerToNull="{{ false }}"
    attr:class="controls-PeriodDialog-MonthsRange"
-   virtualPageSize="{{3}}"
+   segmentSize="5"
+   virtualPageSize="{{5}}"
    position="{{_options.position}}"
    shadowStyle="datePopup"
-   _limit="{{1}}"
+   bottomShadowVisibility="{{false}}"
+   _limit="{{3}}"
    on:itemClick="_onItemClick()"
 >
    <ws:yearHeaderTemplate>

@@ -1,6 +1,6 @@
 import { mixin } from 'Types/util';
 import { ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
-import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions } from 'Controls/gridNew';
+import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, GridItemActionsCell } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
@@ -15,6 +15,8 @@ export default class TreeGridDataRow<T extends Model>
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly DisplayItemActions: boolean = true;
+    readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly LadderSupport: boolean = true;
@@ -39,6 +41,18 @@ export default class TreeGridDataRow<T extends Model>
     // TODO duplicate code with GridRow. Нужно придумать как от него избавиться.
     //  Проблема в том, что mixin не умеет объединять одинаковые методы, а логику Grid мы добавляем через mixin
     // region overrides
+
+    protected _initializeColumns(): void {
+        super._initializeColumns();
+
+        if (this._$columns && this.hasItemActionsSeparatedCell()) {
+            this._$columnItems.push(new GridItemActionsCell({
+                owner: this,
+                isFixed: true,
+                column: {}
+            }));
+        }
+    }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {
         const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility);

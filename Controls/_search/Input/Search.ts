@@ -6,6 +6,7 @@ import {descriptor} from 'Types/entity';
 import {constants} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {default as Store} from 'Controls/Store';
+import 'css!Controls/search';
 
 // timer for search, when user click on search button or pressed enter.
 // protect against clickjacking (https://en.wikipedia.org/wiki/Clickjacking)
@@ -196,12 +197,11 @@ class Search extends Base {
         this._wasActionUser = true;
     }
 
-    static _theme: string[] = Base._theme.concat(['Controls/search']);
-
     static _private = _private;
 
     static getDefaultOptions(): object {
        let defaultOptions = Base.getDefaultOptions();
+       defaultOptions.borderVisibility = 'visible';
        defaultOptions.contrastBackground = false;
        defaultOptions.trim = false;
        defaultOptions.placeholder = rk('Найти') + '...';

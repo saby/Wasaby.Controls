@@ -36,6 +36,7 @@ import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
 import {IShadowsOptions} from 'Controls/_scroll/Container/Interface/IShadows';
 import {IControllerState} from 'Controls/_dataSource/Controller';
+import {isEqual} from 'Types/object';
 
 type Key = string|number|null;
 
@@ -154,7 +155,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._source = options.source;
         }
         if (options.useStore) {
-            this._inputSearchValue = this._searchValue = Store.getState().searchValue as unknown as string;
+            this._inputSearchValue = this._searchValue = Store.getState().searchValue as unknown as string || '';
         } else if (options.searchValue) {
             this._inputSearchValue = this._searchValue = options.searchValue;
         }
@@ -246,8 +247,10 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions: IBrowserOptions, context: typeof ContextOptions): void | Promise<RecordSet> {
+        const sourceChanged = this._options.source !== newOptions.source;
+        const hasSearchValueInOptions = newOptions.searchValue !== undefined;
+        const isInputSearchValueLongerThenMinSearchLength = this._inputSearchValue && this._inputSearchValue.length >= this._options.minSearchLength;
         let methodResult;
-        let sourceChanged;
 
         this._getOperationsController().update(newOptions);
         if (newOptions.hasOwnProperty('markedKey') && newOptions.markedKey !== undefined) {
@@ -260,9 +263,8 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._updateFilterAndFilterItems();
         }
 
-        if (this._options.source !== newOptions.source) {
+        if (sourceChanged) {
             this._source = newOptions.source;
-            sourceChanged = true;
         }
 
         if (newOptions.root !== this._options.root) {
@@ -285,20 +287,26 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         const isChanged = sourceController.updateOptions(
            this._getSourceControllerOptions(newOptions as ISourceControllerOptions));
 
+        if ((this._options.searchValue !== newOptions.searchValue) && (this._searchValue !== newOptions.searchValue)) {
+            this._inputSearchValue = newOptions.searchValue;
+
+            if (!newOptions.searchValue && sourceChanged && this._searchController) {
+                this._updateFilter(this._searchController);
+            }
+        }
+
         if (isChanged) {
             methodResult = this._reload(newOptions);
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
         }
 
-        if (sourceChanged && this._inputSearchValue && !newOptions.searchValue) {
+        if (isChanged && isInputSearchValueLongerThenMinSearchLength && hasSearchValueInOptions && !newOptions.searchValue) {
             this._inputSearchValue = '';
         }
 
-        if (newOptions.searchValue !== undefined && this._searchValue !== newOptions.searchValue) {
-            if (this._options.searchValue !== newOptions.searchValue) {
-                this._inputSearchValue = newOptions.searchValue;
-            }
+        const searchParamChanged = this._options.searchParam !== newOptions.searchParam;
+        if ((hasSearchValueInOptions && this._searchValue !== newOptions.searchValue) || searchParamChanged) {
             if (!methodResult) {
                 methodResult = this._updateSearchController(newOptions).catch((error) => {
                     this._processLoadError(error);
@@ -688,7 +696,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _processSearchError(error: Error): void|Error {
-        if (!error.isCancelled) {
+        if (!error.isCanceled) {
             this._loading = false;
             this._filterChanged(null, this._searchController.getFilter());
             this._getErrorRegister().start({
@@ -716,7 +724,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
     private _updateFilter(searchController: SearchController): void {
         const filter = searchController.reset(true);
-        this._filterChanged(null, filter);
+        if (!isEqual(this._filter, filter)) {
+            this._filterChanged(null, filter);
+        }
         this._setSearchValue('');
     }
 
@@ -729,7 +739,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
 
         const switchedStr = getSwitcherStrFromData(recordSet);
         this._misspellValue = switchedStr;
-        if (Browser._needChangeSearchValueToSwitchedString(recordSet)) {
+        if (this._searchController.needChangeSearchValueToSwitchedString(recordSet)) {
             this._setSearchValue(switchedStr);
         }
     }
@@ -846,11 +856,6 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._filterController.resetPrefetch();
         this._filter = this._filterController.getFilter() as QueryWhereExpression<unknown>;
         this._notify('filterChanged', [this._filter]);
-    }
-
-    private static _needChangeSearchValueToSwitchedString(recordSet: RecordSet): boolean {
-        const metaData = recordSet && recordSet.getMetaData();
-        return metaData ? metaData.returnSwitched : false;
     }
 
     static _getRoot(path: RecordSet, currentRoot: Key, parentProperty: string): Key {

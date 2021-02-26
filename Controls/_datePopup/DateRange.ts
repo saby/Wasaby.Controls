@@ -1,5 +1,6 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as template from 'wml!Controls/_datePopup/DateRange';
+import * as monthHeaderTmpl from 'wml!Controls/_datePopup/DateRangeMonthHeaderTemplate';
 import {Date as WSDate} from 'Types/entity';
 import {date as formatDate} from 'Types/formatter';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -7,6 +8,7 @@ import {DateRangeModel, Utils as DateControlsUtils, dateRangeQuantum as quantumU
 import {EventUtils} from 'UI/Events';
 import {MonthModel} from 'Controls/calendar';
 import {Base as dateUtils} from 'Controls/dateUtils';
+import {detection} from 'Env/Env';
 
 /**
  * Component that allows you to select periods of multiple days.
@@ -20,6 +22,7 @@ import {Base as dateUtils} from 'Controls/dateUtils';
 
 export default class DateRange extends Control<IControlOptions> {
     protected _template: TemplateFunction = template;
+    protected _monthHeaderTmpl: TemplateFunction = monthHeaderTmpl;
     protected _monthViewModel: MonthModel = MonthModel;
     protected _weekdaysCaptions: string = DateControlsUtils.getWeekdaysCaptions();
     protected _monthSelectionEnabled: boolean = true;
@@ -29,33 +32,41 @@ export default class DateRange extends Control<IControlOptions> {
     private _position: Date;
     private _monthsPosition: any;
 
+    private _singleDayHover: boolean = true;
+
     constructor(options) {
         super(options);
         this._rangeModel = new DateRangeModel({ dateConstructor: options.dateConstructor });
         EventUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
+        // Нет необходимости передавать опцию hoveredStartValue и hoveredEndValue, если ховер работает только по одному
+        // итему, а не по нескольким, как в квантах.
+        const isQuantumSelection = options.selectionType === 'quantum' && options.ranges;
+        if (isQuantumSelection) {
+            const isSingleDayQuantum = 'days' in options.ranges && options.ranges.days.indexOf(1) !== -1;
+            this._singleDayHover = isSingleDayQuantum;
+        }
     }
 
     protected _beforeMount(options): void {
+        if (options.position) {
+            this._monthsPosition = new Date(options.position.getFullYear(), 0);
+            // При открытии календаря будут видны сразу 2 месяца. Поставим маркер на нижний видимый месяц, чтобы
+            // избежать моргания маркера.
+            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth() + 1);
+            this._markedKey = this._dateToId(markedKeyDate);
+        }
         this._updateView(options);
     }
 
-    protected _afterMount(options): void {
-        this._markedKey = this._dateToId(this._position);
-    }
-
     protected _beforeUpdate(options): void {
+        if (this._position !== options.position) {
+            this._markedKey = this._dateToId(options.position);
+        }
         this._updateView(options);
     }
 
     protected _beforeUnmount(): void {
         this._rangeModel.destroy();
-    }
-
-    protected _monthObserverHandler(event, entries): void {
-        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
-        if (entries.nativeEntry.intersectionRatio === 1) {
-            this._markedKey = this._dateToId(entries.data);
-        }
     }
 
     protected _monthCaptionClick(e: SyntheticEvent, yearDate: Date, month: number): void {
@@ -113,15 +124,18 @@ export default class DateRange extends Control<IControlOptions> {
 
    protected _onPositionChanged(e: Event, position: Date): void {
         this._position = position;
+       const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
+       this._markedKey = this._dateToId(markedKeyDate);
+       if (markedKeyDate.getFullYear() !== this._monthsPosition.getFullYear()) {
+           this._monthsPosition = new Date(markedKeyDate.getFullYear(), 0);
+       }
         this._notifyPositionChanged(position);
-        if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._monthsPosition = new Date(position.getFullYear(), 0);
-        }
     }
 
     protected _onMonthsPositionChanged(e: Event, position: Date): void {
-        if (position.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._notifyPositionChanged(position);
+        if (position.getFullYear() !== this._position.getFullYear()) {
+            const newPosition = new Date(position.getFullYear(), 0);
+            this._notifyPositionChanged(newPosition);
         }
     }
 
@@ -144,14 +158,10 @@ export default class DateRange extends Control<IControlOptions> {
                 options.ranges.months[0] === 1));
         if (this._position !== options.position) {
             this._position = options.position;
-            if (!this._monthsPosition || this._position.getFullYear() !== this._monthsPosition.getFullYear()) {
-                this._monthsPosition = new Date(this._position.getFullYear(), 0);
-            }
-            this._markedKey = this._dateToId(this._position);
         }
-        if (this._position?.getFullYear() !== this._monthsPosition?.getFullYear()) {
-            const newPosition = new Date(this._monthsPosition.getFullYear(), 0);
-            this._notifyPositionChanged(newPosition);
+        if (!this._singleDayHover) {
+            this._hoveredStartValue = options.hoveredStartValue;
+            this._hoveredEndValue = options.hoveredEndValue;
         }
     }
 

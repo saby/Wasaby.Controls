@@ -68,7 +68,7 @@ export default interface ILookup {
  * Открыть справочник.
  * @function Controls/_interface/ILookup#showSelector
  * @returns {Promise}
- * @param {Object} popupOptions {@link Controls/_popup/Opener/Stack/PopupOptions.typedef Опции всплывающего окна.}
+ * @param {Object} popupOptions {@link Controls/popup:IStackOpener.PopupOptions.typedef Опции всплывающего окна}.
  *
  * @example
  * Откроем окно с заданными параметрами.

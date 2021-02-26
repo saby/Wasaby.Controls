@@ -1,0 +1,3 @@
+<svg class="controls-icon_size-{{_options.iconSize}} controls-icon_style-{{_options.iconStyle}}">
+    <use xlink:href="{{_iconUrl}}"/>
+</svg>

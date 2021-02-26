@@ -11,7 +11,7 @@
  * @library Controls/columns
  * @includes View Controls/columns:View
  * @public
- * @author Аверкиев П.А.
+ * @author Колесов В. А.
  */
 import { register } from 'Types/di';
 

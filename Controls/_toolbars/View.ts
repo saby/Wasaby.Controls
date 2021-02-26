@@ -10,10 +10,14 @@ import {getMenuItems, needShowMenu} from './Util';
 import {showType} from './interfaces/IShowType';
 import 'css!Controls/toolbars';
 import 'css!Controls/buttons';
+import 'css!Controls/CommonClasses';
 
 import {
-    getButtonTemplate, hasSourceChanged,
-    getButtonTemplateOptionsByItem, getTemplateByItem, loadItems, getSimpleButtonTemplateOptionsByItem
+    getButtonTemplate,
+    hasSourceChanged,
+    getTemplateByItem,
+    loadItems,
+    getSimpleButtonTemplateOptionsByItem
 } from 'Controls/_toolbars/Util';
 import {IStickyPopupOptions, IStickyPosition, IEventHandlers} from 'Controls/popup';
 
@@ -511,10 +515,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         return getTemplateByItem(item, this._options);
     }
 
-    protected _getButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
-        return getButtonTemplateOptionsByItem(item, this._options);
-    }
-
     protected _getSimpleButtonTemplateOptionsByItem(item: TItem): IButtonOptions {
         return getSimpleButtonTemplateOptionsByItem(item, this._options);
     }
@@ -600,8 +600,6 @@ class Toolbar extends Control<IToolbarOptions, TItems> implements IHierarchy, II
         }
         return void 0;
     }
-
-    static _theme: string[] = ['Controls/Classes'];
 
     private static _typeItem(item: TItem): TypeItem {
         if (item.get('icon')) {
