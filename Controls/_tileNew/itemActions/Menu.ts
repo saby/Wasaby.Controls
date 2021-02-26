@@ -3,7 +3,7 @@ import * as template from 'wml!Controls/_tileNew/itemActions/Menu/Menu';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Memory} from 'Types/source';
 
-export interface ITileMenuActionsOptions extends IControlOptions{
+export interface ITileMenuActionsOptions extends IControlOptions {
     source: Memory;
     previewWidth: number;
     previewHeight: number;
