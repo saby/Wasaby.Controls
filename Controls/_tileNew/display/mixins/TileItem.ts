@@ -82,6 +82,8 @@ export default abstract class TileItem<T extends Model = Model> {
 
     protected _$tileWidthProperty: string;
 
+    protected _$tileFitProperty: string;
+
     // endregion TileOptions
 
     // region ImageOptions
@@ -146,6 +148,17 @@ export default abstract class TileItem<T extends Model = Model> {
         }
     }
 
+    getTileFitProperty(): string {
+        return this._$tileFitProperty;
+    }
+
+    setTileFitProperty(tileFitProperty: string): void {
+        if (this._$tileFitProperty !== tileFitProperty) {
+            this._$tileFitProperty = tileFitProperty;
+            this._nextVersion();
+        }
+    }
+
     getTileWidth(widthTpl?: number): number {
         const imageHeight = this.getImageHeight();
         const imageWidth = this.getImageWidth();
@@ -159,11 +172,10 @@ export default abstract class TileItem<T extends Model = Model> {
                 const imageProportion = imageWidth / imageHeight;
                 widthProportion = Math.min(DEFAULT_SCALE_COEFFICIENT,
                     Math.max(imageProportion, this.getCompressionCoefficient()));
+            } else if (this.getTileFitProperty()) {
+                const tileFit = object.getPropertyValue<number>(this.getContents(), this.getTileFitProperty());
+                return this.getTileHeight() * (tileFit || DEFAULT_COMPRESSION_COEFF);
             }
-            // TODO разобраться для чего это свойство нужно, в доке нет, демок нет
-            /* else if (this._options.tileFitProperty) {
-                return this._itemsHeight * (item.get(this._options.tileFitProperty) || DEFAULT_COMPRESSION_COEFF);
-            }*/
         } else {
             return itemWidth;
         }
@@ -317,7 +329,6 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'preview':
                 classes += ' controls-TileView__previewTemplate_itemActions';
-                // TODO {{itemData.dispItem.isNode() ? 'controls-TileView__previewTemplate_itemActions_node'}}
                 break;
         }
 
@@ -326,7 +337,6 @@ export default abstract class TileItem<T extends Model = Model> {
 
     getActionMode(itemType: string = 'default'): string {
         if (itemType === 'preview') {
-            // TODO itemData.dispItem.isNode() ? 'strict' : 'adaptive'
             return 'adaptive';
         }
 
@@ -335,7 +345,6 @@ export default abstract class TileItem<T extends Model = Model> {
 
     getActionPadding(itemType: string = 'default'): string {
         if (itemType === 'preview') {
-            // TODO itemData.dispItem.isNode() ? '' : 'null'
             return 'null';
         }
 
@@ -438,9 +447,8 @@ export default abstract class TileItem<T extends Model = Model> {
         return !contentTemplate;
     }
 
-    getImageTemplate(): TemplateFunction {
+    getImageTemplate(itemType: string = 'default'): TemplateFunction {
         return ImageTemplate;
-        // TODO if isNode() && itemType === 'small' то иконка папки <span attr:class="controls-TileView__smallTemplate_nodeIcon_theme-{{theme}} icon-large icon-Folder icon-disabled"></span>
     }
 
     getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: string, imagePosition?: string, imageSize?: string): string {
@@ -634,7 +642,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer'): string {
+    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer', templateMarker?: boolean): string {
         let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()} controls-ListView__itemV`;
         if (templateClickable !== false) {
             classes += ` controls-ListView__itemV_cursor-${cursor}`;
@@ -652,6 +660,12 @@ export default abstract class TileItem<T extends Model = Model> {
             classes += ` controls-ListView__item_dragging_theme-${this.getTheme()}`;
         }
 
+        if (this.shouldDisplayMarker(templateMarker)) {
+            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-${this.getTheme()}`;
+        } else {
+            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
+        }
+
         switch (itemType) {
             case 'default':
             case 'medium':
@@ -661,7 +675,6 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'preview':
                 classes += ' controls-TileView__previewTemplate';
-                // TODO {{itemData.dispItem && itemData.dispItem.isNode() ? 'js-controls-TileView__withoutZoom controls-TileView__previewTemplate_node' : ''}}
                 if (this.hasVisibleActions() && (this.isUnscaleable() || this.canShowActions())) {
                     classes += ' controls-TileView__previewTemplate_actions_showed';
                 }
@@ -673,7 +686,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ' controls-TileView__smallTemplate_item';
                 classes += ` controls-TileView__smallTemplate_item_theme-${this.getTheme()}`;
                 classes += ' js-controls-TileView__withoutZoom  js-controls-ListView__measurableContainer';
-                classes += ` controls-TileView__smallTemplate_listItem_theme-${this.getTheme()}`; // TODO если isNode то заменить listItem на nodeItem
+                classes += ` controls-TileView__smallTemplate_listItem_theme-${this.getTheme()}`;
                 if (this.isActive()) {
                     classes += ` controls-TileView__smallTemplate_item_active_theme-${this.getTheme()}`;
                 }
@@ -687,7 +700,6 @@ export default abstract class TileItem<T extends Model = Model> {
         // TODO staticHeight
 
         const width = this.getTileWidth(templateWidth);
-        // TODO if isNode() then width = templateWidth || folderWidth || itemData.defaultFolderWidth
         const compressedWidth = width * this.getCompressionCoefficient();
         return `
             -ms-flex-preferred-size: ${compressedWidth}px;
@@ -749,17 +761,28 @@ export default abstract class TileItem<T extends Model = Model> {
         if (this.isSwiped()) {
             classes += ` controls-TileView__item_swiped${theme}`;
         }
-        if (this.shouldDisplayMarker(templateMarker)) {
-            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker${theme}`;
-        } else {
-            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker${theme}`;
-        }
 
         return classes;
     }
 
-    getWrapperStyles(): string {
-        return this.getFixedPositionStyle();
+    getWrapperStyles(itemType: string = 'default'): string {
+        let styles = this.getFixedPositionStyle() || '';
+
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                styles += ' display: contents';
+                break;
+            case 'medium':
+                break;
+            case 'rich':
+                break;
+            case 'preview':
+                break;
+        }
+
+        return styles;
     }
 
     getFixedPositionStyle(): string {
@@ -800,8 +823,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'preview':
                 classes += 'controls-TileView__previewTemplate_title';
-                // TODO {{itemData.dispItem.isNode() ? 'controls-fontweight-bold' : ''}}
-                classes += ` controls-fontsize-m_theme-${this.getTheme()}`; // TODO в дереве заменить m на l
+                classes += ` controls-fontsize-m_theme-${this.getTheme()}`;
                 const countLines = titleLines === 1 ? 'single' : 'multi';
                 classes += ` controls-TileView__previewTemplate_title_${countLines}Line_theme-${this.getTheme()}`;
                 classes += ` controls-TileView__previewTemplate_title_gradient_${gradientType}_theme-${this.getTheme()}`;
@@ -843,12 +865,11 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'default':
                 return !!this.getDisplayValue() || (this.hasVisibleActions() || this.isEditing());
             case 'small':
-                break;
             case 'medium':
             case 'rich':
                 return true;
             case 'preview':
-                return this.canShowActions() || this.hasVisibleActions(); // TODO || isNode();
+                return this.canShowActions() || this.hasVisibleActions();
         }
     }
 
@@ -868,7 +889,6 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'small':
                 classes += ` controls-TileView__smallTemplate_title_theme-${this.getTheme()}`;
-                // TODO {{itemData.dispItem.isNode() ? 'controls-TileView__smallTemplate_title_node_theme-' + _options.theme}}"
                 break;
             case 'medium':
                 classes += ' controls-TileView__mediumTemplate_title controls-fontweight-bold';
@@ -888,7 +908,7 @@ export default abstract class TileItem<T extends Model = Model> {
                     classes += ' ws-ellipsis';
                 }
                 classes += ` controls-TileView__richTemplate_title_theme-${this.getTheme()}`;
-                classes += ` controls-fontsize-xl_theme-${this.getTheme()}`; // TODO не забыть в дереве заменить xl на 4xl для узлов
+                classes += ` controls-fontsize-xl_theme-${this.getTheme()}`;
                 classes += ` controls-text-${titleColorStyle}_theme-${this.getTheme()}`;
                 break;
             case 'preview':
@@ -1052,6 +1072,7 @@ Object.assign(TileItem.prototype, {
     _$tileHeight: DEFAULT_TILE_HEIGHT,
     _$tileWidth: DEFAULT_TILE_WIDTH,
     _$tileWidthProperty: '',
+    _$tileFitProperty: '',
     _$tileScalingMode: 'none',
     _$imageProperty: '',
     _$imageFit: 'none',

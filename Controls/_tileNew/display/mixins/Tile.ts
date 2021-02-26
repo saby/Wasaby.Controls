@@ -52,6 +52,8 @@ export default abstract class Tile<
 
     protected _$tileWidthProperty: string;
 
+    protected _$tileFitProperty: string;
+
     protected _$tileScalingMode: string;
 
     protected _$itemsContainerPadding: IItemPadding;
@@ -167,6 +169,26 @@ export default abstract class Tile<
         this.getViewIterator().each((item: TileItem<S>) => {
             if (item.setTileWidthProperty) {
                 item.setTileWidthProperty(tileWidthProperty);
+            }
+        });
+    }
+
+    getTileFitProperty(): string {
+        return this._$tileFitProperty;
+    }
+
+    setTileFitProperty(tileFitProperty: string): void {
+        if (this._$tileFitProperty !== tileFitProperty) {
+            this._$tileFitProperty = tileFitProperty;
+            this._updateItemsTileFitProperty(tileFitProperty);
+            this._nextVersion();
+        }
+    }
+
+    private _updateItemsTileFitProperty(tileFitProperty: string): void {
+        this.getViewIterator().each((item: TileItem<S>) => {
+            if (item.setTileFitProperty) {
+                item.setTileFitProperty(tileFitProperty);
             }
         });
     }
@@ -433,21 +455,6 @@ export default abstract class Tile<
         return this._$itemsContainerPadding?.right;
     }
 
-    getInvisibleClasses(): string {
-        let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()}`;
-        classes += ` controls-TileView__item_spacingLeft_${this.getLeftPadding()}_theme-${this.getTheme()}`;
-        classes += ` controls-TileView__item_spacingRight_${this.getRightPadding()}_theme-${this.getTheme()}`;
-        classes += ` controls-TileView__item_spacingTop_${this.getTopPadding()}_theme-${this.getTheme()}`;
-        classes += ` controls-TileView__item_spacingBottom_${this.getBottomPadding()}_theme-${this.getTheme()}`;
-        classes += ' controls-TileView__item_invisible';
-        return classes;
-    }
-
-    getInvisibleStyles(templateWidth?: number): string {
-        const width = templateWidth || this.getTileWidth();
-        return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
-    }
-
     protected _createPositionInBounds(
         left: number,
         top: number,
@@ -514,6 +521,7 @@ Object.assign(Tile.prototype, {
     _$imageUrlResolver: null,
     _$tileScalingMode: 'none',
     _$tileWidthProperty: '',
+    _$tileFitProperty: '',
     _$itemsContainerPadding: null,
     _$roundBorder: null,
     _hoveredItem: null

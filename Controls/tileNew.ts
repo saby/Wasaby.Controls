@@ -24,6 +24,10 @@ import {getImageUrl, getImageSize, getImageClasses, getImageRestrictions, getIte
 
 import TileCollection from 'Controls/_tileNew/display/TileCollection';
 import TileCollectionItem from 'Controls/_tileNew/display/TileCollectionItem';
+import InvisibleTileItem from 'Controls/_tileNew/display/InvisibleTileItem';
+import Tile from 'Controls/_tileNew/display/mixins/Tile';
+import TileItem from 'Controls/_tileNew/display/mixins/TileItem';
+import InvisibleStrategy from 'Controls/_tileNew/display/strategies/Invisible';
 
 export {
     View,
@@ -36,6 +40,10 @@ export {
     ActionsMenu,
     TileCollection,
     TileCollectionItem,
+    Tile as TileMixin,
+    TileItem as TileItemMixin,
+    InvisibleTileItem,
+    InvisibleStrategy,
     getImageUrl,
     getImageSize,
     getImageClasses,
@@ -45,3 +53,4 @@ export {
 
 register('Controls/tileNew:TileCollection', TileCollection, {instantiate: false});
 register('Controls/tileNew:TileCollectionItem', TileCollectionItem, {instantiate: false});
+register('Controls/tileNew:InvisibleTileItem', InvisibleTileItem, {instantiate: false});
