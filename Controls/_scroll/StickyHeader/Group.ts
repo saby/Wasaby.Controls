@@ -147,6 +147,12 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     }
 
+    setFixedPosition(position: string): void {
+        for (const id in this._headers) {
+            this._headers[id].inst.setFixedPosition(position);
+        }
+    }
+
     protected _fixedHandler(event: SyntheticEvent<Event>, fixedHeaderData: IFixedEventData): void {
         event.stopImmediatePropagation();
         if (!fixedHeaderData.isFakeFixed) {

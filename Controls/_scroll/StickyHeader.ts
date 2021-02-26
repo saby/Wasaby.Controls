@@ -196,7 +196,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _afterUpdate(oldOptions: IStickyHeaderOptions): void {
-        if (oldOptions.mode === MODE.notsticky && this._options.mode !== MODE.notsticky) {
+        if (oldOptions.mode === MODE.notsticky && this._isStickyEnabled(this._options)) {
             this._register();
             this._init();
         }
@@ -221,6 +221,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     _init(): void {
+        if (this._model) {
+            return;
+        }
         this._updateComputedStyle();
 
         // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
@@ -459,6 +462,23 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
             if (this._canScroll && this._initialized) {
                 this._updateStyles(this._options);
+            }
+        }
+    }
+
+    setFixedPosition(position: string) {
+        this._init();
+
+        const fixedPosition: POSITION = this._model.fixedPosition;
+        this._model.fixedPosition = position;
+
+        if (this._model.fixedPosition !== fixedPosition) {
+            this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
+            this._updateStyles(this._options);
+            if (this._isBottomShadowVisible) {
+                fastUpdate.mutate(() => {
+                    this._children.shadowBottom.classList.remove(this._isMobileIOS ? 'ws-invisible' : 'ws-hidden');
+                });
             }
         }
     }
