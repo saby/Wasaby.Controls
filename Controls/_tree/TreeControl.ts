@@ -525,13 +525,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         super._beforeMount(...args);
         const options = args[0];
         this._initKeyProperty(options);
-        if (options.markerMoveMode === 'leaves') {
 
-            // TODO: отрефакторить после наследования (TreeControl <- BaseControl)
-            this._beforeMountCallback = ({viewModel, markerController}) => {
-               
-            };
-        }
         if (options.sourceController) {
             // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
             //  и на списке и на Browser'e
@@ -551,31 +545,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (this._expandedItemsToNotify) {
             this._notify('expandedItemsChanged', [this._expandedItemsToNotify]);
             this._expandedItemsToNotify = null;
-        }
-    }
-
-    protected _onItemsReady(options, items) {
-        super._onItemsReady(options, items);
-        if (options.markerMoveMode === 'leaves' && !this._modeLeavesInitialized) {
-            this._modeLeavesInitialized = true;
-            const model = this._listViewModel;
-            const current = items.getRecordById(this._options.markedKey) || items.at(0);
-            if (current) {
-                if (current.get(this._options.nodeProperty) !== null) {
-                    this._tempItem = current.getKey();
-                    this._currentItem = this._tempItem;
-                    this._doAfterItemExpanded = (itemKey) => {
-                        this._doAfterItemExpanded = null;
-                        this._applyMarkedLeaf(itemKey, model, markerController);
-                    };
-                    this._expandedItemsToNotify = this._expandToFirstLeaf(this._tempItem, items, model);
-                    if (this._expandedItemsToNotify) {
-                        model.setExpandedItems(this._expandedItemsToNotify);
-                    }
-                } else {
-                    this._applyMarkedLeaf(current.getKey(), model, markerController);
-                }
-            }
         }
     }
 
@@ -971,12 +940,32 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     }
                 });
             }
-        }
 
         // После релоад разворачиваем узлы до первого leaf и ставим на него маркер
         if (options.markerMoveMode === 'leaves') {
-            this.goToNext();
-        }
+            if (options.markerMoveMode === 'leaves') {
+                const markerController = this.getMarkerController();
+                const model = this._listViewModel;
+                const current = loadedList.getRecordById(options.markedKey) || loadedList.at(0);
+                if (current) {
+                    if (current.get(options.nodeProperty) !== null) {
+                        this._tempItem = current.getKey();
+                        this._currentItem = this._tempItem;
+                        this._doAfterItemExpanded = (itemKey) => {
+                            this._doAfterItemExpanded = null;
+                            this._applyMarkedLeaf(itemKey, model, markerController);
+                        };
+                        this._expandedItemsToNotify = this._expandToFirstLeaf(this._tempItem, loadedList, options);
+                        if (this._expandedItemsToNotify) {
+                            model.setExpandedItems(this._expandedItemsToNotify);
+                        }
+                    } else {
+                        this._applyMarkedLeaf(current.getKey(), model, markerController);
+                    }
+                }
+            }
+        } 
+    }
         // reset deepReload after loading data (see reload method or constructor)
         this._deepReload = false;
     }
@@ -1055,17 +1044,17 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
-    private _expandToFirstLeaf(key: CrudEntityKey, items, listModel?): CrudEntityKey[] {
+    private _expandToFirstLeaf(key: CrudEntityKey, items, options): CrudEntityKey[] {
         if (items.getCount()) {
-            const model = listModel || this._listViewModel;
+            const model = this._listViewModel;
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
-            while (curItem && curItem.get(this._options.nodeProperty) !== null) {
-                expanded.push(curItem.get(this._options.keyProperty));
+            while (curItem && curItem.get(options.nodeProperty) !== null) {
+                expanded.push(curItem.get(options.keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }
             if (curItem && this._doAfterItemExpanded) {
-                this._doAfterItemExpanded(curItem.get(this._options.keyProperty));
+                this._doAfterItemExpanded(curItem.get(options.keyProperty));
             }
             return expanded;
         }
@@ -1147,11 +1136,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                         const expandResult = this.toggleExpanded(itemKey);
                         if (expandResult instanceof Promise) {
                             expandResult.then(() => {
-                                this._expandToFirstLeaf(itemKey, model.getItems(), model);
+                                this._expandToFirstLeaf(itemKey, model.getItems(), this._options);
                                 resolve();
                             });
                         } else {
-                            this._expandToFirstLeaf(itemKey, model.getItems(), model);
+                            this._expandToFirstLeaf(itemKey, model.getItems(), this._options);
                             resolve();
                         }
                     }
@@ -1181,7 +1170,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         // TODO: отрефакторить после наследования (TreeControl <- BaseControl) Нужно вызывать BaseControl._private::changeMarkedKey
         if (markerController.getMarkedKey() !== this._currentItem) {
             markerController.setMarkedKey(this._currentItem);
-            this._notify('markedKeyChanged', [this._currentItem]);
+            if (this._isMounted) {
+                this._notify('markedKeyChanged', [this._currentItem]);
+            }
         }
 
         this._tempItem = null;

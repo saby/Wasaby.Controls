@@ -24,7 +24,7 @@ export interface IColumnsControlOptions extends IBaseControlOptions {
 export default class ColumnsControl<TOptions extends IColumnsControlOptions = IColumnsControlOptions> extends BaseControl<TOptions> {
     private _columnsCount: number;
     private _spacing: number = SPACING;
-    protected _model: Collection<Model>;
+    protected _listViewModel: Collection<Model>;
 
     protected _afterMount(): void {
         super._afterMount();
@@ -49,7 +49,7 @@ export default class ColumnsControl<TOptions extends IColumnsControlOptions = IC
         super._beforeUpdate(options);
         if (options.columnsMode === 'fixed' && options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
-            this._model.setColumnsCount(this._columnsCount);
+            this._listViewModel.setColumnsCount(this._columnsCount);
         } else {
             this._resizeHandler();
         }
@@ -82,12 +82,12 @@ export default class ColumnsControl<TOptions extends IColumnsControlOptions = IC
         const newColumnsCount = Math.floor(width / ((columnMinWidth || DEFAULT_MIN_WIDTH) + this._spacing));
         if (newColumnsCount !== this._columnsCount) {
             this._columnsCount = newColumnsCount;
-            this._model.setColumnsCount(this._columnsCount);
+            this._listViewModel.setColumnsCount(this._columnsCount);
         }
     }
 
     private moveMarker(direction: string): void {
-        const model = this._model;
+        const model = this._listViewModel;
         if (model && this._markerController) {
             const curMarkedItem = model.find((item) => item.isMarked());
             let newMarkedItem: CollectionItem<Model>;

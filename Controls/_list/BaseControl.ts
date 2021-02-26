@@ -3279,7 +3279,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     // расстояние, на которое поднят верхний триггер, если _attachLoadTopTriggerToNull === true
     _attachedToNullLoadTopTriggerOffset = ATTACHED_TO_NULL_LOAD_TOP_TRIGGER_OFFSET;
     _hideTopTrigger = false;
-    _listViewModel = null;
+    protected _listViewModel = null;
     _viewModelConstructor = null;
 
     _loadMoreCaption = null;

@@ -25,22 +25,22 @@ export default class Columns extends ListView {
         this._templateKeyPrefix = 'columns-render';
     }
     protected _resizeHandler(): void {
-        this._notify('resize', []);
+        this._notify('controlResize', []);
     }
 
     protected _getItemsContainerStyle(): string {
         const spacing = this._options.listModel.getSpacing();
         const columnsCount = this._options.listModel.getColumnsCount();
-        const minmax = `minmax(${this._options.columnMinWidth + spacing}px, ${this._options.columnMaxWidth  + spacing}px) `;
+        const minmax = `minmax(${this._options.columnMinWidth + spacing}px, ${this._options.columnMaxWidth + spacing}px) `;
         const gridTemplate = minmax.repeat(columnsCount);
-        return  `grid-template-columns: ${gridTemplate};
-                 -ms-grid-columns: ${gridTemplate};`;
+        return `grid-template-columns: ${gridTemplate};
+                -ms-grid-columns: ${gridTemplate};`;
     }
     protected _getMinMaxMidthStyle(min: number, max: number): string {
-        return  `min-width:${min}px; max-width:${max}px; `;
+        return `min-width:${min}px; max-width:${max}px; `;
     }
     protected _getPlaceholderStyle(): string {
-        return  this._getMinMaxMidthStyle(this._options.columnMinWidth, this._options.columnMaxWidth);
+        return this._getMinMaxMidthStyle(this._options.columnMinWidth, this._options.columnMaxWidth);
     }
     protected _getColumnStyle(index: number): string {
         const spacing = this._options.listModel.getSpacing();

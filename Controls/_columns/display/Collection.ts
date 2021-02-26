@@ -82,8 +82,6 @@ export default class Collection<
         return this._$spacing;
     }
 
-    
-
     private updateColumnIndexesByItems(): void {
         this._columnsIndexes = new Array<number[]>(this._$columnsCount);
         for (let i = 0; i < this._$columnsCount; i++) {

@@ -2015,10 +2015,7 @@ define([
             }
          };
          treeControl.getViewModel().setItems(rs, cfg);
-         treeControl._beforeMountCallback({
-            viewModel: treeControl.getViewModel(),
-            markerController: treeControl.getMarkerController()
-         });
+         treeControl._afterReloadCallback(cfg, rs);
          treeControl._afterMount();
          assert.equal(treeControl._markedLeaf, 'last');
          await treeControl.goToPrev();
