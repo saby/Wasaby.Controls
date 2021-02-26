@@ -14,6 +14,7 @@ import 'Controls/form';
 import {Logger} from 'UI/Utils';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {IFilterDetailPanelOptions, THistorySaveMode} from 'Controls/_filterPopup/interface/IFilterPanel';
+import 'css!Controls/filterPopup';
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 const setPropValue = Utils.object.setPropertyValue.bind(Utils);
@@ -343,8 +344,6 @@ class FilterPanel extends Control<IFilterDetailPanelOptions, RecordSet | List<IF
       });
       return items;
    }
-
-   static _theme: string[] = ['Controls/filterPopup'];
 
    static getDefaultOptions(): IFilterDetailPanelOptions {
       return {

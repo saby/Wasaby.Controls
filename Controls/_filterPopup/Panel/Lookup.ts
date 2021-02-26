@@ -5,6 +5,7 @@ import {Logger} from 'UI/Utils';
 import {IPopupOptions} from 'Controls/popup';
 import {ILookupOptions, Input} from 'Controls/lookup';
 import {Register} from 'Controls/event';
+import 'css!Controls/filterPopup';
 
 type TKey = string|number|null;
 
@@ -147,8 +148,6 @@ class Lookup extends Control<IFilterPanelLookupOptions> {
 
       return caption;
    }
-
-   static _theme: string[] = ['Controls/filterPopup'];
 
    static getDefaultOptions(): Partial<IFilterPanelLookupOptions> {
       return {

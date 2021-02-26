@@ -7,6 +7,7 @@ import {Confirmation} from 'Controls/popup';
 import {IFilterItem} from 'Controls/filter';
 import * as Clone from 'Core/core-clone';
 import DialogTemplate = require('wml!Controls/_filterPopup/History/_Favorite/EditDialog');
+import 'css!Controls/filterPopup';
 
 export interface IEditDialogResult {
     action: string;
@@ -139,8 +140,6 @@ class EditDialog extends Control<IEditDialogOptions> {
             isClient: false
         };
     }
-
-    static _theme: string[] = ['Controls/filterPopup', 'Controls/Classes'];
 }
 
 Object.defineProperty(EditDialog, 'defaultProps', {
