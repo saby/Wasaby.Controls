@@ -1,8 +1,9 @@
-import TileCollectionItem, { IOptions } from './TileCollectionItem';
+import TileCollectionItem from './TileCollectionItem';
 import {Model} from 'Types/entity';
 import { Collection, ItemsFactory } from 'Controls/display';
 import Tile from 'Controls/_tileNew/display/mixins/Tile';
 import { mixin } from 'Types/util';
+import {IOptions} from 'Controls/_tileNew/display/mixins/TileItem';
 
 export default class TileCollection<
     S extends Model = Model,

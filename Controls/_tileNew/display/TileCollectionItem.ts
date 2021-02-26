@@ -4,7 +4,8 @@ import { mixin } from 'Types/util';
 import TileItem from 'Controls/_tileNew/display/mixins/TileItem';
 
 export default class TileCollectionItem<T extends Model = Model>
-    extends mixin<CollectionItem<T>, TileItem<T>>(CollectionItem, TileItem) {
+    extends mixin<CollectionItem, TileItem>(CollectionItem, TileItem) {
+
     setActive(active: boolean, silent?: boolean): void {
         // TODO This is copied from TileViewModel, but there must be a better
         // place for it. For example, somewhere in ItemActions container

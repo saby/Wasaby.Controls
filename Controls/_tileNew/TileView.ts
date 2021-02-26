@@ -326,7 +326,7 @@ var TileView = ListView.extend({
         const theme = `_theme-${this._options.theme}`;
         let classes = 'controls-TileView__itemPaddingContainer ';
 
-        if (this.getCount()) {
+        if (this._listModel.getCount()) {
             if (this._options.itemsContainerPadding) {
                 classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this._options.itemsContainerPadding?.left}_itemPadding_${this._options.leftPadding}${theme}`;
                 classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this._options.itemsContainerPadding?.right}_itemPadding_${this._options.rightPadding}${theme}`;

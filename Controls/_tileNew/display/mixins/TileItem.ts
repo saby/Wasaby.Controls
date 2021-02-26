@@ -1,11 +1,13 @@
-import {Model} from 'Types/entity';
-import {ICollectionItemOptions} from 'Controls/display';
-import {object} from 'Types/util';
-import {getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tileNew/utils/imageUtil';
 import {TemplateFunction} from 'UI/Base';
-import ImageTemplate from 'wml!Controls/_tileNew/render/Image';
+import {Model} from 'Types/entity';
+import {object} from 'Types/util';
 import {isEqual} from 'Types/object';
-import Tile, {DEFAULT_COMPRESSION_COEFF, DEFAULT_SCALE_COEFFICIENT, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, IRoundBorder } from './Tile';
+import {ICollectionItemOptions} from 'Controls/display';
+import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tileNew/utils/imageUtil';
+import * as ImageTemplate from 'wml!Controls/_tileNew/render/Image';
+import Tile, {
+    DEFAULT_COMPRESSION_COEFF, DEFAULT_SCALE_COEFFICIENT, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, IRoundBorder
+} from './Tile';
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 
