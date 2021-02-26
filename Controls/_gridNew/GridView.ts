@@ -5,7 +5,7 @@ import { Logger} from 'UI/Utils';
 import { GridCollection, GridRow, GridLadderUtil, GridLayoutUtil, isFullGridSupport } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
-import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
+import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupCellContentWithRightTemplate';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';

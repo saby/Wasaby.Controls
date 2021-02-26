@@ -21,7 +21,7 @@ ItemTemplate.isWasabyTemplate = true;
 
 import * as ColumnTemplate from 'wml!Controls/_gridNew/Render/CellContent';
 import * as StickyLadderColumnTemplate from 'wml!Controls/_gridNew/Render/grid/StickyLadderColumn';
-import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
+import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupCellContentWithRightTemplate';
 import * as HeaderContent from 'wml!Controls/_gridNew/Render/HeaderCellContent';
 import * as ResultColumnTemplate from 'wml!Controls/_gridNew/Render/ResultsCellContent';
 import * as ResultsTemplate from 'wml!Controls/_gridNew/Render/ResultsCellContent';
@@ -66,6 +66,7 @@ import {
 } from 'Controls/_gridNew/display/Collection';
 export { default as GridMixin, TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from 'Controls/_gridNew/display/mixins/Grid';
 export { default as GridRowMixin } from 'Controls/_gridNew/display/mixins/Row';
+export { default as GridGroupCellMixin } from 'Controls/_gridNew/display/mixins/GroupCell';
 export { IItemTemplateParams } from 'Controls/_gridNew/display/mixins/Row';
 
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_gridNew/display/Row';
@@ -91,7 +92,7 @@ import GridResultsCell, {IOptions as IGridResultsCellOptions} from 'Controls/_gr
 
 import GridFooterRow, {IOptions as IGridFooterRowOptions} from 'Controls/_gridNew/display/FooterRow';
 import GridFooterCell, {IOptions as IGridFooterCellOptions} from 'Controls/_gridNew/display/FooterCell';
-import GridGroupItem, {IOptions as IGridGroupItemOptions} from 'Controls/_gridNew/display/GroupItem';
+import GridGroupRow, {IOptions as IGridGroupRowOptions} from 'Controls/_gridNew/display/GroupRow';
 import GridGroupCell, {IOptions as IGridGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
 
 import { IDisplaySearchValueOptions, IDisplaySearchValue } from 'Controls/_gridNew/display/interface/IDisplaySearchValue';
@@ -111,6 +112,8 @@ register('Controls/gridNew:GridDataCell', GridDataCell, {instantiate: false});
 register('Controls/gridNew:GridFooterCell', GridFooterCell, {instantiate: false});
 register('Controls/gridNew:GridResultsCell', GridResultsCell, {instantiate: false});
 register('Controls/display:GridGroupCell', GridGroupCell, {instantiate: false});
+register('Controls/gridNew:GridGroupCell', GridGroupCell, {instantiate: false});
+register('Controls/gridNew:GridGroupRow', GridGroupRow, {instantiate: false});
 
 export {
     GridCollection, IGridCollectionOptions,
@@ -130,7 +133,7 @@ export {
     GridResultsCell, IGridResultsCellOptions,
     GridFooterRow, IGridFooterRowOptions,
     GridFooterCell, IGridFooterCellOptions,
-    GridGroupItem, IGridGroupItemOptions,
+    GridGroupRow, IGridGroupRowOptions,
     GridGroupCell, IGridGroupCellOptions,
     IDisplaySearchValueOptions, IDisplaySearchValue
 };

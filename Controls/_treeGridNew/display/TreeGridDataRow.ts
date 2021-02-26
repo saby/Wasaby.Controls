@@ -1,5 +1,5 @@
 import { mixin } from 'Types/util';
-import { ITreeItemOptions, TreeItem, IItemPadding, TMarkerClassName } from 'Controls/display';
+import { ITreeItemOptions, TreeItem, IItemPadding, TMarkerClassName, IGroupNode } from 'Controls/display';
 import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, GridItemActionsCell } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn } from 'Controls/interface';
@@ -10,7 +10,7 @@ export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItem
 }
 
 export default class TreeGridDataRow<T extends Model>
-   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue {
+   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
@@ -106,7 +106,7 @@ export default class TreeGridDataRow<T extends Model>
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
             searchValue: this._$searchValue
-        }
+        };
     }
 
     setSearchValue(searchValue: string): void {
@@ -139,7 +139,17 @@ export default class TreeGridDataRow<T extends Model>
         }
     }
 
+    // Убираем ExpanderPadding для подуровней TreeGridGroupRow
+    shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
+        const should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
+        return should && (this._$parent.isRoot() || !(this._$parent as TreeGridDataRow<T>).isGroupNode());
+    }
+
     // endregion overrides
+
+    isGroupNode(): boolean {
+        return false;
+    }
 }
 
 Object.assign(TreeGridDataRow.prototype, {

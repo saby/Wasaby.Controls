@@ -19,6 +19,7 @@ import IMarkable, {TMarkerClassName} from './interface/IMarkable';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
 import Collection from 'Controls/_display/Collection';
+import IItemActionsItem from './interface/IItemActionsItem';
 
 export interface IOptions<T extends Model = Model> {
     itemModule: string;
@@ -79,7 +80,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     InstantiableMixin,
     SerializableMixin,
     ItemCompatibilityListViewModel
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable {
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable, IItemActionsItem {
 
     // region IInstantiable
 
@@ -87,6 +88,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly DraggableItem: boolean = true;
+    readonly ItemActionsItem: boolean = true;
     private _$editingColumnIndex: number;
 
     getInstanceId: () => string;

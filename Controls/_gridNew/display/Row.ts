@@ -25,6 +25,7 @@ export default class Row<T>
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly DraggableItem: boolean = false;
+    readonly ItemActionsItem: boolean = false;
 
     constructor(options?: IOptions<T>) {
         super(options);

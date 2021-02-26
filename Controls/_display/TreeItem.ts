@@ -8,6 +8,7 @@ import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
 import { TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
+import IGroupNode from './interface/IGroupNode';
 
 export interface IOptions<T extends Model> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -36,7 +37,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     >(
     CollectionItem,
     ExpandableMixin
-) {
+) implements IGroupNode {
     protected _$owner: Tree<T>;
 
     /**
@@ -169,6 +170,13 @@ export default class TreeItem<T extends Model = Model> extends mixin<
      */
     setNode(node: boolean|null): void {
         this._$node = node;
+    }
+
+    /**
+     * Возвращает признак, является ли элемент узлом-группой
+     */
+    isGroupNode(): boolean {
+        return false;
     }
 
     /**

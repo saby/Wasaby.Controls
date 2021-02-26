@@ -28,6 +28,7 @@ export default class DataRow<T extends Model> extends Row<T> implements
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly DraggableItem: boolean = true;
+    readonly ItemActionsItem: boolean = true;
     private _$editingColumnIndex: number;
     protected _$hasStickyGroup: boolean;
 
