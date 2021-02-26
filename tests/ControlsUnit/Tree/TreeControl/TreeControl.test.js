@@ -456,12 +456,14 @@ define([
                       id: 'leaf',
                       parent: 'node',
                       nodeType: null,
+                      hasChildren: false
                    },
 
                    {
                       id: 'node',
                       parent: null,
                       nodeType: true,
+                      hasChildren: false
                    }
                 ],
                 filter: function() {
@@ -472,6 +474,7 @@ define([
             columns: [],
             parentProperty: 'parent',
             nodeProperty: 'nodeType',
+            hasChildrenProperty: 'hasChildren',
             source: source
          };
 

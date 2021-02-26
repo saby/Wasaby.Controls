@@ -247,9 +247,10 @@ const _private = {
         // загружаем узел только если:
         // 1. он не был загружен ранее (проверяем через sourceController, была ли выполнена загрузка)
         // 2. у него вообще есть дочерние элементы (по значению поля hasChildrenProperty)
-        const items = self._listViewModel.getCollection();
+        const viewModel = self.getViewModel();
+        const items = viewModel.getCollection();
         const isAlreadyLoaded = self.getSourceController().hasLoaded(nodeKey) ||
-                                self._listViewModel.getHasMoreStorage().hasOwnProperty(nodeKey);
+                                viewModel.getHasMoreStorage().hasOwnProperty(nodeKey);
 
         if (isAlreadyLoaded) {
             return false;
@@ -569,7 +570,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
-    protected _updateListModel(newOptions): void {
+    protected _updateTreeControlModel(newOptions): void {
         const viewModel = this.getViewModel();
 
         if (!viewModel) {
@@ -675,7 +676,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             updateSourceController = true;
         }
 
-        this._updateListModel(newOptions);
+        this._updateTreeControlModel(newOptions);
 
         if (sourceController) {
             const sourceControllerState = sourceController.getState();
@@ -715,8 +716,12 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         return _private.toggleExpanded(this, item, model);
     }
 
-    protected _onLoadMoreClick(e, dispItem) {
-        _private.loadMore(this, dispItem);
+    protected _loadMore(e, dispItem?): void {
+        if (dispItem) {
+            _private.loadMore(this, dispItem);
+        } else {
+            super._loadMore(e);
+        }
     }
 
     private _onExpandedItemsChanged(e, expandedItems): void {

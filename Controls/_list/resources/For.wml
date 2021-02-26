@@ -73,9 +73,9 @@
     <!-- В записи подвал не вывести, т.к. редатируемая строка оборачивается в контрол. Контрол может принять только один корневой элемент. -->
     <ws:if data="{{ nodeFooters && nodeFooters.length > 0 }}">
         <ws:partial template="wml!Controls/_treeGrid/TreeGridView/layout/common/NodeFooterChooser"
-                    useNewNodeFooters="{{ useNewNodeFooters }}"
+                    useNewNodeFooters="{{ itemData.useNewNodeFooters }}"
                     nodeFooters="{{ nodeFooters }}"
-                    moreFontColorStyle="{{_options.moreFontColorStyle}}"/>
+                    moreFontColorStyle="{{ itemData.moreFontColorStyle }}"/>
     </ws:if>
 </ws:template>
 

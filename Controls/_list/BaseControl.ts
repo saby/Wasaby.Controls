@@ -3726,9 +3726,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             _private.loadToDirectionIfNeed(this, direction, this._options.filter);
         }
     }
-    _loadMore(event, direction): void {
-        this.loadMore(direction);
-    }
 
     triggerVisibilityChangedHandler(direction: IDirection, state: boolean): void {
         this._loadTriggerVisibility[direction] = state;
@@ -3917,7 +3914,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
     }
 
-    _updateListModel(newOptions): void {
+    _updateBaseControlModel(newOptions): void {
         // Не нужно обновлять модель, если она была пересоздана или не создана вообще
         if (this._modelRecreated || !this._listViewModel) {
             return;
@@ -4341,7 +4338,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         this._spaceBlocked = false;
 
-        this._updateListModel(newOptions);
+        this._updateBaseControlModel(newOptions);
     }
 
     reloadItem(key: string, readMeta: object, replaceItem: boolean, reloadType: string = 'read'): Promise<Model> {
@@ -5713,7 +5710,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         _private.startDragNDrop(this, this._savedItemMouseDownEventArgs.domEvent, this._savedItemMouseDownEventArgs.itemData);
     }
 
-    _onLoadMoreClick(e, dispItem) {}
+    protected _loadMore(e): void {
+        _private.loadToDirectionIfNeed(this, 'down');
+    }
 
     _onCutClick() {
         if (!this._expanded) {
@@ -5812,7 +5811,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     _onViewKeyDown(event) {
         // Если фокус выше ColumnsView, то событие не долетит до нужного обработчика, и будет сразу обработано BaseControl'ом
         // передаю keyDownHandler, чтобы обработать событие независимо от положения фокуса.
-        const handlerResult = this._options._keyDownHandler && this._options._keyDownHandler(event);
+        const handlerResult = this._keyDownHandler && this._keyDownHandler(event);
         if (!_private.isBlockedForLoading(this._loadingIndicatorState) && (handlerResult !== false)) {
             const key = event.nativeEvent.keyCode;
             const dontStop = key === 17 // Ctrl
@@ -5825,6 +5824,8 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             EventUtils.keysHandler(event, HOT_KEYS, _private, this, dontStop);
         }
     }
+
+    protected _keyDownHandler(event): boolean | void {}
 
     _getViewClasses(addShowActionsClass: boolean, addHoverEnabledClass: boolean, uniqueId: string): string  {
         const classes: string[] = [];
@@ -5856,7 +5857,11 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             this._unprocessedDragEnteredItem = itemData;
             this._processItemMouseEnterWithDragNDrop(itemData);
         }
-        if (!itemData['[Controls/_display/GroupItem]'] && !itemData['[Controls/_display/SearchSeparator]']) {
+        // TODO Перевести на интерфейс I[какая то сущьность с поддуржкой экшенов]
+        //  https://online.sbis.ru/opendoc.html?guid=09821b73-685b-43ae-acd2-f7af6c74627d
+        if (!itemData['[Controls/treeGrid:TreeGridNodeFooterRow]'] &&
+            !itemData['[Controls/_display/GroupItem]'] &&
+            !itemData['[Controls/_display/SearchSeparator]']) {
             const itemKey = _private.getPlainItemContents(itemData).getKey();
             const itemIndex = this._listViewModel.getIndex(itemData.dispItem || itemData);
 

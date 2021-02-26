@@ -1,4 +1,0 @@
-<Controls.list:BaseControl
-        _keyDownHandler="{{_keyDownHandler}}"
->
-</Controls.list:BaseControl>

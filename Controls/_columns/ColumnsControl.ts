@@ -22,16 +22,10 @@ export interface IColumnsControlOptions extends IBaseControlOptions {
 }
 
 export default class ColumnsControl<TOptions extends IColumnsControlOptions = IColumnsControlOptions> extends BaseControl<TOptions> {
-    private _keyDownHandler: Function;
     private _columnsCount: number;
     private _columnsController: ColumnsController;
     private _spacing: number = SPACING;
     protected _model: Collection<Model>;
-
-    constructor(options: TOptions) {
-        super(options);
-        this._keyDownHandler = this._keyDownHandler.bind(this);
-    }
 
     protected _beforeMount(options: TOptions): void {
         this._columnsController = new ColumnsController({columnsMode: options.columnsMode});

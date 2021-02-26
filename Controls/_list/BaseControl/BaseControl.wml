@@ -152,7 +152,6 @@
                 on:saveScrollPosition="_stopBubblingEvent()"
                 on:restoreScrollPosition="_stopBubblingEvent()"
                 on:loadMore="_loadMore()"
-                on:loadMoreClick="_onLoadMoreClick()"
         >
             <ws:itemActionsTemplate>
                 <ws:partial
