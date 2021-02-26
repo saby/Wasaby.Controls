@@ -1,0 +1,42 @@
+<ws:partial template="wml!Controls/_tileNew/render/items/Default"
+            titleStyle="none"
+            hasTitle="{{false}}"
+            itemActionsPosition="custom"
+            highlightOnHover="{{false}}"
+            scope="{{_options}}"
+            itemType="preview">
+   <ws:contentTemplate>
+      <div class="controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-{{_options.theme}}">
+         <ws:partial template="{{ (item || itemData).getImageTemplate() }}"
+                     scope="{{_options}}">
+            <ws:topTemplate>
+               <ws:partial template="{{topTemplate}}"
+                           itemData="{{(item || itemData)}}"
+                           item="{{(item || itemData)}}"
+                           attr:class="controls-TileView__previewTemplate_topTemplate"/>
+            </ws:topTemplate>
+            <ws:bottomRightTemplate>
+               <ws:if data="{{bottomRightTemplate}}">
+                  <ws:partial template="{{bottomRightTemplate}}"
+                              attr:class="controls-TileView__previewTemplate_bottomRightTemplate controls-TileView__previewTemplate_bottomRightTemplate_theme-{{_options.theme}}"
+                              itemData="{{(item || itemData)}}"
+                              item="{{(item || itemData)}}"/>
+               </ws:if>
+            </ws:bottomRightTemplate>
+         </ws:partial>
+         <ws:partial template="wml!Controls/_tileNew/render/Content" scope="{{_options}}"/>
+      </div>
+   </ws:contentTemplate>
+   <ws:itemActionsTemplate>
+      <ws:partial template="Controls/_tileNew/itemActions/Control" item="{{(item || itemData)}}" itemData="{{(item || itemData)}}">
+         <ws:partial template="{{itemActionsTemplate}}"
+                     actionPadding="{{ (item || itemData).getActionPadding(itemType) }}"
+                     actionStyle="{{!titleStyle || titleStyle === 'light' ? 'tileLight' : 'tileDark'}}"
+                     iconStyle="{{!titleStyle || titleStyle === 'light' ? 'contrast' : 'tileDark'}}"
+                     actionMode="{{ (item || itemData).getActionMode(itemType) }}"
+                     highlightOnHover="{{false}}"
+                     itemData="{{(item || itemData)}}"
+                     item="{{(item || itemData)}}"/>
+      </ws:partial>
+   </ws:itemActionsTemplate>
+</ws:partial>
