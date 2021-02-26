@@ -1,4 +1,4 @@
-import {default as NewSourceController} from 'Controls/_dataSource/Controller';
+import {default as NewSourceController, IControllerOptions} from 'Controls/_dataSource/Controller';
 import {IFilterItem, ControllerClass as FilterController, IFilterControllerOptions} from 'Controls/filter';
 import {
     ISourceOptions,
@@ -14,8 +14,13 @@ import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
 import {Logger} from 'UI/Utils';
 import {loadSavedConfig} from 'Controls/Application/SettingsController';
 import {loadAsync, loadSync, isLoaded} from 'WasabyLoader/ModulesLoader';
+import {Guid} from 'Types/entity';
+import {mixin} from 'Types/util';
+import {SerializableMixin} from 'Types/entity';
+import {ControllerClass as SearchController} from 'Controls/search';
+import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 
-const FILTER_PARAMS_LOAD_TIMEOUT = 1000;
+const FILTER_PARAMS_LOAD_TIMEOUT = 10000;
 
 interface IFilterHistoryLoaderResult {
     filterButtonSource: IFilterItem[];
@@ -31,6 +36,7 @@ export interface ILoadDataConfig extends
     IBaseLoadDataConfig,
     ISourceOptions,
     INavigationOptions<INavigationSourceConfig> {
+    id?: string;
     type?: 'list';
     sorting?: TSortingOptionValue;
     filter?: TFilter;
@@ -47,6 +53,9 @@ export interface ILoadDataConfig extends
     searchValue?: string;
     filterHistoryLoader?: (filterButtonSource: object[], historyId: string) => Promise<IFilterHistoryLoaderResult>;
     error?: Error;
+    historySaveCallback?: (historyData: Record<string, unknown>, filterButtonItems: IFilterItem[]) => void;
+    minSearchLength?: number;
+    searchDelay?: number;
 }
 
 export interface ILoadDataCustomConfig extends IBaseLoadDataConfig {
@@ -54,12 +63,19 @@ export interface ILoadDataCustomConfig extends IBaseLoadDataConfig {
     loadDataMethod: Function;
 }
 
+export interface IDataLoaderOptions {
+    loadDataConfigs?: ILoadDataConfig[];
+}
+
 export interface ILoadDataResult extends ILoadDataConfig {
     data: RecordSet;
     error: Error;
     sourceController: NewSourceController;
     filterController?: FilterController;
+    searchController?: SearchController;
 }
+
+type TLoadedConfigs = Map<string, ILoadDataResult|ILoadDataConfig>;
 
 function isNeedPrepareFilter(loadDataConfig: ILoadDataConfig): boolean {
     return !!loadDataConfig.filterButtonSource;
@@ -68,6 +84,10 @@ function isNeedPrepareFilter(loadDataConfig: ILoadDataConfig): boolean {
 function getFilterController(options: IFilterControllerOptions): FilterController {
     const controllerClass = loadSync<typeof import('Controls/filter')>('Controls/filter').ControllerClass;
     return new controllerClass(options);
+}
+
+function getSourceController(options: IControllerOptions): NewSourceController {
+    return new NewSourceController(options);
 }
 
 function getFilterControllerWithHistoryFromLoader(loadConfig: ILoadDataConfig): Promise<FilterController> {
@@ -86,6 +106,22 @@ function getFilterControllerWithFilterHistory(loadConfig: ILoadDataConfig): Prom
         controller.setFilterItems(historyItems);
         return controller;
     });
+}
+
+function getLoadResult(
+    loadConfig: ILoadDataConfig,
+    sourceController: NewSourceController,
+    filterController: FilterController
+): ILoadDataResult {
+    return {
+        ...loadConfig,
+        sourceController,
+        filterController,
+        data: sourceController.getItems(),
+        error: sourceController.getLoadError(),
+        filter: sourceController.getFilter(),
+        sorting:  sourceController.getSorting() as TSortingOptionValue
+    };
 }
 
 function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult> {
@@ -116,8 +152,6 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
         filterPromise = wrapTimeout(filterPromise, FILTER_PARAMS_LOAD_TIMEOUT).catch(() => {
             Logger.info('Controls/dataSource:loadData: Данные фильтрации не загрузились за 1 секунду');
         });
-    } else {
-        filterController = getFilterController(loadConfig as IFilterControllerOptions);
     }
 
     if (loadConfig.propStorageId) {
@@ -132,30 +166,48 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
         sortingPromise
     ]).then(([filterPromiseResult, sortingPromiseResult]: [TFilter, ISortingOptions]) => {
         const sorting = sortingPromiseResult ? sortingPromiseResult.sorting : loadConfig.sorting;
-        const sourceController = new NewSourceController({
+        const sourceController = getSourceController({
             ...loadConfig,
             sorting,
             filter: filterController ? filterController.getFilter() : loadConfig.filter
         });
 
         return new Promise((resolve) => {
-            sourceController.load().finally(() => {
-                const loadResult = {
-                    sourceController,
-                    data: sourceController.getItems(),
-                    error: sourceController.getLoadError(),
-                    filter: sourceController.getFilter(),
-                    sorting,
-                    navigation: loadConfig.navigation
-                };
-                resolve({...loadConfig, ...loadResult});
-            });
+            if (loadConfig.source) {
+                sourceController.load().finally(() => {
+                    resolve(getLoadResult(loadConfig, sourceController, filterController));
+                });
+            } else {
+                resolve(getLoadResult(loadConfig, sourceController, filterController));
+            }
         });
     });
 }
 
-export default class DataLoader {
-    load(sourceConfigs: Array<ILoadDataConfig|ILoadDataCustomConfig>): Promise<Array<ILoadDataResult|unknown>> {
+export default class DataLoader extends mixin<SerializableMixin>(SerializableMixin) {
+    private _loadedConfigStorage: TLoadedConfigs = new Map();
+    private _loadDataConfigs: ILoadDataConfig[];
+    private _searchControllerCreatePromise: Promise<SearchController>;
+
+    constructor(options: IDataLoaderOptions = {}) {
+        super();
+        SerializableMixin.call(this);
+        this._loadDataConfigs = options.loadDataConfigs || [];
+        this._fillLoadedConfigStorage(this._loadDataConfigs);
+    }
+
+    load<T extends ILoadDataResult>(
+        sourceConfigs: Array<ILoadDataConfig|ILoadDataCustomConfig> = this._loadDataConfigs
+    ): Promise<T[]> {
+        return Promise.all(this.loadEvery<T>(sourceConfigs)).then((results) => {
+            this._fillLoadedConfigStorage(results);
+            return results;
+        });
+    }
+
+    loadEvery<T extends ILoadDataConfig|ILoadDataCustomConfig>(
+        sourceConfigs: Array<ILoadDataConfig|ILoadDataCustomConfig> = this._loadDataConfigs
+    ): Array<Promise<T>> {
         const loadDataPromises = [];
         let loadPromise;
 
@@ -182,6 +234,87 @@ export default class DataLoader {
             loadDataPromises.push(loadPromise);
         });
 
-        return Promise.all(loadDataPromises);
+        return loadDataPromises;
+    }
+
+    getSourceController(id?: string): NewSourceController {
+        const config = this._getConfig(id);
+        let sourceController;
+
+        if (config.sourceController) {
+            sourceController = config.sourceController;
+        } else {
+            sourceController = config.sourceController = getSourceController(config);
+        }
+        return sourceController;
+    }
+
+    getFilterController(id?: string): FilterController {
+        const config = this._getConfig(id);
+        let filterController;
+
+        if (config.filterController) {
+            filterController = config.filterController;
+        } else if (isLoaded('Controls/filter')) {
+            filterController = config.filterController = getFilterController(config as IFilterControllerOptions);
+        }
+        return filterController;
+    }
+
+    getSearchController(id?: string): Promise<SearchController> {
+        const config = this._getConfig(id);
+        if (!config.searchController) {
+            if (!this._searchControllerCreatePromise) {
+                this._searchControllerCreatePromise = import('Controls/search').then((result) => {
+                    config.searchController = new result.ControllerClass(
+                        {
+                            ...config,
+                            sourceController: this.getSourceController(id)
+                        } as ISearchControllerOptions
+                    );
+
+                    return config.searchController;
+                });
+            }
+            return this._searchControllerCreatePromise;
+        }
+
+        return Promise.resolve(config.searchController);
+    }
+
+    destroy(): void {
+        this._loadedConfigStorage.forEach((config: ILoadDataResult) => {
+            if (config.sourceController) {
+                config.sourceController.destroy();
+            }
+        });
+        this._loadedConfigStorage.clear();
+    }
+
+    private _fillLoadedConfigStorage(
+        data: ILoadDataConfig[]|ILoadDataResult[]
+    ): void {
+        this._loadedConfigStorage.clear();
+        data.forEach((result) => {
+            this._loadedConfigStorage.set(result.id || Guid.create(), result);
+        });
+    }
+
+    private _getConfig(id?: string): ILoadDataResult {
+        let config;
+
+        if (!id) {
+            config = this._loadedConfigStorage.entries().next().value[1];
+        } else if (id) {
+            config = this._loadedConfigStorage.get(id);
+        } else {
+            Logger.error('Controls/dataSource:loadData: ????');
+        }
+
+        return config;
     }
 }
+
+Object.assign(DataLoader.prototype, {
+    _moduleName: 'Controls/dataSource:DataLoader'
+});
