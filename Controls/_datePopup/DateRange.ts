@@ -20,7 +20,6 @@ const _private = {
                 options.ranges.months[0] === 1));
         if (self._position !== options.position) {
             self._position = options.position;
-            self._markedKey = self._dateToId(self._position);
         }
         if (!self._singleDayHover) {
             self._hoveredStartValue = options.hoveredStartValue;
@@ -74,28 +73,23 @@ var Component = BaseControl.extend([EventProxy], {
     _beforeMount: function (options) {
         if (options.position) {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
+            // При открытии календаря будут видны сразу 2 месяца. Поставим маркер на нижний видимый месяц, чтобы
+            // избежать моргания маркера.
+            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth() + 1);
+            this._markedKey = this._dateToId(markedKeyDate);
         }
         _private.updateView(this, options);
     },
 
     _beforeUpdate: function (options) {
+        if (this._position !== options.position) {
+            this._markedKey = this._dateToId(options.position);
+        }
         _private.updateView(this, options);
     },
 
     _beforeUnmount: function () {
         this._rangeModel.destroy();
-    },
-
-    _monthObserverHandler: function(event, entries) {
-        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
-        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
-        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
-        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
-            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
-                this._monthsPosition = new Date(entries.data.getFullYear(), 0);
-            }
-            this._markedKey = this._dateToId(entries.data);
-        }
     },
 
     _monthCaptionClick: function(e: SyntheticEvent, yearDate: Date, month: number): void {
@@ -161,6 +155,11 @@ var Component = BaseControl.extend([EventProxy], {
 
     _onPositionChanged: function(e: Event, position: Date) {
         this._position = position;
+        const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
+        this._markedKey = this._dateToId(markedKeyDate);
+        if (markedKeyDate.getFullYear() !== this._monthsPosition.getFullYear()) {
+            this._monthsPosition = new Date(markedKeyDate.getFullYear(), 0);
+        }
         _private.notifyPositionChanged(this, position);
     },
 
