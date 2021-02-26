@@ -173,7 +173,7 @@ export default class _Controller implements IDropdownController {
       const deps = [this._loadMenuTemplates(this._options)];
 
       if (!this._items) {
-         deps.push(this._getloadItemsPromise()
+         deps.push(this._getLoadItemsPromise()
              .then(() => this._loadItemsTemplates(this._options))
              .catch((error) => {
                return Promise.reject(error);
@@ -183,7 +183,11 @@ export default class _Controller implements IDropdownController {
          deps.push(this._loadItemsTemplates(this._options));
       }
 
-      return Promise.all(deps);
+      return Promise.allSettled(deps).then((results) => {
+         if (results.some((result) => result.reason)) {
+            return Promise.reject();
+         }
+      });
    }
 
    setMenuPopupTarget(target): void {
@@ -283,7 +287,7 @@ export default class _Controller implements IDropdownController {
       );
    }
 
-   private _getloadItemsPromise(): Promise<any> {
+   private _getLoadItemsPromise(): Promise<any> {
       if (this._items) {
          // Обновляем данные в источнике, нужно для работы истории
          this._setItems(this._items);
@@ -559,7 +563,7 @@ export default class _Controller implements IDropdownController {
          });
          this._loadMenuTempPromise = mStubs.require(templatesToLoad).then((loadedDeps) => {
             return loadedDeps[0].Control.loadCSS(options.theme);
-         });
+         }).catch((error) => Promise.reject(error));
       }
       return this._loadMenuTempPromise;
    }
