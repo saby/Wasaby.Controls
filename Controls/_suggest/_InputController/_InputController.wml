@@ -48,7 +48,7 @@
                             <ws:if data="{{_options.footerTemplate.templateOptions.showSelectorButtonTemplate}}">
                                 <ws:partial template="{{_options.footerTemplate.templateOptions.showSelectorButtonTemplate}}"/>
                             </ws:if>
-                            <ws:else>
+                            <ws:else data="{{_options.footerTemplate.templateOptions.showSelectorButtonTemplate !== null}}">
                                 {[Показать все]}
                             </ws:else>
                         </span>

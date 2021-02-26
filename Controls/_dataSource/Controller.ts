@@ -200,6 +200,10 @@ export default class Controller {
         return this._filter;
     }
 
+    getSorting(): unknown {
+        return this._options.sorting;
+    }
+
     setNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): void {
         this._navigation = navigation;
 

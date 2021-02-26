@@ -1,0 +1,22 @@
+<ws:partial template="wml!Controls/_tileNew/render/items/Default"
+            itemActionsPadding="null"
+            highlightOnHover="{{false}}"
+            itemWidth="{{ (item || itemData).getTileSizes(imagePosition, imageViewMode).width }}"
+            folderWidth="{{ (item || itemData).getTileSizes(imagePosition, imageViewMode).width }}"
+            staticHeight="{{true}}"
+            height="auto"
+            scope="{{_options}}"
+            itemType="rich">
+   <ws:contentTemplate>
+       <div class="controls-TileView__richTemplate controls-TileView__richTemplate_imagePosition_{{imagePosition || 'top'}}">
+           <ws:partial template="{{ (item || itemData).getImageTemplate() }}"
+                       imagePosition="{{ imagePosition || 'top' }}"
+                       imageViewMode="{{ imageViewMode || 'rectangle' }}"
+                       imageSize="{{ imageSize || 's' }}"
+                       imageFit="{{ imageFit || 'cover' }}"
+                       imageProportion="{{ (item || itemData).getImageProportion(imageProportion) }}"
+                       scope="{{_options}}"/>
+           <ws:partial template="wml!Controls/_tileNew/render/Content" scope="{{_options}}"/>
+       </div>
+   </ws:contentTemplate>
+</ws:partial>
