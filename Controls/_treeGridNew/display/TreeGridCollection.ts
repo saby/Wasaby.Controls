@@ -1,4 +1,5 @@
 import { mixin } from 'Types/util';
+import {TemplateFunction} from 'UI/Base';
 import TreeGridDataRow, {IOptions as ITreeGridRowOptions} from './TreeGridDataRow';
 import {
     TreeItem,
@@ -16,7 +17,6 @@ import {
 import TreeGridFooterRow from './TreeGridFooterRow';
 import {Model as EntityModel, Model} from 'Types/entity';
 import TreeGridNodeFooterRow from './TreeGridNodeFooterRow';
-import {TemplateFunction} from "UI/Base";
 
 export interface IOptions<S extends Model, T extends TreeGridDataRow<S>>
    extends IGridCollectionOptions<S, T>, ITreeCollectionOptions<S, T> {}
