@@ -29,7 +29,6 @@ export default class ExpandableInput extends Control<IControlOptions> {
 
    protected _beforeMount(options: IExpandableInputOptions): void {
       this._expanded = this._getExpanded(options.expanded);
-      this._needShowSearchAnimation = this._expanded;
    }
 
    protected _handleDeactivate(): void {
