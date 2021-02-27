@@ -13,15 +13,13 @@ import {IList} from 'Types/collection';
 import {mixin, object} from 'Types/util';
 import {TemplateFunction} from 'UI/Base';
 import {ICollectionItemStyled} from './interface/ICollectionItemStyled';
-import {ANIMATION_STATE, ICollection, ISourceCollection} from './interface/ICollection';
+import {ANIMATION_STATE, ICollection, ISourceCollection, IItemPadding} from './interface/ICollection';
 import {ICollectionItem} from './interface/ICollectionItem';
-import IMarkable from './interface/IMarkable';
+import IMarkable, {TMarkerClassName} from './interface/IMarkable';
 import { IItemCompatibilityListViewModel, ItemCompatibilityListViewModel } from './ItemCompatibilityListViewModel';
 import {IEditableCollectionItem} from './interface/IEditableCollectionItem';
-import {TMarkerClassName} from '../_grid/interface/ColumnTemplate';
-import {IItemPadding} from '../_list/interface/IList';
 import Collection from 'Controls/_display/Collection';
-import {TItemKey} from 'Controls/_display/interface';
+import IItemActionsItem from './interface/IItemActionsItem';
 
 export interface IOptions<T extends Model = Model> {
     itemModule: string;
@@ -82,7 +80,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     InstantiableMixin,
     SerializableMixin,
     ItemCompatibilityListViewModel
-) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable {
+) implements IInstantiable, IVersionable, ICollectionItem, ICollectionItemStyled, IItemCompatibilityListViewModel, IEditableCollectionItem, IMarkable, IItemActionsItem {
 
     // region IInstantiable
 
@@ -90,6 +88,7 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly DraggableItem: boolean = true;
+    readonly ItemActionsItem: boolean = true;
     private _$editingColumnIndex: number;
 
     getInstanceId: () => string;

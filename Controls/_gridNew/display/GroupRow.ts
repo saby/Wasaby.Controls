@@ -8,24 +8,25 @@ import {
     GridLadderUtil
 } from 'Controls/display';
 
-import Row from './Row';
-import Cell from './Cell';
+import DataRow from './DataRow';
+import DataCell from './DataCell';
 import Collection from './Collection';
-import GroupCell from './GroupCell';
+import {IColumn} from 'Controls/grid';
+import {TColspanCallbackResult} from 'Controls/_gridNew/display/mixins/Grid';
+import {IOptions as IGroupCellOptions} from 'Controls/_gridNew/display/GroupCell';
+import {IItemTemplateParams} from "Controls/_gridNew/display/mixins/Row";
 
-const DEFAULT_GROUP_CONTENT_TEMPLATE = 'Controls/gridNew:GroupContent';
 const GROUP_Z_INDEX_DEFAULT = 2;
 const GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS = 3;
-
 export interface IOptions<T> extends IBaseCollectionItemOptions<T>, IExpandableMixinOptions {
     owner: Collection<T>;
 }
 
-export default class GroupItem<T> extends mixin<
-    Row<any>,
+export default class GroupRow<T> extends mixin<
+    DataRow<any>,
     ExpandableMixin
     >(
-    Row,
+    DataRow,
     ExpandableMixin
 ) {
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = false;
@@ -34,9 +35,11 @@ export default class GroupItem<T> extends mixin<
     readonly Markable: boolean = false;
     readonly SelectableItem: boolean = false;
     readonly DraggableItem: boolean = false;
-    readonly '[Controls/_display/grid/GroupItem]': true;
+    readonly LadderSupport: boolean = false;
+    readonly ItemActionsItem: boolean = false;
+    readonly '[Controls/_display/grid/GroupRow]': true;
 
-    protected _$columnItems: Array<Cell<T>>;
+    protected _$columnItems: Array<DataCell<T>>;
     protected _groupTemplate: TemplateFunction|string;
 
     constructor(options?: IOptions<T>) {
@@ -84,13 +87,14 @@ export default class GroupItem<T> extends mixin<
         return this._$owner.getStickyColumn();
     }
 
-    getCaption(): T {
-        return this.contents;
-    }
-
-    getItemClasses(): string {
-        return 'controls-ListView__itemV controls-Grid__row controls-ListView__group ' +
-                (this.isHiddenGroup() ? 'controls-ListView__groupHidden' : 'controls-Grid__row ');
+    getItemClasses(params: IItemTemplateParams = { theme: 'default' }): string {
+        params.highlightOnHover = false;
+        let classes = super.getItemClasses(params);
+        classes += ' controls-ListView__group';
+        if (this.isHiddenGroup()) {
+            classes += ' controls-ListView__groupHidden';
+        }
+        return classes;
     }
 
     getStickyHeaderMode(): string {
@@ -104,33 +108,38 @@ export default class GroupItem<T> extends mixin<
     getStickyHeaderZIndex(): number {
         return (this.hasHeader() || this.getResultsPosition()) ? GROUP_Z_INDEX_DEFAULT : GROUP_Z_INDEX_WITHOUT_HEADERS_AND_RESULTS;
     }
-
-    _initializeColumns(): void {
-        if (this._$columns) {
-            const columns = [];
-
-            columns.push(new GroupCell({
-                owner: this,
-                columns: this._$columns,
-                column: { template: this._groupTemplate || DEFAULT_GROUP_CONTENT_TEMPLATE },
-                zIndex: this.getStickyHeaderZIndex()
-            }));
-
-            this._$columnItems = columns;
-        }
-    }
-
     setExpanded(expanded: boolean, silent?: boolean): void {
         super.setExpanded(expanded, silent);
         this._nextVersion();
     }
 
+    protected _getColspan(column: IColumn, columnIndex: number): TColspanCallbackResult {
+        return 'end';
+    }
+
+    protected _initializeColumns(): void {
+        if (this._$columns) {
+            this._$columnItems = this._prepareColumnItems(this._$columns, this.getColumnsFactory());
+            this._processStickyLadderCells();
+        }
+    }
+
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGroupCellOptions<T>> {
+        return {
+            ...super._getColumnFactoryParams(column, columnIndex),
+            columnsLength: this._$columns.length,
+            contents: this.getContents(),
+			zIndex: this.getStickyHeaderZIndex(),
+            groupTemplate: this._groupTemplate
+        };
+    }
 }
 
-Object.assign(GroupItem.prototype, {
+Object.assign(GroupRow.prototype, {
     '[Controls/_display/GroupItem]': true,
-    '[Controls/_display/grid/GroupItem]': true,
-    _moduleName: 'Controls/display:GridGroupItem',
+    '[Controls/_display/grid/GroupRow]': true,
+    _moduleName: 'Controls/gridNew:GridGroupRow',
+    _cellModule: 'Controls/gridNew:GridGroupCell',
     _instancePrefix: 'grid-group-item-',
     _$columns: null
 });

@@ -1,4 +1,4 @@
-import { TColumns } from './IColumn';
+import { TColumns } from 'Controls/interface';
 import { IList } from 'Controls/list';
 /**
  * Интерфейс для контрола {@link Controls/grid:View Таблица}.
@@ -23,7 +23,7 @@ export interface IGridControl extends IList {
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
  * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
- * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере настроено отображение данных "лесенкой" для свойств "photo" и "date". Дополнительно включено прилипание заголовка таблицы, а также прилипание по первой колонке (см. {@link Controls/grid:IColumn#stickyProperty stickyProperty}).
+ * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере настроено отображение данных "лесенкой" для свойств "photo" и "date". Дополнительно включено прилипание заголовка таблицы, а также прилипание по первой колонке (см. {@link Controls/interface:IColumn#stickyProperty stickyProperty}).
  * @demo Controls-demo/grid/LadderStickyMultiline/StickyMultiline/Index В демо-примере настроено отображение данных "лесенкой" для свойств "date" и "time". Дополнительно включено прилипание по первой колонке.
  * @example
  * <pre class="brush: js">
@@ -38,7 +38,7 @@ export interface IGridControl extends IList {
  *     ladderProperties="{{_ladderProperties}}"/>
  * </pre>
  * @remark Подробнее о конфигурации лесенки читайте в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ руководстве разработчика}.
- * @see Controls/grid:IColumn#stickyProperty
+ * @see Controls/interface:IColumn#stickyProperty
  */
 
 /*
@@ -77,7 +77,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<Controls/grid:IHeaderCell>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ заголовка} таблицы.
+ * @cfg {Array.<Controls/interface:IHeaderCell>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ заголовка} таблицы.
  * @remark
  * В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек заголовка.
  * Для одноуровневого заголовка первый объект массива задаёт конфигурацию для первой ячейки.
@@ -152,7 +152,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#columns
- * @cfg {Array.<Controls/grid:IColumn>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/ колонок} таблицы.
+ * @cfg {Array.<Controls/interface:IColumn>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/columns/ колонок} таблицы.
  * @remark
  * Если при отрисовске контрола данные не отображаются или выводится только их часть, то следует проверить {@link Controls/collection:RecordSet}, полученный от {@link /doc/platform/developmentapl/interface-development/controls/list/source/ источника данных}.
  * Такой RecordSet должен содержать набор полей, которые заданы в конфигурации контрола в опции columns, а также сами данные для каждого поля.
@@ -578,10 +578,10 @@ export interface IGridControl extends IList {
  * @remark
  * Аргументы функции:
  * * {Types/entity:Model} item Элемент, для которого рассчитывается объединение.
- * * {Controls/grid:IColumn} column Колонка таблицы.
+ * * {Controls/interface:IColumn} column Колонка таблицы.
  * * {Number} columnIndex Индекс колонки таблицы.
  * * {Boolean} isEditing Актуальное состояние редактирования элемента.
- * 
+ *
  * Функция возвращает {Controls/gridNew:TColspanCallbackResult} - количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
  * @markdown
  * @see resultsColspanCallback
@@ -592,9 +592,9 @@ export interface IGridControl extends IList {
  * @cfg {Function} Функция обратного вызова для расчёта объединения колонок строки результатов.
  * @remark
  * Аргументы функции:
- * * {Controls/grid:IColumn} column Колонка грида
+ * * {Controls/interface:IColumn} column Колонка грида
  * * {Number} columnIndex Индекс колонки грида
- * 
+ *
  * Функция возвращает {Controls/gridNew:TColspanCallbackResult} - количество объединяемых колонок, учитывая текущую. Для объединения всех колонок, начиная с текущей, из функции нужно вернуть специальное значение 'end'.
  * @markdown
  * @see colspanCallback
@@ -651,7 +651,7 @@ export interface IGridControl extends IList {
  * @event Происходит при клике на тег внутри ячейки таблицы.
  * @name Controls/_grid/interface/IGridControl#tagClick
  * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
- * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:IColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/interface:IColumn#tagStyleProperty tagStyleProperty} у колонки.
  * @see tagStyle
  */
 
@@ -659,6 +659,6 @@ export interface IGridControl extends IList {
  * @event Происходит при наведении курсора мыши на тег внутри ячейки таблицы.
  * @name Controls/_grid/interface/IGridControl#tagHover
  * @param {Object} event Нативное событие. Может быть использовано для получения тега как DOM-элемента для отображения инфобокса.
- * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/grid:IColumn#tagStyleProperty tagStyleProperty} у колонки.
+ * @remark Событие никогда не запустится, если вы не укажете опцию {@link Controls/grid:ColumnTemplate#tagStyle tagStyle} шаблона колонки или {@link Controls/interface:IColumn#tagStyleProperty tagStyleProperty} у колонки.
  * @see tagClick
  */

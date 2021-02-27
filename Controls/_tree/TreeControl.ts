@@ -1027,19 +1027,19 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _onItemClick: function(e, item, originalEvent, columnIndex: number, returnExpandResult: boolean /* for tests */) {
         e.stopPropagation();
         const eventResult = this._notify('itemClick', [item, originalEvent, columnIndex], { bubbling: true });
-        if (eventResult !== false && this._options.expandByItemClick && item.get(this._options.nodeProperty) !== null) {
-            const display = this._options.useNewModel ? this._children.baseControl.getViewModel() : this._children.baseControl.getViewModel().getDisplay();
-            const dispItem = display.getItemBySourceItem(item);
-
+        const model = this._children.baseControl.getViewModel();
+        const display = model.getDisplay ? model.getDisplay() : model;
+        const dispItem = display.getItemBySourceItem(item);
             // Если в проекции нет такого элемента, по которому произошел клик, то это хлебная крошка, а не запись.
             // После исправления ошибки событие itemClick не будет стрелять при клике на крошку.
             // https://online.sbis.ru/opendoc.html?guid=4017725f-9e22-41b9-adab-0d79ad13fdc9
-            if (dispItem) {
-                const expandResult = _private.toggleExpanded(this, dispItem);
+        if (dispItem && (
+            (eventResult !== false && this._options.expandByItemClick && dispItem.isNode() !== null) ||
+            dispItem.isGroupNode())) {
+            const expandResult = _private.toggleExpanded(this, dispItem);
 
-                if (returnExpandResult) {
-                    return expandResult;
-                }
+            if (returnExpandResult) {
+                return expandResult;
             }
         }
         return eventResult;

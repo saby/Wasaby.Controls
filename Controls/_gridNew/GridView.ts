@@ -5,7 +5,7 @@ import { Logger} from 'UI/Utils';
 import { GridCollection, GridRow, GridLadderUtil, GridLayoutUtil, isFullGridSupport } from 'Controls/display';
 import * as GridTemplate from 'wml!Controls/_gridNew/Render/grid/GridView';
 import * as GridItem from 'wml!Controls/_gridNew/Render/grid/Item';
-import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupTemplate';
+import * as GroupTemplate from 'wml!Controls/_gridNew/Render/GroupCellContentWithRightTemplate';
 import * as GridIsEqualUtil from 'Controls/Utils/GridIsEqualUtil';
 import { Model } from 'Types/entity';
 import { SyntheticEvent } from 'Vdom/Vdom';
@@ -160,7 +160,9 @@ const GridView = ListView.extend({
             columnsWidths = ['max-content'].concat(columnsWidths);
         }
 
-        if (isFullGridSupport() && !!options.columnScroll && options.itemActionsPosition !== 'custom') {
+        // Дополнительная колонка для отображения застиканных операций над записью при горизонтальном скролле.
+        // Если в списке нет данных, дополнительная колонка не нужна, т.к. операций над записью точно нет.
+        if (isFullGridSupport() && !!options.columnScroll && options.itemActionsPosition !== 'custom' && this._listModel.getCount()) {
             columnsWidths.push('0px');
         }
 

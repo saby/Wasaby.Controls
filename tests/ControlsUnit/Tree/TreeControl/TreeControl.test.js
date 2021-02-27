@@ -1833,9 +1833,19 @@ define([
       it('itemClick sends right args', function() {
          let isEventRaised = false;
          let isParentEventStopped = false;
-
-         const treeControl = correctCreateTreeControl({ readOnly: true, keyProperty: 'id' });
-         const item = {};
+         const data = new collection.RecordSet({
+            rawData: [{ id: 1 }],
+            keyProperty: 'id'
+         });
+         const treeControl = correctCreateTreeControl({
+            source: new sourceLib.Memory({
+               data,
+               keyProperty: 'id'
+            }),
+            readOnly: true,
+            keyProperty: 'id'
+         });
+         const item = data.at(0);
          const nativeEvent = {};
          const event = {
             stopPropagation: () => {

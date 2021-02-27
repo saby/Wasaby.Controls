@@ -1,5 +1,5 @@
 import {IControlOptions, TemplateFunction} from 'UI/base';
-import {IColspanParams, TCellAlign, TCellVerticalAlign} from 'Controls/grid';
+import {IColspanParams, TCellAlign, TCellVerticalAlign} from 'Controls/interface';
 
 export interface IRowspanParams {
     startRow?: number;

@@ -9,7 +9,7 @@ import {StackOpener} from 'Controls/popup';
 import {Model} from 'Types/entity';
 import {IFilterOptions, ISourceOptions, INavigationOptions, IItemActionsOptions, ISelectorDialogOptions} from 'Controls/interface';
 import {IList} from 'Controls/list';
-import {IColumn} from 'Controls/grid';
+import {IColumn} from 'Controls/interface';
 import {List, RecordSet} from 'Types/collection';
 import {factory} from 'Types/chain';
 import 'css!Controls/toggle';

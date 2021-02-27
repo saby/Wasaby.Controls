@@ -3,7 +3,7 @@ import {IControlOptions, Control} from 'UI/Base';
 import { RecordSet } from 'Types/collection';
 import { Model } from 'Types/entity';
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
-import { IItemPadding } from 'Controls/list';
+import { IItemPadding } from 'Controls/display';
 
 export interface IPropertyGridColumnOptions {
     width: string;

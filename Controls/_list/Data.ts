@@ -135,8 +135,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
          this._root = options.root;
       }
       this._sourceController =
-          options.sourceController ||
-          new SourceController(this._getSourceControllerOptions(options));
+          options.sourceController || this._getSourceController(options);
       this._fixRootForMemorySource(options);
 
       let controllerState = this._sourceController.getState();
@@ -246,6 +245,12 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
       } as ISourceControllerOptions;
    }
 
+   private _getSourceController(options: IDataOptions): SourceController {
+      const sourceController = new SourceController(this._getSourceControllerOptions(options));
+      sourceController.subscribe('rootChanged', this._rootChanged.bind(this));
+      return sourceController;
+   }
+
    private _notifyNavigationParamsChanged(params): void {
       if (this._isMounted) {
          this._notify('navigationParamsChanged', [params]);
@@ -294,12 +299,15 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
    }
 
    _rootChanged(event, root): void {
+      const rootChanged = this._root !== root;
       if (this._options.root === undefined) {
          this._root = root;
          // root - не реактивное состояние, надо позвать forceUpdate
          this._forceUpdate();
       }
-      this._notify('rootChanged', [root]);
+      if (rootChanged) {
+         this._notify('rootChanged', [root]);
+      }
    }
 
    // TODO сейчас есть подписка на itemsChanged из поиска. По хорошему не должно быть.
@@ -333,6 +341,7 @@ class Data extends Control<IDataOptions>/** @lends Controls/_list/Data.prototype
           options.source &&
           Object.getPrototypeOf(options.source).constructor === Memory &&
           this._sourceController.getRoot() === null) {
+         this._root = undefined;
          this._sourceController.setRoot(undefined);
       }
    }
