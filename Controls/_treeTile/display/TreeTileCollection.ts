@@ -2,8 +2,8 @@ import {Model} from 'Types/entity';
 import { mixin } from 'Types/util';
 import {TileMixin} from 'Controls/tileNew';
 import TreeTileCollectionItem from './TreeTileCollectionItem';
-import {ItemsFactory, Tree} from 'Controls/display';
-import {IOptions} from "Controls/_tileNew/display/mixins/TileItem";
+import {ItemsFactory, itemsStrategy, Tree, TreeItem} from 'Controls/display';
+import InvisibleStrategy from './strategy/Invisible';
 
 export default class TreeTileCollection<
     S extends Model = Model,
@@ -56,7 +56,7 @@ export default class TreeTileCollection<
     protected _getItemsFactory(): ItemsFactory<T> {
         const parent = super._getItemsFactory();
 
-        return function TileItemsFactory(options: IOptions<S>): T {
+        return function TileItemsFactory(options: any): T {
             const params = this._getItemsFactoryParams(options);
             return parent.call(this, params);
         };
@@ -67,6 +67,16 @@ export default class TreeTileCollection<
 
         params.nodesHeight = this.getNodesHeight();
         return params;
+    }
+
+    protected _createComposer(): itemsStrategy.Composer<any, TreeItem<any>> {
+        const composer = super._createComposer();
+
+        composer.append(InvisibleStrategy, {
+            display: this
+        });
+
+        return composer;
     }
 }
 

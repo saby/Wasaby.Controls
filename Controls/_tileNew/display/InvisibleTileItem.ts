@@ -1,9 +1,9 @@
-import {OptionsToPropertyMixin, VersionableMixin} from 'Types/entity';
+import {InstantiableMixin, OptionsToPropertyMixin, VersionableMixin} from 'Types/entity';
 import { mixin } from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
 import * as ItemTemplate from 'wml!Controls/_tileNew/render/items/Invisible';
 
-export default class InvisibleTileItem extends mixin<VersionableMixin, OptionsToPropertyMixin>(VersionableMixin, OptionsToPropertyMixin) {
+export default class InvisibleTileItem extends mixin<VersionableMixin, OptionsToPropertyMixin, InstantiableMixin>(VersionableMixin, OptionsToPropertyMixin, InstantiableMixin) {
     protected _$theme: string;
 
     protected _$tileWidth: number;
@@ -15,6 +15,17 @@ export default class InvisibleTileItem extends mixin<VersionableMixin, OptionsTo
     protected _$topPadding: string;
 
     protected _$bottomPadding: string;
+
+    protected _$lastInvisibleItem: boolean;
+
+    constructor(options: any) {
+        super();
+        OptionsToPropertyMixin.call(this, options);
+    }
+
+    get key(): string {
+        return this.getInstanceId();
+    }
 
     getTemplate(): TemplateFunction {
         return ItemTemplate;
@@ -72,15 +83,25 @@ export default class InvisibleTileItem extends mixin<VersionableMixin, OptionsTo
         const width = templateWidth || this.getTileWidth();
         return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
     }
+
+    isLastInvisibleItem(): boolean {
+        return this._$lastInvisibleItem;
+    }
+
+    isEditing(): boolean {
+        return false;
+    }
 }
 
 Object.assign(InvisibleTileItem.prototype, {
     '[Controls/_tileNew/InvisibleTileItem]': true,
     _moduleName: 'Controls/tileNew:InvisibleTileItem',
+    _instancePrefix: 'invisible-tile-item-',
     _$theme: 'default',
     _$leftPadding: 'default',
     _$rightPadding: 'default',
     _$topPadding: 'default',
     _$bottomPadding: 'default',
-    _$tileWidth: null
+    _$tileWidth: null,
+    _$lastInvisibleItem: false
 });

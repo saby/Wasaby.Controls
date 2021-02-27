@@ -4,6 +4,8 @@ import TileCollection from '../TileCollection';
 import TileCollectionItem from '../TileCollectionItem';
 import InvisibleTileItem from '../InvisibleTileItem';
 
+export const COUNT_INVISIBLE_ITEMS = 10;
+
 interface IOptions<S extends Model = Model, T extends TileCollectionItem<S>> {
     source: IItemsStrategy<S, T>;
     display: TileCollection<S, T>;
@@ -161,19 +163,23 @@ export default class InvisibleStrategy<
         return itemsOrder;
     }
 
-    protected static _createInvisibleItems(display: TileCollection): InvisibleTileItem[] {
+    protected static _createInvisibleItems(display: TileCollection, options: object): InvisibleTileItem[] {
         const items = [];
 
-        const params = InvisibleStrategy._getInvisibleItemParams(display);
-        for (let i = 0; i < 10; i++) {
+        const params = InvisibleStrategy._getInvisibleItemParams(display, options);
+        for (let i = 0; i < COUNT_INVISIBLE_ITEMS; i++) {
+            if (i === COUNT_INVISIBLE_ITEMS - 1) {
+                params.lastInvisibleItem = true;
+            }
             items.push(display.createItem(params));
         }
 
         return items;
     }
 
-    protected static _getInvisibleItemParams(display: TileCollection): object {
+    protected static _getInvisibleItemParams(display: TileCollection, options: object): object {
         return {
+            ...options,
             itemModule: 'Controls/tileNew:InvisibleTileItem',
             theme: display.getTheme(),
             tileWidth: display.getTileWidth(),

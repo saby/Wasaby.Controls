@@ -328,15 +328,15 @@ var TileView = ListView.extend({
 
         if (this._listModel.getCount()) {
             if (this._options.itemsContainerPadding) {
-                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this._options.itemsContainerPadding?.left}_itemPadding_${this._options.leftPadding}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this._options.itemsContainerPadding?.right}_itemPadding_${this._options.rightPadding}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this._options.itemsContainerPadding?.top}_itemPadding_${this._options.topPadding}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this._options.itemsContainerPadding?.bottom}_itemPadding_${this._options.bottomPadding}${theme}`;
+                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this._options.itemsContainerPadding?.left || 'default'}_itemPadding_${this._options.leftPadding || 'default'}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this._options.itemsContainerPadding?.right || 'default'}_itemPadding_${this._options.rightPadding || 'default'}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this._options.itemsContainerPadding?.top || 'default'}_itemPadding_${this._options.topPadding || 'default'}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this._options.itemsContainerPadding?.bottom || 'default'}_itemPadding_${this._options.bottomPadding || 'default'}${theme}`;
             } else {
-                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this._options.leftPadding}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this._options.rightPadding}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this._options.topPadding}${theme}`;
-                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this._options.bottomPadding}${theme}`;
+                classes += `controls-TileView__itemsPaddingContainer_spacingLeft_${this._options.leftPadding || 'default'}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingRight_${this._options.rightPadding || 'default'}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingTop_${this._options.topPadding || 'default'}${theme}`;
+                classes += ` controls-TileView__itemsPaddingContainer_spacingBottom_${this._options.bottomPadding || 'default'}${theme}`;
             }
         }
 

@@ -642,7 +642,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer', templateMarker?: boolean): string {
+    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer', templateMarker?: boolean, templateShadowVisibility): string {
         let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()} controls-ListView__itemV`;
         if (templateClickable !== false) {
             classes += ` controls-ListView__itemV_cursor-${cursor}`;
@@ -658,12 +658,6 @@ export default abstract class TileItem<T extends Model = Model> {
 
         if (this.isDragged()) {
             classes += ` controls-ListView__item_dragging_theme-${this.getTheme()}`;
-        }
-
-        if (this.shouldDisplayMarker(templateMarker)) {
-            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-${this.getTheme()}`;
-        } else {
-            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
         }
 
         switch (itemType) {
@@ -690,6 +684,12 @@ export default abstract class TileItem<T extends Model = Model> {
                 if (this.isActive()) {
                     classes += ` controls-TileView__smallTemplate_item_active_theme-${this.getTheme()}`;
                 }
+                if (this.shouldDisplayMarker(templateMarker)) {
+                    classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-${this.getTheme()}`;
+                } else {
+                    classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
+                }
+                classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}_theme-${this.getTheme()}`;
                 break;
         }
 
@@ -716,6 +716,10 @@ export default abstract class TileItem<T extends Model = Model> {
         highlightOnHover?: boolean,
         backgroundColorStyle?: string
     ): string {
+        if (itemType === 'small') {
+            return '';
+        }
+
         const theme = `_theme-${this.getTheme()}`;
 
         let classes = `controls-TileView__itemContent controls-TileView__itemContent${theme} js-controls-ListView__measurableContainer`;
@@ -727,6 +731,12 @@ export default abstract class TileItem<T extends Model = Model> {
 
         if (backgroundColorStyle) {
             classes += ` controls-TileView__itemContent_background_${backgroundColorStyle}${theme}`;
+        }
+
+        if (this.shouldDisplayMarker(templateMarker)) {
+            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-${this.getTheme()}`;
+        } else {
+            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
         }
 
         classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}${theme}`;

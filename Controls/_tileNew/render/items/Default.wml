@@ -1,4 +1,4 @@
-<div attr:class="{{ (item || itemData).getItemClasses(itemType, clickable, hasTitle, cursor, marker) }}" attr:style="{{ (item || itemData).getItemStyles(width, staticHeight) }}">
+<div attr:class="{{ (item || itemData).getItemClasses(itemType, clickable, hasTitle, cursor, marker, shadowVisibility) }}" attr:style="{{ (item || itemData).getItemStyles(width, staticHeight) }}">
    <ws:if data="{{ (item || itemData).shouldDisplayAutoResizer(staticHeight) }}">
       <div style="{{ (item || itemData).getAutoResizerStyles(width) }}"></div>
    </ws:if>
