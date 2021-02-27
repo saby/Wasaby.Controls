@@ -2,7 +2,7 @@ import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
 
-type Path = null|Model[];
+export type Path = null|Model[];
 
 interface IPathResult {
     path: Path;
