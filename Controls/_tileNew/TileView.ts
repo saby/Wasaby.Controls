@@ -258,7 +258,7 @@ var TileView = ListView.extend({
 
         // If the hover on the checkbox does not increase the element
         if (event.target.closest('.js-controls-TileView__withoutZoom')) {
-            if (itemData.dispItem.isNode() === false) {
+            if (itemData.isNode && itemData.isNode() === false) {
                 if (documentForUnits) {
                     itemSize = itemContainerRect;
                 } else {
@@ -307,7 +307,7 @@ var TileView = ListView.extend({
     },
 
     _setHoveredItem: function (itemData, position, startPosition, noZoom, itemWidth?: number): void {
-        const needUpdateActions = this._options.actionMode === 'adaptive' && !itemData.dispItem.isNode();
+        const needUpdateActions = this._options.actionMode === 'adaptive' && (!itemData.isNode || !itemData.isNode());
         if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
             this._listModel.setHoveredItem({
                 key: itemData.key,

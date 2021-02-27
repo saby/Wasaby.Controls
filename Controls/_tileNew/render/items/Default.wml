@@ -1,6 +1,6 @@
-<div attr:class="{{ (item || itemData).getItemClasses(itemType, clickable, hasTitle, cursor, marker, shadowVisibility) }}" attr:style="{{ (item || itemData).getItemStyles(width, staticHeight) }}">
+<div attr:class="{{ (item || itemData).getItemClasses(itemType, clickable, hasTitle, cursor, marker, shadowVisibility) }}" attr:style="{{ (item || itemData).getItemStyles(width || itemWidth, staticHeight) }}">
    <ws:if data="{{ (item || itemData).shouldDisplayAutoResizer(staticHeight) }}">
-      <div style="{{ (item || itemData).getAutoResizerStyles(width) }}"></div>
+      <div style="{{ (item || itemData).getAutoResizerStyles(width || itemWidth) }}"></div>
    </ws:if>
 
    <div attr:class="{{ (item || itemData).getWrapperClasses(itemType, shadowVisibility, marker, highlightOnHover, backgroundColorStyle) }}"
@@ -11,14 +11,15 @@
          <ws:templateOptions item="{{ (item || itemData) }}" checkboxReadOnly="{{checkboxReadOnly}}"/>
       </ws:partial>
 
-      <ws:partial if="{{ (item || itemData).shouldDisplayImageTemplate() }}" template="{{ (item || itemData).getImageTemplate(itemType) }}" scope="{{_options}}"/>
+      <ws:partial if="{{ (item || itemData).shouldDisplayImageTemplate(contentTemplate) }}" template="{{ (item || itemData).getImageTemplate(itemType) }}" scope="{{_options}}"/>
 
       <ws:partial template="{{ (item || itemData).getContentTemplate(contentTemplate) }}"
                   item="{{(item || itemData)}}"
                   swipeTemplate="{{swipeTemplate}}"
                   itemActionsTemplate="{{itemActionsTemplate}}"
                   hasTitle="{{hasTitle}}"
-                  width="{{(item || itemData).getTileWidth(width)}}"
+                  itemType="{{itemType}}"
+                  width="{{(item || itemData).getTileWidth(width || itemWidth)}}"
                   scope="{{_options}}">
          <ws:multiSelectTemplate>
             <ws:partial template="{{ multiSelectTpl }}">

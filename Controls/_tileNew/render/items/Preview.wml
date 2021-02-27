@@ -7,23 +7,23 @@
             itemType="preview">
    <ws:contentTemplate>
       <div class="controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-{{_options.theme}}">
-         <ws:partial template="{{ (item || itemData).getImageTemplate(itemType) }}" scope="{{_options}}">
+         <ws:partial template="{{ (contentTemplate.item || contentTemplate.itemData).getImageTemplate(contentTemplate.itemType) }}" scope="{{_options}}">
             <ws:topTemplate>
-               <ws:partial template="{{topTemplate}}"
+               <ws:partial if="{{contentTemplate.topTemplate}}"
+                           template="{{contentTemplate.topTemplate}}"
                            itemData="{{(item || itemData)}}"
                            item="{{(item || itemData)}}"
                            attr:class="controls-TileView__previewTemplate_topTemplate"/>
             </ws:topTemplate>
             <ws:bottomRightTemplate>
-               <ws:if data="{{bottomRightTemplate}}">
-                  <ws:partial template="{{bottomRightTemplate}}"
-                              attr:class="controls-TileView__previewTemplate_bottomRightTemplate controls-TileView__previewTemplate_bottomRightTemplate_theme-{{_options.theme}}"
-                              itemData="{{(item || itemData)}}"
-                              item="{{(item || itemData)}}"/>
-               </ws:if>
+               <ws:partial if="{{contentTemplate.bottomRightTemplate}}"
+                           template="{{contentTemplate.bottomRightTemplate}}"
+                           attr:class="controls-TileView__previewTemplate_bottomRightTemplate controls-TileView__previewTemplate_bottomRightTemplate_theme-{{_options.theme}}"
+                           itemData="{{(contentTemplate.item || contentTemplate.itemData)}}"
+                           item="{{(contentTemplate.item || contentTemplate.itemData)}}"/>
             </ws:bottomRightTemplate>
          </ws:partial>
-         <ws:partial template="wml!Controls/_tileNew/render/Content" scope="{{_options}}"/>
+         <ws:partial template="wml!Controls/_tileNew/render/Content" scope="{{contentTemplate._options}}"/>
       </div>
    </ws:contentTemplate>
    <ws:itemActionsTemplate>

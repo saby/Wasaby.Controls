@@ -16,9 +16,9 @@ import {default as View} from 'Controls/_tileNew/View';
 import * as ItemTemplate from 'wml!Controls/_tileNew/render/items/Default';
 import * as ContentTemplate from 'wml!Controls/_tileNew/render/Content';
 import * as SmallItemTemplate from 'wml!Controls/_tileNew/render/items/Small';
-import * as MediumItemTemplate from 'wml!Controls/_tileNew/render/items/Medium';
-import * as PreviewItemTemplate from 'wml!Controls/_tileNew/render/items/Preview';
-import * as RichItemTemplate from 'wml!Controls/_tileNew/render/items/Rich';
+import * as MediumTemplate from 'wml!Controls/_tileNew/render/items/Medium';
+import * as PreviewTemplate from 'wml!Controls/_tileNew/render/items/Preview';
+import * as RichTemplate from 'wml!Controls/_tileNew/render/items/Rich';
 import {default as ActionsMenu} from 'Controls/_tileNew/itemActions/Menu';
 import {getImageUrl, getImageSize, getImageClasses, getImageRestrictions, getItemSize} from 'Controls/_tileNew/utils/imageUtil';
 
@@ -34,9 +34,9 @@ export {
     ItemTemplate,
     ContentTemplate,
     SmallItemTemplate,
-    MediumItemTemplate,
-    PreviewItemTemplate,
-    RichItemTemplate,
+    MediumTemplate,
+    PreviewTemplate,
+    RichTemplate,
     ActionsMenu,
     TileCollection,
     TileCollectionItem,

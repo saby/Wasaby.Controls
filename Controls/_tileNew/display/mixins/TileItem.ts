@@ -162,8 +162,8 @@ export default abstract class TileItem<T extends Model = Model> {
     getTileWidth(widthTpl?: number): number {
         const imageHeight = this.getImageHeight();
         const imageWidth = this.getImageWidth();
-        const itemWidth = object.getPropertyValue<number>(this.getContents(), this.getTileWidthProperty())
-            || this._$tileWidth || widthTpl || DEFAULT_TILE_WIDTH;
+        const itemWidth = widthTpl || object.getPropertyValue<number>(this.getContents(), this.getTileWidthProperty())
+            || this._$tileWidth || DEFAULT_TILE_WIDTH;
         let widthProportion = DEFAULT_WIDTH_PROPORTION;
 
         let resultWidth = null;
@@ -179,7 +179,9 @@ export default abstract class TileItem<T extends Model = Model> {
         } else {
             return itemWidth;
         }
-        resultWidth = Math.floor(this.getTileHeight() * widthProportion);
+        if (!widthTpl) {
+            resultWidth = Math.floor(this.getTileHeight() * widthProportion);
+        }
 
         return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     }
@@ -696,17 +698,24 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getItemStyles(templateWidth?: number, staticHeight?: number): string {
-        // TODO staticHeight
-
+    getItemStyles(templateWidth?: number, staticHeight?: boolean): string {
         const width = this.getTileWidth(templateWidth);
-        const compressedWidth = width * this.getCompressionCoefficient();
-        return `
-            -ms-flex-preferred-size: ${compressedWidth}px;
-            flex-basis: ${compressedWidth}px;
-            height: ${this.getTileHeight()}px;
-            max-width: ${width}px;
-        `;
+        if (this.getTileMode() === 'dynamic') {
+            const flexBasis = width * this.getCompressionCoefficient();
+            return `
+                -ms-flex-preferred-size: ${flexBasis}px;
+                flex-basis: ${flexBasis}px;
+                height: ${this.getTileHeight()}px;
+                max-width: ${width}px;
+            `;
+        } else if (staticHeight) {
+            return `
+                -ms-flex-preferred-size: ${width}px;
+                height: ${this.getTileHeight()}px;
+            `;
+        }
+
+        return '';
     }
 
     getWrapperClasses(
