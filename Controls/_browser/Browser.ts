@@ -197,7 +197,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     }
 
     private _getSourceController(): SourceController {
-        return this._dataLoader.getSourceController();
+        const sourceController = this._dataLoader.getSourceController();
+        sourceController.subscribe('rootChanged', this._rootChanged.bind(this));
+        return sourceController;
     }
 
     protected _afterMount(options: IBrowserOptions): void {
@@ -210,7 +212,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             }, true);
         }
     }
-        
+
     protected _createNewStoreObservers(): string[] {
         const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
                 this._filterItemsChanged(null, filterSource);
@@ -775,6 +777,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             })
             .finally(() => {
                 this._loading = false;
+                this._afterSourceLoad(sourceController, options);
             })
             .then((result) => {
                 return this._updateSearchController(options).then(() => result);

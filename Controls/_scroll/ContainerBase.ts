@@ -386,12 +386,15 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
     }
 
     _onRegisterNewComponent(component: Control): void {
-        // Если состояние еще не инициализировано, то компонент получит его после инициализации.
-        if (this._scrollModel) {
-            const scrollState = this._scrollModel.clone();
-            const oldScrollState = this._oldScrollState.clone();
-            this._registrars.scrollStateChanged.startOnceTarget(component, scrollState, oldScrollState);
+        // Списку нужны события canScroll и cantScroll в момент инициализации до того,
+        // как у нас отработают обработчики и инициализируются состояние.
+        if (!this._scrollModel) {
+            this._createScrollModel();
         }
+        const scrollState = this._scrollModel.clone();
+        const oldScrollState = this._oldScrollState.clone();
+        this._registrars.scrollStateChanged.startOnceTarget(component, scrollState, oldScrollState);
+
     }
 
     _onResizeContainer(newState: IScrollState): void {
@@ -724,7 +727,6 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
         // как у нас отработают обработчики и инициализируются состояние.
         if (!this._scrollModel) {
             this._createScrollModel();
-            this._updateStateAndGenerateEvents(this._getFullStateFromDOM());
         }
         this._sendByListScrollRegistrarToComponent(
             component,
