@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-   <Controls.tile:View
+   <Controls.treeTile:View
       tileMode="dynamic"
       displayProperty="title"
       imageProperty="image"
@@ -7,6 +7,6 @@
       itemActions="{{_itemActions}}"
       actionMenuViewMode="preview"
       actionMode="adaptive"
-      itemTemplate="Controls/tile:PreviewTemplate"
+      itemTemplate="Controls/tileNew:PreviewTemplate"
       source="{{_viewSource}}"/>
 </div>
