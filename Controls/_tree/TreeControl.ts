@@ -502,7 +502,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _currentItem = null;
     private _tempItem = null;
     private _markedLeaf = '';
-    private _modeLeavesInitialized = false;
     private _doAfterItemExpanded = null;
 
     private _itemOnWhichStartCountDown = null;
@@ -510,6 +509,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _deepReload;
 
     constructor(options: TOptions) {
+        super(options);
         this._expandNodeOnDrag = this._expandNodeOnDrag.bind(this);
         if (typeof options.root !== 'undefined') {
             this._root = options.root;
@@ -517,25 +517,26 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         if (options.expandedItems && options.expandedItems.length > 0) {
             this._deepReload = true;
         }
-        this._keyDownHandler = this._keyDownHandler.bind(this);
-        super(options);
     }
 
     protected _beforeMount(...args: [TOptions, object]): void {
-        super._beforeMount(...args);
-        const options = args[0];
-        this._initKeyProperty(options);
+        const superResult = super._beforeMount(...args);
+        const doBeforeMount = () => {
+            const options = args[0];
+            this._initKeyProperty(options);
 
-        if (options.sourceController) {
-            // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
-            //  и на списке и на Browser'e
-            const sourceControllerState = options.sourceController.getState();
+            if (options.sourceController) {
+                // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
+                //  и на списке и на Browser'e
+                const sourceControllerState = options.sourceController.getState();
 
-            if (options.parentProperty && sourceControllerState.parentProperty !== options.parentProperty ||
-                options.root !== undefined && options.root !== sourceControllerState.root) {
-                options.sourceController.updateOptions({...options, keyProperty: this._keyProperty});
+                if (options.parentProperty && sourceControllerState.parentProperty !== options.parentProperty ||
+                    options.root !== undefined && options.root !== sourceControllerState.root) {
+                    options.sourceController.updateOptions({...options, keyProperty: this._keyProperty});
+                }
             }
-        }
+        };
+        return !superResult ? doBeforeMount() : superResult.then(doBeforeMount);
     }
 
     protected _afterMount() {
@@ -856,7 +857,16 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         EventUtils.keysHandler(event, HOT_KEYS, _private, this);
     }
 
-    protected _beforeReloadCallback(filter, sorting, navigation, cfg): void {
+    protected protected _reload(cfg, sourceConfig?: IBasePositionSourceConfig | IBasePageSourceConfig): Promise<any> {
+        const filter: IHashMap<unknown> = cClone(cfg.filter);
+        const sorting = cClone(cfg.sorting);
+        const navigation = cClone(cfg.navigation);
+
+        this._prepareModelBeforeReload(filter, sorting, navigation, cfg);
+        return super._reload(cfg, sourceConfig);
+    }
+
+    protected _prepareModelBeforeReload(filter, sorting, navigation, cfg): void {
         if (this._options.parentProperty === undefined) {
             return;
         }
@@ -964,7 +974,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                     }
                 }
             }
-        } 
+        }
     }
         // reset deepReload after loading data (see reload method or constructor)
         this._deepReload = false;

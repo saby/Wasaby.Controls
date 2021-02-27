@@ -391,112 +391,6 @@ const _private = {
         return needAttachLoadTopTriggerToNull;
     },
 
-    reload(self, cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
-        const filter: IHashMap<unknown> = cClone(cfg.filter);
-        const sorting = cClone(cfg.sorting);
-        const navigation = cClone(cfg.navigation);
-        const resDeferred = new Deferred();
-
-        self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
-        if (self._beforeReloadCallback) {
-            // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
-            self._beforeReloadCallback(filter, sorting, navigation, cfg);
-        }
-
-        if (self._sourceController) {
-            _private.showIndicator(self);
-            _private.getPortionedSearch(self).reset();
-
-            if (cfg.groupProperty) {
-                const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
-                GroupingController.prepareFilterCollapsedGroups(collapsedGroups, filter);
-            }
-            // Need to create new Deffered, returned success result
-            // load() method may be fired with errback
-            _private.setReloadingState(self, true);
-            self._sourceController.reload(sourceConfig).addCallback(function(list) {
-                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
-                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
-                if (self._destroyed) {
-                    resDeferred.callback({
-                        data: null
-                    });
-                    return;
-                }
-                _private.doAfterUpdate(self, () => {
-                    _private.hideError(self);
-                    _private.setReloadingState(self, false);
-                    if (list.getCount()) {
-                        self._loadedItems = list;
-                    } else {
-                        self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
-                    }
-                    if (self._pagingNavigation) {
-                        const hasMoreDataDown = list.getMetaData().more;
-                        _private.updatePagingData(self, hasMoreDataDown);
-                    }
-                    let listModel = self._listViewModel;
-
-                    if (!self._shouldNotResetPagingCache) {
-                        self._cachedPagingState = false;
-                    }
-
-                    if (listModel) {
-                        if (self._groupingLoader) {
-                            self._groupingLoader.resetLoadedGroups(listModel);
-                        }
-
-                        // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
-                        // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
-                        // выполняется в колбеке после обновления (doAfterUpdate).
-                        _private.assignItemsToModel(self, list, self._options);
-
-                        if (self._sourceController) {
-                            _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
-                        }
-
-                        if (self._loadedItems) {
-                            self._shouldRestoreScrollPosition = true;
-                        }
-                        // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
-                        if (self._itemsChanged) {
-                            self._shouldNotifyOnDrawItems = true;
-                        }
-                    } else {
-                        _private.initializeModel(self, cfg, list)
-                    }
-                    _private.prepareFooter(self, self._options, self._sourceController);
-                    _private.resolveIndicatorStateAfterReload(self, list, navigation);
-
-                    resDeferred.callback({
-                        data: list
-                    });
-
-                    _private.resetScrollAfterLoad(self);
-                    _private.resolveIsLoadNeededByNavigationAfterReload(self, cfg, list);
-                });
-            }).addErrback(function(error: Error) {
-                _private.hideIndicator(self);
-                return _private.processError(self, {
-                    error
-                }).then(function(result: ICrudResult) {
-                    if (!self._destroyed) {
-                        self._afterReloadCallback(cfg);
-                    }
-                    resDeferred.callback({
-                        data: null,
-                        ...result
-                    });
-                }) as Deferred<Error>;
-            });
-        } else {
-            self._afterReloadCallback(cfg);
-            resDeferred.callback();
-            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
-        }
-        return resDeferred;
-    },
-
     assignItemsToModel(self, items: RecordSet, newOptions): void {
         const listModel = self._listViewModel;
 
@@ -1137,7 +1031,7 @@ const _private = {
             // измениться, поэтому пейджинг не должен прятаться в любом случае
             self._shouldNotResetPagingCache = true;
             self._scrollController.setResetInEnd(direction === 'down');
-            _private.reload(self, self._options, navigationQueryConfig).addCallback(() => {
+            self._reload(self._options, navigationQueryConfig).addCallback(() => {
                 self._shouldNotResetPagingCache = false;
 
                 /**
@@ -3411,8 +3305,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
     __errorController = null;
 
-    _beforeMountCallback = null;
-
     //#endregion
 
     constructor(options) {
@@ -3431,7 +3323,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
      * @return {Promise}
      * @protected
      */
-    protected _beforeMount(newOptions: TOptions, context?, receivedState?: IReceivedState = {}): void {
+    protected _beforeMount(newOptions: TOptions, context?, receivedState?: IReceivedState = {}): void | Promise<unknown> {
         this._notifyNavigationParamsChanged = _private.notifyNavigationParamsChanged.bind(this);
         this._dataLoadCallback = _private.dataLoadCallback.bind(this);
         this._uniqueId = Guid.create();
@@ -3512,13 +3404,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                     const selectionController = _private.createSelectionController(this, newOptions);
                     const selection = {selected: newOptions.selectedKeys, excluded: newOptions.excludedKeys};
                     selectionController.setSelection(selection);
-                }
-                if (this._beforeMountCallback) {
-                    this._beforeMountCallbackCalled = true;
-                    this._beforeMountCallback({
-                        viewModel: this._listViewModel,
-                        markerController: _private.getMarkerController(this, newOptions)
-                    });
                 }
             }
         });
@@ -4145,13 +4030,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                 }
                 const isActionsAssigned = this._listViewModel.isActionsAssigned();
                 _private.assignItemsToModel(this, items, newOptions);
-                if (this._beforeMountCallback && !this._beforeMountCallbackCalled) {
-                    this._beforeMountCallbackCalled = true;
-                    this._beforeMountCallback({
-                        viewModel: this._listViewModel,
-                        markerController: _private.getMarkerController(this, newOptions)
-                    });
-                }
                 isItemsResetFromSourceController = true;
 
                 // TODO удалить когда полностью откажемся от старой модели
@@ -4427,9 +4305,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
     _onValidateDestroyed(e: Event, control: ValidateContainer): void {
         this._validateController.removeValidator(control);
-    }
-
-    protected _beforeReloadCallback(filter, sorting, navigation, cfg): void {
     }
 
     protected _afterReloadCallback(options, loadedList: RecordSet): void {
@@ -4941,9 +4816,111 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         return cancelEditPromise.then(() => {
             if (!this._destroyed) {
-                return _private.reload(this, this._options, sourceConfig).then(getData);
+                return this._reload(this._options, sourceConfig).then(getData);
             }
         });
+    }
+
+    protected _reload(cfg, sourceConfig?: IBaseSourceConfig): Promise<any> | Deferred<any> {
+        const filter: IHashMap<unknown> = cClone(cfg.filter);
+        const navigation = cClone(cfg.navigation);
+        const resDeferred = new Deferred();
+        const self = this;
+
+        self._noDataBeforeReload = !_private.hasDataBeforeLoad(self);
+
+        if (self._sourceController) {
+            _private.showIndicator(self);
+            _private.getPortionedSearch(self).reset();
+
+            if (cfg.groupProperty) {
+                const collapsedGroups = self._listViewModel ? self._listViewModel.getCollapsedGroups() : cfg.collapsedGroups;
+                GroupingController.prepareFilterCollapsedGroups(collapsedGroups, filter);
+            }
+            // Need to create new Deffered, returned success result
+            // load() method may be fired with errback
+            _private.setReloadingState(self, true);
+            self._sourceController.reload(sourceConfig).addCallback(function(list) {
+                // Пока загружались данные - список мог уничтожится. Обрабатываем это.
+                // https://online.sbis.ru/opendoc.html?guid=8bd2ff34-7d72-4c7c-9ccf-da9f5160888b
+                if (self._destroyed) {
+                    resDeferred.callback({
+                        data: null
+                    });
+                    return;
+                }
+                _private.doAfterUpdate(self, () => {
+                    _private.hideError(self);
+                    _private.setReloadingState(self, false);
+                    if (list.getCount()) {
+                        self._loadedItems = list;
+                    } else {
+                        self._loadingIndicatorContainerOffsetTop = _private.getListTopOffset(self);
+                    }
+                    if (self._pagingNavigation) {
+                        const hasMoreDataDown = list.getMetaData().more;
+                        _private.updatePagingData(self, hasMoreDataDown);
+                    }
+                    let listModel = self._listViewModel;
+
+                    if (!self._shouldNotResetPagingCache) {
+                        self._cachedPagingState = false;
+                    }
+
+                    if (listModel) {
+                        if (self._groupingLoader) {
+                            self._groupingLoader.resetLoadedGroups(listModel);
+                        }
+
+                        // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
+                        // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
+                        // выполняется в колбеке после обновления (doAfterUpdate).
+                        _private.assignItemsToModel(self, list, self._options);
+
+                        if (self._sourceController) {
+                            _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
+                        }
+
+                        if (self._loadedItems) {
+                            self._shouldRestoreScrollPosition = true;
+                        }
+                        // после reload может не сработать beforeUpdate поэтому обновляем еще и в reload
+                        if (self._itemsChanged) {
+                            self._shouldNotifyOnDrawItems = true;
+                        }
+                    } else {
+                        _private.initializeModel(self, cfg, list)
+                    }
+                    _private.prepareFooter(self, self._options, self._sourceController);
+                    _private.resolveIndicatorStateAfterReload(self, list, navigation);
+
+                    resDeferred.callback({
+                        data: list
+                    });
+
+                    _private.resetScrollAfterLoad(self);
+                    _private.resolveIsLoadNeededByNavigationAfterReload(self, cfg, list);
+                });
+            }).addErrback(function(error: Error) {
+                _private.hideIndicator(self);
+                return _private.processError(self, {
+                    error
+                }).then(function(result: ICrudResult) {
+                    if (!self._destroyed) {
+                        self._afterReloadCallback(cfg);
+                    }
+                    resDeferred.callback({
+                        data: null,
+                        ...result
+                    });
+                }) as Deferred<Error>;
+            });
+        } else {
+            self._afterReloadCallback(cfg);
+            resDeferred.callback();
+            Logger.error('BaseControl: Source option is undefined. Can\'t load data', self);
+        }
+        return resDeferred;
     }
 
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)
@@ -5720,12 +5697,12 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     _onCutClick() {
         if (!this._expanded) {
             this._sourceController.setNavigation(undefined);
-            _private.reload(this, this._options).then(() => {
+            this._reload(this._options).then(() => {
                 this._expanded = true;
             });
         } else {
             this._sourceController.setNavigation(this._options.navigation);
-            _private.reload(this, this._options).then(() => {
+            this._reload(this._options).then(() => {
                 this._expanded = false;
             });
         }
@@ -5990,7 +5967,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         const updateData = () => {
             this._sourceController.setNavigation(newNavigation);
-            const result = _private.reload(this, this._options);
+            const result = this._reload(this._options);
             this._shouldRestoreScrollPosition = true;
             return result;
         };

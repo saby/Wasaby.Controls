@@ -1165,7 +1165,7 @@ describe('Controls/list_clean/BaseControl', () => {
             let isCancelCalled = false;
 
             beforeEach(() => {
-                stubReload = sinon.stub(BaseControl._private, 'reload').callsFake(() => Promise.resolve());
+                stubReload = sinon.stub(baseControl, '_reload').callsFake(() => Promise.resolve());
                 baseControl._editInPlaceController = {
                     isEditing: () => true
                 };

@@ -935,104 +935,6 @@ define([
 
          });
       });
-      // it('TreeControl._beforeUpdate', function() {
-      //    var
-      //       reloadCalled = false,
-      //       setRootCalled = false,
-      //       filterOnOptionChange = null,
-      //       source = new sourceLib.Memory({
-      //          data: [],
-      //          keyProperty: 'id'
-      //       }),
-      //       config = {
-      //          columns: [],
-      //          source: source,
-      //          items: new collection.RecordSet({
-      //             rawData: [],
-      //             keyProperty: 'id'
-      //          }),
-      //          expandedItems: [],
-      //          collapsedItems: [],
-      //          selectedKeys: [],
-      //          excludedKeys: [],
-      //          selectionType: 'all',
-      //          keyProperty: 'id',
-      //          parentProperty: 'parent'
-      //       },
-      //       treeControl = correctCreateTreeControl(config),
-      //       treeGridViewModel = treeControl.getViewModel(),
-      //       reloadOriginal = treeControl.reload;
-      //
-      //
-      //    treeGridViewModel.setRoot = function() {
-      //       setRootCalled = true;
-      //    };
-      //    treeControl.reload = function() {
-      //       reloadCalled = true;
-      //       return reloadOriginal.apply(this, arguments);
-      //    };
-      //    treeGridViewModel._model._display = {
-      //       setFilter: function() {},
-      //       getRoot: function() {
-      //          return {
-      //             getContents: function() {
-      //                return null;
-      //             }
-      //          };
-      //       },
-      //       unsubscribe: () => {},
-      //       destroy: () => {},
-      //       getChildren: function() {
-      //          return {
-      //             getCount() {
-      //                return null;
-      //             }
-      //          };
-      //       },
-      //       getCollection: function () {
-      //          return new collection.RecordSet({
-      //             rawData: [],
-      //             idProperty: 'id'
-      //          });
-      //       },
-      //       getItemBySourceItem: function () {
-      //          return null;
-      //       },
-      //       getItemBySourceKey: function () {
-      //          return null;
-      //       },
-      //       getCollapsedGroups: () => undefined,
-      //       getKeyProperty: () => 'id',
-      //       getCount() {
-      //          return null;
-      //       }
-      //    };
-      //    treeGridViewModel.setExpandedItems(['testRoot']);
-      //
-      //    return new Promise(function(resolve, reject) {
-      //       const originBRC = treeControl._beforeReloadCallback;
-      //
-      //       treeControl._beforeReloadCallback = function(filter) {
-      //          originBRC.call(treeControl, filter, null, null, treeControl._options);
-      //          filterOnOptionChange = filter;
-      //       };
-      //       treeControl.reload().addCallback(function(res) {
-      //          const configClone = {...config};
-      //          configClone.root = 'testRoot';
-      //          treeControl._beforeUpdate(configClone);
-      //          treeControl._options.root = 'testRoot';
-      //          try {
-      //             assert.deepEqual(treeGridViewModel.getExpandedItems(), []);
-      //          } catch (e) {
-      //             reject(e);
-      //          }
-      //
-      //          assert.isTrue(treeControl._needResetExpandedItems);
-      //          resolve();
-      //          return res;
-      //       });
-      //    });
-      // });
 
       describe('_beforeUpdate', () => {
          it('_beforeUpdate with new expandedItems', async () => {
@@ -1903,7 +1805,7 @@ define([
          filter = {};
          cfg.selectedKeys = [];
          selfWithBaseControl._nodesSourceControllers = getNodesSourceControllers();
-         const callback = correctCreateTreeControl(cfg)._beforeReloadCallback;
+         const callback = correctCreateTreeControl(cfg)._prepareModelBeforeReload;
          callback.call(selfWithBaseControl, filter, null, null, cfg);
          assert.isFalse(!!selfWithBaseControl._nodesSourceControllers[1]);
 

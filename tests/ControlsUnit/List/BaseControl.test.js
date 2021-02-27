@@ -2669,7 +2669,7 @@ define([
 
          lnBaseControl.saveOptions(lnCfg);
          await lnBaseControl._beforeMount(lnCfg);
-         await lists.BaseControl._private.reload(lnBaseControl, lnCfg);
+         await lnBaseControl._reload(lnCfg);
          assert.equal(lnBaseControl._shouldRestoreScrollPosition, true);
       });
 
@@ -2971,7 +2971,7 @@ define([
 
          it('before mounting', async function() {
             await baseControl._beforeMount(cfg);
-            await lists.BaseControl._private.reload(baseControl, cfg);
+            await baseControl._reload(cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
             scrollContainer.clientHeight = 100;
             await baseControl._afterMount();
@@ -2979,7 +2979,7 @@ define([
          });
          it('after scroll to end', async function() {
             baseControl._wasScrollToEnd = true;
-            await lists.BaseControl._private.reload(baseControl, cfg);
+            await baseControl._reload(cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
             scrollContainer.clientHeight = 100;
             await baseControl._afterMount();
@@ -2987,7 +2987,7 @@ define([
          });
          it('without scroll', async function() {
             baseControl._isScrollShown = false;
-            await lists.BaseControl._private.reload(baseControl, cfg);
+            await baseControl._reload(cfg);
             assert.isFalse(baseControl._resetScrollAfterReload);
             await baseControl._afterUpdate(cfg);
             baseControl._componentDidUpdate();
@@ -2995,7 +2995,7 @@ define([
          });
          it('with scroll', async function() {
             baseControl._isScrollShown = true;
-            await lists.BaseControl._private.reload(baseControl, cfg);
+            await baseControl._reload(cfg);
             await baseControl._afterUpdate(cfg);
             baseControl._componentDidUpdate();
             assert.isFalse(doScrollNotified);
@@ -6748,7 +6748,7 @@ define([
             };
 
             let cfgClone = { ...cfg };
-            await lists.BaseControl._private.reload(ctrl, cfgClone);
+            await ctrl._reload(cfgClone);
             await ctrl._sourceController._loadPromise.promise;
 
             assert.equal(2, queryCallsCount);
