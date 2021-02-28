@@ -555,13 +555,6 @@ export default class Controller extends mixin<
                 })
                 .catch((error) => {
                     if (error && !error.isCanceled && !error.canceled) {
-                        // Если упала ошибка при загрузке в каком-то направлении,
-                        // то контроллер навигации сбрасывать нельзя,
-                        // Т.к. в этом направлении могут продолжить загрухзку
-                        if (!direction) {
-                            this._navigationController = null;
-                        }
-                        this._loadPromise = null;
                         this._processQueryError(error);
                     }
                     return Promise.reject(error);
@@ -657,8 +650,16 @@ export default class Controller extends mixin<
     }
 
     private _processQueryError(
-        queryError: Error
+        queryError: Error,
+        direction?: Direction
     ): Error {
+        // Если упала ошибка при загрузке в каком-то направлении,
+        // то контроллер навигации сбрасывать нельзя,
+        // Т.к. в этом направлении могут продолжить загрухзку
+        if (!direction) {
+            this._navigationController = null;
+        }
+        this._loadPromise = null;
         if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(queryError);
         }

@@ -20,7 +20,7 @@ import {SerializableMixin} from 'Types/entity';
 import {ControllerClass as SearchController} from 'Controls/search';
 import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 
-const FILTER_PARAMS_LOAD_TIMEOUT = 10000;
+const DEFAULT_LOAD_TIMEOUT = 10000;
 
 interface IFilterHistoryLoaderResult {
     filterButtonSource: IFilterItem[];
@@ -149,14 +149,14 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
             .catch(() => {
                 filterController = getFilterController(loadConfig as IFilterControllerOptions);
             });
-        filterPromise = wrapTimeout(filterPromise, FILTER_PARAMS_LOAD_TIMEOUT).catch(() => {
+        filterPromise = wrapTimeout(filterPromise, DEFAULT_LOAD_TIMEOUT).catch(() => {
             Logger.info('Controls/dataSource:loadData: Данные фильтрации не загрузились за 1 секунду');
         });
     }
 
     if (loadConfig.propStorageId) {
         sortingPromise = loadSavedConfig(loadConfig.propStorageId, ['sorting']);
-        sortingPromise = wrapTimeout(sortingPromise, FILTER_PARAMS_LOAD_TIMEOUT).catch(() => {
+        sortingPromise = wrapTimeout(sortingPromise, DEFAULT_LOAD_TIMEOUT).catch(() => {
             Logger.info('Controls/dataSource:loadData: Данные сортировки не загрузились за 1 секунду');
         });
     }
