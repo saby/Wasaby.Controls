@@ -163,7 +163,7 @@ var
                             }
                             self._saveColumnScrollSizes(newSizes);
                             self._updateColumnScrollData();
-                            self._listModel?.setColumnScrollVisibility(self._isColumnScrollVisible());
+                            self._listModel?.setColumnScrollVisibility(self._isColumnScrollVisible(), true);
                         }, true);
                         result = 'created';
                     } else {

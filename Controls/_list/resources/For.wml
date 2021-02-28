@@ -25,7 +25,6 @@
                         editArrowTemplate="{{ editArrowTemplate }}"
                         multiSelectTpl="{{ multiSelectTpl }}"
                         backgroundStyle="{{ backgroundStyle }}"
-                        isColumnScrollVisible="{{ isColumnScrollVisible }}"
                         tagTemplate="{{ tagTemplate }}"
                         markerPosition="{{_options.markerPosition}}"
 
@@ -52,7 +51,6 @@
                     editArrowTemplate="{{ editArrowTemplate }}"
                     multiSelectTpl="{{ multiSelectTpl }}"
                     backgroundStyle="{{ backgroundStyle }}"
-                    isColumnScrollVisible="{{ isColumnScrollVisible }}"
                     tagTemplate="{{ tagTemplate }}"
                     markerPosition="{{_options.markerPosition}}"
 
