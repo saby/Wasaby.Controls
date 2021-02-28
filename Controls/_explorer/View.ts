@@ -64,7 +64,7 @@ const VIEW_MODEL_CONSTRUCTORS_NEW = {
 };
 const USE_NEW_MODEL_VALUES_NEW = {
     search: true,
-    tile: false,
+    tile: true,
     table: true,
     list: true
 };
@@ -249,7 +249,7 @@ export default class Explorer extends Control<IControlOptions> {
             cfg.sourceController) {
             // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
             if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
-                this._loadTileViewMode().then(() => {
+                this._loadTileViewMode(cfg).then(() => {
                     this._setViewModeSync(this._pendingViewMode, cfg);
                 });
             } else {
@@ -658,7 +658,7 @@ export default class Explorer extends Control<IControlOptions> {
         }
 
         if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-            this._setViewModePromise = this._loadTileViewMode().then(() => {
+            this._setViewModePromise = this._loadTileViewMode(cfg).then(() => {
                 this._setViewModeSync(viewMode, cfg);
             });
         } else {
@@ -717,18 +717,28 @@ export default class Explorer extends Control<IControlOptions> {
         return itemFromRoot;
     }
 
-    private _loadTileViewMode(): Promise<void> {
-        return new Promise((resolve) => {
-            import('Controls/tile').then((tile) => {
-                VIEW_NAMES.tile = tile.TreeView;
-                VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
-                VIEW_NAMES_NEW.tile = tile.TreeView;
-                VIEW_MODEL_CONSTRUCTORS_NEW.tile = tile.TreeViewModel;
-                resolve(tile);
-            }).catch((err) => {
-                Logger.error('Controls/_explorer/View: ' + err.message, this, err);
+    private _loadTileViewMode(options: any): Promise<void> {
+        if (options.useNewModel) {
+            return new Promise((resolve) => {
+                import('Controls/treeTile').then((tile) => {
+                    VIEW_NAMES_NEW.tile = tile.View;
+                    VIEW_MODEL_CONSTRUCTORS_NEW.tile = 'Controls/treeTile:TreeTileCollection';
+                    resolve(tile);
+                }).catch((err) => {
+                    Logger.error('Controls/_explorer/View: ' + err.message, this, err);
+                });
             });
-        });
+        } else {
+            return new Promise((resolve) => {
+                import('Controls/tile').then((tile) => {
+                    VIEW_NAMES.tile = tile.TreeView;
+                    VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+                    resolve(tile);
+                }).catch((err) => {
+                    Logger.error('Controls/_explorer/View: ' + err.message, this, err);
+                });
+            });
+        }
     }
 
     private _canStartDragNDropFunc(): boolean {

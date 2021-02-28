@@ -4,6 +4,27 @@ import {TileMixin} from 'Controls/tileNew';
 import TreeTileCollectionItem from './TreeTileCollectionItem';
 import {ItemsFactory, itemsStrategy, Tree, TreeItem} from 'Controls/display';
 import InvisibleStrategy from './strategy/Invisible';
+import {CrudEntityKey} from "Types/source";
+
+/**
+ * Рекурсивно проверяет скрыт ли элемент сворачиванием родительских узлов
+ * @param {TreeItem<T>} item
+ */
+function itemIsVisible<T extends Model>(item: TreeItem<T>): boolean  {
+    if (item['[Controls/_display/GroupItem]'] || item['[Controls/_display/BreadcrumbsItem]']) {
+        return true;
+    }
+
+    const parent = item.getParent();
+    // корневой узел не может быть свернут
+    if (!parent || parent['[Controls/_display/BreadcrumbsItem]'] || parent.isRoot()) {
+        return true;
+    } else if (!parent.isExpanded()) {
+        return false;
+    }
+
+    return itemIsVisible(parent);
+}
 
 export default class TreeTileCollection<
     S extends Model = Model,
@@ -12,6 +33,16 @@ export default class TreeTileCollection<
     protected _$nodesHeight: number;
 
     protected _$folderWidth: number;
+
+    constructor(options: any) {
+        super(options);
+
+        // TODO должно быть в Tree. Перенести туда, когда полностью перейдем на новые коллекции.
+        //  Если сразу в Tree положим, то все разломаем
+        this.addFilter(
+            (contents, sourceIndex, item, collectionIndex) => itemIsVisible(item)
+        );
+    }
 
     getNodesHeight(): number {
         return this._$nodesHeight;

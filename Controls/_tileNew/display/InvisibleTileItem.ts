@@ -91,6 +91,10 @@ export default class InvisibleTileItem extends mixin<VersionableMixin, OptionsTo
     isEditing(): boolean {
         return false;
     }
+
+    getContents(): object {
+        return this.getInstanceId();
+    }
 }
 
 Object.assign(InvisibleTileItem.prototype, {

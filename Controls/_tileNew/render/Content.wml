@@ -1,7 +1,7 @@
 <div class="{{ item.getContentClasses(itemType) }}"
      style="{{ item.getContentStyles(itemType, imageViewMode, imagePosition, gradientColor) }}">
     <ws:if data="{{ item.shouldDisplayTitle(itemType) }}">
-        <span class="{{ item.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle) }}"
+        <div class="{{ item.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle) }}"
               style="{{ item.getTitleStyles(itemType, titleLines) }}"
               title="{{ item.getDisplayValue() }}">
             <ws:if data="{{ item.getSearchValue() }}">
@@ -14,7 +14,7 @@
             <ws:else>
                 {{ item.getDisplayValue() }}
             </ws:else>
-        </span>
+        </div>
     </ws:if>
 
     <ws:if data="{{ item.shouldDisplayDescription(itemType, description, descriptionLines) }}">

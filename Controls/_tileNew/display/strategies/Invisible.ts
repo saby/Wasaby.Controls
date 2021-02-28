@@ -164,7 +164,7 @@ export default class InvisibleStrategy<
     protected static _createInvisibleItems(display: TileCollection, options: object): InvisibleTileItem[] {
         const items = [];
 
-        const params = InvisibleStrategy._getInvisibleItemParams(display, options);
+        const params = this._getInvisibleItemParams(display, options);
         for (let i = 0; i < COUNT_INVISIBLE_ITEMS; i++) {
             if (i === COUNT_INVISIBLE_ITEMS - 1) {
                 params.lastInvisibleItem = true;

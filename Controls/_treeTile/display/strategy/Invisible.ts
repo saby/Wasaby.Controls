@@ -32,17 +32,19 @@ export default class InvisibleStrategy<
         for (let i = 0; i < items.length; i++) {
             const item = items[i];
             const prevItem = items[i - 1];
-            if (item['[Controls/_display/GroupItem]'] || prevItem && prevItem.isNode() && !item.isNode()) {
+            if (item['[Controls/_display/GroupItem]'] || prevItem && prevItem.isNode() !== null && item.isNode() === null && item.getParent() !== prevItem) {
                 const invisibleIsNode = prevItem && prevItem.isNode();
-                newInvisibleItems.push(super._createInvisibleItems(options.display, invisibleIsNode));
+                const parent = prevItem.getParent();
+                newInvisibleItems.push(super._createInvisibleItems(options.display, {isNodeItems: invisibleIsNode, parent}));
                 insertIndexForNewInvisibleItems.push(i);
             }
         }
 
         // Вставляем невидимые элементы в конец списка
         const invisibleIsNode = items[items.length - 1].isNode();
-        newInvisibleItems.push(super._createInvisibleItems(options.display, invisibleIsNode));
-        insertIndexForNewInvisibleItems.push(items.length - 1);
+        const parent = items[items.length - 1].getParent();
+        newInvisibleItems.push(super._createInvisibleItems(options.display, {isNodeItems: invisibleIsNode, parent}));
+        insertIndexForNewInvisibleItems.push(items.length);
 
         const itemsOrder = items.map((it, index) => index + newInvisibleItems.length * COUNT_INVISIBLE_ITEMS);
 
@@ -63,6 +65,7 @@ export default class InvisibleStrategy<
         const params = super._getInvisibleItemParams(display, options);
         params.itemModule = 'Controls/treeTile:InvisibleTreeTileItem';
         params.node = options.isNodeItems;
+        params.parent = options.parent;
         params.folderWidth = display.getFolderWidth();
         return params;
     }
