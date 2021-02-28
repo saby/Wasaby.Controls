@@ -47,6 +47,7 @@
 
             <Controls.scroll:Container attr:class="controls-ScrollContainer__flex controls-FavoriteEditDialog__scroll">
                <Controls.toggle:CheckboxGroup bind:selectedKeys="_selectedFilters"
+                                              on:selectedKeysChanged="_selectedFiltersChanged()"
                                               keyProperty="{{_keyProperty}}"
                                               source="{{_source}}">
                   <ws:itemTemplate>
