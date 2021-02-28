@@ -196,11 +196,11 @@ define([
             target: 'myContainer',
             validationStatus: 'invalid',
             template: 'myTemplate',
-            templateOptions: {
+            templateOptions: {k
                errors: 'Error'
             },
             eventHandlers: {},
-            closeOnOutsideClick: false
+            closeOnOutsideClick: true
          };
 
          validCtrl._callInfoBox = (cfg) => {
