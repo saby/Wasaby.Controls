@@ -196,7 +196,7 @@ define([
             target: 'myContainer',
             validationStatus: 'invalid',
             template: 'myTemplate',
-            templateOptions: {k
+            templateOptions: {
                errors: 'Error'
             },
             eventHandlers: {},
