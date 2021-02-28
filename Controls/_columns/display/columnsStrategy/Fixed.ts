@@ -1,8 +1,9 @@
 import Collection from 'Controls/_columns/display/Collection';
-import {IColumnsCalculator} from 'Controls/_columns/interface/IColumnsCalculator';
+import IColumnsStrategy from 'Controls/_columns/interface/IColumnsStrategy';
+import { Model } from 'Types/entity';
 
-export class FixedColumns implements IColumnsCalculator {
-    calcColumn(collection: Collection<unknown>, index: number): number {
+export default class Fixed implements IColumnsStrategy {
+    calcColumn(collection: Collection<Model>, index: number): number {
         if (index < collection.getCount()) {
             const item = collection.at(index);
             return item.getContents().get && item.getContents().get(collection.getColumnProperty() || 'column') || 0;
