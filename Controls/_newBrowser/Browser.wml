@@ -56,9 +56,7 @@
          >
             <ws:afterBreadCrumbsTemplate>
                <ws:if data="{{_options.detail.afterBreadCrumbsTemplate}}">
-                  <div on:search="_onSearch()" on:searchReset="_onSearchReset()">
-                     <ws:partial template="{{_options.detail.afterBreadCrumbsTemplate}}"/>
-                  </div>
+                  <ws:partial template="{{_options.detail.afterBreadCrumbsTemplate}}"/>
                </ws:if>
                <ws:else>
                   <invisible-node/>
