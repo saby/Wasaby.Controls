@@ -4,7 +4,7 @@ import template = require('wml!Controls/_form/ControllerBase/ControllerBase');
 import {Model, Record} from 'Types/entity';
 import * as cInstance from 'Core/core-instance';
 import * as Deferred from 'Core/Deferred';
-import {IControllerBase} from 'Controls/_form/interface/IControllerBase';
+import IControllerBase from 'Controls/_form/interface/IControllerBase';
 import {IFormOperation} from 'Controls/interface';
 import {Confirmation} from 'Controls/popup';
 import {Container as ValidateContainer, ControllerClass, IValidateResult} from 'Controls/validate';
