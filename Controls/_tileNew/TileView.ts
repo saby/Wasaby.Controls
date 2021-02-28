@@ -5,118 +5,92 @@ import {TouchContextField} from 'Controls/context';
 import { TILE_SCALING_MODE, ZOOM_COEFFICIENT, ZOOM_DELAY } from './utils/Constants';
 import {isEqual} from 'Types/object';
 import { getItemSize } from './utils/imageUtil';
+import { TemplateFunction } from 'UI/Base';
+import TileCollectionItem from './display/TileCollectionItem';
+import TileCollection from './display/TileCollection';
+import {SyntheticEvent} from 'UI/Vdom';
+import {Model} from 'Types/entity';
 
-var _private = {
-    getPositionInContainer: function (itemNewSize, itemRect, containerRect, zoomCoefficient, withoutCorrection = false) {
-        var
-            additionalWidth = (itemNewSize.width - itemRect.width) / 2,
-            additionalHeightBottom = (itemNewSize.height - itemRect.height * zoomCoefficient),
-            additionalHeight = (itemNewSize.height - itemRect.height - additionalHeightBottom) / 2,
-            left = itemRect.left - (containerRect.left + additionalWidth),
-            top = itemRect.top - (containerRect.top + additionalHeight),
-            right = containerRect.right - (itemRect.right + additionalWidth),
-            bottom = containerRect.bottom - (itemRect.bottom + additionalHeight + additionalHeightBottom);
+export default class TileView extends ListView {
+    protected _template: TemplateFunction = template;
+    protected _defaultItemTemplate: TemplateFunction = defaultItemTpl;
+    protected _hoveredItem: TileCollectionItem;
+    protected _mouseMoveTimeout: number;
+    protected _listModel: TileCollection;
 
-        return withoutCorrection ? {left, right, top, bottom} : _private.getCorrectPosition(top, right, bottom, left);
-    },
-    getPositionInDocument: function(position, containerRect, documentRect, withoutCorrection = false) {
-        var
-            left = position.left + containerRect.left,
-            right = position.right + (documentRect.width - containerRect.right),
-            top = position.top + containerRect.top,
-            bottom = position.bottom + (documentRect.height - containerRect.bottom);
-
-        return withoutCorrection ? {left, right, top, bottom} : _private.getCorrectPosition(top, right, bottom, left);
-    },
-    getCorrectPosition: function(top, right, bottom, left) {
-        if (left < 0) {
-            right += left;
-            left = 0;
-        } else if (right < 0) {
-            left += right;
-            right = 0;
-        }
-        if (top < 0) {
-            bottom += top;
-            top = 0;
-        } else if (bottom < 0) {
-            top += bottom;
-            bottom = 0;
-        }
-
-        if (left < 0 || right < 0 || top < 0 || bottom < 0) {
-            return null;
-        } else {
-            return {left, right, top, bottom};
-        }
-    },
-    getItemStartPosition: function (itemContainerRect, containerRect) {
-        return {
-            top: itemContainerRect.top,
-            left: itemContainerRect.left,
-            right: containerRect.width - itemContainerRect.right,
-            bottom: containerRect.height - itemContainerRect.bottom
-        };
-    },
-    onScroll: function (self) {
-        _private.clearMouseMoveTimeout(self);
-        self._listModel.setHoveredItem(null);
-    },
-    clearMouseMoveTimeout: function (self) {
-        clearTimeout(self._mouseMoveTimeout);
-        self._mouseMoveTimeout = null;
-    },
-    isTouch: function (self) {
-        return self._context?.isTouch?.isTouch;
-    },
-    getPositionStyle: function (position) {
-        var result = '';
-        if (position) {
-            for (var side in position) {
-                if (position.hasOwnProperty(side)) {
-                    result += side + ': ' + position[side] + 'px; ';
-                }
-            }
-        }
-        return result;
-    },
-    // TODO Нужен синглтон, который говорит, идет ли сейчас перетаскивание
-    // https://online.sbis.ru/opendoc.html?guid=a838cfd3-a49b-43a8-821a-838c1344288b
-    shouldProcessHover(self): boolean {
-        return (
-            !_private.isTouch(self) &&
-            !document.body.classList.contains('ws-is-drag')
-        );
-    }
-};
-
-var TileView = ListView.extend({
-    _template: template,
-    _defaultItemTemplate: defaultItemTpl,
-    _hoveredItem: undefined,
-    _mouseMoveTimeout: undefined,
-    _resizeFromSelf: false,
-
-    _afterMount: function () {
+    _afterMount(options: any): void {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
         this._notify('register', ['scroll', this, this._onScroll, {listenAll: true}], {bubbling: true});
-        TileView.superclass._afterMount.apply(this, arguments);
-    },
+        super._afterMount(options);
+    }
 
-    _onResize: function () {
-       this._listModel.setHoveredItem(null);
-    },
+    _onResize(): void {
+        this._listModel.setHoveredItem(null);
+    }
+
+    _beforeUpdate(newOptions: any): void {
+        if (this._options.tileMode !== newOptions.tileMode) {
+            this._listModel.setTileMode(newOptions.tileMode);
+        }
+        if (this._options.itemsContainerPadding !== newOptions.itemsContainerPadding) {
+            this._listModel.setItemsContainerPadding(newOptions.itemsContainerPadding);
+        }
+        if (this._options.tileHeight !== newOptions.tileHeight) {
+            this._listModel.setTileHeight(newOptions.tileHeight);
+        }
+        if (!isEqual(this._options.roundBorder, newOptions.roundBorder)) {
+            this._listModel.setRoundBorder(newOptions.roundBorder);
+        }
+        super._beforeUpdate(newOptions);
+    }
+
+    _afterUpdate(options: any): void {
+        const hoveredItem = this._listModel.getHoveredItem();
+
+        if (
+            hoveredItem &&
+            hoveredItem.endPosition &&
+            hoveredItem.endPosition !== hoveredItem.position &&
+            this._hasFixedItemInDOM()
+        ) {
+
+            // TODO: KINGO
+            // Браузер устанавливает на элемент position: fixed, а изменение свойств top/left/bottom/right группирует в
+            // одну перерисовку. В итоге, первые стили не проставляются, получаем большой контейнер.
+            // Когда устанавливаются вторые стили, контейнер сжимается до нужных размеров.
+            // Такое поведение стало проявляться, видимо, после оптимизации и ускорения шаблонизатора.
+            // Перерисовки, которые раньше происходили в два кадра, теперь происходят в один.
+            // Поэтому нужно вызвать forced reflow, чтобы применились первые стили, перед применением вторых.
+
+            const container = this._container[0] || this._container;
+            container.getBoundingClientRect();
+
+            this._listModel.setHoveredItem({
+                key: hoveredItem.key,
+                isAnimated: true,
+                canShowActions: true,
+                zoomCoefficient: this._getZoomCoefficient(),
+                position: hoveredItem.endPosition
+            });
+        }
+        super._afterUpdate(options);
+    }
+
+    _beforeUnmount(): void {
+        this._notify('unregister', ['controlResize', this], {bubbling: true});
+        this._notify('unregister', ['scroll', this, {listenAll: true}], {bubbling: true});
+    }
 
     getActionsMenuConfig(
-        item,
-        clickEvent,
-        action,
-        isContextMenu,
-        menuConfig,
-        itemData
+        item: Model,
+        clickEvent: SyntheticEvent,
+        action: object,
+        isContextMenu: boolean,
+        menuConfig: object,
+        itemData: TileCollectionItem
     ): Record<string, any> {
         const isActionMenu = !!action && !action.isMenu;
-        if (this._shouldOpenExtendedMenu(isActionMenu, isContextMenu, item) && menuConfig) {
+        if (this._shouldOpenExtendedMenu(isActionMenu, isContextMenu, itemData) && menuConfig) {
             const MENU_MAX_WIDTH = 200;
             const menuOptions = menuConfig.templateOptions;
             const itemContainer = clickEvent.target.closest('.controls-TileView__item');
@@ -126,10 +100,10 @@ var TileView = ListView.extend({
             }
             let previewWidth = imageWrapper.clientWidth;
             let previewHeight = imageWrapper.clientHeight;
-            menuOptions.image = itemData.imageData.url;
-            menuOptions.title = itemData.item.get(itemData.displayProperty);
+            menuOptions.image = itemData.getImageUrl();
+            menuOptions.title = itemData.getDisplayValue();
             menuOptions.additionalText = itemData.item.get(menuOptions.headerAdditionalTextProperty);
-            menuOptions.imageClasses = itemData.imageData?.class;
+            menuOptions.imageClasses = itemData.getImageClasses();
             if (this._options.tileScalingMode === TILE_SCALING_MODE.NONE) {
                 previewHeight = previewHeight * ZOOM_COEFFICIENT;
                 previewWidth = previewWidth * ZOOM_COEFFICIENT;
@@ -154,90 +128,41 @@ var TileView = ListView.extend({
         } else {
             return null;
         }
-    },
+    }
 
-    _shouldOpenExtendedMenu(isActionMenu, isContextMenu, item): boolean {
+    _shouldOpenExtendedMenu(isActionMenu: boolean, isContextMenu: boolean, item: TileCollectionItem): boolean {
         const isScalingTile = this._options.tileScalingMode !== 'none' &&
-            this._options.tileScalingMode !== 'overlap' &&
-            !item.isNode();
+            this._options.tileScalingMode !== 'overlap';
         return this._options.actionMenuViewMode === 'preview' && !isActionMenu && !(isScalingTile && isContextMenu);
-    },
+    }
 
-    _beforeUpdate: function (newOptions) {
-        if (this._options.tileMode !== newOptions.tileMode) {
-            this._listModel.setTileMode(newOptions.tileMode);
-        }
-        if (this._options.itemsContainerPadding !== newOptions.itemsContainerPadding) {
-            this._listModel.setItemsContainerPadding(newOptions.itemsContainerPadding);
-        }
-        if (this._options.tileHeight !== newOptions.tileHeight) {
-            this._listModel.setItemsHeight(newOptions.tileHeight);
-        }
-        if (!isEqual(this._options.roundBorder, newOptions.roundBorder)) {
-            this._listModel.setRoundBorder(newOptions.roundBorder);
-        }
-        TileView.superclass._beforeUpdate.apply(this, arguments);
-    },
-
-    _afterUpdate: function () {
-        var hoveredItem = this._listModel.getHoveredItem();
-
-        if (
-            hoveredItem &&
-            hoveredItem.endPosition &&
-            hoveredItem.endPosition !== hoveredItem.position &&
-            this._hasFixedItemInDOM()
-        ) {
-
-            // TODO: KINGO
-            // Браузер устанавливает на элемент position: fixed, а изменение свойств top/left/bottom/right группирует в
-            // одну перерисовку. В итоге, первые стили не проставляются, получаем большой контейнер.
-            // Когда устанавливаются вторые стили, контейнер сжимается до нужных размеров.
-            // Такое поведение стало проявляться, видимо, после оптимизации и ускорения шаблонизатора.
-            // Перерисовки, которые раньше происходили в два кадра, теперь происходят в один.
-            // Поэтому нужно вызвать forced reflow, чтобы применились первые стили, перед применением вторых.
-
-            let container = this._container[0] || this._container;
-            container.getBoundingClientRect();
-
-            this._listModel.setHoveredItem({
-                key: hoveredItem.key,
-                isAnimated: true,
-                canShowActions: true,
-                zoomCoefficient: this._getZoomCoefficient(),
-                position: hoveredItem.endPosition
-            });
-        }
-        TileView.superclass._afterUpdate.apply(this, arguments);
-    },
-
-    //TODO: Удалить проверку на DOM. https://online.sbis.ru/opendoc.html?guid=85bf65db-66a4-4b17-a59d-010a5ecb15a9
-    _hasFixedItemInDOM: function () {
+    // TODO: Удалить проверку на DOM. https://online.sbis.ru/opendoc.html?guid=85bf65db-66a4-4b17-a59d-010a5ecb15a9
+    _hasFixedItemInDOM(): boolean {
         return !!this._children.tileContainer.querySelector('.controls-TileView__item_fixed');
-    },
+    }
 
-    _onItemMouseLeave: function (event, itemData) {
-        var hoveredItem = this._listModel.getHoveredItem();
+    _onItemMouseLeave(event: SyntheticEvent, itemData: TileCollectionItem): void {
+        const hoveredItem = this._listModel.getHoveredItem();
         if (hoveredItem && hoveredItem.key === itemData.key) {
             if (!itemData.isActive() || hoveredItem.key !== itemData.key) {
                 this._listModel.setHoveredItem(null);
             }
         }
-        _private.clearMouseMoveTimeout(this);
-        TileView.superclass._onItemMouseLeave.apply(this, arguments);
-    },
+        this._clearMouseMoveTimeout();
+        super._onItemMouseLeave(event, itemData);
+    }
 
-    _onItemMouseMove(event, itemData): void {
+    _onItemMouseMove(event: SyntheticEvent, itemData: TileCollectionItem): void {
         const hoveredItem = this._listModel.getHoveredItem();
         const isCurrentItemHovered = hoveredItem && hoveredItem.key === itemData.key;
         const activeItem = this._listModel.getActiveItem();
         if (!isCurrentItemHovered &&
-            _private.shouldProcessHover(this) &&
+            this._shouldProcessHover() &&
             !this._listModel.isDragging() &&
             !activeItem
         ) {
             if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
-                _private.clearMouseMoveTimeout(this);
+                this._clearMouseMoveTimeout();
                 this._calculateHoveredItemPosition(event, itemData);
             } else {
                 const itemWidth = event.target.closest('.controls-TileView__item').clientWidth;
@@ -245,10 +170,10 @@ var TileView = ListView.extend({
             }
         }
 
-        TileView.superclass._onItemMouseMove.apply(this, arguments);
-    },
+        super._onItemMouseMove(event, itemData);
+    }
 
-    _calculateHoveredItemPosition: function (event, itemData, documentForUnits) {
+    _calculateHoveredItemPosition(event: SyntheticEvent, itemData: TileCollectionItem, documentForUnits?: boolean): void {
         const documentObject = documentForUnits ? documentForUnits : document;
         const itemContainer = event.target.closest('.controls-TileView__item');
         const itemContainerRect = itemContainer.getBoundingClientRect();
@@ -258,41 +183,36 @@ var TileView = ListView.extend({
 
         // If the hover on the checkbox does not increase the element
         if (event.target.closest('.js-controls-TileView__withoutZoom')) {
-            if (itemData.isNode && itemData.isNode() === false) {
-                if (documentForUnits) {
-                    itemSize = itemContainerRect;
-                } else {
-                    itemSize = getItemSize(itemContainer, 1, this._options.tileMode);
-                }
-                let position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
-                const documentRect = documentObject.documentElement.getBoundingClientRect();
-                position = _private.getPositionInDocument(position, containerRect, documentRect, true);
-                this._setHoveredItem(itemData, position, position, true, itemSize.width);
+            if (documentForUnits) {
+                itemSize = itemContainerRect;
             } else {
-                this._setHoveredItem(itemData, null, null, null, itemContainerRect.width);
+                itemSize = getItemSize(itemContainer, 1, this._options.tileMode);
             }
+            let position = this._getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
+            const documentRect = documentObject.documentElement.getBoundingClientRect();
+            position = this._getPositionInDocument(position, containerRect, documentRect, true);
+            this._setHoveredItem(itemData, position, position, true, itemSize.width);
         } else {
             itemSize = getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
             this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
         }
-    },
+    }
 
-    _prepareHoveredItem: function (itemData, itemContainerRect, itemSize, containerRect) {
-        var
-            self = this,
+    _prepareHoveredItem(itemData: TileCollectionItem, itemContainerRect, itemSize, containerRect): void {
+        let
             documentRect,
             itemStartPosition,
-            position = _private.getPositionInContainer(itemSize, itemContainerRect, containerRect, this._getZoomCoefficient());
+            position = this._getPositionInContainer(itemSize, itemContainerRect, containerRect, this._getZoomCoefficient());
 
         if (position) {
             documentRect = document.documentElement.getBoundingClientRect();
             if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP) {
-                itemStartPosition = _private.getItemStartPosition(itemContainerRect, documentRect);
+                itemStartPosition = this._getItemStartPosition(itemContainerRect, documentRect);
             } else {
                 itemStartPosition = null;
             }
-            this._mouseMoveTimeout = setTimeout(function () {
-                self._setHoveredItem(itemData, _private.getPositionInDocument(position, containerRect, documentRect), itemStartPosition, null, itemSize.width);
+            this._mouseMoveTimeout = setTimeout(function() {
+                this._setHoveredItem(itemData, this._getPositionInDocument(position, containerRect, documentRect), itemStartPosition, null, itemSize.width);
             }, ZOOM_DELAY);
         } else {
             /* Если позиции нет, то это означает, что плитка по одной из координат выходит за пределы контейнера.
@@ -300,27 +220,29 @@ var TileView = ListView.extend({
              */
             this._setHoveredItem(itemData, null, null, false, itemContainerRect.width);
         }
-    },
+    }
 
-    _getZoomCoefficient: function () {
-        return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP ? ZOOM_COEFFICIENT : 1;
-    },
+    _getZoomCoefficient(): number {
+        return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP
+            ? ZOOM_COEFFICIENT
+            : 1;
+    }
 
-    _setHoveredItem: function (itemData, position, startPosition, noZoom, itemWidth?: number): void {
+    _setHoveredItem(itemData: TileCollectionItem, position: string, startPosition: string, noZoom: boolean, itemWidth?: number): void {
         const needUpdateActions = this._options.actionMode === 'adaptive' && (!itemData.isNode || !itemData.isNode());
         if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
             this._listModel.setHoveredItem({
                 key: itemData.key,
                 canShowActions: noZoom || !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
                 zoomCoefficient: this._getZoomCoefficient(),
-                position: _private.getPositionStyle(startPosition || position),
-                endPosition: _private.getPositionStyle(position)
+                position: this._getPositionStyle(startPosition || position),
+                endPosition: this._getPositionStyle(position)
             });
         }
         if (needUpdateActions) {
             this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
         }
-    },
+    }
 
     getItemsPaddingContainerClasses(): string {
         const theme = `_theme-${this._options.theme}`;
@@ -341,36 +263,123 @@ var TileView = ListView.extend({
         }
 
         return classes;
-    },
-
-    _onItemWheel: function () {
-        _private.onScroll(this);
-    },
-
-    _onScroll: function () {
-        _private.onScroll(this);
-    },
-
-    getItemsContainer: function () {
-        return this._children.tileContainer;
-    },
-
-    _beforeUnmount: function () {
-        this._notify('unregister', ['controlResize', this], {bubbling: true});
-        this._notify('unregister', ['scroll', this, {listenAll: true}], {bubbling: true});
-    },
-
-    _onTileViewKeyDown: function () {
     }
-});
 
-TileView.getDefaultOptions = function () {
-    return {
-        itemsHeight: 150,
-        tileMode: 'static',
-        tileScalingMode: TILE_SCALING_MODE.NONE
-    };
-};
+    _onItemWheel(): void {
+        this.onScroll();
+    }
+
+    _onScroll(): void {
+        this.onScroll();
+    }
+
+    getItemsContainer(): object {
+        return this._children.tileContainer;
+    }
+
+    _onTileViewKeyDown(): void {}
+
+    private _getPositionInContainer(itemNewSize: object, itemRect: object, containerRect: object, zoomCoefficient: number, withoutCorrection: boolean = false): object {
+        const
+            additionalWidth = (itemNewSize.width - itemRect.width) / 2,
+            additionalHeightBottom = (itemNewSize.height - itemRect.height * zoomCoefficient),
+            additionalHeight = (itemNewSize.height - itemRect.height - additionalHeightBottom) / 2,
+            left = itemRect.left - (containerRect.left + additionalWidth),
+            top = itemRect.top - (containerRect.top + additionalHeight),
+            right = containerRect.right - (itemRect.right + additionalWidth),
+            bottom = containerRect.bottom - (itemRect.bottom + additionalHeight + additionalHeightBottom);
+
+        return withoutCorrection ? {left, right, top, bottom} : this.getCorrectPosition(top, right, bottom, left);
+    }
+
+    private _getPositionInDocument(position: object, containerRect: object, documentRect: object, withoutCorrection: boolean = false): object {
+        const
+            left = position.left + containerRect.left,
+            right = position.right + (documentRect.width - containerRect.right),
+            top = position.top + containerRect.top,
+            bottom = position.bottom + (documentRect.height - containerRect.bottom);
+
+        return withoutCorrection ? {left, right, top, bottom} : this.getCorrectPosition(top, right, bottom, left);
+    }
+
+    private getCorrectPosition(top: number, right: number, bottom: number, left: number): object {
+        if (left < 0) {
+            right += left;
+            left = 0;
+        } else if (right < 0) {
+            left += right;
+            right = 0;
+        }
+        if (top < 0) {
+            bottom += top;
+            top = 0;
+        } else if (bottom < 0) {
+            top += bottom;
+            bottom = 0;
+        }
+
+        if (left < 0 || right < 0 || top < 0 || bottom < 0) {
+            return null;
+        } else {
+            return {left, right, top, bottom};
+        }
+    }
+
+    private _getItemStartPosition(itemContainerRect: object, containerRect: object): object {
+        return {
+            top: itemContainerRect.top,
+            left: itemContainerRect.left,
+            right: containerRect.width - itemContainerRect.right,
+            bottom: containerRect.height - itemContainerRect.bottom
+        };
+    }
+
+    private onScroll(): void {
+        this._clearMouseMoveTimeout(this);
+        this._listModel.setHoveredItem(null);
+    }
+    private _clearMouseMoveTimeout(): void {
+        clearTimeout(this._mouseMoveTimeout);
+        this._mouseMoveTimeout = null;
+    }
+
+    private _getPositionStyle(position: object): string {
+        let result = '';
+        if (position) {
+            for (const side in position) {
+                if (position.hasOwnProperty(side)) {
+                    result += side + ': ' + position[side] + 'px; ';
+                }
+            }
+        }
+        return result;
+    }
+
+    // TODO Нужен синглтон, который говорит, идет ли сейчас перетаскивание
+    // https://online.sbis.ru/opendoc.html?guid=a838cfd3-a49b-43a8-821a-838c1344288b
+    private _shouldProcessHover(): boolean {
+        return (
+            !this._context?.isTouch?.isTouch &&
+            !document.body.classList.contains('ws-is-drag')
+        );
+    }
+
+    static _theme: string[] = ['Controls/tile'];
+
+    static getDefaultOptions(): object {
+        return {
+            itemsHeight: 150,
+            tileMode: 'static',
+            tileScalingMode: TILE_SCALING_MODE.NONE
+        };
+    }
+
+    static contextTypes(): object {
+        return {
+            isTouch: TouchContextField
+        };
+    }
+}
 
 Object.defineProperty(TileView, 'defaultProps', {
    enumerable: true,
@@ -380,14 +389,3 @@ Object.defineProperty(TileView, 'defaultProps', {
       return TileView.getDefaultOptions();
    }
 });
-
-TileView.contextTypes = function contextTypes() {
-    return {
-        isTouch: TouchContextField
-    };
-};
-
-TileView._private = _private;
-TileView._theme = ['Controls/tile'];
-
-export = TileView;

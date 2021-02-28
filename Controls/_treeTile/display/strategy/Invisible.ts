@@ -39,10 +39,10 @@ export default class InvisibleStrategy<
             }
         }
 
-        if (options.display.getTileMode() === 'static' && options.display.getCount()) {
-            const invisibleIsNode = items[items.length - 1].isNode();
-            newInvisibleItems.push(super._createInvisibleItems(options.display, invisibleIsNode));
-        }
+        // Вставляем невидимые элементы в конец списка
+        const invisibleIsNode = items[items.length - 1].isNode();
+        newInvisibleItems.push(super._createInvisibleItems(options.display, invisibleIsNode));
+        insertIndexForNewInvisibleItems.push(items.length - 1);
 
         const itemsOrder = items.map((it, index) => index + newInvisibleItems.length * COUNT_INVISIBLE_ITEMS);
 

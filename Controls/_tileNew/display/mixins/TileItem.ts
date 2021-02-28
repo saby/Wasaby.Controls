@@ -231,7 +231,7 @@ export default abstract class TileItem<T extends Model = Model> {
     }
 
     getAutoResizerStyles(width?: number): string {
-        return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width))} * 100%;`;
+        return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width)) * 100}%;`;
     }
 
     // endregion AutoResizer
@@ -708,14 +708,14 @@ export default abstract class TileItem<T extends Model = Model> {
                 height: ${this.getTileHeight()}px;
                 max-width: ${width}px;
             `;
-        } else if (staticHeight) {
-            return `
-                -ms-flex-preferred-size: ${width}px;
-                height: ${this.getTileHeight()}px;
-            `;
+        } else {
+            let styles = `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
+            if (staticHeight) {
+                styles += ` height: ${this.getTileHeight()}px;`;
+            }
+            return styles;
         }
 
-        return '';
     }
 
     getWrapperClasses(
