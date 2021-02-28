@@ -158,12 +158,14 @@ var
                     if (!self._columnScrollController) {
                         _private.createColumnScroll(self, options);
                         self._columnScrollController.updateSizes((newSizes) => {
+                            let silenceModelUpdate = true;
                             if (isOnMount && self._options.columnScrollStartPosition === 'end') {
                                 self._columnScrollController.setScrollPosition(newSizes.contentSize - newSizes.containerSize);
+                                silenceModelUpdate = false;
                             }
                             self._saveColumnScrollSizes(newSizes);
                             self._updateColumnScrollData();
-                            self._listModel?.setColumnScrollVisibility(self._isColumnScrollVisible(), true);
+                            self._listModel?.setColumnScrollVisibility(self._isColumnScrollVisible(), silenceModelUpdate);
                         }, true);
                         result = 'created';
                     } else {
