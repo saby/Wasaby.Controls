@@ -75,6 +75,8 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
 
     private _delayedHeaders: number[] = [];
 
+    private _stickyMode: MODE;
+
     // Считаем заголовок инициализированным после того как контроллер установил ему top или bottom.
     // До этого не синхронизируем дом дерево при изменении состояния.
     private _initialized: boolean = false;
@@ -259,7 +261,10 @@ export default class Group extends Control<IStickyHeaderGroupOptions> {
     }
 
     protected _stickyModeChanged(event: SyntheticEvent<Event>, stickyId: number, newMode: MODE): void {
-        this._notify('stickyModeChanged', [this._index, newMode], {bubbling: true});
+        if (this._stickyMode !== newMode) {
+            this._stickyMode = newMode;
+            this._notify('stickyModeChanged', [this._index, newMode], {bubbling: true});
+        }
         event.stopPropagation();
     }
 
