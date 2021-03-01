@@ -21,11 +21,7 @@
                         </ws:for>
                     </ws:if>
                     <ws:if data="{{ item.shouldDisplayExpander(expanderIcon, 'default') }}">
-                        <ws:partial template="{{item.getExpanderTemplate(expanderTemplate)}}"
-                                    itemData="{{item}}"
-                                    item="{{item}}"
-                                    expanderIcon="{{item.getExpanderIcon(expanderIcon)}}"
-                                    expanderSize="{{item.getExpanderSize(expanderSize)}}"/>
+                        <div class="{{(item || itemData).getExpanderClasses((item || itemData).getExpanderIcon(expanderIcon), (item || itemData).getExpanderSize(expanderSize))}}"></div>
                     </ws:if>
                     <ws:else data="{{item.shouldDisplayExpanderPadding(expanderIcon, expanderSize)}}">
                         <div class="{{item.getExpanderPaddingClasses(expanderSize)}}"></div>
@@ -78,11 +74,7 @@
 
                         <!-- Экспандер -->
                         <ws:if data="{{ item.shouldDisplayExpanderBlock(gridColumn) && item.shouldDisplayExpander(afterContentTemplate.expanderIcon, 'right') }}">
-                            <ws:partial template="{{item.getExpanderTemplate(afterContentTemplate.expanderTemplate)}}"
-                                        itemData="{{item}}"
-                                        item="{{item}}"
-                                        expanderIcon="{{item.getExpanderIcon(afterContentTemplate.expanderIcon)}}"
-                                        expanderSize="{{item.getExpanderSize(afterContentTemplate.expanderSize)}}"/>
+                            <div class="{{item.getExpanderClasses(item.getExpanderIcon(expanderIcon), item.getExpanderSize(expanderSize))}}"></div>
                         </ws:if>
                     </ws:afterContentTemplate>
                 </ws:partial>
