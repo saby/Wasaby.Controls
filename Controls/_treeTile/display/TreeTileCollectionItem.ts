@@ -83,7 +83,7 @@ export default class TreeTileCollectionItem<T extends Model = Model>
             itemType = 'small';
         }
 
-        let classes = super.getItemActionClasses(itemType);
+        let classes = super.getItemActionsClasses(itemType);
 
         if (itemType === 'preview' && this.isNode()) {
             classes += ' controls-TileView__previewTemplate_itemActions_node';
