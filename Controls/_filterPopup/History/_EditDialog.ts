@@ -92,6 +92,15 @@ class EditDialog extends Control<IEditDialogOptions> {
         this.sendResult({action: 'delete', isClient: this._isClient});
     }
 
+    protected _selectedFiltersChanged(): void {
+        this._placeholder = factory(this._options.items).filter((item): boolean => {
+            return this._selectedFilters.includes(item[this._keyProperty]);
+        }).map((selectedItem): string => {
+            return selectedItem.textValue;
+        }).value().join(', ');
+        this._textValue = this._options.isFavorite ? this._placeholder : '';
+    }
+
     protected _apply(): void {
         if (!this._selectedFilters.length) {
             this.showConfirmation();
