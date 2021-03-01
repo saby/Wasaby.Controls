@@ -104,6 +104,7 @@
                                                     nodeProperty="{{_options.toolbarNodeProperty}}"
                                                     iconSize="s"
                                                     on:itemClick="_toolbarItemClickHandler()"
+                                                    on:deactivated="_toolbarDeactivatedHandler()"
                                                     attr:class="controls-Lookup__toolbar_theme-{{_options.theme}}"/>
                         </ws:if>
                         <ws:partial template="{{_showSelectorTemplate}}"
