@@ -27,7 +27,7 @@ const DEFAULT_MIN_VISIBLE_ITEMS = 2;
  * @class Controls/_filterPopup/SimplePanel
  * @extends UI/Base:Control
  * @public
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  *
  * @example
  * <pre class="brush: html">
@@ -47,7 +47,7 @@ const DEFAULT_MIN_VISIBLE_ITEMS = 2;
  * @mixes Controls/_filterPopup/SimplePanel/SimplePanelStyles
  *
  * @public
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  *
  */
 class Panel extends Control<ISimplePanelOptions> {

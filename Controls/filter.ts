@@ -42,7 +42,8 @@ export {default as ViewContainer} from './_filter/View/Container';
 export {default as DateRangeEditor} from './_filter/Editors/DateRange';
 export {default as Prefetch} from 'Controls/_filter/Prefetch';
 export {default as mergeSource} from 'Controls/_filter/Utils/mergeSource';
-export {IFilterItem} from 'Controls/_filter/View/interface/IFilterView';
+export {IFilterItem} from 'Controls/_filter/View/interface/IFilterItem';
+export {IFilterViewOptions, IFilterView} from 'Controls/_filter/View/interface/IFilterView';
 
 export {
    ViewItemTemplate,

@@ -15,7 +15,7 @@ import {factory} from 'Types/chain';
  * @extends UI/Base:Control
  * @mixes Controls/_interface/IMultiSelectable
  * @public
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  *
  */
 
