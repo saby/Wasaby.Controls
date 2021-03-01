@@ -67,8 +67,8 @@
             itemActionsClass="controls-TileView__richTemplate_itemActions controls-TileView__itemActions_topRight controls-TileView__richTemplate_itemActions_theme-{{theme}}"
             itemActionsPadding="null"
             highlightOnHover="{{false}}"
-            itemWidth="{{itemData.getTileSizes && itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
-            folderWidth="{{itemData.getTileSizes && itemData.getTileSizes(_options.itemData.tileSize, _options.imagePosition, _options.imageViewMode).width}}"
+            itemWidth="{{itemData.getTileSizes && itemData.getItemWidth(itemData.item, itemData.dispItem && itemData.dispItem.isNode(), null, null, imagePosition)}}"
+            folderWidth="{{itemData.getTileSizes && itemData.getItemWidth(itemData.item, itemData.dispItem && itemData.dispItem.isNode(), null, null, imagePosition)}}"
             staticHeight="{{true}}"
             height="auto"
             scope="{{_options}}">
