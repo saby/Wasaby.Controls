@@ -562,7 +562,7 @@ const _private = {
         const condition = () => {
             // В плитках элемент с классом controls-ListView__itemV имеет нормальные размеры,
             // а в обычном списке данный элемент будет иметь размер 0x0
-            if (self._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+            if (self._children.baseControl.getViewModel()['[Controls/_tile/Tile]']) {
                 return !target.classList.contains('controls-ListView__itemV');
             } else {
                 return !target.parentNode.classList.contains('controls-ListView__itemV');
@@ -1106,7 +1106,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             result = { top: null, bottom: null };
 
             // В плитке порядок записей слева направо, а не сверху вниз, поэтому считаем отступы слева и справа
-            if (this._children.baseControl.getViewModel()['[Controls/_tile/TreeTileViewModel]']) {
+            if (this._children.baseControl.getViewModel()['[Controls/_tile/Tile]']) {
                 result.top = (event.nativeEvent.pageX - dragTargetRect.left) / dragTargetRect.width;
                 result.bottom = (dragTargetRect.right - event.nativeEvent.pageX) / dragTargetRect.width;
             } else {

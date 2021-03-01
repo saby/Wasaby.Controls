@@ -510,6 +510,7 @@ export default abstract class Tile<
 
 Object.assign(Tile.prototype, {
     '[Controls/_tileNew/mixins/Tile]': true,
+    '[Controls/_tile/Tile]': true,
     _$tileMode: 'static',
     _$tileSize: null,
     _$tileHeight: DEFAULT_TILE_HEIGHT,

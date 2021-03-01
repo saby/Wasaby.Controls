@@ -24,7 +24,7 @@ const ITEM_PADDING_SIZES = {
 };
 
 var TreeTileViewModel = TreeViewModel.extend({
-    '[Controls/_tile/TreeTileViewModel]': true,
+    '[Controls/_tile/Tile]': true,
 
     constructor: function (cfg) {
         TreeTileViewModel.superclass.constructor.apply(this, arguments);
