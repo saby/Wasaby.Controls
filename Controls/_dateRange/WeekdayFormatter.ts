@@ -13,10 +13,10 @@ import {date as formatDate} from 'Types/formatter';
  *
  */
 
-/*
+/**
  * @name Controls/_dateRange/WeekdayFormatter#value
  * @cfg {Date} Дата, которая будет отформатирована в день недели.
-*/
+ */
 
 export default class WeekdayFormatter extends Control {
     protected _template: TemplateFunction = template;
