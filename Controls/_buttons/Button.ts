@@ -1,7 +1,7 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import {IButton, IButtonOptions} from './interface/IButton';
 import {IClick} from './interface/IClick';
-import {isSVGIcon, getSVGIconURL} from '../Utils/getSVGIconURL';
+import {isSVGIcon, getIcon} from '../Utils/Icon';
 import {
     ICaption,
     ICaptionOptions,
@@ -65,7 +65,7 @@ export function simpleCssStyleGeneration(options: IButtonControlOptions): void {
     this._stringCaption = typeof options.caption === 'string' || options.caption instanceof String;
     this._captionPosition = options.captionPosition || 'right';
     this._isSVGIcon = isSVGIcon(options.icon);
-    this._icon = this._isSVGIcon ? getSVGIconURL(options.icon) : options.icon;
+    this._icon = getIcon(options.icon);
     if (options.icon) {
         this._iconSize = options.iconSize;
         if (options.readOnly) {
