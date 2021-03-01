@@ -1,6 +1,6 @@
 <div class="demo-Mover">
    <span>Standard moving items</span>
-   <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id">
+   <Controls.list:DataContainer source="{{_viewSource}}" keyProperty="id" bind:sorting="_sorting">
       <Controls.list:Container>
          <Controls.list:View class="demo-Mover__list test_list_1"
                              name="listMover"
@@ -8,7 +8,7 @@
       </Controls.list:Container>
    </Controls.list:DataContainer>
    <span>Move items only to collections</span>
-   <Controls.list:DataContainer source="{{_viewSourceSecond}}" keyProperty="id">
+   <Controls.list:DataContainer source="{{_viewSourceSecond}}" keyProperty="id" bind:sorting="_sorting">
       <Controls.list:Container>
          <Controls.list:View class="demo-Mover__list test_list_2"
                              name="listSecondMover"
