@@ -339,19 +339,18 @@ export default class ColumnScroll {
         const newPosition = this._columnScroll.getScrollPosition();
         if (oldPosition !== newPosition) {
             this.onScrollEnded();
-            this._dragScroll.setScrollPosition(newPosition);
         }
     }
 
     onPositionChanged(newPosition: number): void {
         this._columnScroll.setScrollPosition(newPosition);
-        this._dragScroll.setScrollPosition(this._columnScroll.getScrollPosition());
+        this._dragScroll?.setScrollPosition(this._columnScroll.getScrollPosition());
     }
 
     onScrollEnded() {
         this._columnScroll.scrollToColumnWithinContainer(this._header);
         this._scrollBar.setPosition(this._columnScroll.getScrollPosition());
-        this._dragScroll.setScrollPosition(this._columnScroll.getScrollPosition());
+        this._dragScroll?.setScrollPosition(this._columnScroll.getScrollPosition());
     }
 
     startDragScrolling(e, startBy: 'mouse' | 'touch'): void {
@@ -449,7 +448,6 @@ export default class ColumnScroll {
             this._classes.dragScroll.overlay = '';
             this._classes.dragScroll.content = '';
             this._classes.dragScroll.grabbing = '';
-
         }
     }
 }
