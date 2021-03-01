@@ -1,4 +1,5 @@
 import View from 'Controls/_treeTile/View';
+import TreeTileView from 'Controls/_treeTile/TreeTileView';
 import TreeTileCollection from 'Controls/_treeTile/display/TreeTileCollection';
 import TreeTileCollectionItem from 'Controls/_treeTile/display/TreeTileCollectionItem';
 import InvisibleTreeTileItem from 'Controls/_treeTile/display/InvisibleTreeTileItem';
@@ -7,6 +8,7 @@ import * as FolderTemplate from 'wml!Controls/_treeTile/render/Folder';
 
 export {
     View,
+    TreeTileView,
     FolderTemplate
 };
 

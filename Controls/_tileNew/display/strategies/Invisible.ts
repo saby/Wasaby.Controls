@@ -151,11 +151,15 @@ export default class InvisibleStrategy<
         items: T[],
         options: ISortOptions<S, T>
     ): number[] {
-        const itemsOrder = items.map((it, index) => index + COUNT_INVISIBLE_ITEMS);
+        const needAppendInvisibleItems = items.length && options.display.getTileMode() === 'static';
+        const offset = needAppendInvisibleItems ? COUNT_INVISIBLE_ITEMS : 0;
+        const itemsOrder = items.map((it, index) => index + offset);
 
-        options.invisibleItems.push(...InvisibleStrategy._createInvisibleItems(options.display, {}));
-        for (let i = 0; i < options.invisibleItems.length; i++) {
-            itemsOrder.push(i);
+        if (needAppendInvisibleItems) {
+            options.invisibleItems.push(...InvisibleStrategy._createInvisibleItems(options.display, {}));
+            for (let i = 0; i < options.invisibleItems.length; i++) {
+                itemsOrder.push(i);
+            }
         }
 
         return itemsOrder;

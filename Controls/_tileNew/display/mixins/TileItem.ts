@@ -860,6 +860,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'default':
                 break;
             case 'small':
+                styles += ' display: contents;';
                 break;
             case 'medium':
                 break;

@@ -41,10 +41,12 @@ export default class InvisibleStrategy<
         }
 
         // Вставляем невидимые элементы в конец списка
-        const invisibleIsNode = items[items.length - 1].isNode();
-        const parent = items[items.length - 1].getParent();
-        newInvisibleItems.push(super._createInvisibleItems(options.display, {isNodeItems: invisibleIsNode, parent}));
-        insertIndexForNewInvisibleItems.push(items.length);
+        if (items.length && options.display.getTileMode() === 'static') {
+            const invisibleIsNode = items[items.length - 1].isNode();
+            const parent = items[items.length - 1].getParent();
+            newInvisibleItems.push(super._createInvisibleItems(options.display, {isNodeItems: invisibleIsNode, parent}));
+            insertIndexForNewInvisibleItems.push(items.length);
+        }
 
         const itemsOrder = items.map((it, index) => index + newInvisibleItems.length * COUNT_INVISIBLE_ITEMS);
 

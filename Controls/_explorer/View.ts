@@ -721,7 +721,7 @@ export default class Explorer extends Control<IControlOptions> {
         if (options.useNewModel) {
             return new Promise((resolve) => {
                 import('Controls/treeTile').then((tile) => {
-                    VIEW_NAMES_NEW.tile = tile.View;
+                    VIEW_NAMES_NEW.tile = tile.TreeTileView;
                     VIEW_MODEL_CONSTRUCTORS_NEW.tile = 'Controls/treeTile:TreeTileCollection';
                     resolve(tile);
                 }).catch((err) => {
