@@ -215,6 +215,18 @@ describe('Controls/_lookup/BaseControllerClass', () => {
 
             ok(controller.update(newOptions as ILookupBaseControllerOptions) === true);
         });
+
+        it('items already updated', async () => {
+            const controller = getLookupControllerWithEmptySelectedKeys();
+            const newOptions = getControllerOptions();
+            const items = new RecordSet({rawData: getData()});
+
+            newOptions.selectedKeys = [0, 1, 2];
+            newOptions.items = items;
+            controller._items = items;
+
+            ok(controller.update(newOptions as ILookupBaseControllerOptions) === undefined);
+        });
     });
 
     it('setItems', () => {
