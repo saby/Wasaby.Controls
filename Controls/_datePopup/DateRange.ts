@@ -82,9 +82,6 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _beforeUpdate: function (options) {
-        if (this._position !== options.position) {
-            this._markedKey = this._dateToId(options.position);
-        }
         _private.updateView(this, options);
     },
 
@@ -141,7 +138,8 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _scrollToMonth: function(e, year, month) {
-        _private.notifyPositionChanged(this, new this._options.dateConstructor(year, month));
+        // При клике на месяц позиционируем его снизу, по аналогии с работй маркера при инициализации
+        _private.notifyPositionChanged(this, new this._options.dateConstructor(year, month - 1));
         e.stopPropagation();
     },
 
@@ -164,8 +162,25 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _onMonthsPositionChanged: function(e: Event, position: Date) {
-        if (position.getFullYear() !== this._position.getFullYear()) {
-            const newPosition = new Date(position.getFullYear(), 0);
+        let positionChanged;
+        let newPosition;
+        // При скролле колонки с месяцами нужно менять позицию календаря только тогда,
+        // когда мы увидим следующий год полностью.
+
+        // Позицией у MonthList считается самый верхний видимый год.
+        // Если мы скроллим вверх, то будем переключаться на год только тогда, когда позиция встанет на год выше.
+        // Таким образом мы переключимся на год только тогда, когда он станет полностью видимым.
+        if (position.getFullYear() + 2 === this._position.getFullYear()) {
+            newPosition = new Date(position.getFullYear() + 1, 0);
+            positionChanged = true;
+        }
+        // При скролле вниз, год станет полностью видимым одновременно с тем, как поменяется позиция. Меняем год сразу.
+        if (position.getFullYear() - 1 === this._position.getFullYear()) {
+            newPosition = new Date(position.getFullYear(), 0);
+            positionChanged = true;
+        }
+        if (positionChanged) {
+            this._markedKey = this._dateToId(newPosition);
             _private.notifyPositionChanged(this, newPosition);
         }
     },
