@@ -391,6 +391,8 @@ function onCollectionItemChange<T extends EntityModel>(
     }
 
     this._nextVersion();
+
+    this._handleAfterCollectionItemChange(item, index, properties);
 }
 
 /**
@@ -4031,6 +4033,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._notifyAfterCollectionChange();
         this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
+
+    protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}
 
     // endregion
 
