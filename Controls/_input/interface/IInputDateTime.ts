@@ -39,6 +39,7 @@ export interface IInputDateTimeOptions {
 /**
  * @event Происходит при изменении значения поля ввода.
  * @name Controls/_input/interface/IInputDateTime#valueChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля ввода.
  * @param {String} displayValue Текстовое значение поля ввода.
  * @remark
@@ -51,7 +52,7 @@ export interface IInputDateTimeOptions {
  * Оба поля в этом примере будут иметь одинаковое поведение.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.input:DateTime value="_fieldValue" on:valueChanged="_valueChangedHandler()"/>
+ * <Controls.input:DateTime value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()"/>
  * <Controls.input:DateTime bind:value="_anotherFieldValue"/>
  * </pre>
  * <pre class="brush: js">
