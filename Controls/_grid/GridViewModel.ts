@@ -1653,6 +1653,7 @@ var
             current.isFullGridSupport = this.isFullGridSupport.bind(this);
             current.resolvers = this._resolvers;
             current.columnScroll = this._options.columnScroll;
+            current.columnScrollVisibility = this._options.columnScrollVisibility;
             // todo remove multiSelectVisibility, multiSelectPosition and multiSelectClassList by task:
             // https://online.sbis.ru/opendoc.html?guid=50811b1e-7362-4e56-b52c-96d63b917dc9
             current.multiSelectVisibility = this._options.multiSelectVisibility;
@@ -1893,6 +1894,7 @@ var
                         getActions: current.getActions,
                         getContents: current.getContents,
                         hasMultiSelectColumn: current.hasMultiSelectColumn,
+                        columnScrollVisibility: current.columnScrollVisibility,
                         task1181001881: self._options.task1181001881
                 };
                 currentColumn.classList = _private.getItemColumnCellClasses(self, current, current.theme, backgroundColorStyle);
@@ -2012,12 +2014,14 @@ var
             }
         },
 
-        setColumnScrollVisibility(columnScrollVisibility: boolean) {
+        setColumnScrollVisibility(columnScrollVisibility: boolean, silence?: true) {
             if (this._options && !!this._options.columnScrollVisibility !== columnScrollVisibility) {
                 this._options.columnScrollVisibility = columnScrollVisibility;
 
-                // Нужно обновить классы с z-index на всех ячейках
-                this._nextModelVersion();
+                if (!silence) {
+                    // Нужно обновить классы с z-index на всех ячейках
+                    this._nextModelVersion();
+                }
             }
         },
 
