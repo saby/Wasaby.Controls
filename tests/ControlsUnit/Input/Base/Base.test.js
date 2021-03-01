@@ -31,7 +31,7 @@ define(
                beforeMount.apply(this, arguments);
 
                ctrl._children[this._fieldName] = {
-                  _mounded: true,
+                  _mounted: true,
                   selectionStart: 0,
                   selectionEnd: 0,
                   value: '',

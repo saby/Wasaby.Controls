@@ -16,7 +16,7 @@ define(
                beforeMount.apply(this, arguments);
 
                ctrl._children[this._fieldName] = {
-                  _mounded: true,
+                  _mounted: true,
                   focus: function() {},
                   setSelectionRange: function(start, end) {
                      this.selectionStart = start;
