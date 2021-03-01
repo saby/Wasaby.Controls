@@ -64,6 +64,7 @@ import {
 } from 'Controls/_gridNew/display/Collection';
 export { default as GridMixin, TColspanCallbackResult, TColspanCallback, TResultsColspanCallback, IEmptyTemplateColumn } from 'Controls/_gridNew/display/mixins/Grid';
 export { default as GridRowMixin } from 'Controls/_gridNew/display/mixins/Row';
+import ItemActionsCell from 'Controls/_gridNew/display/ItemActionsCell';
 
 import GridRow, {IOptions as IGridRowOptions} from 'Controls/_gridNew/display/Row';
 import GridCell, {IOptions as IGridCellOptions} from 'Controls/_gridNew/display/Cell';
@@ -128,5 +129,6 @@ export {
     GridFooterCell, IGridFooterCellOptions,
     GridGroupItem, IGridGroupItemOptions,
     GridGroupCell, IGridGroupCellOptions,
-    IDisplaySearchValueOptions, IDisplaySearchValue
-}
+    IDisplaySearchValueOptions, IDisplaySearchValue,
+    ItemActionsCell
+};
