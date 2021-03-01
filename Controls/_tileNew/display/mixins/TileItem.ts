@@ -5,6 +5,10 @@ import {isEqual} from 'Types/object';
 import {ICollectionItemOptions} from 'Controls/display';
 import {getImageClasses, getImageRestrictions, getImageSize, getImageUrl} from 'Controls/_tileNew/utils/imageUtil';
 import * as ImageTemplate from 'wml!Controls/_tileNew/render/Image';
+import * as DefaultContent from 'wml!Controls/_tileNew/render/itemsContent/Default';
+import * as MediumContent from 'wml!Controls/_tileNew/render/itemsContent/Medium';
+import * as PreviewContent from 'wml!Controls/_tileNew/render/itemsContent/Preview';
+import * as RichContent from 'wml!Controls/_tileNew/render/itemsContent/Rich';
 import Tile, {
     DEFAULT_COMPRESSION_COEFF, DEFAULT_SCALE_COEFFICIENT, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, IRoundBorder
 } from './Tile';
@@ -162,8 +166,8 @@ export default abstract class TileItem<T extends Model = Model> {
     getTileWidth(widthTpl?: number): number {
         const imageHeight = this.getImageHeight();
         const imageWidth = this.getImageWidth();
-        const itemWidth = object.getPropertyValue<number>(this.getContents(), this.getTileWidthProperty())
-            || this._$tileWidth || widthTpl || DEFAULT_TILE_WIDTH;
+        const itemWidth = widthTpl || object.getPropertyValue<number>(this.getContents(), this.getTileWidthProperty())
+            || this._$tileWidth || DEFAULT_TILE_WIDTH;
         let widthProportion = DEFAULT_WIDTH_PROPORTION;
 
         let resultWidth = null;
@@ -179,7 +183,9 @@ export default abstract class TileItem<T extends Model = Model> {
         } else {
             return itemWidth;
         }
-        resultWidth = Math.floor(this.getTileHeight() * widthProportion);
+        if (!widthTpl) {
+            resultWidth = Math.floor(this.getTileHeight() * widthProportion);
+        }
 
         return itemWidth ? Math.max(resultWidth, itemWidth) : resultWidth;
     }
@@ -229,7 +235,7 @@ export default abstract class TileItem<T extends Model = Model> {
     }
 
     getAutoResizerStyles(width?: number): string {
-        return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width))} * 100%;`;
+        return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width)) * 100}%;`;
     }
 
     // endregion AutoResizer
@@ -572,7 +578,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
     // region ImageGradient
 
-    shouldDisplayImageGradient(itemType: string = 'default', imageEffect?: string, imageViewMode?: string, imagePosition?: string): boolean {
+    shouldDisplayGradient(itemType: string = 'default', imageEffect?: string, imageViewMode?: string, imagePosition?: string): boolean {
         switch (itemType) {
             case 'default':
             case 'small':
@@ -585,7 +591,7 @@ export default abstract class TileItem<T extends Model = Model> {
         }
     }
 
-    getImageGradientClasses(itemType: string = 'default', gradientType: string = 'dark'): string {
+    getGradientClasses(itemType: string = 'default', gradientType: string = 'dark'): string {
         let classes = '';
 
         switch (itemType) {
@@ -605,7 +611,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getImageGradientStyles(itemType: string = 'default', gradientColor: string = '#ffffff', gradientType: string = 'dark'): string {
+    getGradientStyles(itemType: string = 'default', gradientColor: string = '#ffffff', gradientType: string = 'dark'): string {
         let styles = '';
 
         switch (itemType) {
@@ -696,17 +702,24 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getItemStyles(templateWidth?: number, staticHeight?: number): string {
-        // TODO staticHeight
-
+    getItemStyles(templateWidth?: number, staticHeight?: boolean): string {
         const width = this.getTileWidth(templateWidth);
-        const compressedWidth = width * this.getCompressionCoefficient();
-        return `
-            -ms-flex-preferred-size: ${compressedWidth}px;
-            flex-basis: ${compressedWidth}px;
-            height: ${this.getTileHeight()}px;
-            max-width: ${width}px;
-        `;
+        if (this.getTileMode() === 'dynamic') {
+            const flexBasis = width * this.getCompressionCoefficient();
+            return `
+                -ms-flex-preferred-size: ${flexBasis}px;
+                flex-basis: ${flexBasis}px;
+                height: ${this.getTileHeight()}px;
+                max-width: ${width}px;
+            `;
+        } else {
+            let styles = `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
+            if (staticHeight) {
+                styles += ` height: ${this.getTileHeight()}px;`;
+            }
+            return styles;
+        }
+
     }
 
     getWrapperClasses(
@@ -814,11 +827,60 @@ export default abstract class TileItem<T extends Model = Model> {
 
     // region Content
 
-    getContentTemplate(contentTemplate: TemplateFunction): TemplateFunction|string {
-        return contentTemplate || 'Controls/tileNew:ContentTemplate';
+    getContentTemplate(itemType: string = 'default'): TemplateFunction {
+        switch (itemType) {
+            case 'default':
+            case 'small':
+                return DefaultContent;
+            case 'medium':
+                return MediumContent;
+            case 'rich':
+                return RichContent;
+            case 'preview':
+                return PreviewContent;
+        }
     }
 
-    getContentClasses(itemType: string = 'default', titleLines: number = 1, gradientType: string = 'dark', titleStyle: string = 'light'): string {
+    getContentClasses(itemType: string = 'default', imagePosition: string = 'top'): string {
+        let classes = '';
+
+        switch (itemType) {
+            case 'default':
+                break;
+            case 'small':
+                break;
+            case 'medium':
+                classes += ` controls-TileView__mediumTemplate_content controls-TileView__mediumTemplate_content_theme-${this.getTheme()}`;
+                break;
+            case 'rich':
+                classes += ` controls-TileView__richTemplate controls-TileView__richTemplate_imagePosition_${imagePosition}`;
+                break;
+            case 'preview':
+                classes += ` controls-TileView__previewTemplate_content controls-TileView__previewTemplate_content_theme-${this.getTheme()}`;
+                break;
+        }
+
+        return classes;
+    }
+
+    // endregion Content
+
+    // region Title
+
+    shouldDisplayTitle(itemType: string = 'default'): boolean {
+        switch (itemType) {
+            case 'default':
+                return !!this.getDisplayValue() || (this.hasVisibleActions() || this.isEditing());
+            case 'small':
+            case 'medium':
+            case 'rich':
+                return true;
+            case 'preview':
+                return this.canShowActions() || this.hasVisibleActions();
+        }
+    }
+
+    getTitleWrapperClasses(itemType: string = 'default', titleLines: number = 1, gradientType: string = 'dark', titleStyle: string = 'light'): string {
         let classes = '';
 
         switch (itemType) {
@@ -844,13 +906,14 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getContentStyles(itemType: string = 'default', imageViewMode: string, imagePosition: string, gradientColor: string = '#FFF'): string {
+    getTitleWrapperStyles(itemType: string = 'default', imageViewMode: string, imagePosition: string, gradientColor: string = '#FFF'): string {
         let styles = '';
 
         switch (itemType) {
             case 'default':
                 break;
             case 'small':
+                styles += ' display: contents;';
                 break;
             case 'medium':
                 break;
@@ -864,23 +927,6 @@ export default abstract class TileItem<T extends Model = Model> {
         }
 
         return styles;
-    }
-
-    // endregion Content
-
-    // region Title
-
-    shouldDisplayTitle(itemType: string = 'default'): boolean {
-        switch (itemType) {
-            case 'default':
-                return !!this.getDisplayValue() || (this.hasVisibleActions() || this.isEditing());
-            case 'small':
-            case 'medium':
-            case 'rich':
-                return true;
-            case 'preview':
-                return this.canShowActions() || this.hasVisibleActions();
-        }
     }
 
     getTitleClasses(itemType: string = 'default', titleStyle?: string, hasTitle?: boolean, titleLines: number = 1, titleColorStyle: string = 'default'): string {
@@ -904,34 +950,27 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ' controls-TileView__mediumTemplate_title controls-fontweight-bold';
                 classes += ` controls-fontsize-l_theme-${this.getTheme()} controls-text-secondary_theme-${this.getTheme()}`;
                 classes += ` controls-TileView__mediumTemplate_title_theme-${this.getTheme()}`;
-                if (titleLines > 1) {
-                    classes += ' controls-TileView__text_ellipsis_multiLine';
-                } else {
-                    classes += ' ws-ellipsis';
-                }
                 break;
             case 'rich':
                 classes += ' controls-TileView__richTemplate_title controls-fontweight-bold';
-                if (titleLines > 1) {
-                    classes += ' controls-TileView__text_ellipsis_multiLine';
-                } else {
-                    classes += ' ws-ellipsis';
-                }
                 classes += ` controls-TileView__richTemplate_title_theme-${this.getTheme()}`;
                 classes += ` controls-fontsize-xl_theme-${this.getTheme()}`;
                 classes += ` controls-text-${titleColorStyle}_theme-${this.getTheme()}`;
                 break;
             case 'preview':
                 classes += ' controls-TileView__previewTemplate_title_text';
-                if (titleLines > 1) {
-                    classes += ' controls-TileView__text_ellipsis_multiLine';
-                } else {
-                    classes += ' ws-ellipsis';
-                }
                 break;
         }
 
         return classes;
+    }
+
+    getEllipsisClasses(titleLines: number = 1): string {
+        if (titleLines > 1) {
+            return 'controls-TileView__text_ellipsis_multiLine';
+        } else {
+            return 'ws-ellipsis';
+        }
     }
 
     getTitleStyles(itemType: string = 'default', titleLines: number = 1): string {

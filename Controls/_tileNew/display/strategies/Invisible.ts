@@ -151,12 +151,14 @@ export default class InvisibleStrategy<
         items: T[],
         options: ISortOptions<S, T>
     ): number[] {
-        const itemsOrder = items.map((it, index) => index);
+        const needAppendInvisibleItems = items.length && options.display.getTileMode() === 'static';
+        const offset = needAppendInvisibleItems ? COUNT_INVISIBLE_ITEMS : 0;
+        const itemsOrder = items.map((it, index) => index + offset);
 
-        if (options.display.getTileMode() === 'static' && options.display.getCount()) {
-            options.invisibleItems.push(...InvisibleStrategy._createInvisibleItems(options.display));
+        if (needAppendInvisibleItems) {
+            options.invisibleItems.push(...InvisibleStrategy._createInvisibleItems(options.display, {}));
             for (let i = 0; i < options.invisibleItems.length; i++) {
-                itemsOrder.push(items.length + i + 1);
+                itemsOrder.push(i);
             }
         }
 
@@ -166,7 +168,7 @@ export default class InvisibleStrategy<
     protected static _createInvisibleItems(display: TileCollection, options: object): InvisibleTileItem[] {
         const items = [];
 
-        const params = InvisibleStrategy._getInvisibleItemParams(display, options);
+        const params = this._getInvisibleItemParams(display, options);
         for (let i = 0; i < COUNT_INVISIBLE_ITEMS; i++) {
             if (i === COUNT_INVISIBLE_ITEMS - 1) {
                 params.lastInvisibleItem = true;

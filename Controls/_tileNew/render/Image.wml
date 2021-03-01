@@ -22,21 +22,11 @@
    <div attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode) }}"
         attr:style="{{ (item || itemData).getImageWrapperStyles(itemType) }}">
       <ws:if data="{{ (item || itemData).shouldDisplayAutoResizer(staticHeight) }}">
-         <div attr:class="{{hasTitle ? 'controls-TileView__resizer_theme-' + theme}}" style="{{ (item || itemData).getAutoResizerStyles(width) }}"></div>
-      </ws:if>
-
-      <ws:if data="{{topTemplate}}">
-         <ws:partial template="{{topTemplate}}" itemData="{{(item || itemData)}}" item="{{(item || itemData)}}"/>
+         <div style="{{ (item || itemData).getAutoResizerStyles(width) }}"></div>
       </ws:if>
 
       <ws:partial template="imageTpl"/>
-      <ws:if data="{{ (item || itemData).shouldDisplayImageGradient(itemType, imageEffect, imageViewMode, imagePosition) }}">
-         <div class="{{ (item || itemData).getImageGradientClasses(itemType, gradientType) }}"
-              style="{{ (item || itemData).getImageGradientStyles(itemType, gradientColor, gradientType) }}"></div>
-      </ws:if>
 
-      <ws:if data="{{bottomRightTemplate}}">
-         <ws:partial template="{{bottomRightTemplate}}" itemData="{{(item || itemData)}}" item="{{(item || itemData)}}"/>
-      </ws:if>
+      <ws:partial if="{{bottomRightTemplate}}" template="{{bottomRightTemplate}}" itemData="{{(item || itemData)}}" item="{{(item || itemData)}}"/>
    </div>
 </ws:if>

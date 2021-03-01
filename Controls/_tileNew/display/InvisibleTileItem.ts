@@ -3,7 +3,16 @@ import { mixin } from 'Types/util';
 import { TemplateFunction } from 'UI/Base';
 import * as ItemTemplate from 'wml!Controls/_tileNew/render/items/Invisible';
 
-export default class InvisibleTileItem extends mixin<VersionableMixin, OptionsToPropertyMixin, InstantiableMixin>(VersionableMixin, OptionsToPropertyMixin, InstantiableMixin) {
+export default class InvisibleTileItem extends mixin<
+    VersionableMixin,
+    OptionsToPropertyMixin,
+    InstantiableMixin
+>(VersionableMixin, OptionsToPropertyMixin, InstantiableMixin) {
+    readonly Markable: boolean = false;
+    readonly SelectableItem: boolean = false;
+    readonly DraggableItem: boolean = false;
+    readonly ItemActionsItem: boolean = false;
+
     protected _$theme: string;
 
     protected _$tileWidth: number;
@@ -90,6 +99,18 @@ export default class InvisibleTileItem extends mixin<VersionableMixin, OptionsTo
 
     isEditing(): boolean {
         return false;
+    }
+
+    isSelected(): boolean {
+        return false;
+    }
+
+    isSwiped(): boolean {
+        return false;
+    }
+
+    getContents(): object {
+        return this.getInstanceId();
     }
 }
 

@@ -2,7 +2,9 @@ import {Collection as BaseCollection, ItemsFactory, IDragPosition} from 'Control
 import CollectionItem, {IOptions as ICollectionItemOptions} from './CollectionItem';
 import ColumnsDragStrategy from './itemsStrategy/ColumnsDrag';
 import { Model } from 'Types/entity';
-import ColumnsController from '../controllers/ColumnsController';
+import IColumnsStrategy from '../interface/IColumnsStrategy';
+import Auto from './columnsStrategy/Auto';
+import Fixed from './columnsStrategy/Auto';
 
 export default class Collection<
     S extends Model = Model,
@@ -10,22 +12,21 @@ export default class Collection<
 > extends BaseCollection<S, T> {
     protected _$columnProperty: string;
     protected _dragStrategy: ColumnsDragStrategy<S, T> = ColumnsDragStrategy;
-
-    // TODO: сделать вместо ColumnsController стратегию
-    protected _columnsStrategy: ColumnsController;
+    protected _columnsStrategy: IColumnsStrategy;
     protected _addingColumnsCounter: number;
     protected _columnsIndexes: number[][];
     protected _$columnsCount: number;
     protected _$columnsMode: 'auto' | 'fixed';
+    protected _$spacing: number;
     constructor(options) {
         super(options);
-        this._columnsStrategy = new ColumnsController({columnsMode: options.columnsMode});
+        this._columnsStrategy = options.columnsMode === 'fixed' ? new Fixed() : new Auto();
         this.updateColumns();
     }
 
     setColumnsMode(columnsMode) {
         if (this._$columnsMode !== columnsMode) {
-            this._columnsStrategy.setColumnsMode(columnsMode);
+            this._columnsStrategy = columnsMode === 'fixed' ? new Fixed() : new Auto();
             this._$columnsMode = columnsMode;
             this.updateColumns();
             this._nextVersion();
@@ -63,6 +64,22 @@ export default class Collection<
             this.updateColumns();
             this._nextVersion();
         }
+    }
+
+    getColumnsCount(): number {
+        return this._$columnsCount;
+    }
+
+    setSpacing(spacing: number): void {
+        if (this._$spacing !== spacing) {
+            this._$spacing = spacing;
+            this.updateColumns();
+            this._nextVersion();
+        }
+    }
+
+    getSpacing(): number {
+        return this._$spacing;
     }
 
     private updateColumnIndexesByItems(): void {
@@ -255,5 +272,6 @@ Object.assign(Collection.prototype, {
     _moduleName: 'Controls/columns:ColumnsCollection',
     _itemModule: 'Controls/columns:ColumnsCollectionItem',
     _$columnsCount: 2,
+    _$spacing: 0,
     _$columnsMode: 'auto'
 });

@@ -213,23 +213,35 @@ export default class Browser extends Control<IOptions, IReceivedState> {
     }
 
     protected _beforeUpdate(newOptions?: IOptions, contexts?: unknown): void {
+        const masterOps = this._buildMasterExplorerOption(newOptions);
+        const detailOps = this._buildDetailExplorerOptions(newOptions);
+
+        this._detailDataSource.updateOptions(detailOps);
+        // Обязательно вызываем setFilter иначе фильтр в sourceController может
+        // не обновиться при updateOptions. Потому что updateOptions сравнивает
+        // не внутреннее поле _filter, фильтр который был передан в опциях при создании,
+        // либо при последнем updateOptions
+        this._detailDataSource.setFilter(detailOps.filter);
+
+        if (detailOps.searchValue && detailOps.searchValue !== this._searchValue) {
+            this._setSearchString(newOptions.searchValue);
+            return;
+        }
+
+        if (!newOptions.searchValue && this._searchValue) {
+            this._resetSearch();
+            return;
+        }
+
         // Все что нужно применится в detailDataLoadCallback
         if (this._search === 'search') {
             return;
         }
 
         this._userViewMode = newOptions.userViewMode;
-        this._masterExplorerOptions = this._buildMasterExplorerOption(newOptions);
 
-        this._detailExplorerOptions = this._buildDetailExplorerOptions(newOptions);
-        this._detailExplorerOptions.sourceController = this._detailDataSource.sourceController;
-        this._detailDataSource.updateOptions(this._detailExplorerOptions);
-        // Обязательно вызываем setFilter иначе фильтр в sourceController может
-        // не обновиться при updateOptions. Потому что updateOptions сравнивает
-        // не внутреннее поле _filter, фильтр который был передан в опциях при создании,
-        // либо при последнем updateOptions
-        this._detailDataSource.setFilter(this._detailExplorerOptions.filter);
-
+        this._detailExplorerOptions = detailOps;
+        this._masterExplorerOptions = masterOps;
         const isDetailRootChanged = this.root !== this._detailExplorerOptions.root;
 
         this.root = this._detailExplorerOptions.root;
@@ -588,6 +600,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         Browser.validateOptions(options);
 
         this._userViewMode = options.userViewMode;
+        this._appliedViewMode = options.userViewMode;
+        this._listConfiguration = options.listConfiguration;
         // Если при инициализации указано плиточное представление,
         // значит шаблон и модель плитки уже загружены
         if (this.viewMode === DetailViewMode.tile) {
@@ -595,19 +609,21 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         }
 
         //region update detail fields
-        const detailExplorerOptions = this._buildDetailExplorerOptions(options);
+        this._detailExplorerOptions = this._buildDetailExplorerOptions(options);
 
-        this.root = detailExplorerOptions.root;
-        this._detailDataSource = new DataSource(detailExplorerOptions);
-        detailExplorerOptions.sourceController = this._detailDataSource.sourceController;
-        this._detailExplorerOptions = detailExplorerOptions;
+        this.root = this._detailExplorerOptions.root;
+        this._detailDataSource = new DataSource(this._detailExplorerOptions);
+        this._detailExplorerOptions.sourceController = this._detailDataSource.sourceController;
         //endregion
 
         //region update master fields
         // На основании полученного состояния соберем опции для master-списка
         this._masterExplorerOptions = this._buildMasterExplorerOption(options);
-        this._masterRoot = this._masterExplorerOptions.root;
+
         this._masterMarkedKey = this.root;
+        this._masterRoot = this._masterExplorerOptions.root;
+
+        this._updateMasterVisibility(options);
         //endregion
 
         // Если передан кастомный идентификатор хранилища, то на основании него собираем
@@ -652,6 +668,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
 
             itemTemplate: compiledOptions.itemTemplate || DefaultListItemTemplate,
             tileItemTemplate: compiledOptions.tileItemTemplate || DefaultTileItemTemplate,
+
+            sourceController: this._detailDataSource?.sourceController,
 
             dataLoadCallback: (items, direction) => {
                 this._onDetailDataLoadCallback(items, direction);

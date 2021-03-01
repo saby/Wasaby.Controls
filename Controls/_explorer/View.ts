@@ -64,7 +64,7 @@ const VIEW_MODEL_CONSTRUCTORS_NEW = {
 };
 const USE_NEW_MODEL_VALUES_NEW = {
     search: true,
-    tile: false,
+    tile: true,
     table: true,
     list: true
 };
@@ -249,7 +249,7 @@ export default class Explorer extends Control<IControlOptions> {
             cfg.sourceController) {
             // https://online.sbis.ru/opendoc.html?guid=7d20eb84-51d7-4012-8943-1d4aaabf7afe
             if (!VIEW_MODEL_CONSTRUCTORS[this._pendingViewMode]) {
-                this._loadTileViewMode().then(() => {
+                this._loadTileViewMode(cfg).then(() => {
                     this._setViewModeSync(this._pendingViewMode, cfg);
                 });
             } else {
@@ -384,7 +384,7 @@ export default class Explorer extends Control<IControlOptions> {
     }
 
     protected _onArrowClick(e): void {
-        let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
+        let item = this._children.treeControl.getViewModel().getMarkedItem().getContents();
         this._notifyHandler(e, 'arrowClick', item);
     }
 
@@ -618,7 +618,22 @@ export default class Explorer extends Control<IControlOptions> {
             this._isGoingBack = false;
         }
         if (this._isGoingFront) {
-            this._children.treeControl.setMarkedKey(null);
+            // Проверить. Возможно, больше этот код не нужен.
+            // До перевода на наследование работало так:
+            // 1. При входе в папку через хлебные крошки маркер контроллер устанавливал новую опцию
+            // 2. baseControl стрелял событие markedKeyChanged, контрол-родитель(в кейсе - демка),
+            // забиндивший опцию ловил его и менял у себя состояние.
+            // 3. Происходил еще один цикл синхронизации, в котором старое и новое значение ключа разные.
+            // 4. По иерархии, шло обновление treeControl, который тут устанавливал снова новый ключ
+            // маркера - null (в itemsSetCallback от эксплорера).
+            // 5. update доходит до BaseControl'a и ключ маркера устанавливается по новым опциям(ключ папки в которую вошли).
+            // [ ключ папки -> обновление бинда -> цикл -> treeControl: ключ null (itemsSetCallback) -> baseControl: ключ по бинду ]
+
+            // https://online.sbis.ru/opendoc.html?guid=fe8dec0c-8396-45d3-9609-6163eee40346
+            // this._children.treeControl.setMarkedKey(null);
+
+            // После перехода на наследование, между обновлением treeControl и baseControl разрыва нет, более того,
+            // поменялся порядок апдейтов контролов. После перевода на наследование сначала обновляется BaseControl.
             this._isGoingFront = false;
         }
         if (this._pendingViewMode) {
@@ -658,7 +673,7 @@ export default class Explorer extends Control<IControlOptions> {
         }
 
         if (!VIEW_MODEL_CONSTRUCTORS[viewMode]) {
-            this._setViewModePromise = this._loadTileViewMode().then(() => {
+            this._setViewModePromise = this._loadTileViewMode(cfg).then(() => {
                 this._setViewModeSync(viewMode, cfg);
             });
         } else {
@@ -717,18 +732,28 @@ export default class Explorer extends Control<IControlOptions> {
         return itemFromRoot;
     }
 
-    private _loadTileViewMode(): Promise<void> {
-        return new Promise((resolve) => {
-            import('Controls/tile').then((tile) => {
-                VIEW_NAMES.tile = tile.TreeView;
-                VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
-                VIEW_NAMES_NEW.tile = tile.TreeView;
-                VIEW_MODEL_CONSTRUCTORS_NEW.tile = tile.TreeViewModel;
-                resolve(tile);
-            }).catch((err) => {
-                Logger.error('Controls/_explorer/View: ' + err.message, this, err);
+    private _loadTileViewMode(options: any): Promise<void> {
+        if (options.useNewModel) {
+            return new Promise((resolve) => {
+                import('Controls/treeTile').then((tile) => {
+                    VIEW_NAMES_NEW.tile = tile.TreeTileView;
+                    VIEW_MODEL_CONSTRUCTORS_NEW.tile = 'Controls/treeTile:TreeTileCollection';
+                    resolve(tile);
+                }).catch((err) => {
+                    Logger.error('Controls/_explorer/View: ' + err.message, this, err);
+                });
             });
-        });
+        } else {
+            return new Promise((resolve) => {
+                import('Controls/tile').then((tile) => {
+                    VIEW_NAMES.tile = tile.TreeView;
+                    VIEW_MODEL_CONSTRUCTORS.tile = tile.TreeViewModel;
+                    resolve(tile);
+                }).catch((err) => {
+                    Logger.error('Controls/_explorer/View: ' + err.message, this, err);
+                });
+            });
+        }
     }
 
     private _canStartDragNDropFunc(): boolean {

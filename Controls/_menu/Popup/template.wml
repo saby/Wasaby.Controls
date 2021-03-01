@@ -100,6 +100,7 @@
                        trigger="{{_options.trigger}}"
                        scrollbarVisible="{{_options.scrollbarVisible}}"
                        theme="{{_options.theme}}"
+                       hoverController="{{_hoverController}}"
                        on:itemClick="_sendResult('itemClick')"
                        on:moreButtonClick="_sendResult('selectorDialogOpened')"
                        on:pinClick="_sendResult('pinClick')"

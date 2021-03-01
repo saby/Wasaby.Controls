@@ -1,7 +1,10 @@
+import { TreeItem } from 'Controls/display';
 import {InvisibleTileItem} from 'Controls/tileNew';
 
 export default class InvisibleTreeTileItem extends InvisibleTileItem {
     protected _$node: boolean|null;
+
+    protected _$parent: TreeItem;
 
     protected _$folderWidth: number;
 
@@ -34,6 +37,10 @@ export default class InvisibleTreeTileItem extends InvisibleTileItem {
             return super.getTileWidth();
         }
     }
+
+    getParent(): TreeItem {
+        return this._$parent;
+    }
 }
 
 Object.assign(InvisibleTreeTileItem.prototype, {
@@ -41,5 +48,6 @@ Object.assign(InvisibleTreeTileItem.prototype, {
     _moduleName: 'Controls/treeTile:InvisibleTreeTileItem',
     _instancePrefix: 'invisible-tree-tile-item-',
     _$folderWidth: null,
-    _$node: null
+    _$node: null,
+    _$parent: null
 });

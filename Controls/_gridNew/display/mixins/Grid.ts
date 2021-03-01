@@ -405,6 +405,13 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         });
     }
 
+    protected _handleAfterCollectionItemChange(item: S, index: number, properties?: object): void {
+        const collectionItem = this.getItemBySourceItem(item);
+        if (collectionItem instanceof DataRow) {
+            collectionItem.updateContentsVersion();
+        }
+    }
+
     getResultsRowClass() {
         return ResultsRow;
     }
@@ -478,6 +485,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
     abstract getRowSeparatorSize(): string;
     abstract getMultiSelectVisibility(): string;
     abstract getMultiSelectPosition(): string;
+    abstract getItemBySourceItem(item: S): T;
 
     protected abstract _nextVersion(): void;
 

@@ -98,6 +98,11 @@ export default class DataRow<T extends Model> extends Row<T> implements
     hasStickyGroup(): boolean {
         return this._$hasStickyGroup;
     }
+
+    updateContentsVersion(): void {
+        this._nextVersion();
+        this._redrawColumns('all');
+    }
 }
 
 Object.assign(DataRow.prototype, {

@@ -1,0 +1,19 @@
+<div class="{{ (item || itemData).getContentClasses(itemType, imagePosition) }}" style="display: contents;">
+    <ws:partial template="{{ (item || itemData).getImageTemplate(itemType) }}" scope="{{_options}}"/>
+
+    <ws:partial if="{{topTemplate}}"
+                template="{{topTemplate}}"
+                itemData="{{(item || itemData)}}"
+                item="{{(item || itemData)}}"
+                attr:class="controls-TileView__previewTemplate_topTemplate"/>
+
+    <ws:partial template="wml!Controls/_tileNew/render/Title" scope="{{_options}}">
+        <ws:bottomRightTemplate>
+            <ws:partial if="{{bottomRightTemplate.bottomRightTemplate}}"
+                        template="{{bottomRightTemplate.bottomRightTemplate}}"
+                        attr:class="controls-TileView__previewTemplate_bottomRightTemplate controls-TileView__previewTemplate_bottomRightTemplate_theme-{{_options.theme}}"
+                        itemData="{{(item || itemData)}}"
+                        item="{{(item || itemData)}}"/>
+        </ws:bottomRightTemplate>
+    </ws:partial>
+</div>

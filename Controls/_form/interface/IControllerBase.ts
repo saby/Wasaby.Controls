@@ -43,7 +43,7 @@ import {Record} from 'Types/entity';
  * @see updatefailed
  */
 
-export interface IControllerBase extends IControlOptions {
+export default interface IControllerBase extends IControlOptions {
     record: Record;
     confirmationShowingCallback?: Function;
     keyProperty?: string;

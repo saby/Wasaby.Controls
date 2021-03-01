@@ -910,5 +910,23 @@ define([
             sinon.assert.calledWith(setFixedPosition, 'top');
          });
       });
+
+      describe('setShadowVisibility', () => {
+         it('should sync update sticky state if there are registered headers ', function() {
+            sinon.stub(component, '_updateShadowsVisibility');
+            component._delayedHeaders = [{}, {}];
+            component.setShadowVisibility(true, false);
+
+            assert.isTrue(component._syncUpdate);
+         });
+
+         it('should sync update sticky state if there are not registered headers ', function() {
+            sinon.stub(component, '_updateShadowsVisibility');
+            component._delayedHeaders = [];
+            component.setShadowVisibility(true, false);
+
+            assert.isFalse(component._syncUpdate);
+         });
+      });
    });
 });

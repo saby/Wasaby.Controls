@@ -3,7 +3,7 @@ import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
-import {createSandbox, stub} from 'sinon';
+import {createSandbox, stub, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 
 const filterByEntries = (item, filter): boolean => {
@@ -383,6 +383,20 @@ describe('Controls/dataSource:SourceController', () => {
                         ok(controller.getItems().getCount() === 2);
                     });
                 });
+            });
+        });
+
+        it('load timeout error',  () => {
+            const options = getControllerOptions();
+            options.loadTimeout = 10;
+            options.source.query = () => {
+                return new Promise((resolve) => {
+                   setTimeout(resolve, 100);
+                });
+            };
+            const controller = getController(options);
+            return controller.load().catch((error) => {
+                ok(error.status === 504);
             });
         });
     });
