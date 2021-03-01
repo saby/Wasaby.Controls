@@ -1,7 +1,6 @@
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {BaseControl, IBaseControlOptions} from 'Controls/list';
 import Collection from 'Controls/_columns/display/Collection';
-import ColumnsController from 'Controls/_columns/controllers/ColumnsController';
 import {Model} from 'Types/entity';
 import CollectionItem from 'Controls/_columns/display/CollectionItem';
 import {scrollToElement} from 'Controls/scroll';

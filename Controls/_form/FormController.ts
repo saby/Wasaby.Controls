@@ -10,7 +10,7 @@ import { CRUD_EVENTS, default as CrudController } from 'Controls/_form/CrudContr
 import { DialogOpener } from 'Controls/error';
 import { Mode } from 'Controls/error';
 import ControllerBase from 'Controls/_form/ControllerBase';
-import {IControllerBase} from 'Controls/_form/interface/IControllerBase';
+import IControllerBase from 'Controls/_form/interface/IControllerBase';
 
 interface IFormController extends IControllerBase {
     readMetaData?: object;

@@ -2,10 +2,26 @@ import TileViewModel = require('Controls/_tile/TileView/TileViewModel');
 import {TreeViewModel} from 'Controls/tree';
 import cMerge = require('Core/core-merge');
 import InvisibleFor = require('wml!Controls/_tile/TileView/resources/InvisibleFor');
-import {SyntheticEvent} from 'UI/Vdom';
 import {Model} from 'Types/entity';
 
 var DEFAULT_FOLDER_WIDTH = 250;
+
+const MIN_TILE_WIDTH = 200;
+
+const TILE_SIZE_ITEMS_MIN_COUNT = {
+    s: 4,
+    m: 3,
+    l: 2
+};
+
+const ITEM_PADDING_SIZES = {
+    null: 0,
+    '3xs': 1,
+    '2xs': 2,
+    s: 4,
+    m: 6,
+    default: 6
+};
 
 var TreeTileViewModel = TreeViewModel.extend({
     '[Controls/_tile/TreeTileViewModel]': true,
@@ -24,6 +40,8 @@ var TreeTileViewModel = TreeViewModel.extend({
             this._notify('onListChange', changesType);
         }.bind(this);
         this._tileModel.subscribe('onListChange', this._onListChangeFn);
+        this._currentWidth = this._options.initialWidth;
+        this.getItemWidth = this.getItemWidth.bind(this);
     },
 
     getItemDataByItem: function (dispItem) {
@@ -37,6 +55,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         } else {
             current._treeTileViewModelCached = true;
         }
+        current.getItemWidth = this.getItemWidth;
         hoveredItem = this._tileModel.getHoveredItem();
         // New Model compatibility
         if (!(current.isHiddenGroup instanceof Function)) {
@@ -109,7 +128,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         // Совместимость с newModel, https://online.sbis.ru/opendoc.html?guid=0bca7ba3-f49f-46da-986a-a1692deb9c47
         current.isStickyHeader = () => {
             return this._options.stickyHeader;
-        }
+        };
 
         return current;
     },
@@ -123,6 +142,7 @@ var TreeTileViewModel = TreeViewModel.extend({
         if (this._options.tileSize) {
             opts.tileSize = this._options.tileSize;
         }
+        opts.getItemWidth = this.getItemWidth;
         const itemContents = dispItem?.getContents();
         if (itemContents instanceof Model) {
             opts.itemWidth = this.getItemWidth(
@@ -145,6 +165,20 @@ var TreeTileViewModel = TreeViewModel.extend({
 
     setTileMode: function (tileMode) {
         this._tileModel.setTileMode(tileMode);
+    },
+
+    getLastItemWidth(): number {
+        const lastItem = this.getLast();
+        return this.getItemDataByItem(lastItem).itemWidth;
+    },
+
+    getCurrentWidth(): number {
+        return this._currentWidth;
+    },
+
+    setCurrentWidth(width: number): void {
+        this._currentWidth = width;
+        this._nextModelVersion();
     },
 
     setTileSize(size: string): void {
@@ -248,14 +282,33 @@ var TreeTileViewModel = TreeViewModel.extend({
     getItemWidth(
         item: Model,
         isFolder: boolean,
-        imageWidthProperty: string,
-        imageHeightProperty: string
+        imageWidthProperty: string = this._options.imageWidthProperty,
+        imageHeightProperty: string = this._options.imageHeightProperty,
+        imagePosition: string
     ): number {
-        if (isFolder) {
-            return this._options.folderWidth || DEFAULT_FOLDER_WIDTH;
+        let itemWidth = null;
+        if (imagePosition && this._options.tileSize) {
+            // TODO Удалить ветку после https://online.sbis.ru/opendoc.html?guid=27d4f8e0-2054-4f6e-8fa9-e12dece27642
+            itemWidth = this._tileModel.getTileSizes(this._options.tileSize, imagePosition).width;
+        } else if (isFolder) {
+            itemWidth = this._options.folderWidth || DEFAULT_FOLDER_WIDTH;
         } else {
-            return this._tileModel.getTileWidth(item, imageWidthProperty, imageHeightProperty);
+            itemWidth = this._tileModel.getTileWidth(item, imageWidthProperty, imageHeightProperty);
         }
+
+        if (this._options.initialWidth && this._options.tileSize) {
+            const itemPadding = this.getItemPadding();
+            const marginsSize = ITEM_PADDING_SIZES[itemPadding.left] + ITEM_PADDING_SIZES[itemPadding.right];
+            const currentWidth = this.getCurrentWidth();
+            const countItemsInRow = TILE_SIZE_ITEMS_MIN_COUNT[this._options.tileSize];
+            if ((currentWidth / countItemsInRow) >= itemWidth) {
+                itemWidth = itemWidth - marginsSize;
+            } else {
+                itemWidth = Math.round(currentWidth / countItemsInRow) - marginsSize;
+            }
+            return itemWidth < MIN_TILE_WIDTH ? MIN_TILE_WIDTH : itemWidth;
+        }
+        return itemWidth;
     },
 
     getImageData(itemWidth: number, itemData: Record<string, any>,  item: Model): {url: string, class: string} {

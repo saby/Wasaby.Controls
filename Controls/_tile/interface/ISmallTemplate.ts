@@ -8,7 +8,7 @@
  * <pre class="brush: html">
  * <Controls.tile:View>
  *    <ws:itemTemplate>
- *       <ws:partial template="Controls/tile:SmallTemplate"
+ *       <ws:partial template="Controls/tile:SmallItemTemplate"
  *                   imageSize="m">
  *       </ws:partial>
  *    </ws:itemTemplate>
