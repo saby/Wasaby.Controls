@@ -816,7 +816,7 @@ const _private = {
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
                     display.getChildren(display.getRoot()).getCount() :
-                    display.getCount();
+                    self._items.getCount();
             } else {
                 loadedDataCount = 0;
             }
