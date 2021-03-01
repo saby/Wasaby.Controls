@@ -57,7 +57,7 @@ export type TOverflow = 'ellipsis' | 'none';
 
 /**
  * @typedef {Enum} TColumnSeparatorSize
- * @description Ширина линии-разделителя колонок.
+ * @description Размер линии-разделителя колонок.
  * @variant s Размер тонкой линии-разделителя.
  * @variant null Без линии-разделителя.
  */
@@ -70,11 +70,11 @@ export type TColumnSeparatorSize = 's' | null;
  */
 export interface IColumnSeparatorSizeConfig {
     /**
-     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок слева.
+     * @cfg {TColumnSeparatorSize} Размер линии-разделителя колонок слева.
      */
     left?: TColumnSeparatorSize;
     /**
-     * @cfg {TColumnSeparatorSize} Ширина линии-разделителя колонок справа.
+     * @cfg {TColumnSeparatorSize} Размер линии-разделителя колонок справа.
      */
     right?: TColumnSeparatorSize;
 }
