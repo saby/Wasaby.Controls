@@ -158,10 +158,9 @@ var
                     if (!self._columnScrollController) {
                         _private.createColumnScroll(self, options);
                         self._columnScrollController.updateSizes((newSizes) => {
-                            let silenceModelUpdate = true;
+                            let silenceModelUpdate = isOnMount && self._options.columnScrollStartPosition !== 'end';
                             if (isOnMount && self._options.columnScrollStartPosition === 'end') {
                                 self._columnScrollController.setScrollPosition(newSizes.contentSize - newSizes.containerSize);
-                                silenceModelUpdate = false;
                             }
                             self._saveColumnScrollSizes(newSizes);
                             self._updateColumnScrollData();
