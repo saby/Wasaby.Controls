@@ -153,7 +153,13 @@ class StickyHeaderController {
         this._isShadowVisible[POSITION.top] = isTopShadowVisible;
         this._isShadowVisible[POSITION.bottom] = isBottomShadowVisible;
         this._updateShadowsVisibility();
+        // Если есть только что зарегистрированные и не просчитанные заголовки, что бы не было мигания теней,
+        // сразу, синхронно не дожидаясь срабатывания IntersectionObserver посчитаем зафиксированы ли ониё.
+        if (isTopShadowVisible && this._delayedHeaders.length) {
+            this._syncUpdate = true;
+        }
     }
+
     _updateShadowsVisibility(): void {
         for (const position of [POSITION.top, POSITION.bottom]) {
             const headersStack: [] = this._headersStack[position];
