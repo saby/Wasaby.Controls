@@ -78,6 +78,10 @@ export default class GroupItem<T> extends mixin<
     isStickyHeader(): boolean {
         return super.isStickyHeader() && !this.isHiddenGroup();
     }
+
+    isSticked(): boolean {
+        return this.isStickyHeader();
+    }
 }
 
 Object.assign(GroupItem.prototype, {
