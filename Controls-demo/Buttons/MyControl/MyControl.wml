@@ -1,0 +1,4 @@
+<div class="myControl__wrapper">
+    <h1 class="myControl__title">My control</h1>
+    <button class="myControl__button"> Моя кнопка </button>
+</div>
