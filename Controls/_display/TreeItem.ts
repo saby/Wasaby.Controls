@@ -314,7 +314,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
         const expanderPosition = this._$owner.getExpanderPosition();
 
-        let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
+        let expanderClasses = `js-controls-Tree__row-expander controls-TreeGrid__row-expander_theme-${theme}`;
         let expanderIconClass = '';
 
         if (expanderPosition === 'default') {

@@ -24,6 +24,8 @@ import {mixin} from 'Types/util';
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
+import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
+import {fetch, HTTPStatus} from 'Browser/Transport';
 
 export interface IControllerState {
     keyProperty: string;
@@ -56,6 +58,7 @@ export interface IControllerOptions extends
     deepReload?: boolean;
     collapsedGroups?: TArrayGroupId;
     navigationParamsChangedCallback?: Function;
+    loadTimeout?: number;
 }
 
 interface ILoadConfig {
@@ -530,38 +533,26 @@ export default class Controller extends mixin<
             this.cancelLoading();
             this._loadPromise = new CancelablePromise(
                 filterPromise.then((preparedFilter: QueryWhereExpression<unknown>) => {
-                    // В source может лежать prefetchProxy
-                    // При подгрузке вниз/вверх данные необходимо брать не из кэша prefetchProxy
-                    const source = direction !== undefined ?
-                        Controller._getSource(this._options.source) :
-                        this._options.source;
-                    const crudWrapper = this._getCrudWrapper(source as ICrud);
-
-                    let params: IQueryParams | IQueryParams[] = {
-                        filter: preparedFilter,
-                        sorting: this._options.sorting
-                    };
-
-                    if (this._hasNavigationBySource()) {
-                        params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
+                    if (this._options.loadTimeout) {
+                        return wrapTimeout(
+                            this._query(preparedFilter, key, navigationSourceConfig, direction),
+                            this._options.loadTimeout
+                        ).catch((error) => {
+                            return Promise.reject(error instanceof Error ? error : new fetch.Errors.HTTP({
+                                httpError: HTTPStatus.GatewayTimeout,
+                                message: undefined,
+                                url: undefined
+                            }));
+                        });
                     }
-                    return crudWrapper.query(params, this._options.keyProperty);
-                }));
+                    return this._query(preparedFilter, key, navigationSourceConfig, direction);
+                })
+            );
 
             return this._loadPromise.promise
-                .then((result: RecordSet) => {
-                    this._loadPromise = null;
-                    return this._processQueryResult(result, key, navigationSourceConfig, direction);
-                })
+                .then((result: RecordSet) => this._processQueryResult(result, key, navigationSourceConfig, direction))
                 .catch((error) => {
                     if (error && !error.isCanceled && !error.canceled) {
-                        // Если упала ошибка при загрузке в каком-то направлении,
-                        // то контроллер навигации сбрасывать нельзя,
-                        // Т.к. в этом направлении могут продолжить загрухзку
-                        if (!direction) {
-                            this._navigationController = null;
-                        }
-                        this._loadPromise = null;
                         this._processQueryError(error);
                     }
                     return Promise.reject(error);
@@ -570,6 +561,30 @@ export default class Controller extends mixin<
             Logger.error('source/Controller: Source option has incorrect type');
             return Promise.reject(new Error('source/Controller: Source option has incorrect type'));
         }
+    }
+
+    private _query(
+        filter: QueryWhereExpression<unknown>,
+        key?: TKey,
+        navigationSourceConfig?: INavigationSourceConfig,
+        direction?: Direction
+    ): Promise<RecordSet> {
+        // В source может лежать prefetchProxy
+        // При подгрузке вниз/вверх данные необходимо брать не из кэша prefetchProxy
+        const source = direction !== undefined ?
+            Controller._getSource(this._options.source) :
+            this._options.source;
+        const crudWrapper = this._getCrudWrapper(source as ICrud);
+
+        let params: IQueryParams | IQueryParams[] = {
+            filter,
+            sorting: this._options.sorting
+        };
+
+        if (this._hasNavigationBySource()) {
+            params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
+        }
+        return crudWrapper.query(params, this._options.keyProperty);
     }
 
     private _getFilterHierarchy(
@@ -634,8 +649,9 @@ export default class Controller extends mixin<
         let methodResult;
         let dataLoadCallbackResult;
 
-        this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        this._loadPromise = null;
         this._loadError = null;
+        this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
 
         if (loadedInCurrentRoot && this._dataLoadCallback) {
             dataLoadCallbackResult = this._dataLoadCallback(result, direction);
@@ -657,8 +673,16 @@ export default class Controller extends mixin<
     }
 
     private _processQueryError(
-        queryError: Error
+        queryError: Error,
+        direction?: Direction
     ): Error {
+        // Если упала ошибка при загрузке в каком-то направлении,
+        // то контроллер навигации сбрасывать нельзя,
+        // Т.к. в этом направлении могут продолжить загрухзку
+        if (!direction) {
+            this._navigationController = null;
+        }
+        this._loadPromise = null;
         if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(queryError);
         }

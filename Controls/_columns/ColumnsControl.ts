@@ -1,10 +1,6 @@
-import {TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import {IList, ListControl} from 'Controls/list';
+import {BaseControl, IBaseControlOptions} from 'Controls/list';
 import Collection from 'Controls/_columns/display/Collection';
-import ListControlTpl = require('wml!Controls/_columns/ColumnsControl');
-import ColumnsController from 'Controls/_columns/controllers/ColumnsController';
-import {MarkerController} from 'Controls/marker';
 import {Model} from 'Types/entity';
 import CollectionItem from 'Controls/_columns/display/CollectionItem';
 import {scrollToElement} from 'Controls/scroll';
@@ -16,7 +12,7 @@ const DEFAULT_MIN_WIDTH = 270;
 const DEFAULT_MAX_WIDTH = 400;
 const DEFAULT_COLUMNS_COUNT = 2;
 
-export interface IColumnsControlOptions extends IList {
+export interface IColumnsControlOptions extends IBaseControlOptions {
     columnMinWidth: number;
     columnMaxWidth: number;
     columnsMode: 'auto' | 'fixed';
@@ -24,43 +20,51 @@ export interface IColumnsControlOptions extends IList {
     initialWidth: number;
 }
 
-export default class ColumnsControl extends ListControl {
-    protected _template: TemplateFunction = ListControlTpl;
-    private _keyDownHandler: Function;
+export default class ColumnsControl<TOptions extends IColumnsControlOptions = IColumnsControlOptions> extends BaseControl<TOptions> {
     private _columnsCount: number;
-    private _markerController: MarkerController;
     private _spacing: number = SPACING;
-    protected _options: IColumnsControlOptions;
-    protected _model: Collection<Model>;
-    protected _addingColumnsCounter: number = 0;
-
-    protected _beforeMount(options: IColumnsControlOptions): void {
-        this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
-        this._keyDownHandler = this._keyDownHandler.bind(this);
-        this._beforeMountCallback = ({viewModel, markerController}) => {
-            this._model = viewModel;
-            this._markerController = markerController;
-            if (options.columnsMode === 'auto' && options.initialWidth) {
-                this._recalculateColumnsCountByWidth(options.initialWidth, options.columnMinWidth);
-            } else {
-                if (options.columnsCount) {
-                    this._columnsCount = options.columnsCount;
-                } else {
-                    this._columnsCount = DEFAULT_COLUMNS_COUNT;
-                }
-                this._model.setColumnsCount(this._columnsCount);
-            }
-        };
-    }
+    protected _listViewModel: Collection<Model>;
 
     protected _afterMount(): void {
+        super._afterMount();
         this._resizeHandler();
     }
 
-    protected _beforeUpdate(options: IColumnsControlOptions): void {
+    protected _onItemsReady(options, items) {
+        super._onItemsReady(options, items);
+        if (options.columnsMode === 'auto' && options.initialWidth) {
+            this._recalculateColumnsCountByWidth(options.initialWidth, options.columnMinWidth);
+        } else {
+            if (options.columnsCount) {
+                this._columnsCount = options.columnsCount;
+            } else {
+                this._columnsCount = DEFAULT_COLUMNS_COUNT;
+            }
+        }
+        this._listViewModel.setColumnsCount(this._columnsCount);
+    }
+
+    protected _beforeUpdate(options: TOptions): void {
+        super._beforeUpdate(options);
         if (options.columnsMode === 'fixed' && options.columnsCount !== this._options.columnsCount) {
             this._columnsCount = options.columnsCount;
+            this._listViewModel.setColumnsCount(this._columnsCount);
+        } else {
+            this._resizeHandler();
         }
+    }
+
+    protected _shouldMoveMarkerOnScrollPaging(): boolean {
+        return false;
+    }
+
+    protected _isPlainItemsContainer(): boolean {
+        return false;
+    }
+
+    protected _viewResize(): void {
+        super._viewResize();
+        this._resizeHandler();
     }
 
     protected _resizeHandler(): void {
@@ -77,16 +81,12 @@ export default class ColumnsControl extends ListControl {
         const newColumnsCount = Math.floor(width / ((columnMinWidth || DEFAULT_MIN_WIDTH) + this._spacing));
         if (newColumnsCount !== this._columnsCount) {
             this._columnsCount = newColumnsCount;
-            this._model.setColumnsCount(this._columnsCount);
+            this._listViewModel.setColumnsCount(this._columnsCount);
         }
     }
 
-    protected _getItemsContainer() {
-        return this._children.baseControl.getItemsContainer();
-    }
-
     private moveMarker(direction: string): void {
-        const model = this._model;
+        const model = this._listViewModel;
         if (model && this._markerController) {
             const curMarkedItem = model.find((item) => item.isMarked());
             let newMarkedItem: CollectionItem<Model>;
@@ -156,6 +156,7 @@ export default class ColumnsControl extends ListControl {
 
     static getDefaultOptions(): Partial<IColumnsControlOptions> {
         return {
+            ...BaseControl.getDefaultOptions(),
             columnMinWidth: DEFAULT_MIN_WIDTH,
             columnMaxWidth: DEFAULT_MAX_WIDTH,
             columnsMode: 'auto',

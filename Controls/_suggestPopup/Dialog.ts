@@ -1,20 +1,20 @@
 import {Control} from 'UI/Base';
 import template = require('wml!Controls/_suggestPopup/Dialog');
-import {SearchContextField, FilterContextField} from 'Controls/context';
+import {SearchContextField} from 'Controls/context';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 
 import 'Controls/popupTemplate';
 
       /**
        * Контрол-контейнер, который обеспечивает связь поля ввода и списка внутри выпадающего блока.
-       * 
+       *
        * @remark
        * Полезные ссылки:
        * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_suggestPopup.less переменные тем оформления}
        * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
        * @author Герасимов А.М.
-       * 
+       *
        */
 
       /*
@@ -22,7 +22,7 @@ import 'Controls/popupTemplate';
        * @class Controls/_suggestPopup/Dialog
        * @extends Controls/Control
        * @author Герасимов Александр
-       * 
+       *
        * @public
        */
 
@@ -42,8 +42,7 @@ import 'Controls/popupTemplate';
          _getChildContext: function() {
             return {
                searchLayoutField: this._searchData,
-               ScrollData: this._scrollData,
-               filterLayoutField: new FilterContextField({filter: this._options.filter})
+               ScrollData: this._scrollData
             };
          },
 

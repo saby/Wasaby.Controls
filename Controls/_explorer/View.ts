@@ -384,7 +384,7 @@ export default class Explorer extends Control<IControlOptions> {
     }
 
     protected _onArrowClick(e): void {
-        let item = this._children.treeControl._children.baseControl.getViewModel().getMarkedItem().getContents();
+        let item = this._children.treeControl.getViewModel().getMarkedItem().getContents();
         this._notifyHandler(e, 'arrowClick', item);
     }
 
@@ -618,7 +618,22 @@ export default class Explorer extends Control<IControlOptions> {
             this._isGoingBack = false;
         }
         if (this._isGoingFront) {
-            this._children.treeControl.setMarkedKey(null);
+            // Проверить. Возможно, больше этот код не нужен.
+            // До перевода на наследование работало так:
+            // 1. При входе в папку через хлебные крошки маркер контроллер устанавливал новую опцию
+            // 2. baseControl стрелял событие markedKeyChanged, контрол-родитель(в кейсе - демка),
+            // забиндивший опцию ловил его и менял у себя состояние.
+            // 3. Происходил еще один цикл синхронизации, в котором старое и новое значение ключа разные.
+            // 4. По иерархии, шло обновление treeControl, который тут устанавливал снова новый ключ
+            // маркера - null (в itemsSetCallback от эксплорера).
+            // 5. update доходит до BaseControl'a и ключ маркера устанавливается по новым опциям(ключ папки в которую вошли).
+            // [ ключ папки -> обновление бинда -> цикл -> treeControl: ключ null (itemsSetCallback) -> baseControl: ключ по бинду ]
+
+            // https://online.sbis.ru/opendoc.html?guid=fe8dec0c-8396-45d3-9609-6163eee40346
+            // this._children.treeControl.setMarkedKey(null);
+
+            // После перехода на наследование, между обновлением treeControl и baseControl разрыва нет, более того,
+            // поменялся порядок апдейтов контролов. После перевода на наследование сначала обновляется BaseControl.
             this._isGoingFront = false;
         }
         if (this._pendingViewMode) {
