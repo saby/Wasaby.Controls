@@ -3,7 +3,6 @@ import {SyntheticEvent} from 'Vdom/Vdom';
 import {IList, ListControl} from 'Controls/list';
 import Collection from 'Controls/_columns/display/Collection';
 import ListControlTpl = require('wml!Controls/_columns/ColumnsControl');
-import ColumnsController from 'Controls/_columns/controllers/ColumnsController';
 import {MarkerController} from 'Controls/marker';
 import {Model} from 'Types/entity';
 import CollectionItem from 'Controls/_columns/display/CollectionItem';
@@ -35,7 +34,6 @@ export default class ColumnsControl extends ListControl {
     protected _addingColumnsCounter: number = 0;
 
     protected _beforeMount(options: IColumnsControlOptions): void {
-        this._columnsController = new ColumnsController({columnsMode: options.columnsMode});
         this._keyDownHandler = this._keyDownHandler.bind(this);
         this._beforeMountCallback = ({viewModel, markerController}) => {
             this._model = viewModel;
