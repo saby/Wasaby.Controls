@@ -9,16 +9,10 @@ import DataContext = require('Core/DataContext');
  *
  * <pre class="brush: html">
  * class MyControl extends Control<IControlOptions> {
- *    _stickyHeaderContext = null;
  *    _beforeMount(options, context, receivedState) {
  *       this._scrollDataContext = new DataContext({
  *          pagingVisible: false
  *       });
- *    }
- *    _getChildContext() {
- *       return {
- *          stickyHeader: this._scrollDataContext
- *       };
  *    }
  * }
  * </pre>
@@ -26,7 +20,7 @@ import DataContext = require('Core/DataContext');
  * @class Controls/_scroll/Context
  * @extends Core/DataContext
  * @demo Controls-demo/Scroll/Context/Index
- * 
+ *
  * @private
  * @author Красильников А.С.
  *
@@ -41,23 +35,17 @@ import DataContext = require('Core/DataContext');
  *
  * <pre>
  *    class MyControl extends Control<IControlOptions> {
- *       _stickyHeaderContext: null,
  *       _beforeMount: function(options, context, receivedState) {
  *          this._scrollDataContext = new DataContext({
  *              pagingVisible: false
  *          });
  *       }
- *       _getChildContext: function() {
- *          return {
- *             stickyHeader: this._scrollDataContext
- *          };
- *       },
  *    }
  * </pre>
  *
  * @class Controls/_scroll/Scroll/Context
  * @extends Core/DataContext
- * 
+ *
  * @private
  * @author Красильников А.С.
  *

@@ -19,7 +19,6 @@ import fastUpdate from './StickyHeader/FastUpdate';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {IScrollState} from '../Utils/ScrollState';
 import {SCROLL_POSITION} from './Utils/Scroll';
-import Context = require('Controls/_scroll/StickyHeader/Context');
 import {IntersectionObserver} from 'Controls/sizeUtils';
 import Model = require('Controls/_scroll/StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
@@ -158,7 +157,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._observeHandler = this._observeHandler.bind(this);
     }
 
-    protected _beforeMount(options: IStickyHeaderOptions, context): void {
+    protected _beforeMount(options: IStickyHeaderOptions): void {
         if (!this._isStickyEnabled(options)) {
             return;
         }
@@ -183,7 +182,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._container;
     }
 
-    protected _beforeUpdate(options: IStickyHeaderOptions, context): void {
+    protected _beforeUpdate(options: IStickyHeaderOptions): void {
         if (!this._isStickyEnabled(options)) {
             return;
         }
@@ -739,12 +738,6 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     static _isIOSChrome(): boolean {
         return detection.isMobileIOS && detection.chrome;
-    }
-
-    static contextTypes(): IStickyHeaderContext {
-        return {
-            stickyHeader: Context
-        };
     }
 
     static getDefaultOptions(): IStickyHeaderOptions {
