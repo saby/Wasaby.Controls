@@ -233,6 +233,7 @@ define(['Controls/_tile/TreeTileView/TreeTileViewModel', 'Types/collection'], fu
             getImageProportion: treeTileViewModel._tileModel.getImageProportion,
             imageHeightProperty: 'imageHeight',
             imageFit: 'cover',
+            getItemWidth: treeTileViewModel.getItemWidth,
             imageUrlResolver: urlResolver
          });
          tileItemData = treeTileViewModel.getTileItemData({
