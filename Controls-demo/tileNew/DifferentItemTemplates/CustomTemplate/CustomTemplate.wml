@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlDemo_Tile_custom-tpl">
-    <Controls.tileNew:View
+    <Controls.treeTile:View
             tileMode="dynamic"
             displayProperty="title"
             imageProperty="image"
@@ -18,5 +18,5 @@
                 </ws:contentTemplate>
             </ws:partial>
         </ws:itemTemplate>
-    </Controls.tileNew:View>
+    </Controls.treeTile:View>
 </div>

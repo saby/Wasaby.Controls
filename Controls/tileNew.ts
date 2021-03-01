@@ -14,7 +14,6 @@ import {register} from 'Types/di';
 
 import {default as View} from 'Controls/_tileNew/View';
 import * as ItemTemplate from 'wml!Controls/_tileNew/render/items/Default';
-import * as ContentTemplate from 'wml!Controls/_tileNew/render/Content';
 import * as SmallItemTemplate from 'wml!Controls/_tileNew/render/items/Small';
 import * as MediumTemplate from 'wml!Controls/_tileNew/render/items/Medium';
 import * as PreviewTemplate from 'wml!Controls/_tileNew/render/items/Preview';
@@ -34,7 +33,6 @@ export {
     View,
     TileView,
     ItemTemplate,
-    ContentTemplate,
     SmallItemTemplate,
     MediumTemplate,
     PreviewTemplate,

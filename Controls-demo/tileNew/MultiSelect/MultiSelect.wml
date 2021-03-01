@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlDemo_Tile_MultiSelect">
-<Controls.tileNew:View
+<Controls.treeTile:View
         tileMode="dynamic"
         displayProperty="title"
         imageProperty="image"
@@ -13,5 +13,5 @@
                         template="Controls/tileNew:ItemTemplate"
                         hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
         </ws:itemTemplate>
-</Controls.tileNew:View>
+</Controls.treeTile:View>
 </div>

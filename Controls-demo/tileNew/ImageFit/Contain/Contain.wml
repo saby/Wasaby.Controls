@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper">
-   <Controls.tileNew:View
+   <Controls.treeTile:View
       tileMode="static"
       displayProperty="title"
       parentProperty="parent"
@@ -15,5 +15,5 @@
             scope="{{itemTemplate}}"
             hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
       </ws:itemTemplate>
-   </Controls.tileNew:View>
+   </Controls.treeTile:View>
 </div>

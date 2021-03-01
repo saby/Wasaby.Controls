@@ -1,4 +1,4 @@
-<Controls.tileNew:View
+<Controls.treeTile:View
    attr:class="demo-Tile__static demo-Tile__staticGroup"
    tileMode="static"
    parentProperty="parent"
@@ -14,4 +14,4 @@
          template="Controls/tileNew:ItemTemplate"
          hasTitle="{{itemTemplate.itemData.item.isDocument}}"/>
    </ws:itemTemplate>
-</Controls.tileNew:View>
+</Controls.treeTile:View>

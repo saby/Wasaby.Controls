@@ -1,12 +1,12 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell controlsDemo__mr2 controlsDemo-hor-padding-s">
-        <Controls.tileNew:View
+        <Controls.treeTile:View
                 tileMode="dynamic"
                 displayProperty="title"
                 imageProperty="image"
                 keyProperty="id"
                 source="{{_viewSource}}">
             <ws:roundBorder tl="s" tr="s" bl="s" br="s"/>
-        </Controls.tileNew:View>
+        </Controls.treeTile:View>
     </div>
 </div>

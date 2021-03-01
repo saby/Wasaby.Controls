@@ -46,22 +46,43 @@ export default class TreeTileCollectionItem<T extends Model = Model>
     }
 
     getImageTemplate(itemType: string = 'default'): TemplateFunction {
-        if (this.isNode() && itemType === 'small') {
+        if (this.isNode() && (itemType === 'small' || itemType === 'default')) {
             return FolderIcon;
         } else {
             return super.getImageTemplate(itemType);
         }
     }
 
-    getTemplate(itemTemplateProperty: string, userTemplate: TemplateFunction | string): TemplateFunction | string {
-        if (this.isNode()) {
-            return FolderTemplate;
-        } else {
-            return super.getTemplate(itemTemplateProperty, userTemplate);
+    getImageClasses(itemTypeTpl: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: string, imagePosition?: string, imageSize?: string): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
         }
+        return super.getImageClasses(itemType, widthTpl, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize);
     }
 
-    getItemActionsClasses(itemType: string = 'default'): string {
+    getImageWrapperClasses(itemTypeTpl: string = 'default', templateHasTitle?: boolean, templateTitleStyle?: string, imageViewMode: string = 'rectangle'): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
+        }
+        return super.getImageWrapperClasses(itemType, templateHasTitle, templateTitleStyle, imageViewMode);
+    }
+
+    shouldDisplayImageResizer(itemTypeTpl: string = 'default', imagePosition: string, imageViewMode: string, imageProportion: string, staticHeight: boolean): boolean {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
+        }
+        return super.shouldDisplayImageResizer(itemType, imagePosition, imageViewMode, imageProportion, staticHeight);
+    }
+
+    getItemActionsClasses(itemTypeTpl: string = 'default'): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
+        }
+
         let classes = super.getItemActionClasses(itemType);
 
         if (itemType === 'preview' && this.isNode()) {
@@ -87,7 +108,12 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         }
     }
 
-    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer'): string {
+    getItemClasses(itemTypeTpl: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer'): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
+        }
+
         let classes = super.getItemClasses(itemType, templateClickable, hasTitle, cursor);
 
         if (this.isNode()) {
@@ -130,30 +156,12 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         }
     }
 
-    getContentClasses(itemType: string = 'default', titleLines: number = 1, gradientType: string = 'dark', titleStyle: string = 'light'): string {
-        let classes = super.getContentClasses(itemType, titleLines, gradientType, titleStyle);
-
-        switch (itemType) {
-            case 'default':
-                break;
-            case 'small':
-                break;
-            case 'medium':
-                break;
-            case 'rich':
-                break;
-            case 'preview':
-                if (this.isNode()) {
-                    classes += ' controls-fontweight-bold';
-                    classes = classes.replace(
-                        `controls-fontsize-m_theme-${this.getTheme()}`,
-                        `controls-fontsize-l_theme-${this.getTheme()}`
-                    );
-                }
-                break;
+    getWrapperStyles(itemTypeTpl: string = 'default'): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
         }
-
-        return classes;
+        return super.getWrapperStyles(itemType);
     }
 
     shouldDisplayTitle(itemType: string = 'default'): boolean {
@@ -168,13 +176,25 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         }
     }
 
-    getTitleClasses(itemType: string = 'default', titleStyle?: string, hasTitle?: boolean, titleLines: number = 1, titleColorStyle: string = 'default'): string {
+    getTitleClasses(itemTypeTpl: string = 'default', titleStyle?: string, hasTitle?: boolean, titleLines: number = 1, titleColorStyle: string = 'default'): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
+        }
         let classes = super.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle);
 
         switch (itemType) {
             case 'default':
             case 'medium':
+                break;
             case 'preview':
+                if (this.isNode()) {
+                    classes += ' controls-fontweight-bold';
+                    classes = classes.replace(
+                        `controls-fontsize-m_theme-${this.getTheme()}`,
+                        `controls-fontsize-l_theme-${this.getTheme()}`
+                    );
+                }
                 break;
             case 'small':
                 if (this.isNode()) {
@@ -194,6 +214,38 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         return classes;
     }
 
+    getTitleWrapperStyles(itemTypeTpl: string = 'default', imageViewMode: string, imagePosition: string, gradientColor: string = '#FFF'): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
+        }
+        return super.getTitleWrapperStyles(itemType, imageViewMode, imagePosition, gradientColor);
+    }
+
+    getTitleWrapperClasses(itemType: string = 'default', titleLines: number = 1, gradientType: string = 'dark', titleStyle: string = 'light'): string {
+        let classes = super.getTitleWrapperClasses(itemType, titleLines, gradientType, titleStyle);
+        switch (itemType) {
+            case 'default':
+            case 'medium':
+                break;
+            case 'preview':
+                if (this.isNode()) {
+                    classes += ' controls-fontweight-bold';
+                    classes = classes.replace(
+                        `controls-fontsize-m_theme-${this.getTheme()}`,
+                        `controls-fontsize-l_theme-${this.getTheme()}`
+                    );
+                }
+                break;
+            case 'small':
+                break;
+            case 'rich':
+                break;
+        }
+
+        return classes;
+    }
+
     // region Duplicate TODO роблема с миксинами
 
     setActive(active: boolean, silent?: boolean): void {
@@ -206,10 +258,10 @@ export default class TreeTileCollectionItem<T extends Model = Model>
     }
 
     getMultiSelectClasses(theme: string): string {
-        return (
-            super.getMultiSelectClasses(theme) +
-            ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom'
-        );
+        let classes = super.getMultiSelectClasses(theme);
+        classes = classes.replace(`controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`, '');
+        classes += ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom';
+        return classes;
     }
 
     // endregion Duplicate

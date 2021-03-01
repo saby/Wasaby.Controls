@@ -105,6 +105,10 @@ export default class InvisibleTileItem extends mixin<
         return false;
     }
 
+    isSwiped(): boolean {
+        return false;
+    }
+
     getContents(): object {
         return this.getInstanceId();
     }

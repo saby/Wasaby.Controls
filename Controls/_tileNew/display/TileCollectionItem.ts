@@ -16,10 +16,10 @@ export default class TileCollectionItem<T extends Model = Model>
     }
 
     getMultiSelectClasses(theme: string): string {
-        return (
-            super.getMultiSelectClasses(theme) +
-            ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom'
-        );
+        let classes = super.getMultiSelectClasses(theme);
+        classes = classes.replace(`controls-ListView__checkbox_position-${this.getOwner().getMultiSelectPosition()}_theme-${theme}`, '');
+        classes += ' controls-TileView__checkbox controls-TileView__checkbox_top js-controls-TileView__withoutZoom';
+        return classes;
     }
 }
 

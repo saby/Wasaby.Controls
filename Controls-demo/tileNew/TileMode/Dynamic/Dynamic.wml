@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper" style="width: 900px;">
    <Controls.buttons:Button readOnly="{{false}}" caption="Load Image" on:click="_getImage()"/>
-   <Controls.tileNew:View
+   <Controls.treeTile:View
       tileMode="dynamic"
       displayProperty="title"
       tileHeight="200"

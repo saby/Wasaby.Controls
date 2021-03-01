@@ -1,6 +1,6 @@
 <div class="controlsDemo__wrapper" style="width: 900px;">
    <Controls.scroll:Container attr:class="controls-demo-Tile__scalingMode_scroll">
-      <Controls.tileNew:View
+      <Controls.treeTile:View
          tileMode="dynamic"
          displayProperty="title"
          tileHeight="200"
