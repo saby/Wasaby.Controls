@@ -1,6 +1,7 @@
 import {DataLoader, ILoadDataResult, ILoadDataConfig, ILoadDataCustomConfig} from 'Controls/dataSource';
 import {Memory} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
+import {useFakeTimers} from 'sinon';
 
 function getDataArray(): object[] {
     return [
