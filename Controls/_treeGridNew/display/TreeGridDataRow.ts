@@ -4,6 +4,7 @@ import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplayS
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
+import ItemActionsCell from "Controls/_gridNew/display/ItemActionsCell";
 
 export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {
     owner: TreeGridCollection<T>;
@@ -122,6 +123,18 @@ export default class TreeGridDataRow<T extends Model>
         super.setActive(active, silent);
         if (changed) {
             this._redrawColumns('all');
+        }
+    }
+
+    protected _initializeColumns(): void {
+        super._initializeColumns();
+
+        if (this._$columns && this.hasItemActionsSeparatedCell()) {
+            this._$columnItems.push(new ItemActionsCell({
+                owner: this,
+                isFixed: true,
+                column: {}
+            }));
         }
     }
 
