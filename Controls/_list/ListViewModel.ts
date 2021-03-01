@@ -578,6 +578,10 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion(true);
     },
 
+    isDragging(): boolean {
+        return !!this.getDragItemData();
+    },
+
     // endregion
 
     setSwipeItem: function(itemData) {

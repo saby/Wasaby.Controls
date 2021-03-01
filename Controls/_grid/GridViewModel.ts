@@ -2419,7 +2419,9 @@ var
             this._model.setDragOutsideList(outside);
             if (this._dragOutsideList !== outside) {
                 this._dragOutsideList = outside;
-                this._nextModelVersion();
+                if (this.isDragging()) {
+                    this._nextModelVersion();
+                }
             }
         },
         isDragOutsideList(): boolean {
@@ -2457,6 +2459,9 @@ var
 
         getDragItemData: function() {
             return this._model.getDragItemData();
+        },
+        isDragging: function() {
+            return this._model.isDragging();
         },
 
         getPrevDragPosition(): IDragPosition<CollectionItem<Model>> {
