@@ -169,7 +169,8 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
         const sourceController = getSourceController({
             ...loadConfig,
             sorting,
-            filter: filterController ? filterController.getFilter() : loadConfig.filter
+            filter: filterController ? filterController.getFilter() : loadConfig.filter,
+            loadTimeout: DEFAULT_LOAD_TIMEOUT
         });
 
         return new Promise((resolve) => {

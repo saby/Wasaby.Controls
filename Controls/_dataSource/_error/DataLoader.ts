@@ -2,8 +2,6 @@ import {Control, TemplateFunction, IControlOptions } from 'UI/Base';
 import { Controller, Mode, ViewConfig as ErrorViewConfig } from 'Controls/error';
 import * as template from 'wml!Controls/_dataSource/_error/DataLoader';
 import {PrefetchProxy} from 'Types/source';
-import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
-import {fetch, HTTPStatus } from 'Browser/Transport';
 import {default as DataLoaderController, ILoadDataResult, ILoadDataConfig} from 'Controls/_dataSource/DataLoader';
 
 interface IErrorContainerReceivedState {
@@ -82,20 +80,9 @@ export default class DataLoader extends Control<IErrorContainerOptions, IErrorCo
       const loadPromises = (new DataLoaderController()).loadEvery(sources);
 
       loadPromises.forEach((loadPromise, sourceIndex) => {
-         return wrapTimeout(loadPromise, loadDataTimeout).catch((err) => {
-            // Если данные не получены за отведенное время, сами сгенерируем 504 ошибку
-            const data = err instanceof Error ? err : new fetch.Errors.HTTP({
-               httpError: HTTPStatus.GatewayTimeout,
-               message: undefined,
-               url: undefined
-            });
-
-            return {
-               data
-            };
-         }).then((loadDataResult: ILoadDataResult) => {
-            if (loadDataResult.data instanceof Error) {
-               errorsResult.push(loadDataResult.data);
+         loadPromise.then((loadDataResult: ILoadDataResult) => {
+            if (loadDataResult.error) {
+               errorsResult.push(loadDataResult.error);
             }
 
             sourcesResult[sourceIndex] = DataLoader._createSourceConfig(loadDataResult);
