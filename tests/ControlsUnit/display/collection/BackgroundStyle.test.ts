@@ -21,7 +21,7 @@ describe('Controls/display/collection/BackgroundStyle', () => {
             collection: recordSet
         });
         assert.strictEqual(collection.getVersion(), 0);
-        assert.equal(collection.getBackgroundStyle(), 'default');
+        assert.equal(collection.getBackgroundStyle(), null);
 
         collection.setBackgroundStyle('custom');
 

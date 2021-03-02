@@ -1,7 +1,3 @@
-import {assert} from 'chai';
-import {RecordSet} from 'Types/collection';
-import {Collection} from 'Controls/display';
-import * as sinon from 'sinon';
 import {GridDataCell} from 'Controls/gridNew';
 import {CssClassesAssert as cAssert} from 'ControlsUnit/CustomAsserts';
 
