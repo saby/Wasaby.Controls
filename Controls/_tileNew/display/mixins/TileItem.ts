@@ -983,7 +983,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
         switch (itemType) {
             case 'default':
-                if (!staticHeight && hasTitle) {
+                if (!staticHeight && hasTitle && !this.isHovered()) {
                     classes += 'ws-ellipsis';
                 }
                 break;

@@ -139,7 +139,7 @@ export default class TreeTileCollectionItem<T extends Model = Model>
     }
 
     getItemStyles(itemType: string, templateWidth?: number, staticHeight?: number): string {
-        if (this.isNode()) {
+        if (this.isNode() && (itemType === 'default' || itemType === 'small')) {
             const width = this.getTileWidth(templateWidth);
             return `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
         } else {
@@ -235,6 +235,14 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         }
 
         return classes;
+    }
+
+    getEllipsisClasses(itemTypeTpl: string = 'default', titleLines: number = 1, staticHeight?: boolean, hasTitle?: boolean): string {
+        let itemType = itemTypeTpl;
+        if (itemType === 'default' && this.isNode()) {
+            itemType = 'small';
+        }
+        return super.getEllipsisClasses(itemType, titleLines, staticHeight, hasTitle);
     }
 
     // region Duplicate TODO роблема с миксинами
