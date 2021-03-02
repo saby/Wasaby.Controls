@@ -916,6 +916,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 styles += ' display: contents;';
                 break;
             case 'medium':
+                styles += ' width: 100%;';
                 break;
             case 'rich':
                 if ((!imageViewMode || imageViewMode === 'rectangle') && imagePosition !== 'left' && imagePosition !== 'right') {
@@ -965,12 +966,21 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getEllipsisClasses(titleLines: number = 1): string {
-        if (titleLines > 1) {
-            return 'controls-TileView__text_ellipsis_multiLine';
-        } else {
-            return 'ws-ellipsis';
+    getEllipsisClasses(itemType: string = 'default', titleLines: number = 1): string {
+        let classes = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'small':
+            case 'medium':
+                break;
+            case 'rich':
+            case 'preview':
+                classes += titleLines > 1 ? ' controls-TileView__text_ellipsis_multiLine' : ' ws-ellipsis';
+                break;
         }
+
+        return classes;
     }
 
     getTitleStyles(itemType: string = 'default', titleLines: number = 1): string {

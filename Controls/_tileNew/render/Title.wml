@@ -7,7 +7,7 @@
 
     <ws:if data="{{ item.shouldDisplayTitle(itemType) }}">
         <div class="{{ item.getTitleClasses(itemType, titleStyle, hasTitle, titleLines, titleColorStyle) }}" title="{{ item.getDisplayValue() }}">
-            <div class="{{ item.getEllipsisClasses(titleLines) }}" style="{{ item.getTitleStyles(itemType, titleLines) }}">
+            <div class="{{ item.getEllipsisClasses(itemType, titleLines) }}" style="{{ item.getTitleStyles(itemType, titleLines) }}">
                 <ws:if data="{{ item.getSearchValue() }}">
                     <Controls.decorator:Highlight highlightedValue="{{ item.getSearchValue() }}">
                         <ws:value>
