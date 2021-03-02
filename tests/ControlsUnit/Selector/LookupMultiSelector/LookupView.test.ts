@@ -101,7 +101,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       lookupView.saveOptions({
          selectorTempalte: null
       });
-      ok(lookupView.showSelector() === false);
+      ok(lookupView.showSelector() === true);
    });
 });
 
