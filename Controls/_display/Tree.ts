@@ -596,6 +596,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        if (!this.getCount()) {
+            return;
+        }
+
         // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
 
         const diff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedKeys);
@@ -631,6 +635,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
+        if (!this.getCount()) {
+            return;
+        }
+
         // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
         const diff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, collapsedKeys);
         diff.removed.forEach((it) => this.getItemBySourceKey(it)?.setExpanded(true));
@@ -649,6 +657,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     resetExpandedItems(): void {
+        if (!this.getCount()) {
+            return;
+        }
+
         this.getItems().filter((it) => it.Expandable && it.isExpanded()).forEach((it) => {
             if (it['[Controls/_display/TreeItem]']) {
                 it.setExpanded(false);
@@ -915,6 +927,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     // region HasNodeWithChildren
 
     private _recountHasNodeWithChildren(): void {
+        if (!this.getCount()) {
+            return;
+        }
+
         const itemsInRoot = this.getChildren(this.getRoot());
 
         let hasNodeWithChildren = false;
