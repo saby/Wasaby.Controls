@@ -13,7 +13,7 @@ export default interface IResetValues {
     readonly '[Controls/_interface/IResetValues]': boolean;
 }
 
-/*
+/**
  * @name Controls/_interface/IResetValues#resetStartValue
  * @cfg {Date} Начало периода, которое будет установлено после сброса значения
  * @remark
@@ -23,7 +23,7 @@ export default interface IResetValues {
  * @demo Controls-demo/dateRange/RangeSelector/ResetValues/Index
  */
 
-/*
+/**
  * @name Controls/_interface/IResetValues#resetEndValue
  * @cfg {Date} Конец периода, которое будет установлено после сброса значения
  * @remark

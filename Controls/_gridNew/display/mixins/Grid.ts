@@ -412,6 +412,15 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
     }
 
+    protected _handleCollectionActionChange(newItems: S[]): void {
+        newItems.forEach((item) => {
+            const collectionItem = this.getItemBySourceItem(item);
+            if (collectionItem instanceof DataRow) {
+                collectionItem.updateContentsVersion();
+            }
+        })
+    }
+
     getResultsRowClass() {
         return ResultsRow;
     }

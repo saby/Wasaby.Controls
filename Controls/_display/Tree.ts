@@ -704,7 +704,11 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     resetExpandedItems(): void {
-        this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
+        this.getItems().filter((it) => it.isExpanded()).forEach((it) => {
+            if (it['[Controls/_display/TreeItem]']) {
+                it.setExpanded(false);
+            }
+        });
         this._reBuildNodeFooters();
     }
 
