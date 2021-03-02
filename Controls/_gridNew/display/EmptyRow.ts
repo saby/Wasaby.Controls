@@ -42,12 +42,16 @@ export default class EmptyRow<T> extends Row<T> {
 
         if (this._$emptyTemplate) {
             const columns = this._$owner.getColumnsConfig();
-            let endColumn = columns.length + 1;
 
             // todo Множественный stickyProperties можно поддержать здесь:
             const stickyLadderProperties = this.getStickyLadderProperties(columns[0]);
             const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
 
+            let endColumn = columns.length + 1;
+
+            if (this._$owner.hasMultiSelectColumn()) {
+                endColumn++;
+            }
             if (stickyLadderCellsCount) {
                 endColumn += stickyLadderCellsCount;
             }
@@ -64,12 +68,11 @@ export default class EmptyRow<T> extends Row<T> {
             });
         } else {
             this._$columnItems = this._prepareColumnItems(this._$emptyTemplateColumns, factory);
-        }
-
-        if (this._$owner.hasMultiSelectColumn()) {
-            this._$columnItems.unshift(new factory({
-                column: {}
-            }));
+            if (this._$owner.hasMultiSelectColumn()) {
+                this._$columnItems.unshift(new factory({
+                    column: {}
+                }));
+            }
         }
     }
 
