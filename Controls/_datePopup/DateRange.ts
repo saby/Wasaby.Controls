@@ -135,16 +135,20 @@ export default class DateRange extends Control<IControlOptions> {
         let newPosition;
         // При скролле колонки с месяцами нужно менять позицию календаря только тогда,
         // когда мы увидим следующий год полностью.
-
         // Позицией у MonthList считается самый верхний видимый год.
-        // Если мы скроллим вверх, то будем переключаться на год только тогда, когда позиция встанет на год выше.
-        // Таким образом мы переключимся на год только тогда, когда он станет полностью видимым.
-        if (position.getFullYear() + 2 === this._position.getFullYear()) {
+
+        // При скролле вверх будем считать год поностью видимым тогда, когда над ним хотя бы немного виден
+        // следующий год. В таком случае позиция MonthList будет установлена на год выше нужного.
+        const needChangeToPrevYear = position.getFullYear() + 2 === this._position.getFullYear();
+        // При скролле вниз, год станет полностью видимым одновременно с тем, как поменяется позиция. Меняем год сразу.
+        const needChangeToNextYear = position.getFullYear() - 1 === this._position.getFullYear();
+
+        if (needChangeToPrevYear) {
             newPosition = new Date(position.getFullYear() + 1, 0);
             positionChanged = true;
         }
-        // При скролле вниз, год станет полностью видимым одновременно с тем, как поменяется позиция. Меняем год сразу.
-        if (position.getFullYear() - 1 === this._position.getFullYear()) {
+
+        if (needChangeToNextYear) {
             newPosition = new Date(position.getFullYear(), 0);
             positionChanged = true;
         }
