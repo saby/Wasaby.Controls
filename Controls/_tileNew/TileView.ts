@@ -161,7 +161,8 @@ export default class TileView extends ListView {
     }
 
     protected _onItemMouseMove(event: SyntheticEvent, item: TileCollectionItem): void {
-        if (this._shouldProcessHover() &&
+        if (!item['[Controls/_display/GroupItem]'] &&
+            this._shouldProcessHover() &&
             !this._listModel.isDragging() &&
             !item.isFixed()
         ) {

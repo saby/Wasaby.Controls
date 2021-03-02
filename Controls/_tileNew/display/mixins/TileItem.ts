@@ -594,7 +594,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 return position === 'image' && imageEffect === 'gradient' && imageViewMode === 'rectangle' && imagePosition === 'top';
             case 'preview':
-                return true;
+                return position === 'title';
         }
     }
 
@@ -992,6 +992,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 }
                 break;
             case 'small':
+                classes += 'ws-ellipsis';
+                break;
             case 'medium':
                 break;
             case 'rich':

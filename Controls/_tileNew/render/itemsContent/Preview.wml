@@ -8,12 +8,12 @@
                 attr:class="controls-TileView__previewTemplate_topTemplate"/>
 
     <ws:partial template="wml!Controls/_tileNew/render/Title" scope="{{_options}}">
-        <ws:bottomRightTemplate>
-            <ws:partial if="{{bottomRightTemplate.bottomRightTemplate}}"
-                        template="{{bottomRightTemplate.bottomRightTemplate}}"
+        <ws:bottomRightTpl>
+            <ws:partial if="{{bottomRightTemplate}}"
+                        template="{{bottomRightTemplate}}"
                         attr:class="controls-TileView__previewTemplate_bottomRightTemplate controls-TileView__previewTemplate_bottomRightTemplate_theme-{{_options.theme}}"
                         itemData="{{(item || itemData)}}"
                         item="{{(item || itemData)}}"/>
-        </ws:bottomRightTemplate>
+        </ws:bottomRightTpl>
     </ws:partial>
 </div>

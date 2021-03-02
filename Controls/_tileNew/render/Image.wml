@@ -31,7 +31,5 @@
       </ws:if>
 
       <ws:partial template="imageTpl"/>
-
-      <ws:partial if="{{bottomRightTemplate}}" template="{{bottomRightTemplate}}" itemData="{{(item || itemData)}}" item="{{(item || itemData)}}"/>
    </div>
 </ws:if>
