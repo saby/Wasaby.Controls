@@ -611,7 +611,8 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
 
                 // method returns error
                 if (!isCancelled && data[1] && !this._isError(data[1])) {
-                    this._$oldItems = data[1].getAll();
+                    // PrefetchProxy returns RecordSet
+                    this._$oldItems = data[1].getAll ? data[1].getAll() : data[1];
 
                     // history service returns error
                     if (data[0] && !this._isError(data[0])) {
