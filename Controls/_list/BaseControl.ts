@@ -6062,7 +6062,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
         // Событие свайпа должно стрелять всегда. Прикладники используют его для кастомных действий.
         // Раньше событие останавливалось если оно обработано платформой, но прикладники сами могут это контролировать.
-        this._notify('itemSwipe', [private.getPlainItemContents(item), swipeEvent, swipeContainer?.clientHeight]);
+        this._notify('itemSwipe', [_private.getPlainItemContents(item), swipeEvent, swipeContainer?.clientHeight]);
     }
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
