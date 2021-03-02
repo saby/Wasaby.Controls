@@ -481,16 +481,24 @@ var
             if (!isEqual(this._expandedItems, expandedItems)) {
                 this._expandedItems = expandedItems ? cClone(expandedItems) : [];
                 this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
-                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-                this._nextModelVersion();
+
+                // Если модель создалась без элементов, проекция для такой модели не создается, однако опции по прежнему могут меняться
+                if (this._display) {
+                    this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+                    this._nextModelVersion();
+                }
             }
         },
 
         setCollapsedItems: function(collapsedItems: Array<unknown>) {
             if (!isEqual(this._collapsedItems, collapsedItems)) {
                 this._collapsedItems = _private.prepareCollapsedItems(this._options.expandedItems, collapsedItems ? collapsedItems : []);
-                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-                this._nextModelVersion();
+
+                // Если модель создалась без элементов, проекция для такой модели не создается, однако опции по прежнему могут меняться
+                if (this._display) {
+                    this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+                    this._nextModelVersion();
+                }
             }
         },
 
