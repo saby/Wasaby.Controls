@@ -1,7 +1,7 @@
 import {Control, TemplateFunction, IControlOptions} from 'UI/Base';
 import * as template from 'wml!Controls/_breadcrumbs/Container';
 import {ContextOptions as DataOptions} from 'Controls/context';
-import calculatePath, {Path} from 'Controls/_dataSource/calculatePath';
+import {calculatePath, Path} from 'Controls/dataSource';
 import {ISourceControllerState, NewSourceController as SourceController} from 'Controls/dataSource';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
