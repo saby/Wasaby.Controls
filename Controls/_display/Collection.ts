@@ -45,7 +45,7 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * 
+ *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @public
  */
@@ -320,6 +320,7 @@ function onCollectionChange<T>(
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
             this._nextVersion();
+            this._handleCollectionActionChange(newItems);
             return;
     }
 
@@ -4035,6 +4036,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}
+
+    protected _handleCollectionActionChange(newItems: T[]): void {}
 
     // endregion
 
