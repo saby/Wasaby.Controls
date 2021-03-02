@@ -1,6 +1,6 @@
 <ws:template name="label">
     <ws:if data="{{collectionItem.isNode()}}">
-      <Controls.heading:Title scope="{{_options}}" fontSize="m"/>
+      <Controls.heading:Title scope="{{_options}}" readOnly="{{true}}" fontSize="m"/>
     </ws:if>
     <ws:else>
       <Controls.input:Label scope="{{_options}}"/>
