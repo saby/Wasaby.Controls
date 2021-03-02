@@ -669,10 +669,6 @@ export default abstract class TileItem<T extends Model = Model> {
             </ws:if>
         */
 
-        if (this.isDragged()) {
-            classes += ` controls-ListView__item_dragging_theme-${this.getTheme()}`;
-        }
-
         switch (itemType) {
             case 'default':
             case 'medium':
