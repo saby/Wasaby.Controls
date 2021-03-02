@@ -24,7 +24,7 @@ interface IFilterPropertyGridOptions extends IControlOptions {
  * @mixes Controls/interface/IItemTemplate
  *
  * @private
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  */
 class PropertyGrid extends Control<IFilterPropertyGridOptions> {
    protected _template: TemplateFunction = template;

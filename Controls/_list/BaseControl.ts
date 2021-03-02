@@ -4872,12 +4872,15 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
-                        // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
-                        // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
-                        // выполняется в колбеке после обновления (doAfterUpdate).
-                        _private.assignItemsToModel(self, list, self._options);
-
                         if (self._sourceController) {
+                            if (self._sourceController.getItems() !== self._items || !self._items) {
+                                // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
+                                // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
+                                // выполняется в колбеке после обновления (doAfterUpdate).
+                                _private.assignItemsToModel(self, list, self._options);
+                            } else if (cfg.itemsSetCallback) {
+                                cfg.itemsSetCallback(self._items);
+                            }
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                         }
 

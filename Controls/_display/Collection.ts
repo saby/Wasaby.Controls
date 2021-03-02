@@ -314,6 +314,7 @@ function onCollectionChange<T>(
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
             this._nextVersion();
+            this._handleCollectionActionChange(newItems);
             return;
     }
 
@@ -3795,6 +3796,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     }
 
     protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}
+
+    protected _handleCollectionActionChange(newItems: T[]): void {}
 
     // endregion
 

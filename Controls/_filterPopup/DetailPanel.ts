@@ -33,7 +33,7 @@ const setPropValue = Utils.object.setPropertyValue.bind(Utils);
  * @extends UI/Base:Control
  * @mixes Controls/_filterPopup/interface/IFilterPanel
  * @public
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  *
  * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
  *
@@ -56,7 +56,7 @@ const setPropValue = Utils.object.setPropertyValue.bind(Utils);
  * @mixes Controls/_filterPopup/interface/IFilterPanel
  * @demo Controls-demo/Filter_new/DetailPanel/ApplyButtonCaption/Index
  * @public
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  *
  * @cssModifier controls-FilterPanel__width-s Маленькая ширина панели.
  * @cssModifier controls-FilterPanel__width-m Средняя ширина панели.
