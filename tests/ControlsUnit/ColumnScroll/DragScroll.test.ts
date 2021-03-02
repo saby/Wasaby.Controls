@@ -1,7 +1,7 @@
 import {assert} from 'chai';
 import {DragScrollController as DragScroll} from 'Controls/columnScroll';
 
-describe('Controls/grid_clean/Controllers/DragScroll', () => {
+describe('Controls/columnScroll/dragScroll', () => {
     it('should not prevent default on touch start', () => {
         const dragScroll = new DragScroll({});
         const event = {

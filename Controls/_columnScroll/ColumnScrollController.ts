@@ -323,10 +323,10 @@ export default class ColumnScrollController {
             if (newContentSize <= newContainerSize) {
                 this._scrollPosition = 0;
             }
-
-            this._updateShadowState();
-            this._updateFixedColumnWidth(isFullGridSupport);
         }
+        this._updateShadowState();
+        this._updateFixedColumnWidth(isFullGridSupport);
+
 
         if (newContainerSize + this._scrollPosition > newContentSize) {
             this._scrollPosition -= (newContainerSize + this._scrollPosition) - newContentSize;
