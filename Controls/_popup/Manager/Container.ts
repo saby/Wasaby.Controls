@@ -148,7 +148,10 @@ class Container extends Control<IControlOptions> {
         ManagerController.notifyToManager('popupActivated', [popupId, data]);
     }
 
-    protected _overlayClickHandler(event: Event): void {
+    protected _overlayClickHandler(event: Event, item: IPopupItem): void {
+        if (item.popupOptions.closeOnOverlayClick) {
+             ManagerController.remove(item.id);
+        }
         // Click on the overlay shouldn't do anything
         event.preventDefault();
         event.stopPropagation();

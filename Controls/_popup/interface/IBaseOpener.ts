@@ -18,6 +18,7 @@ export interface IBasePopupOptions {
     autofocus?: boolean;
     topPopup?: boolean;
     modal?: boolean;
+    closeOnOverlayClick?: boolean;
     eventHandlers?: IEventHandlers;
     isDefaultOpener?: boolean;
     showIndicator?: boolean;
@@ -118,6 +119,14 @@ export interface IBaseOpener {
  * @name Controls/_popup/interface/IBaseOpener#showIndicator
  * @cfg {Boolean} Определяет, будет ли показываться индикатор при открытии окна
  * @default true
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#closeOnOverlayClick
+ * @cfg {Boolean} Определяет, будет ли закрываться попап при клике по оверлею.
+ * @description Актуально только при включенной опции {@link Controls/_popup/interface/IBaseOpener#modal modal}
+ * @default false
+ * @see Controls/_popup/interface/IBaseOpener#modal
  */
 
 /**
