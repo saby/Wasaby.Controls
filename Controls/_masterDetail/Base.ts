@@ -136,13 +136,7 @@ class Base extends Control<IMasterDetail> {
         } else if (options.propStorageId) {
             return new Promise((resolve) => {
                 this._getSettings(options).then((storage) => {
-                    const width = storage && storage[options.propStorageId];
-                    if (width) {
-                        this._currentWidth = width + 'px';
-                        this._updateOffset(options);
-                    } else {
-                        this.initCurrentWidth(options.masterWidth);
-                    }
+                    this._updateSizesByPropStorageId(storage, options);
                     this._prepareLimitSizes(options);
                     resolve(this._currentWidth);
                 });
@@ -220,12 +214,18 @@ class Base extends Control<IMasterDetail> {
 
         if (options.propStorageId !== this._options.propStorageId) {
             return this._getSettings(options).then((storage) => {
-                const width = storage && storage[options.propStorageId];
-                if (width) {
-                    this._currentWidth = width + 'px';
-                    this._updateOffset(options);
-                }
+                this._updateSizesByPropStorageId(storage, options);
             });
+        }
+    }
+
+    private _updateSizesByPropStorageId(storage: object, options: IMasterDetail): void {
+        const width = storage && storage[options.propStorageId];
+        if (width) {
+            this._currentWidth = width + 'px';
+            this._updateOffset(options);
+        } else {
+            this.initCurrentWidth(options.masterWidth);
         }
     }
 
