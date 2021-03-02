@@ -238,6 +238,15 @@ export default abstract class TileItem<T extends Model = Model> {
         return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width)) * 100}%;`;
     }
 
+    getAutoResizerClasses(itemType: string, staticHeight?: boolean, hasTitle?: boolean): string {
+        if (itemType === 'preview') {
+            return '';
+        }
+        return this.getTileMode() !== 'dynamic' && !staticHeight && hasTitle
+            ? `controls-TileView__resizer_theme-${this.getTheme()}`
+            : '';
+    }
+
     // endregion AutoResizer
 
     getCompressionCoefficient(): number {
@@ -372,8 +381,8 @@ export default abstract class TileItem<T extends Model = Model> {
         }
     }
 
-    getImageFit(): string {
-        return this._$imageFit;
+    getImageFit(imageFitTpl?: string): string {
+        return imageFitTpl || this._$imageFit;
     }
 
     setImageFit(imageFit: string): void {
@@ -479,11 +488,8 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 classes += ' controls-TileView__richTemplate_image';
                 classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
-                if (!imageProportion || imageViewMode !== 'rectangle' || imagePosition !== 'top') {
-                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
-                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
-
-                }
+                classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
+                classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
                 break;
         }
 
@@ -517,7 +523,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ` controls-TileView__mediumTemplate_image_theme-${this.getTheme()}`;
                 break;
             case 'rich':
-                classes += ' controls-TileView__richTemplate_imageWrapper';
+                // TODO в этом случае не нужны общие классы вверху, нужно написать так чтобы они не считались
+                classes = ' controls-TileView__richTemplate_imageWrapper';
                 classes += ` controls-TileView_richTemplate_image_spacing_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
                 break;
             case 'preview':
@@ -562,7 +569,7 @@ export default abstract class TileItem<T extends Model = Model> {
         }
     }
 
-    getImagePreserveAspectRatio(itemType: string = 'default'): string {
+    getImagePreserveAspectRatio(itemType: string = 'default', imageFit?: string): string {
         switch (itemType) {
             case 'default':
             case 'small':
@@ -570,7 +577,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'medium':
                 return 'xMidYMid meet';
             case 'rich':
-                return `xMidYMid ${this.getImageFit() === 'cover' ? 'slice' : 'meet'}`;
+                return `xMidYMid ${this.getImageFit(imageFit) === 'cover' ? 'slice' : 'meet'}`;
         }
     }
 
@@ -578,14 +585,14 @@ export default abstract class TileItem<T extends Model = Model> {
 
     // region ImageGradient
 
-    shouldDisplayGradient(itemType: string = 'default', imageEffect?: string, imageViewMode?: string, imagePosition?: string): boolean {
+    shouldDisplayGradient(itemType: string = 'default', imageEffect?: string, imageViewMode?: string, imagePosition?: string, position?: string): boolean {
         switch (itemType) {
             case 'default':
             case 'small':
             case 'medium':
                 return false;
             case 'rich':
-                return imageEffect === 'gradient' && imageViewMode === 'rectangle' && imagePosition === 'top';
+                return position === 'image' && imageEffect === 'gradient' && imageViewMode === 'rectangle' && imagePosition === 'top';
             case 'preview':
                 return true;
         }
@@ -702,7 +709,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getItemStyles(templateWidth?: number, staticHeight?: boolean): string {
+    getItemStyles(itemType: string, templateWidth?: number, staticHeight?: boolean): string {
         const width = this.getTileWidth(templateWidth);
         if (this.getTileMode() === 'dynamic') {
             const flexBasis = width * this.getCompressionCoefficient();
@@ -714,7 +721,7 @@ export default abstract class TileItem<T extends Model = Model> {
             `;
         } else {
             let styles = `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
-            if (staticHeight) {
+            if (staticHeight && itemType !== 'rich') {
                 styles += ` height: ${this.getTileHeight()}px;`;
             }
             return styles;
@@ -727,7 +734,8 @@ export default abstract class TileItem<T extends Model = Model> {
         templateShadowVisibility?: string,
         templateMarker?: boolean,
         highlightOnHover?: boolean,
-        backgroundColorStyle?: string
+        backgroundColorStyle?: string,
+        height?: string
     ): string {
         if (itemType === 'small') {
             return '';
@@ -737,6 +745,10 @@ export default abstract class TileItem<T extends Model = Model> {
 
         let classes = `controls-TileView__itemContent controls-TileView__itemContent${theme} js-controls-ListView__measurableContainer`;
         classes += ` ${this.getRoundBorderClasses()}`;
+
+        if (height === 'auto') {
+            classes += ' controls-TileView__item_autoHeight';
+        }
 
         if (highlightOnHover) {
             classes += ` controls-TileView__itemContent_highlightOnHover${theme}`;
@@ -827,7 +839,11 @@ export default abstract class TileItem<T extends Model = Model> {
 
     // region Content
 
-    getContentTemplate(itemType: string = 'default'): TemplateFunction {
+    getContentTemplate(itemType: string = 'default', contentTemplate?: TemplateFunction): TemplateFunction {
+        if (contentTemplate) {
+            return contentTemplate;
+        }
+
         switch (itemType) {
             case 'default':
             case 'small':
@@ -966,11 +982,15 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getEllipsisClasses(itemType: string = 'default', titleLines: number = 1): string {
+    getEllipsisClasses(itemType: string = 'default', titleLines: number = 1, staticHeight?: boolean, hasTitle?: boolean): string {
         let classes = '';
 
         switch (itemType) {
             case 'default':
+                if (!staticHeight && hasTitle) {
+                    classes += 'ws-ellipsis';
+                }
+                break;
             case 'small':
             case 'medium':
                 break;
@@ -1100,6 +1120,24 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
     // endregion RoundBorder
+
+    getMultiSelectStyles(itemType: string = 'default'): string {
+        let styles = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'medium':
+            case 'rich':
+            case 'preview':
+                break;
+            case 'small':
+                // TODO переопределяем left и top, т.к. в метод getMultiSelectClasses мы не можем прокинуть параметр itemType
+                styles += ' left: unset; top: unset;';
+                break;
+        }
+
+        return styles;
+    }
 
     abstract isHovered(): boolean;
     abstract isActive(): boolean;
