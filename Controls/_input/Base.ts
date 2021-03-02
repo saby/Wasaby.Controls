@@ -511,9 +511,7 @@ class Base<TBaseInputOptions extends IBaseInputOptions = {}> extends Control<TBa
         const readOnlyField: HTMLElement = this._getReadOnlyField();
 
         if (field) {
-            if (field._mounted) {
-                hasFieldHorizontalScroll = field.hasHorizontalScroll();
-            }
+            hasFieldHorizontalScroll = field.hasHorizontalScroll();
         } else if (readOnlyField) {
             hasFieldHorizontalScroll = this._hasHorizontalScroll(readOnlyField);
         }

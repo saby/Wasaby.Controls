@@ -467,7 +467,13 @@ class Field<Value, ModelOptions>
     }
 
     hasHorizontalScroll(): boolean {
-        return hasHorizontalScroll(this._getField());
+        /**
+         * При смене состояния readOnly, и наведении курсора, field не успевает замаунтится.
+         */
+        if (this._mounted) {
+            return hasHorizontalScroll(this._getField());
+        }
+        return false;
     }
 
     scrollTo(scrollTop: number): void {
