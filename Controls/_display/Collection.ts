@@ -126,6 +126,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     theme?: string;
+    backgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -829,6 +830,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
     protected _isDragOutsideList: boolean = false;
+
+    // Фон застиканных записей и лесенки
+    protected _$backgroundStyle?: string;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2365,6 +2369,18 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$hoverBackgroundStyle;
     }
 
+    setBackgroundStyle(backgroundStyle: string): void {
+        this._$backgroundStyle = backgroundStyle;
+        this.getItems().forEach((item) => {
+           item.setBackgroundStyle(backgroundStyle);
+        });
+        this.nextVersion();
+    }
+
+    getBackgroundStyle(): string {
+        return this._$backgroundStyle;
+    }
+
     getEditingBackgroundStyle(): string {
         const editingConfig = this.getEditingConfig();
         if (editingConfig) {
@@ -3029,6 +3045,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
+            options.backgroundStyle = this._$backgroundStyle;            
             options.theme = this._$theme;
             options.leftPadding = this._$leftPadding;
             options.rightPadding = this._$rightPadding;
@@ -3834,6 +3851,7 @@ Object.assign(Collection.prototype, {
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
     _$hoverBackgroundStyle: 'default',
+    _$backgroundStyle: null,
     _$rowSeparatorSize: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

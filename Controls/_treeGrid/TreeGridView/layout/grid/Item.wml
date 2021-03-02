@@ -33,7 +33,7 @@
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).top}}
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).bottom}}
          {{currentColumn.getColspanedPaddingClassList(currentColumn, colspan).right}}
-         {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
+         {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-background-' + itemData.backgroundStyle + '_theme-' + itemData.theme + ' controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
          {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}">
         <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}">
            <ws:expanderTemplate>
@@ -58,7 +58,7 @@
                 attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
                             {{currentColumn.column.valign ?' controls-Grid__cell_valign_' + currentColumn.column.valign + ' controls-Grid__cell-content_full-height' : ''}}
                             {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}
-                            {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
+                            {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-background-' + itemData.backgroundStyle + '_theme-' + itemData.theme + ' controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
                             {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}
                             {{!!itemData.isDragging ? ' controls-ListView__itemContent_dragging_theme-' + itemData.theme}}"
                 ladderWrapper="{{currentColumn.ladderWrapper}}"
