@@ -1200,7 +1200,7 @@ var
                 } else {
 
                     const additionalColumn = hasMultiSelectColumn ? 1 : 0;
-                    const gridStyles = GridLayoutUtil.getMultiHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn);
+                    const gridStyles = GridLayoutUtil.getMultiHeaderStyles(startColumn, endColumn, startRow, endRow, additionalColumn, this.stickyLadderCellsCount());
                     cellStyles += gridStyles;
 
                 }
@@ -1221,7 +1221,7 @@ var
                 this._headerRows[rowIndex][columnIndex + 1].startColumn &&
                 !(cell.title || cell.caption)
             ) {
-                cellStyles = GridLayoutUtil.getMultiHeaderStyles(1, 2, 1, this._maxEndRow, 0)
+                cellStyles = GridLayoutUtil.getMultiHeaderStyles(1, 2, 1, this._maxEndRow, 0, this.stickyLadderCellsCount());
                 if (!GridLayoutUtil.isFullGridSupport()) {
                     headerColumn.rowSpan = this._maxEndRow - 1;
                     headerColumn.colSpan = 1;
