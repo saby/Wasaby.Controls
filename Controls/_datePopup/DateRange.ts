@@ -59,9 +59,6 @@ export default class DateRange extends Control<IControlOptions> {
     }
 
     protected _beforeUpdate(options): void {
-        if (this._position !== options.position) {
-            this._markedKey = this._dateToId(options.position);
-        }
         this._updateView(options);
     }
 
@@ -114,7 +111,8 @@ export default class DateRange extends Control<IControlOptions> {
     }
 
     protected _scrollToMonth(e, year, month): void {
-        this._notifyPositionChanged(new this._options.dateConstructor(year, month));
+        // При клике на месяц позиционируем его снизу, по аналогии с работй маркера при инициализации
+        this._notifyPositionChanged(new this._options.dateConstructor(year, month - 1));
         e.stopPropagation();
     }
 
@@ -133,8 +131,29 @@ export default class DateRange extends Control<IControlOptions> {
     }
 
     protected _onMonthsPositionChanged(e: Event, position: Date): void {
-        if (position.getFullYear() !== this._position.getFullYear()) {
-            const newPosition = new Date(position.getFullYear(), 0);
+        let positionChanged;
+        let newPosition;
+        // При скролле колонки с месяцами нужно менять позицию календаря только тогда,
+        // когда мы увидим следующий год полностью.
+        // Позицией у MonthList считается самый верхний видимый год.
+
+        // При скролле вверх будем считать год поностью видимым тогда, когда над ним хотя бы немного виден
+        // следующий год. В таком случае позиция MonthList будет установлена на год выше нужного.
+        const needChangeToPrevYear = position.getFullYear() + 2 === this._position.getFullYear();
+        // При скролле вниз, год станет полностью видимым одновременно с тем, как поменяется позиция. Меняем год сразу.
+        const needChangeToNextYear = position.getFullYear() - 1 === this._position.getFullYear();
+
+        if (needChangeToPrevYear) {
+            newPosition = new Date(position.getFullYear() + 1, 0);
+            positionChanged = true;
+        }
+
+        if (needChangeToNextYear) {
+            newPosition = new Date(position.getFullYear(), 0);
+            positionChanged = true;
+        }
+        if (positionChanged) {
+            this._markedKey = this._dateToId(newPosition);
             this._notifyPositionChanged(newPosition);
         }
     }
