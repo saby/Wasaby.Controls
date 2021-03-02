@@ -12,6 +12,7 @@ import * as RichContent from 'wml!Controls/_tileNew/render/itemsContent/Rich';
 import Tile, {
     DEFAULT_COMPRESSION_COEFF, DEFAULT_SCALE_COEFFICIENT, DEFAULT_TILE_HEIGHT, DEFAULT_TILE_WIDTH, IRoundBorder
 } from './Tile';
+import {itemTemplate} from "Controls/switchableArea";
 
 const DEFAULT_WIDTH_PROPORTION = 1;
 
@@ -230,17 +231,27 @@ export default abstract class TileItem<T extends Model = Model> {
 
     // region AutoResizer
 
-    shouldDisplayAutoResizer(staticHeight: boolean): boolean {
-        return !staticHeight && this.getTileMode() !== 'dynamic';
+    shouldDisplayAutoResizer(itemType: string, staticHeight: boolean, imagePosition?: string, imageViewMode?: string, imageProportion?: number): boolean {
+        if (itemType === 'rich') {
+            return imagePosition === 'top' && imageViewMode === 'rectangle' && !!imageProportion;
+        } else {
+            return !staticHeight && this.getTileMode() !== 'dynamic';
+        }
     }
 
-    getAutoResizerStyles(width?: number): string {
+    getAutoResizerStyles(itemType: string, width?: number, imageProportion?: number): string {
+        if (itemType === 'rich') {
+            return ` padding-top: ${100 * imageProportion}%`;
+        }
         return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width)) * 100}%;`;
     }
 
     getAutoResizerClasses(itemType: string, staticHeight?: boolean, hasTitle?: boolean): string {
         if (itemType === 'preview') {
             return '';
+        }
+        if (itemType === 'rich') {
+            return 'controls-TileView__image_resizer';
         }
         return this.getTileMode() !== 'dynamic' && !staticHeight && hasTitle
             ? `controls-TileView__resizer_theme-${this.getTheme()}`
@@ -466,7 +477,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return ImageTemplate;
     }
 
-    getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: string, imagePosition?: string, imageSize?: string): string {
+    getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: number, imagePosition?: string, imageSize?: string, imageProportionOnItem?: string): string {
         const imageRestrictions = this.getImageFit() === 'cover'
             ? getImageRestrictions(this.getImageHeight(), this.getImageWidth(), this.getTileHeight(), this.getTileWidth(widthTpl))
             : {};
@@ -488,8 +499,10 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 classes += ' controls-TileView__richTemplate_image';
                 classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
-                classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
-                classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
+                if (!imageProportionOnItem || imageViewMode !== 'rectangle' || imagePosition !== 'top') {
+                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
+                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
+                }
                 break;
         }
 
@@ -553,19 +566,6 @@ export default abstract class TileItem<T extends Model = Model> {
             return 'controls-TileView__imageAlign_wrapper ws-flexbox ws-justify-content-center ws-align-items-center';
         } else {
             return '';
-        }
-    }
-
-    shouldDisplayImageResizer(itemType: string = 'default', imagePosition: string, imageViewMode: string, imageProportion: string, staticHeight: boolean): boolean {
-        switch (itemType) {
-            case 'default':
-            case 'preview':
-            case 'medium':
-                return !staticHeight && this.getTileMode() !== 'dynamic';
-            case 'small':
-                return false;
-            case 'rich':
-                return imagePosition === 'top' && imageViewMode === 'rectangle' && !!imageProportion;
         }
     }
 
@@ -1129,9 +1129,9 @@ export default abstract class TileItem<T extends Model = Model> {
         switch (itemType) {
             case 'default':
             case 'medium':
-            case 'rich':
             case 'preview':
                 break;
+            case 'rich':
             case 'small':
                 // TODO переопределяем left и top, т.к. в метод getMultiSelectClasses мы не можем прокинуть параметр itemType
                 styles += ' left: unset; top: unset;';

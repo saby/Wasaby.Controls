@@ -4,7 +4,6 @@ import {TileItemMixin} from 'Controls/tileNew';
 import { TreeItem } from 'Controls/display';
 import { TemplateFunction } from 'UI/Base';
 import * as FolderIcon from 'wml!Controls/_treeTile/render/FolderIcon';
-import * as FolderTemplate from 'wml!Controls/_treeTile/render/Folder';
 
 const DEFAULT_FOLDER_WIDTH = 250;
 
@@ -53,12 +52,12 @@ export default class TreeTileCollectionItem<T extends Model = Model>
         }
     }
 
-    getImageClasses(itemTypeTpl: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: string, imagePosition?: string, imageSize?: string): string {
+    getImageClasses(itemTypeTpl: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: number, imagePosition?: string, imageSize?: string, imageProportionOnItem?: string): string {
         let itemType = itemTypeTpl;
         if (itemType === 'default' && this.isNode()) {
             itemType = 'small';
         }
-        return super.getImageClasses(itemType, widthTpl, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize);
+        return super.getImageClasses(itemType, widthTpl, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageProportionOnItem);
     }
 
     getImageWrapperClasses(itemTypeTpl: string = 'default', templateHasTitle?: boolean, templateTitleStyle?: string, imageViewMode: string = 'rectangle'): string {
@@ -67,14 +66,6 @@ export default class TreeTileCollectionItem<T extends Model = Model>
             itemType = 'small';
         }
         return super.getImageWrapperClasses(itemType, templateHasTitle, templateTitleStyle, imageViewMode);
-    }
-
-    shouldDisplayImageResizer(itemTypeTpl: string = 'default', imagePosition: string, imageViewMode: string, imageProportion: string, staticHeight: boolean): boolean {
-        let itemType = itemTypeTpl;
-        if (itemType === 'default' && this.isNode()) {
-            itemType = 'small';
-        }
-        return super.shouldDisplayImageResizer(itemType, imagePosition, imageViewMode, imageProportion, staticHeight);
     }
 
     getItemActionsClasses(itemTypeTpl: string = 'default'): string {

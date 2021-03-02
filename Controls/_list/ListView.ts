@@ -31,7 +31,7 @@ var _private = {
     },
 
     setHoveredItem: function(self, itemData, nativeEvent) {
-        const item = itemData.item;
+        const item = itemData?.item;
         if (item !== self._hoveredItem) {
             self._hoveredItem = item;
             var container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
