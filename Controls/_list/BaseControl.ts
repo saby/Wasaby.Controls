@@ -4012,6 +4012,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
             }
 
+            if (!this._options.sourceController) {
+                _private.executeAfterReloadCallbacks(this, this._items, newOptions);
+            }
+
             if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
                 if (this._listViewModel) {
                     this._listViewModel.setHasMoreData(_private.hasMoreDataInAnyDirection(this, this._sourceController));
