@@ -468,7 +468,8 @@ class Field<Value, ModelOptions>
 
     hasHorizontalScroll(): boolean {
         /**
-         * При смене состояния readOnly, и наведении курсора, field не успевает замаунтится.
+         * При смене состояния readOnly, может произойти сутуация, когда базовый контрол замаунтился, а field нет.
+         * https://online.sbis.ru/opendoc.html?guid=1aaaab99-539a-4dec-87e1-c92095fd553a
          */
         if (this._mounted) {
             return hasHorizontalScroll(this._getField());
