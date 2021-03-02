@@ -5909,7 +5909,11 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             }
         }
         // Событие свайпа должно стрелять всегда. Прикладники используют его для кастомных действий.
-        this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.height]);
+        // Опция task1181224388 до версии 21.2000 отменяет корявые условия отправки этого события,
+        // В 21.2000 вообще нет этого условия.
+        if (this._options.task1181224388 || (!this._options.itemActions && item.isSwiped())) {
+            this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
+        }
     },
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
