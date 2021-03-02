@@ -574,7 +574,7 @@ define(
             });
          });
 
-         it('_private::loadItemsTemplates', (done) => {
+         it('_loadItemsTemplates', (done) => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = new collection.RecordSet({
                keyProperty: 'id',
@@ -586,7 +586,7 @@ define(
             });
          });
 
-         it('_private::loadItems', () => {
+         it('_loadItems', async () => {
             const controllerConfig = { ...config };
             controllerConfig.dataLoadCallback = function(loadedItems) {
                const item = new entity.Record({
@@ -598,13 +598,17 @@ define(
                loadedItems.add(item);
             };
             let dropdownController = getDropdownController(controllerConfig);
-            return new Promise((resolve) => {
-               dropdownController._loadItems(controllerConfig).then(() => {
-                  dropdownController._menuSource.query().then((menuItems) => {
-                     assert.isTrue(!!menuItems.getRecordById('9'));
-                     resolve();
-                  });
+            await dropdownController._loadItems(controllerConfig).then(() => {
+               dropdownController._menuSource.query().then((menuItems) => {
+                  assert.isTrue(!!menuItems.getRecordById('9'));
                });
+            });
+
+            dropdownController._sourceController = {
+               load: () => Promise.reject('error')
+            };
+            await dropdownController._loadItems(controllerConfig).then(() => {}, (error) => {
+               assert.equal(error, 'error');
             });
          });
 

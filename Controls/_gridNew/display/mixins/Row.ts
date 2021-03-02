@@ -318,7 +318,7 @@ export default abstract class Row<T> {
                 ...this._getColumnFactoryParams(column, columnIndex),
                 instanceId: `${this.key}_column_${columnIndex}`,
                 colspan: colspan as number,
-                isFixed: columnIndex < this.getStickyColumnsCount()
+                isFixed: columnIndex < this.getStickyColumnsCount(),
             }));
         }
         return columnItems;

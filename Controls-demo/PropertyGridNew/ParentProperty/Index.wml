@@ -5,8 +5,5 @@
             source="{{_source}}"
             nodeProperty="@parent"
             parentProperty="parent">
-        <ws:itemTemplate>
-            <ws:partial template="wml!Controls-demo/PropertyGridNew/ParentProperty/itemTemplate"/>
-        </ws:itemTemplate>
     </Controls.propertyGrid:PropertyGrid>
 </div>
