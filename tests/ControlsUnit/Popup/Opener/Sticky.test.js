@@ -1131,6 +1131,7 @@ define(
             popupCfg.sizes.width = 200;
             popupCfg.sizes.height = 500;
 
+            // bottom vertical overflow
             var position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.top, 200);
             assert.equal(position.left, 200);
@@ -1139,10 +1140,41 @@ define(
             targetCoords.top = 250;
             targetCoords.bottom = 350;
 
+            // top vertical overflow
             position = StickyStrategy.getPosition(popupCfg, targetCoords);
             assert.equal(position.bottom, 250);
             assert.equal(position.left, 200);
             assert.equal(position.height, 250);
+
+            popupCfg.restrictiveContainerCoords = {
+               top: 100,
+               bottom: 400,
+               right: 300,
+               left: 100
+            };
+
+            targetCoords.top = 200;
+            targetCoords.bottom = 300;
+            targetCoords.left = 150;
+            targetCoords.right = 250;
+
+            // right horizontal overflow
+            position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.left, 150);
+            assert.equal(position.width, 150);
+
+
+            targetCoords.top = 200;
+            targetCoords.bottom = 300;
+            targetCoords.left = 150;
+            targetCoords.right = 250;
+            popupCfg.targetPoint.horizontal = 'right';
+            popupCfg.direction.horizontal = 'left';
+
+            // left horizontal overflow
+            position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.right, 350);
+            assert.equal(position.width, 150);
 
             StickyStrategy._private.getBody = getBody;
          });
