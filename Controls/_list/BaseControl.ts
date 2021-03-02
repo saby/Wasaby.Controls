@@ -439,6 +439,8 @@ const _private = {
                                 // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
                                 // выполняется в колбеке после обновления (doAfterUpdate).
                                 _private.assignItemsToModel(self, list, self._options);
+                            } else if (cfg.itemsSetCallback) {
+                                cfg.itemsSetCallback(self._items);
                             }
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                         }
