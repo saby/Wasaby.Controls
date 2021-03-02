@@ -477,7 +477,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return ImageTemplate;
     }
 
-    getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: number, imagePosition?: string, imageSize?: string, imageProportionOnItem?: string): string {
+    getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: number, imagePosition?: string, imageSize?: string, imageFit?: string, imageProportionOnItem?: string): string {
         const imageRestrictions = this.getImageFit() === 'cover'
             ? getImageRestrictions(this.getImageHeight(), this.getImageWidth(), this.getTileHeight(), this.getTileWidth(widthTpl))
             : {};
