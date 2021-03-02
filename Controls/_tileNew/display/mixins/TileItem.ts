@@ -701,6 +701,9 @@ export default abstract class TileItem<T extends Model = Model> {
                 } else {
                     classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
                 }
+                if (this.canShowActions()) {
+                    classes += ' controls-ListView__item_showActions';
+                }
                 classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}_theme-${this.getTheme()}`;
                 break;
         }
@@ -789,9 +792,7 @@ export default abstract class TileItem<T extends Model = Model> {
             classes += ` controls-ListView__item_dragging${theme} controls-ListView__itemContent_dragging${theme}`;
         }
 
-        if (this.canShowActions()) {
-            classes += ' controls-ListView__item_showActions';
-        }
+
         if (this.isSwiped()) {
             classes += ` controls-TileView__item_swiped${theme}`;
         }
@@ -891,7 +892,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 return true;
             case 'preview':
-                return this.canShowActions() || this.hasVisibleActions();
+                return !!this.getDisplayValue() || this.canShowActions() || this.hasVisibleActions();
         }
     }
 
