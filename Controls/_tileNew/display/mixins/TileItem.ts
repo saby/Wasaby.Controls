@@ -488,11 +488,8 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'rich':
                 classes += ' controls-TileView__richTemplate_image';
                 classes += ` controls-TileView__richTemplate_image_viewMode_${imageViewMode}`;
-                if (!imageProportion || imageViewMode !== 'rectangle' || imagePosition !== 'top') {
-                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
-                    classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
-
-                }
+                classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition}_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
+                classes += ` controls-TileView__richTemplate_image_size_${imageSize}_position_${imagePosition !== 'top' ? 'vertical' : 'top'}_theme-${this.getTheme()}`;
                 break;
         }
 
@@ -526,7 +523,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 classes += ` controls-TileView__mediumTemplate_image_theme-${this.getTheme()}`;
                 break;
             case 'rich':
-                classes += ' controls-TileView__richTemplate_imageWrapper';
+                // TODO в этом случае не нужны общие классы вверху, нужно написать так чтобы они не считались
+                classes = ' controls-TileView__richTemplate_imageWrapper';
                 classes += ` controls-TileView_richTemplate_image_spacing_viewMode_${imageViewMode}_theme-${this.getTheme()}`;
                 break;
             case 'preview':
@@ -587,14 +585,14 @@ export default abstract class TileItem<T extends Model = Model> {
 
     // region ImageGradient
 
-    shouldDisplayGradient(itemType: string = 'default', imageEffect?: string, imageViewMode?: string, imagePosition?: string): boolean {
+    shouldDisplayGradient(itemType: string = 'default', imageEffect?: string, imageViewMode?: string, imagePosition?: string, position?: string): boolean {
         switch (itemType) {
             case 'default':
             case 'small':
             case 'medium':
                 return false;
             case 'rich':
-                return imageEffect === 'gradient' && imageViewMode === 'rectangle' && imagePosition === 'top';
+                return position === 'image' && imageEffect === 'gradient' && imageViewMode === 'rectangle' && imagePosition === 'top';
             case 'preview':
                 return true;
         }
@@ -711,7 +709,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getItemStyles(templateWidth?: number, staticHeight?: boolean): string {
+    getItemStyles(itemType: string, templateWidth?: number, staticHeight?: boolean): string {
         const width = this.getTileWidth(templateWidth);
         if (this.getTileMode() === 'dynamic') {
             const flexBasis = width * this.getCompressionCoefficient();
@@ -723,7 +721,7 @@ export default abstract class TileItem<T extends Model = Model> {
             `;
         } else {
             let styles = `-ms-flex-preferred-size: ${width}px; flex-basis: ${width}px;`;
-            if (staticHeight) {
+            if (staticHeight && itemType !== 'rich') {
                 styles += ` height: ${this.getTileHeight()}px;`;
             }
             return styles;
