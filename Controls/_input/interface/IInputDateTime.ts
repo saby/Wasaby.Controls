@@ -39,6 +39,7 @@ export interface IInputDateTimeOptions {
 /**
  * @event Происходит при изменении значения поля ввода.
  * @name Controls/_input/interface/IInputDateTime#valueChanged
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Новое значение поля ввода.
  * @param {String} displayValue Текстовое значение поля ввода.
  * @remark
@@ -51,14 +52,14 @@ export interface IInputDateTimeOptions {
  * Оба поля в этом примере будут иметь одинаковое поведение.
  * <pre class="brush: html">
  * <!-- WML -->
- * <Controls.input:DateTime value="_fieldValue" on:valueChanged="_valueChangedHandler()"/>
+ * <Controls.input:DateTime value="{{_fieldValue}}" on:valueChanged="_valueChangedHandler()"/>
  * <Controls.input:DateTime bind:value="_anotherFieldValue"/>
  * </pre>
  * <pre class="brush: js">
  * // JavaScript
  * class MyControl extends Control<IControlOptions> {
  *    _fieldValue: null,
- *    _valueChangedHandler(value, displayValue) {
+ *    _valueChangedHandler(event, value, displayValue) {
  *       this._fieldValue = value;
  *       this._saveToDatabase(displayValue);
  *    },
@@ -70,6 +71,7 @@ export interface IInputDateTimeOptions {
 /**
  * @event Происходит при завершении ввода в поле (поле потеряло фокус или пользователь нажал клавишу "enter").
  * @name Controls/_input/interface/IInputDateTime#inputCompleted
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
@@ -83,7 +85,7 @@ export interface IInputDateTimeOptions {
  * <pre class="brush: js">
  * // JavaScript
  * class MyControl extends Control<IControlOptions> {
- *    _inputCompletedHandler(value, displayValue) {
+ *    _inputCompletedHandler(event, value, displayValue) {
  *       this._saveEnteredValueToDabase1(value);
  *       this._saveEnteredValueToDabase2(displayValue);
  *    }
