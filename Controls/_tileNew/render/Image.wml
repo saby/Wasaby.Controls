@@ -22,7 +22,7 @@
    <div attr:class="{{ (item || itemData).getImageWrapperClasses(itemType, hasTitle, titleStyle, imageViewMode) }}"
         attr:style="{{ (item || itemData).getImageWrapperStyles(itemType) }}">
       <ws:if data="{{ (item || itemData).shouldDisplayAutoResizer(staticHeight) }}">
-         <div style="{{ (item || itemData).getAutoResizerStyles(width) }}"></div>
+         <div class="{{ (item || itemData).getAutoResizerClasses(itemType, staticHeight, hasTitle) }}" style="{{ (item || itemData).getAutoResizerStyles(width) }}"></div>
       </ws:if>
 
       <ws:partial template="imageTpl"/>

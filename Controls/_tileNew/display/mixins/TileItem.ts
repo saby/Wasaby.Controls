@@ -238,6 +238,15 @@ export default abstract class TileItem<T extends Model = Model> {
         return `padding-top: ${(this.getTileHeight() / this.getTileWidth(width)) * 100}%;`;
     }
 
+    getAutoResizerClasses(itemType: string, staticHeight?: boolean, hasTitle?: boolean): string {
+        if (itemType === 'preview') {
+            return '';
+        }
+        return this.getTileMode() !== 'dynamic' && !staticHeight && hasTitle
+            ? `controls-TileView__resizer_theme-${this.getTheme()}`
+            : '';
+    }
+
     // endregion AutoResizer
 
     getCompressionCoefficient(): number {
@@ -827,7 +836,11 @@ export default abstract class TileItem<T extends Model = Model> {
 
     // region Content
 
-    getContentTemplate(itemType: string = 'default'): TemplateFunction {
+    getContentTemplate(itemType: string = 'default', contentTemplate?: TemplateFunction): TemplateFunction {
+        if (contentTemplate) {
+            return contentTemplate;
+        }
+
         switch (itemType) {
             case 'default':
             case 'small':
@@ -966,11 +979,15 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getEllipsisClasses(itemType: string = 'default', titleLines: number = 1): string {
+    getEllipsisClasses(itemType: string = 'default', titleLines: number = 1, staticHeight?: boolean, hasTitle?: boolean): string {
         let classes = '';
 
         switch (itemType) {
             case 'default':
+                if (this.getTileMode() !== 'dynamic' && !staticHeight && hasTitle) {
+                    classes += 'ws-ellipsis';
+                }
+                break;
             case 'small':
             case 'medium':
                 break;
@@ -1100,6 +1117,24 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
     // endregion RoundBorder
+
+    getMultiSelectStyles(itemType: string = 'default'): string {
+        let styles = '';
+
+        switch (itemType) {
+            case 'default':
+            case 'medium':
+            case 'rich':
+            case 'preview':
+                break;
+            case 'small':
+                // TODO переопределяем left и top, т.к. в метод getMultiSelectClasses мы не можем прокинуть параметр itemType
+                styles += ' left: unset; top: unset;';
+                break;
+        }
+
+        return styles;
+    }
 
     abstract isHovered(): boolean;
     abstract isActive(): boolean;
