@@ -8,6 +8,7 @@
         <ws:itemTemplate>
             <ws:partial itemWidth="{{200}}"
                         titleStyle="accent"
+                        hasTitle="{{ true }}"
                         template="Controls/tileNew:ItemTemplate"/>
         </ws:itemTemplate>
 </Controls.treeTile:View>
