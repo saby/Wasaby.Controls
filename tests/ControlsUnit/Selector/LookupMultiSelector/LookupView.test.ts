@@ -102,6 +102,7 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
          selectorTempalte: null
       });
       ok(lookupView.showSelector() === true);
+      ok(!lookupView._suggestState);
    });
 });
 
