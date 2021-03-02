@@ -5,12 +5,14 @@
    <span class="controls-Back__wrapper controls-Back__wrapper_{{_options.fontSize}}">
       <div class="controls-Back_arrow controls-Back_style-{{_options.iconStyle}} controls-Back_style-{{_options.iconStyle}}_size-{{_options.iconSize}}{{_options.newIcon ? '_modified'}}
          controls-Back_size-{{_options.iconSize}}">
-         <svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            viewBox="0 0 8 16" style="enable-background:new 0 0 8 16; fill:{{_options.iconStyle === "primary" ? '#ff7033' : 'black'}};" 
-            xml:space="preserve" class="controls-Back__svg{{_options.newIcon ? '_modified'}}">
+         <ws:if data="{{ _options.newIcon }}">
+            <svg version="1.1" id="Слой_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 8 16" style="enable-background:new 0 0 8 16;" 
+            xml:space="preserve" class="controls-Back__svg_modified controls-Back__svg_style-{{_options.iconStyle}}_size-{{_options.iconSize}}_modified">
             <polygon points="0.5,8 6,0 8,0 2.5,8 8,16 6,16 "/>
-         </svg>
-         </div>
+            </svg>
+         </ws:if>
+      </div>
       <ws:if data="{{_isOldIe}}">
          <div class="controls-Back__caption__wrapper controls-Back__caption_style-{{_options.fontColorStyle}}">
             <ws:partial template="caption"/>
