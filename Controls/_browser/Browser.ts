@@ -221,11 +221,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             }, true);
         }
     }
-        
+
     protected _createNewStoreObservers(): string[] {
         const sourceCallbackId = Store.onPropertyChanged('filterSource', (filterSource: IFilterItem[]) => {
                 this._filterItemsChanged(null, filterSource);
-            });
+        });
         const filterSourceCallbackId = Store.onPropertyChanged('filter',
            (filter: QueryWhereExpression<unknown>) => this._filterChanged(null, filter));
         const searchValueCallbackId = Store.onPropertyChanged('searchValue',
