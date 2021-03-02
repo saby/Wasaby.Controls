@@ -816,9 +816,9 @@ define(
             StickyStrategy._private._isMobileDevices = () => true;
 
             // правый и нижний край не влезли
-            result = StickyStrategy._private.checkOverflow({}, {}, position, 'horizontal');
+            result = StickyStrategy._private.checkOverflow({direction: {}}, {}, position, 'horizontal');
             assert.strictEqual(result, 10);
-            result = StickyStrategy._private.checkOverflow({}, {}, position, 'vettical');
+            result = StickyStrategy._private.checkOverflow({direction: {}}, {}, position, 'vettical');
             assert.strictEqual(result, 20);
 
             position = {
@@ -827,9 +827,9 @@ define(
             };
 
             // левый и верхний край не влезли
-            result = StickyStrategy._private.checkOverflow({}, {}, position, 'horizontal');
+            result = StickyStrategy._private.checkOverflow({direction: {}}, {}, position, 'horizontal');
             assert.strictEqual(result, 10);
-            result = StickyStrategy._private.checkOverflow({}, {}, position, 'vettical');
+            result = StickyStrategy._private.checkOverflow({direction: {}}, {}, position, 'vettical');
             assert.strictEqual(result, 20);
 
             StickyStrategy._private._isMobileDevices = _isMobileDevices;
@@ -1069,6 +1069,80 @@ define(
             StickyStrategy._private.calculateRestrictionContainerCoords(popupCfg, position);
             assert.equal(position.top, 20);
             assert.equal(position.left, 30);
+
+            StickyStrategy._private.getBody = getBody;
+         });
+         it('restrictive container overflow', () => {
+            let getBody = StickyStrategy._private.getBody;
+
+            StickyStrategy._private.getBody = () => ({
+               height: 600,
+               width: 600
+            });
+            let popupCfg = {
+               restrictiveContainerCoords: {
+                  top: 100,
+                  bottom: 400,
+                  right: 400,
+                  left: 100
+               },
+               config: {
+                  maxWidth: 300,
+                  minWidth: 100
+               },
+               sizes: {
+                  width: 200,
+                  height: 500,
+                  margins: {
+                     top: 0,
+                     bottom: 0,
+                     right: 0,
+                     left: 0
+                  }
+               },
+               offset: {
+                  horizontal: 0,
+                  vertical: 0
+               },
+               targetPoint: {
+                  horizontal: 'left',
+                  vertical: 'top'
+               },
+               direction: {
+                  horizontal: 'right',
+                  vertical: 'bottom'
+               },
+               fittingMode: {
+                  horizontal: 'adaptive',
+                  vertical: 'adaptive'
+               }
+            };
+            const targetCoords = {
+               top: 200,
+               left: 200,
+               bottom: 300,
+               right: 300,
+               width: 100,
+               height: 100,
+               leftScroll: 0,
+               topScroll: 0
+            };
+
+            popupCfg.sizes.width = 200;
+            popupCfg.sizes.height = 500;
+
+            var position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.top, 200);
+            assert.equal(position.left, 200);
+            assert.equal(position.height, 200);
+
+            targetCoords.top = 250;
+            targetCoords.bottom = 350;
+
+            position = StickyStrategy.getPosition(popupCfg, targetCoords);
+            assert.equal(position.bottom, 250);
+            assert.equal(position.left, 200);
+            assert.equal(position.height, 250);
 
             StickyStrategy._private.getBody = getBody;
          });
