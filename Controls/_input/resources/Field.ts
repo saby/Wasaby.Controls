@@ -350,6 +350,8 @@ class Field<Value, ModelOptions>
          */
         if (!detection.isMobileAndroid) {
             this._updateField(model.displayValue, model.selection);
+        } else {
+            this.setValue(model.displayValue);
         }
     }
 
