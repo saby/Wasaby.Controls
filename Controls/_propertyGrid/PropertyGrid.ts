@@ -101,7 +101,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             nodeProperty: options.nodeProperty,
             keyProperty: propertyGridItems.getKeyProperty(),
             root: null,
-            group: this._groupCallback,
+            group: this._groupCallback.bind(this, options.groupProperty),
             filter: this._displayFilter.bind(this),
             toggledEditors: this._toggledEditors,
             itemPadding: options.itemPadding
@@ -122,10 +122,10 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         return toggledEditors;
     }
 
-    private _groupCallback(item: Model): string {
+    private _groupCallback(groupProperty: string, item: Model): string {
         return item.get(PROPERTY_TOGGLE_BUTTON_ICON_FIELD) ?
             'propertyGrid_toggleable_editors_group' :
-            item.get(PROPERTY_GROUP_FIELD);
+            item.get(groupProperty);
     }
 
     private _displayFilter(
@@ -321,7 +321,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
 
     static getDefaultOptions(): Partial<IPropertyGridOptions> {
         return {
-            keyProperty: 'name'
+            keyProperty: 'name',
+            groupProperty: PROPERTY_GROUP_FIELD
         };
     }
 }

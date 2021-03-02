@@ -13,6 +13,7 @@ export interface IPropertyGridOptions extends IControlOptions {
     editingObject: Model | Record<string, any>;
     source: IPropertyGridProperty[] | RecordSet<IPropertyGridProperty>;
     groupTemplate?: Function;
+    groupProperty?: string;
     collapsedGroups?: Array<string|number>;
     nodeProperty?: string;
     parentProperty?: string;
@@ -244,4 +245,31 @@ export interface IPropertyGrid {
  * @name Controls/_propertyGrid/IPropertyGrid#nodeProperty
  * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
  * @demo Controls-demo/PropertyGridNew/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_propertyGrid/IPropertyGrid#groupProperty
+ * @cfg {String} Имя свойства, содержащего идентификатор группы элемента редактора свойств.
+ * @see groupTemplate
+ * @default group
+ * @demo Controls-demo/PropertyGridNew/groupProperty/Index
+ * @example
+ *  <pre class="brush: html; highlight: [2]">
+ * <!-- WML -->
+ * <Controls.propertyGrid:PropertyGrid groupProperty='myGroupField'>
+ *    ...
+ * </Controls.propertyGrid:PropertyGrid>
+ * </pre>
+ * <pre class="brush: js;; highlight: [7]">
+ * // TypeScript
+ * _beforeMount() {
+ *     this._propertyGridSource = [
+ *         {
+ *             name: 'myProperty'
+ *             type: 'string',
+ *             myGroupField: 'myGroup'
+ *         }
+ *     ];
+ * }
+ * </pre>
  */
