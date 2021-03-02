@@ -213,6 +213,7 @@ define(
             menu._options.readOnly = true;
             menu._handleMouseEnter();
             assert.isNull(menu._dependenciesTimer);
+            menu._options.readOnly = false;
          });
 
          it('_handleClick', () => {
