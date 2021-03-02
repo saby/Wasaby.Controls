@@ -143,6 +143,7 @@ var Component = BaseControl.extend({
             css.push('controls-PeriodDialog-Years__item-displayed_theme-' + this._options.theme);
         } else if (itemValue === (new Date()).getFullYear()) {
             css.push('controls-PeriodDialog-Years__item-current');
+            css.push('controls-PeriodDialog-Years__item-current_theme-' + this._options.theme);
         } else {
             css.push('controls-PeriodDialog-Years__rangeBtn-regular_theme-' + this._options.theme);
         }
