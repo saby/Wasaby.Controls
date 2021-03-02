@@ -293,7 +293,7 @@ var
         // Для решения же ошибки https://online.sbis.ru/opendoc.html?guid=42614e54-3ed7-41f4-9d57-a6971df66f9c,
         // сделаем перерисовку столбцов после установки isColumnScrollVisible
         getHeaderZIndex(params): number {
-            if (params.isColumnScrollVisible) {
+            if (params.columnScroll) {
                 return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
             } else {
                 // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
@@ -348,9 +348,7 @@ var
 
             if (self._options.columnScroll) {
                 classLists.columnScroll += _private.getColumnScrollCalculationCellClasses(current, theme);
-                if (self._options.columnScrollVisibility) {
-                    classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
-                }
+                classLists.columnScroll += _private.getColumnScrollCellClasses(current, theme);
             } else if (!checkBoxCell) {
                 classLists.base += ' controls-Grid__cell_fit';
             }
@@ -1086,7 +1084,7 @@ var
                   isMultiHeader: this._isMultiHeader,
                   hasMultiSelectColumn,
                   stickyColumnsCount: this._options.stickyColumnsCount,
-                  isColumnScrollVisible: this._options.columnScroll && this._options.columnScrollVisibility,
+                   columnScroll: this._options.columnScroll
                });
             }
 
@@ -1105,9 +1103,7 @@ var
                     stickyColumnsCount: this._options.stickyColumnsCount
                 };
                 cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
-                if (this._options.columnScrollVisibility) {
-                    cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
-                }
+                cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
                 // Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc
                 if (this._options.columnScrollVisibility && this.isStickyHeader()) {
                     cellClasses += ' controls-Grid__columnScroll_will-transform';
@@ -1346,7 +1342,7 @@ var
                     columnIndex,
                     hasMultiSelectColumn,
                     stickyColumnsCount: this._options.stickyColumnsCount,
-                    isColumnScrollVisible: this._options.columnScroll && this._options.columnScrollVisibility
+                    columnScroll: this._options.columnScroll
                 });
             }
 
@@ -1370,9 +1366,7 @@ var
                     stickyColumnsCount: this._options.stickyColumnsCount
                 };
                 cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
-                if (this._options.columnScrollVisibility) {
-                    cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
-                }
+                cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
                 // Этот костыль выпилен в 6000 по https://online.sbis.ru/opendoc.html?guid=f5e830c3-7be2-4272-9c38-594c241401cc
                 if (this._options.columnScrollVisibility && this.isStickyHeader()) {
                     cellClasses += ' controls-Grid__columnScroll_will-transform';
@@ -2418,7 +2412,9 @@ var
             this._model.setDragOutsideList(outside);
             if (this._dragOutsideList !== outside) {
                 this._dragOutsideList = outside;
-                this._nextModelVersion();
+                if (!!this.getDragItemData()) {
+                    this._nextModelVersion();
+                }
             }
         },
         isDragOutsideList(): boolean {

@@ -37,27 +37,10 @@ import {hasResetValue, resetFilter} from 'Controls/_filter/resetFilterUtils';
 import converterFilterItems = require('Controls/_filter/converterFilterItems');
 import mergeSource from 'Controls/_filter/Utils/mergeSource';
 
-import {IFilterItem, IEditorOptions, TKey} from './View/interface/IFilterView';
-import {INavigationOptionValue, INavigationSourceConfig} from 'Controls/interface';
+import {IFilterItem, IEditorOptions, TKey, TNavigation} from './View/interface/IFilterItem';
+import {IFilterView, IFilterViewOptions} from './View/interface/IFilterView';
 import {Source as HistorySource} from 'Controls/history';
 import 'css!Controls/filter';
-
-interface IFilterViewOptions extends IControlOptions {
-    source: IFilterItem[];
-    itemTemplate: TemplateFunction;
-    historyId: string;
-    alignment: 'right' | 'left';
-
-    detailPanelTemplateName: string;
-    detailPanelTemplateOptions: unknown;
-    detailPanelPopupOptions: unknown;
-    detailPanelOpenMode: 'stack' | 'sticky';
-
-    panelTemplateName: string;
-    panelTemplateOptions: unknown;
-}
-
-type TNavigation = INavigationOptionValue<INavigationSourceConfig>;
 
 interface IFilterReceivedState {
     configs: IFilterItemConfigs;
@@ -110,11 +93,8 @@ const FILTER_PANEL_POPUP = 'Controls/filterPanelPopup';
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less переменные тем оформления filter}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления filterPopup}
  *
- * @class Controls/_filter/View
- * @extends UI/Base:Control
- * @mixes Controls/_filter/View/interface/IFilterItem
  * @public
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  *
  * @demo Controls-demo/FilterView/ItemTemplates/Index
  * @demo Controls-demo/FilterView/FilterView
@@ -141,7 +121,8 @@ const FILTER_PANEL_POPUP = 'Controls/filterPanelPopup';
  * @see Controls/filter:FastContainer
  */
 
-class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> {
+class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> implements IFilterView {
+    readonly '[Controls/_filter/View/interface/IFilterView]': boolean;
     protected _template: TemplateFunction = template;
     protected _displayText: {[key: string]: IDisplayText};
     protected _filterText: string;
@@ -772,7 +753,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> {
         });
         const newFolderItems = getItemsByParentKey(newItems).value();
         folderItems = getItemsWithHistory(folderItems, newFolderItems,
-            config.sourceController, item.editorOptions.source, config.keyProperty);
+            config.sourceController, item.editorOptions.source, config.keyProperty, folderId);
         folderItems.prepend([config.popupItems.getRecordById(folderId)]);
         return folderItems;
     }

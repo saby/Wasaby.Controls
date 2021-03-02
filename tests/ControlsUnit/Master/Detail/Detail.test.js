@@ -107,6 +107,24 @@ define(['Controls/masterDetail'], function (masterDetail) {
          Control.destroy();
       });
 
+      it ('_beforeUpdate with new propStorageId', async () => {
+         let Control = new masterDetail.Base();
+         let options = {
+            propStorageId: 'test'
+         };
+         Control._beforeMount(options);
+         options.propStorageId = 'newTest';
+         Control._getSettings = () => {
+            const result = {
+               newTest: 50
+            };
+            return Promise.resolve(result);
+         };
+         await Control._beforeUpdate(options);
+         assert.equal(Control._currentWidth, '50px');
+         Control.destroy();
+      });
+
       it ('_dragStartHandler', () => {
          let Control = new masterDetail.Base();
          let options = {

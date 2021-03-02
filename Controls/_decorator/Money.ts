@@ -69,34 +69,34 @@ interface IPaths {
 export interface IMoneyOptions extends IControlOptions, INumberFormatOptions, ITooltipOptions,
     IFontColorStyleOptions, IFontWeightOptions, IFontSizeOptions {
     /**
-     * Декорируемое число.
-     * @type string
+     * @name Controls/_decorator/IMoney#value
+     * @cfg {String} Декорируемое число.
      * @default null
      * @demo Controls-demo/Decorator/Money/Value/Index
      */
     value: string;
     /**
-     * Тип аббревиатуры.
-     * @type TAbbreviationType
+     * @name Controls/_decorator/IMoney#abbreviationType
+     * @cfg {TAbbreviationType} Тип аббревиатуры.
      * @default 'none'
      * @demo Controls-demo/Decorator/Money/Abbreviation/Index
      */
     abbreviationType?: TAbbreviationType;
     /**
-     * Отображаемая валюта.
-     * @type TCurrency
+     * @name Controls/_decorator/IMoney#currency
+     * @cfg {TCurrency} Отображаемая валюта.
      * @demo Controls-demo/Decorator/Money/Currency/Index
      */
     currency?: TCurrency;
     /**
-     * Размер отображаемой валюты.
-     * @type TCurrencySize
+     * @name Controls/_decorator/IMoney#currencySize
+     * @cfg {TCurrencySize} Размер отображаемой валюты.
      * @default 's'
      */
     currencySize?: TCurrencySize;
     /**
-     * Позиция отображаемой валюты относительно суммы.
-     * @type TCurrencyPosition
+     * @name Controls/_decorator/IMoney#currencyPosition
+     * @cfg {TCurrencyPosition} Позиция отображаемой валюты относительно суммы.
      * @default 'right'
      */
     currencyPosition?: TCurrencyPosition;

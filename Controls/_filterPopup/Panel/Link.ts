@@ -12,7 +12,7 @@ import 'css!Controls/filterPopup';
  * @class Controls/_filterPopup/Panel/Link
  * @extends UI/Base:Control
  * @public
- * @author Золотова Э.Е.
+ * @author Михайлов С.Е.
  *
  * @example
  * Пример использования контрола на панели фильтра в блоке "Еще можно отобрать"
