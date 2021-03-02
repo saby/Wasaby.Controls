@@ -13,7 +13,7 @@ import {
     IFontSize,
     IFontSizeOptions,
     IFontWeight,
-    IFontWeightOptions
+    IFontWeightOptions, ITooltip
 } from 'Controls/interface';
 import 'css!Controls/decorator';
 
@@ -62,8 +62,8 @@ export interface INumberOptions extends IControlOptions, INumberFormatOptions, I
      */
     roundMode: RoundMode;
     /**
-     * Тип аббревиатуры.
-     * @type TAbbreviationType
+     * @name Controls/_decorator/INumber#abbreviationType
+     * @cfg {TAbbreviationType} Тип аббревиатуры.
      * @default 'none'
      * @demo Controls-demo/Decorator/Number/Abbreviation/Index
      */
@@ -86,7 +86,7 @@ export interface INumberOptions extends IControlOptions, INumberFormatOptions, I
  *
  * @author Красильников А.С.
  */
-class NumberDecorator extends Control<INumberOptions> {
+class NumberDecorator extends Control<INumberOptions> implements INumberFormat, ITooltip, IFontColorStyle, IFontSize, IFontWeight {
     private _fontColorStyle: string;
 
     protected _formattedNumber: string = null;
