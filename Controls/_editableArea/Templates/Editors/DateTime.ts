@@ -13,8 +13,12 @@ import Base from './Base';
 
 class DateTime extends Base {
    _prepareValueForEditor(value): string {
+      let date = value;
+      if (!date) {
+          date = new Date();
+      }
       // todo fixed by: https://online.sbis.ru/opendoc.html?guid=00a8daf1-c567-46bb-a40e-53c1eef5a26b
-      return value.toLocaleDateString('ru-RU', {
+      return date.toLocaleDateString('ru-RU', {
          year: '2-digit',
          month: 'numeric',
          day: 'numeric'
