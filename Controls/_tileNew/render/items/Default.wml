@@ -3,7 +3,7 @@
       <div style="{{ (item || itemData).getAutoResizerStyles(width || itemWidth) }}"></div>
    </ws:if>
 
-   <div attr:class="{{ (item || itemData).getWrapperClasses(itemType, shadowVisibility, marker, highlightOnHover, backgroundColorStyle) }}"
+   <div attr:class="{{ (item || itemData).getWrapperClasses(itemType, shadowVisibility, marker, highlightOnHover, backgroundColorStyle, height) }}"
         attr:style="{{ (item || itemData).getWrapperStyles(itemType) }}">
 
       <ws:partial if="{{ (item || itemData).shouldDisplayMultiSelectTemplate() }}"

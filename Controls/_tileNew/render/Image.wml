@@ -5,15 +5,15 @@
            xmlns="http://www.w3.org/2000/svg"
            height="100%"
            width="100%"
-           class="{{ (item || itemData).getImageClasses(itemType, width, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize) }}"
-           preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType) }}">
-         <image preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType) }}" height="100%" width="100%" xlink:href="{{ (item || itemData).getImageUrl(width) }}"></image>
+           class="{{ (item || itemData).getImageClasses(itemType, width, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit) }}"
+           preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType, imageFit) }}">
+         <image preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType, imageFit) }}" height="100%" width="100%" xlink:href="{{ (item || itemData).getImageUrl(width, imageFit) }}"></image>
       </svg>
    </ws:if>
    <ws:else>
       <div class="{{ (item || itemData).getImageAlignClasses(imageAlign) }}">
-         <img class="{{ (item || itemData).getImageClasses(itemType, width, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize) }}"
-              src="{{(item || itemData).getImageUrl(width)}}"/>
+         <img class="{{ (item || itemData).getImageClasses(itemType, width, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit) }}"
+              src="{{(item || itemData).getImageUrl(width, imageFit)}}"/>
       </div>
    </ws:else>
 </ws:template>

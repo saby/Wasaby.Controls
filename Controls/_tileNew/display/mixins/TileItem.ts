@@ -381,8 +381,8 @@ export default abstract class TileItem<T extends Model = Model> {
         }
     }
 
-    getImageFit(): string {
-        return this._$imageFit;
+    getImageFit(imageFitTpl?: string): string {
+        return imageFitTpl || this._$imageFit;
     }
 
     setImageFit(imageFit: string): void {
@@ -571,7 +571,7 @@ export default abstract class TileItem<T extends Model = Model> {
         }
     }
 
-    getImagePreserveAspectRatio(itemType: string = 'default'): string {
+    getImagePreserveAspectRatio(itemType: string = 'default', imageFit?: string): string {
         switch (itemType) {
             case 'default':
             case 'small':
@@ -579,7 +579,7 @@ export default abstract class TileItem<T extends Model = Model> {
             case 'medium':
                 return 'xMidYMid meet';
             case 'rich':
-                return `xMidYMid ${this.getImageFit() === 'cover' ? 'slice' : 'meet'}`;
+                return `xMidYMid ${this.getImageFit(imageFit) === 'cover' ? 'slice' : 'meet'}`;
         }
     }
 
@@ -736,7 +736,8 @@ export default abstract class TileItem<T extends Model = Model> {
         templateShadowVisibility?: string,
         templateMarker?: boolean,
         highlightOnHover?: boolean,
-        backgroundColorStyle?: string
+        backgroundColorStyle?: string,
+        height?: string
     ): string {
         if (itemType === 'small') {
             return '';
@@ -746,6 +747,10 @@ export default abstract class TileItem<T extends Model = Model> {
 
         let classes = `controls-TileView__itemContent controls-TileView__itemContent${theme} js-controls-ListView__measurableContainer`;
         classes += ` ${this.getRoundBorderClasses()}`;
+
+        if (height === 'auto') {
+            classes += ' controls-TileView__item_autoHeight';
+        }
 
         if (highlightOnHover) {
             classes += ` controls-TileView__itemContent_highlightOnHover${theme}`;
@@ -984,7 +989,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
         switch (itemType) {
             case 'default':
-                if (this.getTileMode() !== 'dynamic' && !staticHeight && hasTitle) {
+                if (!staticHeight && hasTitle) {
                     classes += 'ws-ellipsis';
                 }
                 break;
