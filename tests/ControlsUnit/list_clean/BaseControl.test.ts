@@ -1225,5 +1225,22 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.ok(!afterReloadCallbackCalled);
         });
 
+        it('baseControl items not changed on reload', async () => {
+            const options = getBaseControlOptionsWithEmptyItems();
+            let itemsReadyCallbackCalled = false;
+            options.itemsReadyCallback = () => {
+                itemsReadyCallbackCalled = true;
+            };
+            const options = await getCorrectBaseControlConfigAsync(options);
+            const baseControl = new BaseControl(options);
+            await baseControl._beforeMount(options);
+            baseControl.saveOptions(options);
+            assert.ok(itemsReadyCallbackCalled);
+
+            itemsReadyCallbackCalled = false;
+            await baseControl.reload();
+            assert.ok(!itemsReadyCallbackCalled);
+        });
+
     });
 });
