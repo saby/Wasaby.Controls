@@ -1,17 +1,4 @@
 <ws:partial template="wml!Controls/_tileNew/render/items/Default"
             highlightOnHover="{{false}}"
             scope="{{_options}}"
-            itemType="preview">
-   <ws:itemActionsTemplate>
-      <ws:partial template="Controls/_tileNew/itemActions/Control" item="{{(item)}}">
-         <ws:partial template="{{itemActionsTemplate.itemActionsTemplate}}"
-                     actionPadding="{{ (item || itemData).getActionPadding(itemType) }}"
-                     actionStyle="{{!titleStyle || titleStyle === 'light' ? 'tileLight' : 'tileDark'}}"
-                     iconStyle="{{!titleStyle || titleStyle === 'light' ? 'contrast' : 'tileDark'}}"
-                     actionMode="{{ (item || itemData).getActionMode(itemType) }}"
-                     highlightOnHover="{{false}}"
-                     itemData="{{(item || itemData)}}"
-                     item="{{(item || itemData)}}"/>
-      </ws:partial>
-   </ws:itemActionsTemplate>
-</ws:partial>
+            itemType="preview"/>

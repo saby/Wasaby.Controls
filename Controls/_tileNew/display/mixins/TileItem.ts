@@ -324,7 +324,10 @@ export default abstract class TileItem<T extends Model = Model> {
         return this._$canShowActions;
     }
 
-    shouldDisplayItemActions(itemActionsPositionTemplate: string): boolean {
+    shouldDisplayItemActions(itemType: string, itemActionsPositionTemplate: string): boolean {
+        if (itemType === 'preview') {
+            return false;
+        }
         const itemActionsPosition = itemActionsPositionTemplate || this.getOwner().getActionsTemplateConfig()?.itemActionsPosition;
         return !this.isSwiped() && (this.hasVisibleActions() || this.isEditing()) && itemActionsPosition !== 'custom';
     }

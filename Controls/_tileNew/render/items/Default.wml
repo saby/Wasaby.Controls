@@ -21,7 +21,7 @@
          </ws:multiSelectTemplate>
       </ws:partial>
 
-      <ws:partial if="{{ (item || itemData).shouldDisplayItemActions(itemActionsPosition) }}"
+      <ws:partial if="{{ (item || itemData).shouldDisplayItemActions(itemType, itemActionsPosition) }}"
                   template="{{itemActionsTemplate}}"
                   scope="{{_options}}"
                   itemActionsClass="{{ (item || itemData).getItemActionsClasses(itemType) }}"/>
