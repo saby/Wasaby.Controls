@@ -5,7 +5,7 @@
            xmlns="http://www.w3.org/2000/svg"
            height="100%"
            width="100%"
-           class="{{ (item || itemData).getImageClasses(itemType, width, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit) }}"
+           class="{{ (item || itemData).getImageClasses(itemType, width, imageAlign, imageViewMode, imageProportion, imagePosition, imageSize, imageFit, imageProportionOnItem) }}"
            preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType, imageFit) }}">
          <image preserveAspectRatio="{{ (item || itemData).getImagePreserveAspectRatio(itemType, imageFit) }}" height="100%" width="100%" xlink:href="{{ (item || itemData).getImageUrl(width, imageFit) }}"></image>
       </svg>

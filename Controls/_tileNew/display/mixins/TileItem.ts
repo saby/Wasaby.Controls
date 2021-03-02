@@ -324,7 +324,10 @@ export default abstract class TileItem<T extends Model = Model> {
         return this._$canShowActions;
     }
 
-    shouldDisplayItemActions(itemActionsPositionTemplate: string): boolean {
+    shouldDisplayItemActions(itemType: string, itemActionsPositionTemplate: string): boolean {
+        if (itemType === 'preview') {
+            return false;
+        }
         const itemActionsPosition = itemActionsPositionTemplate || this.getOwner().getActionsTemplateConfig()?.itemActionsPosition;
         return !this.isSwiped() && (this.hasVisibleActions() || this.isEditing()) && itemActionsPosition !== 'custom';
     }
@@ -477,7 +480,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return ImageTemplate;
     }
 
-    getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: number, imagePosition?: string, imageSize?: string, imageProportionOnItem?: string): string {
+    getImageClasses(itemType: string = 'default', widthTpl?: number, imageAlign: string = 'center', imageViewMode?: string, imageProportion?: number, imagePosition?: string, imageSize?: string, imageFit?: string, imageProportionOnItem?: string): string {
         const imageRestrictions = this.getImageFit() === 'cover'
             ? getImageRestrictions(this.getImageHeight(), this.getImageWidth(), this.getTileHeight(), this.getTileWidth(widthTpl))
             : {};
@@ -668,10 +671,6 @@ export default abstract class TileItem<T extends Model = Model> {
                <div attr:class="controls-TileView__smallTemplate_dragTargetNode_theme-{{theme}}"></div>
             </ws:if>
         */
-
-        if (this.isDragged()) {
-            classes += ` controls-ListView__item_dragging_theme-${this.getTheme()}`;
-        }
 
         switch (itemType) {
             case 'default':
@@ -987,7 +986,7 @@ export default abstract class TileItem<T extends Model = Model> {
 
         switch (itemType) {
             case 'default':
-                if (!staticHeight && hasTitle) {
+                if (!staticHeight && hasTitle && !this.isHovered()) {
                     classes += 'ws-ellipsis';
                 }
                 break;

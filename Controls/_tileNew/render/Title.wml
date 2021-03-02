@@ -31,4 +31,5 @@
         </div>
     </ws:if>
 
+    <ws:partial if="{{itemActionsTpl}}" template="{{itemActionsTpl}}" scope="{{_options}}"/>
 </div>

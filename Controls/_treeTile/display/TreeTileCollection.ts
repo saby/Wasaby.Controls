@@ -97,6 +97,7 @@ export default class TreeTileCollection<
         super._getItemsFactoryParams(params);
 
         params.nodesHeight = this.getNodesHeight();
+        params.folderWidth = this.getFolderWidth();
         return params;
     }
 
