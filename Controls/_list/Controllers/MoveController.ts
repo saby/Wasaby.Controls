@@ -64,6 +64,8 @@ export class MoveController {
     // Сортировка при перемещении вверх/вниз
     private _sorting: QueryOrderSelector;
 
+    private _task1181039033: boolean;
+
     constructor(options: IMoveControllerOptions) {
         this.updateOptions(options);
     }
@@ -78,6 +80,7 @@ export class MoveController {
         this._source = options.source;
         this._parentProperty = options.parentProperty;
         this._sorting = options.sorting;
+        this._task1181039033 = options.task1181039033;
     }
 
     /**
@@ -183,34 +186,85 @@ export class MoveController {
          * При использовании ICrudPlus.move() мы не можем передать filter и folder_id, т.к. такой контракт
          * не соответствует стандартному контракту SbisService.move(). Поэтому здесь вызывается call
          */
-        if ((this._source as SbisService).call && position === LOCAL_MOVE_POSITION.On) {
+        if ((this._source as SbisService).call) {
             const source: SbisService = this._source as SbisService;
-            return new Promise((resolve) => {
-                import('Controls/operations').then((operations) => {
-                    const sourceAdapter = source.getAdapter();
-                    const callFilter = {
-                        ...filter,
-                        selection: operations.selectionToRecord(selection, sourceAdapter)
-                    };
-                    source.call(source.getBinding().move, {
-                        method: source.getBinding().list,
-                        filter: Record.fromObject(callFilter, sourceAdapter),
-                        folder_id: targetKey
-                    }).then((result: DataSet) => {
-                        resolve(result);
+            if (position === LOCAL_MOVE_POSITION.On) {
+                return new Promise((resolve) => {
+                    import('Controls/operations').then((operations) => {
+                        const sourceAdapter = source.getAdapter();
+                        const callFilter = {
+                            ...filter,
+                            selection: operations.selectionToRecord(selection, sourceAdapter)
+                        };
+                        source.call(source.getBinding().move, {
+                            method: source.getBinding().list,
+                            filter: Record.fromObject(callFilter, sourceAdapter),
+                            folder_id: targetKey
+                        }).then((result: DataSet) => {
+                            resolve(result);
+                        });
                     });
                 });
-            });
+
+            } else if (this._sorting && this._task118103903) {
+               return this._moveWithSorting(source, selection, targetKey, position);
+            }
         }
         return this._source.move(selection.selected, targetKey, {
             position,
-            query: this._prepareQuery(),
             parentProperty: this._parentProperty
         });
     }
 
-    private _prepareQuery(): QueryOrder[] {
-        return new Query().orderBy(this._sorting);
+    // TODO убрать, когда Кудрявцев сделает контракт для перемещения с сортировкой
+    //  https://online.sbis.ru/opendoc.html?guid=00c3f7fd-74f5-44e1-820e-681170fbbacd
+    private _moveWithSorting(source: SbisService,
+                             selection: ISelectionObject,
+                             targetKey: CrudEntityKey,
+                             position: LOCAL_MOVE_POSITION): Promise<DataSet | void> {
+        return new Promise((resolve) => {
+            const objectName = source.getEndpoint().contract;
+            const readMethod = source.getBinding().read;
+            const updateMethod = source.getBinding().update;
+            source.call(source.getBinding().move, {
+                IndexNumber: source.getOrderProperty(),
+                HierarchyName: this._parentProperty || null,
+                ObjectName: objectName,
+                ObjectId: selection.selected[0],
+                DestinationId: targetKey,
+                Order: position,
+                Sorting: this._getSortingParams(),
+                ReadMethod: readMethod.indexOf('.') > -1 ? readMethod : objectName + '.' + readMethod,
+                UpdateMethod: updateMethod.indexOf('.') > -1 ? updateMethod : objectName + '.' + updateMethod
+            }).then((result: DataSet) => {
+                resolve(result);
+            });
+        });
+    }
+
+    // TODO убрать, когда Кудрявцев сделает контракт для перемещения с сортировкой
+    //  https://online.sbis.ru/opendoc.html?guid=00c3f7fd-74f5-44e1-820e-681170fbbacd
+    private _getSortingParams(): string[] | null {
+        const query = new Query().orderBy(this._sorting);
+        const orders = query.getOrderBy();
+        if (!orders) {
+            return null;
+        }
+
+        let sort = null;
+        for (let i = 0; i < orders.length; i++) {
+            const order = orders[i];
+            if (!sort) {
+                sort = [];
+            }
+            sort.push({
+                n: order.getSelector(),
+                o: order.getOrder(),
+                l: order.getNullPolicy()
+            });
+        }
+
+        return sort;
     }
 
     /**

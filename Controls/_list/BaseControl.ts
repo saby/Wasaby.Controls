@@ -3083,7 +3083,8 @@ const _private = {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
             parentProperty: options.parentProperty,
-            sorting: options.sorting
+            sorting: options.sorting,
+            task118103903: options.task118103903
         };
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
