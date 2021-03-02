@@ -120,6 +120,7 @@ define([
                    }
                 };
                 ViewInstance._groupClick(null, groupItem, clickEvent);
+                ViewInstance._afterUpdate({});
                 assert.isTrue(expandedState !== groupItem.isExpanded());
                 assert.isTrue(controlResizeNotified);
             });

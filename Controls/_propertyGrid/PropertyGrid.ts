@@ -66,6 +66,7 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
     protected _toggledEditors: TToggledEditors = {};
     private _itemActionsController: ItemActionsController;
     private _itemActionSticky: StickyOpener;
+    private _collapsedGroupsChanged: boolean = false;
 
     protected _beforeMount(options: IPropertyGridOptions): void {
         this._collapsedGroups = this._getCollapsedGroups(options.collapsedGroups);
@@ -89,6 +90,13 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
             this._collapsedGroups = this._getCollapsedGroups(newOptions.collapsedGroups);
             this._listModel.setFilter(this._displayFilter.bind(this));
+        }
+    }
+
+    protected _afterUpdate(oldOptions: IPropertyGridOptions): void {
+        if (this._collapsedGroupsChanged) {
+            this._notify('controlResize', [], {bubbling: true});
+            this._collapsedGroupsChanged = false;
         }
     }
 
@@ -197,7 +205,8 @@ export default class PropertyGridView extends Control<IPropertyGridOptions> {
             displayItem.toggleExpanded();
             this._collapsedGroups[groupName] = !collapsed;
             this._listModel.setFilter(this._displayFilter.bind(this));
-            this._notify('controlResize', [], {bubbling: true});
+            this._collapsedGroupsChanged = true;
+
         }
     }
 
