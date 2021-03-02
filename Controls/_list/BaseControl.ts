@@ -6034,7 +6034,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             this.setMarkedKey(key);
             _private.updateItemActionsOnce(this, this._options);
             itemActionsController = _private.getItemActionsController(this, this._options);
-            itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
+            if (itemActionsController) {
+                itemActionsController.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
+            }
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             // Тут не надо инициализировать контроллер, если он не проинициализирован
@@ -6061,9 +6063,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                 this.setMarkedKey(key);
             }
         }
-        if (!this._options.itemActions && item.isSwiped()) {
-            this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
-        }
+        // Событие свайпа должно стрелять всегда. Прикладники используют его для кастомных действий.
+        // Раньше событие останавливалось если оно обработано платформой, но прикладники сами могут это контролировать.
+        this._notify('itemSwipe', [_private.getPlainItemContents(item), swipeEvent, swipeContainer?.clientHeight]);
     }
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
