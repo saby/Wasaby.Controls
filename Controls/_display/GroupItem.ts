@@ -75,12 +75,8 @@ export default class GroupItem<T> extends mixin<
         this._nextVersion();
     }
 
-    isStickyHeader(): boolean {
-        return super.isStickyHeader() && !this.isHiddenGroup();
-    }
-
     isSticked(): boolean {
-        return this.isStickyHeader();
+        return this.isStickyHeader() && !this.isHiddenGroup();
     }
 }
 
