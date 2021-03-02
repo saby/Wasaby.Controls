@@ -6026,7 +6026,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         const itemContainer = (swipeEvent.target as HTMLElement).closest('.controls-ListView__itemV');
         const swipeContainer = _private.getSwipeContainerSize(itemContainer as HTMLElement);
         let itemActionsController: ItemActionsController;
-        let isSwipeEventHandled: boolean = false;
 
         if (swipeEvent.nativeEvent.direction === 'left') {
             this.setMarkedKey(key);
@@ -6034,7 +6033,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             itemActionsController = _private.getItemActionsController(this, this._options);
             if (itemActionsController) {
                 itemActionsController.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
-                isSwipeEventHandled = true;
             }
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
@@ -6043,7 +6041,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             if (swipedItem) {
                 this._itemActionsController.startSwipeCloseAnimation();
                 this._listViewModel.nextVersion();
-                isSwipeEventHandled = true;
 
                 // Для сценария, когда свайпнули одну запись и потом свайпнули вправо другую запись
                 if (swipedItem !== item) {
@@ -6055,7 +6052,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                     this._notify('checkboxClick', [key, item.isSelected()]);
                     const newSelection = _private.getSelectionController(this).toggleItem(key);
                     _private.changeSelection(this, newSelection);
-                    isSwipeEventHandled = true;
                     // Animation should be played only if checkboxes are visible.
                     if (_private.hasSelectionController(this)) {
                         _private.getSelectionController(this).startItemAnimation(key);
@@ -6064,9 +6060,8 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                 this.setMarkedKey(key);
             }
         }
-        if (!isSwipeEventHandled) {
-            this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.height]);
-        }
+        // Событие свайпа должно стрелять всегда. Прикладники используют его для кастомных действий.
+        this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.height]);
     }
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
