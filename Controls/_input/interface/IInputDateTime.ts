@@ -59,7 +59,7 @@ export interface IInputDateTimeOptions {
  * // JavaScript
  * class MyControl extends Control<IControlOptions> {
  *    _fieldValue: null,
- *    _valueChangedHandler(value, displayValue) {
+ *    _valueChangedHandler(event, value, displayValue) {
  *       this._fieldValue = value;
  *       this._saveToDatabase(displayValue);
  *    },
