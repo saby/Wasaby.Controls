@@ -166,7 +166,7 @@ class Manager {
      */
     update(id: string, options: IPopupOptions): string | null {
         const item: IPopupItem = this.find(id);
-        if (item) {
+        if (item && item.positionConfig) {
             const oldOptions: IPopupOptions = item.popupOptions;
             item.popupOptions = options;
             const updateOptionsResult: null | Promise<null> =
