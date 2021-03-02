@@ -112,7 +112,7 @@
             <ws:else>
                <div class="controls-Grid__row-main_ladderWrapper"
                   style="{{ 'left: 0; right: -'+ currentColumn.column.width }};">
-                  <ws:partial template="STICKY_LADDER_HEADER_CONTENT"  attr:style="z-index: 2" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
+                  <ws:partial template="STICKY_LADDER_HEADER_CONTENT" attr:style="z-index: {{currentColumn.columnScrollVisibility ? 4 : 2}}" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
                </div>
             </ws:else>
          </ws:if>
