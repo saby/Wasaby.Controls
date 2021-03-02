@@ -4451,15 +4451,6 @@ define([
                   spySetMarkedKey.restore();
                });
 
-               // Должен бросать событие наверх, если оно не обработано
-               it('it should fire event whe it wasn\'t fired', () => {
-                  const spyNotify = sinon.spy(instance, '_notify');
-                  instance._listViewModel.at(0).setSwiped(true, true);
-                  instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-                  sinon.assert.notCalled(spyNotify);
-                  spyNotify.restore();
-               });
-
                // Должен работать свайп по breadcrumbs
                it('should work with breadcrumbs', () => {
                   swipeEvent = initSwipeEvent('left');
@@ -4489,8 +4480,8 @@ define([
                });
             });
 
-            // Должен бросать событие наверх, если оно не обработано
-            it('it should fire event whe it wasn\'t fired', () => {
+            // Должен бросать событие наверх
+            it('it should fire event', () => {
                initTest();
                const spyNotify = sinon.spy(instance, '_notify');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
