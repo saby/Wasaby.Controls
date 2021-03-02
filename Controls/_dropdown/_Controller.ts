@@ -388,7 +388,7 @@ export default class _Controller implements IDropdownController {
                 return this._resolveLoadedItems(options, items);
              }, (error) => {
                 this._loadError(error);
-                return error;
+                return Promise.reject(error);
              });
           });
    }
