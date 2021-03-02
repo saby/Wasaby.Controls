@@ -152,6 +152,9 @@ var TileView = ListView.extend({
                     vertical: 'top',
                     horizontal: 'left'
                 },
+                fittingMode: {
+                    vertical: 'overflow'
+                },
                 opener: menuConfig.opener,
                 template: 'Controls/tile:ActionsMenu',
                 actionOnScroll: 'close'
