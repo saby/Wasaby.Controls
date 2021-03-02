@@ -99,6 +99,7 @@
                        backgroundStyle="{{_options.backgroundStyle}}"
                        trigger="{{_options.trigger}}"
                        scrollbarVisible="{{_options.scrollbarVisible}}"
+                       subMenuLevel="{{_options.subMenuLevel}}"
                        theme="{{_options.theme}}"
                        hoverController="{{_hoverController}}"
                        on:itemClick="_sendResult('itemClick')"
