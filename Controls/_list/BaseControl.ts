@@ -5914,7 +5914,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // поэтому в 21.1200 отменяем корявые условия отправки этого события только под опцией task1181224388.
         // В 21.2000 вообще нет этого условия.
         if (this._options.task1181224388 || (!this._options.itemActions && item.isSwiped())) {
-            this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
+            this._notify('itemSwipe', [_private.getPlainItemContents(item), swipeEvent, swipeContainer?.clientHeight]);
         }
     },
 
