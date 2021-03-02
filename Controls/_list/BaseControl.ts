@@ -6062,12 +6062,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
         // Событие свайпа должно стрелять всегда. Прикладники используют его для кастомных действий.
         // Раньше событие останавливалось если оно обработано платформой, но прикладники сами могут это контролировать.
-        // Поиском по https://s.tensor.ru есть один обработчик этого события, который потенциально может что-то поломать - у Мугинова,
-        // поэтому в 21.1200 отменяем корявые условия отправки этого события только под опцией task1181224388.
-        // В 21.2000 вообще нет этого условия.
-        if (this._options.task1181224388 || (!this._options.itemActions && item.isSwiped())) {
-            this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
-        }
+        this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
     }
 
     _updateItemActionsOnItem(event: SyntheticEvent<Event>, itemKey: string | number, itemWidth: number): void {
