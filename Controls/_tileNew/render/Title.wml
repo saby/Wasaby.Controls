@@ -19,7 +19,7 @@
                     {{ item.getDisplayValue() }}
                 </ws:else>
             </div>
-            <ws:partial if="{{bottomRightTemplate}}" template="{{bottomRightTemplate}}" scope="{{_options}}"/>
+            <ws:partial if="{{bottomRightTpl}}" template="{{bottomRightTpl}}" scope="{{_options}}"/>
         </div>
     </ws:if>
 
