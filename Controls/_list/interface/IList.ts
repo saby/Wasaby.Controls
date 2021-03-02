@@ -551,7 +551,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Object} nativeEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
- * This event fires anyway, despite on handling in list
+ * This event fires anyway, despite on handling in list.
  */
 
 /**
