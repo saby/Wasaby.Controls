@@ -4,12 +4,15 @@ import defaultItemTpl = require('wml!Controls/_tileNew/render/items/Default');
 import {TouchContextField} from 'Controls/context';
 import { TILE_SCALING_MODE, ZOOM_COEFFICIENT, ZOOM_DELAY } from './utils/Constants';
 import {isEqual} from 'Types/object';
-import { getItemSize } from './utils/imageUtil';
 import { TemplateFunction } from 'UI/Base';
 import TileCollectionItem from './display/TileCollectionItem';
 import TileCollection from './display/TileCollection';
 import {SyntheticEvent} from 'UI/Vdom';
 import {Model} from 'Types/entity';
+import {constants} from 'Env/Env';
+import {debounce} from 'Types/function';
+
+const HOVERED_ITEM_CHANGE_DELAY = 150;
 
 export default class TileView extends ListView {
     protected _template: TemplateFunction = template;
@@ -17,6 +20,20 @@ export default class TileView extends ListView {
     protected _hoveredItem: TileCollectionItem;
     protected _mouseMoveTimeout: number;
     protected _listModel: TileCollection;
+
+    protected _animatedItem: TileCollectionItem<unknown> = null;
+    protected _animatedItemTargetPosition: string;
+    protected _shouldPerformAnimation: boolean;
+    private _debouncedSetHoveredItem: Function;
+
+    protected _beforeMount(options: any): void {
+        super._beforeMount(options);
+
+        this._debouncedSetHoveredItem = debounce(
+            this._setHoveredItem.bind(this),
+            HOVERED_ITEM_CHANGE_DELAY
+        );
+    }
 
     _afterMount(options: any): void {
         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
@@ -42,38 +59,30 @@ export default class TileView extends ListView {
             this._listModel.setRoundBorder(newOptions.roundBorder);
         }
         super._beforeUpdate(newOptions);
+        if (newOptions.listModel !== this._listModel) {
+            this._animatedItem = null;
+            this._debouncedSetHoveredItem(this, null);
+        }
+        this._shouldPerformAnimation =
+            this._animatedItem && !this._animatedItem.destroyed && this._animatedItem.isFixed();
     }
 
-    _afterUpdate(options: any): void {
-        const hoveredItem = this._listModel.getHoveredItem();
-
-        if (
-            hoveredItem &&
-            hoveredItem.endPosition &&
-            hoveredItem.endPosition !== hoveredItem.position &&
-            this._hasFixedItemInDOM()
-        ) {
-
-            // TODO: KINGO
-            // Браузер устанавливает на элемент position: fixed, а изменение свойств top/left/bottom/right группирует в
-            // одну перерисовку. В итоге, первые стили не проставляются, получаем большой контейнер.
-            // Когда устанавливаются вторые стили, контейнер сжимается до нужных размеров.
-            // Такое поведение стало проявляться, видимо, после оптимизации и ускорения шаблонизатора.
-            // Перерисовки, которые раньше происходили в два кадра, теперь происходят в один.
-            // Поэтому нужно вызвать forced reflow, чтобы применились первые стили, перед применением вторых.
-
-            const container = this._container[0] || this._container;
-            container.getBoundingClientRect();
-
-            this._listModel.setHoveredItem({
-                key: hoveredItem.key,
-                isAnimated: true,
-                canShowActions: true,
-                zoomCoefficient: this._getZoomCoefficient(),
-                position: hoveredItem.endPosition
-            });
+    protected _afterUpdate(): void {
+        super._afterUpdate();
+        if (this._animatedItem) {
+            if (this._animatedItem.destroyed) {
+                this._animatedItem = null;
+            } else if (
+                this._shouldPerformAnimation &&
+                this._animatedItem.isFixed() &&
+                !this._animatedItem.isAnimated()
+            ) {
+                this._animatedItem.setAnimated(true);
+                this._animatedItem.setFixedPositionStyle(this._animatedItemTargetPosition);
+                this._animatedItem.setCanShowActions(true);
+                this._animatedItem = null;
+            }
         }
-        super._afterUpdate(options);
     }
 
     _beforeUnmount(): void {
@@ -136,89 +145,99 @@ export default class TileView extends ListView {
         return this._options.actionMenuViewMode === 'preview' && !isActionMenu && !(isScalingTile && isContextMenu);
     }
 
-    // TODO: Удалить проверку на DOM. https://online.sbis.ru/opendoc.html?guid=85bf65db-66a4-4b17-a59d-010a5ecb15a9
-    _hasFixedItemInDOM(): boolean {
-        return !!this._children.tileContainer.querySelector('.controls-TileView__item_fixed');
+    protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem): void {
+        super._onItemMouseEnter(e, item);
+        if (this._shouldProcessHover()) {
+            this._debouncedSetHoveredItem(this, item);
+        }
     }
 
-    _onItemMouseLeave(event: SyntheticEvent, itemData: TileCollectionItem): void {
-        const hoveredItem = this._listModel.getHoveredItem();
-        if (hoveredItem && hoveredItem.key === itemData.key) {
-            if (!itemData.isActive() || hoveredItem.key !== itemData.key) {
-                this._listModel.setHoveredItem(null);
-            }
+    protected _onItemMouseLeave(event: SyntheticEvent, item: TileCollectionItem): void {
+        if (!this._context?.isTouch?.isTouch && !item.isActive()) {
+            this._debouncedSetHoveredItem(this, null);
         }
         this._clearMouseMoveTimeout();
-        super._onItemMouseLeave(event, itemData);
+        super._onItemMouseLeave(event, item);
     }
 
-    _onItemMouseMove(event: SyntheticEvent, itemData: TileCollectionItem): void {
-        const hoveredItem = this._listModel.getHoveredItem();
-        const isCurrentItemHovered = hoveredItem && hoveredItem.key === itemData.key;
-        const activeItem = this._listModel.getActiveItem();
-        if (!isCurrentItemHovered &&
-            this._shouldProcessHover() &&
+    protected _onItemMouseMove(event: SyntheticEvent, item: TileCollectionItem): void {
+        if (this._shouldProcessHover() &&
             !this._listModel.isDragging() &&
-            !activeItem
+            !item.isFixed()
         ) {
-            if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
-                this._clearMouseMoveTimeout();
-                this._calculateHoveredItemPosition(event, itemData);
-            } else {
-                const itemWidth = event.target.closest('.controls-TileView__item').clientWidth;
-                this._setHoveredItem(itemData, null, null, true, itemWidth);
-            }
+            this._setHoveredItemPosition(event, item);
         }
 
-        super._onItemMouseMove(event, itemData);
+        super._onItemMouseMove(event, item);
     }
 
-    _calculateHoveredItemPosition(event: SyntheticEvent, itemData: TileCollectionItem, documentForUnits?: boolean): void {
-        const documentObject = documentForUnits ? documentForUnits : document;
-        const itemContainer = event.target.closest('.controls-TileView__item');
+    protected _setHoveredItemPosition(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem<unknown>): void {
+        const target = e.target as HTMLElement;
+        const tileScalingMode = this._listModel.getTileScalingMode();
+
+        if (tileScalingMode === 'none' || target.closest('.js-controls-TileView__withoutZoom')) {
+            item.setCanShowActions(true);
+            return;
+        }
+
+        const itemContainer: HTMLElement = target.closest('.controls-TileView__item');
         const itemContainerRect = itemContainer.getBoundingClientRect();
-        const container = this._options.tileScalingMode === TILE_SCALING_MODE.INSIDE ? this._children.tileContainer : documentObject.documentElement;
-        const containerRect = container.getBoundingClientRect();
-        let itemSize;
 
-        // If the hover on the checkbox does not increase the element
-        if (event.target.closest('.js-controls-TileView__withoutZoom')) {
-            if (documentForUnits) {
-                itemSize = itemContainerRect;
+        const viewContainer = tileScalingMode === 'inside'
+            ? this.getItemsContainer()
+            : constants.isBrowserPlatform && document.documentElement;
+        const viewContainerRect = viewContainer.getBoundingClientRect();
+
+        const targetItemSize = this._listModel.getItemContainerSize(itemContainer);
+        const targetItemPosition = this._listModel.getItemContainerPosition(
+            targetItemSize,
+            itemContainerRect,
+            viewContainerRect
+        );
+
+        const documentRect = constants.isBrowserPlatform && document.documentElement.getBoundingClientRect();
+        const targetItemPositionInDocument = this._listModel.getItemContainerPositionInDocument(
+            targetItemPosition,
+            viewContainerRect,
+            documentRect
+        );
+
+        // TODO This should probably be moved to some kind of animation manager
+        if (targetItemPositionInDocument) {
+            const targetPositionStyle = this._convertPositionToStyle(targetItemPositionInDocument);
+            if (tileScalingMode !== 'overlap') {
+                const startItemPositionInDocument = this._listModel.getItemContainerStartPosition(
+                    itemContainerRect,
+                    documentRect
+                );
+                item.setFixedPositionStyle(this._convertPositionToStyle(startItemPositionInDocument));
+                this._animatedItem = item;
+                this._animatedItemTargetPosition = targetPositionStyle;
             } else {
-                itemSize = getItemSize(itemContainer, 1, this._options.tileMode);
+                item.setFixedPositionStyle(targetPositionStyle);
+                item.setCanShowActions(true);
             }
-            let position = this._getPositionInContainer(itemSize, itemContainerRect, containerRect, 1, true);
-            const documentRect = documentObject.documentElement.getBoundingClientRect();
-            position = this._getPositionInDocument(position, containerRect, documentRect, true);
-            this._setHoveredItem(itemData, position, position, true, itemSize.width);
-        } else {
-            itemSize = getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
-            this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
         }
     }
 
-    _prepareHoveredItem(itemData: TileCollectionItem, itemContainerRect, itemSize, containerRect): void {
-        let
-            documentRect,
-            itemStartPosition,
-            position = this._getPositionInContainer(itemSize, itemContainerRect, containerRect, this._getZoomCoefficient());
-
-        if (position) {
-            documentRect = document.documentElement.getBoundingClientRect();
-            if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP) {
-                itemStartPosition = this._getItemStartPosition(itemContainerRect, documentRect);
-            } else {
-                itemStartPosition = null;
+    protected _convertPositionToStyle(position: object): string {
+        let result = '';
+        for (const key in position) {
+            if (position.hasOwnProperty(key)) {
+                result += `${key}: ${position[key]}px;`;
             }
-            this._mouseMoveTimeout = setTimeout(function() {
-                this._setHoveredItem(itemData, this._getPositionInDocument(position, containerRect, documentRect), itemStartPosition, null, itemSize.width);
-            }, ZOOM_DELAY);
-        } else {
-            /* Если позиции нет, то это означает, что плитка по одной из координат выходит за пределы контейнера.
-               В таком случае ее не надо увеличивать и itemAction'ы нужно посчитать от оригинального размера.
-             */
-            this._setHoveredItem(itemData, null, null, false, itemContainerRect.width);
+        }
+        return result;
+    }
+
+    private _setHoveredItem(self: TileView, item: TileCollectionItem): void {
+        if (
+            !this._destroyed &&
+            this._listModel && !this._listModel.destroyed &&
+            this._listModel.getHoveredItem() !== item &&
+            !this._listModel.getActiveItem()
+        ) {
+            this._listModel.setHoveredItem(item);
         }
     }
 
@@ -226,22 +245,6 @@ export default class TileView extends ListView {
         return this._options.tileScalingMode !== TILE_SCALING_MODE.NONE && this._options.tileScalingMode !== TILE_SCALING_MODE.OVERLAP
             ? ZOOM_COEFFICIENT
             : 1;
-    }
-
-    _setHoveredItem(itemData: TileCollectionItem, position: string, startPosition: string, noZoom: boolean, itemWidth?: number): void {
-        const needUpdateActions = this._options.actionMode === 'adaptive' && (!itemData.isNode || !itemData.isNode());
-        if (this._options.tileScalingMode !== TILE_SCALING_MODE.NONE) {
-            this._listModel.setHoveredItem({
-                key: itemData.key,
-                canShowActions: noZoom || !position || this._options.tileScalingMode === TILE_SCALING_MODE.OVERLAP,
-                zoomCoefficient: this._getZoomCoefficient(),
-                position: this._getPositionStyle(startPosition || position),
-                endPosition: this._getPositionStyle(position)
-            });
-        }
-        if (needUpdateActions) {
-            this._notify('updateItemActionsOnItem', [itemData.key, itemWidth], {bubbling: true});
-        }
     }
 
     getItemsPaddingContainerClasses(): string {
