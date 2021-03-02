@@ -18,6 +18,7 @@ export const items = [
     {
         id: 3,
         parent: null,
+        'parent@': null,
         type: null,
         title: 'Речка',
         image: Images.RIVER,
@@ -32,6 +33,7 @@ export const items = [
     {
         id: 4,
         parent: null,
+        'parent@': null,
         type: null,
         width: 200,
         title: 'Сравнение систем по учету рабочего времени.xlsx',
@@ -45,6 +47,7 @@ export const items = [
     }, {
         id: 5,
         parent: null,
+        'parent@': null,
         type: null,
         title: 'Конфеты копия',
         image: Images.MOUNTANTS,
@@ -57,6 +60,7 @@ export const items = [
     }, {
         id: 6,
         parent: null,
+        'parent@': null,
         type: null,
         title: 'Квадрат',
         image: Images.SQUARE,
