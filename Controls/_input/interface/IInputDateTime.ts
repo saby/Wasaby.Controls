@@ -71,6 +71,7 @@ export interface IInputDateTimeOptions {
 /**
  * @event Происходит при завершении ввода в поле (поле потеряло фокус или пользователь нажал клавишу "enter").
  * @name Controls/_input/interface/IInputDateTime#inputCompleted
+ * @param {Vdom/Vdom:SyntheticEvent} eventObject Дескриптор события.
  * @param {Date} value Значение поля.
  * @param {String} displayValue Текстовое значение поля.
  * @remark
@@ -84,7 +85,7 @@ export interface IInputDateTimeOptions {
  * <pre class="brush: js">
  * // JavaScript
  * class MyControl extends Control<IControlOptions> {
- *    _inputCompletedHandler(value, displayValue) {
+ *    _inputCompletedHandler(event, value, displayValue) {
  *       this._saveEnteredValueToDabase1(value);
  *       this._saveEnteredValueToDabase2(displayValue);
  *    }
