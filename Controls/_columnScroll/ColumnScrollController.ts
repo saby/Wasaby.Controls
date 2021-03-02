@@ -463,6 +463,8 @@ export default class ColumnScrollController {
             }
         }
 
+        newHTML += ` .controls-Grid__cell_fixed_theme-${this._options.theme} { z-index: 3 }`;
+
         if (this._stylesContainer.innerHTML !== newHTML) {
             this._stylesContainer.innerHTML = newHTML;
         }
