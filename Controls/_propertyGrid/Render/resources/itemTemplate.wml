@@ -4,7 +4,8 @@
     </ws:if>
     <ws:else data="{{item.caption !== '' && !item.editorOptions.jumpingLabel}}">
         <Controls.input:Label
-                attr:class="controls-PropertyGrid__editor-caption_theme-{{theme}}"
+                attr:class="controls-PropertyGrid__editor-caption_theme-{{theme}}
+                            {{'controls-PropertyGrid__editor-caption_' + (collectionItem.getEditorTemplateName() ? 'withEditor' : 'withoutEditor')}}"
                 caption="{{item.caption || item.name}}"
                 scope="{{item.captionOptions}}" />
     </ws:else>
