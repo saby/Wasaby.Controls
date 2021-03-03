@@ -153,7 +153,7 @@ const _private = {
         const expandToFirstLeafIfNeed = () => {
             // Если узел сворачивается - автоматически высчитывать следующий разворачиваемый элемент не требуется.
             // Ошибка: https://online.sbis.ru/opendoc.html?guid=98762b51-6b69-4612-9468-1c38adaa2606
-            if (options.markerMoveMode === 'leaves' && expanded !== false) {
+            if (options.markerMoveMode === 'leaves' && expanded !== false && self._goToNextAfterExpand) {
                 self._tempItem = nodeKey;
                 return self.goToNext();
             }
@@ -503,6 +503,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _tempItem = null;
     private _markedLeaf = '';
     private _doAfterItemExpanded = null;
+    private _goToNextAfterExpand: true;
 
     private _itemOnWhichStartCountDown = null;
     private _timeoutForExpandOnDrag = null;
@@ -1143,6 +1144,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                         this._doAfterItemExpanded();
                         resolve();
                     } else {
+                        this._goToNextAfterExpand = false;
                         const expandResult = this.toggleExpanded(itemKey);
                         if (expandResult instanceof Promise) {
                             expandResult.then(() => {
@@ -1186,6 +1188,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
 
         this._tempItem = null;
+        this._goToNextAfterExpand = true;
 
     }
 
