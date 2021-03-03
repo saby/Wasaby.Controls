@@ -137,6 +137,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
     private _detailPanelTemplateName: string;
     private _loadPromise: CancelablePromise<any>;
     private _loadOperationsPanelPromise: Promise<unknown>;
+    private _collapsedFilters: string[]|number[] = null;
 
     openDetailPanel(): void {
         if (this._detailPanelTemplateName) {
@@ -1053,6 +1054,10 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
     private _moreButtonClick(result: IResultPopup): void {
         this._idOpenSelector = result.id;
         this._configs[result.id].initSelectorItems = result.selectedItems;
+    }
+
+    private _collapsedFiltersChanged(result: object): void {
+        this._collapsedFilters = result.collapsedFilters;
     }
 
     private _isNeedReload(oldItems: IFilterItem[],
