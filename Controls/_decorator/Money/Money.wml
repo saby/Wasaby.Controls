@@ -6,7 +6,7 @@
     <ws:if data="{{_options.abbreviationType === 'long'}}">
         <span class="controls-fontsize-{{_options.fontSize}}_theme-{{_options.theme}}
                  controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
-                 controls-DecoratorMoney__integer_fontWeight_{{_options.fontWeight}}
+                 controls-fontweight-{{_options.fontWeight}}
                  {{ _options.stroked ? 'controls-DecoratorMoney__stroked' }}">
             {{_formattedNumber}}
         </span>

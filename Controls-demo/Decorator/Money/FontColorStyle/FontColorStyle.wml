@@ -32,7 +32,7 @@
         <Controls.decorator:Money value="{{_value}}" fontColorStyle="link" />
     </div>
     <div class="controlsDemo__cell">
-        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=label</div>
-        <Controls.decorator:Money value="{{_value}}" fontColorStyle="label" />
+        <div class="controls-text-label_theme-{{_options.theme}}">fontColorStyle=info</div>
+        <Controls.decorator:Money value="{{_value}}" fontColorStyle="info" />
     </div>
 </div>
