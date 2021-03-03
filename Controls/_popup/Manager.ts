@@ -430,29 +430,15 @@ class Manager {
         // popup was activated
     }
 
-    protected _popupDeactivated(id: string): boolean {
-        const item = this.find(id);
-        if (item && this._needClosePopupByDeactivated(item)) {
-            if (!this._isIgnoreActivationArea(this._getActiveElement())) {
-                this._finishPendings(id, null, () => {
-                    // if pendings is exist, take focus back while pendings are finishing
-                    this._getPopupContainer().getPopupById(id).activate();
-                }, () => {
-                    const itemContainer = this._getItemContainer(id);
-                    if (item.popupOptions.isCompoundTemplate) {
-                        this._getCompoundArea(itemContainer).close();
-                    } else {
-                        item.controller.popupDeactivated(item, itemContainer);
-                    }
-                });
-            }
-        }
-        return false;
-    }
-
     protected mouseDownHandler(event: Event): void {
-        if (this._popupItems && !this._isIgnoreActivationArea(event.target as HTMLElement)) {
-            const deactivatedPopups = [];
+        if (this._elementIsPopupOverlay(event.target as Element)) {
+            const popupContainer = ManagerController.getContainer();
+            const popupItem = ManagerController.find(popupContainer.getOverlayId());
+            if (popupItem && popupItem.popupState !== popupItem.controller.POPUP_STATE_INITIALIZING) {
+                this._closePopupByOutsideClick(popupItem);
+            }
+        } else if (!this._isIgnoreActivationArea(event.target as HTMLElement)) {
+            const popupsForClose = [];
             this._popupItems.each((item) => {
                 if (item) {
                     const parentControls = goUpByControlTree(event.target);
@@ -460,34 +446,37 @@ class Manager {
 
                     // Check the link between target and popup
                     if (this._needClosePopupByOutsideClick(item) && parentControls.indexOf(popupInstance) === -1) {
-                        deactivatedPopups.push(item);
+                        popupsForClose.push(item);
                     }
                 }
             });
-            for (let i = 0; i < deactivatedPopups.length; i++) {
-                const itemContainer = this._getItemContainer(deactivatedPopups[i].id);
-                if (deactivatedPopups[i].popupOptions.isCompoundTemplate) {
-                    // TODO: Compatible ветка.
-                    // Если попап создался, а слой совместимости еще не готов, то считаем что окно не построилось
-                    // и не должно закрываться на клик мимо.
-                    const compoundArea = this._getCompoundArea(itemContainer);
-                    if (compoundArea.isPopupCreated()) {
-                        compoundArea.close();
-                    }
-                } else {
-                    deactivatedPopups[i].controller.popupDeactivated(deactivatedPopups[i]);
-                }
+            for (let i = 0; i < popupsForClose.length; i++) {
+                this._closePopupByOutsideClick(popupsForClose[i]);
             }
         }
     }
 
-    private _needClosePopupByOutsideClick(item: IPopupItem): boolean {
-        return item.popupOptions.closeOnOutsideClick && item.popupState !== item.controller.POPUP_STATE_INITIALIZING;
+    private _closePopupByOutsideClick(item: IPopupItem): void {
+        if (item.popupOptions.isCompoundTemplate) {
+            // TODO: Compatible ветка.
+            // Если попап создался, а слой совместимости еще не готов, то считаем что окно не построилось
+            // и не должно закрываться на клик мимо.
+            const itemContainer = this._getItemContainer(item.id);
+            const compoundArea = this._getCompoundArea(itemContainer);
+            if (compoundArea.isPopupCreated()) {
+                compoundArea.close();
+            }
+        } else {
+            item.controller.closePopupByOutsideClick(item);
+        }
     }
 
-    private _needClosePopupByDeactivated(item: IPopupItem): boolean {
-        // Временная опция, на момент перевода опции closeOnOutsideClick на работу через mousedown
-        return item.popupOptions.closeOnDeactivated && item.popupState !== item.controller.POPUP_STATE_INITIALIZING;
+    private _elementIsPopupOverlay(target: Element): boolean {
+        return target.classList.contains('controls-Container__overlay');
+    }
+
+    private _needClosePopupByOutsideClick(item: IPopupItem): boolean {
+        return item.popupOptions.closeOnOutsideClick && item.popupState !== item.controller.POPUP_STATE_INITIALIZING;
     }
 
     private _getActiveElement(): HTMLElement {
