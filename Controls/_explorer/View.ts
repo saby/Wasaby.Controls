@@ -468,7 +468,7 @@ export default class Explorer extends Control<IControlOptions> {
     }
 
     private _dragHighlighter(itemKey, hasArrow): string {
-        return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+        return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey && itemKey !== 'dots'
             ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
     }
 
