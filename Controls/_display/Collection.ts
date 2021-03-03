@@ -45,7 +45,7 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * 
+ *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @public
  */
@@ -423,14 +423,7 @@ function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boo
 
 function onCollectionPropertyChange(event: EventObject, values: {metaData: { results?: EntityModel }}): void {
     if (values && values.metaData) {
-        if (
-            values.metaData.results &&
-            values.metaData.results['[Types/_entity/IObservableObject]'] &&
-            values.metaData.results !== this._$metaResults
-        ) {
-            values.metaData.results.subscribe('onPropertyChange', this._onMetaResultsChange);
-        }
-
+        this._actualizeSubscriptionOnMetaResults(this._$metaResults, values.metaData.results);
         this.setMetaResults(values.metaData.results);
     }
 }
@@ -946,10 +939,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             // необходимо следить.
             (this._$collection as ObservableMixin).subscribe('onPropertyChange', this._onCollectionPropertyChange);
 
-            const metaResults = this._$collection.getMetaData && this._$collection.getMetaData()?.results;
-            if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
-                metaResults.subscribe('onPropertyChange', this._onMetaResultsChange);
-            }
+            this._actualizeSubscriptionOnMetaResults(null, this._$metaResults);
         }
         if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -969,10 +959,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                     'onPropertyChange', this._onCollectionPropertyChange
                 );
 
-                const metaResults = this._$collection.getMetaData && this._$collection.getMetaData()?.results;
-                if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
-                    metaResults.unsubscribe('onPropertyChange', this._onMetaResultsChange);
-                }
+                this._actualizeSubscriptionOnMetaResults(this._$metaResults, null);
             }
             if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -2681,6 +2668,17 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     getMetaData(): any {
         return this._$collection && this._$collection.getMetaData ? this._$collection.getMetaData() : {};
+    }
+
+    private _actualizeSubscriptionOnMetaResults(thisMetaResults, newMetaResults) {
+        if (thisMetaResults !== newMetaResults) {
+            if (thisMetaResults && thisMetaResults['[Types/_entity/IObservableObject]']) {
+                thisMetaResults.unsubscribe('onPropertyChange', this._onMetaResultsChange);
+            }
+            if (newMetaResults && newMetaResults['[Types/_entity/IObservableObject]']) {
+                newMetaResults.subscribe('onPropertyChange', this._onMetaResultsChange);
+            }
+        }
     }
 
     getCollapsedGroups(): TArrayGroupKey {
