@@ -1,0 +1,14 @@
+<div class="controls-DateRangeButtonsController">
+    <ws:partial template="{{ _options.content }}" on:register="_registerIt()">
+        <ws:prevButtonTemplate>
+            <Controls.buttons:ArrowButton scope="{{ prevButtonTemplate }}"
+                                          direction="left"
+                                          on:click="_shiftBack()"/>
+        </ws:prevButtonTemplate>
+        <ws:nextButtonTemplate>
+            <Controls.buttons:ArrowButton scope="{{ nextButtonTemplate }}"
+                                          direction="right"
+                                          on:click="_shiftBack()"/>
+        </ws:nextButtonTemplate>
+    </ws:partial>
+</div>

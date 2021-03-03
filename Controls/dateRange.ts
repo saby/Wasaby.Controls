@@ -18,6 +18,7 @@ export {default as IPeriodLiteDialog} from './_dateRange/interfaces/IPeriodLiteD
 export {default as ILinkView} from './_dateRange/interfaces/ILinkView';
 export {default as WeekdayFormatter} from './_dateRange/WeekdayFormatter';
 export {default as keyboardPeriodController} from './_dateRange/Utils/keyboardPeriodController';
+export {default as ButtonsController} from './_dateRange/ButtonsController';
 import IDateRangeSelectable = require('Controls/_dateRange/interfaces/IDateRangeSelectable');
 import {default as ICaptionFormatter} from 'Controls/_dateRange/interfaces/ICaptionFormatter';
 
