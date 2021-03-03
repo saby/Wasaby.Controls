@@ -206,6 +206,7 @@ interface IIndicatorConfig {
     theme: string;
     isPortionedSearchInProgress: boolean;
     attachLoadTopTriggerToNull: boolean;
+    attachLoadTopTriggerToNullOption: boolean;
 }
 
 interface IBeginEditOptions {
@@ -2359,13 +2360,13 @@ const _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull}: IIndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull, attachLoadTopTriggerToNullOption}: IIndicatorConfig
     ): string {
         const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
            ? 'attachToNull'
            : loadingIndicatorState;
 
-        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNull && detection.isIE;
+        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNullOption;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${state}`, !isAbsoluteTopIndicator)
             .add('controls-BaseControl__loadingIndicator__state-up-absolute', isAbsoluteTopIndicator)
@@ -6156,7 +6157,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             loadingIndicatorState: indicatorState,
             theme: this._options.theme,
             isPortionedSearchInProgress: !!this._portionedSearchInProgress,
-            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull
+            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+            attachLoadTopTriggerToNullOption: this._options.attachLoadTopTriggerToNull
         });
     },
 
