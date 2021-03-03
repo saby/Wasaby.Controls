@@ -268,7 +268,7 @@ const _private = {
             action,
             isContextMenu,
             defaultMenuConfig,
-            self._listViewModel?.getItemDataByItem?.(item));
+            self._listViewModel?.getItemDataByItem ? self._listViewModel.getItemDataByItem(item) : item);
         return menuConfig || defaultMenuConfig;
     },
     getItemActionsController(self, options: IList): ItemActionsController {

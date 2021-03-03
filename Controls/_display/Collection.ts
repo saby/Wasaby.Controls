@@ -1,5 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
+import * as cMerge from 'Core/core-merge';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
@@ -2583,7 +2584,27 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._actionsMenuConfig = config;
     }
 
-    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+    getActionsTemplateConfig(templateOptions: any): IItemActionsTemplateConfig {
+        if (templateOptions && this._actionsTemplateConfig) {
+            if (templateOptions.actionStyle) {
+                this._actionsTemplateConfig.actionStyle = templateOptions.actionStyle;
+            }
+            if (templateOptions.actionPadding) {
+                this._actionsTemplateConfig.actionPadding = templateOptions.actionPadding;
+            }
+            if (templateOptions.iconStyle) {
+                this._actionsTemplateConfig.iconStyle = templateOptions.iconStyle;
+            }
+            if (templateOptions.actionMode) {
+                this._actionsTemplateConfig.actionMode = templateOptions.actionMode;
+            }
+            if (templateOptions.highlightOnHover) {
+                this._actionsTemplateConfig.highlightOnHover = templateOptions.highlightOnHover;
+            }
+            if (templateOptions.itemActionsClass) {
+                this._actionsTemplateConfig.itemActionsClass = templateOptions.itemActionsClass;
+            }
+        }
         return this._actionsTemplateConfig;
     }
 
