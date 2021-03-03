@@ -22,6 +22,10 @@ interface IFilterHistoryLoaderResult {
     filter: TFilter;
     historyItems: IFilterItem[];
 }
+interface IFilterResult {
+    historyItems: IFilterItem[];
+    controller: FilterController;
+}
 
 interface IBaseLoadDataConfig {
     afterLoadCallback?: string;
@@ -70,26 +74,38 @@ function getFilterController(options: IFilterControllerOptions): FilterControlle
     return new controllerClass(options);
 }
 
-function getFilterControllerWithHistoryFromLoader(loadConfig: ILoadDataConfig): Promise<FilterController> {
+function getFilterControllerWithHistoryFromLoader(loadConfig: ILoadDataConfig): Promise<IFilterResult> {
     return loadConfig.filterHistoryLoader(loadConfig.filterButtonSource, loadConfig.historyId)
         .then((result: IFilterHistoryLoaderResult) => {
-            return getFilterController({
+            const controller = getFilterController({
                 ...loadConfig,
                 result
             } as IFilterControllerOptions);
+
+            if (result.historyItems) {
+                controller.setFilterItems(result.historyItems);
+            }
+            return {
+                controller,
+                ...result
+            };
         });
 }
 
-function getFilterControllerWithFilterHistory(loadConfig: ILoadDataConfig): Promise<FilterController> {
+function getFilterControllerWithFilterHistory(loadConfig: ILoadDataConfig): Promise<IFilterResult> {
     const controller = getFilterController(loadConfig as IFilterControllerOptions);
     return controller.loadFilterItemsFromHistory().then((historyItems) => {
         controller.setFilterItems(historyItems);
-        return controller;
+        return {
+            controller,
+            historyItems: historyItems.items || historyItems
+        };
     });
 }
 
 function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult> {
     let filterController: FilterController;
+    let filterHistoryItems;
     let sortingPromise;
     let filterPromise;
 
@@ -107,8 +123,9 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
         }
 
         filterPromise
-            .then((controller) => {
+            .then(({controller, historyItems}) => {
                 filterController = controller;
+                filterHistoryItems = historyItems;
             })
             .catch(() => {
                 filterController = getFilterController(loadConfig as IFilterControllerOptions);
@@ -116,8 +133,6 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
         filterPromise = wrapTimeout(filterPromise, FILTER_PARAMS_LOAD_TIMEOUT).catch(() => {
             Logger.info('Controls/dataSource:loadData: Данные фильтрации не загрузились за 1 секунду');
         });
-    } else {
-        filterController = getFilterController(loadConfig as IFilterControllerOptions);
     }
 
     if (loadConfig.propStorageId) {
@@ -146,7 +161,8 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
                     error: sourceController.getLoadError(),
                     filter: sourceController.getFilter(),
                     sorting,
-                    navigation: loadConfig.navigation
+                    navigation: loadConfig.navigation,
+                    historyItems: filterHistoryItems
                 };
                 resolve({...loadConfig, ...loadResult});
             });
