@@ -240,7 +240,7 @@ import {ILabelOptions} from 'Controls/input';
  * </pre>
  */
 
-type TProperty = String | Boolean | Number | Date | number[] | string[];
+type TProperty = 'string' | 'boolean' | 'number' | 'date' | 'enum' | 'text';
 
 export default interface IProperty {
     name: string;

@@ -307,7 +307,7 @@ define(
             });
 
             it('expandButton hidden, history menu', () => {
-               const newMenuOptions = { allowPin: true };
+               const newMenuOptions = { allowPin: true, subMenuLevel: 1 };
 
                const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
                assert.isFalse(result, 'level is not first');
@@ -572,6 +572,7 @@ define(
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;
             expectedOptions.searchParam = null;
+            expectedOptions.subMenuLevel = 1;
             expectedOptions.iWantBeWS3 = false;
 
             let resultOptions = menuControl._getTemplateOptions(item);

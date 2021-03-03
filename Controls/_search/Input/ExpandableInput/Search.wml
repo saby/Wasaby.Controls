@@ -4,7 +4,8 @@
         <div class="controls-Search__expandable-container
                     controls-Search__expandable-container-inlineWidth-{{_options.inlineWidth}}">
             <div class="controls-Search__expandable-input
-                        controls-Search__expandable-input-inlineWidth-{{_options.inlineWidth}}">
+                        {{_needShowAnimation ? 'controls-Search__expandable-input-inlineWidth-' + _options.inlineWidth}}"
+                 on:animationend="_animationendHandler()">
                 <ws:partial template="{{'Controls/search:Input'}}"
                             name="searchInput"
                             searchButtonVisible="{{_options.searchButtonVisible}}"
@@ -44,10 +45,11 @@
     <ws:else>
         <div class="controls-Search__expandable-button-container">
             <div class="controls-Search__expandable-button
-                    {{_needShowButtonAnimation ? 'controls-Search__expandable-button-animation'}}
+                    {{_needShowAnimation ? 'controls-Search__expandable-button-animation'}}
                     controls-Search__button_{{_options.readOnly ? 'readOnly' : 'enabled'}}
                     controls-Search__searchButton_color icon-Search2
                     controls-icon_size-m"
+                 on:animationend="_animationendHandler()"
                  on:click="_handleOpenClick()"></div>
         </div>
     </ws:else>

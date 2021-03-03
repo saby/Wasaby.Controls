@@ -222,10 +222,14 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     }
 
     private _resetHistoryFields(item: Model, keyProperty: string): Model {
-        const origItem = item.clone();
-        origItem.removeField('copyOriginalId');
-        origItem.setKeyProperty(keyProperty);
-        return origItem;
+        if (item.has('copyOriginalId')) {
+            const origItem = item.clone();
+            origItem.removeField('copyOriginalId');
+            origItem.setKeyProperty(keyProperty);
+            return origItem;
+        } else {
+            return item;
+        }
     }
 
     _prepareHistoryItem(item: Model, historyType: string): void {
@@ -611,7 +615,8 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
 
                 // method returns error
                 if (!isCancelled && data[1] && !this._isError(data[1])) {
-                    this._$oldItems = data[1].getAll();
+                    // PrefetchProxy returns RecordSet
+                    this._$oldItems = data[1].getAll ? data[1].getAll() : data[1];
 
                     // history service returns error
                     if (data[0] && !this._isError(data[0])) {

@@ -1,5 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
+import * as cMerge from 'Core/core-merge';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
@@ -126,6 +127,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     theme?: string;
+    backgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -829,6 +831,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
     protected _isDragOutsideList: boolean = false;
+
+    // Фон застиканных записей и лесенки
+    protected _$backgroundStyle?: string;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -2365,6 +2370,18 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$hoverBackgroundStyle;
     }
 
+    setBackgroundStyle(backgroundStyle: string): void {
+        this._$backgroundStyle = backgroundStyle;
+        this.getItems().forEach((item) => {
+           item.setBackgroundStyle(backgroundStyle);
+        });
+        this.nextVersion();
+    }
+
+    getBackgroundStyle(): string {
+        return this._$backgroundStyle;
+    }
+
     getEditingBackgroundStyle(): string {
         const editingConfig = this.getEditingConfig();
         if (editingConfig) {
@@ -2562,7 +2579,27 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._actionsMenuConfig = config;
     }
 
-    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+    getActionsTemplateConfig(templateOptions: any): IItemActionsTemplateConfig {
+        if (templateOptions && this._actionsTemplateConfig) {
+            if (templateOptions.actionStyle) {
+                this._actionsTemplateConfig.actionStyle = templateOptions.actionStyle;
+            }
+            if (templateOptions.actionPadding) {
+                this._actionsTemplateConfig.actionPadding = templateOptions.actionPadding;
+            }
+            if (templateOptions.iconStyle) {
+                this._actionsTemplateConfig.iconStyle = templateOptions.iconStyle;
+            }
+            if (templateOptions.actionMode) {
+                this._actionsTemplateConfig.actionMode = templateOptions.actionMode;
+            }
+            if (templateOptions.highlightOnHover) {
+                this._actionsTemplateConfig.highlightOnHover = templateOptions.highlightOnHover;
+            }
+            if (templateOptions.itemActionsClass) {
+                this._actionsTemplateConfig.itemActionsClass = templateOptions.itemActionsClass;
+            }
+        }
         return this._actionsTemplateConfig;
     }
 
@@ -3029,6 +3066,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
+            options.backgroundStyle = this._$backgroundStyle;            
             options.theme = this._$theme;
             options.leftPadding = this._$leftPadding;
             options.rightPadding = this._$rightPadding;
@@ -3834,6 +3872,7 @@ Object.assign(Collection.prototype, {
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
     _$hoverBackgroundStyle: 'default',
+    _$backgroundStyle: null,
     _$rowSeparatorSize: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

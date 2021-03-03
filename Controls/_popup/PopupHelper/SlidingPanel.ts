@@ -123,6 +123,7 @@ export default class SlidingPanel extends Base {
         const isPhone = detection.isPhone;
         const slidingPanelOptions = {
             position: 'bottom',
+            desktopMode: DEFAULT_DESKTOP_MODE,
             ...popupOptions.slidingPanelOptions
         };
         const options = isPhone ? slidingPanelOptions : popupOptions.dialogOptions;
@@ -142,7 +143,8 @@ export default class SlidingPanel extends Base {
             if (!resultPopupOptions.templateOptions) {
                 resultPopupOptions.templateOptions = {};
             }
-            resultPopupOptions.templateOptions.slidingPanelOptions = this._getDefaultSlidingPanelData(popupOptions);
+            resultPopupOptions.templateOptions.slidingPanelOptions =
+                this._getDefaultSlidingPanelData(resultPopupOptions);
         }
 
         return resultPopupOptions;

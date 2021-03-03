@@ -24,15 +24,9 @@ export default class TileView extends ListView {
     protected _animatedItem: TileCollectionItem<unknown> = null;
     protected _animatedItemTargetPosition: string;
     protected _shouldPerformAnimation: boolean;
-    private _debouncedSetHoveredItem: Function;
 
     protected _beforeMount(options: any): void {
         super._beforeMount(options);
-
-        this._debouncedSetHoveredItem = debounce(
-            this._setHoveredItem.bind(this),
-            HOVERED_ITEM_CHANGE_DELAY
-        );
     }
 
     _afterMount(options: any): void {
@@ -61,7 +55,7 @@ export default class TileView extends ListView {
         super._beforeUpdate(newOptions);
         if (newOptions.listModel !== this._listModel) {
             this._animatedItem = null;
-            this._debouncedSetHoveredItem(this, null);
+            this._setHoveredItem(this, null);
         }
         this._shouldPerformAnimation =
             this._animatedItem && !this._animatedItem.destroyed && this._animatedItem.isFixed();
@@ -131,7 +125,7 @@ export default class TileView extends ListView {
                     horizontal: 'left'
                 },
                 opener: menuConfig.opener,
-                template: 'Controls/tile:ActionsMenu',
+                template: 'Controls/tileNew:ActionsMenu',
                 actionOnScroll: 'close'
             };
         } else {
@@ -148,13 +142,13 @@ export default class TileView extends ListView {
     protected _onItemMouseEnter(e: SyntheticEvent<MouseEvent>, item: TileCollectionItem): void {
         super._onItemMouseEnter(e, item);
         if (this._shouldProcessHover()) {
-            this._debouncedSetHoveredItem(this, item);
+            this._setHoveredItem(this, item, e);
         }
     }
 
     protected _onItemMouseLeave(event: SyntheticEvent, item: TileCollectionItem): void {
         if (!this._context?.isTouch?.isTouch && !item.isActive()) {
-            this._debouncedSetHoveredItem(this, null);
+            this._setHoveredItem(this, item, event);
         }
         this._clearMouseMoveTimeout();
         super._onItemMouseLeave(event, item);
@@ -231,7 +225,7 @@ export default class TileView extends ListView {
         return result;
     }
 
-    private _setHoveredItem(self: TileView, item: TileCollectionItem): void {
+    private _setHoveredItem(self: TileView, item: TileCollectionItem, event: SyntheticEvent): void {
         if (
             !this._destroyed &&
             this._listModel && !this._listModel.destroyed &&
@@ -240,6 +234,15 @@ export default class TileView extends ListView {
         ) {
             this._listModel.setHoveredItem(item);
         }
+
+        if (this._needUpdateActions(item, event)) {
+            const itemWidth = event.target.closest('.controls-TileView__item').clientWidth;
+            this._notify('updateItemActionsOnItem', [item.getContents().getKey(), itemWidth], { bubbling: true });
+        }
+    }
+
+    protected _needUpdateActions(item: TileCollectionItem, event: SyntheticEvent): boolean {
+        return this._options.actionMode === 'adaptive' && event;
     }
 
     _getZoomCoefficient(): number {

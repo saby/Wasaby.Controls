@@ -13,6 +13,7 @@ import DataRow from './DataRow';
 import DataCellCompatibility from './compatibility/DataCell';
 
 export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions {
+    backgroundStyle: string;
 }
 
 export default class DataCell<T extends Model, TOwner extends DataRow<T>> extends mixin<
@@ -29,6 +30,8 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
     readonly TagCell: boolean = true;
     readonly ItemActionsCell: boolean = true;
     readonly LadderContentCell: boolean = true;
+
+    protected _$backgroundStyle: string;
 
     protected _$searchValue: string;
 
@@ -47,6 +50,10 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
                       templateHighlightOnHover: boolean = true,
                       tmplIsEditable: boolean = true): string {
         let classes = super.getContentClasses(theme, backgroundColorStyle, cursor, templateHighlightOnHover);
+
+        if (this._$hiddenForLadder) {
+            classes += ` controls-background-${this._$backgroundStyle}_theme-${theme}`;
+        }
 
         if (this._$owner.getEditingConfig()?.mode === 'cell') {
             classes += ` controls-Grid__row-cell_editing-mode-single-cell_theme-${theme}`;
@@ -155,6 +162,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
 Object.assign(DataCell.prototype, {
     '[Controls/_display/grid/DataCell]': true,
     _moduleName: 'Controls/gridNew:GridDataCell',
+    _$backgroundStyle: 'default',
     _$searchValue: '',
     _instancePrefix: 'grid-data-cell-'
 });
