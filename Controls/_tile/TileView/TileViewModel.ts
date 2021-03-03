@@ -22,7 +22,7 @@ const TILE_SIZES = {
             imageHeight: 180
         },
         vertical: {
-            width: 200,
+            width: 164,
             imageWidth: 300
         }
     },
@@ -32,7 +32,7 @@ const TILE_SIZES = {
             imageHeight: 240
         },
         vertical: {
-            width: 256,
+            width: 200,
             imageWidth: 160
         }
     },
@@ -42,7 +42,7 @@ const TILE_SIZES = {
             imageHeight: 320
         },
         vertical: {
-            width: 360,
+            width: 256,
             imageWidth: 300
         }
     }
@@ -93,7 +93,7 @@ var TileViewModel = ListViewModel.extend({
 
     getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
         const sizeParams = object.clone(TILE_SIZES[tileSize]);
-        const tileSizes = sizeParams[imagePosition === 'top' ? 'horizontal' : 'vertical'];
+        const tileSizes = sizeParams[imagePosition === 'top' ? 'vertical' : 'horizontal'];
         if (imagePosition === 'top') {
             tileSizes.imageWidth = null;
             if (imageViewMode !== 'rectangle') {
