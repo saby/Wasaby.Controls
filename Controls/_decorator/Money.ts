@@ -132,6 +132,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     protected _tooltip: string;
     private _formattedNumber: string | IPaths;
     private _fontColorStyle: string;
+    private _fractionFontSize: string;
 
     readonly '[Controls/_interface/ITooltip]': boolean = true;
     readonly '[Controls/_interface/IFontColorStyle]': boolean = true;
@@ -200,12 +201,16 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     }
 
     private _setFontState(options: IMoneyOptions): void {
-        if (options.readOnly) {
+        if (options.readOnly || options.stroked) {
             this._fontColorStyle = 'readonly';
-        } else if (options.stroked) {
-            this._fontColorStyle = 'unaccented';
         } else {
             this._fontColorStyle = options.fontColorStyle;
+        }
+
+        if (options.fontSize === '6xl' || options.fontSize === '8xl' ) {
+            this._fractionFontSize = '3xl';
+        } else {
+            this._fractionFontSize = 'xs';
         }
     }
 

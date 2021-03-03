@@ -20,7 +20,7 @@
             </span>
             <ws:if data="{{_isDisplayFractionPath(_formattedNumber.fraction, _options.showEmptyDecimals)}}">
                 <span class="controls-DecoratorMoney__fraction__colorStyle-{{ _formattedNumber.fraction === '.00' ? 'readOnly' : _fontColorStyle}}
-                            controls-fontsize-xs_theme-{{_options.theme}}">
+                            controls-fontsize-{{_fractionFontSize}}_theme-{{_options.theme}}">
                     {{_formattedNumber.fraction}}
                 </span>
             </ws:if>
