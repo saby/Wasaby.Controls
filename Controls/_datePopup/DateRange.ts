@@ -53,6 +53,7 @@ var Component = BaseControl.extend([EventProxy], {
     _selectionProcessing: false,
 
     _singleDayHover: true,
+    _shouldUpdateMonthsPosition: true,
 
     // We store the position locally in the component, and don't use the value from options
     // to be able to quickly switch it on the mouse wheel.
@@ -73,10 +74,6 @@ var Component = BaseControl.extend([EventProxy], {
     _beforeMount: function (options) {
         if (options.position) {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
-            // При открытии календаря будут видны сразу 2 месяца. Поставим маркер на нижний видимый месяц, чтобы
-            // избежать моргания маркера.
-            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth() + 1);
-            this._markedKey = this._dateToId(markedKeyDate);
         }
         _private.updateView(this, options);
     },
@@ -87,6 +84,22 @@ var Component = BaseControl.extend([EventProxy], {
 
     _beforeUnmount: function () {
         this._rangeModel.destroy();
+    },
+
+    _monthObserverHandler: function(event, entries) {
+        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
+        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
+        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
+        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
+            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
+                if (this._shouldUpdateMonthsPosition ) {
+                    this._monthsPosition = new Date(entries.data.getFullYear(), 0);
+                } else {
+                    this._shouldUpdateMonthsPosition = true;
+                }
+            }
+            this._markedKey = this._dateToId(entries.data);
+        }
     },
 
     _monthCaptionClick: function(e: SyntheticEvent, yearDate: Date, month: number): void {
@@ -138,8 +151,7 @@ var Component = BaseControl.extend([EventProxy], {
     },
 
     _scrollToMonth: function(e, year, month) {
-        // При клике на месяц позиционируем его снизу, по аналогии с работй маркера при инициализации
-        _private.notifyPositionChanged(this, new this._options.dateConstructor(year, month - 1));
+        _private.notifyPositionChanged(this, new this._options.dateConstructor(year, month));
         e.stopPropagation();
     },
 
@@ -153,11 +165,6 @@ var Component = BaseControl.extend([EventProxy], {
 
     _onPositionChanged: function(e: Event, position: Date) {
         this._position = position;
-        const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
-        this._markedKey = this._dateToId(markedKeyDate);
-        if (markedKeyDate.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._monthsPosition = new Date(markedKeyDate.getFullYear(), 0);
-        }
         _private.notifyPositionChanged(this, position);
     },
 
@@ -175,6 +182,10 @@ var Component = BaseControl.extend([EventProxy], {
         const needChangeToNextYear = position.getFullYear() - 1 === this._position.getFullYear();
 
         if (needChangeToPrevYear) {
+            // При смене позиции выстрелит monthsObserver и т.к. при скролле вверх позиция маркера не будет совпадать
+            // с позицией MonthList, мы прискроллимся к году, на котором находится маркер, что будет выглядеть как
+            // прыжок. Не будем обновлять позицию при первом вызове обсервера
+            this._shouldUpdateMonthsPosition = false;
             newPosition = new Date(position.getFullYear() + 1, 0);
             positionChanged = true;
         }
