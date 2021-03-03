@@ -222,10 +222,14 @@ export default class HistorySource extends mixin<SerializableMixin, OptionsToPro
     }
 
     private _resetHistoryFields(item: Model, keyProperty: string): Model {
-        const origItem = item.clone();
-        origItem.removeField('copyOriginalId');
-        origItem.setKeyProperty(keyProperty);
-        return origItem;
+        if (item.has('copyOriginalId')) {
+            const origItem = item.clone();
+            origItem.removeField('copyOriginalId');
+            origItem.setKeyProperty(keyProperty);
+            return origItem;
+        } else {
+            return item;
+        }
     }
 
     _prepareHistoryItem(item: Model, historyType: string): void {

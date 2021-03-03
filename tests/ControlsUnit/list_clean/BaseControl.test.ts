@@ -1127,8 +1127,12 @@ describe('Controls/list_clean/BaseControl', () => {
             it('_beforeMount without source and sourceController, then _beforeUpdate with sourceController', async () => {
                 let baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 let afterReloadCallbackCalled = false;
+                let serviceDataLoadCallbackCalled = false;
                 baseControlOptions.afterReloadCallback = () => {
                     afterReloadCallbackCalled = true;
+                };
+                baseControlOptions.serviceDataLoadCallback = () => {
+                    serviceDataLoadCallbackCalled = true;
                 };
                 baseControlOptions.source = null;
                 baseControlOptions.sourceController = null;
@@ -1146,8 +1150,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 await baseControl._beforeUpdate(baseControlOptions);
                 baseControl._updateInProgress = false;
                 baseControl.saveOptions(baseControlOptions);
-                await baseControl.reload();
                 assert.isTrue(afterReloadCallbackCalled);
+                assert.isTrue(serviceDataLoadCallbackCalled);
             });
 
         });
