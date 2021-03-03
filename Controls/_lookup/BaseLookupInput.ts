@@ -200,7 +200,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
-        if (this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) {
+        if ((this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) && this._suggestState) {
             this.closeSuggest();
         }
     }
@@ -398,6 +398,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     closeSuggest(): void {
         this._suggestState = false;
+        this._children.layout.closeSuggest();
     }
 
     paste(value: string): void {
