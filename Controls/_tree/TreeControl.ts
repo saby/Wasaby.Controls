@@ -1182,8 +1182,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         }
                     }
                 } else {
+                    const itemKey = this._tempItem;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(this._tempItem, true);
+                    this.scrollToItem(itemKey, true);
                     resolve();
                 }
             } else {
