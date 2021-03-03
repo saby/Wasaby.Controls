@@ -88,14 +88,16 @@ function getBreadCrumbsReference<S extends Model, T extends TreeItem<S>>(
                 breadCrumbs = display?.createBreadcrumbsItem({
                     contents: null,
                     last,
-                    multiSelectVisibility: display?.getMultiSelectVisibility()
+                    multiSelectVisibility: display?.getMultiSelectVisibility(),
+                    multiSelectAccessibilityProperty: display?.getMultiSelectAccessibilityProperty()
                 });
             } else {
                 breadCrumbs = new BreadcrumbsItem<S>({
                     contents: null,
                     last,
                     owner: display,
-                    multiSelectVisibility: display?.getMultiSelectVisibility()
+                    multiSelectVisibility: display?.getMultiSelectVisibility(),
+                    multiSelectAccessibilityProperty: display?.getMultiSelectAccessibilityProperty()
                 });
             }
 
