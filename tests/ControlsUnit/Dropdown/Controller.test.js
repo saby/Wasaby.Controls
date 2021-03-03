@@ -147,6 +147,15 @@ define(
             });
          });
 
+         it('handleClose', function() {
+            let newOptions = clone(config);
+            let dropdownController = getDropdownController(newOptions);
+            dropdownController._items = new collection.RecordSet({});
+            dropdownController._options.searchParam = 'title';
+            dropdownController.handleClose();
+            assert.isNull(dropdownController._items);
+         });
+
          describe('update', function() {
             let dropdownController, opened, updatedItems;
             beforeEach(function() {
