@@ -115,4 +115,32 @@ describe('Controls/dataSource:loadData', () => {
         deepStrictEqual(loadDataResult[0], { testField: 'testValue' });
     });
 
+    it('load with filterHistoryLoader', async () => {
+        const historyItem = {
+            name: 'title', value: 'Sasha', textValue: 'Sasha'
+        };
+        const loadDataConfigCustomLoader = {
+            type: 'list',
+            source: getSource(),
+            filter: {},
+            filterButtonSource: [
+                {
+                    name: 'title', value: '', textValue: ''
+                }
+            ],
+            filterHistoryLoader: () => Promise.resolve({
+                historyItems: [{...historyItem}]
+            })
+        };
+        const loadDataResult = await getDataLoaded().load([loadDataConfigCustomLoader]);
+
+        deepStrictEqual(
+            (loadDataResult[0] as ILoadDataResult).filter,
+            {
+                title: 'Sasha'
+            }
+        );
+        deepStrictEqual(loadDataResult[0].historyItems, [{...historyItem}]);
+    });
+
 });
