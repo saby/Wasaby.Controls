@@ -381,6 +381,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             opener: this,
             templateOptions: {
                 items,
+                collapsedGroups: this._collapsedFilters,
                 historyId: this._options.historyId
             },
             target: this._container[0] || this._container,
@@ -433,9 +434,10 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 case 'applyClick': this._applyClick(result); break;
                 case 'selectorResult': this._selectorResult(result); break;
                 case 'moreButtonClick': this._moreButtonClick(result); break;
+                case 'collapsedFiltersChanged': this._collapsedFiltersChanged(result); break;
             }
         }
-        if (result.action !== 'moreButtonClick') {
+        if (result.action !== 'moreButtonClick' && result.action !== 'collapsedFiltersChanged') {
             if (result.history) {
                 this._notify('historyApply', [result.history]);
             }
