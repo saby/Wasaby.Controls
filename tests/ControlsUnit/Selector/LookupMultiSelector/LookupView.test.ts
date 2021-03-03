@@ -96,13 +96,23 @@ describe('Controls/_lookup/MultipleInput/LookupView', () => {
       }));
    });
 
-   it('showSelector retunrs boolean result', function() {
-      var lookupView = new Lookup();
+   it('showSelector retunrs boolean result', () => {
+      const lookupView = new Lookup();
+      let suggestClosed = false;
       lookupView.saveOptions({
          selectorTempalte: null
       });
+      lookupView._children = {
+         layout: {
+            closeSuggest: () => {
+               suggestClosed = true;
+            }
+         }
+      };
+      lookupView._suggestState = true;
       ok(lookupView.showSelector() === true);
       ok(!lookupView._suggestState);
+      ok(suggestClosed);
    });
 });
 
