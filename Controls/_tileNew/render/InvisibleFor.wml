@@ -1,4 +1,0 @@
-<ws:for data="i in 10">
-   <ws:partial attr:class="js-controls-List_invisible-for-VirtualScroll " template="wml!Controls/_tileNew/render/items/Invisible" collection="{{ listModel }}"/>
-</ws:for>
-<div class="controls-TreeTileView__separator js-controls-List_invisible-for-VirtualScroll"></div>
