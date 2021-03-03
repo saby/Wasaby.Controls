@@ -78,7 +78,8 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
                 contents: null,
                 last,
                 owner: display,
-                multiSelectVisibility: display?.getMultiSelectVisibility()
+                multiSelectVisibility: display?.getMultiSelectVisibility(),
+                multiSelectAccessibilityProperty: display?.getMultiSelectAccessibilityProperty()
             });
             treeItemToBreadcrumbs.set(last, breadCrumbs);
         }
@@ -88,7 +89,8 @@ function getBreadCrumbsReference<S, T extends TreeItem<S>>(
             breadCrumbs = new SearchSeparator({
                 contents: null,
                 source: item,
-                multiSelectVisibility: display?.getMultiSelectVisibility()
+                multiSelectVisibility: display?.getMultiSelectVisibility(),
+                multiSelectAccessibilityProperty: display?.getMultiSelectAccessibilityProperty()
             });
             treeItemToBreadcrumbs.set(item, breadCrumbs);
         }
@@ -356,7 +358,8 @@ export default class Search<S, T extends TreeItem<S> = TreeItem<S>> extends mixi
                         decoratedItem = new TreeItemDecorator({
                             source: item,
                             parent,
-                            multiSelectVisibility: display?.getMultiSelectVisibility()
+                            multiSelectVisibility: display?.getMultiSelectVisibility(),
+                            multiSelectAccessibilityProperty: display?.getMultiSelectAccessibilityProperty()
                         });
                         treeItemToDecorator.set(item, decoratedItem);
                     }
