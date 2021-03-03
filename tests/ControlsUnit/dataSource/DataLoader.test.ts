@@ -133,7 +133,7 @@ describe('Controls/dataSource:loadData', () => {
                 historyItems: [{...historyItem}]
             })
         };
-        const loadDataResult = await getDataLoaded().load([loadDataConfigCustomLoader]);
+        const loadDataResult = await getDataLoader().load([loadDataConfigCustomLoader]);
 
         deepStrictEqual(
             (loadDataResult[0] as ILoadDataResult).filter,
