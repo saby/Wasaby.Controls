@@ -15,3 +15,4 @@ export {getSimpleButtonTemplateOptionsByItem, getButtonTemplate} from './_toolba
 export {default as BoxView} from './_toolbars/BoxView';
 export {default as IToolbarSource} from './_toolbars/IToolbarSource';
 export {showType} from './_toolbars/interfaces/IShowType';
+export { IToolBarItem } from './_toolbars/IToolbarSource';
