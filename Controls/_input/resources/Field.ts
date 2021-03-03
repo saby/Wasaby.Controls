@@ -352,6 +352,10 @@ class Field<Value, ModelOptions>
         if (!detection.isMobileAndroid) {
             this._updateField(model.displayValue, model.selection);
         } else {
+            /**
+             * На старых версиях android, появляется ошибка описанная выше.
+             * На более новых версия (начиная с 8), ошибка не повторяется, если синхронизировать только value.
+             */
             const androidVersion = detection.AndroidVersion;
             if (androidVersion && androidVersion >= MINIMAL_ANDROID_VERSION) {
                 this.setValue(model.displayValue);
