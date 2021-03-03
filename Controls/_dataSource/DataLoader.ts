@@ -126,12 +126,14 @@ function getFilterControllerWithFilterHistory(loadConfig: ILoadDataConfig): Prom
 function getLoadResult(
     loadConfig: ILoadDataConfig,
     sourceController: NewSourceController,
-    filterController: FilterController
+    filterController: FilterController,
+    historyItems?: IFilterItem[]
 ): ILoadDataResult {
     return {
         ...loadConfig,
         sourceController,
         filterController,
+        historyItems,
         data: sourceController.getItems(),
         error: sourceController.getLoadError(),
         filter: sourceController.getFilter(),
@@ -193,10 +195,10 @@ function loadDataByConfig(loadConfig: ILoadDataConfig): Promise<ILoadDataResult>
         return new Promise((resolve) => {
             if (loadConfig.source) {
                 sourceController.load().finally(() => {
-                    resolve(getLoadResult(loadConfig, sourceController, filterController));
+                    resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems));
                 });
             } else {
-                resolve(getLoadResult(loadConfig, sourceController, filterController));
+                resolve(getLoadResult(loadConfig, sourceController, filterController, filterHistoryItems));
             }
         });
     });
