@@ -78,6 +78,10 @@ class Container extends Control<IControlOptions> {
         return this._redrawPromise;
     }
 
+    getOverlayId(): string {
+        return this._overlayId;
+    }
+
     private _calcOverlayId(popupItems: List<IPopupItem>): void {
         let maxModalPopup;
         popupItems.each((item: IPopupItem) => {
@@ -140,21 +144,15 @@ class Container extends Control<IControlOptions> {
         return dispatcherHandler(event);
     }
 
-    protected _popupDeactivated(event: Event, popupId: string, data: boolean): void {
-        ManagerController.notifyToManager('popupDeactivated', [popupId, data]);
-    }
-
     protected _popupActivated(event: Event, popupId: string, data: boolean): void {
         ManagerController.notifyToManager('popupActivated', [popupId, data]);
     }
 
     protected _overlayClickHandler(event: Event, item: IPopupItem): void {
-        if (item.popupOptions.closeOnOverlayClick) {
-             ManagerController.remove(item.id);
+        if (!item.popupOptions.closeOnOverlayClick) {
+            event.preventDefault();
+            event.stopPropagation();
         }
-        // Click on the overlay shouldn't do anything
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     // To calculate the zIndex in a compatible notification Manager

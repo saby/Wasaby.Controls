@@ -12,7 +12,6 @@
         <Controls._popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" attr:key="{{item.id}}"
                                        name="{{item.id}}"
                                        theme="{{_options.theme}}"
-                                       on:deactivated="_popupDeactivated(item.id)"
                                        on:keydown="_keyDownHandler()"
                                        on:activated="_popupActivated(item.id)"
                                        attr:class="
