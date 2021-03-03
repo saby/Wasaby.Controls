@@ -503,7 +503,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _tempItem = null;
     private _markedLeaf = '';
     private _doAfterItemExpanded = null;
-    private _goToNextAfterExpand: true,
+    private _goToNextAfterExpand: true;
 
     private _itemOnWhichStartCountDown = null;
     private _timeoutForExpandOnDrag = null;
