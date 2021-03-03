@@ -297,6 +297,7 @@ function onCollectionChange<T>(
             // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
             // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
             // виртуального скролла.
+            // TODO избавиться по ошибке https://online.sbis.ru/opendoc.html?guid=f44d88a0-ac53-4d45-9dea-2b594211ee57
             const needReset = this._$compatibleReset || newItems.length === 0 || reason === 'assign';
             this._reBuild(needReset);
             projectionNewItems = toArray(this);
