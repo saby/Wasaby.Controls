@@ -238,6 +238,18 @@ define(
             });
          });
 
+         it('_beforeUnmount', () => {
+            const items = Clone(defaultItems);
+            const menuControl = getMenu();
+            menuControl._options = {
+               searchValue: '123'
+            };
+            menuControl._listModel = getListModel(items);
+            let listModelItems = menuControl._listModel.getCollection();
+            menuControl._beforeUnmount();
+            assert.equal(listModelItems.getCount(), 0);
+         });
+
          describe('getCollection', function() {
             let menuControl = new menu.Control();
             let items = new collection.RecordSet({
