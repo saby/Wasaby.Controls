@@ -45,7 +45,7 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * 
+ *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @public
  */
@@ -2486,6 +2486,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._$multiSelectAccessibilityProperty = property;
         this._nextVersion();
         this._updateItemsMultiSelectAccessibilityProperty(property);
+    }
+
+    getMultiSelectAccessibilityProperty(): string {
+        return this._$multiSelectAccessibilityProperty;
     }
 
     setMultiSelectPosition(position: 'default' | 'custom'): void {
