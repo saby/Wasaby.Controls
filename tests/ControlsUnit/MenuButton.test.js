@@ -63,7 +63,8 @@ define(
             source: new sourceLib.Memory({
                keyProperty: 'id',
                data: items
-            })
+            }),
+            readOnly: false
          };
 
          let testConfig = {
@@ -75,8 +76,8 @@ define(
                data: items
             }),
             nodeProperty: 'node',
-            itemTemplateProperty: 'itemTemplate'
-
+            itemTemplateProperty: 'itemTemplate',
+            readOnly: false
          };
 
          let menu = new dropdown.Button(config);
@@ -212,6 +213,7 @@ define(
             menu._options.readOnly = true;
             menu._handleMouseEnter();
             assert.isNull(menu._dependenciesTimer);
+            menu._options.readOnly = false;
          });
 
          it('_handleClick', () => {
