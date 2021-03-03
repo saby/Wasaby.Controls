@@ -2301,6 +2301,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._updateItemsMultiSelectAccessibilityProperty(property);
     }
 
+    getMultiSelectAccessibilityProperty(): string {
+        return this._$multiSelectAccessibilityProperty;
+    }
+
     setMultiSelectPosition(position: 'default' | 'custom'): void {
         if (this._$multiSelectPosition === position) {
             return;
