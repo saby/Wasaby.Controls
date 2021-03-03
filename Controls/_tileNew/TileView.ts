@@ -148,7 +148,7 @@ export default class TileView extends ListView {
 
     protected _onItemMouseLeave(event: SyntheticEvent, item: TileCollectionItem): void {
         if (!this._context?.isTouch?.isTouch && !item.isActive()) {
-            this._setHoveredItem(this, item, event);
+            this._setHoveredItem(this, null, event);
         }
         this._clearMouseMoveTimeout();
         super._onItemMouseLeave(event, item);
