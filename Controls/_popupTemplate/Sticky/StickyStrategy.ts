@@ -3,8 +3,6 @@
  */
 import * as cMerge from 'Core/core-merge';
 import {detection, constants} from 'Env/Env';
-import {ITargetCoords} from 'Controls/_popupTemplate/TargetCoords';
-import {TPosition} from 'Controls/_listDragNDrop/interface';
 let TouchKeyboardHelper = {};
 
 if (detection.isMobileIOS && detection.IOSVersion === 12) {
@@ -115,7 +113,8 @@ const INVERTING_CONST = {
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
          const isHorizontal = direction === 'horizontal';
          const popupDirection = popupCfg.direction[direction];
-         const restrictiveContainerCoord = popupCfg.restrictiveContainerCoords?.[popupDirection];
+         const restrictiveContainerPosition = popupCfg.restrictiveContainerCoords;
+         const restrictiveContainerCoord = restrictiveContainerPosition?.[popupDirection] || 0;
 
          if (position.hasOwnProperty(isHorizontal ? 'right' : 'bottom')) {
             if (position[isHorizontal ? 'right' : 'bottom'] < 0) {
@@ -128,7 +127,7 @@ const INVERTING_CONST = {
             );
             return popupCfg.sizes[isHorizontal ? 'width' : 'height'] -
                 (targetCoord - targetCoords[isHorizontal ? 'leftScroll' : 'topScroll']) +
-                (restrictiveContainerCoord || 0);
+                restrictiveContainerCoord;
          }
          if (position[isHorizontal ? 'left' : 'top'] < 0) {
             return -(position[isHorizontal ? 'left' : 'top']);
@@ -157,7 +156,7 @@ const INVERTING_CONST = {
 
          const positionValue: number = position[isHorizontal ? 'left' : 'top'];
          const popupSize: number = popupCfg.sizes[isHorizontal ? 'width' : 'height'];
-         const windowSize: number = typeof restrictiveContainerCoord === 'number' ? restrictiveContainerCoord :
+         const windowSize: number = restrictiveContainerPosition ? restrictiveContainerCoord :
              _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
          let overflow = positionValue + taskBarKeyboardIosHeight + popupSize - windowSize - viewportOffset;
          if (_private.isIOS12()) {
