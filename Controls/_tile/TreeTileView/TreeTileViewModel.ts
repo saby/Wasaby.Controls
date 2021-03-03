@@ -6,23 +6,6 @@ import {Model} from 'Types/entity';
 
 var DEFAULT_FOLDER_WIDTH = 250;
 
-const MIN_TILE_WIDTH = 200;
-
-const TILE_SIZE_ITEMS_MIN_COUNT = {
-    s: 4,
-    m: 3,
-    l: 2
-};
-
-const ITEM_PADDING_SIZES = {
-    null: 0,
-    '3xs': 1,
-    '2xs': 2,
-    s: 4,
-    m: 6,
-    default: 6
-};
-
 var TreeTileViewModel = TreeViewModel.extend({
     '[Controls/_tile/TreeTileViewModel]': true,
 
@@ -296,18 +279,6 @@ var TreeTileViewModel = TreeViewModel.extend({
             itemWidth = this._tileModel.getTileWidth(item, imageWidthProperty, imageHeightProperty);
         }
 
-        if (this._options.initialWidth && this._options.tileSize) {
-            const itemPadding = this.getItemPadding();
-            const marginsSize = ITEM_PADDING_SIZES[itemPadding.left] + ITEM_PADDING_SIZES[itemPadding.right];
-            const currentWidth = this.getCurrentWidth();
-            const countItemsInRow = TILE_SIZE_ITEMS_MIN_COUNT[this._options.tileSize];
-            if ((currentWidth / countItemsInRow) >= itemWidth) {
-                itemWidth = itemWidth - marginsSize;
-            } else {
-                itemWidth = Math.round(currentWidth / countItemsInRow) - marginsSize;
-            }
-            return itemWidth < MIN_TILE_WIDTH ? MIN_TILE_WIDTH : itemWidth;
-        }
         return itemWidth;
     },
 
