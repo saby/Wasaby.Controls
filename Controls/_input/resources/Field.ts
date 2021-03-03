@@ -50,6 +50,7 @@ export interface IField {
     readonly '[Controls/input:IField]': boolean;
 }
 
+const MINIMAL_ANDROID_VERSION = 8;
 /**
  * Контрол-обертка над нативными полями ввода. Используется для реализации контролов с вводом данных.
  * Если требуется готовый контрол с вводом текста используйте {@link Controls/_input/Text Controls.input:Text}
@@ -350,6 +351,15 @@ class Field<Value, ModelOptions>
          */
         if (!detection.isMobileAndroid) {
             this._updateField(model.displayValue, model.selection);
+        } else {
+            /**
+             * На старых версиях android, появляется ошибка описанная выше.
+             * На более новых версия (начиная с 8), ошибка не повторяется, если синхронизировать только value.
+             */
+            const androidVersion = detection.AndroidVersion;
+            if (androidVersion && androidVersion >= MINIMAL_ANDROID_VERSION) {
+                this.setValue(model.displayValue);
+            }
         }
     }
 
