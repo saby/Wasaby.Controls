@@ -341,6 +341,9 @@ export default class _Controller implements IDropdownController {
    }
 
    private _isLocalSource(source): boolean {
+      if (source instanceof PrefetchProxy) {
+         return cInstance.instanceOfModule(source.getOriginal(), 'Types/source:Local');
+      }
       return cInstance.instanceOfModule(source, 'Types/source:Local');
    }
 
@@ -370,7 +373,7 @@ export default class _Controller implements IDropdownController {
       let sourcePromise;
 
       if (this._hasHistory(options) && this._isLocalSource(options.source) && !options.historyNew) {
-         sourcePromise = getSource(this._source ||options.source, options.historyId);
+         sourcePromise = getSource(this._source || options.source, options);
       } else {
          sourcePromise = Promise.resolve(options.source);
       }
@@ -388,7 +391,7 @@ export default class _Controller implements IDropdownController {
                 return this._resolveLoadedItems(options, items);
              }, (error) => {
                 this._loadError(error);
-                return error;
+                return Promise.reject(error);
              });
           });
    }

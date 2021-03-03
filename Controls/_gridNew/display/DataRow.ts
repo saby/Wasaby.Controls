@@ -56,8 +56,9 @@ export default class DataRow<T extends Model> extends Row<T> implements
     protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGridDataCellOptions<T>> {
         return {
             ...super._getColumnFactoryParams(column, columnIndex),
-            searchValue: this._$searchValue
-        }
+            searchValue: this._$searchValue,
+            backgroundStyle: this._$backgroundStyle
+        };
     }
 
     setSearchValue(searchValue: string): void {
@@ -102,6 +103,11 @@ export default class DataRow<T extends Model> extends Row<T> implements
     updateContentsVersion(): void {
         this._nextVersion();
         this._redrawColumns('all');
+    }
+
+    setBackgroundStyle(backgroundStyle: string): void {
+        super.setBackgroundStyle(backgroundStyle);
+        this._reinitializeColumns();
     }
 }
 

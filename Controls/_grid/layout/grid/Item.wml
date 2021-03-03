@@ -47,7 +47,7 @@
       <ws:if data="{{colspan}}">
          <div class="controls-Grid__row-cell__content_colspaned
                      {{ currentColumn.getColspanedPaddingClassList(currentColumn, colspan).getAll() }}
-                     {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
+                     {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-background-' + itemData.backgroundStyle + '_theme-' + itemData.theme + ' controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
                      {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}">
             <ws:partial template="{{colspanTemplate}}" itemData="{{itemData}}">
                <ws:multiSelectTemplate>
@@ -64,7 +64,7 @@
                      ladderWrapper="{{currentColumn.ladderWrapper}}"
                      stickyProperty="{{stickyProperty}}"
                      attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}
-                                 {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder  controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
+                                 {{!isLadderHeader && currentColumn.hiddenForLadder && !colspan ? 'controls-Grid__row-cell__content_hiddenForLadder controls-background-' + itemData.backgroundStyle + '_theme-' + itemData.theme + ' controls-Grid__row-cell__content_hiddenForLadder_theme-' + itemData.theme}}
                                  {{!isLadderHeader && itemData.stickyLadder ? 'controls-Grid__row-cell__content_ladderHeader'}}
                                  {{itemData.stickyLadder && itemData.stickyProperties[1] && !itemData.stickyLadder[itemData.stickyProperties[1]].ladderLength ? 'controls-Grid__row-cell__content_ladder-empty'}}
                                  {{itemData.isAnimatedForSelection() ? ' controls-ListView__item_rightSwipeAnimation'}}
@@ -112,7 +112,7 @@
             <ws:else>
                <div class="controls-Grid__row-main_ladderWrapper"
                   style="{{ 'left: 0; right: -'+ currentColumn.column.width }};">
-                  <ws:partial template="STICKY_LADDER_HEADER_CONTENT"  attr:style="z-index: 2" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
+                  <ws:partial template="STICKY_LADDER_HEADER_CONTENT" attr:style="z-index: {{currentColumn.columnScrollVisibility ? 4 : 2}}" currentColumn="{{currentColumn}}" stickyProperty="{{stickyProperty}}"/>
                </div>
             </ws:else>
          </ws:if>

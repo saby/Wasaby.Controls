@@ -1141,7 +1141,6 @@ describe('Controls/list_clean/BaseControl', () => {
                 await baseControl._beforeUpdate(baseControlOptions);
                 baseControl._updateInProgress = false;
                 baseControl.saveOptions(baseControlOptions);
-                await baseControl.reload();
                 assert.isTrue(afterReloadCallbackCalled);
                 sandbox.restore();
             });
