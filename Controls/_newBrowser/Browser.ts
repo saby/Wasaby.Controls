@@ -435,7 +435,6 @@ export default class Browser extends Control<IOptions, IReceivedState> {
             );
 
             this.root = null;
-            this._detailDataSource.setRoot(null);
         }
 
         this._setViewMode(DetailViewMode.search);
