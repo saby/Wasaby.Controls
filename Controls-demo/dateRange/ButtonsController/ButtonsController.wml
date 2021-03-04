@@ -1,18 +1,18 @@
 <div class="controlsDemo__wrapper">
     <div class="controlsDemo__cell">
         <Controls.dateRange:ButtonsController attr:class="controlsDemo__flex">
-            <Controls.dateRange:Button direction="left"/>
+            <Controls.dateRange:ArrowButton direction="left"/>
             <Controls.dateRange:RangeSelector
                     bind:startValue="_startValue1"
                     bind:endValue="_endValue1"
             />
-            <Controls.dateRange:Button direction="right"/>
+            <Controls.dateRange:ArrowButton direction="right"/>
         </Controls.dateRange:ButtonsController>
     </div>
     <div class="controlsDemo__cell">
         <Controls.dateRange:ButtonsController attr:class="controlsDemo__flex">
-            <Controls.dateRange:Button direction="left"/>
-            <Controls.dateRange:Button direction="right"/>
+            <Controls.dateRange:ArrowButton direction="left"/>
+            <Controls.dateRange:ArrowButton direction="right"/>
             <Controls.dateRange:RangeSelector
                     bind:startValue="_startValue2"
                     bind:endValue="_endValue2"
@@ -25,8 +25,8 @@
                     bind:startValue="_startValue3"
                     bind:endValue="_endValue3"
             />
-            <Controls.dateRange:Button direction="left"/>
-            <Controls.dateRange:Button direction="right"/>
+            <Controls.dateRange:ArrowButton direction="left"/>
+            <Controls.dateRange:ArrowButton direction="right"/>
         </Controls.dateRange:ButtonsController>
     </div>
 </div>

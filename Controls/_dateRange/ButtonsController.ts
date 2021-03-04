@@ -9,24 +9,18 @@ import {RegisterClass} from 'Controls/event';
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/ButtonsController/Index
- * @see Controls/_dateRange/Button
+ * @see Controls/_dateRange/ArrowButton
  */
 
 /**
  * @name Controls/_dateRange/ButtonsController#content
  * @cfg {TemplateFunction} Пользовательский шаблон.
- * @remark
- * В шаблон будут переданы контентные опции
- * <ul>
- *     <li>prevButtonTemplate - Кнопка-стрелка указывающая влево</li>
- *     <li>nextButtonTemplate - Кнопка-стрелка указывающая вправо</li>
- * </ul>
  * @example
  * <pre>
  *     <Controls.dateRange:ButtonsController>
- *         <Controls.dateRange:Button direction="left"/>
+ *         <Controls.dateRange:ArrowButton direction="left"/>
  *         <Controls.dateRange:RangeSelector bind:startValue="_startValue" bind:endValue="_endValue"/>
- *         <Controls.dateRange:Button direction="right"/>
+ *         <Controls.dateRange:ArrowButton direction="right"/>
  *     </Controls.dateRange:ButtonsController>
  * </pre>
  */

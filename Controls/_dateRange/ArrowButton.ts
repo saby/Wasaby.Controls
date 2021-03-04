@@ -1,9 +1,9 @@
 import {Control, TemplateFunction} from 'UI/Base';
-import * as template from 'wml!Controls/_dateRange/Button/Button';
+import * as template from 'wml!Controls/_dateRange/ArrowButton/ArrowButton';
 
 /**
  * Контрол кнопка для переключения периода.
- * @class Controls/_dateRange/Buttons
+ * @class Controls/_dateRange/ArrowButton
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/ButtonsController/Index
