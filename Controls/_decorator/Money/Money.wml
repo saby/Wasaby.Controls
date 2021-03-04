@@ -18,8 +18,8 @@
                     controls-DecoratorMoney__integer_fontWeight_{{_options.fontWeight}}">
                 {{_formattedNumber.integer}}
             </span>
-            <ws:if data="{{_isDisplayFractionPath(_formattedNumber.fraction, _options.showEmptyDecimals)}}">
-                <span class="controls-DecoratorMoney__fraction__colorStyle-{{ _formattedNumber.fraction === '.00' ? 'readOnly' : _fontColorStyle}}
+            <ws:if data="{{ _options.showDecimals }}">
+                <span class="controls-DecoratorMoney__fraction__colorStyle-{{ _formattedNumber.fraction === '.00' ? 'readonly' : _fontColorStyle}}
                             controls-fontsize-{{_fractionFontSize}}_theme-{{_options.theme}}">
                     {{_formattedNumber.fraction}}
                 </span>

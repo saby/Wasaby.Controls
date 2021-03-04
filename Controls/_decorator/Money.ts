@@ -143,20 +143,13 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
     protected _options: IMoneyOptions;
     protected _template: TemplateFunction = template;
 
-    // Used in template
-    protected _isDisplayFractionPath(value: string, showEmptyDecimals: boolean): boolean {
-        return showEmptyDecimals || value !== '.00';
-    }
-
     private _getTooltip(options: IMoneyOptions): string {
 
         if (options.hasOwnProperty('tooltip')) {
             return options.tooltip;
         }
 
-        return this._isDisplayFractionPath(this._formattedNumber.fraction, options.showEmptyDecimals)
-            ? this._formattedNumber.number
-            : this._formattedNumber.integer;
+        return this._formattedNumber.number;
     }
 
     private _changeState(options: IMoneyOptions, useLogging: boolean): boolean {
@@ -272,7 +265,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             fontSize: 'm',
             fontWeight: 'default',
             useGrouping: true,
-            showEmptyDecimals: true,
+            showDecimals: true,
             currencySize: 's',
             currencyPosition: 'right',
             abbreviationType: 'none',
@@ -287,7 +280,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             fontColorStyle: descriptor(String),
             fontSize: descriptor(String),
             useGrouping: descriptor(Boolean),
-            showEmptyDecimals: descriptor(Boolean),
+            showDecimals: descriptor(Boolean),
             value: descriptor(String, Number, null),
             currencySize: descriptor(String),
             currencyPosition: descriptor(String),
