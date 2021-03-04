@@ -51,6 +51,8 @@ export default class DateRange extends Control<IControlOptions> {
     protected _beforeMount(options): void {
         if (options.position) {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
+            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth());
+            this._markedKey = this._dateToId(markedKeyDate);
         }
         this._updateView(options);
     }
