@@ -1007,6 +1007,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
         this._userStrategies = null;
+        this._$metaResults = null;
 
         super.destroy();
     }

@@ -473,10 +473,6 @@ var ItemsViewModel = BaseViewModel.extend({
         const shouldUpdate = !!metaData && !isEqual(metaData, {}) && typeof metaData.results !== 'undefined';
         if (shouldUpdate) {
             this._updateSubscriptionOnMetaChange(this._items, items, true);
-            const display = this.getDisplay();
-            if (display) {
-                display.setMetaResults(metaData && metaData.results);
-            }
         }
         return shouldUpdate;
     },
