@@ -37,6 +37,7 @@ export interface IStickyHeaderOptions extends IControlOptions {
     zIndex: number;
     shadowVisibility: SHADOW_VISIBILITY;
     backgroundStyle: string;
+    offsetTop: number;
 }
 
 interface IResizeObserver {
@@ -197,7 +198,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._release();
         }
         if (options.fixedZIndex !== this._options.fixedZIndex) {
-            this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247, options.task1181007458);
+            this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.offsetTop, options.task1177692247, options.task1181007458);
         }
     }
 
@@ -520,19 +521,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStyles(options: IStickyHeaderOptions): void {
-        this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247, options.task1181007458);
+        this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.offsetTop, options.task1177692247, options.task1181007458);
         this._updateShadowStyles(options.mode, options.shadowVisibility);
         this._updateObserversStyles(options.offsetTop, options.shadowVisibility);
     }
 
-    private _updateStyle(position: POSITION, fixedZIndex: number, zIndex: number, task1177692247?, task1181007458?): void {
-        const style = this._getStyle(position, fixedZIndex, zIndex, task1177692247);
+    private _updateStyle(position: POSITION, fixedZIndex: number, zIndex: number, offsetTop: number, task1177692247?, task1181007458?): void {
+        const style = this._getStyle(position, fixedZIndex, zIndex, offsetTop, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
-    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, zIndex: number, task1177692247?, task1181007458?): string {
+    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, zIndex: number, offsetTop: number, task1177692247?, task1181007458?): string {
         let
             offset: number = 0,
             container: HTMLElement,
@@ -552,6 +553,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         if (positionFromOptions.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
+            if (offsetTop) {
+                top += offsetTop;
+            }
             const checkOffset = fixedPosition || isIosOptimizedMode;
             style += 'top: ' + (top - (checkOffset ? offset : 0)) + 'px;';
         }
