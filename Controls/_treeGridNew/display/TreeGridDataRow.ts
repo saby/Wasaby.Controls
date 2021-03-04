@@ -9,7 +9,7 @@ export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItem
     owner: TreeGridCollection<T>;
 }
 
-export default class TreeGridDataRow<T extends Model>
+export default class TreeGridDataRow<T extends Model = Model>
    extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;

@@ -99,7 +99,7 @@ export type StrategyConstructor<
    T extends CollectionItem<S> = CollectionItem<S>
    > = new() => F;
 
-interface ISessionItems<T> extends Array<T> {
+export interface ISessionItems<T> extends Array<T> {
     properties?: object;
 }
 
@@ -2141,7 +2141,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             items,
             index
         );
-        this._handleAfterCollectionChange();
+        this._handleAfterCollectionChange(items);
 
         if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
@@ -3073,7 +3073,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
-            options.backgroundStyle = this._$backgroundStyle;            
+            options.backgroundStyle = this._$backgroundStyle;
             options.theme = this._$theme;
             options.leftPadding = this._$leftPadding;
             options.rightPadding = this._$rightPadding;
@@ -3697,7 +3697,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                     index
                 );
             });
-            this._handleAfterCollectionChange();
+            this._handleAfterCollectionChange(items);
         }
     }
 
@@ -3732,7 +3732,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 );
             }
         );
-        this._handleAfterCollectionChange();
+        this._handleAfterCollectionChange(changedItems);
     }
 
     /**
@@ -3835,7 +3835,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._notify('onAfterCollectionChange');
     }
 
-    protected _handleAfterCollectionChange(): void {
+    protected _handleAfterCollectionChange(changedItems: ISessionItems<T> = []): void {
         this._notifyAfterCollectionChange();
         this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
