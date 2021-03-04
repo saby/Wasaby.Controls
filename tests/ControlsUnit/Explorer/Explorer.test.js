@@ -1159,6 +1159,7 @@ define([
             assert.equal(explorer._dragHighlighter(1), '');
             assert.equal(explorer._dragHighlighter(2), 'controls-BreadCrumbsView__dropTarget_withoutArrow');
             assert.equal(explorer._dragHighlighter(2, true), 'controls-BreadCrumbsView__dropTarget_withArrow');
+            assert.equal(explorer._dragHighlighter('dots'), '');
          });
          it('_documentDragStart', function() {
             var dcid = 'test-id';
