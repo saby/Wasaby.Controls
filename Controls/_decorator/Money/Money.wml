@@ -15,7 +15,7 @@
         <span class="{{ _options.stroked ? 'controls-DecoratorMoney__stroked' }}">
             <span class="controls-fontsize-{{_options.fontSize}}_theme-{{_options.theme}}
                     controls-text-{{_fontColorStyle}}_theme-{{_options.theme}}
-                    controls-DecoratorMoney__integer_fontWeight_{{_options.fontWeight}}">
+                    controls-fontweight-{{_options.fontWeight}}">
                 {{_formattedNumber.integer}}
             </span>
             <ws:if data="{{_isDisplayFractionPath(_formattedNumber.fraction, _options.showEmptyDecimals)}}">
