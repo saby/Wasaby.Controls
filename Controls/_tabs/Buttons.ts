@@ -313,7 +313,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
     static getDefaultOptions(): ITabsOptions {
         return {
             style: 'primary',
-            inlineHeight: 'l',
+            inlineHeight: 's',
             markerThickness: 'l',
             borderVisible: true,
             separatorVisible: true,
