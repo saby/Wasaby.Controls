@@ -45,6 +45,7 @@ export default class ButtonsController extends Control {
         } else {
             this._shiftForward();
         }
+        event.stopPropagation();
     }
 
     protected _beforeUnmount(): void {
