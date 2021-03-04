@@ -6287,7 +6287,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _documentDragStart(dragObject): void {
-        if (this._options.readOnly || !this._options.itemsDragNDrop) {
+        if (this._options.readOnly || !this._options.itemsDragNDrop || !(dragObject && dragObject.entity)) {
             return;
         }
 
