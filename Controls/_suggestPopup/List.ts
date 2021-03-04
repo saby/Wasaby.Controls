@@ -8,6 +8,8 @@ import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import {EventUtils} from 'UI/Events';
 import { constants } from 'Env/Env';
 import {RecordSet} from 'Types/collection';
+import 'css!Controls/suggestPopup';
+import 'css!Controls/suggest';
 
 const DIALOG_PAGE_SIZE = 25;
 
@@ -259,7 +261,6 @@ List.contextTypes = function() {
    };
 };
 
-List._theme = ['Controls/suggest', 'Controls/suggestPopup'];
 List._private = _private;
 
 export = List;

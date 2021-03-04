@@ -1,6 +1,8 @@
 import BaseLayer from './__BaseLayer';
 import {constants, detection} from 'Env/Env';
 import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
+import 'css!Controls/suggestPopup';
+import 'css!Controls/suggest';
 
 var _private = {
    getBorderWidth: function(container) {
@@ -101,7 +103,6 @@ var __PopupContent = BaseLayer.extend({
       }
    }
 });
-__PopupContent._theme = ['Controls/suggest', 'Controls/suggestPopup'];
 __PopupContent._private = _private;
 
 export default __PopupContent;
