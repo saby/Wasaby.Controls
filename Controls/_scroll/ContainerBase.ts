@@ -209,29 +209,46 @@ export default class ContainerBase<T extends IContainerBaseOptions> extends Cont
 
     _registerIt(event: SyntheticEvent, registerType: string, component: any,
                 callback: () => void, triggers): void {
-        this._registrars.scrollStateChanged.register(event, registerType, component, callback);
-        if (registerType === 'scrollStateChanged') {
-            this._onRegisterNewComponent(component);
+        switch (registerType) {
+            case 'scrollStateChanged':
+                this._registrars.scrollStateChanged.register(event, registerType, component, callback);
+                this._onRegisterNewComponent(component);
+                break;
+            case 'listScroll':
+                // совместимость со списками
+                this._registrars.listScroll.register(event, registerType, component, callback);
+                this._onRegisterNewListScrollComponent(component);
+                break;
+            case 'virtualScrollMove':
+                this._registrars.virtualScrollMove.register(event, registerType, component, callback);
+                break;
+            case 'scroll':
+                this._registrars.scroll.register(event, registerType, component, callback, {listenAll: true});
+                break;
+            case 'virtualNavigation':
+                this._virtualNavigationRegistrar.register(event, registerType, component, callback);
+                break;
         }
-        // совместимость со списками
-        this._registrars.listScroll.register(event, registerType, component, callback);
-        if (registerType === 'listScroll') {
-            this._onRegisterNewListScrollComponent(component);
-        }
-
-        if (registerType === 'virtualScrollMove') {
-            this._registrars.virtualScrollMove.register(event, registerType, component, callback);
-        }
-
-        this._registrars.scroll.register(event, registerType, component, callback, {listenAll: true});
-        this._virtualNavigationRegistrar.register(event, registerType, component, callback);
     }
 
     _unRegisterIt(event: SyntheticEvent, registerType: string, component: any): void {
-        this._registrars.scrollStateChanged.unregister(event, registerType, component);
-        this._registrars.scroll.unregister(event, registerType, component);
-        this._registrars.listScroll.unregister(event, registerType, component);
-        this._virtualNavigationRegistrar.unregister(event, registerType, component);
+        switch (registerType) {
+            case 'scrollStateChanged':
+                this._registrars.scrollStateChanged.unregister(event, registerType, component);
+                break;
+            case 'listScroll':
+                this._registrars.listScroll.unregister(event, registerType, component);
+                break;
+            case 'virtualScrollMove':
+                this._registrars.virtualScrollMove.unregister(event, registerType, component);
+                break;
+            case 'scroll':
+                this._registrars.scroll.unregister(event, registerType, component);
+                break;
+            case 'virtualNavigation':
+                this._virtualNavigationRegistrar.unregister(event, registerType, component);
+                break;
+        }
     }
 
     protected _enableVirtualNavigationHandler(): void {
