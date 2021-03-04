@@ -17,6 +17,8 @@ import {isLeftMouseButton} from 'Controls/popup';
 import {generateStates} from 'Controls/input';
 import {RecordSet} from 'Types/collection';
 import {Model} from 'Types/entity';
+import 'css!Controls/dropdown';
+import 'css!Controls/CommonClasses';
 
 interface IComboboxOptions extends IBaseDropdownOptions, ISingleSelectableOptions, IBorderStyleOptions,
     IValidationStatusOptions, IInputPlaceholderOptions {
@@ -122,8 +124,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder {
             selectedKeys: [options.selectedKey],
             markerVisibility: 'hidden',
             dataLoadCallback: this._dataLoadCallback.bind(this),
-            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup')
-                           + ' controls-ComboBox-popup_theme-' + options.theme,
+            popupClassName: (options.popupClassName ? options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'),
             typeShadow: 'suggestionsContainer',
             close: this._onClose,
             open: this._onOpen,
@@ -246,7 +247,7 @@ class ComboBox extends BaseDropdown implements IInputPlaceholder {
       return validationStatus;
    }
 
-   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
+   static _theme: string[] = ['Controls/Classes'];
 
    static getDefaultOptions(): object {
       return {

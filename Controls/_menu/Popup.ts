@@ -12,6 +12,8 @@ import {TSelectedKeys} from 'Controls/interface';
 import {CollectionItem} from 'Controls/display';
 import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRedraw';
 import HoverController from 'Controls/_menu/HoverController';
+import 'css!Controls/menu';
+import 'css!Controls/CommonClasses';
 
 const SEARCH_DEPS = [
     'Controls/browser',
@@ -255,8 +257,6 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     private _getTheme(): string {
         return ManagerController.getPopupHeaderTheme();
     }
-
-    static _theme: string[] = ['Controls/menu', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {
