@@ -1,0 +1,6 @@
+<div class="controls-FilterEditors__toggleTumbler_theme-{{_options.theme}}">
+   <Controls.toggle:Tumbler items="{{_options.items}}"
+                            bind:selectedKey="_selectedKey"
+                            on:selectedKeyChanged="_selectedKeyChangedHandler()"/>
+</div>
+
