@@ -9,7 +9,7 @@ import {RegisterClass} from 'Controls/event';
  * @public
  * @author Красильников А.С.
  * @demo Controls-demo/dateRange/ButtonsController/Index
- *
+ * @see Controls/_dateRange/Button
  */
 
 /**
@@ -21,6 +21,14 @@ import {RegisterClass} from 'Controls/event';
  *     <li>prevButtonTemplate - Кнопка-стрелка указывающая влево</li>
  *     <li>nextButtonTemplate - Кнопка-стрелка указывающая вправо</li>
  * </ul>
+ * @example
+ * <pre>
+ *     <Controls.dateRange:ButtonsController>
+ *         <Controls.dateRange:Button direction="left"/>
+ *         <Controls.dateRange:RangeSelector bind:startValue="_startValue" bind:endValue="_endValue"/>
+ *         <Controls.dateRange:Button direction="right"/>
+ *     </Controls.dateRange:ButtonsController>
+ * </pre>
  */
 
 export default class ButtonsController extends Control {
@@ -31,15 +39,23 @@ export default class ButtonsController extends Control {
         this._register = new RegisterClass({ register: 'shiftDateRangePeriod' });
     }
 
+    protected _shiftPeriod(event: Event, direction: string): void {
+        if (direction === 'left') {
+            this._shiftBack();
+        } else {
+            this._shiftForward();
+        }
+    }
+
     protected _beforeUnmount(): void {
         this._register.destroy();
     }
 
-    protected _shiftBack(): void {
+    private _shiftBack(): void {
         this._register.start(-1);
     }
 
-    protected _shiftForward(): void {
+    private _shiftForward(): void {
         this._register.start(1);
     }
 
