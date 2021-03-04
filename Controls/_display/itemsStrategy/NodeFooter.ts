@@ -89,13 +89,11 @@ export default class NodeFooter<S, T extends TreeItem<S> = TreeItem<S>> implemen
     invalidate(): void {
         this._itemsOrder = null;
         this._nodeFooters = [];
-        return this.source.invalidate();
     }
 
     reset(): void {
         this._itemsOrder = null;
         this._nodeFooters = [];
-        return this.source.reset();
     }
 
     splice(start: number, deleteCount: number, added?: S[]): T[] {
