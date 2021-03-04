@@ -7707,6 +7707,11 @@ define([
             });
          });
 
+         it('skip drag start if no drag entity', () => {
+            baseControl._documentDragStart({ entity: null }, 1);
+            assert.isFalse(baseControl._documentDragging);
+         });
+
          it('drag start', () => {
             baseControl._dragStart({ entity: new dragNDrop.ItemsEntity({items: [1]}) }, 1);
             assert.isNotNull(baseControl._dndListController);
