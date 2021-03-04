@@ -30,7 +30,7 @@ export {default as IExpandable, IExpandableOptions} from './_interface/IExpandab
 export {default as ISorting, ISortingOptions, TSortingOptionValue} from './_interface/ISorting';
 export {default as ILookup, ILookupOptions} from './_interface/ILookup';
 export {default as IDateMask, IDateMaskOptions} from './_interface/IDateMask';
-export {default as IDateRangeValidators, IDateRangeValidatorsOptions, DateRangeValidators} from './_interface/IDateRangeValidators';
+export {default as IDateRangeValidators, IDateRangeValidatorsOptions, TDateRangeValidators} from './_interface/IDateRangeValidators';
 export {default as IPropStorage, IPropStorageOptions} from './_interface/IPropStorage';
 export {default as IBorderStyle, IBorderStyleOptions} from './_interface/IBorderStyle';
 export {default as IValidationStatus, IValidationStatusOptions, ValidationStatus} from './_interface/IValidationStatus';
