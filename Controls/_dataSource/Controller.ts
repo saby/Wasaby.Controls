@@ -661,6 +661,8 @@ export default class Controller extends mixin<
             this._dataLoadCallbackFromOptions(result, direction);
         }
 
+        this._notify('dataLoadCallback', result);
+
         if (dataLoadCallbackResult instanceof Promise) {
             methodResult = dataLoadCallbackResult.then(() => {
                 return this._addItems(result, key, direction);
