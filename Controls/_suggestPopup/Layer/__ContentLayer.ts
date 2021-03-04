@@ -1,8 +1,7 @@
 /**
  * Created by am.gerasimov on 18.04.2018.
  */
-
-import BaseLayer from './__BaseLayer';
+import { Control } from 'UI/Base';
 import template = require('wml!Controls/_suggestPopup/Layer/__ContentLayer');
 
 var _private = {
@@ -125,7 +124,7 @@ var _private = {
    }
 };
 
-var __ContentLayer = BaseLayer.extend({
+var __ContentLayer = Control.extend({
 
    _template: template,
    _height: '0px',
