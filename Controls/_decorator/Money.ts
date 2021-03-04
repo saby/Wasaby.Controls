@@ -38,14 +38,14 @@ type TAbbreviationType = 'long' | 'none';
 type TCurrency = 'Ruble' | 'Euro' | 'Dollar';
 /**
  * Тип данных для позиции отображаемой валюты
- * @typedef {string} TAbbreviationType
+ * @typedef {string} TCurrencyPosition
  * @variant right
  * @variant left
  */
 type TCurrencyPosition = 'right' | 'left';
 /**
  * Тип данных для размера отображаемой валюты
- * @typedef {string} TCurrency
+ * @typedef {string} TCurrencySize
  * @variant 2xs
  * @variant xs
  * @variant s
@@ -142,6 +142,11 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
 
     protected _options: IMoneyOptions;
     protected _template: TemplateFunction = template;
+
+    // Used in template
+    protected _isDisplayFractionPath(value: string, showEmptyDecimals: boolean): boolean {
+        return showEmptyDecimals || value !== '.00';
+    }
 
     private _getTooltip(options: IMoneyOptions): string {
 
@@ -265,7 +270,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             fontSize: 'm',
             fontWeight: 'default',
             useGrouping: true,
-            showDecimals: true,
+            showEmptyDecimals: true,
             currencySize: 's',
             currencyPosition: 'right',
             abbreviationType: 'none',
@@ -280,7 +285,7 @@ class Money extends Control<IMoneyOptions> implements INumberFormat, ITooltip, I
             fontColorStyle: descriptor(String),
             fontSize: descriptor(String),
             useGrouping: descriptor(Boolean),
-            showDecimals: descriptor(Boolean),
+            showEmptyDecimals: descriptor(Boolean),
             value: descriptor(String, Number, null),
             currencySize: descriptor(String),
             currencyPosition: descriptor(String),

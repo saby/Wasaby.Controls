@@ -1,6 +1,6 @@
 export interface INumberFormatOptions {
     useGrouping?: boolean;
-    showDecimals?: boolean;
+    showEmptyDecimals?: boolean;
     stroked?: boolean;
     underline?: TUnderline;
 }

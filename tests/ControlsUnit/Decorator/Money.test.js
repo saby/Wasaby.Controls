@@ -202,6 +202,20 @@ define(
                assert.equal(ctrl._tooltip, 'tooltip');
             });
          });
+         describe('isDisplayFractionPath', function() {
+            it('Test1', function() {
+               assert.isFalse(ctrl._isDisplayFractionPath('.00', false));
+            });
+            it('Test2', function() {
+               assert.isTrue(ctrl._isDisplayFractionPath('.10', false));
+            });
+            it('Test3', function() {
+               assert.isTrue(ctrl._isDisplayFractionPath('.00', true));
+            });
+            it('Test4', function() {
+               assert.isTrue(ctrl._isDisplayFractionPath('.10', true));
+            });
+         });
       });
    }
 );
