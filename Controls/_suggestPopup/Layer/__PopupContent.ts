@@ -1,4 +1,4 @@
-import BaseLayer from './__BaseLayer';
+import { Control } from 'UI/Base';
 import {constants, detection} from 'Env/Env';
 import template = require('wml!Controls/_suggestPopup/Layer/__PopupContent');
 
@@ -11,7 +11,7 @@ var _private = {
    }
 };
 
-var __PopupContent = BaseLayer.extend({
+var __PopupContent = Control.extend({
 
    _template: template,
    _positionFixed: false,
