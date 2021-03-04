@@ -132,7 +132,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             }
             this._closeSubMenu();
             result = this._loadItems(newOptions).then((res) => {
-               this._updateItems(res, newOptions);
+                this._updateItems(res, newOptions);
                 this._notifyResizeAfterRender = true;
                 return res;
             });
@@ -157,6 +157,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     protected _beforeUnmount(): void {
+        if (this._options.searchValue) {
+            // items dropdown/_Controller'a обновляются по ссылке.
+            // если был поиск, то зануляем items, чтобы при след. открытии меню отображались все записи.
+            this._listModel.getCollection().clear();
+        }
         if (this._sourceController) {
             this._sourceController.cancelLoading();
             this._sourceController = null;

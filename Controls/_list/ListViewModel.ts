@@ -168,6 +168,18 @@ const _private = {
         itemsModelCurrent.getContentClasses = () => {
             return `${itemsModelCurrent.spacingClassList} ${itemsModelCurrent.isRightSwiped?.() ? 'controls-ListView__item_rightSwipeAnimation' : ''}`;
         };
+
+        itemsModelCurrent.getMultiSelectClasses = () => {
+            return itemsModelCurrent.multiSelectClassList;
+        };
+
+        itemsModelCurrent.isVisibleCheckbox = () => {
+            return itemsModelCurrent.dispItem.isVisibleCheckbox();
+        };
+
+        itemsModelCurrent.isReadonlyCheckbox = () => {
+            return itemsModelCurrent.dispItem.isReadonlyCheckbox();
+        };
     },
     getSeparatorSizes(options: IListSeparatorOptions): IListSeparatorOptions['rowSeparatorSize'] {
         return options.rowSeparatorSize ? options.rowSeparatorSize.toLowerCase() : null;

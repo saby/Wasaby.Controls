@@ -480,6 +480,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     setFixedPosition(position: string) {
+        // Спилить метод после того как будет сделана задача
+        // https://online.sbis.ru/opendoc.html?guid=8089ac76-89d3-42c0-9ef2-8b187014559f
         this._init();
 
         const fixedPosition: POSITION = this._model.fixedPosition;
@@ -491,6 +493,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             if (this._isBottomShadowVisible) {
                 fastUpdate.mutate(() => {
                     this._children.shadowBottom.classList.remove(this._isMobileIOS ? 'ws-invisible' : 'ws-hidden');
+                    this._container.style.zIndex = this._options.fixedZIndex;
                 });
             }
         }
