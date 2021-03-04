@@ -6332,7 +6332,8 @@ define([
                hasPaging: hasPaging,
                loadingIndicatorState: indicatorState,
                theme,
-               isPortionedSearchInProgress
+               isPortionedSearchInProgress,
+               attachLoadTopTriggerToNullOption: true
             });
          }
 
