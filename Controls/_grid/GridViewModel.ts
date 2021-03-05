@@ -277,7 +277,7 @@ var
 
             if (isHeader && typeof endColumn !== 'undefined') {
                 // endColumn - конфиг GridLayout, он всегда больше на 1.
-                return endColumn - 1 <= stickyColumnsCount;
+                return endColumn - 1 <= stickyColumnsCount + (stickyLadderCellsCount || 0);
             }
             const isCellIndexLessTheFixedIndex = columnIndex < (stickyColumnsCount + columnOffset);
             if (isMultiHeader !== undefined) {
