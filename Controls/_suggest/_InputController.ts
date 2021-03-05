@@ -32,6 +32,7 @@ import Deferred = require('Core/Deferred');
 import {TVisibility} from 'Controls/marker';
 import {DependencyTimer} from 'Controls/popup';
 import {ISearchControllerOptions} from "../_search/ControllerClass";
+import 'css!Controls/suggest';
 
 const CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
 const HISTORY_KEYS_FIELD = 'historyKeys';
@@ -1091,8 +1092,6 @@ export default class InputContainer extends Control<IInputControllerOptions> {
    closeSuggest(): void {
       this._close();
    }
-
-   static _theme: string[] = ['Controls/suggest'];
 
    static getOptionTypes(): object {
       return {
