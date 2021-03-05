@@ -648,6 +648,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._getHasMoreData = _private.getHasMoreData.bind(null, this);
         this._afterSetItemsOnReloadCallback = _private.afterSetItemsOnReloadCallback.bind(null, this);
+        this._canChangeMarker = this._canChangeMarker.bind(this);
         this._errorController = cfg.errorController || new dataSourceError.Controller({});
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
@@ -1254,6 +1255,15 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._tempItem = null;
         this._goToNextAfterExpand = true;
 
+    },
+    _canChangeMarker(key: CrudEntityKey): boolean {
+        // TODO: отрефакторить после наследования (TreeControl <- BaseControl)
+        //  Нужно вызывать TreeControl::changeMarkedKey, который переопределит BaseControl._private::changeMarkedKey
+        if (this._options.markerMoveMode === 'leaves') {
+            const item = this._children.baseControl.getViewModel().getItemBySourceKey(key);
+            return !item || item.isNode() === null;
+        }
+        return true;
     },
     getNextItem(key: CrudEntityKey, model?): Model {
         const listModel = model || this._children.baseControl.getViewModel();

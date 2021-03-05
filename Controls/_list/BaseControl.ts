@@ -2758,7 +2758,8 @@ const _private = {
 
     changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey, shouldFireEvent: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
-        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent) {
+        const canChangeMarker = !self._options.canChangeMarker || self._options.canChangeMarker instanceof Function && self._options.canChangeMarker(newMarkedKey);
+        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent || !canChangeMarker) {
             return newMarkedKey;
         }
 
