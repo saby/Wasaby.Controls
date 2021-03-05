@@ -658,7 +658,7 @@ export default abstract class TileItem<T extends Model = Model> {
         return classes;
     }
 
-    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer', templateMarker?: boolean, templateShadowVisibility): string {
+    getItemClasses(itemType: string = 'default', templateClickable?: boolean, hasTitle?: boolean, cursor: string = 'pointer', templateMarker?: boolean, templateShadowVisibility?: string, border?: boolean): string {
         let classes = `controls-TileView__item controls-TileView__item_theme-${this.getTheme()} controls-ListView__itemV`;
         if (templateClickable !== false) {
             classes += ` controls-ListView__itemV_cursor-${cursor}`;
@@ -678,6 +678,8 @@ export default abstract class TileItem<T extends Model = Model> {
                 break;
             case 'rich':
                 classes += ' controls-TileView__richTemplate_item';
+                classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}_theme-${this.getTheme()}`;
+                classes += this.getMarkerClasses(templateMarker, border);
                 break;
             case 'preview':
                 classes += ' controls-TileView__previewTemplate';
@@ -696,11 +698,7 @@ export default abstract class TileItem<T extends Model = Model> {
                 if (this.isActive()) {
                     classes += ` controls-TileView__smallTemplate_item_active_theme-${this.getTheme()}`;
                 }
-                if (this.shouldDisplayMarker(templateMarker)) {
-                    classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-${this.getTheme()}`;
-                } else {
-                    classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
-                }
+                classes += this.getMarkerClasses(templateMarker, border);
                 classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}_theme-${this.getTheme()}`;
                 break;
         }
@@ -731,10 +729,11 @@ export default abstract class TileItem<T extends Model = Model> {
     getWrapperClasses(
         itemType: string = 'default',
         templateShadowVisibility?: string,
-        templateMarker?: boolean,
+        marker?: boolean,
         highlightOnHover?: boolean,
         backgroundColorStyle?: string,
-        height?: string
+        height?: string,
+        border?: boolean
     ): string {
         if (itemType === 'small') {
             return this.canShowActions() ? 'controls-ListView__item_showActions' : '';
@@ -757,11 +756,7 @@ export default abstract class TileItem<T extends Model = Model> {
             classes += ` controls-TileView__itemContent_background_${backgroundColorStyle}${theme}`;
         }
 
-        if (this.shouldDisplayMarker(templateMarker)) {
-            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-${this.getTheme()}`;
-        } else {
-            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
-        }
+        classes += this.getMarkerClasses(marker, border);
 
         classes += ` controls-ListView__item_shadow_${this.getShadowVisibility(templateShadowVisibility)}${theme}`;
         if (this.isActive()) {
@@ -831,6 +826,20 @@ export default abstract class TileItem<T extends Model = Model> {
         if (!silent) {
             this._notifyItemChangeToOwner('fixedPosition');
         }
+    }
+
+    getMarkerClasses(marker?: boolean, border?: boolean): string {
+        let classes = '';
+
+        if (this.shouldDisplayMarker(marker)) {
+            classes += ` controls-TileView__item_withMarker controls-TileView__item_withMarker_theme-${this.getTheme()}`;
+        } else if (border !== false) {
+            classes += ` controls-TileView__item_withoutMarker controls-TileView__item_withoutMarker_theme-${this.getTheme()}`;
+        } else {
+            classes += ` controls-TileView__item_withoutBorder controls-TileView__item_withoutBorder_theme-${this.getTheme()}`;
+        }
+
+        return classes;
     }
 
     // endregion Styles
