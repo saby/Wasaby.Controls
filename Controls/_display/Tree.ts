@@ -908,7 +908,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             nearbyItem = enumerator.getCurrent();
 
             // если мы пришли сюда, когда в enumerator ещё ничего нет, то nearbyItem будет undefined
-            if (skipGroups && !!nearbyItem && nearbyItem['[Controls/_display/GroupItem]']) {
+            // если nearbyItem не может быть выделен, то он и не может стать текущим
+            if (!!nearbyItem && !nearbyItem.SelectableItem) {
                 nearbyItem = undefined;
                 continue;
             }

@@ -3,7 +3,6 @@ import IMenuPopup, {IMenuPopupOptions} from 'Controls/_menu/interface/IMenuPopup
 import PopupTemplate = require('wml!Controls/_menu/Popup/template');
 import {default as searchHeaderTemplate} from 'Controls/_menu/Popup/searchHeaderTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as mStubs from 'Core/moduleStubs';
 import {default as headerTemplate} from 'Controls/_menu/Popup/headerTemplate';
 import {Controller as ManagerController, IStickyPopupOptions} from 'Controls/popup';
 import {RecordSet} from 'Types/collection';
@@ -15,10 +14,9 @@ import scheduleCallbackAfterRedraw from 'Controls/Utils/scheduleCallbackAfterRed
 import HoverController from 'Controls/_menu/HoverController';
 
 const SEARCH_DEPS = [
-    'Controls/browser:Browser',
-    'Controls/list:Container',
-    'Controls/search:Input',
-    'Controls/search:InputContainer'
+    'Controls/browser',
+    'Controls/list',
+    'Controls/search'
 ];
 
 /**
@@ -73,7 +71,10 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
             }
         }
         if (options.searchParam) {
-            return mStubs.require(SEARCH_DEPS);
+            const depPromise = SEARCH_DEPS.map((dep) => {
+                return import(dep)
+            });
+            return Promise.all(depPromise);
         }
     }
 

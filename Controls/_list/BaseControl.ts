@@ -218,6 +218,7 @@ interface IIndicatorConfig {
     theme: string;
     isPortionedSearchInProgress: boolean;
     attachLoadTopTriggerToNull: boolean;
+    attachLoadTopTriggerToNullOption: boolean;
 }
 
 interface IBeginEditOptions {
@@ -2248,13 +2249,13 @@ const _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull}: IIndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull, attachLoadTopTriggerToNullOption}: IIndicatorConfig
     ): string {
         const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
            ? 'attachToNull'
            : loadingIndicatorState;
 
-        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNull && detection.isIE;
+        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNullOption;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${state}`, !isAbsoluteTopIndicator)
             .add('controls-BaseControl__loadingIndicator__state-up-absolute', isAbsoluteTopIndicator)
@@ -5678,6 +5679,13 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item, domEvent);
         }
 
+        if (this._mouseDownItemKey === key) {
+            // TODO избавиться по задаче https://online.sbis.ru/opendoc.html?guid=7f63bbd1-3cb9-411b-81d7-b578d27bf289
+            // Ключ перетаскиваемой записи мы запоминаем на mouseDown, но днд начнется только после смещения на 4px и не факт, что он вообще начнется
+            // Если сработал mouseUp, то днд точно не сработает и draggedKey нам уже не нужен
+            this._draggedKey = null;
+        }
+
         this._mouseDownItemKey = undefined;
         this._onLastMouseUpWasDrag = this._dndListController && this._dndListController.isDragging();
         this._notify('itemMouseUp', [itemData.item, domEvent.nativeEvent]);
@@ -6309,7 +6317,8 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             loadingIndicatorState: indicatorState,
             theme: this._options.theme,
             isPortionedSearchInProgress: !!this._portionedSearchInProgress,
-            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull
+            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+            attachLoadTopTriggerToNullOption: this._options.attachLoadTopTriggerToNull
         });
     }
 
@@ -6443,7 +6452,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     }
 
     _documentDragStart(dragObject): void {
-        if (this._options.readOnly || !this._options.itemsDragNDrop) {
+        if (this._options.readOnly || !this._options.itemsDragNDrop || !(dragObject && dragObject.entity)) {
             return;
         }
 

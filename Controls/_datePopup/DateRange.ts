@@ -33,6 +33,7 @@ export default class DateRange extends Control<IControlOptions> {
     private _monthsPosition: any;
 
     private _singleDayHover: boolean = true;
+    private _shouldUpdateMonthsPosition: boolean = true;
 
     constructor(options) {
         super(options);
@@ -50,9 +51,7 @@ export default class DateRange extends Control<IControlOptions> {
     protected _beforeMount(options): void {
         if (options.position) {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
-            // При открытии календаря будут видны сразу 2 месяца. Поставим маркер на нижний видимый месяц, чтобы
-            // избежать моргания маркера.
-            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth() + 1);
+            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth());
             this._markedKey = this._dateToId(markedKeyDate);
         }
         this._updateView(options);
@@ -64,6 +63,22 @@ export default class DateRange extends Control<IControlOptions> {
 
     protected _beforeUnmount(): void {
         this._rangeModel.destroy();
+    }
+
+    protected _monthObserverHandler(event, entries): void {
+        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
+        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
+        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
+        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
+            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
+                if (this._shouldUpdateMonthsPosition ) {
+                    this._monthsPosition = new Date(entries.data.getFullYear(), 0);
+                } else {
+                    this._shouldUpdateMonthsPosition = true;
+                }
+            }
+            this._markedKey = this._dateToId(entries.data);
+        }
     }
 
     protected _monthCaptionClick(e: SyntheticEvent, yearDate: Date, month: number): void {
@@ -111,8 +126,7 @@ export default class DateRange extends Control<IControlOptions> {
     }
 
     protected _scrollToMonth(e, year, month): void {
-        // При клике на месяц позиционируем его снизу, по аналогии с работй маркера при инициализации
-        this._notifyPositionChanged(new this._options.dateConstructor(year, month - 1));
+        this._notifyPositionChanged(new this._options.dateConstructor(year, month));
         e.stopPropagation();
     }
 
@@ -122,11 +136,6 @@ export default class DateRange extends Control<IControlOptions> {
 
    protected _onPositionChanged(e: Event, position: Date): void {
         this._position = position;
-       const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
-       this._markedKey = this._dateToId(markedKeyDate);
-       if (markedKeyDate.getFullYear() !== this._monthsPosition.getFullYear()) {
-           this._monthsPosition = new Date(markedKeyDate.getFullYear(), 0);
-       }
         this._notifyPositionChanged(position);
     }
 
@@ -144,6 +153,10 @@ export default class DateRange extends Control<IControlOptions> {
         const needChangeToNextYear = position.getFullYear() - 1 === this._position.getFullYear();
 
         if (needChangeToPrevYear) {
+            // При смене позиции выстрелит monthsObserver и т.к. при скролле вверх позиция маркера не будет совпадать
+            // с позицией MonthList, мы прискроллимся к году, на котором находится маркер, что будет выглядеть как
+            // прыжок. Не будем обновлять позицию при первом вызове обсервера
+            this._shouldUpdateMonthsPosition = false;
             newPosition = new Date(position.getFullYear() + 1, 0);
             positionChanged = true;
         }

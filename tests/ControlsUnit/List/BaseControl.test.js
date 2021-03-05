@@ -6332,7 +6332,8 @@ define([
                hasPaging: hasPaging,
                loadingIndicatorState: indicatorState,
                theme,
-               isPortionedSearchInProgress
+               isPortionedSearchInProgress,
+               attachLoadTopTriggerToNullOption: true
             });
          }
 
@@ -7704,6 +7705,11 @@ define([
 
                baseControl._documentDragging = false;
             });
+         });
+
+         it('skip drag start if no drag entity', () => {
+            baseControl._documentDragStart({ entity: null }, 1);
+            assert.isFalse(baseControl._documentDragging);
          });
 
          it('drag start', () => {

@@ -4,16 +4,13 @@ import {TSelectedKeys, IOptions} from 'Controls/interface';
 import {default as IMenuControl, IMenuControlOptions} from 'Controls/_menu/interface/IMenuControl';
 import {RecordSet, List} from 'Types/collection';
 import {ICrudPlus, PrefetchProxy, QueryWhere} from 'Types/source';
-import * as Clone from 'Core/core-clone';
-import * as Merge from 'Core/core-merge';
 import {Collection, CollectionItem, Search} from 'Controls/display';
-import Deferred = require('Core/Deferred');
 import ViewTemplate = require('wml!Controls/_menu/Control/Control');
 import * as groupTemplate from 'wml!Controls/_menu/Render/groupTemplate';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {Model} from 'Types/entity';
 import {factory} from 'Types/chain';
-import {isEqual} from 'Types/object';
+import {isEqual, merge} from 'Types/object';
 import {groupConstants as constView} from 'Controls/list';
 import {_scrollContext as ScrollData} from 'Controls/scroll';
 import {TouchContextField} from 'Controls/context';
@@ -90,7 +87,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
 
     protected _beforeMount(options: IMenuControlOptions,
                            context?: object,
-                           receivedState?: void): Deferred<RecordSet> {
+                           receivedState?: void): Promise<RecordSet> {
         this._expandedItemsFilter = this._expandedItemsFilterCheck.bind(this);
         this._additionalFilter = MenuControl._additionalFilterCheck.bind(this, options);
         this._limitHistoryFilter = this._limitHistoryCheck.bind(this);
@@ -568,11 +565,11 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     selectorDialogResult(event, result);
                     opener.close();
                 }
-            }
+            },
+            ...selectorTemplate.templateOptions
         };
-        Merge(templateConfig, selectorTemplate.templateOptions);
 
-        return Merge({
+        return {
             // Т.к само меню закроется после открытия стекового окна,
             // в опенер нужно положить контрол, который останется на странице.
             opener: this._options.selectorOpener,
@@ -585,8 +582,9 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
                     selectorDialogResult(event, result);
                     opener.close();
                 }
-            }
-        }, selectorTemplate.popupOptions || {});
+            },
+            ...selectorTemplate.popupOptions
+        };
     }
 
     private _changeSelection(key: string|number|null): void {
@@ -795,7 +793,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     }
 
     private _loadExpandedItems(options: IMenuControlOptions): void {
-        const loadConfig: IMenuControlOptions = Clone(options);
+        const loadConfig: IMenuControlOptions = merge({}, options);
 
         delete loadConfig.navigation;
         this._sourceController = null;
@@ -806,8 +804,8 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         });
     }
 
-    private _loadItems(options: IMenuControlOptions): Deferred<RecordSet> {
-        const filter: QueryWhere = Clone(options.filter) || {};
+    private _loadItems(options: IMenuControlOptions): Promise<RecordSet> {
+        const filter: QueryWhere = merge({}, options.filter);
         filter[options.parentProperty] = options.root;
         const sourceController = this._getSourceController(options);
         sourceController.setFilter(filter);

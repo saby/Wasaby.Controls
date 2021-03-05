@@ -23,7 +23,7 @@ describe('Controls/_display/collection/UpdateOption', () => {
 
     // Коллекция  не может быть создана без данных и нельзя установить пустую коллекцию.
     // Поэтому проверяем только случай когда коллекция была и вызвали установку новой коллекции.
-    it('1. Should update subscription on property change of record set. Unsubscribe from old and subscribe to new.', () => {
+    it('1. Should update subscription on property change of record set. Unsubscribe from old and subscribe to new RecordSet.', () => {
         const oldRecordSet = new RecordSet({rawData: []});
         const newRecordSet = new RecordSet({rawData: []});
 
@@ -75,6 +75,26 @@ describe('Controls/_display/collection/UpdateOption', () => {
             collection.setCollection(newRecordSet);
 
             assert.isTrue(unsubscribeSpy.calledWith('onPropertyChange'));
+        });
+
+        it('3. [with meta-results] -> [with meta-results]. Should unsubscribe from old meta results and subscribe to new.', () => {
+            const oldResults = createMetaResults();
+            const newResults = createMetaResults();
+            const oldRecordSet = createRecordSet({results: oldResults});
+            const newRecordSet = createRecordSet({results: newResults});
+
+            const collection = new Collection({
+                keyProperty: 'id',
+                collection: oldRecordSet
+            });
+
+            const unsubscribeSpy = sandbox.spy(oldResults, 'unsubscribe');
+            const subscribeSpy = sandbox.spy(newResults, 'subscribe');
+
+            collection.setCollection(newRecordSet);
+
+            assert.isTrue(unsubscribeSpy.calledWith('onPropertyChange'));
+            assert.isTrue(subscribeSpy.calledWith('onPropertyChange'));
         });
     });
 
