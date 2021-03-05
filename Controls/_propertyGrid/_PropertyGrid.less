@@ -13,10 +13,19 @@
 
 .controls-PropertyGrid__editor-caption_theme-@{themeName} {
    display: inline-flex;
-   color: @label_text-color;
    cursor: default;
    white-space: nowrap;
    max-width: 100%;
+}
+
+.controls-PropertyGrid__editor_nodeCaption {
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.controls-PropertyGrid__editor_nodeCaption_wrapper_theme-@{themeName} {
+   height: @inline_height_default_label;
+   align-items: center;
 }
 
 .controls-PropertyGrid__editor-caption_withEditor {
