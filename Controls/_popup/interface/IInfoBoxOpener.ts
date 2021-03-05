@@ -12,7 +12,7 @@ import {List} from 'Types/collection';
  * @author Красильников А.С.
  */
 
-export interface IInfoBoxPopupOptions extends IValidationStatusOptions {
+export interface IInfoBoxPopupOptions extends IValidationStatusOptions, IControlOptions {
     target?: HTMLElement | EventTarget | Control;
     opener?: Control<IControlOptions, unknown>;
     maxWidth?: number;
@@ -30,7 +30,6 @@ export interface IInfoBoxPopupOptions extends IValidationStatusOptions {
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     zIndex?: number; //TODO Compatible
     position?: string; //TODO старое, надо удалить
-    theme?: string;
 }
 
 export interface IInfoBoxOpener {
