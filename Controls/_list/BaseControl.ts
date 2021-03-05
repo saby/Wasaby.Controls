@@ -3129,7 +3129,6 @@ const _private = {
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/_interface/INavigation
  * @mixes Controls/_interface/IFilterChanged
- * @mixes Controls/interface/IHighlighter
  * @mixes Controls/interface/IEditableList
  * @mixes Controls/_list/BaseControl/Styles
  * @mixes Controls/_list/interface/IList
