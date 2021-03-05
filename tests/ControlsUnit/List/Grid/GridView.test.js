@@ -533,6 +533,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
          describe('update sizes', () => {
             it('on view resize', async () => {
+               gridView._beforeMount(cfg)
                gridView.saveOptions(cfg);
                gridView._afterMount();
 
@@ -550,6 +551,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             });
 
             it('on list collection changed', async () => {
+               gridView._beforeMount(cfg)
                gridView.saveOptions(cfg);
                gridView._afterMount();
 
@@ -567,6 +569,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
             });
 
             it('on toggle multiselect', async () => {
+               gridView._beforeMount(cfg)
                gridView.saveOptions({...cfg, multiSelectVisibility: 'hidden'});
                gridView._afterMount();
 
@@ -692,7 +695,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
                   left: 0
                });
 
-
+               gridView._beforeMount(cfg)
                gridView.saveOptions(cfg);
                await gridView._afterMount();
                gridView._notify = (eName, args) => {
