@@ -761,7 +761,7 @@ const _private = {
                 // то на событие reset список будет пустой и нам некуда будет ставить маркер.
                 if (_private.hasMarkerController(self) && self._portionedSearchInProgress) {
                     const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
-                    _private.changeMarkedKey(self, newMarkedKey);
+                    self._changeMarkedKey(newMarkedKey);
                 }
                 self._needScrollToFirstItem = false;
                 if (!self._hasMoreData(self._sourceController, direction)) {
@@ -1689,7 +1689,7 @@ const _private = {
                         break;
                 }
 
-                _private.changeMarkedKey(self, newMarkedKey);
+                self._changeMarkedKey(newMarkedKey);
             }
 
             // will updated after render
@@ -2584,7 +2584,7 @@ const _private = {
             const controller = _private.getMarkerController(self);
             const newMarkedKey = controller.getNextMarkedKey();
             if (newMarkedKey !== controller.getMarkedKey()) {
-                const result = _private.changeMarkedKey(self, newMarkedKey);
+                const result = self._changeMarkedKey(newMarkedKey);
                 if (result instanceof Promise) {
                     /**
                      * Передавая в force true, видимый элемент подскролливается наверх.
@@ -2613,7 +2613,7 @@ const _private = {
             const controller = _private.getMarkerController(self);
             const newMarkedKey = controller.getPrevMarkedKey();
             if (newMarkedKey !== controller.getMarkedKey()) {
-                const result = _private.changeMarkedKey(self, newMarkedKey);
+                const result = self._changeMarkedKey(newMarkedKey);
                 if (result instanceof Promise) {
                     result.then((key) => _private.scrollToItem(self, key, true));
                 } else if (result !== undefined) {
@@ -2629,14 +2629,14 @@ const _private = {
         }
     },
 
-    setMarkerAfterScrolling(self: typeof BaseControl, scrollTop: number): void {
+    setMarkerAfterScrolling(self: BaseControl, scrollTop: number): void {
         // TODO вручную обрабатывать pagedown и делать stop propagation
         self._setMarkerAfterScroll = false;
         if (self._options.markerVisibility !== 'hidden' && self._children.listView) {
             const itemsContainer = self._children.listView.getItemsContainer();
             const item = self._scrollController.getFirstVisibleRecord(itemsContainer, self._container, scrollTop);
             const markedKey = _private.getMarkerController(self).getSuitableMarkedKey(item);
-            _private.changeMarkedKey(self, markedKey);
+            self._changeMarkedKey(markedKey);
         }
     },
 
@@ -2644,43 +2644,6 @@ const _private = {
     delayedSetMarkerAfterScrolling: debounce((self, scrollTop) => {
         _private.setMarkerAfterScrolling(self, self._scrollParams ? self._scrollParams.scrollTop : scrollTop);
     }, SET_MARKER_AFTER_SCROLL_DELAY),
-
-    changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey, shouldFireEvent: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
-        const markerController = _private.getMarkerController(self);
-        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent) {
-            return newMarkedKey;
-        }
-
-        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = self._notify('beforeMarkedKeyChanged', [newMarkedKey]);
-
-        const handleResult = (key) => {
-            // Прикладники могут как передавать значения в markedKey, так и передавать undefined.
-            // И при undefined нужно делать так, чтобы markedKey задавался по нашей логике.
-            // Это для трюка от Бегунова когда делают bind на переменную, которая изначально undefined.
-            // В таком случае, чтобы не было лишних синхронизаций - мы работаем по нашему внутреннему state.
-            if (self._options.markedKey === undefined) {
-                markerController.setMarkedKey(key);
-            }
-            self._notify('markedKeyChanged', [key]);
-        };
-
-        let result = eventResult;
-        if (eventResult instanceof Promise) {
-            eventResult.then((key) => {
-                handleResult(key);
-                return key;
-            });
-        } else if (eventResult !== undefined && self._environment) {
-            // Если не был инициализирован environment, то _notify будет возвращать null,
-            // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
-            handleResult(eventResult);
-        } else {
-            result = newMarkedKey;
-            handleResult(newMarkedKey);
-        }
-
-        return result;
-    },
 
     // endregion
 
@@ -3772,7 +3735,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (_private.hasMarkerController(this)) {
             const newMarkedKey = _private.getMarkerController(this).getMarkedKey();
             if (newMarkedKey !== this._options.markedKey) {
-                _private.changeMarkedKey(this, newMarkedKey, true);
+                this._changeMarkedKey(newMarkedKey, true);
             }
         }
 
@@ -4096,7 +4059,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                 // поэтому нужно пересчитать markedKey
 
                 const newMarkedKey = markerController.calculateMarkedKeyForVisible();
-                _private.changeMarkedKey(self, newMarkedKey);
+                self._changeMarkedKey(newMarkedKey);
             }
         } else if (_private.hasMarkerController(this) && newOptions.markerVisibility === 'hidden') {
             _private.getMarkerController(this).destroy();
@@ -4934,12 +4897,49 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     // TODO удалить, когда будет выполнено наследование контролов (TreeControl <- BaseControl)
     setMarkedKey(key: CrudEntityKey): void {
         if (this._options.markerVisibility !== 'hidden') {
-            _private.changeMarkedKey(this, key);
+            this._changeMarkedKey(key);
         }
     }
 
     getMarkerController(): MarkerController {
         return _private.getMarkerController(this, this._options);
+    }
+
+    protected _changeMarkedKey(newMarkedKey: CrudEntityKey, shouldFireEvent: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
+        const markerController = _private.getMarkerController(this);
+        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent) {
+            return newMarkedKey;
+        }
+
+        const eventResult: Promise<CrudEntityKey>|CrudEntityKey = this._notify('beforeMarkedKeyChanged', [newMarkedKey]);
+
+        const handleResult = (key) => {
+            // Прикладники могут как передавать значения в markedKey, так и передавать undefined.
+            // И при undefined нужно делать так, чтобы markedKey задавался по нашей логике.
+            // Это для трюка от Бегунова когда делают bind на переменную, которая изначально undefined.
+            // В таком случае, чтобы не было лишних синхронизаций - мы работаем по нашему внутреннему state.
+            if (this._options.markedKey === undefined) {
+                markerController.setMarkedKey(key);
+            }
+            this._notify('markedKeyChanged', [key]);
+        };
+
+        let result = eventResult;
+        if (eventResult instanceof Promise) {
+            eventResult.then((key) => {
+                handleResult(key);
+                return key;
+            });
+        } else if (eventResult !== undefined && this._environment) {
+            // Если не был инициализирован environment, то _notify будет возвращать null,
+            // но это значение используется, чтобы сбросить маркер. Актуально для юнитов
+            handleResult(eventResult);
+        } else {
+            result = newMarkedKey;
+            handleResult(newMarkedKey);
+        }
+
+        return result;
     }
 
     protected _shouldMoveMarkerOnScrollPaging(): boolean {
@@ -6615,7 +6615,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                 // когда перетаскиваем запись в свернутый узел
                 if (!moveToCollapsedNode) {
                     const draggedKey = draggableItem.getContents().getKey();
-                    _private.changeMarkedKey(this, draggedKey);
+                    this._changeMarkedKey(draggedKey);
                 }
             }
 

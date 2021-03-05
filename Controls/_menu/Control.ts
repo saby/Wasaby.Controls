@@ -21,6 +21,7 @@ import {StickyOpener, StackOpener} from 'Controls/popup';
 import {TKey} from 'Controls/_menu/interface/IMenuControl';
 import { MarkerController, Visibility as MarkerVisibility } from 'Controls/marker';
 import {FlatSelectionStrategy, SelectionController, IFlatSelectionStrategyOptions} from 'Controls/multiselection';
+import 'css!Controls/menu';
 
 interface IMenuPosition {
     left: number;
@@ -50,7 +51,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
     readonly '[Controls/_menu/interface/IMenuControl]': boolean = true;
     protected _template: TemplateFunction = ViewTemplate;
 
-    _children: {
+    protected _children: {
         Sticky: StickyOpener
     };
 
@@ -960,7 +961,7 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
             theme: options.theme,
             actionAlignment: 'horizontal',
             actionCaptionPosition: 'none',
-            itemActionsClass: `controls-Menu__itemActions_position_rightCenter_theme-${options.theme}`,
+            itemActionsClass: `controls-Menu__itemActions_position_rightCenter`,
             iconSize: editingConfig ? 's' : 'm'
         });
     }
@@ -998,8 +999,6 @@ export default class MenuControl extends Control<IMenuControlOptions> implements
         }
         return this._errorController;
     }
-
-    static _theme: string[] = ['Controls/menu'];
 
     private static _isPinIcon(target: EventTarget): boolean {
         return !!((target as HTMLElement)?.closest('.controls-Menu__iconPin'));

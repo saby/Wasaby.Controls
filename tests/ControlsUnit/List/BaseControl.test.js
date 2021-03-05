@@ -8145,14 +8145,14 @@ define([
             });
          });
 
-         describe('_private.changeMarkedKey', () => {
+         describe('_changeMarkedKey', () => {
             it('notify return promise', () => {
                baseControl._notify = (eventName, params) => {
                   assert.deepEqual(params, [3]);
                   return Promise.resolve(3);
                };
 
-               return lists.BaseControl._private.changeMarkedKey(baseControl, 3).then((newMarkedKey) => {
+               return baseControl._changeMarkedKey(3).then((newMarkedKey) => {
                   assert.equal(newMarkedKey, 3);
                   assert.isTrue(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
                });
@@ -8168,7 +8168,7 @@ define([
                   return 2;
                };
 
-               lists.BaseControl._private.changeMarkedKey(baseControl, 3);
+               baseControl._changeMarkedKey(3);
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
@@ -8178,7 +8178,7 @@ define([
                   assert.deepEqual(params, [3]);
                };
 
-               lists.BaseControl._private.changeMarkedKey(baseControl, 3);
+               baseControl._changeMarkedKey(3);
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(3).isMarked());
             });
 
@@ -8187,7 +8187,7 @@ define([
                baseControl._notify = () => {
                   notifyCalled = true;
                };
-               lists.BaseControl._private.changeMarkedKey(baseControl, undefined);
+               baseControl._changeMarkedKey(undefined);
                assert.isFalse(notifyCalled);
             });
 
@@ -8199,7 +8199,7 @@ define([
                baseControl._notify = () => {
                   notifyCalled = true;
                };
-               lists.BaseControl._private.changeMarkedKey(baseControl, 1);
+               baseControl._changeMarkedKey(1);
                assert.isFalse(notifyCalled);
             });
          });
