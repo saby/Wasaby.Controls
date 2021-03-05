@@ -171,6 +171,9 @@ const _private = {
                         }
                         self._children.baseControl.hideIndicator();
                     }).catch((error: Error) => {
+                        if (error.isCanceled) {
+                            return;
+                        }
                         _private.processError(self, error);
                         // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
