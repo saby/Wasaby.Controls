@@ -164,7 +164,7 @@ export default class MonthsSource extends Memory {
             return true;
         }
         for (const range of this._displayedRanges) {
-            if (date >= range[0] && (date <= range[1] || !range[1])) {
+            if ((date >= range[0] || range[0] === null) && (date <= range[1] || !range[1])) {
                 return true;
             }
         }
@@ -175,7 +175,8 @@ export default class MonthsSource extends Memory {
         let range: Date[] = [];
         for (let i = 0; i < this._displayedRanges.length; i++) {
             range = this._displayedRanges[i];
-            if (date < range[0]) {
+            // После 1970 года проверка на то, что дата больше чем null не работает
+            if (date < range[0] && range[0] !== null) {
                 return [
                     i === 0 ? null : this._shiftRange(this._displayedRanges[i - 1][1], 1),
                     this._shiftRange(range[0], -1)
