@@ -66,7 +66,7 @@ export default class extends Control {
                 caption: '',
                 value: '1',
                 textValue: 'Мужской',
-                editorTemplateName: 'Controls/filterPanel:ToggleTumbler',
+                editorTemplateName: 'Controls/filterPanel:TumblerEditor',
                 editorOptions: {
                     items: new RecordSet({
                         rawData: [

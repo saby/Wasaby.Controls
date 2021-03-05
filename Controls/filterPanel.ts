@@ -11,5 +11,5 @@
 export {default as View} from './_filterPanel/View';
 export {default as NumberRangeEditor} from './_filterPanel/Editors/NumberRange';
 export {default as ListEditor} from './_filterPanel/Editors/List';
-export {default as ToggleTumbler} from './_filterPanel/Editors/ToggleTumbler';
+export {default as TumblerEditor} from './_filterPanel/Editors/Tumbler';
 export {default as Container} from './_filterPanel/View/Container';
