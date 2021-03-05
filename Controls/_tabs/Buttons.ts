@@ -314,7 +314,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         return {
             style: 'primary',
             inlineHeight: 's',
-            markerThickness: 's',
+            markerThickness: 'l',
             borderVisible: true,
             separatorVisible: true,
             displayProperty: 'title'
