@@ -534,6 +534,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
          describe('update sizes', () => {
             it('on view resize', async () => {
                gridView.saveOptions(cfg);
+               gridView._beforeMount(cfg);
                gridView._afterMount();
 
                await new Promise((resolve) => {
@@ -551,6 +552,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
             it('on list collection changed', async () => {
                gridView.saveOptions(cfg);
+               gridView._beforeMount(cfg);
                gridView._afterMount();
 
                await new Promise((resolve) => {
@@ -568,6 +570,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
             it('on toggle multiselect', async () => {
                gridView.saveOptions({...cfg, multiSelectVisibility: 'hidden'});
+               gridView._beforeMount(cfg);
                gridView._afterMount();
 
                assert.equal(gridView._containerSize, 100);
@@ -694,6 +697,7 @@ define(['Controls/grid', 'Types/collection'], function(gridMod, collection) {
 
 
                gridView.saveOptions(cfg);
+               gridView._beforeMount(cfg);
                await gridView._afterMount();
                gridView._notify = (eName, args) => {
                   if (eName === 'itemSwipe') {

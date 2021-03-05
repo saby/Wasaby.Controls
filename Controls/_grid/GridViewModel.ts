@@ -271,9 +271,9 @@ var
         },
 
         isFixedCell: function(params) {
-            const { hasMultiSelectColumn, stickyColumnsCount, columnIndex, rowIndex, isHeader, isMultiHeader, endColumn } = params;
+            const { hasMultiSelectColumn, stickyColumnsCount, columnIndex, rowIndex, isHeader, isMultiHeader, endColumn, stickyLadderCellsCount } = params;
             const
-                columnOffset = hasMultiSelectColumn ? 1 : 0;
+                columnOffset = (hasMultiSelectColumn ? 1 : 0) + (stickyLadderCellsCount || 0);
 
             if (isHeader && typeof endColumn !== 'undefined') {
                 // endColumn - конфиг GridLayout, он всегда больше на 1.
@@ -294,7 +294,10 @@ var
         // сделаем перерисовку столбцов после установки isColumnScrollVisible
         getHeaderZIndex(params): number {
             if (params.columnScroll) {
-                return _private.isFixedCell(params) ? FIXED_HEADER_ZINDEX : STICKY_HEADER_ZINDEX;
+                // Если есть лесенка, то z-index заголовка стики-колонки надо увеличить на 1
+                return _private.isFixedCell(params) ?
+                    FIXED_HEADER_ZINDEX + (params.stickyLadderCellsCount ? 1 : 0) :
+                    STICKY_HEADER_ZINDEX;
             } else {
                 // Пока в таблице нет горизонтального скролла, шапка ен может быть проскролена по горизонтали.
                 return FIXED_HEADER_ZINDEX;
@@ -550,7 +553,8 @@ var
                 stopIndex,
                 display: self.getDisplay(),
                 columns: self._columns,
-                stickyColumn: self._options.stickyColumn
+                stickyColumn: self._options.stickyColumn,
+                hasColumnScroll: self._options.columnScroll
             });
             return newLadder;
         },
@@ -1082,6 +1086,7 @@ var
                   isMultiHeader: this._isMultiHeader,
                   hasMultiSelectColumn,
                   stickyColumnsCount: this._options.stickyColumnsCount,
+                  stickyLadderCellsCount: this.stickyLadderCellsCount(),
                    columnScroll: this._options.columnScroll
                });
             }
@@ -1098,7 +1103,8 @@ var
                     isHeader: true,
                     isMultiHeader: this._isMultiHeader,
                     hasMultiSelectColumn,
-                    stickyColumnsCount: this._options.stickyColumnsCount
+                    stickyColumnsCount: this._options.stickyColumnsCount,
+                    stickyLadderCellsCount: this.stickyLadderCellsCount()
                 };
                 cellClasses += _private.getColumnScrollCalculationCellClasses(params, this._options.theme);
                 cellClasses += _private.getColumnScrollCellClasses(params, this._options.theme);
