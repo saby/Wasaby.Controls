@@ -10,9 +10,7 @@ import TileCollection from './display/TileCollection';
 import {SyntheticEvent} from 'UI/Vdom';
 import {Model} from 'Types/entity';
 import {constants} from 'Env/Env';
-import {debounce} from 'Types/function';
-
-const HOVERED_ITEM_CHANGE_DELAY = 150;
+import {getItemSize} from './utils/imageUtil';
 
 export default class TileView extends ListView {
     protected _template: TemplateFunction = template;
@@ -239,7 +237,14 @@ export default class TileView extends ListView {
         }
 
         if (this._needUpdateActions(item, event)) {
-            const itemWidth = event.target.closest('.controls-TileView__item').clientWidth;
+            let itemWidth;
+            const itemContainer = event.target.closest('.controls-TileView__item');
+            if (event.target.closest('.js-controls-TileView__withoutZoom')) {
+                itemWidth = itemContainer.clientWidth;
+            } else {
+                const itemSizes = getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
+                itemWidth = itemSizes.width;
+            }
             this._notify('updateItemActionsOnItem', [item.getContents().getKey(), itemWidth], { bubbling: true });
         }
     }
