@@ -1179,17 +1179,21 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             this._markedLeaf = newMarkedLeaf;
         }
 
-        // TODO: отрефакторить после наследования (TreeControl <- BaseControl) Нужно вызывать BaseControl._private::changeMarkedKey
-        if (markerController.getMarkedKey() !== this._currentItem) {
-            markerController.setMarkedKey(this._currentItem);
-            if (this._isMounted) {
-                this._notify('markedKeyChanged', [this._currentItem]);
-            }
+        if (this._isMounted) {
+            this._changeMarkedKey(this._currentItem);
         }
 
         this._tempItem = null;
         this._goToNextAfterExpand = true;
+    }
 
+    protected _changeMarkedKey(newMarkedKey: CrudEntityKey, shouldFireEvent: boolean = false): Promise<CrudEntityKey> | CrudEntityKey {
+        const item = this.getViewModel().getItemBySourceKey(newMarkedKey);
+        if (this._options.markerMoveMode === 'leaves' && (item && item.isNode() !== null)) {
+            return;
+        }
+
+        return super._changeMarkedKey(newMarkedKey, shouldFireEvent);
     }
 
     getNextItem(key: CrudEntityKey, model?): Model {
