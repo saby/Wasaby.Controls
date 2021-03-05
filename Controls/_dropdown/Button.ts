@@ -25,6 +25,11 @@ export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHei
    menuPopupTrigger?: 'click' | 'hover';
 }
 
+// При menuPopupTrigger установленным в значение hover появляется проблема:
+// Если при закрытии menuPopup, курсор сразу оказывается на кнопке, то menuPopup открывается повторно.
+// Чтобы этого избежать, задаем таймаут
+const OPEN_MENU_ON_HOVER_TIMEOUT = 200;
+
 /**
  * Контрол «Кнопка с меню».
  *
@@ -100,6 +105,7 @@ export default class Button extends BaseDropdown {
    protected _template: TemplateFunction = template;
    protected _tmplNotify: Function = EventUtils.tmplNotify;
    protected _hasItems: boolean = true;
+   protected _isOpenMenuOnHover: boolean = false;
 
    _beforeMount(options: IButtonOptions,
                 context: object,
@@ -159,6 +165,18 @@ export default class Button extends BaseDropdown {
       };
    }
 
+    protected _onOpen(): void {
+        super._onOpen();
+        this._isOpenMenuOnHover = true;
+    }
+
+    protected _onClose(): void {
+        super._onClose();
+        setTimeout(() => {
+            this._isOpenMenuOnHover = false;
+        }, OPEN_MENU_ON_HOVER_TIMEOUT);
+    }
+
    _onItemClickHandler(result, nativeEvent) {
       //onMenuItemActivate will deleted by task https://online.sbis.ru/opendoc.html?guid=6175f8b3-4166-497e-aa51-1fdbcf496944
       const onMenuItemActivateResult = this._notify('onMenuItemActivate', [result[0], nativeEvent]);
@@ -183,7 +201,7 @@ export default class Button extends BaseDropdown {
    }
     _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
       super._handleMouseEnter(event);
-      if (this._options.menuPopupTrigger === 'hover') {
+      if (this._options.menuPopupTrigger === 'hover' && !this._isOpenMenuOnHover) {
          this.openMenu();
       }
     }
