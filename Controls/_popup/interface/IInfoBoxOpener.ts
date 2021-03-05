@@ -30,6 +30,7 @@ export interface IInfoBoxPopupOptions extends IValidationStatusOptions {
     zIndexCallback?(item: IPopupItemInfo, popupList: List<IPopupItemInfo>): number;
     zIndex?: number; //TODO Compatible
     position?: string; //TODO старое, надо удалить
+    theme?: string;
 }
 
 export interface IInfoBoxOpener {
