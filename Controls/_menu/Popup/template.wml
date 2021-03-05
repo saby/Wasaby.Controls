@@ -23,13 +23,18 @@
               iconStyle="{{_options.iconStyle}}"
               dropdownClassName="{{_options.dropdownClassName}}"
               headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
-              footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
               backgroundStyle="transparent"
               on:mouseenter="_mouseEnterHandler()"
               on:headerClick="_headerClick()"
               on:footerClick="_footerClick()">
+         <ws:footerContentTemplate>
+             <ws:if data="{{_options.footerContentTemplate || _options.footerTemplate}}">
+                 <ws:partial template="{{_options.footerContentTemplate || _options.footerTemplate}}"
+                             hoverController="{{_hoverController}}"></ws:partial>
+             </ws:if>
+         </ws:footerContentTemplate>
          <ws:bodyContentTemplate>
             <div class="{{_options.headerTemplate && _verticalDirection === 'top' ? 'controls-Menu__popup-reverse'}}
              controls-Menu__popup-content controls-Menu__popup-content_theme-{{_options.theme}}">
