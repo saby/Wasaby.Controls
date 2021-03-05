@@ -22,7 +22,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#ladderProperties
- * @cfg {Array.<String>} Массив свойств, по которым происходит прилипание.
+ * @cfg {Array.<String>} Массив с именами полей, по которым строится {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ лесенка}.
  * @demo Controls-demo/grid/Ladder/Sticky/Index В демо-примере настроено отображение данных "лесенкой" для свойств "photo" и "date". Дополнительно включено прилипание заголовка таблицы, а также прилипание по первой колонке (см. {@link Controls/interface:IColumn#stickyProperty stickyProperty}).
  * @demo Controls-demo/grid/LadderStickyMultiline/StickyMultiline/Index В демо-примере настроено отображение данных "лесенкой" для свойств "date" и "time". Дополнительно включено прилипание по первой колонке.
  * @example
@@ -37,8 +37,10 @@ export interface IGridControl extends IList {
  *     header="{{_header}}"
  *     ladderProperties="{{_ladderProperties}}"/>
  * </pre>
- * @remark Подробнее о конфигурации лесенки читайте в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ руководстве разработчика}.
+ * @remark
+ * Подробнее о конфигурации лесенки читайте в {@link /doc/platform/developmentapl/interface-development/controls/list/grid/ladder/ руководстве разработчика}.
  * @see Controls/interface:IColumn#stickyProperty
+ * @markdown
  */
 
 /*
