@@ -593,6 +593,8 @@
   "--separator_color_ToolbarBox": "#e4e4e4",
   "--separator_offset-horizontal_ToolbarBox": "var(--offset_s)",
   "--item_padding-horizontal_l_menu": "var(--offset_m)",
+  "--inline_height_default_link_button": "18px",
+  "--item_padding-horizontal_s_menu": "var(--offset_2xs)",
   "--item_height_menu": "32px",
   "--background-color_slidingPanel": "var(--background-color)",
   "--box-shadow_slidingPanel": "0 0 5px 0 rgba(0, 0, 0, 0.2)",
