@@ -1,9 +1,14 @@
 <ws:template name="label">
     <ws:if data="{{collectionItem.isNode()}}">
-      <Controls.heading:Title scope="{{_options}}" readOnly="{{true}}" fontSize="m"/>
+        <div class="controls-PropertyGrid__editor_nodeCaption_wrapper_theme-{{theme}}">
+            <Controls.heading:Title scope="{{_options}}"
+                                    readOnly="{{true}}"
+                                    fontSize="m"
+                                    attr:class="controls-PropertyGrid__editor_nodeCaption"/>
+        </div>
     </ws:if>
     <ws:else>
-      <Controls.input:Label scope="{{_options}}"/>
+        <Controls.input:Label scope="{{_options}}"/>
     </ws:else>
 </ws:template>
 
