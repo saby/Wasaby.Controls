@@ -92,8 +92,7 @@ class InfoboxTarget extends Control<IInfoBoxOptions> implements IInfoBox {
                 onResult: this._resultHandler,
                 onClose: this._closeHandler
             },
-            templateOptions: this._options.templateOptions,
-            theme: this._options.theme
+            templateOptions: this._options.templateOptions
         };
     }
 
