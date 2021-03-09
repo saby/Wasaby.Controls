@@ -3792,6 +3792,10 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         this._listViewModel.setKeyProperty(this._keyProperty);
 
+        if (this._options.displayProperty !== newOptions.displayProperty) {
+            this._listViewModel.setDisplayProperty(newOptions.displayProperty);
+        }
+
         if (!newOptions.useNewModel) {
             this._listViewModel.setBackgroundStyle(newOptions.backgroundStyle);
         }
