@@ -57,7 +57,7 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         ladder = {}, ladderState = {}, stickyLadder = {},
         stickyLadderState = {};
 
-    const nodeProperty = params.task1181099336 && params.display.getNodeProperty();
+    const nodeProperty = params.task1181099336 && params.display && params.display.getNodeProperty();
 
     if (!supportLadder && !stickyColumn) {
         return {};
@@ -132,7 +132,7 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     state: ladderState[ladderProperties[fIdx]],
                     ladder: ladder[idx][ladderProperties[fIdx]],
                     mainLadder: ladder[idx][ladderProperties[fIdx - 1]],
-                    hasNodeFooter: params.task1181099336 && item.get && item.get(nodeProperty)
+                    hasNodeFooter: params.task1181099336 && nodeProperty && item.get && item.get(nodeProperty)
                 });
             }
         }
@@ -148,7 +148,7 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     state: stickyLadderState[stickyProperties[fIdx]],
                     ladder: stickyLadder[idx][stickyProperties[fIdx]],
                     mainLadder: stickyLadder[idx][stickyProperties[fIdx - 1]],
-                    hasNodeFooter: params.task1181099336 && item.get && item.get(nodeProperty)
+                    hasNodeFooter: params.task1181099336 && nodeProperty && item.get && item.get(nodeProperty)
                 });
             }
         }
