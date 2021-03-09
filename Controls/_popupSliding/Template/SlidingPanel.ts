@@ -3,6 +3,7 @@ import * as template from 'wml!Controls/_popupSliding/Template/SlidingPanel/Slid
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {IDragObject, Container} from 'Controls/dragnDrop';
 import {ISlidingPanelTemplateOptions} from 'Controls/_popupSliding/interface/ISlidingPanelTemplate';
+import {detection} from 'Env/Env';
 
 /**
  * Интерфейс для шаблона попапа-шторки.
@@ -25,12 +26,10 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     private _isPanelMounted: boolean = false;
     private _currentTouchYPosition: number = null;
     private _scrollState: object = null;
-    private _touchAvailable: boolean = false;
 
     protected _beforeMount(options: ISlidingPanelTemplateOptions): void {
         this._position = options.slidingPanelOptions?.position;
         this._scrollAvailable = this._isScrollAvailable(options);
-        this._touchAvailable = this._scrollAvailable;
     }
 
     protected _beforeUpdate(options: ISlidingPanelTemplateOptions): void {
@@ -48,9 +47,6 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         const scrollAvailable = this._isScrollAvailable(options);
         if (scrollAvailable !== this._scrollAvailable) {
             this._scrollAvailable = scrollAvailable;
-
-            // Если при построении скролл доступен, то сразу же отпускаем тач.
-            this._touchAvailable = this._scrollAvailable;
         }
         this._isPanelMounted = true;
     }
@@ -82,12 +78,26 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
     }
 
     /**
+     * Фикс для сафари, чтобы при свайпе по шторке не тянулся body.
+     * TODO: Нужно сделать какое-то общее решение для d'n'd
+     * https://online.sbis.ru/opendoc.html?guid=2e549898-5980-49bc-b4b7-e0a27f02bf55
+     * @param state
+     * @private
+     */
+    private _toggleCancelBodyDragging(state: boolean): void {
+        if (detection.isMobileIOS) {
+            document.documentElement.style.overflow = state ? 'hidden' : '';
+        }
+    }
+
+    /**
      * Запоминаем начальную позицию тача, чтобы считать offset от нее
      * @param {<TouchEvent>} event
      * @private
      */
     protected _touchStartHandler(event: SyntheticEvent<TouchEvent>): void {
         this._currentTouchYPosition = event.nativeEvent.targetTouches[0].clientY;
+        this._toggleCancelBodyDragging(true);
     }
 
     /**
@@ -115,11 +125,6 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
         }
         event.stopPropagation();
         this._notifyDragStart(this._touchDragOffset);
-
-        // Чтобы скролл внутри и снаружи при таче не срабатывал(Нужно чтобы боди не тянулся при свайпах по шторке)
-        if (!this._touchAvailable) {
-            event.preventDefault();
-        }
     }
 
     protected _touchEndHandler(): void {
@@ -127,12 +132,7 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
             this._notifyDragEnd();
             this._touchDragOffset = null;
         }
-
-        /*
-           Размораживаем свайп после окончания тача в котором стал доступен скролл,
-           чтобы при достижении максимальной высоты не начал скроллиться боди
-        */
-        this._touchAvailable = this._scrollAvailable;
+        this._toggleCancelBodyDragging(false);
     }
 
     private _notifyDragStart(offset: IDragObject['offset']): void {
