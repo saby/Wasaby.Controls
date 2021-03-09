@@ -21,8 +21,8 @@
               iconSize="{{_options.iconSize}}"
               iconStyle="{{_options.iconStyle}}"
               dropdownClassName="{{_options.dropdownClassName}}"
+              footerContentTemplate="{{footerContent}}"
               headerContentTemplate="{{headerContentTemplate || _headerTemplate}}"
-              footerContentTemplate="{{_options.footerContentTemplate || _options.footerTemplate}}"
               footerItemData="{{_options.footerItemData}}"
               closeButtonVisibility="{{_closeButtonVisibility}}"
               backgroundStyle="transparent"
@@ -114,20 +114,34 @@
    </div>
 </ws:template>
 
+<ws:template name="menuPopupWrapper">
+   <ws:if data="{{_options.footerContentTemplate || _options.footerTemplate}}">
+      <ws:partial template="menuPopup">
+         <ws:footerContent>
+            <ws:partial template="{{_options.footerContentTemplate || _options.footerTemplate}}"
+                        hoverController="{{_hoverController}}"></ws:partial>
+         </ws:footerContent>
+      </ws:partial>
+   </ws:if>
+   <ws:else>
+      <ws:partial template="menuPopup"/>
+   </ws:else>
+</ws:template>
+
 <ws:if data="{{_options.searchParam}}">
    <ws:partial template="{{'Controls/browser:Browser'}}" scope="{{_options}}">
       <ws:partial template="{{'Controls/list:Container'}}">
-         <ws:partial template="menuPopup" filter="{{content.filter}}"/>
+         <ws:partial template="menuPopupWrapper" filter="{{content.filter}}"/>
       </ws:partial>
    </ws:partial>
 </ws:if>
 <ws:else data="{{_headerTemplate}}">
-   <ws:partial template="menuPopup">
+   <ws:partial template="menuPopupWrapper">
       <ws:headerContentTemplate>
          <ws:partial template="{{_headerTemplate}}" multiSelect="{{_options.multiSelect}}"/>
       </ws:headerContentTemplate>
    </ws:partial>
 </ws:else>
 <ws:else>
-   <ws:partial template="menuPopup" />
+   <ws:partial template="menuPopupWrapper" />
 </ws:else>
