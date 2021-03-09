@@ -50,7 +50,7 @@
                                               on:click="_applyButtonClick()"/>
                   </div>
                </ws:if>
-               <ws:if data="{{_options.headerTemplate}}">
+               <ws:if data="{{_options.headerTemplate && _headerVisible}}">
                   <ws:partial template="{{_options.headerTemplate}}"
                               iconSize="{{_options.iconSize}}"
                               headingIconSize="{{_headingIconSize}}"
@@ -94,6 +94,7 @@
                        selectorDialogResult="{{_options.selectorDialogResult}}"
                        itemPadding="{{_itemPadding}}"
                        dataLoadCallback="{{_dataLoadCallback}}"
+                       dataLoadErrback="{{_dataLoadErrback}}"
                        headingIcon="{{_headingIcon}}"
                        headerTemplate="{{_headerTemplate || _options.headerTemplate}}"
                        backgroundStyle="{{_options.backgroundStyle}}"
