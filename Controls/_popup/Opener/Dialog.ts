@@ -42,7 +42,7 @@ class Dialog extends BaseOpener<IDialogOpenerOptions> implements IDialogOpener, 
     }
 
     static openPopup(config: IDialogOpenerOptions): Promise<string> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const newCfg = getDialogConfig(config);
             if (!newCfg.hasOwnProperty('isHelper')) {
                 Logger.warn('Controls/popup:Dialog: Для открытия диалоговых окон из кода используйте DialogOpener');
@@ -67,6 +67,8 @@ class Dialog extends BaseOpener<IDialogOpenerOptions> implements IDialogOpener, 
             } else {
                 BaseOpener.requireModules(newCfg, POPUP_CONTROLLER).then((result: ILoadDependencies) => {
                     showDialog(result.template, newCfg, result.controller);
+                }).catch((error: RequireError) => {
+                    reject(error);
                 });
             }
         });

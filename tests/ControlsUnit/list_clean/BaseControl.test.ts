@@ -144,6 +144,9 @@ describe('Controls/list_clean/BaseControl', () => {
 
         beforeEach(() => {
             baseControl = new BaseControl(baseControlCfg);
+            baseControl._children = {
+                scrollObserver: { startRegister: () => null }
+            };
         });
 
         afterEach(() => {
@@ -301,7 +304,7 @@ describe('Controls/list_clean/BaseControl', () => {
                     prev: 'visible'
                 }, baseControl._pagingCfg.arrowState);
 
-            baseControl.scrollMoveSyncHandler({scrollTop: 600});
+            baseControl.scrollMoveSyncHandler({scrollTop: 640});
             assert.deepEqual({
                 begin: 'visible',
                 end: 'hidden',
@@ -1050,13 +1053,27 @@ describe('Controls/list_clean/BaseControl', () => {
 
                 sourceControllerOptions = {...sourceControllerOptions};
                 sourceControllerOptions.source = new Memory();
-                sourceControllerOptions.source.query = () => Promise.reject(new Error());
+                sourceControllerOptions.source.query = () => {
+                    const error = new Error();
+                    error.processed = true;
+                    return Promise.reject(error);
+                };
                 sourceController.updateOptions(sourceControllerOptions);
                 await sourceController.reload().catch(() => {});
                 baseControlOptions.source = new Memory();
                 assert.doesNotThrow(() => {
                     baseControl._beforeUpdate(baseControlOptions);
                 });
+
+                baseControl.__error = {testErrorField: 'testErrorValue'};
+                sourceControllerOptions = {...sourceControllerOptions};
+                sourceControllerOptions.source = new Memory();
+                sourceController.updateOptions(sourceControllerOptions);
+                await sourceController.reload();
+                baseControlOptions = {...baseControlOptions};
+                baseControlOptions.source = new Memory();
+                baseControl._beforeUpdate(baseControlOptions);
+                assert.ok(!baseControl.__error);
             });
 
             it('_beforeUpdate while source controller is loading', async () => {
@@ -1104,13 +1121,14 @@ describe('Controls/list_clean/BaseControl', () => {
             it('_beforeMount without source and sourceController, then _beforeUpdate with sourceController', async () => {
                 let baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 let afterReloadCallbackCalled = false;
-                baseControlOptions.afterReloadCallback = () => {
-                    afterReloadCallbackCalled = true;
-                };
                 baseControlOptions.source = null;
                 baseControlOptions.sourceController = null;
 
+                const sandbox = sinon.createSandbox();
                 const baseControl = new BaseControl(baseControlOptions);
+                sandbox.stub(baseControl, '_afterReloadCallback').callsFake(() => {
+                    afterReloadCallbackCalled = true;
+                });
                 await baseControl._beforeMount(baseControlOptions);
                 baseControl.saveOptions(baseControlOptions);
 
@@ -1123,8 +1141,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 await baseControl._beforeUpdate(baseControlOptions);
                 baseControl._updateInProgress = false;
                 baseControl.saveOptions(baseControlOptions);
-                await baseControl.reload();
                 assert.isTrue(afterReloadCallbackCalled);
+                sandbox.restore();
             });
 
         });
@@ -1146,7 +1164,7 @@ describe('Controls/list_clean/BaseControl', () => {
             let isCancelCalled = false;
 
             beforeEach(() => {
-                stubReload = sinon.stub(BaseControl._private, 'reload').callsFake(() => Promise.resolve());
+                stubReload = sinon.stub(baseControl, '_reload').callsFake(() => Promise.resolve());
                 baseControl._editInPlaceController = {
                     isEditing: () => true
                 };
@@ -1184,16 +1202,39 @@ describe('Controls/list_clean/BaseControl', () => {
     describe('reload', () => {
 
         it('baseControl destroyed on reload', async () => {
-            const options = getBaseControlOptionsWithEmptyItems();
+            const options = await getCorrectBaseControlConfigAsync(getBaseControlOptionsWithEmptyItems());
+            let afterReloadCallbackCalled = false;
+            options.afterReloadCallback = () => {
+                afterReloadCallbackCalled = true;
+            };
             const baseControl = new BaseControl(options);
             await baseControl._beforeMount(options);
             baseControl.saveOptions(options);
+            afterReloadCallbackCalled = false;
             const reloadPromise = baseControl.reload();
             baseControl._beforeUnmount();
             baseControl._destroyed = true;
 
             const reloadPromiseResult = await reloadPromise;
             assert.ok(!reloadPromiseResult, 'reload return wrong result');
+            assert.ok(!afterReloadCallbackCalled);
+        });
+
+        it('baseControl items not changed on reload', async () => {
+            const options = getBaseControlOptionsWithEmptyItems();
+            let itemsReadyCallbackCalled = false;
+            options.itemsReadyCallback = () => {
+                itemsReadyCallbackCalled = true;
+            };
+            const options = await getCorrectBaseControlConfigAsync(options);
+            const baseControl = new BaseControl(options);
+            await baseControl._beforeMount(options);
+            baseControl.saveOptions(options);
+            assert.ok(itemsReadyCallbackCalled);
+
+            itemsReadyCallbackCalled = false;
+            await baseControl.reload();
+            assert.ok(!itemsReadyCallbackCalled);
         });
 
     });

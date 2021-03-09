@@ -19,7 +19,6 @@ import fastUpdate from './StickyHeader/FastUpdate';
 import {RegisterUtil, UnregisterUtil} from 'Controls/event';
 import {IScrollState} from '../Utils/ScrollState';
 import {SCROLL_POSITION} from './Utils/Scroll';
-import Context = require('Controls/_scroll/StickyHeader/Context');
 import {IntersectionObserver} from 'Controls/sizeUtils';
 import Model = require('Controls/_scroll/StickyHeader/Model');
 import template = require('wml!Controls/_scroll/StickyHeader/StickyHeader');
@@ -142,12 +141,15 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _topObserverStyle: string = '';
     protected _bottomObserverStyle: string = '';
 
-    protected _scrollShadowPosition: string = '';
-
     private _stickyDestroy: boolean = false;
     private _scroll: HTMLElement;
 
     private _needUpdateObserver: boolean = false;
+
+    // Если заголовок сконфигурариован так, что при построении отображется тень, то установим true.
+    // Сбросим обратно только, когда отработает обсервер и мы узнаем настоящее положение заголовка.
+    // До этого момента будем отображать тень.
+    private _initialShowShadow: boolean = false;
 
     // Считаем заголовок инициализированным после того как контроллер установил ему top или bottom.
     // До этого не синхронизируем дом дерево при изменении состояния.
@@ -158,9 +160,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         this._observeHandler = this._observeHandler.bind(this);
     }
 
-    protected _beforeMount(options: IStickyHeaderOptions, context): void {
+    protected _beforeMount(options: IStickyHeaderOptions): void {
         if (!this._isStickyEnabled(options)) {
             return;
+        }
+        if (options.shadowVisibility === SHADOW_VISIBILITY.initial) {
+            this._initialShowShadow = true;
         }
         this._updateStyles(options);
     }
@@ -183,7 +188,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._container;
     }
 
-    protected _beforeUpdate(options: IStickyHeaderOptions, context): void {
+    protected _beforeUpdate(options: IStickyHeaderOptions): void {
         if (!this._isStickyEnabled(options)) {
             return;
         }
@@ -191,12 +196,12 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             this._release();
         }
         if (options.fixedZIndex !== this._options.fixedZIndex) {
-            this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247);
+            this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247, options.task1181007458);
         }
     }
 
     protected _afterUpdate(oldOptions: IStickyHeaderOptions): void {
-        if (oldOptions.mode === MODE.notsticky && this._options.mode !== MODE.notsticky) {
+        if (oldOptions.mode === MODE.notsticky && this._isStickyEnabled(this._options)) {
             this._register();
             this._init();
         }
@@ -221,6 +226,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     _init(): void {
+        if (this._model) {
+            return;
+        }
         this._updateComputedStyle();
 
         // После реализации https://online.sbis.ru/opendoc.html?guid=36457ffe-1468-42bf-acc9-851b5aa24033
@@ -266,7 +274,9 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
     getOffset(parentElement: HTMLElement, position: POSITION): number {
         let offset = getOffset(parentElement, this._container, position);
-        if (this._model?.isFixed()) {
+        // Проверяем действительно ли устновлен top. Иногда мы производим замеры когда модель уже поменяли,
+        // а изменения еще не применились к dom дереву и просто проверка на isFixed проходит, а блок еще не смещен.
+        if (this._model?.isFixed() && this._container.style.top !== '') {
             offset += getGapFixSize();
         }
         return offset;
@@ -364,6 +374,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             changed = true;
         }
 
+        if (!scrollState.hasUnrenderedContent.top && this._initialized) {
+            this._initialShowShadow = false;
+        }
+
         this._scrollState = scrollState;
 
         if (changed && this._initialized) {
@@ -453,10 +467,34 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             return;
         }
 
+        if (!this._model.fixedPosition) {
+            this._initialShowShadow = false;
+        }
+
         if (this._model.fixedPosition !== fixedPosition) {
             this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
             if (this._canScroll && this._initialized) {
                 this._updateStyles(this._options);
+            }
+        }
+    }
+
+    setFixedPosition(position: string) {
+        // Спилить метод после того как будет сделана задача
+        // https://online.sbis.ru/opendoc.html?guid=8089ac76-89d3-42c0-9ef2-8b187014559f
+        this._init();
+
+        const fixedPosition: POSITION = this._model.fixedPosition;
+        this._model.fixedPosition = position;
+
+        if (this._model.fixedPosition !== fixedPosition) {
+            this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
+            this._updateStyles(this._options);
+            if (this._isBottomShadowVisible) {
+                fastUpdate.mutate(() => {
+                    this._children.shadowBottom.classList.remove(this._isMobileIOS ? 'ws-invisible' : 'ws-hidden');
+                    this._container.style.zIndex = this._options.fixedZIndex;
+                });
             }
         }
     }
@@ -484,19 +522,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     private _updateStyles(options: IStickyHeaderOptions): void {
-        this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247);
+        this._updateStyle(options.position, options.fixedZIndex, options.zIndex, options.task1177692247, options.task1181007458);
         this._updateShadowStyles(options.mode, options.shadowVisibility);
         this._updateObserversStyles(options.offsetTop, options.shadowVisibility);
     }
 
-    private _updateStyle(position: POSITION, fixedZIndex: number, zIndex: number, task1177692247): void {
+    private _updateStyle(position: POSITION, fixedZIndex: number, zIndex: number, task1177692247?, task1181007458?): void {
         const style = this._getStyle(position, fixedZIndex, zIndex, task1177692247);
         if (this._style !== style) {
             this._style = style;
         }
     }
 
-    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, zIndex: number, task1177692247?): string {
+    protected _getStyle(positionFromOptions: POSITION, fixedZIndex: number, zIndex: number, task1177692247?, task1181007458?): string {
         let
             offset: number = 0,
             container: HTMLElement,
@@ -512,7 +550,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
 
         fixedPosition = this._model ? this._model.fixedPosition : undefined;
         // Включаю оптимизацию для всех заголовков на ios, в 5100 проблем выявлено не было
-        const isIosOptimizedMode = this._isMobileIOS && opts.task1181007458 !== true;
+        const isIosOptimizedMode = this._isMobileIOS && task1181007458 !== true;
 
         if (positionFromOptions.indexOf(POSITION.top) !== -1 && this._stickyHeadersHeight.top !== null) {
             top = this._stickyHeadersHeight.top;
@@ -649,13 +687,19 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     protected _isShadowVisible(shadowPosition: POSITION, mode: MODE, shadowVisibility: SHADOW_VISIBILITY): boolean {
         //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
         const fixedPosition: POSITION = shadowPosition === POSITION.top ? POSITION.bottom : POSITION.top;
+        const shadowVisibility = this._options.shadowVisibility;
+
+        if (this._initialShowShadow && this._options.position === fixedPosition) {
+            return true;
+        }
 
         const shadowEnabled: boolean = this._isShadowVisibleByScrollState(shadowPosition);
 
         return !!(shadowEnabled &&
             ((this._model && this._model.fixedPosition === fixedPosition) || (!this._model && this._isFixed)) &&
             (shadowVisibility === SHADOW_VISIBILITY.visible ||
-                shadowVisibility === SHADOW_VISIBILITY.lastVisible) &&
+                shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                shadowVisibility === SHADOW_VISIBILITY.initial) &&
             (mode === MODE.stackable || this._isFixed));
     }
 
@@ -715,16 +759,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return this._isStickySupport && options.mode !== MODE.notsticky;
     }
 
-    static _theme: string[] = ['Controls/scroll', 'Controls/Classes'];
-
     static _isIOSChrome(): boolean {
         return detection.isMobileIOS && detection.chrome;
-    }
-
-    static contextTypes(): IStickyHeaderContext {
-        return {
-            stickyHeader: Context
-        };
     }
 
     static getDefaultOptions(): IStickyHeaderOptions {
@@ -744,7 +780,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             shadowVisibility: descriptor(String).oneOf([
                 SHADOW_VISIBILITY.visible,
                 SHADOW_VISIBILITY.hidden,
-                SHADOW_VISIBILITY.lastVisible
+                SHADOW_VISIBILITY.lastVisible,
+                SHADOW_VISIBILITY.initial
             ]),
             backgroundStyle: descriptor(String),
             mode: descriptor(String).oneOf([
@@ -767,7 +804,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
         return 1;
     }
 
-    static _theme: string[] = ['Controls/scroll'];
+    static _theme: string[] = ['Controls/scroll', 'Controls/Classes'];
 
 }
 /**

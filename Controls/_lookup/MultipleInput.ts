@@ -83,6 +83,7 @@ export default class MultipleInput extends BaseLookupInput {
     protected _availableWidthCollection: number;
 
     showSelector(popupOptions?: IStackPopupOptions): boolean {
+        this.closeSuggest();
         return showSelector(this, popupOptions, false);
     }
 

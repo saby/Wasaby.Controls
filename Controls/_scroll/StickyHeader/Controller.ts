@@ -1,4 +1,3 @@
-import {Control} from 'UI/Base';
 import {debounce} from 'Types/function';
 import {IFixedEventData, isHidden, POSITION, SHADOW_VISIBILITY, TRegisterEventData, TYPE_FIXED_HEADERS} from './Utils';
 import StickyHeader from 'Controls/_scroll/StickyHeader';
@@ -33,6 +32,7 @@ class StickyHeaderController {
     // Учтем эти заголовки после ближайшего события ресайза.
     private _delayedHeaders: TRegisterEventData[] = [];
     private _initialized: boolean = false;
+    private _syncUpdate: boolean = false;
     private _updateTopBottomInitialized: boolean = false;
     private _stickyHeaderResizeObserver: ResizeObserverUtil;
     private _elementsHeight: IHeightEntry[] = [];
@@ -153,7 +153,13 @@ class StickyHeaderController {
         this._isShadowVisible[POSITION.top] = isTopShadowVisible;
         this._isShadowVisible[POSITION.bottom] = isBottomShadowVisible;
         this._updateShadowsVisibility();
+        // Если есть только что зарегистрированные и не просчитанные заголовки, что бы не было мигания теней,
+        // сразу, синхронно не дожидаясь срабатывания IntersectionObserver посчитаем зафиксированы ли ониё.
+        if (isTopShadowVisible && this._delayedHeaders.length) {
+            this._syncUpdate = true;
+        }
     }
+
     _updateShadowsVisibility(): void {
         for (const position of [POSITION.top, POSITION.bottom]) {
             const headersStack: [] = this._headersStack[position];
@@ -162,7 +168,8 @@ class StickyHeaderController {
                 if (this._fixedHeadersStack[position].includes(headerId)) {
                     const header: TRegisterEventData = this._headers[headerId];
                     let visibility: boolean = this._isShadowVisible[position];
-                    if (header.inst.shadowVisibility === SHADOW_VISIBILITY.lastVisible) {
+                    if (header.inst.shadowVisibility === SHADOW_VISIBILITY.lastVisible ||
+                        header.inst.shadowVisibility === SHADOW_VISIBILITY.initial) {
                         visibility = visibility && (headerId === lastHeaderId);
                     }
                     header.inst.updateShadowVisibility(visibility);
@@ -171,14 +178,17 @@ class StickyHeaderController {
         }
     }
 
-    registerHandler(event, data: TRegisterEventData, register: boolean): void {
-        const promise = this._register(data, register, true);
+    registerHandler(event, data: TRegisterEventData, register: boolean, syncUpdate: boolean = false): Promise<void> {
+        const promise = this._register(data, register, syncUpdate);
         this._clearOffsetCache();
         event.stopImmediatePropagation();
+        if (syncUpdate) {
+            this._syncUpdate = true;
+        }
         return promise;
     }
 
-    _register(data: TRegisterEventData, register: boolean, update: boolean): Promise<void> {
+    _register(data: TRegisterEventData, register: boolean, syncUpdate: boolean = false): Promise<void> {
         if (register) {
             this._headers[data.id] = {
                 ...data,
@@ -195,7 +205,7 @@ class StickyHeaderController {
             this._delayedHeaders.push(data);
 
             this._observeStickyHeader(data);
-            if (!isHidden(data.inst.getHeaderContainer()) && this._initialized && this._canScroll) {
+            if (!isHidden(data.inst.getHeaderContainer()) && (this._initialized || syncUpdate) && this._canScroll) {
                 return Promise.resolve().then(this._registerDelayed.bind(this));
             }
         } else {
@@ -380,13 +390,23 @@ class StickyHeaderController {
         this._resetSticky();
 
         return fastUpdate.measure(() => {
+            const newHeaders: [] = [];
             this._delayedHeaders = this._delayedHeaders.filter((header: TRegisterEventData) => {
                 if (!isHidden(header.inst.getHeaderContainer())) {
                     this._addToHeadersStack(header.id, header.position);
+                    newHeaders.push(header.id);
                     return false;
                 }
                 return true;
             });
+
+            // Найдем среди новых заголовков те, что зафиксированы, и не дожидаясь
+            // срабатывания IntersectionObserver синхронно установим им состояние фиксации.
+            // Таким образом избавимся от мигания тени при построении на клиенте.
+            if (this._syncUpdate) {
+                this._updateHeadersFixedPositions(newHeaders);
+                this._syncUpdate = false;
+            }
 
             if (delayedHeadersCount !== this._delayedHeaders.length) {
                 this._updateFixedInitially(POSITION.top);
@@ -397,6 +417,34 @@ class StickyHeaderController {
                 this._callResizeCallback();
             }
         });
+    }
+
+    _updateHeadersFixedPositions(headers: string[]) {
+        const position = POSITION.top;
+        const headersStack: [] = this._headersStack[position];
+        let fixedHeadersHeight: number = 0;
+        let replaceableHeight: number = 0;
+        for (const headerId of headersStack) {
+            const header = this._headers[headerId];
+
+            if (headers.includes(headerId)) {
+                if (this._getHeaderOffset(headerId, position) <= fixedHeadersHeight + replaceableHeight) {
+                    header.inst.setFixedPosition(POSITION.top);
+                }
+            }
+
+            if (header.inst.shadowVisibility === SHADOW_VISIBILITY.hidden) {
+                continue;
+            }
+
+            // If the header is "replaceable", we take into account the last one after all "stackable" headers.
+            if (header.mode === 'stackable') {
+                fixedHeadersHeight += header.inst.height;
+                replaceableHeight = 0;
+            } else if (header.mode === 'replaceable') {
+                replaceableHeight = header.inst.height;
+            }
+        }
     }
 
     /**

@@ -1,6 +1,6 @@
 import { isEqual } from 'Types/object';
 import isFullGridSupport from './GridSupportUtil';
-import { TColumns } from 'Controls/grid';
+import { TColumns } from 'Controls/interface';
 
 export interface IStickyColumn {
     index: number;
@@ -32,6 +32,8 @@ interface IPrepareLadderParams extends IStickyColumnsParams{
     startIndex: number;
     stopIndex: number;
     display: any;
+
+    task1181099336?: boolean;
 }
 
 export function isSupportLadder(ladderProperties ?: string[]): boolean {
@@ -55,20 +57,28 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
         ladder = {}, ladderState = {}, stickyLadder = {},
         stickyLadderState = {};
 
+    const nodeProperty = params.task1181099336 && params.display.getNodeProperty();
+
     if (!supportLadder && !stickyColumn) {
         return {};
     }
 
     function processLadder(params) {
-        var
-            value = params.value,
-            prevValue = params.prevValue,
-            state = params.state;
+        const value = params.value;
+        const prevValue = params.prevValue;
+        const state = params.state;
+        const hasMainLadder = !!(params.mainLadder?.ladderLength);
 
         // isEqual works with any types
-        if (isEqual(value, prevValue)) {
+        if (isEqual(value, prevValue) && !hasMainLadder) {
             state.ladderLength++;
+            if (params.hasNodeFooter) {
+                state.ladderLength++;
+            }
         } else {
+            if (params.hasNodeFooter) {
+                state.ladderLength++;
+            }
             params.ladder.ladderLength = state.ladderLength;
             state.ladderLength = 1;
         }
@@ -120,7 +130,9 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     value: item.get ? item.get(ladderProperties[fIdx]) : undefined,
                     prevValue: prevItem && prevItem.get ? prevItem.get(ladderProperties[fIdx]) : undefined,
                     state: ladderState[ladderProperties[fIdx]],
-                    ladder: ladder[idx][ladderProperties[fIdx]]
+                    ladder: ladder[idx][ladderProperties[fIdx]],
+                    mainLadder: ladder[idx][ladderProperties[fIdx - 1]],
+                    hasNodeFooter: params.task1181099336 && item.get && item.get(nodeProperty)
                 });
             }
         }
@@ -134,7 +146,9 @@ export function prepareLadder(params: IPrepareLadderParams): ILadderObject {
                     value: item.get ? item.get(stickyProperties[fIdx]) : undefined,
                     prevValue: prevItem && prevItem.get ? prevItem.get(stickyProperties[fIdx]) : undefined,
                     state: stickyLadderState[stickyProperties[fIdx]],
-                    ladder: stickyLadder[idx][stickyProperties[fIdx]]
+                    ladder: stickyLadder[idx][stickyProperties[fIdx]],
+                    mainLadder: stickyLadder[idx][stickyProperties[fIdx - 1]],
+                    hasNodeFooter: params.task1181099336 && item.get && item.get(nodeProperty)
                 });
             }
         }

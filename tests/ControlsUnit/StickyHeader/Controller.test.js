@@ -876,5 +876,57 @@ define([
 
          });
       });
+
+      describe('_updateHeadersFixedPositions', () => {
+         it('Header with id equal to "sticky" stops being fixed', function() {
+            const setFixedPosition = sinon.fake();
+            component._headers = {
+               sticky1: {
+                  mode: 'stackable',
+                  inst: {
+                     height: 10
+                  }
+               },
+               sticky2: {
+                  mode: 'stackable',
+                  inst: {
+                     height: 10,
+                     setFixedPosition: setFixedPosition
+                  },
+                  offset: { top: 5 }
+               },
+               sticky3: {
+                  mode: 'stackable',
+                  inst: {
+                     height: 10
+                  }
+               }
+            };
+            component._headersStack = {
+               top: ['sticky1', 'sticky2', 'sticky3']
+            };
+            component._updateHeadersFixedPositions(['sticky2']);
+
+            sinon.assert.calledWith(setFixedPosition, 'top');
+         });
+      });
+
+      describe('setShadowVisibility', () => {
+         it('should sync update sticky state if there are registered headers ', function() {
+            sinon.stub(component, '_updateShadowsVisibility');
+            component._delayedHeaders = [{}, {}];
+            component.setShadowVisibility(true, false);
+
+            assert.isTrue(component._syncUpdate);
+         });
+
+         it('should sync update sticky state if there are not registered headers ', function() {
+            sinon.stub(component, '_updateShadowsVisibility');
+            component._delayedHeaders = [];
+            component.setShadowVisibility(true, false);
+
+            assert.isFalse(component._syncUpdate);
+         });
+      });
    });
 });

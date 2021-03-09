@@ -3,7 +3,7 @@ import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {ok, deepStrictEqual} from 'assert';
 import {RecordSet} from 'Types/collection';
 import {INavigationPageSourceConfig, INavigationOptionValue} from 'Controls/interface';
-import {createSandbox, stub} from 'sinon';
+import {createSandbox, stub, useFakeTimers} from 'sinon';
 import {default as groupUtil} from 'Controls/_dataSource/GroupUtil';
 
 const filterByEntries = (item, filter): boolean => {
@@ -118,7 +118,11 @@ function getPagingNavigation(hasMore: boolean = false, pageSize: number = 1): IN
 }
 
 const sourceWithError = new Memory();
-sourceWithError.query = () => Promise.reject(new Error());
+sourceWithError.query = () => {
+    const error = new Error();
+    error.processed = true;
+    return Promise.reject(error);
+};
 
 function getControllerWithHierarchy(additionalOptions: object = {}): NewSourceController {
     return new NewSourceController({...getControllerWithHierarchyOptions(), ...additionalOptions});
@@ -165,15 +169,34 @@ describe('Controls/dataSource:SourceController', () => {
             ok((loadedItems as RecordSet).getCount() === 5);
         });
 
+        it('load with direction "down"',  async () => {
+            const controller  = getController();
+            await controller.load('down');
+            ok(controller.getItems().getCount() === 4);
+        });
+
+        it('load without direction',  async () => {
+            const controller = getControllerWithHierarchy({
+                navigation: getPagingNavigation()
+            });
+            await controller.reload();
+            await controller.load(undefined, 3);
+            ok(controller.hasLoaded(3));
+
+            await controller.load();
+            ok(!controller.hasLoaded(3));
+        });
+
         it('load call while loading',  async () => {
             const controller = getController();
             let loadPromiseWasCanceled = false;
 
-            controller.load().catch(() => {
+            const promiseCanceled = controller.load().catch(() => {
                 loadPromiseWasCanceled = true;
             });
 
             await controller.load();
+            await promiseCanceled;
             ok(loadPromiseWasCanceled);
         });
 
@@ -320,6 +343,23 @@ describe('Controls/dataSource:SourceController', () => {
             ok(!dataLoadCallbackCalled);
         });
 
+        it('dataLoadCallback from setter returns promise',  async () => {
+            const controller = getController();
+            let promiseResolver;
+
+            const promise = new Promise((resolve) => {
+                promiseResolver = resolve;
+            });
+            controller.setDataLoadCallback(() => {
+                return promise;
+            });
+            const reloadPromise = controller.reload().then(() => {
+                ok(controller.getItems().getCount() === 4);
+            });
+            promiseResolver();
+            await reloadPromise;
+        });
+
         it('load with direction returns error',  () => {
             const navigation = getPagingNavigation();
             let options = {...getControllerOptions(), navigation};
@@ -343,6 +383,20 @@ describe('Controls/dataSource:SourceController', () => {
                         ok(controller.getItems().getCount() === 2);
                     });
                 });
+            });
+        });
+
+        it('load timeout error',  () => {
+            const options = getControllerOptions();
+            options.loadTimeout = 10;
+            options.source.query = () => {
+                return new Promise((resolve) => {
+                   setTimeout(resolve, 100);
+                });
+            };
+            const controller = getController(options);
+            return controller.load().catch((error) => {
+                ok(error.status === 504);
             });
         });
     });

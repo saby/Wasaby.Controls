@@ -16,7 +16,7 @@
     templateOptions Опции, передаваемые в шаблон ячейки заголовка.
 */
 import { TemplateFunction } from 'UI/Base';
-import {IColspanParams, IHeaderCell, IRowspanParams} from 'Controls/grid';
+import {IColspanParams, IHeaderCell} from 'Controls/interface';
 import { IItemPadding } from 'Controls/display';
 import HeaderRow from './HeaderRow';
 import Cell, {IOptions as ICellOptions} from './Cell';
@@ -113,7 +113,11 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     // endregion
 
     // region Аспект "Объединение строк"
-    _getRowspanParams(): Required<IRowspanParams> {
+    _getRowspanParams(): {
+        startRow: number,
+        endRow: number,
+        rowspan: number
+    } {
         const startRow = typeof this._$column.startRow === 'number' ? this._$column.startRow : (this._$owner.getIndex() + 1);
         let endRow;
 
@@ -133,7 +137,7 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
     getRowspan(): string {
         if (!this._$owner.isFullGridSupport()) {
-            return this._getRowspanParams().rowspan;
+            return '' + this._getRowspanParams().rowspan;
         }
         const {startRow, endRow} = this._getRowspanParams();
         return `grid-row: ${startRow} / ${endRow};`;
@@ -141,18 +145,22 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     // endregion
 
     getWrapperStyles(): string {
+        let styles = super.getWrapperStyles();
+        if (this._$owner.isFullGridSupport()) {
+            styles += this.getRowspan();
+        }
+        styles += ` z-index: ${this.getZIndex()};`;
+        return styles;
+    }
+
+    getZIndex(): number {
         let zIndex;
         if (this._$owner.hasColumnScroll()) {
             zIndex = this._$isFixed ? FIXED_HEADER_Z_INDEX : STICKY_HEADER_Z_INDEX;
         } else {
             zIndex = FIXED_HEADER_Z_INDEX;
         }
-        let styles = super.getWrapperStyles();
-        if (this._$owner.isFullGridSupport()) {
-            styles += this.getRowspan();
-        }
-        styles += ` z-index: ${zIndex};`;
-        return styles;
+        return zIndex;
     }
 
     getWrapperClasses(theme: string, backgroundColorStyle: string, style: string): string {
@@ -172,10 +180,6 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         }
         if (!isStickySupport) {
             wrapperClasses += ' controls-Grid__header-cell_static';
-        }
-
-        if (!this.isMultiSelectColumn()) {
-            wrapperClasses += ' controls-Grid__header-cell_min-width';
         }
 
         if (this._$valign) {
@@ -276,6 +280,12 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
     }
 
     protected _getWrapperPaddingClasses(theme: string): string {
+        // Для ячейки, создаваемой в связи с множественной лесенкой не нужны отступы, иначе будут проблемы с наложением
+        // тени: https://online.sbis.ru/opendoc.html?guid=758f38c7-f5e7-447e-ab79-d81546b9f76e
+        if (this._$ladderCell) {
+            return '';
+        }
+
         let paddingClasses = '';
         const leftPadding = this._$owner.getLeftPadding();
         const rightPadding = this._$owner.getRightPadding();

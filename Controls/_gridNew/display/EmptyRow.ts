@@ -1,5 +1,5 @@
 import {TemplateFunction} from 'UI/Base';
-import {IColspanParams, IColumn} from 'Controls/grid';
+import {IColspanParams, IColumn} from 'Controls/interface';
 
 import Row, {IOptions as IRowOptions} from './Row';
 import EmptyCell from './EmptyCell';
@@ -38,16 +38,20 @@ export default class EmptyRow<T> extends Row<T> {
             return;
         }
 
-        const factory = this._getColumnsFactory();
+        const factory = this.getColumnsFactory();
 
         if (this._$emptyTemplate) {
             const columns = this._$owner.getColumnsConfig();
-            let endColumn = columns.length + 1;
 
             // todo Множественный stickyProperties можно поддержать здесь:
             const stickyLadderProperties = this.getStickyLadderProperties(columns[0]);
             const stickyLadderCellsCount = stickyLadderProperties && stickyLadderProperties.length || 0;
 
+            let endColumn = columns.length + 1;
+
+            if (this._$owner.hasMultiSelectColumn()) {
+                endColumn++;
+            }
             if (stickyLadderCellsCount) {
                 endColumn += stickyLadderCellsCount;
             }
@@ -64,12 +68,11 @@ export default class EmptyRow<T> extends Row<T> {
             });
         } else {
             this._$columnItems = this._prepareColumnItems(this._$emptyTemplateColumns, factory);
-        }
-
-        if (this._$owner.hasMultiSelectColumn()) {
-            this._$columnItems.unshift(new factory({
-                column: {}
-            }));
+            if (this._$owner.hasMultiSelectColumn()) {
+                this._$columnItems.unshift(new factory({
+                    column: {}
+                }));
+            }
         }
     }
 

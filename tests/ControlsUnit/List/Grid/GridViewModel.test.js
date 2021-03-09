@@ -161,6 +161,11 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             gridViewModel.setDragItemData(dragItemData);
             assert.equal(gridViewModel.getDragItemData(), dragItemData);
          });
+
+         it('resetDraggedItems', () => {
+            gridViewModel.resetDraggedItems();
+            assert.equal(gridViewModel._model.getVersion(), 3);
+         });
       });
 
       describe('"_private" block', function() {
@@ -3017,9 +3022,9 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             assert.equal(3, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnIndex: 1}));
 
             // fixed coll withoutColumnScroll
-            assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false}));
+            assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnScroll: false}));
             // sticky fit coll withoutColumnScroll
-            assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, isColumnScrollVisible: false, columnIndex: 1}));
+            assert.equal(4, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnScroll: false, columnIndex: 1}));
          });
 
          it('updates prefix version with ladder only on add and remove', () => {

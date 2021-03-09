@@ -1,5 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 import Abstract, {IEnumerable, IOptions as IAbstractOptions} from './Abstract';
+import * as cMerge from 'Core/core-merge';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem, {IOptions as ICollectionItemOptions, ICollectionItemCounters} from './CollectionItem';
 import GroupItem from './GroupItem';
@@ -33,7 +34,7 @@ import {mixin, object} from 'Types/util';
 import {Set, Map} from 'Types/shim';
 import {Object as EventObject} from 'Env/Event';
 import * as VirtualScrollController from './controllers/VirtualScroll';
-import {ICollection, ISourceCollection} from './interface/ICollection';
+import { ICollection, ISourceCollection, IItemPadding } from './interface/ICollection';
 import { IDragPosition } from './interface/IDragPosition';
 import {INavigationOptionValue} from 'Controls/interface';
 
@@ -44,21 +45,22 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * Возможные значения доступности чекбокса
+ *
+ * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @class
  * @public
  */
 const MultiSelectAccessibility = {
     /**
-     * Чекбокс виден и с ним можно взаимодействовать
+     * Чекбокс виден и с ним можно взаимодействовать.
      */
     enabled: true,
     /**
-     * Чекбокс виден, но с ним нельзя взаимодействовать
+     * Чекбокс виден, но с ним нельзя взаимодействовать. Режим "только для чтения".
      */
     disabled: false,
     /**
-     * Чекбокс скрыт
+     * Чекбокс скрыт.
      */
     hidden: null
 };
@@ -97,7 +99,7 @@ export type StrategyConstructor<
    T extends CollectionItem<S> = CollectionItem<S>
    > = new() => F;
 
-interface ISessionItems<T> extends Array<T> {
+export interface ISessionItems<T> extends Array<T> {
     properties?: object;
 }
 
@@ -125,6 +127,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     theme?: string;
+    backgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -151,12 +154,6 @@ export interface IViewIterator {
 
 export type TGroupKey = string|number;
 export type TArrayGroupKey = TGroupKey[];
-export interface IItemPadding {
-    top?: string;
-    bottom?: string;
-    left?: string;
-    right?: string;
-}
 
 export interface IItemActionsTemplateConfig {
     toolbarVisibility?: boolean;
@@ -295,7 +292,9 @@ function onCollectionChange<T>(
             // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
             // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
             // виртуального скролла.
-            this._reBuild(this._$compatibleReset || newItems.length === 0 || reason === 'assign');
+            // TODO избавиться по ошибке https://online.sbis.ru/opendoc.html?guid=f44d88a0-ac53-4d45-9dea-2b594211ee57
+            const needReset = this._$compatibleReset || newItems.length === 0 || reason === 'assign';
+            this._reBuild(needReset);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -306,6 +305,9 @@ function onCollectionChange<T>(
                 0
             );
             this._handleAfterCollectionChange();
+            if (!needReset) {
+                this._handleCollectionActionChange(newItems);
+            }
             this._nextVersion();
             return;
 
@@ -319,6 +321,7 @@ function onCollectionChange<T>(
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
             this._nextVersion();
+            this._handleCollectionActionChange(newItems);
             return;
     }
 
@@ -390,6 +393,8 @@ function onCollectionItemChange<T extends EntityModel>(
     }
 
     this._nextVersion();
+
+    this._handleAfterCollectionItemChange(item, index, properties);
 }
 
 /**
@@ -416,6 +421,17 @@ function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boo
             callbacks.shift();
         }
     }
+}
+
+function onCollectionPropertyChange(event: EventObject, values: {metaData: { results?: EntityModel }}): void {
+    if (values && values.metaData) {
+        this._actualizeSubscriptionOnMetaResults(this._$metaResults, values.metaData.results);
+        this.setMetaResults(values.metaData.results);
+    }
+}
+
+function onMetaResultsChange(event: EventObject, values: Record<string, unknown>) {
+    this.setMetaResults(this._$collection.getMetaData()?.results);
 }
 
 /**
@@ -774,6 +790,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _onCollectionChange: Function;
 
     /**
+     * Обработчик события об изменении свойства в коллекции
+     */
+    protected _onCollectionPropertyChange: Function;
+
+    /**
+     * Обработчик события об изменении результатов из мета данных коллекции
+     */
+    protected _onMetaResultsChange: Function;
+
+    /**
      * Обработчик события об изменении элемента коллекции
      */
     protected _onCollectionItemChange: Function;
@@ -802,6 +828,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _userStrategies: Array<IUserStrategy<S, T>>;
 
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
+    protected _isDragOutsideList: boolean = false;
+
+    // Фон застиканных записей и лесенки
+    protected _$backgroundStyle?: string;
 
     constructor(options: IOptions<S, T>) {
         super(options);
@@ -864,7 +894,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             throw new TypeError(`${this._moduleName}: source collection should implement Types/collection:IEnumerable`);
         }
 
-        this.setMetaResults(this.getMetaData().results);
+        this._$metaResults = this.getMetaData().results;
 
         this._$sort = normalizeHandlers(this._$sort);
         this._$filter = normalizeHandlers(this._$filter);
@@ -883,15 +913,15 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._bindHandlers();
         this._initializeCollection();
 
-        if (options.itemPadding) {
-            this._setItemPadding(options.itemPadding);
-        }
-
         this._viewIterator = {
             each: this.each.bind(this),
             setIndices: () => false,
             isItemAtIndexHidden: () => false
         };
+
+        if (options.itemPadding) {
+            this._setItemPadding(options.itemPadding);
+        }
 
         if (this._isGrouped()) {
             // TODO What's a better way of doing this?
@@ -907,6 +937,14 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         if (this._$collection['[Types/_collection/IObservable]']) {
             (this._$collection as ObservableMixin).subscribe('onCollectionChange', this._onCollectionChange);
             (this._$collection as ObservableMixin).subscribe('onCollectionItemChange', this._onCollectionItemChange);
+
+            // Подписка на onPropertyChange коллекции для отслеживания установки/удаления/изменения метаданных.
+            // Метаданные нужны списку для отображения результатов.
+            // Результаты в метаданных должны быть заданы в формате Types/entity:Model, за изменение модели тоже
+            // необходимо следить.
+            (this._$collection as ObservableMixin).subscribe('onPropertyChange', this._onCollectionPropertyChange);
+
+            this._actualizeSubscriptionOnMetaResults(null, this._$metaResults);
         }
         if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -922,6 +960,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 (this._$collection as ObservableMixin).unsubscribe(
                     'onCollectionItemChange', this._onCollectionItemChange
                 );
+                (this._$collection as ObservableMixin).unsubscribe(
+                    'onPropertyChange', this._onCollectionPropertyChange
+                );
+
+                this._actualizeSubscriptionOnMetaResults(this._$metaResults, null);
             }
             if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -933,6 +976,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         const projectionOldItems = toArray(this) as [];
         this._deinitializeCollection();
         this._$collection = newCollection;
+        this._$metaResults = this.getMetaData().results;
         this._initializeCollection();
         const projectionNewItems = toArray(this) as [];
         this._notifyBeforeCollectionChange();
@@ -958,6 +1002,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
         this._userStrategies = null;
+        this._$metaResults = null;
 
         super.destroy();
     }
@@ -1609,14 +1654,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return true;
     }
 
-    setGroupProperty(groupProperty: string): void {
+    setGroupProperty(groupProperty: string): boolean {
         if (this._$groupProperty !== groupProperty) {
             this._$groupProperty = groupProperty;
             this.setGroup((item) => {
                 return item.get(this._$groupProperty);
             });
             this._nextVersion();
+            return true;
         }
+        return false;
     }
 
     getGroupProperty(): string {
@@ -2024,9 +2071,11 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
      * @return {String}
      */
     setKeyProperty(keyProperty: string): void {
-        this._$keyProperty = keyProperty;
-        this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
-        this.nextVersion();
+        if (keyProperty !== this._$keyProperty) {
+            this._$keyProperty = keyProperty;
+            this._composer.getInstance<DirectItemsStrategy<T>>(DirectItemsStrategy).keyProperty = keyProperty;
+            this.nextVersion();
+        }
     }
 
     /**
@@ -2093,7 +2142,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             items,
             index
         );
-        this._handleAfterCollectionChange();
+        this._handleAfterCollectionChange(items);
 
         if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
@@ -2158,11 +2207,18 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
      * @param outside
      */
     setDragOutsideList(outside: boolean): void {
-        const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
-        if (strategy) {
-            strategy.avatarItem.setDragOutsideList(outside);
-            this._nextVersion();
+        if (this._isDragOutsideList !== outside) {
+            this._isDragOutsideList = outside;
+            const strategy = this.getStrategyInstance(this._dragStrategy) as DragStrategy;
+            if (strategy) {
+                strategy.avatarItem.setDragOutsideList(outside);
+                this._nextVersion();
+            }
         }
+    }
+
+    isDragOutsideList(): boolean {
+        return this._isDragOutsideList;
     }
 
     isDragging(): boolean {
@@ -2238,6 +2294,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._updateItemsMultiSelectAccessibilityProperty(property);
     }
 
+    getMultiSelectAccessibilityProperty(): string {
+        return this._$multiSelectAccessibilityProperty;
+    }
+
     setMultiSelectPosition(position: 'default' | 'custom'): void {
         if (this._$multiSelectPosition === position) {
             return;
@@ -2268,15 +2328,21 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         });
     }
 
-    protected _setItemPadding(itemPadding: IItemPadding): void {
+    protected _setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
         this._$topPadding = itemPadding.top || 'default';
         this._$bottomPadding = itemPadding.bottom || 'default';
         this._$leftPadding = itemPadding.left || 'default';
         this._$rightPadding = itemPadding.right || 'default';
+
+        this.getViewIterator().each((item: CollectionItem) => {
+            if (item.setItemPadding) {
+                item.setItemPadding(itemPadding, silent);
+            }
+        });
     }
 
     setItemPadding(itemPadding: IItemPadding, silent?: boolean): void {
-        this._setItemPadding(itemPadding);
+        this._setItemPadding(itemPadding, silent);
         if (!silent) {
             this._nextVersion();
         }
@@ -2299,6 +2365,18 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     getHoverBackgroundStyle(): string {
         return this._$hoverBackgroundStyle;
+    }
+
+    setBackgroundStyle(backgroundStyle: string): void {
+        this._$backgroundStyle = backgroundStyle;
+        this.getItems().forEach((item) => {
+           item.setBackgroundStyle(backgroundStyle);
+        });
+        this.nextVersion();
+    }
+
+    getBackgroundStyle(): string {
+        return this._$backgroundStyle;
     }
 
     getEditingBackgroundStyle(): string {
@@ -2422,6 +2500,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     setMetaResults(metaResults: EntityModel): void {
         this._$metaResults = metaResults;
+        this._nextVersion();
     }
 
     getMetaResults(): EntityModel {
@@ -2430,6 +2509,17 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     getMetaData(): any {
         return this._$collection && this._$collection.getMetaData ? this._$collection.getMetaData() : {};
+    }
+
+    private _actualizeSubscriptionOnMetaResults(thisMetaResults, newMetaResults) {
+        if (thisMetaResults !== newMetaResults) {
+            if (thisMetaResults && thisMetaResults['[Types/_entity/IObservableObject]']) {
+                thisMetaResults.unsubscribe('onPropertyChange', this._onMetaResultsChange);
+            }
+            if (newMetaResults && newMetaResults['[Types/_entity/IObservableObject]']) {
+                newMetaResults.subscribe('onPropertyChange', this._onMetaResultsChange);
+            }
+        }
     }
 
     getCollapsedGroups(): TArrayGroupKey {
@@ -2497,7 +2587,27 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._actionsMenuConfig = config;
     }
 
-    getActionsTemplateConfig(): IItemActionsTemplateConfig {
+    getActionsTemplateConfig(templateOptions: any): IItemActionsTemplateConfig {
+        if (templateOptions && this._actionsTemplateConfig) {
+            if (templateOptions.actionStyle) {
+                this._actionsTemplateConfig.actionStyle = templateOptions.actionStyle;
+            }
+            if (templateOptions.actionPadding) {
+                this._actionsTemplateConfig.actionPadding = templateOptions.actionPadding;
+            }
+            if (templateOptions.iconStyle) {
+                this._actionsTemplateConfig.iconStyle = templateOptions.iconStyle;
+            }
+            if (templateOptions.actionMode) {
+                this._actionsTemplateConfig.actionMode = templateOptions.actionMode;
+            }
+            if (templateOptions.highlightOnHover) {
+                this._actionsTemplateConfig.highlightOnHover = templateOptions.highlightOnHover;
+            }
+            if (templateOptions.itemActionsClass) {
+                this._actionsTemplateConfig.itemActionsClass = templateOptions.itemActionsClass;
+            }
+        }
         return this._actionsTemplateConfig;
     }
 
@@ -2931,12 +3041,16 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._onCollectionChange = onCollectionChange.bind(this);
         this._onCollectionItemChange = onCollectionItemChange.bind(this);
         this._oEventRaisingChange = onEventRaisingChange.bind(this);
+        this._onCollectionPropertyChange = onCollectionPropertyChange.bind(this);
+        this._onMetaResultsChange = onMetaResultsChange.bind(this);
     }
 
     protected _unbindHandlers(): void {
         this._onCollectionChange = null;
         this._onCollectionItemChange = null;
         this._oEventRaisingChange = null;
+        this._onCollectionPropertyChange = null;
+        this._onMetaResultsChange = null;
     }
 
     // endregion
@@ -2960,6 +3074,12 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
+            options.backgroundStyle = this._$backgroundStyle;
+            options.theme = this._$theme;
+            options.leftPadding = this._$leftPadding;
+            options.rightPadding = this._$rightPadding;
+            options.topPadding = this._$topPadding;
+            options.bottomPadding = this._$bottomPadding;
             return create(options.itemModule || this._itemModule, options);
         };
     }
@@ -3578,7 +3698,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                     index
                 );
             });
-            this._handleAfterCollectionChange();
+            this._handleAfterCollectionChange(items);
         }
     }
 
@@ -3613,7 +3733,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 );
             }
         );
-        this._handleAfterCollectionChange();
+        this._handleAfterCollectionChange(changedItems);
     }
 
     /**
@@ -3716,10 +3836,14 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._notify('onAfterCollectionChange');
     }
 
-    protected _handleAfterCollectionChange(): void {
+    protected _handleAfterCollectionChange(changedItems: ISessionItems<T> = []): void {
         this._notifyAfterCollectionChange();
         this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
+
+    protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}
+
+    protected _handleCollectionActionChange(newItems: T[]): void {}
 
     // endregion
 
@@ -3756,6 +3880,7 @@ Object.assign(Collection.prototype, {
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
     _$hoverBackgroundStyle: 'default',
+    _$backgroundStyle: null,
     _$rowSeparatorSize: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

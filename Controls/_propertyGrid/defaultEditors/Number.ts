@@ -30,7 +30,7 @@ export interface INumberEditorOptions extends IEditorOptions {
  * @extends UI/Base:Control
  * @mixes Controls/_propertyGrid/IEditor
  * @demo Controls-demo/PropertyGridNew/Editors/Number/Demo
- * 
+ *
  * @public
  * @author Борисов А.Н.
  */
@@ -40,7 +40,7 @@ export interface INumberEditorOptions extends IEditorOptions {
  * @class Controls/_propertyGrid/defaultEditors/Number
  * @extends UI/Base:Control
  * @mixes Controls/_propertyGrid/IEditor
- * 
+ *
  * @public
  * @author Борисов А.Н.
  */
@@ -64,10 +64,9 @@ class NumberEditor extends Control implements IEditor {
     }
 
     _inputCompleted(event: Event, value: number): void {
-        const newValue = value || 0;
-        if (this._initialValue !== newValue) {
-            this._initialValue = newValue;
-            this._notify('propertyValueChanged', [newValue], {bubbling: true});
+        if (this._initialValue !== value) {
+            this._initialValue = value;
+            this._notify('propertyValueChanged', [value], {bubbling: true});
         }
     }
 }

@@ -28,7 +28,7 @@ export interface ISortingSelectorOptions extends IControlOptions, IFontColorStyl
  *
  * @extends UI/Base:Control
  * @public
- * @implements Controls/_interface/IFontColorStyle
+ * @implements Controls/interface:IFontColorStyle
  * @implements Controls/_interface/IFontSize
  * @demo Controls-demo/grid/Sorting/SortingSelector/Default/Index
  * @author Авраменко А.С.

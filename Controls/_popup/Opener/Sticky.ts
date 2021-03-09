@@ -85,7 +85,7 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
     }
 
     static openPopup(config: IStickyPopupOptions, popupController: string = POPUP_CONTROLLER): Promise<string> {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
             const newCfg = getStickyConfig(config);
             if (!newCfg.hasOwnProperty('isHelper')) {
                 Logger.warn('Controls/popup:Sticky: Для открытия прилипающих окон из кода используйте StickyOpener');
@@ -97,6 +97,8 @@ class Sticky extends BaseOpener<IStickyOpenerOptions> implements IStickyOpener {
                 BaseOpener.showDialog(result.template, newCfg, result.controller).then((popupId: string) => {
                     resolve(popupId);
                 });
+            }).catch((error: RequireError) => {
+                reject(error);
             });
         });
     }

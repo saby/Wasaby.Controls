@@ -3,6 +3,7 @@ import template = require('wml!Controls/_suggest/Input/Input');
 import {EventUtils} from 'UI/Events';
 import {getOptionTypes} from 'Controls/_suggest/Utils';
 import {generateStates} from 'Controls/input';
+import 'css!Controls/suggest';
 
 /**
  * Поле ввода с автодополнением это одострочное поле ввода, которое помогает пользователю ввести текст, предлагая подходящие варианты по первым набранным символам.
@@ -127,10 +128,10 @@ var Suggest = Control.extend({
 
 // <editor-fold desc="OptionsDesc">
 
-Suggest._theme = ['Controls/suggest', 'Controls/Classes'];
 Suggest.getOptionTypes = getOptionTypes;
 Suggest.getDefaultOptions = function() {
    return {
+      borderVisibility: 'visible',
       minSearchLength: 3
    };
 };

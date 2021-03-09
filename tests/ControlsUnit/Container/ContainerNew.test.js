@@ -68,9 +68,6 @@ define(
                top: 'auto',
                bottom: 'auto'
             };
-            scroll._stickyHeaderContext = {
-               updateConsumers: function() { }
-            };
 
             scroll._isMounted = true;
 
@@ -110,6 +107,9 @@ define(
                   let result;
 
                   scroll._scrollbars = {
+                     vertical: {
+                        isVisible: () => false
+                     },
                      setOffsets() {}
                   };
                   scroll._shadows = {
@@ -117,7 +117,8 @@ define(
                         result = res;
                      },
                      top: {
-                        isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined })
+                        isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined }),
+                        getVisibilityByInnerComponents: () => false
                      },
                      bottom: {
                         isStickyHeadersShadowsEnabled: sinon.stub().returns({ then: () => undefined })

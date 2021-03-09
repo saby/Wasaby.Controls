@@ -95,7 +95,11 @@ define(
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
 
-               options.source.query = () => Promise.reject(new Error());
+               options.source.query = () => {
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
+               };
 
                await menuControl._loadItems(options).catch(() => {
                   assert.isNotNull(menuControl._errorConfig);
@@ -107,10 +111,14 @@ define(
                const options = Clone(defaultOptions);
                const menuControl = getMenu();
                menuControl._options.dataLoadErrback = () => {
-                  isDataLoadErrbackCalled = true
-               }
+                  isDataLoadErrbackCalled = true;
+               };
 
-               options.source.query = () => Promise.reject(new Error());
+               options.source.query = () => {
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
+               };
 
                await menuControl._loadItems(options).catch(() => {
                   assert.isNotNull(menuControl._errorConfig);
@@ -185,7 +193,9 @@ define(
 
             it('_loadItems return error', async() => {
                menuControl._loadItems = () => {
-                  return Promise.reject(new Error());
+                  const error = new Error();
+                  error.processed = true;
+                  return Promise.reject(error);
                };
                await menuControl._beforeMount(menuOptions);
 
@@ -226,6 +236,18 @@ define(
                menuControl._beforeMount(menuOptions);
                assert.isTrue(isErrorProcessed);
             });
+         });
+
+         it('_beforeUnmount', () => {
+            const items = Clone(defaultItems);
+            const menuControl = getMenu();
+            menuControl._options = {
+               searchValue: '123'
+            };
+            menuControl._listModel = getListModel(items);
+            let listModelItems = menuControl._listModel.getCollection();
+            menuControl._beforeUnmount();
+            assert.equal(listModelItems.getCount(), 0);
          });
 
          describe('getCollection', function() {
@@ -297,7 +319,7 @@ define(
             });
 
             it('expandButton hidden, history menu', () => {
-               const newMenuOptions = { allowPin: true };
+               const newMenuOptions = { allowPin: true, subMenuLevel: 1 };
 
                const result = menuControl._isExpandButtonVisible(items, newMenuOptions);
                assert.isFalse(result, 'level is not first');
@@ -518,6 +540,19 @@ define(
             sinon.restore();
          });
 
+         it('_startOpeningTimeout', () => {
+            let isHandledItem = false;
+            const clock = sinon.useFakeTimers();
+            let menuControl = getMenu();
+            menuControl._handleCurrentItem = () => {
+               isHandledItem = true;
+            };
+            menuControl._startOpeningTimeout();
+            clock.tick(400);
+            assert.isTrue(isHandledItem);
+            clock.restore();
+         });
+
          it('getTemplateOptions', function() {
             let menuControl = getMenu();
             menuControl._isLoadedChildItems = () => true;
@@ -549,6 +584,7 @@ define(
             expectedOptions.additionalProperty = null;
             expectedOptions.itemPadding = null;
             expectedOptions.searchParam = null;
+            expectedOptions.subMenuLevel = 1;
             expectedOptions.iWantBeWS3 = false;
 
             let resultOptions = menuControl._getTemplateOptions(item);
@@ -898,6 +934,30 @@ define(
                menuControl._openItemActionMenu('item', {}, null);
                assert.isTrue(isOpened);
                assert.isOk(actualConfig.eventHandlers);
+            });
+
+            it('_onItemActionsMenuResult', () => {
+               let isItemHandled = false;
+               let isClosed = false;
+               const actionModel = new entity.Model({
+                  rawData: {
+                     key: '1',
+                     handler: () => { isItemHandled = true; }
+                  },
+                  keyProperty: 'key'
+               });
+               let menuControl = getMenu();
+               menuControl._itemActionsController = {
+                  getActiveItem: () => ({ getContents: () => {} })
+               };
+               menuControl._itemActionSticky = {
+                  close: () => {
+                     isClosed = true;
+                  }
+               };
+               menuControl._onItemActionsMenuResult('itemClick', actionModel, null);
+               assert.isTrue(isItemHandled);
+               assert.isTrue(isClosed);
             });
          });
 

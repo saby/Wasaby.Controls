@@ -14,6 +14,7 @@
                     class="controls-DateLinkView__value {{!_options.readOnly? 'controls-DateLinkView__value-hovered'}}
                     {{_fontSize? 'controls-fontsize-' + _fontSize + '_theme-' + _options.theme }}
                     {{_fontColorStyle? 'controls-text-' + _fontColorStyle + '_theme-' + _options.theme }}
+                    {{_fontColorStyle? 'controls-text-' + _fontColorStyle}}
                     controls-DateLinkView__value_theme-{{_options.theme}}
                     {{ _styleClass }} {{ _valueEnabledClass }}"
                     title="{{_options.tooltip}}"
@@ -47,7 +48,7 @@
               on:click="shiftForward()">
            </span>
         </ws:if>
-        <ws:if data="{{ _options.resetButtonVisible }}">
+        <ws:if data="{{ _resetButtonVisible || _clearButtonVisible }}">
             <span class="controls-DateLinkView__resetButton controls-DateLinkView__resetButton_theme-{{_options.theme}}
                         controls-icon controls-icon_style-unaccented_theme-{{ _options.theme }}
                         controls-icon_size-s_theme-{{ _options.theme }} icon-Close"

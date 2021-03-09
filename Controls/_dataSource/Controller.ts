@@ -1,7 +1,6 @@
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryOrderSelector, QueryWhereExpression} from 'Types/source';
 import {CrudWrapper} from './CrudWrapper';
-import {NavigationController} from 'Controls/source';
-import {INavigationControllerOptions} from 'Controls/_source/NavigationController';
+import {default as NavigationController, INavigationControllerOptions} from 'Controls/_dataSource/NavigationController';
 import {INavigationOptionValue,
         INavigationSourceConfig,
         Direction,
@@ -16,14 +15,17 @@ import {INavigationOptionValue,
         INavigationOptions} from 'Controls/interface';
 import {TNavigationPagingMode} from 'Controls/interface';
 import {RecordSet} from 'Types/collection';
-import {Record as EntityRecord, CancelablePromise, Model} from 'Types/entity';
+import {Record as EntityRecord, CancelablePromise, Model, EventRaisingMixin, ObservableMixin} from 'Types/entity';
 import {Logger} from 'UI/Utils';
 import {IQueryParams} from 'Controls/_interface/IQueryParams';
 import {default as groupUtil} from './GroupUtil';
 import {isEqual} from 'Types/object';
+import {mixin} from 'Types/util';
 // @ts-ignore
 import * as cInstance from 'Core/core-instance';
 import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
+import {wrapTimeout} from 'Core/PromiseLib/PromiseLib';
+import {fetch, HTTPStatus} from 'Browser/Transport';
 
 export interface IControllerState {
     keyProperty: string;
@@ -56,6 +58,7 @@ export interface IControllerOptions extends
     deepReload?: boolean;
     collapsedGroups?: TArrayGroupId;
     navigationParamsChangedCallback?: Function;
+    loadTimeout?: number;
 }
 
 interface ILoadConfig {
@@ -104,7 +107,13 @@ export function isEqualItems(oldList: RecordSet, newList: RecordSet): boolean {
         (getProtoOf(newList.getAdapter()).constructor == getProtoOf(oldList.getAdapter()).constructor);
 }
 
-export default class Controller {
+export default class Controller extends mixin<
+    ObservableMixin,
+    EventRaisingMixin
+    >(
+    ObservableMixin,
+    EventRaisingMixin
+) {
     private _options: IControllerOptions;
     private _filter: QueryWhereExpression<unknown>;
     private _items: RecordSet;
@@ -127,12 +136,14 @@ export default class Controller {
     private _deepReload: boolean;
 
     constructor(cfg: IControllerOptions) {
+        super();
+        EventRaisingMixin.call(this, cfg);
         this._options = cfg;
         this.setFilter(cfg.filter);
         this.setNavigation(cfg.navigation);
 
         if (cfg.root !== undefined) {
-            this.setRoot(cfg.root);
+            this._setRoot(cfg.root);
         }
         if (cfg.dataLoadCallback !== undefined) {
             this._setDataLoadCallbackFromOptions(cfg.dataLoadCallback);
@@ -201,6 +212,10 @@ export default class Controller {
         return this._filter;
     }
 
+    getSorting(): unknown {
+        return this._options.sorting;
+    }
+
     setNavigation(navigation: INavigationOptionValue<INavigationSourceConfig>): void {
         this._navigation = navigation;
 
@@ -215,7 +230,8 @@ export default class Controller {
 
     // FIXME, если root задаётся на списке, а не на data(browser)
     setRoot(key: TKey): void {
-        this._root = key;
+        this._setRoot(key);
+        this._notify('rootChanged', key);
     }
 
     getRoot(): TKey {
@@ -314,6 +330,10 @@ export default class Controller {
         this._expandedItems = expandedItems;
     }
 
+    getExpandedItems(): TKey[] {
+        return this._expandedItems;
+    }
+
     // FIXME для поддержки nodeSourceControllers в дереве
     calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
         this._updateQueryPropertiesByItems(items, key, undefined, direction);
@@ -372,6 +392,10 @@ export default class Controller {
         this._destroyNavigationController();
     }
 
+    private _setRoot(key: TKey): void {
+        this._root = key;
+    }
+
     private _getCrudWrapper(sourceOption: ICrud): CrudWrapper {
         if (!this._crudWrapper) {
             this._crudWrapper = new CrudWrapper({source: sourceOption});
@@ -407,7 +431,7 @@ export default class Controller {
         direction?: Direction
     ): void {
         if (this._hasNavigationBySource()) {
-            if (this._deepReload) {
+            if (this._deepReload || !direction && this._root === id) {
                 this._destroyNavigationController();
             }
             this._getNavigationController(this._navigation)
@@ -455,9 +479,9 @@ export default class Controller {
 
         if (direction === 'up') {
             this._prependItems(items);
-        } else if (direction === 'down') {
+        } else if (direction === 'down' && this._items) {
             this._appendItems(items);
-        } else if (key !== this._root && this._items) {
+        } else if (!direction && key !== this._root && this._items) {
             this._mergeItems(items);
         } else {
             this._setItems(items);
@@ -509,48 +533,58 @@ export default class Controller {
             this.cancelLoading();
             this._loadPromise = new CancelablePromise(
                 filterPromise.then((preparedFilter: QueryWhereExpression<unknown>) => {
-                    // В source может лежать prefetchProxy
-                    // При подгрузке вниз/вверх данные необходимо брать не из кэша prefetchProxy
-                    const source = direction !== undefined ?
-                        Controller._getSource(this._options.source) :
-                        this._options.source;
-                    const crudWrapper = this._getCrudWrapper(source as ICrud);
-
-                    let params: IQueryParams | IQueryParams[] = {
-                        filter: preparedFilter,
-                        sorting: this._options.sorting
-                    };
-
-                    if (this._hasNavigationBySource()) {
-                        params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
+                    if (this._options.loadTimeout) {
+                        return wrapTimeout(
+                            this._query(preparedFilter, key, navigationSourceConfig, direction),
+                            this._options.loadTimeout
+                        ).catch((error) => {
+                            return Promise.reject(error instanceof Error ? error : new fetch.Errors.HTTP({
+                                httpError: HTTPStatus.GatewayTimeout,
+                                message: undefined,
+                                url: undefined
+                            }));
+                        });
                     }
-                    return crudWrapper.query(params, this._options.keyProperty);
-                }));
-
-            this._loadPromise.promise
-                .then((result: RecordSet) => {
-                    this._loadPromise = null;
-                    return this._processQueryResult(result, key, navigationSourceConfig, direction);
+                    return this._query(preparedFilter, key, navigationSourceConfig, direction);
                 })
+            );
+
+            return this._loadPromise.promise
+                .then((result: RecordSet) => this._processQueryResult(result, key, navigationSourceConfig, direction))
                 .catch((error) => {
-                    if (!error.isCanceled && !error.canceled) {
-                        // Если упала ошибка при загрузке в каком-то направлении,
-                        // то контроллер навигации сбрасывать нельзя,
-                        // Т.к. в этом направлении могут продолжить загрухзку
-                        if (!direction) {
-                            this._navigationController = null;
-                        }
-                        this._loadPromise = null;
+                    if (error && !error.isCanceled && !error.canceled) {
                         this._processQueryError(error);
                     }
-                    return error;
+                    return Promise.reject(error);
                 });
-
-            return this._loadPromise.promise;
         } else {
             Logger.error('source/Controller: Source option has incorrect type');
             return Promise.reject(new Error('source/Controller: Source option has incorrect type'));
         }
+    }
+
+    private _query(
+        filter: QueryWhereExpression<unknown>,
+        key?: TKey,
+        navigationSourceConfig?: INavigationSourceConfig,
+        direction?: Direction
+    ): Promise<RecordSet> {
+        // В source может лежать prefetchProxy
+        // При подгрузке вниз/вверх данные необходимо брать не из кэша prefetchProxy
+        const source = direction !== undefined ?
+            Controller._getSource(this._options.source) :
+            this._options.source;
+        const crudWrapper = this._getCrudWrapper(source as ICrud);
+
+        let params: IQueryParams | IQueryParams[] = {
+            filter,
+            sorting: this._options.sorting
+        };
+
+        if (this._hasNavigationBySource()) {
+            params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
+        }
+        return crudWrapper.query(params, this._options.keyProperty);
     }
 
     private _getFilterHierarchy(
@@ -615,8 +649,9 @@ export default class Controller {
         let methodResult;
         let dataLoadCallbackResult;
 
-        this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
+        this._loadPromise = null;
         this._loadError = null;
+        this._updateQueryPropertiesByItems(result, key, navigationSourceConfig, direction);
 
         if (loadedInCurrentRoot && this._dataLoadCallback) {
             dataLoadCallbackResult = this._dataLoadCallback(result, direction);
@@ -625,6 +660,8 @@ export default class Controller {
         if ((loadedInCurrentRoot || direction) && this._dataLoadCallbackFromOptions) {
             this._dataLoadCallbackFromOptions(result, direction);
         }
+
+        this._notify('dataLoadCallback', result);
 
         if (dataLoadCallbackResult instanceof Promise) {
             methodResult = dataLoadCallbackResult.then(() => {
@@ -638,12 +675,25 @@ export default class Controller {
     }
 
     private _processQueryError(
-        queryError: Error
+        queryError: Error,
+        direction?: Direction
     ): Error {
+        // Если упала ошибка при загрузке в каком-то направлении,
+        // то контроллер навигации сбрасывать нельзя,
+        // Т.к. в этом направлении могут продолжить загрухзку
+        if (!direction) {
+            this._navigationController = null;
+        }
+        this._loadPromise = null;
         if (this._options.dataLoadErrback) {
             this._options.dataLoadErrback(queryError);
         }
         this._loadError = queryError;
+        // Выводим ошибку в консоль, иначе из-за того, что она произошла в Promise,
+        // у которого есть обработка ошибок через catch, никто о ней не узнает
+        if (!queryError.processed && !queryError.hasOwnProperty('httpError')) {
+            Logger.error('dataSource/Controller load error', this, queryError);
+        }
         return queryError;
     }
 

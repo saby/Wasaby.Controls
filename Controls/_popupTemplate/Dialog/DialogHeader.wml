@@ -6,6 +6,7 @@
       <ws:if data="{{_options.headingCaption}}">
          <div class="controls-DialogTemplate__caption">
             <Controls.heading:Title attr:class="controls-DialogTemplate__caption_text"
+                                    on:mousedown="_headingMousedownHandler()"
                                     caption="{{_options.headingCaption}}"
                                     fontColorStyle="{{_options.headingFontColorStyle}}"
                                     fontSize="{{_options.headingFontSize}}"

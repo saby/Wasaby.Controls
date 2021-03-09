@@ -3,13 +3,15 @@ import _SuggestOptionsField = require('Controls/_suggestPopup/_OptionsField');
 import 'Controls/Container/Async';
 import {IControlOptions, Control, TemplateFunction} from 'UI/Base';
 import {SyntheticEvent} from 'UI/Vdom';
+import 'css!Controls/suggestPopup';
+import 'css!Controls/suggest';
 
 /**
  * Proxy container for suggest options.
  *
  * @class Controls/_suggestPopup/_ListWrapper
  * @extends UI/Base:Control
- * 
+ *
  * @private
  */
 
@@ -46,6 +48,4 @@ export default class ListWrapper extends Control<IControlOptions> {
    protected _tabsSelectedKeyChanged(event: SyntheticEvent, key: string | number | null): void {
       this._notify('tabsSelectedKeyChanged', [key]);
    }
-
-   static _theme: string[] = ['Controls/suggest', 'Controls/suggestPopup'];
 }

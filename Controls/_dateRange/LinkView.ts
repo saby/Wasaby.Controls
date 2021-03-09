@@ -13,6 +13,7 @@ import {isLeftMouseButton} from 'Controls/popup';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {descriptor} from "Types/entity";
 import dateControlsUtils from "./Utils";
+import {Base as dateUtils} from 'Controls/dateUtils';
 
 export interface ILinkViewControlOptions extends IControlOptions, IFontColorStyleOptions {
 }
@@ -21,6 +22,7 @@ export interface ILinkViewControlOptions extends IControlOptions, IFontColorStyl
  * <a href="/materials/Controls-demo/app/Controls-demo%2FInput%2FDate%2FLinkView">Demo examples.</a>.
  * @class Controls/_dateRange/LinkView
  * @extends UI/Base:Control
+ * @mixes Controls/_interface/IResetValues
  * @mixes Controls/_interface/IFontSize
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_dateRange/interfaces/ICaptionFormatter
@@ -46,6 +48,8 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    protected _defaultFontColorStyle: string = 'link';
    protected _defaultFontSize: string;
 
+   protected _resetButtonVisible: boolean;
+
    constructor(options: ILinkViewControlOptions) {
       super(arguments);
       this._rangeModel = new DateRangeModel({
@@ -55,24 +59,27 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
    }
 
    _beforeMount(options: ILinkViewControlOptions): void {
+      this._updateResetButtonVisible(options);
       this._setDefaultFontSize(options.viewMode);
       this._rangeModel.update(options);
       this._updateCaption(options);
       this._updateStyles({}, options);
       this._updateClearButton(options);
 
-      if (options.showPrevArrow || options.showNextArrow) {
-         Logger.error('LinkView: ' + rk('You should use prevArrowVisibility and nextArrowVisibility instead of showPrevArrow and showNextArrow'), this);
+      if (options.clearButtonVisibility) {
+         Logger.warn('LinkView: Используется устаревшая опция clearButtonVisibility, используйте' +
+             'resetStartValue и resetEndValue');
       }
-
-      // clearButtonVisibility is option of clearButton visibility state
-
-      if ((options.prevArrowVisibility && options.clearButtonVisibility) || (options.nextArrowVisibility && options.clearButtonVisibility)) {
-         Logger.error('LinkView: ' + rk('The Controls functional is not intended for showClearButton and prevArrowVisibility/nextArrowVisibility options using in one time'), this);
+      if (options.prevArrowVisibility) {
+         Logger.warn('LinkView: Используется устаревшая опция prevArrowVisibility, используйте контрол ArrowButton');
+      }
+      if (options.nextArrowVisibility) {
+         Logger.warn('LinkView: Используется устаревшая опция nextArrowVisibility, используйте контрол ArrowButton');
       }
    }
 
    _beforeUpdate(options: ILinkViewControlOptions): void {
+      this._updateResetButtonVisible(options);
       var changed = this._rangeModel.update(options);
       if (changed || this._options.emptyCaption !== options.emptyCaption ||
           this._options.captionFormatter !== options.captionFormatter) {
@@ -103,6 +110,22 @@ class LinkView extends Control<ILinkViewControlOptions> implements IFontColorSty
 
    _resetButtonClickHandler(): void {
       this._notify('resetButtonClick');
+      // TODO: удалить по https://online.sbis.ru/opendoc.html?guid=0c2d0902-6bdc-432e-8081-06a01898f99e
+      if (this._clearButtonVisible) {
+         this._rangeModel.setRange(null, null);
+         this._updateCaption();
+      }
+   }
+
+   _updateResetButtonVisible(options): void {
+      const hasResetStartValue = options.resetStartValue || options.resetStartValue === null;
+      const hasResetEndValue = options.resetEndValue || options.resetEndValue === null;
+      this._resetButtonVisible = (hasResetStartValue &&
+          (!dateUtils.isDatesEqual(options.startValue, options.resetStartValue) ||
+              options.startValue !== options.resetStartValue)) ||
+          (hasResetEndValue &&
+              (!dateUtils.isDatesEqual(options.endValue, options.resetEndValue)
+                  || options.endValue !== options.resetEndValue));
    }
 
    getPopupTarget() {

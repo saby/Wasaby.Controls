@@ -18,6 +18,7 @@ export interface IBasePopupOptions {
     autofocus?: boolean;
     topPopup?: boolean;
     modal?: boolean;
+    closeOnOverlayClick?: boolean;
     eventHandlers?: IEventHandlers;
     isDefaultOpener?: boolean;
     showIndicator?: boolean;
@@ -79,7 +80,7 @@ export interface IBaseOpener {
  * </pre>
  * js
  * <pre>
- *   Control.extend({
+ *   class MyControl extends Control<IControlOptions>{
  *      ...
  *
  *      _open() {
@@ -97,7 +98,7 @@ export interface IBaseOpener {
  *          this._children.sticky.close()
  *      }
  *      ...
- *  });
+ *  }
  *  </pre>
  *  @see open
  */
@@ -118,6 +119,14 @@ export interface IBaseOpener {
  * @name Controls/_popup/interface/IBaseOpener#showIndicator
  * @cfg {Boolean} Определяет, будет ли показываться индикатор при открытии окна
  * @default true
+ */
+
+/**
+ * @name Controls/_popup/interface/IBaseOpener#closeOnOverlayClick
+ * @cfg {Boolean} Определяет, будет ли закрываться попап при клике по оверлею.
+ * @description Актуально только при включенной опции {@link Controls/_popup/interface/IBaseOpener#modal modal}
+ * @default false
+ * @see Controls/_popup/interface/IBaseOpener#modal
  */
 
 /**
@@ -200,7 +209,7 @@ export interface IBaseOpener {
  *
  * <pre>
  *    // MyTooltip.js
- *    Control.extend({
+ *   class MyControl extends Control<IControlOptions>{
  *       ...
  *       _zIndexCallback(currentItem) {
  *          if (currentItem.parentZIndex) {
@@ -208,7 +217,7 @@ export interface IBaseOpener {
  *          }
  *       }
  *       ...
- *    });
+ *    }
  * </pre>
  */
 
@@ -249,18 +258,18 @@ export interface IBaseOpener {
  *
  * <pre>
  *    // MainControl.js
- *    Control.extend({
+ *    class MainControl extends Control<IControlOptions>{
  *       ...
  *       _popupResultHandler(event, userData) {
  *          this._saveUserData(userData);
  *       }
  *       ...
- *    });
+ *    };
  * </pre>
  *
  * <pre>
  *    // popupTemplate.js
- *    Control.extend({
+ *   class PopupTemplate extends Control<IControlOptions>{
  *       ...
  *       _sendDataToMainControl(userData) {
  *          this._notify('sendResult', [userData], { bubbling: true});
@@ -282,7 +291,7 @@ export interface IBaseOpener {
  *
  * <pre>
  *    // MainControl.js
- *    Control.extend({
+ *    class MainControl extends Control<IControlOptions>{
  *       ...
  *       _popupResultHandler(event, userData) {
  *          this._saveUserData(userData);
@@ -293,7 +302,7 @@ export interface IBaseOpener {
  *
  * <pre>
  *    // popupTemplate.js
- *    Control.extend({
+ *    class PopupTemplate extends Control<IControlOptions>{
  *       ...
  *       _sendDataToMainControl(userData) {
  *          this._notify('sendResult', [userData], { bubbling: true});
@@ -313,14 +322,14 @@ export interface IBaseOpener {
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions>{
  *       ...
  *       _popupOpenHandler() {
  *          this._popupOpened = true;
  *          this._changeStatus(this._popupOpened);
  *       }
  *       ...
- *    });
+ *    }
  * </pre>
  */
 
@@ -334,14 +343,14 @@ export interface IBaseOpener {
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions>{
  *       ...
  *       _popupOpenHandler() {
  *          this._popupOpened = true;
  *          this._changeStatus(this._popupOpened);
  *       }
  *       ...
- *    });
+ *    };
  * </pre>
  */
 
@@ -355,13 +364,13 @@ export interface IBaseOpener {
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions>{
  *       ...
  *       _popupCloseHandler() {
  *          this._removeItem(this._currentItem);
  *       }
  *       ...
- *    });
+ *    };
  * </pre>
  */
 
@@ -375,13 +384,13 @@ export interface IBaseOpener {
  * </pre>
  *
  * <pre>
- *    Control.extend({
+ *    class MyControl extends Control<IControlOptions>{
  *       ...
  *       _popupCloseHandler() {
  *          this._removeItem(this._currentItem);
  *       }
  *       ...
- *    });
+ *    };
  * </pre>
  */
 
@@ -405,7 +414,7 @@ export interface IBaseOpener {
  * </pre>
  * userControl.js
  * <pre>
- *   Control.extend({
+ *   class MyControl extends Control<IControlOptions> {
  *      ...
  *
  *      constructor: function() {
@@ -432,7 +441,7 @@ export interface IBaseOpener {
  *         this._sendData(this._data);
  *      }
  *      ...
- *  });
+ *  };
  * </pre>
  * TestStack.wml
  * <pre>
@@ -442,7 +451,7 @@ export interface IBaseOpener {
  * </pre>
  * TestStack.js
  * <pre>
- *     Control.extend({
+ *     class MyControl extends Control<IControlOptions>{
  *         ...
  *
  *         _sendData() {
@@ -483,9 +492,8 @@ export interface IBaseOpener {
  * </pre>
  * userControl.js
  * <pre>
- *   Control.extend({
+ *   class MyControl extends Control<IControlOptions>{
  *      ...
- *
  *      constructor: function() {
  *         Control.superclass.constructor.apply(this, arguments);
  *         this._onResultHandler = this._onResultHandler.bind(this);
@@ -510,7 +518,7 @@ export interface IBaseOpener {
  *         this._sendData(this._data);
  *      }
  *      ...
- *  });
+ *  };
  * </pre>
  * TestStack.wml
  * <pre>
@@ -520,7 +528,7 @@ export interface IBaseOpener {
  * </pre>
  * TestStack.js
  * <pre>
- *     Control.extend({
+ *     class MyControl extends Control<IControlOptions>{
  *         ...
  *
  *         _sendData() {

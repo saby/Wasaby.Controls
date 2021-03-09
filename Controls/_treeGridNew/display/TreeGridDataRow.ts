@@ -1,24 +1,27 @@
 import { mixin } from 'Types/util';
-import { ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
-import { IGridRowOptions, GridCell, GridRowMixin } from 'Controls/gridNew';
+import { ITreeItemOptions, TreeItem, IItemPadding, TMarkerClassName, IGroupNode } from 'Controls/display';
+import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, GridItemActionsCell } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
-import { TMarkerClassName } from 'Controls/grid';
+import { IColumn } from 'Controls/interface';
 import { Model } from 'Types/entity';
 
-export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T> {
+export interface IOptions<T extends Model> extends IGridRowOptions<T>, ITreeItemOptions<T>, IDisplaySearchValueOptions {
     owner: TreeGridCollection<T>;
 }
 
-export default class TreeGridDataRow<T extends Model>
-   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) {
+export default class TreeGridDataRow<T extends Model = Model>
+   extends mixin<TreeItem<any>, GridRowMixin<any>>(TreeItem, GridRowMixin) implements IDisplaySearchValue, IGroupNode {
     readonly '[Controls/_display/grid/Row]': boolean;
     readonly '[Controls/treeGrid:TreeGridDataRow]': boolean;
 
     readonly '[Controls/_display/IEditableCollectionItem]': boolean = true;
+    readonly DisplayItemActions: boolean = true;
+    readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;
     readonly SelectableItem: boolean = true;
     readonly LadderSupport: boolean = true;
     readonly DraggableItem: boolean = true;
+    protected _$searchValue: string;
 
     constructor(options: IOptions<T>) {
         super(options);
@@ -38,6 +41,18 @@ export default class TreeGridDataRow<T extends Model>
     // TODO duplicate code with GridRow. Нужно придумать как от него избавиться.
     //  Проблема в том, что mixin не умеет объединять одинаковые методы, а логику Grid мы добавляем через mixin
     // region overrides
+
+    protected _initializeColumns(): void {
+        super._initializeColumns();
+
+        if (this._$columns && this.hasItemActionsSeparatedCell()) {
+            this._$columnItems.push(new GridItemActionsCell({
+                owner: this,
+                isFixed: true,
+                column: {}
+            }));
+        }
+    }
 
     setMultiSelectVisibility(multiSelectVisibility: string): boolean {
         const isChangedMultiSelectVisibility = super.setMultiSelectVisibility(multiSelectVisibility);
@@ -87,6 +102,27 @@ export default class TreeGridDataRow<T extends Model>
         }
     }
 
+    protected _getColumnFactoryParams(column: IColumn, columnIndex: number): Partial<IGridDataCellOptions<T>> {
+        return {
+            ...super._getColumnFactoryParams(column, columnIndex),
+            searchValue: this._$searchValue
+        };
+    }
+
+    setSearchValue(searchValue: string): void {
+        this._$searchValue = searchValue;
+        if (this._$columnItems) {
+            this._$columnItems.forEach((cell, cellIndex) => {
+                cell.setSearchValue(searchValue);
+            });
+        }
+        this._nextVersion();
+    }
+
+    getSearchValue(): string {
+        return this._$searchValue;
+    }
+
     setSelected(selected: boolean|null, silent?: boolean): void {
         const changed = this._$selected !== selected;
         super.setSelected(selected, silent);
@@ -103,7 +139,17 @@ export default class TreeGridDataRow<T extends Model>
         }
     }
 
+    // Убираем ExpanderPadding для подуровней TreeGridGroupRow
+    shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
+        const should = super.shouldDisplayExpanderPadding(tmplExpanderIcon, tmplExpanderSize);
+        return should && (this._$parent.isRoot() || !(this._$parent as TreeGridDataRow<T>).isGroupNode());
+    }
+
     // endregion overrides
+
+    isGroupNode(): boolean {
+        return false;
+    }
 }
 
 Object.assign(TreeGridDataRow.prototype, {
@@ -112,5 +158,6 @@ Object.assign(TreeGridDataRow.prototype, {
     '[Controls/_display/TreeItem]': true,
     _cellModule: 'Controls/treeGrid:TreeGridDataCell',
     _moduleName: 'Controls/treeGrid:TreeGridDataRow',
+    _$searchValue: '',
     _instancePrefix: 'tree-grid-row-'
 });

@@ -62,14 +62,16 @@ class DialogTemplate extends Control<IDialogTemplateOptions> implements IPopupTe
         this._headerTheme = ManagerController.getPopupHeaderTheme();
     }
 
-    private _onMouseDown(event: SyntheticEvent<Event>): void {
-        if (this._needStartDrag(event.target)) {
+    protected _onMouseDown(event: SyntheticEvent<MouseEvent>): void {
+        if (this._needStartDrag(event)) {
             this._startDragNDrop(event);
         }
     }
 
-    private _needStartDrag(target: EventTarget): boolean {
-        return this._options.draggable && target.tagName !== 'INPUT';
+    private _needStartDrag(event: SyntheticEvent<MouseEvent>): boolean {
+        const {target} = event;
+        const isEventProcessed = event.nativeEvent.processed;
+        return this._options.draggable && (target as HTMLElement).tagName !== 'INPUT' && !isEventProcessed;
     }
 
     private _startDragNDrop(event: SyntheticEvent<Event>): void {

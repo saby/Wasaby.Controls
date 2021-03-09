@@ -51,7 +51,7 @@
 
 .controls-TileView__richTemplate_image {
    width: 100%;
-   height: 100%;
+   height: auto;
 }
 
 .controls-TileView__richTemplate_imageWrapper {
@@ -62,6 +62,12 @@
    box-sizing: border-box;
    justify-content: center;
    position: relative;
+}
+
+.controls-TileView__richTemplate_imageWrapper__ellipse_proportion::after {
+   display: block;
+   content: '';
+   padding-bottom: 100%;
 }
 
 .controls-TileView_richTemplate_image_spacing_viewMode_circle_theme-@{themeName},
@@ -81,7 +87,7 @@
    height: @image_height_m_position_top_rich_tile;
 }
 
-.controls-TileView__richTemplate_image_size_l_position_top_theme-@{themeName} {
+.controls-TileView__richTemplate_image_size_l_position_top_viewMode_rectangle_theme-@{themeName} {
    height: @image_height_l_position_top_rich_tile;
 }
 
@@ -114,6 +120,11 @@
 .controls-TileView__richTemplate_image_size_l_position_top_viewMode_ellipse {
    width: @image_height_l_position_top_rich_tile;
 }
+// TODO костыль для imageSize, убрать https://online.sbis.ru/opendoc.html?guid=2986407e-574b-476e-861e-5c14099eab22
+.controls-TileView__richTemplate_image_size_xl_position_top_viewMode_circle,
+.controls-TileView__richTemplate_image_size_xl_position_top_viewMode_ellipse {
+   width: 100%;
+}
 
 .controls-TileView__richTemplate {
    display: flex;
@@ -122,9 +133,14 @@
 
 .controls-TileView__richTemplate_item {
    overflow: hidden;
+   box-sizing: border-box;
 }
 
-.controls-TileView__richTemplate_itemActions_theme-@{themeName} {
+.controls-TileView__richTemplate_item .controls-TileView__item_withoutBorder {
+   border: none;
+}
+
+.controls-TileView__richTemplate_item .controls-TileView__richTemplate_itemActions_theme-@{themeName} {
    background-color: rgba(255, 255, 255, 0.75);
    box-shadow: @item_actions_shadow_size_rich_tile @item_actions_shadow_color_rich_tile;
    height: @item_actions_height_rich_tile;

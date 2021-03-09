@@ -1,5 +1,5 @@
 /**
- * Шаблон, который по умолчанию используется для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ ячейки шапки} в контроле {@link Controls/grid:View Таблица}.
+ * Шаблон, который по умолчанию используется для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ ячейки заголовка} в {@link Controls/grid:View таблице}.
  *  
  * @class Controls/_grid/interface/HeaderContent
  * @author Авраменко А.С.

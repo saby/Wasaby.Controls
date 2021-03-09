@@ -14,6 +14,7 @@ import {
    NewSourceController as SourceController
 } from 'Controls/dataSource';
 import {QueryWhereExpression} from 'Types/source';
+import * as getSwitcherStrFromData from 'Controls/_search/Misspell/getSwitcherStrFromData';
 
 /**
  * Контрол используют в качестве контроллера для организации поиска в реестрах.
@@ -73,6 +74,7 @@ interface IContainerOptions extends IControlOptions, ISearchOptions, IHierarchyS
    viewMode: string;
    root?: Key;
    searchValue?: string;
+   sourceController?: SourceController;
 }
 
 type Key = string | number | null;
@@ -81,7 +83,6 @@ export default class Container extends Control<IContainerOptions> {
    protected _template: TemplateFunction = template;
 
    private _tmplNotify: Function = EventUtils.tmplNotify;
-   private _dataOptions: typeof DataOptions = null;
    private _previousViewMode: string = null;
    private _viewMode: string = null;
    private _searchValue: string = null;
@@ -92,6 +93,7 @@ export default class Container extends Control<IContainerOptions> {
    private _path: RecordSet = null;
    private _deepReload: boolean = undefined;
    private _inputSearchValue: string = '';
+   private _loading: boolean = false;
 
    private _searchController: SearchController = null;
 
@@ -104,17 +106,25 @@ export default class Container extends Control<IContainerOptions> {
       this._previousViewMode = this._viewMode = options.viewMode;
       this._updateViewMode(options.viewMode);
 
-      this._sourceController = context.dataOptions.sourceController;
+      this._sourceController = options.sourceController || context.dataOptions.sourceController;
       if (this._sourceController) {
          this._sourceController.updateOptions(this._getSourceControllerOptions());
       }
 
-      this._getSearchController({...options, ...context.dataOptions}).then((searchController) => {
-         this._searchValue = searchController.getSearchValue();
-      });
+      this._searchValue = this._getSearchController({
+         ...options,
+         ...context.dataOptions,
+         sourceController: this._sourceController
+      }).getSearchValue();
 
       if (options.searchValue) {
          this._inputSearchValue = options.searchValue;
+      }
+
+      if (this._inputSearchValue && this._inputSearchValue.length > options.minSearchLength) {
+         this._updateViewMode('search');
+      } else {
+         this._updateViewMode(options.viewMode);
       }
 
       if (options.root !== undefined) {
@@ -135,9 +145,11 @@ export default class Container extends Control<IContainerOptions> {
       const options = {...newOptions, ...context.dataOptions};
       const searchValueChanged = newOptions.searchValue !== undefined &&
           (this._options.searchValue !== newOptions.searchValue && this._searchValue !== newOptions.searchValue);
+      let updateResult;
 
       if (newOptions.root !== this._options.root) {
          this._root = newOptions.root;
+         this._getSearchController(newOptions).setRoot(newOptions.root);
       }
 
       if (this._options.viewMode !== newOptions.viewMode) {
@@ -148,18 +160,22 @@ export default class Container extends Control<IContainerOptions> {
          }
       }
 
-      if (this._searchController && options.sourceController && searchValueChanged) {
-         this._inputSearchValue = newOptions.searchValue;
+      const searchParamChanged = this._options.searchParam !== newOptions.searchParam;
+      if (this._searchController && options.sourceController && (searchValueChanged || searchParamChanged)) {
+         if (searchValueChanged) {
+            this._inputSearchValue = newOptions.searchValue;
+         }
          if (this._sourceController !== options.sourceController) {
             this._sourceController = options.sourceController;
          }
-         const updateResult = this._searchController.update(options);
+         updateResult = this._searchController.update(options);
 
          if (updateResult && !(updateResult instanceof Promise)) {
             this._sourceController.setFilter(updateResult as QueryWhereExpression<unknown>);
             this._notify('filterChanged', [updateResult]);
             this._setSearchValue(newOptions.searchValue);
          } else if (updateResult instanceof Promise) {
+            this._loading = true;
             updateResult.catch((error: Error & {
                isCancelled?: boolean;
             }) => {
@@ -172,6 +188,8 @@ export default class Container extends Control<IContainerOptions> {
       if (this._sourceController) {
          this._sourceController.updateOptions(this._getSourceControllerOptions());
       }
+
+      return updateResult;
    }
 
    private _getSourceControllerOptions(): ISourceControllerOptions {
@@ -187,9 +205,7 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    private _startSearch(value: string, options?: IContainerOptions): Promise<RecordSet | Error> {
-      return this._getSearchController(options).then((searchController) => {
-         return searchController.search(value);
-      });
+      return this._getSearchController(options).search(value);
    }
 
    private _updateParams(searchValue: string): void {
@@ -218,6 +234,7 @@ export default class Container extends Control<IContainerOptions> {
 
    protected _search(event: SyntheticEvent, validatedValue: string): void {
       this._inputSearchValue = validatedValue;
+      this._loading = true;
       this._startSearch(validatedValue, this._options)
           .catch((error: Error & {
              isCancelled?: boolean;
@@ -226,6 +243,10 @@ export default class Container extends Control<IContainerOptions> {
                 return error;
              }
           });
+   }
+
+   protected _inputSearchValueChanged(event: SyntheticEvent, value: string): void {
+      this._inputSearchValue = value;
    }
 
    private _isSearchViewMode(): boolean {
@@ -259,13 +280,15 @@ export default class Container extends Control<IContainerOptions> {
    }
 
    private _searchReset(event: SyntheticEvent): void {
-      this._getSearchController().then((searchController) => {
-         if (this._rootBeforeSearch) {
-            this._root = this._rootBeforeSearch;
-         }
-         this._updateFilter(searchController);
-         this._handleDataLoad(null);
-      });
+      const searchController = this._getSearchController();
+
+      if (this._rootBeforeSearch && this._root !== this._rootBeforeSearch && this._options.startingWith === 'current') {
+         this._root = this._rootBeforeSearch;
+         searchController.setRoot(this._root);
+         this._notify('rootChanged', [this._root]);
+      }
+      this._rootBeforeSearch = null;
+      this._updateFilter(searchController);
    }
 
    private _updateFilter(searchController: SearchController): void {
@@ -274,13 +297,11 @@ export default class Container extends Control<IContainerOptions> {
       this._setSearchValue('');
    }
 
-   private _getSearchController(options?: IContainerOptions & typeof DataOptions): Promise<SearchController> {
+   private _getSearchController(options?: IContainerOptions & typeof DataOptions): SearchController {
       if (!this._searchController) {
-         return import('Controls/search').then((result) => {
-            return this._searchController = new result.ControllerClass(options ?? this._options);
-         });
+         this._searchController = new SearchController(options ?? this._options);
       }
-      return Promise.resolve(this._searchController);
+      return this._searchController;
    }
 
    private _dataLoadCallback(data: RecordSet): void {
@@ -301,23 +322,31 @@ export default class Container extends Control<IContainerOptions> {
          this._notifiedMarkedKey = undefined;
       }
 
-      if (data instanceof RecordSet && this._searchController && this._searchController.isSearchInProcess()) {
-         const filter = this._searchController.getFilter();
-         this._updateParams(this._searchController.getSearchValue());
-         this._sourceController.setFilter(filter);
-         this._notify('filterChanged', [filter]);
+      if (this._searchController && (this._searchController.isSearchInProcess() || this._searchController.getSearchValue() !== this._searchValue)) {
+         this._afterSearch(data);
       }
 
       this._path = data?.getMetaData().path ?? null;
-
-      if (!this._isSearchViewMode()) {
-         this._getSearchController().then((searchController) => searchController.setPath(this._path));
-      }
+      this._searchController.setPath(this._path);
 
       if (this._isSearchViewMode() && !this._searchValue) {
          this._updateViewMode(this._previousViewMode);
          this._previousViewMode = null;
          this._misspellValue = '';
+      }
+   }
+
+   private _afterSearch(items: RecordSet): void {
+      const filter = this._searchController.getFilter();
+      this._updateParams(this._searchController.getSearchValue());
+      this._sourceController.setFilter(filter);
+      this._notify('filterChanged', [filter]);
+      this._loading = false;
+
+      const switchedStr = getSwitcherStrFromData(items);
+      this._misspellValue = switchedStr;
+      if (this._searchController.needChangeSearchValueToSwitchedString(items)) {
+         this._setSearchValue(switchedStr);
       }
    }
 

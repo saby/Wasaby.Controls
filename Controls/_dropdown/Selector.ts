@@ -17,6 +17,8 @@ import {IBaseDropdownOptions} from 'Controls/_dropdown/interface/IBaseDropdown';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/popup';
+import 'css!Controls/dropdown';
+import 'css!Controls/CommonClasses';
 
 interface IInputOptions extends IBaseDropdownOptions {
    fontColorStyle?: string;
@@ -27,9 +29,6 @@ interface IInputOptions extends IBaseDropdownOptions {
 
 const getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
-interface IDropdownInputChildren {
-   infoboxTarget: InfoboxTarget;
-}
 
 /**
  * Контрол, позволяющий выбрать значение из списка. Отображается в виде ссылки.
@@ -101,7 +100,9 @@ export default class Selector extends BaseDropdown {
    protected _tooltip: string;
    protected _selectedItems: Model[];
    protected _controller: Controller;
-   protected _children: IDropdownInputChildren;
+   protected _children: {
+      infoboxTarget: InfoboxTarget;
+   };
 
    _beforeMount(options: IInputOptions,
                 context: object,
@@ -128,8 +129,7 @@ export default class Selector extends BaseDropdown {
             popupClassName: options.popupClassName || ((options.showHeader ||
                 options.headerTemplate || options.headerContentTemplate) ?
                 'controls-DropdownList__margin-head' : options.multiSelect ?
-                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin') +
-                ' theme_' + options.theme,
+                    'controls-DropdownList_multiSelect__margin' :  'controls-DropdownList__margin'),
             allowPin: false,
             selectedItemsChangedCallback: this._prepareDisplayState.bind(this, options),
             openerControl: this
@@ -284,8 +284,6 @@ export default class Selector extends BaseDropdown {
    protected _deactivated(): void {
       this.closeMenu();
    }
-
-   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
 
    static getDefaultOptions(): Partial<IBaseDropdownOptions> {
       return {

@@ -1,10 +1,11 @@
 import {Control, IControlOptions, TemplateFunction} from 'UI/Base';
 import * as coreMerge from 'Core/core-merge';
 import {SyntheticEvent} from 'Vdom/Vdom';
-import * as StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
+import StringValueConverter from 'Controls/_input/DateTime/StringValueConverter';
 import IDateTimeMask from 'Controls/_input/interface/IDateTimeMask';
 import {EventUtils} from 'UI/Events';
 import {Popup as PopupUtil} from 'Controls/dateUtils';
+import 'css!Controls/input';
 
 import template = require('wml!Controls/_input/Date/Picker/Picker');
 
@@ -39,13 +40,24 @@ class Picker extends Control<IControlOptions> {
     _shouldValidate: boolean = false;
 
     openPopup(event: SyntheticEvent<MouseEvent>): void {
+        let value;
+        // Если передать null в datePopup в качестве начала и конца периода, то он выделит
+        // период от -бесконечности до +бесконечности.
+        // В режиме выбора одного дня мы не должны выбирать ни один день.
+        if (this._options.value === null) {
+            value = undefined;
+        } else {
+            value = this._options.value;
+        }
         const cfg = {
             ...PopupUtil.getCommonOptions(this),
             target: this._container,
             template: 'Controls/datePopup',
-            className: 'controls-PeriodDialog__picker_theme-' + this._options.theme,
+            className: 'controls-PeriodDialog__picker',
             templateOptions: {
                 ...PopupUtil.getTemplateOptions(this),
+                startValue: value,
+                endValue: value,
                 selectionType: 'single',
                 calendarSource: this._options.calendarSource,
                 dayTemplate: this._options.dayTemplate,
@@ -97,7 +109,7 @@ class Picker extends Control<IControlOptions> {
         return coreMerge({}, IDateTimeMask.getOptionTypes());
     }
 
-    static _theme: string[] = ['Controls/Classes', 'Controls/input'];
+    static _theme: string[] = ['Controls/Classes'];
 }
 
 Object.defineProperty(Picker, 'defaultProps', {

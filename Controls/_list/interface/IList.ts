@@ -1,66 +1,13 @@
 import { TemplateFunction } from 'UI/Base';
 import { IItemActionsOptions } from 'Controls/itemActions';
 import { IMarkerListOptions } from 'Controls/marker';
+import { IItemPadding } from 'Controls/display';
 import {IFontColorStyle} from 'Controls/interface';
 import {IMovableOptions} from './IMovableList';
 
 type TMultiSelectVisibility = 'visible'|'onhover'|'hidden';
 
 type TListStyle = 'master'|'default';
-
-/**
- * @typedef {String} TVerticalItemPadding
- * @variant S
- * @variant nyll
- */
-export type TVerticalItemPadding = 'S'|'null';
-
-/**
- * @typedef {String} THorizontalItemPadding
- * @variant XS
- * @variant S
- * @variant M
- * @variant L
- * @variant XL
- * @variant XXL
- * @variant null
- */
-export type THorizontalItemPadding = 'XS'|'S'|'M'|'L'|'XL'|'XXL'|'null';
-
-/**
- * Интерфейс настройки отступов записи
- * @Interface Controls/_list/interface/IList/IItemPadding
- * @public
- * @author Авраменко А.С.
- */
-/*ENG
- * Item padding settings interface
- * @interface Controls/_list/interface/IList/IItemPadding
- * @public
- * @author Авраменко А.С.
- */
-export interface IItemPadding {
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#top
-     * @cfg {TVerticalItemPadding} Отступ записи сверху
-     */
-    top?: TVerticalItemPadding;
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#bottom
-     * @cfg {TVerticalItemPadding} Отступ записи снизу
-     */
-    bottom?: TVerticalItemPadding;
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#left
-     * @cfg {THorizontalItemPadding} Отступ записи слева
-     */
-    left?: THorizontalItemPadding;
-    /**
-     * @name Controls/_list/interface/IList/IItemPadding#right
-     * @cfg {THorizontalItemPadding} Отступ записи справа
-     */
-    right?: THorizontalItemPadding;
-}
 
 /**
  * Интерфейс для списков.
@@ -78,7 +25,7 @@ export interface IItemPadding {
  * @author Авраменко А.С.
  */
 
-export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovableOptions {
+export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovableOptions, IItemTemplateOptions {
     attachLoadTopTriggerToNull?: boolean;
     emptyTemplate?: TemplateFunction | string;
     footerTemplate?: TemplateFunction | string;
@@ -111,14 +58,14 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#moreFontColorStyle
- * @cfg {IFontColorStyle} Опция управляет стилем цвета текста для кнопки ещё.
+ * @cfg {Controls/interface:IFontColorStyle} Опция управляет стилем цвета текста для {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/button-more/ кнопки "Ещё"}.
  * @default listMore
  * @see IFontColorStyle
  */
 
 /**
  * @name Controls/_list/interface/IList#pagingContentTemplate
- * @cfg {Function} Опция управляет отображением {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/#button-number счетчика непрочитанных сообщений}.
+ * @cfg {Function} Шаблон отображения слева от кнопки навигации. Используется для отображения {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/visual-mode/infinite-scrolling/#button-number счетчика непрочитанных сообщений}.
  * @demo Controls-demo/list_new/Navigation/Paging/End/ContentTemplate/Index
  * @see pagingMode
  */
@@ -139,7 +86,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#continueSearchTemplate
- * @cfg {string|Function} Шаблон отображения блока, который отображается при прерывании итеративного поиска.
+ * @cfg {string|Function} Шаблон отображения блока, который отображается при прерывании {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#batch-filtration-search итеративного поиска}.
  * @default Controls/list:ContinueSearchTemplate
  * @demo Controls-demo/list_new/Searching/PortionedSearch/Index
  * @example
@@ -241,6 +188,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @typedef {String} MultiSelectVisibility
+ * @description Допустимые значения для опции {@link multiSelectVisibility}.
  * @variant visible Показать.
  * @variant hidden Скрыть.
  * @variant onhover Показывать при наведении.
@@ -248,11 +196,9 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#multiSelectVisibility
- * @cfg {MultiSelectVisibility} Видимость чекбоксов.
+ * @cfg {MultiSelectVisibility} Видимость {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбоксов}.
  * @demo Controls-demo/list_new/MultiSelect/MultiSelectVisibility/OnHover/Index
  * @default hidden
- * @remark
- * Подробнее о работе с чекбоксами читайте {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ здесь}.
  * @see multiSelectAccessibilityProperty
  * @see multiSelectPosition
  */
@@ -273,13 +219,14 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @typedef {String} MultiSelectPosition
+ * @description Допустимые значения для опции {@link multiSelectPosition}.
  * @variant custom Позиционирование чекбокса в произвольном месте пользовательского шаблона. Подробнее читайте {@link здесь}.
  * @variant default Стандартная позиция чекбоксов множественного выбора в начале строки.
  */
 
 /**
  * @name Controls/_list/interface/IList#multiSelectPosition
- * @cfg {MultiSelectPosition} Позиционирование чекбокса.
+ * @cfg {MultiSelectPosition} Позиционирование {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбокса}.
  * @demo Controls-demo/list_new/MultiSelect/CustomPosition/Index
  * @default default
  * @see multiSelectAccessibilityProperty
@@ -301,13 +248,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#multiSelectAccessibilityProperty
- * @cfg {String} Имя свойства, содержащего информацию о доступности чекбокса элемента.
- * @remark Определяет возможность изменения состояния чекбокса и его видимость.
- * Для указания значения в {@link Types/entity:Record рекорде} рекомендуется использовать константу {@link Controls/list:MultiSelectAccessibility MultiSelectAccessibility}.
- * Возможные значения свойства {@link Types/entity:Record рекорда}:
- * * {@link Controls/list:MultiSelectAccessibility#enabled enabled} Чекбокс виден и с ним можно взаимодействовать
- * * {@link Controls/list:MultiSelectAccessibility#disabled disabled} Чекбокс виден, но с ним нельзя взаимодействовать
- * * {@link Controls/list:MultiSelectAccessibility#hidden hidden} Чекбокс скрыт
+ * @cfg {Controls/display:MultiSelectAccessibility} Имя поля записи, в котором хранится состояние видимости {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ чекбокса}.
  * @demo Controls-demo/list_new/ItemTemplate/MultiSelectAccessibilityProperty/Index
  * @see multiSelectVisibility
  * @see multiSelectPosition
@@ -547,7 +488,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим свайп.
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
- * Событие происходит, только если со списком ничего не происходит при свайпе (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
+ * Событие стреляет всегда, вне зависимости от того, обработано оно платформой или нет.
  */
 
 /*ENG
@@ -557,7 +498,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Object} nativeEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
- * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
+ * This event fires anyway, despite on handling in list.
  */
 
 /**
@@ -666,7 +607,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  */
 
 /**
- * @cfg {ItemPadding} Конфигурация отступов внутри элементов списка.
+ * @cfg {ItemPadding} {@link /doc/platform/developmentapl/interface-development/controls/list/list/paddings/ Конфигурация отступов} внутри элементов списка.
  * @name Controls/_list/interface/IList#itemPadding
  * @demo Controls-demo/list_new/ItemPadding/DifferentPadding/Index В примере заданы горизонтальные отступы.
  * @demo Controls-demo/list_new/ItemPadding/NoPadding/Index В примере отступы отсутствуют.
@@ -694,7 +635,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#backgroundStyle
- * @cfg {BackgroundStyle} Префикс стиля для настройки фона внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
+ * @cfg {BackgroundStyle} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/ Префикс стиля для настройки фона} внутренних компонентов списочного контрола с фиксированным или абсолютным позиционированием.
  * @default default
  * @remark
  * Согласно <a href="/doc/platform/developmentapl/interface-development/controls/list/list/background/">документации</a> поддерживаются любые произвольные значения опции.
@@ -714,7 +655,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#rowSeparatorSize
- * @cfg {RowSeparatorSize} Высота линии-разделителя строк.
+ * @cfg {RowSeparatorSize} Высота {@link /doc/platform/developmentapl/interface-development/controls/list/grid/line-separator/#row линии-разделителя строк}.
  * @default s
  */
 
@@ -729,7 +670,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#hoverBackgroundStyle
- * @cfg {String} Стиль подсветки строки при наведении курсора мыши.
+ * @cfg {String} {@link /doc/platform/developmentapl/interface-development/controls/list/list/background/#hover Стиль подсветки строки} при наведении курсора мыши.
  * @default default
  * @remark
  * По умолчанию подсветка соответствует @background-color. Поддерживаются любые произвольные значения опции.

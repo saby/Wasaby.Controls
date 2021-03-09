@@ -3,6 +3,8 @@ import {Record, Model} from 'Types/entity';
 
 import {IMarkable, ILadderConfig, TLadderElement} from 'Controls/display';
 
+import { IDisplaySearchValue, IDisplaySearchValueOptions } from './interface/IDisplaySearchValue';
+
 import ITagCell from './interface/ITagCell';
 import ILadderContentCell from './interface/ILadderContentCell';
 import IItemActionsCell from './interface/IItemActionsCell';
@@ -10,7 +12,8 @@ import Cell, {IOptions as ICellOptions} from './Cell';
 import DataRow from './DataRow';
 import DataCellCompatibility from './compatibility/DataCell';
 
-export interface IOptions<T> extends ICellOptions<T> {
+export interface IOptions<T> extends ICellOptions<T>, IDisplaySearchValueOptions {
+    backgroundStyle: string;
 }
 
 export default class DataCell<T extends Model, TOwner extends DataRow<T>> extends mixin<
@@ -19,16 +22,26 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
 >(
     Cell,
     DataCellCompatibility
-) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell {
+) implements IMarkable, ITagCell, IItemActionsCell, ILadderContentCell, IDisplaySearchValue {
 
+    readonly DisplaySearchValue: boolean = true;
     readonly Markable: boolean = true;
     readonly Draggable: boolean = true;
     readonly TagCell: boolean = true;
     readonly ItemActionsCell: boolean = true;
     readonly LadderContentCell: boolean = true;
 
+    protected _$backgroundStyle: string;
+
+    protected _$searchValue: string;
+
     get ladder(): TLadderElement<ILadderConfig> {
         return this.getOwner().getLadder();
+    }
+
+    setSearchValue(searchValue: string): void {
+        this._$searchValue = searchValue;
+        this._nextVersion();
     }
 
     getContentClasses(theme: string,
@@ -37,6 +50,10 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
                       templateHighlightOnHover: boolean = true,
                       tmplIsEditable: boolean = true): string {
         let classes = super.getContentClasses(theme, backgroundColorStyle, cursor, templateHighlightOnHover);
+
+        if (this._$hiddenForLadder) {
+            classes += ` controls-background-${this._$backgroundStyle}_theme-${theme}`;
+        }
 
         if (this._$owner.getEditingConfig()?.mode === 'cell') {
             classes += ` controls-Grid__row-cell_editing-mode-single-cell_theme-${theme}`;
@@ -72,7 +89,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             return this._$owner.shouldDisplayMarker(marker) && this.isLastColumn();
         } else {
             return this._$owner.shouldDisplayMarker(marker) &&
-                this._$owner.getMultiSelectVisibility() === 'hidden' && this.isFirstColumn();
+                !this._$owner.hasMultiSelectColumn() && this.isFirstColumn();
         }
     }
     // endregion
@@ -145,5 +162,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
 Object.assign(DataCell.prototype, {
     '[Controls/_display/grid/DataCell]': true,
     _moduleName: 'Controls/gridNew:GridDataCell',
+    _$backgroundStyle: 'default',
+    _$searchValue: '',
     _instancePrefix: 'grid-data-cell-'
 });

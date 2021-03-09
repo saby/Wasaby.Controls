@@ -10,11 +10,13 @@ import {
 import {IItemAction, TItemActionVisibilityCallback} from 'Controls/itemActions';
 import {Stack} from 'Controls/popup';
 import {NewSourceController} from 'Controls/dataSource';
+import HoverController from 'Controls/_menu/HoverController';
+import {default as IBackgroundStyle, IBackgroundStyleOptions} from "Controls/_interface/IBackgroundStyle";
 
 export type TKey = string|number|null;
 
-export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions,
-    INavigationOptions<INavigationSourceConfig>, IFilterOptions, ISelectorDialogOptions {
+export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions, IBackgroundStyle,
+    IBackgroundStyleOptions, INavigationOptions<INavigationSourceConfig>, IFilterOptions, ISelectorDialogOptions {
     nodeFooterTemplate?: TemplateFunction;
     root?: TKey;
     selectorOpener?: Stack;
@@ -24,6 +26,7 @@ export interface IMenuControlOptions extends IMenuBaseOptions, ISourceOptions,
     dataLoadErrback: Function;
     selectorDialogResult: Function;
     sourceController?: NewSourceController;
+    hoverController?: HoverController;
 }
 
 /**
@@ -108,6 +111,11 @@ export default interface IMenuControl {
  * @name Controls/_menu/interface/IMenuControl#nodeProperty
  * @cfg {String} Имя свойства, содержащего информацию о типе элемента (лист, узел).
  * @demo Controls-demo/Menu/Control/ParentProperty/Index
+ */
+
+/**
+ * @name Controls/_menu/interface/IMenuControl#backgroundStyle
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupBackground/Index
  */
 
 /**

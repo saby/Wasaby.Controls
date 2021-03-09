@@ -8,6 +8,8 @@ import {TKey} from 'Controls/interface';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
+import 'css!Controls/lookup';
+import 'css!Controls/CommonClasses';
 
 type LookupReceivedState = SelectedItems|null;
 
@@ -142,8 +144,6 @@ export default abstract class
     protected abstract _inheritorBeforeUpdate(options: ILookupOptions): void;
 
     protected abstract _itemsChanged(items: SelectedItems): void;
-
-    static _theme: string[] = ['Controls/lookup', 'Controls/Classes'];
 
     static getDefaultOptions(): object {
         return {

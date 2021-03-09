@@ -8,6 +8,7 @@ import {mixin} from 'Types/util';
 import TreeChildren from './TreeChildren';
 import { TemplateFunction } from 'UI/Base';
 import { Model } from 'Types/entity';
+import IGroupNode from './interface/IGroupNode';
 
 export interface IOptions<T extends Model> extends ICollectionItemOptions<T>, IExpandableMixinOptions {
     owner?: Tree<T>;
@@ -36,7 +37,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     >(
     CollectionItem,
     ExpandableMixin
-) {
+) implements IGroupNode {
     protected _$owner: Tree<T>;
 
     /**
@@ -59,6 +60,11 @@ export default class TreeItem<T extends Model = Model> extends mixin<
      * Название свойства, содержащего дочерние элементы узла. Используется для анализа на наличие дочерних элементов.
      */
     protected _$childrenProperty: string;
+
+    /**
+     * Признак, означающий что в списке есть узел с детьми
+     */
+    protected _$hasNodeWithChildren: boolean;
 
     /**
      * Признак, что узел является целью при перетаскивании
@@ -167,6 +173,13 @@ export default class TreeItem<T extends Model = Model> extends mixin<
     }
 
     /**
+     * Возвращает признак, является ли элемент узлом-группой
+     */
+    isGroupNode(): boolean {
+        return false;
+    }
+
+    /**
      * Устанавливаем признак, что узел является целью при перетаскивании
      * @param isTarget Является ли узел целью при перетаскивании
      */
@@ -234,12 +247,20 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         return expanderSize || this._$owner.getExpanderSize();
     }
 
-    shouldDisplayExpander(expanderIcon?: string): boolean {
+    setHasNodeWithChildren(hasNodeWithChildren: boolean): void {
+        if (this._$hasNodeWithChildren !== hasNodeWithChildren) {
+            this._$hasNodeWithChildren = hasNodeWithChildren;
+            this._nextVersion();
+        }
+    }
+
+    shouldDisplayExpander(expanderIcon?: string, position: 'default'|'right' = 'default'): boolean {
         if (this.getExpanderIcon(expanderIcon) === 'none' || this.isNode() === null) {
             return false;
         }
 
-        return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren());
+        const correctPosition = this.getOwner().getExpanderPosition() === position;
+        return (this._$owner.getExpanderVisibility() === 'visible' || this.isHasChildren()) && correctPosition;
     }
 
     shouldDisplayExpanderPadding(tmplExpanderIcon?: string, tmplExpanderSize?: string): boolean {
@@ -252,6 +273,10 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         } else {
             return !expanderSize && expanderIcon !== 'none' && expanderPosition === 'default';
         }
+    }
+
+    shouldDisplayLevelPadding(withoutLevelPadding?: boolean): boolean {
+        return !withoutLevelPadding && this.getLevel() > 1;
     }
 
     getExpanderPaddingClasses(tmplExpanderSize?: string, theme: string = 'default'): string {
@@ -289,7 +314,7 @@ export default class TreeItem<T extends Model = Model> extends mixin<
         const expanderSize = this.getExpanderSize(tmplExpanderSize);
         const expanderPosition = this._$owner.getExpanderPosition();
 
-        let expanderClasses = `controls-TreeGrid__row-expander_theme-${theme}`;
+        let expanderClasses = `js-controls-Tree__row-expander controls-TreeGrid__row-expander_theme-${theme}`;
         let expanderIconClass = '';
 
         if (expanderPosition === 'default') {
@@ -378,5 +403,6 @@ Object.assign(TreeItem.prototype, {
     _$expanded: false,
     _$hasChildren: false,
     _$childrenProperty: '',
+    _$hasNodeWithChildren: true,
     _instancePrefix: 'tree-item-'
 });

@@ -12,8 +12,10 @@ import {IStickyPopupOptions} from 'Controls/popup';
 import getDropdownControllerOptions from 'Controls/_dropdown/Utils/GetDropdownControllerOptions';
 import * as Merge from 'Core/core-merge';
 import {isLeftMouseButton} from 'Controls/popup';
+import 'css!Controls/dropdown';
+import 'css!Controls/CommonClasses';
 
-interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
+export interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOptions {
    additionalProperty?: string;
    lazyItemsLoading?: boolean;
    buttonStyle?: string;
@@ -22,6 +24,7 @@ interface IButtonOptions extends IBaseDropdownOptions, IIconOptions, IHeightOpti
    fontColorStyle?: string;
    fontSize?: string;
    showHeader?: boolean;
+   menuPopupTrigger?: 'click' | 'hover';
 }
 
 /**
@@ -136,10 +139,11 @@ export default class Button extends BaseDropdown {
             headingIcon: options.icon,
             headingIconSize: options.iconSize,
             dataLoadCallback: this._dataLoadCallback.bind(this),
-            popupClassName: (options.popupClassName || this._offsetClassName) + ' theme_' + options.theme,
+            popupClassName: options.popupClassName || this._offsetClassName,
             hasIconPin: this._hasIconPin,
             allowPin: true,
-            markerVisibility: 'hidden'
+            markerVisibility: 'hidden',
+            trigger: options.menuPopupTrigger,
          }
       };
    }
@@ -179,6 +183,12 @@ export default class Button extends BaseDropdown {
       }
       this.openMenu();
    }
+    _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
+      super._handleMouseEnter(event);
+      if (this._options.menuPopupTrigger === 'hover') {
+         this.openMenu();
+      }
+    }
 
    openMenu(popupOptions?: IStickyPopupOptions): void {
       const config = this._getMenuPopupConfig();
@@ -201,6 +211,15 @@ export default class Button extends BaseDropdown {
             break;
          case 'footerClick':
             this._footerClick(data);
+            break;
+          /**
+           * TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера
+           * переделать по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
+           */
+          case 'menuOpened':
+          case 'menuClosed':
+              this._notify(action, [], {bubbling: true});
+              break;
       }
    }
 
@@ -218,13 +237,12 @@ export default class Button extends BaseDropdown {
       this.closeMenu();
    }
 
-   static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
-
    static getDefaultOptions(): object {
       return {
          showHeader: true,
          filter: {},
          buttonStyle: 'secondary',
+         menuPopupTrigger: 'click',
          viewMode: 'button',
          fontSize: 'm',
          iconStyle: 'secondary',
@@ -287,6 +305,18 @@ export default class Button extends BaseDropdown {
  * @name Controls/_dropdown/Button#fontSize
  * @cfg
  * @demo Controls-demo/dropdown_new/Button/FontSize/Index
+ */
+
+/**
+ * @typedef {String} TMenuPopupTrigger
+ * @variation click Открытие кликом по контенту. Закрытие кликом "мимо" - не по контенту или шаблону.
+ * @variation hover Открытие по ховеру - по наведению курсора на контент. Закрытие по ховеру - по навердению курсора на контент или шаблон.
+ */
+/**
+ * @name Controls/_dropdown/Button#menuPopupTrigger
+ * @cfg {TMenuPopupTrigger} Название события, которое запускает открытие или закрытие меню.
+ * @default click
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
  */
 
 /**

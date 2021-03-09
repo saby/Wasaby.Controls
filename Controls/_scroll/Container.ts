@@ -1,33 +1,33 @@
-import {constants, detection, compatibility} from 'Env/Env';
+import {compatibility, constants, detection} from 'Env/Env';
 import {SyntheticEvent} from 'Vdom/Vdom';
 import {TemplateFunction} from 'UI/Base';
 import ContainerBase, {IContainerBaseOptions} from 'Controls/_scroll/ContainerBase';
 import * as ScrollData from 'Controls/_scroll/Scroll/Context';
 import Observer from './IntersectionObserver/Observer';
-import template = require('wml!Controls/_scroll/Container/Container');
-import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 import ShadowsModel from './Container/ShadowsModel';
 import ScrollbarsModel from './Container/ScrollbarsModel';
 import PagingModel, {TPagingModeScroll} from './Container/PagingModel';
 import {
+    getDefaultOptions as getScrollbarsDefaultOptions,
     IScrollbars,
-    IScrollbarsOptions,
-    getDefaultOptions as getScrollbarsDefaultOptions
+    IScrollbarsOptions
 } from './Container/Interface/IScrollbars';
 import {
+    getDefaultOptions as getShadowsDefaultOptions,
     IShadows,
     IShadowsOptions,
     IShadowsVisibilityByInnerComponents,
     SHADOW_MODE,
-    SHADOW_VISIBILITY,
-    getDefaultOptions as getShadowsDefaultOptions
+    SHADOW_VISIBILITY
 } from './Container/Interface/IShadows';
 import {IIntersectionObserverObject} from './IntersectionObserver/Types';
 import StickyHeaderController from './StickyHeader/Controller';
 import {IFixedEventData, TRegisterEventData, TYPE_FIXED_HEADERS} from './StickyHeader/Utils';
 import {POSITION} from './Container/Type';
 import {SCROLL_DIRECTION} from './Utils/Scroll';
-import {IScrollState} from './Utils/ScrollState';
+import {IHasUnrenderedContent, IScrollState} from './Utils/ScrollState';
+import template = require('wml!Controls/_scroll/Container/Container');
+import baseTemplate = require('wml!Controls/_scroll/ContainerBase/ContainerBase');
 
 /**
  * @typeof {String} TPagingPosition
@@ -330,7 +330,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
             this._gridAutoShadows = false;
             this._shadows.updateOptions(this._getShadowsModelOptions(this._options));
         }
-        const needUpdate = this._wasMouseEnter || this._options.shadowMode === SHADOW_MODE.JS;
+        const needUpdate = this._wasMouseEnter || !this._isOptimizeShadowEnabled;
         this._shadows.updateVisibilityByInnerComponents(shadowsVisibility, needUpdate);
 
         // Если принудительно включили тени изнутри, то надо инициализировать заголовки что бы отрисовать тени на них.
@@ -344,13 +344,33 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         this._updateStateAndGenerateEvents(this._scrollModel);
     }
 
+    // Сейчас наличие контента сверху и снизу мы определяем косвенно по информации от списков надо ли отображать тень.
+    // Это надо переделывать. Списки ничего не должны знать о тенях, и должны общаться со скролл контенером
+    // в терминах виртуального скрола. Значение gridauto должно быть не у опций topShadowVisibility и
+    // bottomShadowVisibility. На мой взгляд должна быть опция говорящая не то, что надо отображеть тень, а работающая
+    // тоже в терминах виртуального скрола. Т.е. чтото типа hasUnrenderedContent. Список может поменять значене этой
+    // опции изнутри.
+    protected _getHasUnrenderedContentState(): IHasUnrenderedContent {
+        return {
+            top: (this._gridAutoShadows && this._options.topShadowVisibility === 'gridauto') ||
+                this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE,
+            bottom: (this._gridAutoShadows && this._options.bottomShadowVisibility === 'gridauto') ||
+                this._shadows.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE
+        }
+    }
+
+    protected _getFullStateFromDOM(): IScrollState {
+        const state: IScrollState = super._getFullStateFromDOM();
+        return {
+            ...state,
+            hasUnrenderedContent: this._getHasUnrenderedContentState()
+        };
+    }
+
     protected _updateStateAndGenerateEvents(newState: IScrollState): void {
         super._updateStateAndGenerateEvents({
             ...newState,
-            hasUnrenderedContent: {
-                top: this._shadows.top?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE,
-                bottom: this._shadows.bottom?.getVisibilityByInnerComponents() === SHADOW_VISIBILITY.VISIBLE
-            }
+            hasUnrenderedContent: this._getHasUnrenderedContentState()
         })
 
     }
@@ -549,7 +569,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     }
 
     _stickyRegisterHandler(event: SyntheticEvent<Event>, data: TRegisterEventData, register: boolean): void {
-        this._stickyHeaderController.registerHandler(event, data, register);
+        // Синхронно Посчитаем и обновим информацию о фиксации заголовков только если известно,
+        // что надо отображать тень сверху. Что бы лишний раз не лазить в дом, в других сценариях,
+        // состояние заголовков обновится асинхронно по срабатыванию IntersectionObserver.
+        this._stickyHeaderController.registerHandler(event, data, register, this._shadows.top.isVisible);
     }
 
     protected _headersResizeHandler(): void {
@@ -564,8 +587,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
         // После отключения оптимизации проблема почему то уходит.
         this._scrollbars.setOffsets({ top: scrollbarOffsetTop, bottom: scrollbarOffsetBottom },
             this._wasMouseEnter || detection.isIE);
-        this._children.scrollBar?.setViewportSize(
-            this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
+        if (this._scrollbars.vertical && this._scrollbars.vertical.isVisible && this._children.hasOwnProperty('scrollBar')) {
+            this._children.scrollBar.setViewportSize(
+                this._children.content.offsetHeight - scrollbarOffsetTop - scrollbarOffsetBottom);
+        }
     }
 
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
@@ -661,7 +686,7 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
 
 /**
  * @name Controls/_scroll/Container#shadowStyle
- * @cfg {String} Постфикс у класса тени
+ * @cfg {String} Определяет постфикс у класса тени
  * @default default
  */
 
