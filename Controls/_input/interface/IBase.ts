@@ -38,7 +38,6 @@ export interface IBaseOptions extends IContrastBackground {
     textAlign?: TextAlign;
     selectOnClick?: boolean;
     spellCheck?: boolean;
-    placeholder?: string | TemplateFunction;
     tooltip?: string;
     name?: string;
     inlineHeight?: string;
@@ -137,11 +136,6 @@ export interface IBase {
  * * false - Отсутствует проверка правописания и грамматики.
  * * true - Браузер проверяет правописание и грамматику в тексте.
  * @demo Controls-demo/Input/SpellCheck/Index
- */
-/**
- * @name Controls/_input/interface/IBase#placeholder
- * @cfg {String|TemplateFunction} Строка или шаблон, содержащие текст подсказки, который будет отображаться в пустом поле.
- * @demo Controls-demo/Input/Placeholders/Index
  */
 /**
  * @name Controls/_input/interface/IBaseFieldTemplate#leftFieldTemplate
