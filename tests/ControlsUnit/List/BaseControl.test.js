@@ -6646,6 +6646,10 @@ define([
 
             lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [1], 0, [], 0);
             assert.isTrue(control._attachLoadTopTriggerToNull);
+
+             control._attachLoadTopTriggerToNull = false;
+             lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [], 0, [1], 0);
+             assert.isTrue(control._attachLoadTopTriggerToNull);
           });
        });
 
