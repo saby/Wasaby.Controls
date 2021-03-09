@@ -1573,7 +1573,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET && newItems && newItems.length) {
+            if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length)) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
             }
 
