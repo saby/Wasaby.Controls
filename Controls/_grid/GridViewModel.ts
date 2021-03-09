@@ -2382,6 +2382,10 @@ var
             this._model.setRowSeparatorSize(rowSeparatorSize);
         },
 
+        setDisplayProperty(displayProperty: string): void {
+            this._model.setDisplayProperty(displayProperty);
+        },
+
         setColumnSeparatorSize(columnSeparatorSize: IGridSeparatorOptions['columnSeparatorSize']): void {
             this._options.columnSeparatorSize = _private.getSeparatorSizes({
                 columnSeparatorSize
