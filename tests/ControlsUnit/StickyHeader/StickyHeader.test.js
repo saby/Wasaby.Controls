@@ -306,6 +306,18 @@ define([
 
             sandbox.restore();
          });
+         describe('offsetTop', function() {
+            it('should return correct top.', function () {
+               const component = createComponent(StickyHeader, {});
+               component._stickyHeadersHeight = {
+                  top: 15,
+                  bottom: 0
+               };
+
+               component._model = {fixedPosition: 'top'};
+               assert.include(component._getStyle('topbottom', 2, undefined, -10), 'top: 5px;');
+            });
+         });
       });
 
       describe('set top', function() {
