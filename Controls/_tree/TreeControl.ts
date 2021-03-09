@@ -504,6 +504,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _markedLeaf = '';
     private _doAfterItemExpanded = null;
     private _goToNextAfterExpand: true;
+    private _doOnDidUpdate = null;
 
     private _itemOnWhichStartCountDown = null;
     private _timeoutForExpandOnDrag = null;
@@ -669,6 +670,13 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
+    protected _componentDidUpdate() {
+        super._componentDidUpdate(...arguments);
+        if (this._doOnDidUpdate) {
+            this._doOnDidUpdate();
+            this._doOnDidUpdate = null;
+        }
+    }
     protected _afterUpdate(oldOptions: TOptions) {
         super._afterUpdate(...arguments);
 
@@ -682,6 +690,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     protected _beforeUnmount(): void {
+        this._doOnDidUpdate = null;
         this._clearTimeoutForExpandOnDrag();
         super._beforeUnmount(...arguments);
     }
@@ -1115,8 +1124,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                         }
                     }
                 } else {
+                    const itemKey = this._tempItem;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(this._tempItem, true);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, true);
+                    };
                     resolve();
                 }
             } else {
@@ -1159,7 +1171,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(itemKey, false);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, false);
+                    }
                     resolve();
                 }
             } else {
