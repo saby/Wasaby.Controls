@@ -17,6 +17,7 @@
                     controls-Search__searchButton_inlineheight-{{inlineHeight}}_theme-{{options.theme}}
                     controls-Search__searchButton_theme_{{options.theme}}_position
                     controls-Search__searchButton_theme_{{options.theme}}_color{{calculateState()}} icon-Search2"
-             on:click="_searchClick()"></div>
+             on:mousedown="_searchClick()"
+             attr:ws-no-focus="true"></div>
     </ws:if>
 </div>

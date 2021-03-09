@@ -166,6 +166,7 @@ class Search extends Base {
             return;
         }
 
+        event.stopPropagation();
         this._notifySearchClick(event);
 
         // move focus from search button to input
