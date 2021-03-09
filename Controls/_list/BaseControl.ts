@@ -4294,6 +4294,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
+        _private.clearShowLoadingIndicatorTimer(this);
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
