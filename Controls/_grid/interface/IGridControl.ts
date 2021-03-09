@@ -254,27 +254,28 @@ export interface IGridControl extends IList {
  * </pre>
  *
  * <pre class="brush: html">
- *  <Controls.grid:View ...>
- *      <ws:footer>
- *          <ws:Array>
- *              <ws:Object startColumn="{{ 2 }}">
- *                  <ws:template>
- *                      <div>Footer column 2 - 4</div>
- *                  </ws:template>
- *              </ws:Object>
- *              <ws:Object startColumn="{{ 4 }}" endColumn="{{ 6 }}">
- *                  <ws:template>
- *                      <div>Footer column 4 - 6</div>
- *                  </ws:template>
- *              </ws:Object>
- *              <ws:Object endColumn="{{ 8 }}" >
- *                  <ws:template>
- *                      <div>Footer column 6 - 8</div>
- *                  </ws:template>
- *              </ws:Object>
- *              </ws:Array>
- *          </ws:footer>
- *      </Controls.grid:View>
+ * <!-- WML -->
+ * <Controls.grid:View source="{{_source}}" columns="{{_columns}}">
+ *     <ws:footer>
+ *         <ws:Array>
+ *             <ws:Object startColumn="{{ 2 }}">
+ *                 <ws:template>
+ *                     <div>Footer column 2 - 4</div>
+ *                 </ws:template>
+ *             </ws:Object>
+ *             <ws:Object startColumn="{{ 4 }}" endColumn="{{ 6 }}">
+ *                 <ws:template>
+ *                     <div>Footer column 4 - 6</div>
+ *                 </ws:template>
+ *             </ws:Object>
+ *             <ws:Object endColumn="{{ 8 }}" >
+ *                 <ws:template>
+ *                     <div>Footer column 6 - 8</div>
+ *                 </ws:template>
+ *             </ws:Object>
+ *         </ws:Array>
+ *     </ws:footer>
+ * </Controls.grid:View>
  * </pre>
  */
 

@@ -1712,5 +1712,20 @@ describe('Controls/_display/Tree', () => {
             rsTree.setCollapsedItems([1]);
             assert.isFalse(rsTree.getItemBySourceKey(1).isExpanded());
         });
+
+        it('toggleItem will not change version for another items', () => {
+            const currentVersions = rsTree.getItems().map((it) => {
+                return {
+                    key: it.getContents().getKey(),
+                    version: it.getVersion()
+                };
+            });
+            rsTree.toggleExpanded(rsTree.getItemBySourceKey(1));
+            currentVersions.forEach((it) => {
+                if (it.key !== 1) {
+                    assert.equal(it.version, rsTree.getItemBySourceKey(it.key).getVersion());
+                }
+            });
+        });
     });
 });

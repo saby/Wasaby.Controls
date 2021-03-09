@@ -4,7 +4,8 @@ import Collection, {
     ISessionItemState,
     ISerializableState as IDefaultSerializableState,
     ISplicedArray,
-    StrategyConstructor
+    StrategyConstructor,
+    ISessionItems
 } from './Collection';
 import CollectionEnumerator from './CollectionEnumerator';
 import CollectionItem from './CollectionItem';
@@ -630,8 +631,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 }
             });
         }
-
-        this._reBuildNodeFooters();
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
@@ -652,8 +651,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 item.setExpanded(false);
             }
         });
-
-        this._reBuildNodeFooters();
     }
 
     resetExpandedItems(): void {
@@ -666,7 +663,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 it.setExpanded(false);
             }
         });
-        this._reBuildNodeFooters();
     }
 
     toggleExpanded(item: T): void {
@@ -691,8 +687,6 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
                 this._collapsedItems.push(itemKey);
             }
         }
-
-        this._reBuildNodeFooters();
     }
 
     // endregion Expanded/Collapsed
@@ -700,8 +694,8 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     setHasMoreStorage(storage: Record<string, boolean>): void {
         if (!isEqual(this._$hasMoreStorage, storage)) {
             this._$hasMoreStorage = storage;
-            this._nextVersion();
             this._reBuildNodeFooters();
+            this._nextVersion();
         }
     }
 
@@ -712,6 +706,15 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     // endregion
 
     // region Protected methods
+
+    protected _handleAfterCollectionChange(changedItems: ISessionItems<T> = []): void {
+        super._handleAfterCollectionChange(changedItems);
+
+        const changedProperties = changedItems.properties;
+        if (changedProperties && (changedProperties === 'expanded' || changedProperties.hasOwnProperty('expanded'))) {
+            this._reBuildNodeFooters();
+        }
+    }
 
     protected _getItemsStrategy: () => IItemsStrategy<S, T>;
 
