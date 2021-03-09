@@ -2236,6 +2236,13 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$itemTemplateProperty;
     }
 
+    setDisplayProperty(displayProperty: string): void {
+        if (this._$displayProperty !== displayProperty) {
+            this._$displayProperty = displayProperty;
+            this._nextVersion();
+        }
+    }
+
     getDisplayProperty(): string {
         return this._$displayProperty;
     }
