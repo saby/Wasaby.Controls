@@ -156,6 +156,7 @@ describe('Controls/suggest', () => {
          };
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
+         suggestComponent.activate = () => {};
 
          suggestComponent._closeHandler(event);
          assert.isTrue(propagationStopped);
