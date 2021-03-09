@@ -185,7 +185,9 @@ export default class Button extends BaseDropdown {
    }
     _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
       super._handleMouseEnter(event);
-      if (this._options.menuPopupTrigger === 'hover') {
+      const isOpenMenuPopup = !(event.nativeEvent.relatedTarget
+          && event.nativeEvent.relatedTarget.closest('.controls-Menu__popup'));
+      if (this._options.menuPopupTrigger === 'hover' && isOpenMenuPopup) {
          this.openMenu();
       }
     }
