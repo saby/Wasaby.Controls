@@ -316,7 +316,7 @@ export default class Button extends BaseDropdown {
  * @name Controls/_dropdown/Button#menuPopupTrigger
  * @cfg {TMenuPopupTrigger} Название события, которое запускает открытие или закрытие меню.
  * @default click
- * @demo Controls-demo/dropdown_new/Button/PopupTrigger/Index
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
  */
 
 /**
