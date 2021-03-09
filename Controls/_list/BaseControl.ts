@@ -3403,9 +3403,11 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups): Promise<unknown> | void {
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
+        let collapsedGroups;
 
         if (self._sourceController) {
             receivedData = self._sourceController.getItems();
+            collapsedGroups = self._sourceController.getCollapsedGroups();
         }
 
         if (collapsedGroups) {
@@ -3486,20 +3488,13 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     _prepareGroups(newOptions, callback?: (...args: unknown[]) => unknown): Promise<TCollapsedGroups> | unknown {
         let result = null;
         if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
-            result = new Promise((resolve) => {
-                groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback((collapsedGroupsFromStore) => {
-                    resolve(collapsedGroupsFromStore || newOptions.collapsedGroups);
-                });
-            });
+            result = (this._sourceController && this._sourceController.getCollapsedGroups()) ||
+                      newOptions.collapsedGroups;
         } else if (newOptions.collapsedGroups) {
             result = newOptions.collapsedGroups;
         }
 
-        if (result instanceof Promise) {
-            return callback ? result.then(callback) : result;
-        } else {
-            return (callback && callback(result)) || result;
-        }
+        return (callback && callback(result)) || result;
     }
 
     _initKeyProperty(options) {
