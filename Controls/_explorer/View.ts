@@ -910,7 +910,6 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface:INavigation
  * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface/IHighlighter
  * @mixes Controls/list:IList
  * @mixes Controls/itemActions:IItemActionsOptions
  * @mixes Controls/interface:IHierarchy
@@ -947,7 +946,6 @@ Object.defineProperty(Explorer, 'defaultProps', {
  * @mixes Controls/interface/IGroupedList
  * @mixes Controls/interface:INavigation
  * @mixes Controls/interface:IFilterChanged
- * @mixes Controls/interface/IHighlighter
  * @mixes Controls/list:IList
  * @mixes Controls/itemActions:IItemActionsOptions
  * @mixes Controls/interface:IHierarchy
