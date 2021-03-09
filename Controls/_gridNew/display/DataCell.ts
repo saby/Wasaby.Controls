@@ -61,7 +61,7 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             if (this.isEditing()) {
                 classes += ` controls-Grid__row-cell_single-cell_editing_theme-${theme}`;
             } else {
-                if (this.getColumnConfig().editable !== false && tmplIsEditable !== false) {
+                if (this.config.editable !== false && tmplIsEditable !== false) {
                     classes += ` controls-Grid__row-cell_single-cell_editable_theme-${theme}`;
                 } else {
                     classes += ` js-controls-ListView__notEditable controls-Grid__row-cell_single-cell_not-editable_theme-${theme}`;
