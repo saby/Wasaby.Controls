@@ -433,8 +433,12 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
     // endregion
 
     // region Аспект "Ячейка"
-    getColumnConfig(): IColumn {
+    get config(): IColumn {
         return this._$column;
+    }
+
+    getColumnConfig(): IColumn {
+        return this.config;
     }
 
     getColumnIndex(): number {

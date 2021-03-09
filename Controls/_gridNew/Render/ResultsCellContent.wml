@@ -1,8 +1,9 @@
 <div class="{{ (gridColumn || colData).getContentClasses(theme, backgroundColorStyle, cursor, highlightOnHover) }}"
      style="{{ (gridColumn || colData).getContentStyles() }}">
 
-    <ws:if data="{{ !!content || !!contentTemplate }}">
+    <ws:if data="{{ content || contentTemplate }}">
         <ws:partial template="{{ content || contentTemplate }}"
+                    column="{{ (gridColumn || colData) }}"
                     colData="{{ (gridColumn || colData) }}"
                     results="{{ (gridColumn || colData).getMetaResults() }}"/>
     </ws:if>

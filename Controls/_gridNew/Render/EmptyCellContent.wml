@@ -1,7 +1,9 @@
 <div class="{{ (gridColumn || emptyViewColumn).getContentClasses(theme, topSpacing, bottomSpacing) }}">
 
-    <ws:if data="{{ !!(contentTemplate || content) }}">
+    <ws:if data="{{ content || contentTemplate }}">
         <!-- Прикладной контент -->
-        <ws:partial template="{{ contentTemplate || content }}" emptyViewColumn="{{ gridColumn || emptyViewColumn }}"/>
+        <ws:partial template="{{ content || contentTemplate }}"
+                    column="{{ gridColumn || emptyViewColumn }}"
+                    emptyViewColumn="{{ gridColumn || emptyViewColumn }}"/>
     </ws:if>
 </div>

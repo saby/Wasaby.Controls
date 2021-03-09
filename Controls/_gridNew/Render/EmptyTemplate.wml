@@ -1,4 +1,4 @@
-<ws:if data="{{ !!contentTemplate }}">
+<ws:if data="{{ content || contentTemplate }}">
     <!-- Прикладной контент -->
-    <ws:partial template="{{ contentTemplate }}"/>
+    <ws:partial template="{{ content || contentTemplate }}"/>
 </ws:if>
