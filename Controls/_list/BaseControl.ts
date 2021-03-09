@@ -3500,7 +3500,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     }
 
     _initKeyProperty(options): void {
-        this._keyProperty = options.keyProperty || this._sourceController.getKeyProperty();
+        this._keyProperty = options.keyProperty || (this._sourceController && this._sourceController.getKeyProperty());
     }
 
     scrollMoveSyncHandler(params: IScrollParams): void {
