@@ -247,7 +247,11 @@ export default class DatePopup extends Control implements EventProxyMixin {
 
     _scrollToCurrentMonth(): void {
         if (this._todayCalendarEnabled) {
-            this._displayedDate = dateUtils.getStartOfMonth(new Date());
+            if (this._state === STATES.year) {
+                this._displayedDate = dateUtils.getStartOfYear(new Date());
+            } else {
+                this._displayedDate = dateUtils.getStartOfMonth(new Date());
+            }
         }
     }
 
