@@ -79,6 +79,8 @@ export default class SlidingPanel extends Control<ISlidingPanelTemplateOptions> 
 
     /**
      * Фикс для сафари, чтобы при свайпе по шторке не тянулся body.
+     * TODO: Нужно сделать какое-то общее решение для d'n'd
+     * https://online.sbis.ru/opendoc.html?guid=2e549898-5980-49bc-b4b7-e0a27f02bf55
      * @param state
      * @private
      */
