@@ -2,7 +2,6 @@ import {BaseController, IDragOffset} from 'Controls/popupTemplate';
 import {IPopupItem, ISlidingPanelPopupOptions, Controller as PopupController, ISlidingPanelOptions} from 'Controls/popup';
 import * as PopupContent from 'wml!Controls/_popupSliding/SlidingPanelContent';
 import SlidingPanelStrategy from './Strategy';
-import {detection} from 'Env/Env';
 
 interface ISlidingPanelItem extends IPopupItem {
     popupOptions: ISlidingPanelPopupOptions;
@@ -19,17 +18,12 @@ interface ISlidingPanelItem extends IPopupItem {
 class Controller extends BaseController {
     TYPE: string = 'SlidingPanel';
     private _destroyPromiseResolvers: Record<string, Function> = {};
-    private _panels: ISlidingPanelItem[] = [];
 
     elementCreated(item: ISlidingPanelItem, container: HTMLDivElement): boolean {
 
         // После создания запускаем анимацию изменив позицию
         const popupOptions = item.popupOptions;
         item.position[popupOptions.slidingPanelOptions.position] = 0;
-        if (!this._hasOpenedPopups()) {
-            this._toggleCancelBodyDragging(true);
-        }
-        this._addPopupToList(item);
         return true;
     }
 
@@ -38,16 +32,11 @@ class Controller extends BaseController {
         return true;
     }
 
-    elementDestroyed(item: ISlidingPanelItem): Promise<null> {
-        const {popupOptions, position, id} = item;
+    elementDestroyed({popupOptions, position, id}: ISlidingPanelItem): Promise<null> {
         // Запускаем анимацию закрытия и откладываем удаление до её окончания
         position[popupOptions.slidingPanelOptions.position] = -position.height;
         return new Promise((resolve) => {
             this._destroyPromiseResolvers[id] = resolve;
-            this._removePopupFromList(item);
-            if (!this._hasOpenedPopups()) {
-                this._toggleCancelBodyDragging(false);
-            }
         });
     }
 
@@ -119,32 +108,6 @@ class Controller extends BaseController {
             position: popupOptions.slidingPanelOptions.position,
             desktopMode: popupOptions.desktopMode
         };
-    }
-
-    private _addPopupToList(item: ISlidingPanelItem): void {
-        this._panels.push(item);
-    }
-
-    private _removePopupFromList(item: ISlidingPanelItem): void {
-        const index = this._panels.indexOf(item);
-        if (index > -1) {
-            this._panels.splice(index, 1);
-        }
-    }
-
-    private _hasOpenedPopups(): boolean {
-        return !!this._panels.length;
-    }
-
-    /**
-     * Фикс для сафари, чтобы при свайпе по шторке не тянулся body.
-     * @param state
-     * @private
-     */
-    private _toggleCancelBodyDragging(state: boolean): void {
-        if (detection.isMobileIOS) {
-            document.documentElement.style.overflow = state ? 'hidden' : undefined;
-        }
     }
 }
 
