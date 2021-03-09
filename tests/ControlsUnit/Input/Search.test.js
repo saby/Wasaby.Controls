@@ -15,6 +15,7 @@ define(
                let search = new searchMod.Input();
                let searched = false;
                let activated = false;
+               const eventMock = {stopPropagation: () => {}};
 
                search._beforeMount({});
                search._notify = (e, args) => {
@@ -27,16 +28,16 @@ define(
                };
 
                search._options.readOnly = true;
-               search._searchClick({});
+               search._searchClick(eventMock);
                assert.isFalse(searched);
                assert.isFalse(activated);
 
                search._options.readOnly = false;
-               search._searchClick({});
+               search._searchClick(eventMock);
                assert.isTrue(activated);
 
                searched = activated = false;
-               search._searchClick({});
+               search._searchClick(eventMock);
                assert.isFalse(searched);
                assert.isTrue(activated);
 
@@ -101,6 +102,7 @@ define(
             it('Enter click', function() {
                let search = new searchMod.Input();
                let activated = false;
+               let eventStopped;
                search._notify = (e, args) => {
                   assert.equal(e, 'searchClick');
                };
@@ -110,9 +112,13 @@ define(
                search._keyUpHandler({
                   nativeEvent: {
                      which: 13 // enter key
+                  },
+                  stopPropagation: () => {
+                     eventStopped = true;
                   }
                });
                assert.isTrue(activated);
+               assert.isTrue(eventStopped);
             });
 
             it('Focus out', function() {

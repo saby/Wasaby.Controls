@@ -721,6 +721,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _closeHandler(event: SyntheticEvent): void {
       event.stopPropagation();
+      this.activate();
       this._close();
    }
 
