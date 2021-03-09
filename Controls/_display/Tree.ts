@@ -47,6 +47,7 @@ interface IItemsFactoryOptions<S> {
     node?: boolean;
     expanderTemplate?: TemplateFunction;
     hasNodeWithChildren?: boolean;
+    expanded?: boolean;
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
@@ -777,6 +778,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
             options.expanderTemplate = this._$expanderTemplate;
             options.hasNodeWithChildren = this._hasNodeWithChildren;
+
+            const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
+            options.expanded = this._expandedItems?.includes(key) && !this._collapsedItems?.includes(key);
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
