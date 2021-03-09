@@ -4711,4 +4711,28 @@ describe('Controls/_display/Collection', () => {
             assert.isTrue(item.isReadonlyCheckbox());
         });
     });
+
+    describe('setDisplayProperty, getDisplayProperty', () => {
+        let display = new CollectionDisplay({
+            collection: new RecordSet({
+                rawData: items,
+                keyProperty: 'id'
+            }),
+            multiSelectAccessibilityProperty: 'multiSelectAccessibility'
+        });
+
+        it('changed display property', () => {
+            const curVersion = display.getVersion();
+            display.setDisplayProperty('name');
+            assert.equal(display.getDisplayProperty(), 'name');
+            assert.equal(display.getVersion(), curVersion + 1);
+        });
+
+        it('not changed display property', () => {
+            const curVersion = display.getVersion();
+            display.setDisplayProperty('name');
+            assert.equal(display.getDisplayProperty(), 'name');
+            assert.equal(display.getVersion(), curVersion);
+        });
+    });
 });

@@ -3880,6 +3880,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
 
+        if (this._options.displayProperty !== newOptions.displayProperty) {
+            this._listViewModel.setDisplayProperty(newOptions.displayProperty);
+        }
+
         if (this._removeController) {
             this._removeController.updateOptions({source: newOptions.source});
         }
