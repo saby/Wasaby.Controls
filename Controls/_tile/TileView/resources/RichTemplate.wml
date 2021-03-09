@@ -4,8 +4,6 @@
    </ws:if>
    <svg role="image"
         xmlns="http://www.w3.org/2000/svg"
-        height="100%"
-        width="100%"
         class="controls-TileView__richTemplate_image
                controls-TileView__richTemplate_image_viewMode_{{imageViewMode}}
                {{!imageProportion || imageViewMode !== 'rectangle' || imagePosition !== 'top' ? 'controls-TileView__richTemplate_image_size_' + imageSize + '_position_' + imagePosition + '_viewMode_' + imageViewMode + '_theme-' + theme +
