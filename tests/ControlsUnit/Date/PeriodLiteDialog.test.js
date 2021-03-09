@@ -500,15 +500,15 @@ define([
             displayedRanges: [[new Date(2019, 0), new Date(2021, 0)]],
             startValue: new Date(2019, 0),
             endValue: new Date(2019, 11, 31),
-            nextArrowResult: true,
-            prevArrowResult: false
+            nextArrowResult: false,
+            prevArrowResult: true
          }, {
             name: 'should set prev arrow to readonly',
             displayedRanges: [[new Date(2019, 0), new Date(2021, 0)]],
             startValue: new Date(2021, 0),
             endValue: new Date(2021, 11, 31),
-            nextArrowResult: false,
-            prevArrowResult: true
+            nextArrowResult: true,
+            prevArrowResult: false
          }, {
             name: 'should set prev and next arrows to readonly',
             displayedRanges: [[new Date(2019, 0), new Date(2019, 0)]],
