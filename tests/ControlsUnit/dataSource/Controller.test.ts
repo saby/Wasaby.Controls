@@ -545,4 +545,27 @@ describe('Controls/dataSource:SourceController', () => {
         });
 
     });
+
+    describe('getKeyProperty', () => {
+
+        it('keyProperty in options', () => {
+            const options = {
+                source: new Memory({
+                    keyProperty: 'testKeyProperty'
+                })
+            };
+            const sourceController = new NewSourceController(options);
+            ok(sourceController.getKeyProperty() === 'testKeyProperty');
+        });
+
+        it('keyProperty from source', () => {
+            const options = {
+                source: new Memory(),
+                keyProperty: 'testKeyProperty'
+            };
+            const sourceController = new NewSourceController(options);
+            ok(sourceController.getKeyProperty() === 'testKeyProperty');
+        });
+
+    });
 });
