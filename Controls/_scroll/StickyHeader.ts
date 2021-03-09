@@ -310,6 +310,7 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             if (this._model?.isFixed()) {
                 this._height -= getGapFixSize();
             }
+            this._height += this._options.offsetTop;
         }
         return this._height;
     }
@@ -780,7 +781,8 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
             shadowVisibility: SHADOW_VISIBILITY.visible,
             backgroundStyle: BACKGROUND_STYLE.DEFAULT,
             mode: MODE.replaceable,
-            position: POSITION.top
+            position: POSITION.top,
+            offsetTop: 0
         };
     }
 
