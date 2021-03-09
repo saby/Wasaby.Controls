@@ -6,9 +6,16 @@
    position: relative;
 }
 
-.controls-PropertyGrid__flex-editor_theme-@{themeName} {
+.controls-PropertyGrid__flex-row {
    display: flex;
+}
+
+.controls-PropertyGrid__row_captionPosition-top {
    flex-direction: column;
+}
+
+.controls-PropertyGrid__editor_captionPosition-left {
+   width: 100%;
 }
 
 .controls-PropertyGrid__editor-caption_theme-@{themeName} {
@@ -21,6 +28,7 @@
 
 .controls-PropertyGrid__editor-caption_withEditor {
    width: 50%;
+   flex-shrink: 0;
 }
 
 .controls-PropertyGrid__group_theme-@{themeName} {
