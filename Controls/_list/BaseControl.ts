@@ -5031,9 +5031,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
-        if (this._itemActionClickItemKey && this._itemActionClickItemKey === item.getKey()) {
+        if (this._itemActionMouseDown) {
             // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
-            this._itemActionClickItemKey = null;
+            this._itemActionMouseDown = null;
             e.stopPropagation();
             return;
         }
@@ -5631,9 +5631,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
-        this._itemActionClickItemKey = null;
+        this._itemActionMouseDown = null;
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
-            this._itemActionClickItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+            this._itemActionMouseDown = true;
             event.stopPropagation();
             return;
         }
