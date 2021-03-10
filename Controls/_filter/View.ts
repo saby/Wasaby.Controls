@@ -556,7 +556,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             if (this._isFrequentItem(item) && config?.items) {
                 const sourceController = this._getSourceController(configs[item.name], item.editorOptions.source,
                     item.editorOptions.navigation);
-                sourceController.calculateState(configs[item.name].items);
+                sourceController.setItems(configs[item.name].items);
             }
         });
     }
@@ -613,7 +613,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                     }
                     if (!configs[item.name].sourceController) {
                         const sourceController = this._getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
-                        sourceController.calculateState(popupItem.items);
+                        sourceController.setItems(popupItem.items);
                     }
                     popupItem.hasMoreButton = configs[item.name].sourceController.hasMoreData('down');
                     popupItem.sourceController = configs[item.name].sourceController;

@@ -201,6 +201,19 @@ export default class Controller extends mixin<
         return this._items;
     }
 
+    getKeyProperty(): string {
+        const options = this._options;
+        let keyProperty;
+
+        if (options.keyProperty) {
+            keyProperty = this._options.keyProperty;
+        } else if (options.source && (options.source as IData).getKeyProperty) {
+            keyProperty = (options.source as IData).getKeyProperty();
+        }
+
+        return keyProperty;
+    }
+
     getLoadError(): Error {
         return this._loadError;
     }
@@ -229,7 +242,6 @@ export default class Controller extends mixin<
         }
     }
 
-    // FIXME, если root задаётся на списке, а не на data(browser)
     setRoot(key: TKey): void {
         this._setRoot(key);
         this._notify('rootChanged', key);
@@ -337,11 +349,6 @@ export default class Controller extends mixin<
 
     getExpandedItems(): TKey[] {
         return this._expandedItems;
-    }
-
-    // FIXME для поддержки nodeSourceControllers в дереве
-    calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
-        this._updateQueryPropertiesByItems(items, key, undefined, direction);
     }
 
     hasMoreData(direction: Direction, key: TKey = this._root): boolean {

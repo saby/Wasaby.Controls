@@ -525,7 +525,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const superResult = super._beforeMount(...args);
         const doBeforeMount = () => {
             const options = args[0];
-            this._initKeyProperty(options);
 
             if (options.sourceController) {
                 // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
@@ -601,10 +600,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const sourceController = this.getSourceController();
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let updateSourceController = false;
-
-        if ((this._options.keyProperty !== newOptions.keyProperty) || (newOptions.source !== this._options.source)) {
-            this._initKeyProperty(newOptions);
-        }
 
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             const sourceControllerRoot = sourceController.getState().root;
@@ -1070,11 +1065,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(options.nodeProperty) !== null) {
-                expanded.push(curItem.get(options.keyProperty));
+                expanded.push(curItem.get(this._keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }
             if (curItem && this._doAfterItemExpanded) {
-                this._doAfterItemExpanded(curItem.get(options.keyProperty));
+                this._doAfterItemExpanded(curItem.get(this._keyProperty));
             }
             return expanded;
         }
@@ -1223,7 +1218,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     private _isExpanded(item, model): boolean {
-        return model.getExpandedItems().indexOf(item.getContents().get(this._options.keyProperty)) > -1;
+        return model.getExpandedItems().indexOf(item.getContents().get(this._keyProperty)) > -1;
     }
 
     static _theme = [...BaseControl._theme, 'Controls/treeGrid'];
