@@ -879,24 +879,38 @@ describe('Controls/list_clean/BaseControl', () => {
             assert.isTrue(!mountResult);
         });
         it('_beforeMount keyProperty', async () => {
-            const baseControlOptions = await getCorrectBaseControlConfigAsync({
+            let baseControlOptions = await getCorrectBaseControlConfigAsync({
                 source: new Memory({
                     keyProperty: 'keyProperty',
                     data: []
                 }),
                 viewModelConstructor: ListViewModel
             });
-            const baseControl = new BaseControl(baseControlOptions);
+
+            let baseControl = new BaseControl(baseControlOptions);
             await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyProperty');
+
+            baseControlOptions = {...baseControlOptions};
             baseControlOptions.keyProperty = 'keyPropertyOptions';
-            baseControl._initKeyProperty(baseControlOptions);
+            baseControlOptions = await getCorrectBaseControlConfigAsync(baseControlOptions);
+            baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
+
+            baseControlOptions = {...baseControlOptions};
             baseControlOptions.source = null;
-            baseControl._initKeyProperty(baseControlOptions);
+            baseControlOptions.sourceController = null;
+            baseControlOptions = await getCorrectBaseControlConfigAsync(baseControlOptions);
+            baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
+
+            baseControlOptions = {...baseControlOptions};
             baseControlOptions.keyProperty = undefined;
-            baseControl._initKeyProperty(baseControlOptions);
+            baseControlOptions = await getCorrectBaseControlConfigAsync(baseControlOptions);
+            baseControl = new BaseControl(baseControlOptions);
+            await baseControl._beforeMount(baseControlOptions);
             assert.isFalse(!!baseControl._keyProperty);
         });
 
