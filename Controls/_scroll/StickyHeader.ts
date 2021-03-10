@@ -189,6 +189,10 @@ export default class StickyHeader extends Control<IStickyHeaderOptions> {
     }
 
     protected _beforeUpdate(options: IStickyHeaderOptions, context): void {
+        // Проверяем именно по старым опциями (this._options), т.к. в случае, если режим прилипания был 'notsticky' и
+        // сменился на любой другой, мы должны заново инициализировать нужные для работы поля.
+        // На beforeUpdate контрол еще не успел перестроится и обсерверы не появились в шаблоне.
+        // Инициализируем поля на afterUpdate, соотвественно нет смысла что-то обновлять до этого момента.
         if (!this._isStickyEnabled(this._options)) {
             return;
         }
