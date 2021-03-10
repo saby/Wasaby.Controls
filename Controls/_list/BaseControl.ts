@@ -3400,9 +3400,11 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups): Promise<unknown> | void {
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
+        let collapsedGroups;
 
         if (self._sourceController) {
             receivedData = self._sourceController.getItems();
+            collapsedGroups = self._sourceController.getCollapsedGroups();
         }
 
         if (collapsedGroups) {
