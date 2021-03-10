@@ -26,6 +26,7 @@ import 'css!Controls/suggest';
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/interface:IInputPlaceholder
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_input/interface/IValue
  *
