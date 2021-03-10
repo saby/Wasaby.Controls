@@ -461,7 +461,7 @@ define([
             it('should return correct position', () => {
                const component = calendarTestUtils.createComponent(PeriodLiteDialog.View, {});
                component._displayedRanges = test.displayedRanges;
-               let result = component._getFullYearsListPosition({
+               let result = component._getPosition({
                   startValue: test.position,
                   dateConstructor: Date
                }).getFullYear();
