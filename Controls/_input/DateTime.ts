@@ -36,7 +36,7 @@ import template = require('wml!Controls/_input/DateTime/DateTime');
  * @mixes Controls/_interface/IInputTag
  * @mixes Controls/_input/interface/IBase
  * @mixes Controls/_input/interface/IBorderVisibility
- * @mixes Controls/_interface/IInputPlaceholder
+ * @mixes Controls/interface:IInputPlaceholder
  * @mixes Controls/_input/interface/IValueValidators
  *
  *

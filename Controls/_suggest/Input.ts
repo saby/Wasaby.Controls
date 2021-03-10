@@ -25,7 +25,7 @@ import {generateStates} from 'Controls/input';
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IBase
- * @mixes Controls/_interface/IInputPlaceholder
+ * @mixes Controls/interface:IInputPlaceholder
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_input/interface/IValue
  *

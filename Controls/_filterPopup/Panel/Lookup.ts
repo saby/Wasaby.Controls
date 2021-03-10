@@ -37,7 +37,7 @@ interface IFilterPanelLookupOptions extends IControlOptions, ILookupOptions {
  * @mixes Controls/_interface/IMultiSelectable
  * @mixes Controls/_interface/ISorting
  * @mixes Controls/_input/interface/IBase
- * @mixes Controls/_interface/IInputPlaceholder
+ * @mixes Controls/interface:IInputPlaceholder
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_interface/IHeight
  * @mixes Controls/_interface/IFontSize
