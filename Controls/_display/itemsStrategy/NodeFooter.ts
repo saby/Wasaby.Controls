@@ -152,7 +152,7 @@ export default class NodeFooter<S, T extends TreeItem<S> = TreeItem<S>> implemen
         for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
             const item = items[itemIndex];
 
-            if (!item['[Controls/_display/TreeItem]'] || item.isNode() === null || !item.isExpanded()) {
+            if (!item['[Controls/_display/TreeItem]'] || item['[Controls/treeGrid:TreeGridNodeFooterRow]'] || item.isNode() === null || !item.isExpanded()) {
                 continue;
             }
 
