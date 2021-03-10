@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper controlsDemo__wrapper_max-width">
+<div class="controlsDemo__wrapper controlsDemo_fixedWidth500">
     <Controls.list:View
             keyProperty="id"
             name="list"
