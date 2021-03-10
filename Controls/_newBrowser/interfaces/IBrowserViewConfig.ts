@@ -18,6 +18,13 @@ export enum NodesPosition {
     left = 'left'
 }
 
+export enum ImageProportion {
+    '1:1' = '1:1',
+    '3:4' = '3:4',
+    '4:3' = '4:3',
+    '16:9'= '16:9'
+}
+
 /**
  * Возможные режимы отображения градиента
  * @public
@@ -180,6 +187,10 @@ export interface ITileConfig {
          * Режим отображения градиента
          */
         imageGradient: ImageGradient
+        /**
+         * Пропорция изображения
+         */
+        imageProportion: ImageProportion
     };
 
     /**
@@ -199,7 +210,12 @@ export interface ITileConfig {
         /**
          * Режим отображения градиента
          */
-        imageGradient: ImageGradient
+        imageGradient: ImageGradient,
+
+        /**
+         * Пропорция изображения
+         */
+        imageProportion: ImageProportion
     };
 }
 
@@ -251,6 +267,7 @@ export interface IListConfig {
          * Позиция картинки на плитке
          */
         imagePosition: ListImagePosition
+        imageViewMode: ImageViewMode
     };
 
     /**

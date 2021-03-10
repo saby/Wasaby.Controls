@@ -86,7 +86,11 @@
                   scope="{{tileItemTemplate}}"
                   template="{{_detailExplorerOptions.tileItemTemplate}}"
                   listConfiguration="{{_listConfiguration}}"
-                  tileCfg="{{_tileCfg}}"
+                  descriptionLines="{{_tileCfg.getDescriptionLines(tileItemTemplate.itemData)}}"
+                  imagePosition="{{_tileCfg.getImagePosition()}}"
+                  imageViewMode="{{_tileCfg.getImageViewMode(tileItemTemplate.itemData)}}"
+                  imageGradient="{{_tileCfg.getImageGradient(tileItemTemplate.itemData)}}"
+                  description="{{tileItemTemplate.itemData.item[_options.detail.descriptionProperty]}}"
                />
             </ws:tileItemTemplate>
          </Controls.explorer:View>

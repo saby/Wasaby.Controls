@@ -15,10 +15,12 @@ import {IBrowserViewConfig, NodesPosition} from 'Controls/_newBrowser/interfaces
 import {
     buildDetailOptions,
     buildMasterOptions,
-    getListConfiguration,
-    ListConfig,
-    TileConfig
+    getListConfiguration
 } from 'Controls/_newBrowser/utils';
+
+import {default as ListTemplateController} from './TemplatesControllers/List';
+import {default as TableTemplateController} from './TemplatesControllers/TableTemplateController';
+import {default as TileTemplateController} from './TemplatesControllers/Tile';
 //region templates import
 // tslint:disable-next-line:ban-ts-ignore
 // @ts-ignore
@@ -502,8 +504,8 @@ export default class Browser extends Control<IOptions, IReceivedState> {
         }
 
         this._listConfiguration = cfg;
-        this._tileCfg = new TileConfig(cfg, options);
-        this._listCfg = new ListConfig(cfg, options);
+        this._tileCfg = new TileTemplateController({viewConfiguration: cfg});
+        this._listCfg = new ListTemplateController({viewConfiguration: cfg});
 
         this._setViewMode(cfg.settings.clientViewMode);
         this._updateMasterVisibility(options);
