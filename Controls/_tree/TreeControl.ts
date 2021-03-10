@@ -630,6 +630,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _tempItem: null,
     _markedLeaf: '',
     _goToNextAfterExpand: true,
+    _doOnDidUpdate: null,
 
     _itemOnWhichStartCountDown: null,
     _timeoutForExpandOnDrag: null,
@@ -797,6 +798,12 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
     },
+    _componentDidUpdate() {
+      if (this._doOnDidUpdate) {
+          this._doOnDidUpdate();
+          this._doOnDidUpdate = null;
+      }
+    },
     _afterUpdate: function(oldOptions) {
         let afterUpdateResult;
         if (this._expandedItemsToNotify) {
@@ -827,6 +834,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return afterUpdateResult;
     },
     _beforeUnmount(): void {
+        this._doOnDidUpdate = null;
         this._clearTimeoutForExpandOnDrag();
     },
 
@@ -1184,8 +1192,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         }
                     }
                 } else {
+                    const itemKey = this._tempItem;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(this._tempItem, true);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, true);
+                    };
                     resolve();
                 }
             } else {
@@ -1227,7 +1238,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(itemKey, false);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, false);
+                    }
                     resolve();
                 }
             } else {
