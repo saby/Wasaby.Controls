@@ -121,7 +121,6 @@ define([
             };
 
             component._beforeUnmount();
-            assert.isUndefined(component._observeHandler);
             assert.isUndefined(component._observer);
             sandbox.restore();
          });
