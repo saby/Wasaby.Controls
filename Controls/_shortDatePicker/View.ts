@@ -82,12 +82,11 @@ class View extends Control<IDateLitePopupOptions> {
         }
 
         if (options.chooseQuarters || options.chooseMonths || options.chooseHalfyears) {
-            this._position = this._getFullYearsListPosition(options);
+            this._position = this._getPosition(options);
         } else {
             this._position = this._getYearsListPosition(options);
         }
 
-        // this._position = this._getFirstPositionInMonthList(this._position, options.dateConstructor);
         this._isExpandButtonVisible = this._getExpandButtonVisibility(options);
 
         if (options.displayedRanges) {
@@ -444,22 +443,31 @@ class View extends Control<IDateLitePopupOptions> {
         }
         return css.join(' ');
     }
-    protected _getFullYearsListPosition(options: IDateLitePopupOptions): Date {
+
+    private _getPosition(options: IDateLitePopupOptions): Date {
         const position = options.year || options.startValue || new options.dateConstructor();
         if (!this._displayedRanges) {
             return position;
         }
-        // В ленте видно сразу 2 года. Если отображаемый год оказался последним, выбираем год над ним.
+        // В ленте календаря видны сразу несколько месяцев
+        // В режиме 'Полугодия, кварталы и месяца' и режиме 'Только месяца' помимо выбранного года виден еще 1
+        // В режиме 'Только кварталы' помимо выбранного года видны еще 3
+        const amountOfVisibleItemsExceptCurrent = options.chooseQuarters && !options.chooseMonths ? 3 : 1;
+
         for (let i = 0; i < this._displayedRanges.length; i++) {
             const displayedRange = this._displayedRanges[i];
+            // При открытии мы позиционируем выбранный год сверху.
+            // Если окажется так, что выбранный год оказался последним отображаемым из-за displayedRanges,
+            // мы не сможем спозиционировать его сверху, т.к. останется пустое место снизу.
+            // Спозиционируемся на год выше (или три года, в случае с режимом 'Только кварталы'), чтобы избежать прыжка
             if (displayedRange[1] && displayedRange[1].getFullYear() === position.getFullYear()) {
-                return new Date(position.getFullYear() - 1, 0);
+                return new options.dateConstructor(position.getFullYear() - amountOfVisibleItemsExceptCurrent, 0);
             }
         }
         return position;
     }
 
-    protected _getYearsListPosition(options: IDateLitePopupOptions): Date {
+    private _getYearsListPosition(options: IDateLitePopupOptions): Date {
         const start = options.startValue;
         const currentDate = new options.dateConstructor();
         const startValueYear = start ? start.getFullYear() : null;
