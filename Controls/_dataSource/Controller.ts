@@ -123,7 +123,6 @@ export default class Controller {
 
     private _expandedItems: TKey[];
     private _deepReload: boolean;
-    private _collapsedGroups: TArrayGroupId;
 
     constructor(cfg: IControllerOptions) {
         this._options = cfg;
@@ -290,10 +289,6 @@ export default class Controller {
             sourceController: source ? this : null,
             dataLoadCallback: this._options.dataLoadCallback
         };
-    }
-
-    getCollapsedGroups(): TArrayGroupId {
-        return this._collapsedGroups;
     }
 
     // FIXME для работы дерева без bind'a опции expandedItems
@@ -583,7 +578,7 @@ export default class Controller {
         filter: QueryWhereExpression<unknown>,
         key: TKey
     ): Promise<QueryWhereExpression<unknown>> {
-        return this._getFilterForCollapsedGroups(filter, this._options)
+        return Controller._getFilterForCollapsedGroups(filter, this._options)
             .then((preparedFilter: QueryWhereExpression<unknown>) => {
                 return this._getFilterHierarchy(preparedFilter, this._options, key);
             });
@@ -719,7 +714,7 @@ export default class Controller {
         this._dataLoadCallbackFromOptions = dataLoadCallback;
     }
 
-    private _getFilterForCollapsedGroups(
+    private static _getFilterForCollapsedGroups(
         initialFilter: QueryWhereExpression<unknown>,
         options: IControllerOptions
     ): Promise<QueryWhereExpression<unknown>> {
@@ -744,8 +739,7 @@ export default class Controller {
             resultFilterPromise = Promise.resolve(getFilterWithCollapsedGroups(collapsedGroups));
         } else if (historyId) {
             resultFilterPromise = groupUtil.restoreCollapsedGroups(historyId).then(
-                (restoredCollapsedGroups?: TArrayGroupId) =>
-                    getFilterWithCollapsedGroups(this._collapsedGroups = restoredCollapsedGroups)
+                (restoredCollapsedGroups?: TArrayGroupId) => getFilterWithCollapsedGroups(restoredCollapsedGroups)
             );
         } else {
             resultFilterPromise = Promise.resolve(initialFilter);
