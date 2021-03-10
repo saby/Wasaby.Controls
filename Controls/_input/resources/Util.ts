@@ -75,7 +75,7 @@ export function getAdaptiveInputType(selection: ISelection, nativeInputType: Nat
 export function processKeydownEvent(event: SyntheticEvent<KeyboardEvent>, additionalProcessedKeys?: string[]): void {
     const code: string = event.nativeEvent.key;
     const processedKeys: string[] = [
-        'End', 'Home', ' ', 'ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight',
+        'End', 'Home', ' ', 'ArrowLeft', 'ArrowRight',
         // Поддержка значения key в IE
         'Spacebar', 'Left', 'Right'
     ];
