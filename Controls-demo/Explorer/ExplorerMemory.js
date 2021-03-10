@@ -88,18 +88,20 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                   }
                });
                TreeMemory.superclass.query.apply(this, arguments).addCallback(function(data) {
-                  var
-                     originalGetAll = data.getAll;
+                  const originalGetAll = data.getAll;
+
                   data.getAll = function() {
-                     var
-                        result = originalGetAll.apply(this, arguments),
-                        meta = result.getMetaData();
+                     const originResult = originalGetAll.apply(this, arguments);
+                     const meta = originResult.getMetaData();
+
                      if (parent !== undefined && parent !== null) {
                         meta.path = getFullPath(self._$data, parent, true);
                      }
-                     result.setMetaData(meta);
-                     return result;
+
+                     originResult.setMetaData(meta);
+                     return originResult;
                   };
+
                   result.callback(data);
                });
             }

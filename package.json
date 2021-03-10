@@ -31,7 +31,6 @@
    "wasaby-cli": {
       "port": 777
    },
-   "dependencies": {},
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
       "concurrently": "^5.3.0",
