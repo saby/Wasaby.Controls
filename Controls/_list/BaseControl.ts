@@ -394,7 +394,7 @@ const _private = {
     },
 
     attachLoadDownTriggerToNullIfNeed(self, options): boolean {
-        if (!_private.supportAttachLoadTriggerToNull(options, 'down') || !options.useNewModel) {
+        if (!_private.supportAttachLoadTriggerToNull(options, 'down') || !self._listViewModel || !self._listViewModel['[Controls/_display/grid/Collection]']) {
             return false;
         }
         const needAttachLoadDownTriggerToNull = _private.needAttachLoadTriggerToNull(self, 'down');
@@ -3766,6 +3766,13 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
             this._attachLoadDownTriggerToNull = false;
         }
+
+        // если высота элементов меньше вьюпорта, то нужно делать дополнительный запрос за данными
+        const itemsContainerHeight = this._getItemsContainer && this._getItemsContainer()?.offsetHeight || 0;
+        if (itemsContainerHeight < this._viewportSize) {
+            this._attachLoadDownTriggerToNull = false;
+        }
+
         if (this._hideDownTrigger) {
             this._hideDownTrigger = false;
         }
