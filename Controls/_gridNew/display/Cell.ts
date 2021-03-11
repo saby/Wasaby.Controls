@@ -202,7 +202,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             }
 
             if (backgroundColorStyle !== 'default' || this.getOwner().hasColumnScroll()) {
-                wrapperClasses += `controls-background-${backgroundColorStyle || style}_theme-${theme}`;
+                wrapperClasses += ` controls-background-${backgroundColorStyle || style}_theme-${theme}`;
             }
         }
         return wrapperClasses;
