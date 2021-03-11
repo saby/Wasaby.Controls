@@ -65,7 +65,7 @@ export type TResultsColspanCallback = (column: IColumn, columnIndex: number) => 
 /**
  * @typedef {Object} IEmptyTemplateColumn
  * @description
- * Объект конфигурации колонки представления пустой таблицы.
+ * Объект конфигурации колонки представления {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty-grid/ пустой таблицы}.
  * @param {TemplateFunction} template Элемент, для которого рассчитывается объединение
  * @param {Number} startColumn Начальный индекс колонки.
  * @param {Number} endColumn Конечный индекс колонки.
