@@ -23,7 +23,7 @@ const setPropValue = Utils.object.setPropertyValue.bind(Utils);
  *
  * @remark
  * Полезные ссылки:
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter-view/base-settings/#step-3 руководство разработчика}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter/filter-view/base-settings/#step-3 руководство разработчика}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less переменные тем оформления filter}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления filterPopup}
  *
@@ -349,7 +349,7 @@ export default FilterPanel;
 
 /**
  * @name Controls/_filterPopup/DetailPanel#topTemplate
- * @cfg {String|Function} Шаблон отображения заголовка на Панели фильтров.
+ * @cfg {String|TemplateFunction} Шаблон отображения заголовка на Панели фильтров.
  */
 
 /**

@@ -997,7 +997,7 @@ Object.defineProperty(Explorer, 'defaultProps', {
 
 /**
  * @name Controls/_explorer/View#tileItemTemplate
- * @cfg {String|Function} Шаблон отображения элемента в режиме "Плитка".
+ * @cfg {String|TemplateFunction} Шаблон отображения элемента в режиме "Плитка".
  * @default undefined
  * @markdown
  * @remark

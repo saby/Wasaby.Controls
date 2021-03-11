@@ -96,7 +96,7 @@ export interface IMenuOptions {
      */
     additionalProperty?: string;
     /**
-     * @cfg {String|Function} Шаблон футера дополнительного меню тулбара.
+     * @cfg {String|TemplateFunction} Шаблон футера дополнительного меню тулбара.
      * @demo Controls-demo/Toolbar/PopupFooterTemplate/Index
      */
     popupFooterTemplate?: String | Function;

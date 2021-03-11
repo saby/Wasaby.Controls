@@ -9,36 +9,22 @@ export default class PathController extends Control<IControlOptions> {
    protected _header: object;
    protected _needShadow: boolean = false;
    private _itemsAndHeaderPromise: Promise<object>;
-   private _itemsAndHeaderPromiseResolver: () => object;
+   private _itemsAndHeaderPromiseResolver: (result: object) => void;
 
    protected _notifyHandler: EventUtils.tmplNotify = EventUtils.tmplNotify;
 
    protected _beforeMount(options) {
-      this._itemsAndHeaderPromise = new Promise((resolve) => {
-         this._itemsAndHeaderPromiseResolver = resolve;
-      });
-      this._header = this._getHeader(options, options.items);
+      this._prepareHeader({}, options);
       options.itemsPromise.then((items) => {
          this._needShadow = this._isNeedShadow(this._header, options.header);
-         this._itemsAndHeaderPromiseResolver({
-            items,
-            header: this._header
-         });
+         this._resolveItemsAndHeaderPromise(items);
       });
    }
 
    protected _beforeUpdate(newOptions) {
-      if (this._options.rootVisible !== newOptions.rootVisible || newOptions.items !== this._options.items || !GridIsEqualUtil.isEqualWithSkip(this._options.header, newOptions.header, { template: true })) {
-         this._itemsAndHeaderPromise = new Promise((resolve) => {
-            this._itemsAndHeaderPromiseResolver = resolve;
-         });
-         this._header = this._getHeader(newOptions, newOptions.items);
-         this._itemsAndHeaderPromiseResolver({
-            items: newOptions.items,
-            header: this._header
-         });
-         this._needShadow = this._isNeedShadow(this._header, newOptions.header);
-      }
+      this._prepareHeader(this._options, newOptions);
+      this._resolveItemsAndHeaderPromise(newOptions.items);
+      this._needShadow = this._isNeedShadow(this._header, newOptions.header);
    }
 
    protected _onBackButtonClick(e): void {
@@ -47,32 +33,64 @@ export default class PathController extends Control<IControlOptions> {
       });
    }
 
-   private _getHeader(options, items): object {
-      let newHeader;
+   private _prepareHeader(oldOptions, newOptions): void {
+      const isEqualItems = (oldItems, newItems) => {
+         if ((!oldItems && newItems) || (oldItems && !newItems)) { return false }
+         if (!oldItems && !newItems) { return true }
 
-      if (options.header && options.header.length && !(options.header[0].title || options.header[0].caption) && !options.header[0].template) {
-         newHeader = options.header.slice();
-         newHeader[0] = {
-            ...options.header[0],
-            template: HeadingPathBack,
-            templateOptions: {
-               itemsAndHeaderPromise: this._itemsAndHeaderPromise,
-               showActionButton: !!options.showActionButton,
-               showArrowOutsideOfBackButton: !!options.showActionButton,
-               backButtonStyle: options.backButtonStyle,
-               backButtonIconStyle: options.backButtonIconStyle,
-               backButtonFontColorStyle: options.backButtonFontColorStyle,
-               displayProperty: options.displayProperty,
-               items
-            },
+         return oldItems.length === newItems.length && oldItems.reduce((acc, prev, index) => acc && prev.isEqual(newItems[index]), true);
+      };
 
-            // TODO: удалить эту опцию после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
-            isBreadCrumbs: true
-         };
-      } else {
-         newHeader = options.header;
+      if (
+          oldOptions.rootVisible !== newOptions.rootVisible ||
+          !isEqualItems(oldOptions.items, newOptions.items) ||
+          !GridIsEqualUtil.isEqualWithSkip(oldOptions.header, newOptions.header, {template: true})
+      ) {
+         this._itemsAndHeaderPromise = new Promise((resolve) => {
+            this._itemsAndHeaderPromiseResolver = resolve;
+         });
+
+         this._header = null;
       }
-      return newHeader;
+
+      if (!this._header) {
+         let newHeader;
+
+         if (newOptions.header && newOptions.header.length && !(newOptions.header[0].title || newOptions.header[0].caption) && !newOptions.header[0].template) {
+            newHeader = newOptions.header.slice();
+            newHeader[0] = {
+               ...newOptions.header[0],
+               template: HeadingPathBack,
+               templateOptions: {
+                  itemsAndHeaderPromise: this._itemsAndHeaderPromise,
+                  showActionButton: !!newOptions.showActionButton,
+                  showArrowOutsideOfBackButton: !!newOptions.showActionButton,
+                  backButtonStyle: newOptions.backButtonStyle,
+                  backButtonIconStyle: newOptions.backButtonIconStyle,
+                  backButtonFontColorStyle: newOptions.backButtonFontColorStyle,
+                  displayProperty: newOptions.displayProperty,
+                  items: newOptions.items
+               },
+
+               // TODO: удалить эту опцию после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+               isBreadCrumbs: true
+            };
+         } else {
+            newHeader = newOptions.header;
+         }
+
+         this._header = newHeader;
+      }
+   }
+
+   private _resolveItemsAndHeaderPromise(items): void {
+      if (this._itemsAndHeaderPromiseResolver) {
+         this._itemsAndHeaderPromiseResolver({
+            items: items,
+            header: this._header
+         });
+         this._itemsAndHeaderPromiseResolver = null;
+      }
    }
 
    private _isNeedShadow(header, headerCfg): boolean {

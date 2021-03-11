@@ -1573,7 +1573,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET && newItems && newItems.length) {
+            if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length)) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
             }
 
@@ -3108,7 +3108,7 @@ const _private = {
  */
 
 export interface IBaseControlOptions extends IControlOptions {
-
+    sourceController?: SourceController;
 }
 
 export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions> extends Control<TOptions>
@@ -3215,7 +3215,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
     _selectionController = null;
     _itemActionsController = null;
-    _sourceController = null;
+    protected _sourceController: SourceController = null;
     _prevRootId = null;
     _loadedBySourceController = false;
 
@@ -3291,6 +3291,13 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         this._dataLoadCallback = _private.dataLoadCallback.bind(this);
         this._uniqueId = Guid.create();
 
+        if (newOptions.sourceController) {
+            this._sourceController = newOptions.sourceController;
+            this._sourceController.updateOptions(newOptions);
+            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+            _private.validateSourceControllerOptions(this, newOptions);
+        }
+
         _private.checkDeprecated(newOptions);
         this._initKeyProperty(newOptions);
         _private.checkRequiredOptions(this, newOptions);
@@ -3303,16 +3310,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
             const shouldPrevent = newOptions.preventServerSideColumnScroll;
             this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
-        }
-
-        if (newOptions.sourceController) {
-            this._sourceController = newOptions.sourceController as SourceController;
-            this._sourceController.updateOptions(newOptions);
-            _private.validateSourceControllerOptions(this, newOptions);
-        }
-
-        if (this._sourceController) {
-            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
         }
 
         if (newOptions.useNewModel) {
@@ -3403,9 +3400,11 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups): Promise<unknown> | void {
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
+        let collapsedGroups;
 
         if (self._sourceController) {
             receivedData = self._sourceController.getItems();
+            collapsedGroups = self._sourceController.getCollapsedGroups();
         }
 
         if (collapsedGroups) {
@@ -3486,30 +3485,17 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     _prepareGroups(newOptions, callback?: (...args: unknown[]) => unknown): Promise<TCollapsedGroups> | unknown {
         let result = null;
         if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
-            result = new Promise((resolve) => {
-                groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback((collapsedGroupsFromStore) => {
-                    resolve(collapsedGroupsFromStore || newOptions.collapsedGroups);
-                });
-            });
+            result = (this._sourceController && this._sourceController.getCollapsedGroups()) ||
+                      newOptions.collapsedGroups;
         } else if (newOptions.collapsedGroups) {
             result = newOptions.collapsedGroups;
         }
 
-        if (result instanceof Promise) {
-            return callback ? result.then(callback) : result;
-        } else {
-            return (callback && callback(result)) || result;
-        }
+        return (callback && callback(result)) || result;
     }
 
-    _initKeyProperty(options) {
-        let keyProperty = options.keyProperty;
-        if (keyProperty === undefined) {
-            if (options.source && options.source.getKeyProperty) {
-                keyProperty = options.source.getKeyProperty();
-            }
-        }
-        this._keyProperty = keyProperty;
+    _initKeyProperty(options): void {
+        this._keyProperty = options.keyProperty || (this._sourceController && this._sourceController.getKeyProperty());
     }
 
     scrollMoveSyncHandler(params: IScrollParams): void {
@@ -3791,6 +3777,10 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
 
         this._listViewModel.setKeyProperty(this._keyProperty);
+
+        if (this._options.displayProperty !== newOptions.displayProperty) {
+            this._listViewModel.setDisplayProperty(newOptions.displayProperty);
+        }
 
         if (!newOptions.useNewModel) {
             this._listViewModel.setBackgroundStyle(newOptions.backgroundStyle);
@@ -4290,6 +4280,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
+        _private.clearShowLoadingIndicatorTimer(this);
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -4676,7 +4667,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         return neededItemsCount <= itemsCount;
     }
     __selectedPageChanged(e, page: number) {
-        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
         const direction = this._currentPage < page ? 'down' : 'up';
         const canScroll = this._canScroll(scrollTop, direction);
         const itemsCount = this._items.getCount();
@@ -4695,7 +4686,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             if (this._scrollController.getParamsToRestoreScrollPosition()) {
                 return;
             }
-            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
             if (!this._canScroll(scrollTop, direction)) {
                 this._shiftToDirection(direction);
             } else {
@@ -5027,9 +5018,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
-        if (this._itemActionClickItemKey && this._itemActionClickItemKey === item.getKey()) {
+        if (this._itemActionMouseDown) {
             // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
-            this._itemActionClickItemKey = null;
+            this._itemActionMouseDown = null;
             e.stopPropagation();
             return;
         }
@@ -5627,9 +5618,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
-        this._itemActionClickItemKey = null;
+        this._itemActionMouseDown = null;
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
-            this._itemActionClickItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+            this._itemActionMouseDown = true;
             event.stopPropagation();
             return;
         }

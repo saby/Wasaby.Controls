@@ -219,7 +219,7 @@ export interface IGridControl extends IList {
  * @description Тип колонки подвалов таблицы
  * @property {Number} [startColumn=undefined] Индекс колонки таблицы, с которой начинается ячейка подвала. Если поле не определено, тогда берется endColumn предыдущей ячейки или 1 (если это первая колонка).
  * @property {Number} [endColumn=undefined] Индекс колонки таблицы, на которой заканчивается ячейка подвала. Если поле не определено, тогда берется startColumn текущей ячейки, увеличенный на один.
- * @property {String|Function} [template=undefined] Шаблон содержимого колонки подвала. Если поле не определено, тогда содержимое колонки будет пустым.
+ * @property {String|TemplateFunction} [template=undefined] Шаблон содержимого колонки подвала. Если поле не определено, тогда содержимое колонки будет пустым.
  * @remark
  * Значения опций startColumn и endColumn задаются в соответствии с GridLayout CSS, т.е. с единицы. Индексы считаются по границам колонок.
  * Например, чтобы отобразить объединенную ячейку подвала под второй и третей колонкой таблицы, нужно задать startColumn и endColumn в значения
@@ -603,9 +603,20 @@ export interface IGridControl extends IList {
  * @see colspanCallback
  */
 
+
+/**
+ * @typedef {Object} Controls/_grid/interface/IGridControl/IEmptyTemplateColumn
+ * @description
+ * Объект конфигурации колонки представления пустой таблицы.
+ * @param {TemplateFunction} template Элемент, для которого рассчитывается объединение.
+ * @param {Number} startColumn Начальный индекс колонки.
+ * @param {Number} endColumn Конечный индекс колонки.
+ */
+
 /**
  * @name Controls/_grid/interface/IGridControl#emptyTemplateColumns
- * @cfg {Array.<Controls/_gridNew/display/mixins/Grid/IEmptyTemplateColumn.typedef>} Конфигурация колонок пустой таблицы.
+ * @cfg {Array.<Controls/_grid/interface/IGridControl/IEmptyTemplateColumn.typedef>} Конфигурация колонок {@link /doc/platform/developmentapl/interface-development/controls/list/grid/empty-grid/#empty-template-columns пустой таблицы}.
+ * @demo Controls-demo/gridNew/EmptyGrid/Editing/Index 
  */
 
 /**

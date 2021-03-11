@@ -23,6 +23,7 @@ interface IDateRangeInputOptions extends IDateRangeValidatorsOptions {
  * @class Controls/_dateRange/Input
  * @extends UI/Base:Control
  * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/interface:IInputPlaceholder
  * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IDateRange
  * @mixes Controls/_dateRange/interfaces/IRangeInputTag

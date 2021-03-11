@@ -151,15 +151,18 @@ export default class NodeFooter<S, T extends TreeItem<S> = TreeItem<S>> implemen
         const nodeFooterContents = options.nodeFooters.map((it) => it.getContents());
         for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
             const item = items[itemIndex];
-            const nodeFooterContent = 'node-footer-' + item.getContents().getKey();
 
+            if (!item['[Controls/_display/TreeItem]'] || item['[Controls/treeGrid:TreeGridNodeFooterRow]'] || item.isNode() === null || !item.isExpanded()) {
+                continue;
+            }
+
+            const nodeFooterContent = 'node-footer-' + item.getContents().getKey();
             // TODO нужно добавить проверку, чтобы не создавать лишние футеры.
             //  Нужно определить, что если в узле нет данных и для него не определен content, тофутер не нужно создавать
             //  Сейчас в этой ситуации, он создастся и не отобразится и это наверное сломает виртуальный скролл
             //  UPD: временно до решения проблемы, отображаем скрытый див
-            // Футер нужен только для развернутых узлов, для которых прикладник их разрешил и для которых уже не было создано футера
             if (
-                !item['[Controls/_display/TreeItem]'] || item.isNode() === null || !item.isExpanded() || nodeFooterContents.includes(nodeFooterContent)
+                nodeFooterContents.includes(nodeFooterContent)
                 || options.footerVisibilityCallback instanceof Function && !options.footerVisibilityCallback(item.getContents())
             ) {
                 continue;
