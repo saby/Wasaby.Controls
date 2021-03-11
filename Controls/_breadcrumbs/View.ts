@@ -23,7 +23,7 @@ const MIN_COUNT_OF_LETTER = 3;
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
- * 
+ *
  * @private
  * @author Авраменко А.С.
  */
@@ -52,7 +52,7 @@ class BreadCrumbsView extends Control<IControlOptions> {
     private _addWithOverflow(displayProperty: string): void {
         if (this._items.length <= CRUMBS_COUNT) {
             this._items.forEach((item) => {
-                if (!item.isDots && item.item.get(displayProperty).length > MIN_COUNT_OF_LETTER) {
+                if (!item.isDots && item.item.get(displayProperty)?.length > MIN_COUNT_OF_LETTER) {
                     item.withOverflow = true;
                 }
             });
