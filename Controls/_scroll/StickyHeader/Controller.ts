@@ -5,7 +5,8 @@ import {IFixedEventData,
     SHADOW_VISIBILITY,
     TRegisterEventData,
     TYPE_FIXED_HEADERS,
-    getGapFixSize} from './Utils';
+    getGapFixSize,
+    MODE} from './Utils';
 import StickyHeader from 'Controls/_scroll/StickyHeader';
 import fastUpdate from './FastUpdate';
 import {ResizeObserverUtil} from 'Controls/sizeUtils';
@@ -584,6 +585,11 @@ class StickyHeaderController {
                 this._delayedHeaders.splice(index, 1);
             }
         });
+    }
+
+    updateStickyMode(stickyId: number, newMode: MODE): void {
+        this._headers[stickyId].mode = newMode;
+        this._updateTopBottom();
     }
 
     private _updateTopBottom() {
