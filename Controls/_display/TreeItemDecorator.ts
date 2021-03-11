@@ -7,6 +7,7 @@ export interface IOptions<T> {
     source: TreeItem<T>;
     parent?: TreeItem<T> | BreadcrumbsItem<T>;
     multiSelectVisibility: string;
+    multiSelectAccessibilityProperty: string;
 }
 
 /**
@@ -22,7 +23,8 @@ export default class TreeItemDecorator<T> extends TreeItem<T> {
     constructor(options?: IOptions<T>) {
         super({
             contents: options?.source?.contents,
-            multiSelectVisibility: options?.multiSelectVisibility
+            multiSelectVisibility: options?.multiSelectVisibility,
+            multiSelectAccessibilityProperty: options?.multiSelectAccessibilityProperty
         });
         this._$source = options?.source;
         this._$parent = options?.parent;

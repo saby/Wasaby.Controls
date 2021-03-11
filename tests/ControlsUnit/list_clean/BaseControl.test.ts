@@ -1127,8 +1127,12 @@ describe('Controls/list_clean/BaseControl', () => {
             it('_beforeMount without source and sourceController, then _beforeUpdate with sourceController', async () => {
                 let baseControlOptions = getBaseControlOptionsWithEmptyItems();
                 let afterReloadCallbackCalled = false;
+                let serviceDataLoadCallbackCalled = false;
                 baseControlOptions.afterReloadCallback = () => {
                     afterReloadCallbackCalled = true;
+                };
+                baseControlOptions.serviceDataLoadCallback = () => {
+                    serviceDataLoadCallbackCalled = true;
                 };
                 baseControlOptions.source = null;
                 baseControlOptions.sourceController = null;
@@ -1146,8 +1150,8 @@ describe('Controls/list_clean/BaseControl', () => {
                 await baseControl._beforeUpdate(baseControlOptions);
                 baseControl._updateInProgress = false;
                 baseControl.saveOptions(baseControlOptions);
-                await baseControl.reload();
                 assert.isTrue(afterReloadCallbackCalled);
+                assert.isTrue(serviceDataLoadCallbackCalled);
             });
 
         });
@@ -1223,6 +1227,23 @@ describe('Controls/list_clean/BaseControl', () => {
             const reloadPromiseResult = await reloadPromise;
             assert.ok(!reloadPromiseResult, 'reload return wrong result');
             assert.ok(!afterReloadCallbackCalled);
+        });
+
+        it('baseControl items not changed on reload', async () => {
+            const options = getBaseControlOptionsWithEmptyItems();
+            let itemsReadyCallbackCalled = false;
+            options.itemsReadyCallback = () => {
+                itemsReadyCallbackCalled = true;
+            };
+            const options = await getCorrectBaseControlConfigAsync(options);
+            const baseControl = new BaseControl(options);
+            await baseControl._beforeMount(options);
+            baseControl.saveOptions(options);
+            assert.ok(itemsReadyCallbackCalled);
+
+            itemsReadyCallbackCalled = false;
+            await baseControl.reload();
+            assert.ok(!itemsReadyCallbackCalled);
         });
 
     });

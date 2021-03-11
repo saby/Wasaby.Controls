@@ -51,6 +51,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     private _inputValue: string;
     private _active: boolean = false;
     private _infoboxOpened: boolean = false;
+    private _toolbarMenuOpened: boolean = false;
     private _needSetFocusInInput: boolean = false;
     private _suggestState: boolean = false;
     private _subscribedOnResizeEvent: boolean = false;
@@ -141,6 +142,14 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
         this._notify('toolbarItemClick', [item, nativeEvent]);
     }
 
+    protected _toolbarMenuOpenedHandler(): void {
+        this._toolbarMenuOpened = true;
+    }
+
+    protected _toolbarMenuClosedHandler(): void {
+        this._toolbarMenuOpened = false;
+    }
+
     protected _getFieldWrapper(): HTMLElement {
         if (!this._fieldWrapper) {
             // @ts-ignore
@@ -191,7 +200,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
     }
 
     private _suggestStateChanged(event: SyntheticEvent, state: boolean): void {
-        if (this._infoboxOpened || !this._isInputActive(this._options) || !state) {
+        if ((this._infoboxOpened || !this._isInputActive(this._options) || !state || this._toolbarMenuOpened) && this._suggestState) {
             this.closeSuggest();
         }
     }
@@ -389,6 +398,7 @@ export default abstract class BaseLookupInput extends BaseLookup<ILookupInputOpt
 
     closeSuggest(): void {
         this._suggestState = false;
+        this._children.layout.closeSuggest();
     }
 
     paste(value: string): void {

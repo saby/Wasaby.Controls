@@ -247,6 +247,7 @@
    flex-grow: 1;
    box-sizing: border-box;
    max-width: 100%;
+   min-width: 0;
 }
 
 // Хак для новой версии хрома (84 dev), заведён issue в поддержке хрома. В IE ломает вёрстку в автотестах
@@ -271,8 +272,7 @@
    font-size: @master_item_font-size_list;
 }
 
-.controls-ColumnScroll_visible .controls-GridNew__cell_fixed_theme-@{themeName},
-.controls-Grid__cell_fixed_theme-@{themeName} {
+.controls-ColumnScroll_visible .controls-GridNew__cell_fixed_theme-@{themeName} {
    z-index: 3;
 }
 
@@ -735,7 +735,6 @@
 .controls-Grid__cell_spacingBackButton_with_multiSelection_theme-@{themeName} {
    margin-left: -@click-area_width_checkbox;
 }
-.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName},
 .controls-GridView__item_active_theme-@{themeName} {
    background-color: @item_hover_background-color_list;
 }
@@ -839,7 +838,7 @@
       background-color: @master_item_hover_background-color_list;
    }
 }
-.controls-Grid__row-cell__content_hiddenForLadder_theme-@{themeName},
+
 .controls-background-listItem_theme-@{themeName} {
    background-color: @background-color;
 }

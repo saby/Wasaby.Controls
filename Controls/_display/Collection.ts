@@ -45,7 +45,7 @@ const MESSAGE_READ_ONLY = 'The Display is read only. You should modify the sourc
 const VERSION_UPDATE_ITEM_PROPERTIES = ['editing', 'editingContents', 'animated', 'canShowActions', 'expanded', 'marked', 'selected'];
 
 /**
- * 
+ *
  * Возможные значения {@link Controls/list:IList#multiSelectAccessibilityProperty доступности чекбокса}.
  * @public
  */
@@ -126,6 +126,7 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     theme?: string;
+    backgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
     groupProperty?: string;
@@ -296,7 +297,9 @@ function onCollectionChange<T>(
             // Как минимум пока мы поддерживаем совместимость с BaseControl, такая возможность нужна,
             // потому что там пересоздание модели вызывает лишние перерисовки, подскроллы, баги
             // виртуального скролла.
-            this._reBuild(this._$compatibleReset || newItems.length === 0 || reason === 'assign');
+            // TODO избавиться по ошибке https://online.sbis.ru/opendoc.html?guid=f44d88a0-ac53-4d45-9dea-2b594211ee57
+            const needReset = this._$compatibleReset || newItems.length === 0 || reason === 'assign';
+            this._reBuild(needReset);
             projectionNewItems = toArray(this);
             this._notifyBeforeCollectionChange();
             this._notifyCollectionChange(
@@ -307,6 +310,9 @@ function onCollectionChange<T>(
                 0
             );
             this._handleAfterCollectionChange();
+            if (!needReset) {
+                this._handleCollectionActionChange(newItems);
+            }
             this._nextVersion();
             return;
 
@@ -320,6 +326,7 @@ function onCollectionChange<T>(
             this._finishUpdateSession(session, false);
             this._notifyCollectionItemsChange(newItems, newItemsIndex, session);
             this._nextVersion();
+            this._handleCollectionActionChange(newItems);
             return;
     }
 
@@ -391,6 +398,8 @@ function onCollectionItemChange<T extends EntityModel>(
     }
 
     this._nextVersion();
+
+    this._handleAfterCollectionItemChange(item, index, properties);
 }
 
 /**
@@ -421,14 +430,7 @@ function onEventRaisingChange(event: EventObject, enabled: boolean, analyze: boo
 
 function onCollectionPropertyChange(event: EventObject, values: {metaData: { results?: EntityModel }}): void {
     if (values && values.metaData) {
-        if (
-            values.metaData.results &&
-            values.metaData.results['[Types/_entity/IObservableObject]'] &&
-            values.metaData.results !== this._$metaResults
-        ) {
-            values.metaData.results.subscribe('onPropertyChange', this._onMetaResultsChange);
-        }
-
+        this._actualizeSubscriptionOnMetaResults(this._$metaResults, values.metaData.results);
         this.setMetaResults(values.metaData.results);
     }
 }
@@ -833,6 +835,9 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
     protected _dragStrategy: StrategyConstructor<DragStrategy> = DragStrategy;
     protected _isDragOutsideList: boolean = false;
 
+    // Фон застиканных записей и лесенки
+    protected _$backgroundStyle?: string;
+
     constructor(options: IOptions<S, T>) {
         super(options);
         SerializableMixin.call(this);
@@ -944,10 +949,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             // необходимо следить.
             (this._$collection as ObservableMixin).subscribe('onPropertyChange', this._onCollectionPropertyChange);
 
-            const metaResults = this._$collection.getMetaData && this._$collection.getMetaData()?.results;
-            if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
-                metaResults.subscribe('onPropertyChange', this._onMetaResultsChange);
-            }
+            this._actualizeSubscriptionOnMetaResults(null, this._$metaResults);
         }
         if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
             (this._$collection as ObservableMixin).subscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -967,10 +969,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                     'onPropertyChange', this._onCollectionPropertyChange
                 );
 
-                const metaResults = this._$collection.getMetaData && this._$collection.getMetaData()?.results;
-                if (metaResults && metaResults['[Types/_entity/IObservableObject]']) {
-                    metaResults.unsubscribe('onPropertyChange', this._onMetaResultsChange);
-                }
+                this._actualizeSubscriptionOnMetaResults(this._$metaResults, null);
             }
             if (this._$collection['[Types/_entity/EventRaisingMixin]']) {
                 (this._$collection as ObservableMixin).unsubscribe('onEventRaisingChange', this._oEventRaisingChange);
@@ -1008,6 +1007,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._cursorEnumerator = null;
         this._utilityEnumerator = null;
         this._userStrategies = null;
+        this._$metaResults = null;
 
         super.destroy();
     }
@@ -2430,6 +2430,13 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         return this._$itemTemplateProperty;
     }
 
+    setDisplayProperty(displayProperty: string): void {
+        if (this._$displayProperty !== displayProperty) {
+            this._$displayProperty = displayProperty;
+            this._nextVersion();
+        }
+    }
+
     getDisplayProperty(): string {
         return this._$displayProperty;
     }
@@ -2486,6 +2493,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._$multiSelectAccessibilityProperty = property;
         this._nextVersion();
         this._updateItemsMultiSelectAccessibilityProperty(property);
+    }
+
+    getMultiSelectAccessibilityProperty(): string {
+        return this._$multiSelectAccessibilityProperty;
     }
 
     setMultiSelectPosition(position: 'default' | 'custom'): void {
@@ -2547,6 +2558,18 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     getHoverBackgroundStyle(): string {
         return this._$hoverBackgroundStyle;
+    }
+
+    setBackgroundStyle(backgroundStyle: string): void {
+        this._$backgroundStyle = backgroundStyle;
+        this.getItems().forEach((item) => {
+           item.setBackgroundStyle(backgroundStyle);
+        });
+        this.nextVersion();
+    }
+
+    getBackgroundStyle(): string {
+        return this._$backgroundStyle;
     }
 
     getEditingBackgroundStyle(): string {
@@ -2679,6 +2702,17 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     getMetaData(): any {
         return this._$collection && this._$collection.getMetaData ? this._$collection.getMetaData() : {};
+    }
+
+    private _actualizeSubscriptionOnMetaResults(thisMetaResults, newMetaResults) {
+        if (thisMetaResults !== newMetaResults) {
+            if (thisMetaResults && thisMetaResults['[Types/_entity/IObservableObject]']) {
+                thisMetaResults.unsubscribe('onPropertyChange', this._onMetaResultsChange);
+            }
+            if (newMetaResults && newMetaResults['[Types/_entity/IObservableObject]']) {
+                newMetaResults.subscribe('onPropertyChange', this._onMetaResultsChange);
+            }
+        }
     }
 
     getCollapsedGroups(): TArrayGroupKey {
@@ -3242,6 +3276,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
+            options.backgroundStyle = this._$backgroundStyle;
             return create(this._itemModule, options);
         };
     }
@@ -4032,6 +4067,10 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }
 
+    protected _handleAfterCollectionItemChange(item: T, index: number, properties?: object): void {}
+
+    protected _handleCollectionActionChange(newItems: T[]): void {}
+
     // endregion
 
     // endregion
@@ -4067,6 +4106,7 @@ Object.assign(Collection.prototype, {
     _$multiSelectAccessibilityProperty: '',
     _$style: 'default',
     _$hoverBackgroundStyle: 'default',
+    _$backgroundStyle: null,
     _$rowSeparatorSize: null,
     _localize: false,
     _itemModule: 'Controls/display:CollectionItem',

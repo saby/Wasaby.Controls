@@ -1,6 +1,6 @@
 import { mixin } from 'Types/util';
 import { ITreeItemOptions, TreeItem, IItemPadding } from 'Controls/display';
-import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions } from 'Controls/gridNew';
+import { IGridRowOptions, GridCell, GridRowMixin, IDisplaySearchValue, IDisplaySearchValueOptions, IGridDataCellOptions, ItemActionsCell } from 'Controls/gridNew';
 import TreeGridCollection from './TreeGridCollection';
 import { IColumn, TMarkerClassName } from 'Controls/grid';
 import { Model } from 'Types/entity';
@@ -122,6 +122,18 @@ export default class TreeGridDataRow<T extends Model>
         super.setActive(active, silent);
         if (changed) {
             this._redrawColumns('all');
+        }
+    }
+
+    protected _initializeColumns(): void {
+        super._initializeColumns();
+
+        if (this._$columns && this.hasItemActionsSeparatedCell()) {
+            this._$columnItems.push(new ItemActionsCell({
+                owner: this,
+                isFixed: true,
+                column: {}
+            }));
         }
     }
 

@@ -237,11 +237,11 @@ export default class _Controller implements IDropdownController {
    }
 
    handleClose(): void {
-      if (this._options.searchParam) {
-         this._setItems(null);
-      }
-      this._isOpened = false;
-      this._menuSource = null;
+       if (this._items && !this._items.getCount() && this._options.searchParam) {
+           this._setItems(null);
+       }
+       this._isOpened = false;
+       this._menuSource = null;
    }
 
    pinClick(item): void {
@@ -341,6 +341,9 @@ export default class _Controller implements IDropdownController {
    }
 
    private _isLocalSource(source): boolean {
+      if (source instanceof PrefetchProxy) {
+         return cInstance.instanceOfModule(source.getOriginal(), 'Types/source:Local');
+      }
       return cInstance.instanceOfModule(source, 'Types/source:Local');
    }
 
@@ -370,7 +373,7 @@ export default class _Controller implements IDropdownController {
       let sourcePromise;
 
       if (this._hasHistory(options) && this._isLocalSource(options.source) && !options.historyNew) {
-         sourcePromise = getSource(this._source ||options.source, options.historyId);
+         sourcePromise = getSource(this._source || options.source, options);
       } else {
          sourcePromise = Promise.resolve(options.source);
       }
@@ -383,14 +386,13 @@ export default class _Controller implements IDropdownController {
 
    private _loadItems(options: IDropdownControllerOptions): Promise<RecordSet|Error> {
       return this._getSourceController(options).then((sourceController) => {
-
-             return sourceController.load().then((items) => {
-                return this._resolveLoadedItems(options, items);
-             }, (error) => {
-                this._loadError(error);
-                return error;
-             });
+          return sourceController.load().then((items) => {
+             return this._resolveLoadedItems(options, items);
+          }, (error) => {
+             this._loadError(error);
+             return Promise.reject(error);
           });
+       });
    }
 
    private _loadSelectedItems(options: IDropdownControllerOptions): Promise<RecordSet> {

@@ -142,7 +142,7 @@ const _private = {
         const expandToFirstLeafIfNeed = () => {
             // Если узел сворачивается - автоматически высчитывать следующий разворачиваемый элемент не требуется.
             // Ошибка: https://online.sbis.ru/opendoc.html?guid=98762b51-6b69-4612-9468-1c38adaa2606
-            if (options.markerMoveMode === 'leaves' && expanded !== false) {
+            if (options.markerMoveMode === 'leaves' && expanded !== false && self._goToNextAfterExpand) {
                 self._tempItem = nodeKey;
                 return self.goToNext();
             }
@@ -629,6 +629,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _currentItem: null,
     _tempItem: null,
     _markedLeaf: '',
+    _goToNextAfterExpand: true,
+    _doOnDidUpdate: null,
 
     _itemOnWhichStartCountDown: null,
     _timeoutForExpandOnDrag: null,
@@ -647,6 +649,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
         this._getHasMoreData = _private.getHasMoreData.bind(null, this);
         this._afterSetItemsOnReloadCallback = _private.afterSetItemsOnReloadCallback.bind(null, this);
+        this._canChangeMarker = this._canChangeMarker.bind(this);
         this._errorController = cfg.errorController || new dataSourceError.Controller({});
         return TreeControl.superclass.constructor.apply(this, arguments);
     },
@@ -795,6 +798,12 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
             sourceController.updateOptions({...newOptions, keyProperty: this._keyProperty});
         }
     },
+    _componentDidUpdate() {
+      if (this._doOnDidUpdate) {
+          this._doOnDidUpdate();
+          this._doOnDidUpdate = null;
+      }
+    },
     _afterUpdate: function(oldOptions) {
         let afterUpdateResult;
         if (this._expandedItemsToNotify) {
@@ -825,6 +834,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return afterUpdateResult;
     },
     _beforeUnmount(): void {
+        this._doOnDidUpdate = null;
         this._clearTimeoutForExpandOnDrag();
     },
 
@@ -1182,8 +1192,11 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         }
                     }
                 } else {
+                    const itemKey = this._tempItem;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(this._tempItem, true);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, true);
+                    };
                     resolve();
                 }
             } else {
@@ -1210,6 +1223,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         this._doAfterItemExpanded();
                         resolve();
                     } else {
+                        this._goToNextAfterExpand = false;
                         const expandResult = this.toggleExpanded(itemKey);
                         if (expandResult instanceof Promise) {
                             expandResult.then(() => {
@@ -1224,7 +1238,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(itemKey, false);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, false);
+                    }
                     resolve();
                 }
             } else {
@@ -1250,7 +1266,17 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
 
         this._tempItem = null;
+        this._goToNextAfterExpand = true;
 
+    },
+    _canChangeMarker(key: CrudEntityKey): boolean {
+        // TODO: отрефакторить после наследования (TreeControl <- BaseControl)
+        //  Нужно вызывать TreeControl::changeMarkedKey, который переопределит BaseControl._private::changeMarkedKey
+        if (this._options.markerMoveMode === 'leaves') {
+            const item = this._children.baseControl.getViewModel().getItemBySourceKey(key);
+            return !item || item.isNode() === null;
+        }
+        return true;
     },
     getNextItem(key: CrudEntityKey, model?): Model {
         const listModel = model || this._children.baseControl.getViewModel();

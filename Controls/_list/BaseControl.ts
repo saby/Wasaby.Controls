@@ -206,6 +206,7 @@ interface IIndicatorConfig {
     theme: string;
     isPortionedSearchInProgress: boolean;
     attachLoadTopTriggerToNull: boolean;
+    attachLoadTopTriggerToNullOption: boolean;
 }
 
 interface IBeginEditOptions {
@@ -433,12 +434,15 @@ const _private = {
                             self._groupingLoader.resetLoadedGroups(listModel);
                         }
 
-                        // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
-                        // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
-                        // выполняется в колбеке после обновления (doAfterUpdate).
-                        _private.assignItemsToModel(self, list, self._options);
-
                         if (self._sourceController) {
+                            if (self._sourceController.getItems() !== self._items || !self._items) {
+                                // Нужно передавать именно self._options, т.к. опции с которыми был вызван reload могут устареть
+                                // пока загружаются данные. self._options будут гарантированно актуальными, т.к. этот код
+                                // выполняется в колбеке после обновления (doAfterUpdate).
+                                _private.assignItemsToModel(self, list, self._options);
+                            } else if (cfg.itemsSetCallback) {
+                                cfg.itemsSetCallback(self._items);
+                            }
                             _private.setHasMoreData(listModel, _private.hasMoreDataInAnyDirection(self, self._sourceController));
                         }
 
@@ -816,7 +820,7 @@ const _private = {
                 const display = options.useNewModel ? self._listViewModel : self._listViewModel.getDisplay();
                 loadedDataCount = display && display['[Controls/_display/Tree]'] ?
                     display.getChildren(display.getRoot()).getCount() :
-                    display.getCount();
+                    self._items.getCount();
             } else {
                 loadedDataCount = 0;
             }
@@ -1685,7 +1689,7 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET && newItems && newItems.length) {
+            if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length)) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
             }
 
@@ -2356,13 +2360,13 @@ const _private = {
         return loadingIndicatorState === 'all';
     },
     getLoadingIndicatorClasses(
-        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull}: IIndicatorConfig
+        {hasItems, hasPaging, loadingIndicatorState, theme, isPortionedSearchInProgress, attachLoadTopTriggerToNull, attachLoadTopTriggerToNullOption}: IIndicatorConfig
     ): string {
         const state = attachLoadTopTriggerToNull && loadingIndicatorState === 'up'
            ? 'attachToNull'
            : loadingIndicatorState;
 
-        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNull && detection.isIE;
+        const isAbsoluteTopIndicator = state === 'up' && !attachLoadTopTriggerToNullOption;
         return CssClassList.add('controls-BaseControl__loadingIndicator')
             .add(`controls-BaseControl__loadingIndicator__state-${state}`, !isAbsoluteTopIndicator)
             .add('controls-BaseControl__loadingIndicator__state-up-absolute', isAbsoluteTopIndicator)
@@ -2754,7 +2758,8 @@ const _private = {
 
     changeMarkedKey(self: typeof BaseControl, newMarkedKey: CrudEntityKey, shouldFireEvent: boolean = false): Promise<CrudEntityKey>|CrudEntityKey {
         const markerController = _private.getMarkerController(self);
-        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent) {
+        const canChangeMarker = !self._options.canChangeMarker || self._options.canChangeMarker instanceof Function && self._options.canChangeMarker(newMarkedKey);
+        if ((newMarkedKey === undefined || newMarkedKey === markerController.getMarkedKey()) && !shouldFireEvent || !canChangeMarker) {
             return newMarkedKey;
         }
 
@@ -3876,6 +3881,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this._listViewModel.setRowSeparatorSize(newOptions.rowSeparatorSize);
         }
 
+        if (this._options.displayProperty !== newOptions.displayProperty) {
+            this._listViewModel.setDisplayProperty(newOptions.displayProperty);
+        }
+
         if (this._removeController) {
             this._removeController.updateOptions({source: newOptions.source});
         }
@@ -4008,6 +4017,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 // TODO удалить когда полностью откажемся от старой модели
                 //  Если Items были обновлены, то в старой модели переинициализировался display и этот параметр сбросился
                 this._listViewModel.setActionsAssigned(isActionsAssigned);
+            }
+
+            if (!this._options.sourceController) {
+                _private.executeAfterReloadCallbacks(this, this._items, newOptions);
             }
 
             if (this._loadedBySourceController && !this._sourceController.getLoadError()) {
@@ -4333,6 +4346,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this._checkTriggerVisibilityTimeout) {
             clearTimeout(this._checkTriggerVisibilityTimeout);
         }
+        _private.clearShowLoadingIndicatorTimer(this);
         if (this._options.itemsDragNDrop) {
             const container = this._container[0] || this._container;
             container.removeEventListener('dragstart', this._nativeDragStart);
@@ -4744,7 +4758,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return neededItemsCount <= itemsCount;
     },
     __selectedPageChanged(e, page: number) {
-        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
         const direction = this._currentPage < page ? 'down' : 'up';
         const canScroll = this._canScroll(scrollTop, direction);
         const itemsCount = this._items.getCount();
@@ -4763,7 +4777,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._scrollController.getParamsToRestoreScrollPosition()) {
                 return;
             }
-            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
             if (!this._canScroll(scrollTop, direction)) {
                 this._shiftToDirection(direction);
             } else {
@@ -4945,9 +4959,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (this.isLoading() && !_private.isPortionedLoad(this)) {
             return;
         }
-        if (this._itemActionClickItemKey && this._itemActionClickItemKey === item.getKey()) {
+        if (this._itemActionMouseDown) {
             // Не нужно кликать по Item, если MouseDown был сделан по ItemAction
-            this._itemActionClickItemKey = null;
+            this._itemActionMouseDown = null;
             e.stopPropagation();
             return;
         }
@@ -5533,9 +5547,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         }
         // При клике в операцию записи не нужно посылать событие itemMouseDown. Останавливать mouseDown в
         // методе _onItemActionMouseDown нельзя, т.к. тогда оно не добросится до Application
-        this._itemActionClickItemKey = null;
+        this._itemActionMouseDown = null;
         if (!!domEvent.target.closest(ITEM_ACTION_SELECTOR)) {
-            this._itemActionClickItemKey = this._options.useNewModel ? itemData.getContents().getKey() : itemData.key;
+            this._itemActionMouseDown = true;
             event.stopPropagation();
             return;
         }
@@ -5582,6 +5596,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         // Колбэк передается из explorer.View, чтобы не проставлять маркер перед проваливанием в узел
         if (this._options._needSetMarkerCallback) {
             canBeMarked = canBeMarked && this._options._needSetMarkerCallback(itemData.item, domEvent);
+        }
+
+        if (this._mouseDownItemKey === key) {
+            // TODO избавиться по задаче https://online.sbis.ru/opendoc.html?guid=7f63bbd1-3cb9-411b-81d7-b578d27bf289
+            // Ключ перетаскиваемой записи мы запоминаем на mouseDown, но днд начнется только после смещения на 4px и не факт, что он вообще начнется
+            // Если сработал mouseUp, то днд точно не сработает и draggedKey нам уже не нужен
+            this._draggedKey = null;
         }
 
         this._mouseDownItemKey = undefined;
@@ -5880,7 +5901,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             this.setMarkedKey(key);
             _private.updateItemActionsOnce(this, this._options);
             itemActionsController = _private.getItemActionsController(this, this._options);
-            itemActionsController?.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
+            if (itemActionsController) {
+                itemActionsController.activateSwipe(key, swipeContainer?.width, swipeContainer?.height);
+            }
         }
         if (swipeEvent.nativeEvent.direction === 'right') {
             // Тут не надо инициализировать контроллер, если он не проинициализирован
@@ -5907,8 +5930,13 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                 this.setMarkedKey(key);
             }
         }
-        if (!this._options.itemActions && item.isSwiped()) {
-            this._notify('itemSwipe', [item, swipeEvent, swipeContainer?.clientHeight]);
+        // Событие свайпа должно стрелять всегда. Прикладники используют его для кастомных действий.
+        // Раньше событие останавливалось если оно обработано платформой, но прикладники сами могут это контролировать.
+        // Поиском по https://s.tensor.ru есть один обработчик этого события, который потенциально может что-то поломать - у Мугинова,
+        // поэтому в 21.1200 отменяем корявые условия отправки этого события только под опцией task1181224388.
+        // В 21.2000 вообще нет этого условия.
+        if (this._options.task1181224388 || (!this._options.itemActions && item.isSwiped())) {
+            this._notify('itemSwipe', [_private.getPlainItemContents(item), swipeEvent, swipeContainer?.clientHeight]);
         }
     },
 
@@ -6143,7 +6171,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             loadingIndicatorState: indicatorState,
             theme: this._options.theme,
             isPortionedSearchInProgress: !!this._portionedSearchInProgress,
-            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull
+            attachLoadTopTriggerToNull: this._attachLoadTopTriggerToNull,
+            attachLoadTopTriggerToNullOption: this._options.attachLoadTopTriggerToNull
         });
     },
 
@@ -6265,7 +6294,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     },
 
     _documentDragStart(dragObject): void {
-        if (this._options.readOnly || !this._options.itemsDragNDrop) {
+        if (this._options.readOnly || !this._options.itemsDragNDrop || !(dragObject && dragObject.entity)) {
             return;
         }
 

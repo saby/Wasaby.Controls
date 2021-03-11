@@ -23,31 +23,31 @@ interface IItemPadding {
 const TILE_SIZES = {
     s: {
         horizontal: {
-            width: 210,
+            width: 300,
             imageHeight: 180
         },
         vertical: {
-            width: 390,
+            width: 164,
             imageWidth: 300
         }
     },
     m: {
         horizontal: {
-            width: 310,
+            width: 420,
             imageHeight: 240
         },
         vertical: {
-            width: 390,
+            width: 200,
             imageWidth: 160
         }
     },
     l: {
         horizontal: {
-            width: 420,
+            width: 648,
             imageHeight: 320
         },
         vertical: {
-            width: 640,
+            width: 256,
             imageWidth: 300
         }
     }
@@ -98,7 +98,7 @@ var TileViewModel = ListViewModel.extend({
 
     getTileSizes(tileSize: string, imagePosition: string = 'top', imageViewMode: string = 'rectangle'): object {
         const sizeParams = object.clone(TILE_SIZES[tileSize]);
-        const tileSizes = sizeParams[imagePosition === 'top' ? 'horizontal' : 'vertical'];
+        const tileSizes = sizeParams[imagePosition === 'top' ? 'vertical' : 'horizontal'];
         if (imagePosition === 'top') {
             tileSizes.imageWidth = null;
             if (imageViewMode !== 'rectangle') {
@@ -328,7 +328,7 @@ var TileViewModel = ListViewModel.extend({
     ): number {
         const imageHeight = imageHeightProperty && Number(item.get(imageHeightProperty));
         const imageWidth = imageWidthProperty && Number(item.get(imageWidthProperty));
-        const itemWidth = item.get(this._options.tileWidthProperty) || this._options.tileWidth || DEFAULT_ITEM_WIDTH;
+        const itemWidth = item && item.get(this._options.tileWidthProperty) || this._options.tileWidth || DEFAULT_ITEM_WIDTH;
         let widthProportion = DEFAULT_WIDTH_PROPORTION;
         let resultWidth = null;
         if (this.getTileMode() === 'dynamic') {

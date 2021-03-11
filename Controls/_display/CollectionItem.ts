@@ -36,6 +36,7 @@ export interface IOptions<T extends Model = Model> {
     multiSelectVisibility?: string;
     multiSelectAccessibilityProperty?: string;
     rowSeparatorSize?: string;
+    backgroundStyle?: string;
 }
 
 export interface ISerializableState<T extends Model = Model> extends IDefaultSerializableState {
@@ -126,6 +127,9 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
     protected _$rendered: boolean;
 
     protected _$multiSelectVisibility: string = 'hidden';
+
+    // Фон застиканных записей и лесенки
+    protected _$backgroundStyle?: string;
 
     protected _$rowSeparatorSize: string;
 
@@ -557,6 +561,11 @@ export default class CollectionItem<T extends Model = Model> extends mixin<
         this._$rendered = state;
     }
 
+    setBackgroundStyle(backgroundStyle: string): void {
+        this._$backgroundStyle = backgroundStyle;
+        this._nextVersion();
+    }
+
     // region Drag-n-drop
 
     setDragged(dragged: boolean, silent?: boolean): void {
@@ -893,6 +902,7 @@ Object.assign(CollectionItem.prototype, {
     _$multiSelectAccessibilityProperty: '',
     _$multiSelectVisibility: null,
     _$rowSeparatorSize: null,
+    _$backgroundStyle: null,
     _contentsIndex: undefined,
     _version: 0,
     _counters: null,

@@ -127,6 +127,12 @@ abstract class BaseController {
         };
     }
 
+    closePopupByOutsideClick(item: IPopupItem): void {
+        if (ManagerController) {
+            ManagerController.remove(item.id);
+        }
+    }
+
     protected elementDestroyed(item: IPopupItem): Promise<undefined> {
         return (new Deferred()).callback();
     }

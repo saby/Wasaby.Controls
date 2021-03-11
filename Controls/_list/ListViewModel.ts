@@ -169,6 +169,18 @@ const _private = {
         itemsModelCurrent.getContentClasses = () => {
             return `${itemsModelCurrent.spacingClassList} ${itemsModelCurrent.isRightSwiped?.() ? 'controls-ListView__item_rightSwipeAnimation' : ''}`;
         };
+
+        itemsModelCurrent.getMultiSelectClasses = () => {
+            return itemsModelCurrent.multiSelectClassList;
+        };
+
+        itemsModelCurrent.isVisibleCheckbox = () => {
+            return itemsModelCurrent.dispItem.isVisibleCheckbox();
+        };
+
+        itemsModelCurrent.isReadonlyCheckbox = () => {
+            return itemsModelCurrent.dispItem.isReadonlyCheckbox();
+        };
     },
     getSeparatorSizes(options: IListSeparatorOptions): IListSeparatorOptions['rowSeparatorSize'] {
         return options.rowSeparatorSize ? options.rowSeparatorSize.toLowerCase() : null;
@@ -864,6 +876,11 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setRowSeparatorSize(rowSeparatorSize: IListSeparatorOptions['rowSeparatorSize']): void {
         this._options.rowSeparatorSize = _private.getSeparatorSizes({rowSeparatorSize});
         this._display.setRowSeparatorSize(rowSeparatorSize);
+        this._nextModelVersion();
+    },
+    setDisplayProperty(displayProperty: string): void {
+        this._options.displayProperty = displayProperty;
+        this._display?.setDisplayProperty(displayProperty);
         this._nextModelVersion();
     },
 

@@ -676,7 +676,11 @@ export default class InputContainer extends Control<IInputControllerOptions> {
          this._setFilter(newOptions.filter, newOptions);
       }
       if (filterChanged && (this._showContent || this._sourceController?.isLoading())) {
-         this._resolveSearch(this._searchValue, newOptions);
+         if (this._searchValue) {
+            this._resolveSearch(this._searchValue, newOptions);
+         } else {
+            this._resolveLoad();
+         }
       }
 
       if (emptyTemplateChanged) {
@@ -716,6 +720,7 @@ export default class InputContainer extends Control<IInputControllerOptions> {
 
    protected _closeHandler(event: SyntheticEvent): void {
       event.stopPropagation();
+      this.activate();
       this._close();
    }
 

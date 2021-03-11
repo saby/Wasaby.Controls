@@ -4397,85 +4397,96 @@ define([
                swipeEvent = undefined;
             });
 
-            beforeEach(() => {
-               return initTest({
-                  itemActions: [
-                     {
-                        id: 1,
-                        showType: 2,
-                        'parent@': true
+            describe('with ItemActions', () => {
+               beforeEach(() => {
+                  return initTest({
+                     itemActions: [
+                        {
+                           id: 1,
+                           showType: 2,
+                           'parent@': true
+                        },
+                        {
+                           id: 2,
+                           showType: 0,
+                           parent: 1
+                        },
+                        {
+                           id: 3,
+                           showType: 0,
+                           parent: 1
+                        }
+                     ]
+                  }).then(() => lists.BaseControl._private.updateItemActions(instance, instance._options));
+               });
+
+               // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо закрыть свайп
+               it('should close swipe when any record has been swiped right', () => {
+                  const item = instance._listViewModel.at(0);
+                  const spySetSwipeAnimation = sinon.spy(item, 'setSwipeAnimation');
+                  item.setSwiped(true, true);
+                  instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
+
+                  sinon.assert.calledWith(spySetSwipeAnimation, 'close');
+                  spySetSwipeAnimation.restore();
+               });
+
+               // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо переместить маркер
+               it('should change marker when any other record has been swiped right', () => {
+                  const spySetMarkedKey = sinon.spy(instance, 'setMarkedKey');
+                  instance._listViewModel.at(0).setSwiped(true, true);
+                  instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
+
+                  sinon.assert.calledOnce(spySetMarkedKey);
+                  spySetMarkedKey.restore();
+               });
+
+               // Если Активирован свайп на одной записи и свайпнули по той же записи, не надо вызывать установку маркера
+               it('should deactivate swipe when any other record has been swiped right', () => {
+                  const spySetMarkedKey = sinon.spy(instance, 'setMarkedKey');
+                  instance._listViewModel.at(0).setSwiped(true, true);
+                  instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
+
+                  sinon.assert.notCalled(spySetMarkedKey);
+                  spySetMarkedKey.restore();
+               });
+
+               // Должен работать свайп по breadcrumbs
+               it('should work with breadcrumbs', () => {
+                  swipeEvent = initSwipeEvent('left');
+                  const itemAt0 = instance._listViewModel.at(0);
+                  const breadcrumbItem = {
+                     '[Controls/_display/BreadcrumbsItem]': true,
+                     _$active: false,
+                     isSelected: () => true,
+                     getContents: () => ['fake', 'fake', 'fake', itemAt0.getContents() ],
+                     setActive: function() {
+                        this._$active = true;
                      },
-                     {
-                        id: 2,
-                        showType: 0,
-                        parent: 1
-                     },
-                     {
-                        id: 3,
-                        showType: 0,
-                        parent: 1
-                     }
-                  ]
-               }).then(() => lists.BaseControl._private.updateItemActions(instance, instance._options));
+                     getActions: () => ({
+                        all: [{
+                           id: 2,
+                           showType: 0
+                        }]
+                     })
+                  };
+                  const stubActivateSwipe = sinon.stub(instance._itemActionsController, 'activateSwipe')
+                     .callsFake((itemKey, actionsContainerWidth, actionsContainerHeight) => {
+                        assert.equal(itemKey, itemAt0.getContents().getKey());
+                        stubActivateSwipe.restore();
+                     });
+
+                  instance._onItemSwipe({}, breadcrumbItem, swipeEvent);
+               });
             });
 
-            // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо закрыть свайп
-            it('should close swipe when any record has been swiped right', () => {
-               const item = instance._listViewModel.at(0);
-               const spySetSwipeAnimation = sinon.spy(item, 'setSwipeAnimation');
-               item.setSwiped(true, true);
-               instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
-
-               sinon.assert.calledWith(spySetSwipeAnimation, 'close');
-               spySetSwipeAnimation.restore();
-            });
-
-            // Если Активирован свайп на одной записи и свайпнули по любой другой записи, надо переместить маркер
-            it('should change marker when any other record has been swiped right', () => {
-               const spySetMarkedKey = sinon.spy(instance, 'setMarkedKey');
-               instance._listViewModel.at(0).setSwiped(true, true);
-               instance._onItemSwipe({}, instance._listViewModel.at(2), swipeEvent);
-
-               sinon.assert.calledOnce(spySetMarkedKey);
-               spySetMarkedKey.restore();
-            });
-
-            // Если Активирован свайп на одной записи и свайпнули по той же записи, не надо вызывать установку маркера
-            it('should deactivate swipe when any other record has been swiped right', () => {
-               const spySetMarkedKey = sinon.spy(instance, 'setMarkedKey');
-               instance._listViewModel.at(0).setSwiped(true, true);
+            // Должен бросать событие наверх
+            it('it should fire event', () => {
+               initTest();
+               const spyNotify = sinon.spy(instance, '_notify');
                instance._onItemSwipe({}, instance._listViewModel.at(0), swipeEvent);
-
-               sinon.assert.notCalled(spySetMarkedKey);
-               spySetMarkedKey.restore();
-            });
-
-            // Должен работать свайп по breadcrumbs
-            it('should work with breadcrumbs', () => {
-               swipeEvent = initSwipeEvent('left');
-               const itemAt0 = instance._listViewModel.at(0);
-               const breadcrumbItem = {
-                  '[Controls/_display/BreadcrumbsItem]': true,
-                  _$active: false,
-                  isSelected: () => true,
-                  getContents: () => ['fake', 'fake', 'fake', itemAt0.getContents() ],
-                  setActive: function() {
-                     this._$active = true;
-                  },
-                  getActions: () => ({
-                     all: [{
-                        id: 2,
-                        showType: 0
-                     }]
-                  })
-               };
-               const stubActivateSwipe = sinon.stub(instance._itemActionsController, 'activateSwipe')
-                  .callsFake((itemKey, actionsContainerWidth, actionsContainerHeight) => {
-                     assert.equal(itemKey, itemAt0.getContents().getKey());
-                     stubActivateSwipe.restore();
-                  });
-
-               instance._onItemSwipe({}, breadcrumbItem, swipeEvent);
+               sinon.assert.called(spyNotify);
+               spyNotify.restore();
             });
          });
 
@@ -6396,7 +6407,8 @@ define([
                hasPaging: hasPaging,
                loadingIndicatorState: indicatorState,
                theme,
-               isPortionedSearchInProgress
+               isPortionedSearchInProgress,
+               attachLoadTopTriggerToNullOption: true
             });
          }
 
@@ -6634,6 +6646,10 @@ define([
 
             lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [1], 0, [], 0);
             assert.isTrue(control._attachLoadTopTriggerToNull);
+
+             control._attachLoadTopTriggerToNull = false;
+             lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [], 0, [1], 0);
+             assert.isTrue(control._attachLoadTopTriggerToNull);
           });
        });
 
@@ -7757,6 +7773,11 @@ define([
 
                baseControl._documentDragging = false;
             });
+         });
+
+         it('skip drag start if no drag entity', () => {
+            baseControl._documentDragStart({ entity: null }, 1);
+            assert.isFalse(baseControl._documentDragging);
          });
 
          it('drag start', () => {

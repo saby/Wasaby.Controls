@@ -14,6 +14,7 @@
                            beforeLoadToDirectionCallback="{{_beforeLoadToDirectionCallback}}"
                            afterReloadCallback="{{_afterReloadCallback}}"
                            afterSetItemsOnReloadCallback="{{_afterSetItemsOnReloadCallback}}"
+                           canChangeMarker="{{_canChangeMarker}}"
                            beforeMountCallback="{{_beforeMountCallback}}"
                            getHasMoreData="{{_getHasMoreData}}"
                            nodeConfig="{{_options.nodeConfig}}"

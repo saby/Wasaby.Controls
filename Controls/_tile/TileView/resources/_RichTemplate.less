@@ -51,7 +51,7 @@
 
 .controls-TileView__richTemplate_image {
    width: 100%;
-   height: 100%;
+   height: auto;
 }
 
 .controls-TileView__richTemplate_imageWrapper {
@@ -133,9 +133,14 @@
 
 .controls-TileView__richTemplate_item {
    overflow: hidden;
+   box-sizing: border-box;
 }
 
-.controls-TileView__richTemplate_itemActions_theme-@{themeName} {
+.controls-TileView__richTemplate_item .controls-TileView__item_withoutBorder {
+   border: none;
+}
+
+.controls-TileView__richTemplate_item .controls-TileView__richTemplate_itemActions_theme-@{themeName} {
    background-color: rgba(255, 255, 255, 0.75);
    box-shadow: @item_actions_shadow_size_rich_tile @item_actions_shadow_color_rich_tile;
    height: @item_actions_height_rich_tile;

@@ -53,6 +53,7 @@ var Component = BaseControl.extend([EventProxy], {
     _selectionProcessing: false,
 
     _singleDayHover: true,
+    _shouldUpdateMonthsPosition: true,
 
     // We store the position locally in the component, and don't use the value from options
     // to be able to quickly switch it on the mouse wheel.
@@ -73,23 +74,34 @@ var Component = BaseControl.extend([EventProxy], {
     _beforeMount: function (options) {
         if (options.position) {
             this._monthsPosition = new Date(options.position.getFullYear(), 0);
-            // При открытии календаря будут видны сразу 2 месяца. Поставим маркер на нижний видимый месяц, чтобы
-            // избежать моргания маркера.
-            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth() + 1);
+            const markedKeyDate = new Date(options.position.getFullYear(), options.position.getMonth());
             this._markedKey = this._dateToId(markedKeyDate);
         }
         _private.updateView(this, options);
     },
 
     _beforeUpdate: function (options) {
-        if (this._position !== options.position) {
-            this._markedKey = this._dateToId(options.position);
-        }
         _private.updateView(this, options);
     },
 
     _beforeUnmount: function () {
         this._rangeModel.destroy();
+    },
+
+    _monthObserverHandler: function(event, entries) {
+        // Меняем маркер выбранного месяца если месяц стал полностью видимым.
+        // На Android значение intersectionRatio никогда не равно 1. Нам подойдет любое значение больше или равное 0.9.
+        const fullItemIntersectionRatio = detection.isMobileAndroid ? 0.9 : 1;
+        if (entries.nativeEntry.intersectionRatio >= fullItemIntersectionRatio) {
+            if (entries.data.getFullYear() !== this._monthsPosition.getFullYear()) {
+                if (this._shouldUpdateMonthsPosition ) {
+                    this._monthsPosition = new Date(entries.data.getFullYear(), 0);
+                } else {
+                    this._shouldUpdateMonthsPosition = true;
+                }
+            }
+            this._markedKey = this._dateToId(entries.data);
+        }
     },
 
     _monthCaptionClick: function(e: SyntheticEvent, yearDate: Date, month: number): void {
@@ -155,17 +167,37 @@ var Component = BaseControl.extend([EventProxy], {
 
     _onPositionChanged: function(e: Event, position: Date) {
         this._position = position;
-        const markedKeyDate = new Date(position.getFullYear(), position.getMonth() + 1);
-        this._markedKey = this._dateToId(markedKeyDate);
-        if (markedKeyDate.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._monthsPosition = new Date(markedKeyDate.getFullYear(), 0);
-        }
         _private.notifyPositionChanged(this, position);
     },
 
     _onMonthsPositionChanged: function(e: Event, position: Date) {
-        if (position.getFullYear() !== this._position.getFullYear()) {
-            const newPosition = new Date(position.getFullYear(), 0);
+        let positionChanged;
+        let newPosition;
+        // При скролле колонки с месяцами нужно менять позицию календаря только тогда,
+        // когда мы увидим следующий год полностью.
+        // Позицией у MonthList считается самый верхний видимый год.
+
+        // При скролле вверх будем считать год поностью видимым тогда, когда над ним хотя бы немного виден
+        // следующий год. В таком случае позиция MonthList будет установлена на год выше нужного.
+        const needChangeToPrevYear = position.getFullYear() + 2 === this._position.getFullYear();
+        // При скролле вниз, год станет полностью видимым одновременно с тем, как поменяется позиция. Меняем год сразу.
+        const needChangeToNextYear = position.getFullYear() - 1 === this._position.getFullYear();
+
+        if (needChangeToPrevYear) {
+            // При смене позиции выстрелит monthsObserver и т.к. при скролле вверх позиция маркера не будет совпадать
+            // с позицией MonthList, мы прискроллимся к году, на котором находится маркер, что будет выглядеть как
+            // прыжок. Не будем обновлять позицию при первом вызове обсервера
+            this._shouldUpdateMonthsPosition = false;
+            newPosition = new Date(position.getFullYear() + 1, 0);
+            positionChanged = true;
+        }
+
+        if (needChangeToNextYear) {
+            newPosition = new Date(position.getFullYear(), 0);
+            positionChanged = true;
+        }
+        if (positionChanged) {
+            this._markedKey = this._dateToId(newPosition);
             _private.notifyPositionChanged(this, newPosition);
         }
     },

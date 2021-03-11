@@ -323,10 +323,10 @@ export default class ColumnScrollController {
             if (newContentSize <= newContainerSize) {
                 this._scrollPosition = 0;
             }
-
-            this._updateShadowState();
-            this._updateFixedColumnWidth(isFullGridSupport);
         }
+        this._updateShadowState();
+        this._updateFixedColumnWidth(isFullGridSupport);
+
 
         if (newContainerSize + this._scrollPosition > newContentSize) {
             this._scrollPosition -= (newContainerSize + this._scrollPosition) - newContentSize;
@@ -462,6 +462,8 @@ export default class ColumnScrollController {
                 newHTML += ` .${this._transformSelector} .controls-Grid-table-layout__itemActions__container { z-index: 1 }`;
             }
         }
+
+        newHTML += ` .${this._transformSelector} .controls-Grid__cell_fixed_theme-${this._options.theme} { z-index: 3 }`;
 
         if (this._stylesContainer.innerHTML !== newHTML) {
             this._stylesContainer.innerHTML = newHTML;

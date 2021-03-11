@@ -541,7 +541,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @param {Types/entity:Model} item Экземпляр элемента списка, по которому производим свайп.
  * @param {Object} nativeEvent Объект нативного события браузера.
  * @remark
- * Событие происходит, только если со списком ничего не происходит при свайпе (например, если список поддерживает выбор, он будет только устанавливать флаг). Это поведение схоже с {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
+ * Событие стреляет всегда, вне зависимости от того, обработано оно платформой или нет.
  */
 
 /*ENG
@@ -551,7 +551,7 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
  * @param {Types/entity:Model} item Instance of the swiped item.
  * @param {Object} nativeEvent Descriptor of the original event. It is useful if you want to get direction or target.
  * @remark
- * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/_list/interface/IClickableView#itemClick itemClick}.
+ * This event fires anyway, despite on handling in list.
  */
 
 /**

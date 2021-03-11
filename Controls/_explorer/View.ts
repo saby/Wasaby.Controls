@@ -638,7 +638,7 @@ var
          return _private.getRoot(this, this._options.root);
       },
       _dragHighlighter: function(itemKey, hasArrow) {
-         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey && itemKey !== 'dots'
             ? 'controls-BreadCrumbsView__dropTarget_' + (hasArrow ? 'withArrow' : 'withoutArrow') : '';
       },
       _documentDragEnd: function(event, dragObject) {

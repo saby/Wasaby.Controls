@@ -136,13 +136,7 @@ class Base extends Control<IMasterDetail> {
         } else if (options.propStorageId) {
             return new Promise((resolve) => {
                 this._getSettings(options).then((storage) => {
-                    const width = storage && storage[options.propStorageId];
-                    if (width) {
-                        this._currentWidth = width + 'px';
-                        this._updateOffset(options);
-                    } else {
-                        this.initCurrentWidth(options.masterWidth);
-                    }
+                    this._updateSizesByPropStorageId(storage, options);
                     this._prepareLimitSizes(options);
                     resolve(this._currentWidth);
                 });
@@ -206,7 +200,7 @@ class Base extends Control<IMasterDetail> {
         this._prevCurrentWidth = this._currentWidth;
     }
 
-    protected _beforeUpdate(options: IMasterDetail): void {
+    protected _beforeUpdate(options: IMasterDetail): void|Promise<unknown> {
         // Если изменилась текущая ширина, то сбросим состояние, иначе работаем с тем, что выставил пользователь
         if (options.masterWidth !== this._options.masterWidth) {
             this._currentWidth = null;
@@ -216,6 +210,22 @@ class Base extends Control<IMasterDetail> {
             this._canResizing = this._isCanResizing(options);
             this._prepareLimitSizes(options);
             this._updateOffset(options);
+        }
+
+        if (options.propStorageId !== this._options.propStorageId) {
+            return this._getSettings(options).then((storage) => {
+                this._updateSizesByPropStorageId(storage, options);
+            });
+        }
+    }
+
+    private _updateSizesByPropStorageId(storage: object, options: IMasterDetail): void {
+        const width = storage && storage[options.propStorageId];
+        if (width) {
+            this._currentWidth = width + 'px';
+            this._updateOffset(options);
+        } else {
+            this.initCurrentWidth(options.masterWidth);
         }
     }
 

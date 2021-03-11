@@ -47,6 +47,7 @@ interface IItemsFactoryOptions<S> {
     node?: boolean;
     expanderTemplate?: TemplateFunction;
     hasNodeWithChildren?: boolean;
+    expanded?: boolean;
 }
 
 export interface IOptions<S, T> extends ICollectionOptions<S, T> {
@@ -651,6 +652,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     setExpandedItems(expandedKeys: CrudEntityKey[]): void {
+        if (!this.getCount()) {
+            return;
+        }
+
         // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
 
         const diff = ArraySimpleValuesUtil.getArrayDifference(this._expandedItems, expandedKeys);
@@ -686,6 +691,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     setCollapsedItems(collapsedKeys: CrudEntityKey[]): void {
+        if (!this.getCount()) {
+            return;
+        }
+
         // TODO зарефакторить по задаче https://online.sbis.ru/opendoc.html?guid=5d8d38d0-3ade-4393-bced-5d7fbd1ca40b
         const diff = ArraySimpleValuesUtil.getArrayDifference(this._collapsedItems, collapsedKeys);
         diff.removed.forEach((it) => this.getItemBySourceKey(it)?.setExpanded(true));
@@ -704,7 +713,15 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     }
 
     resetExpandedItems(): void {
-        this.getItems().filter((it) => it.isExpanded()).forEach((it) => it.setExpanded(false));
+        if (!this.getCount()) {
+            return;
+        }
+
+        this.getItems().filter((it) => it.isExpanded()).forEach((it) => {
+            if (it['[Controls/_display/TreeItem]']) {
+                it.setExpanded(false);
+            }
+        });
         this._reBuildNodeFooters();
     }
 
@@ -761,6 +778,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             options.hasChildren = object.getPropertyValue<boolean>(options.contents, this._$hasChildrenProperty);
             options.expanderTemplate = this._$expanderTemplate;
             options.hasNodeWithChildren = this._hasNodeWithChildren;
+
+            const key = object.getPropertyValue<CrudEntityKey>(options.contents, this._$keyProperty);
+            options.expanded = this._expandedItems?.includes(key) && !this._collapsedItems?.includes(key);
             if (!('node' in options)) {
                 options.node = object.getPropertyValue<boolean>(options.contents, this._$nodeProperty);
             }
@@ -947,7 +967,9 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
             nearbyItem = enumerator.getCurrent();
 
             // если мы пришли сюда, когда в enumerator ещё ничего нет, то nearbyItem будет undefined
-            if (skipGroups && !!nearbyItem && nearbyItem['[Controls/_display/GroupItem]']) {
+            // В 21.2000 Сделал проверку на SelectableItem
+            if ((skipGroups && !!nearbyItem && nearbyItem['[Controls/_display/GroupItem]']) ||
+                (!!nearbyItem && nearbyItem['[Controls/_display/SearchSeparator]'])) {
                 nearbyItem = undefined;
                 continue;
             }
@@ -995,6 +1017,10 @@ export default class Tree<S extends Model = Model, T extends TreeItem<S> = TreeI
     // region HasNodeWithChildren
 
     private _recountHasNodeWithChildren(): void {
+        if (!this.getCount()) {
+            return;
+        }
+
         const itemsInRoot = this.getChildren(this.getRoot());
 
         let hasNodeWithChildren = false;

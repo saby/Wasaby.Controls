@@ -104,6 +104,12 @@ var TileView = ListView.extend({
 
     _onResize: function () {
        this._listModel.setHoveredItem(null);
+       if (this._options.initialWidth) {
+           const itemsContainerWidth = this.getItemsContainer().getBoundingClientRect().width;
+           if (itemsContainerWidth > 0) {
+               this._listModel.setCurrentWidth(itemsContainerWidth);
+           }
+       }
     },
 
     getActionsMenuConfig(
@@ -145,6 +151,9 @@ var TileView = ListView.extend({
                 targetPoint: {
                     vertical: 'top',
                     horizontal: 'left'
+                },
+                fittingMode: {
+                    vertical: 'overflow'
                 },
                 opener: menuConfig.opener,
                 template: 'Controls/tile:ActionsMenu',

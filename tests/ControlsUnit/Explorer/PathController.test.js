@@ -193,7 +193,7 @@ define([
                items: items.slice(),
                displayProperty: 'title'
             });
-            assert.notEqual(instance._header, headerInst);
+            assert.equal(instance._header, headerInst);
          });
 
          it('new different items', function() {
