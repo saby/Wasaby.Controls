@@ -66,7 +66,6 @@ export default class View extends Control<IControlOptions> {
     protected _beforeMount(options: IViewPanelOptions): void {
         this._setSource(options.source);
         this._updateFilterParams();
-        this._filterReseted = this._isFilterReseted();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
@@ -74,7 +73,6 @@ export default class View extends Control<IControlOptions> {
             this._setSource(newOptions.source);
             this._updateFilterParams();
         }
-        this._filterReseted = this._isFilterReseted();
     }
 
     protected _resetFilter(): void {
@@ -158,6 +156,7 @@ export default class View extends Control<IControlOptions> {
             this._setEditingParam(item.name, item.value);
             this._setGroupItem(item.group, item.textValue, item.editorOptions?.afterEditorTemplate);
         });
+        this._filterReseted = this._isFilterReseted();
     }
 
     private _setEditingParam(paramName: string, value: unknown): void {
