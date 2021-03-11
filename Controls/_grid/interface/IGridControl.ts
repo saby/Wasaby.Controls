@@ -2,8 +2,6 @@ import { TColumns } from 'Controls/interface';
 import { IList } from 'Controls/list';
 /**
  * Интерфейс для контрола {@link Controls/grid:View Таблица}.
- *
- * @interface Controls/_grid/interface/IGridControl
  * @public
  * @author Авраменко А.С.
  */
@@ -79,64 +77,8 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#header
- * @cfg {Array.<Controls/interface:IHeaderCell>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ заголовка} таблицы.
- * @remark
- * В качестве значения опция принимает массив объектов, в которых задают конфигурацию для ячеек заголовка.
- * Для одноуровневого заголовка первый объект массива задаёт конфигурацию для первой ячейки.
- * Условно ячейки заголовка нумеруются слева направо.
- * Для многоуровневого заголовка порядок объектов массива не соответствует конфигурируемой ячейке.
- * Подробнее о работе с заголовком таблицы читайте {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ здесь}.
+ * @cfg {Array.<Controls/interface:IHeaderCell>} Конфигурация {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ шапки} таблицы.
  * @demo Controls-demo/grid/Header/Default/Index
- * @example
- * Пример 1. Для первой ячейки задаём пользовательский шаблон.
- * <pre class="brush: html; highlight: [2,3,4,5,6,7,8]">
- *    <Controls.grid:View>
- *       <ws:header>
- *          <ws:Array>
- *              <ws:template>
- *                  <ws:partial template="Controls/grid:HeaderContent" attr:class="controls-Grid__cell_spacing_money" colData="{{colData}}" />
- *              </ws:template>
- *          </ws:Array>
- *       </ws:header>
- *    </Controls.grid:View>
- * </pre>
- * @example
- * Пример 2. Настройка опции задаётся в хуке и передаётся в шаблон.
- * <pre class="brush: js">
- * _header: null,
- * _beforeMount: function(options) {
- *    this._header = [
- *       {
- *          caption: 'Name',
- *          startRow: 1,
- *          endRow: 3,
- *          startColumn: 1,
- *          endColumn: 2
- *       },
- *       {
- *          caption: 'Price',
- *          startRow: 1,
- *          endRow: 2,
- *          startColumn: 2,
- *          endColumn: 4
- *       },
- *       {
- *          caption: 'Cell',
- *          startRow: 2,
- *          endRow: 3,
- *          startColumn: 2,
- *          endColumn: 3
- *       },
- *       {
- *          caption: 'Residue',
- *          startRow: 2,
- *          endRow: 3,
- *          startColumn: 3,
- *          endColumn: 4
- *       }
- *    ]
- * }
- * </pre>
  */
 
 /*
@@ -242,41 +184,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#footer
- * @cfg {Array.<IFooterColumn>} Конфигурация колонок подвала таблицы.
- * @example
- * В примере показана настройка колонок подвала для таблицы с десятью колонками.
- * <pre class="brush: js">
- * _columns: null,
- * _beforeMount: function() {
- *    this._columns = getGridColumns();
- *    // this._columns.length === 10
- * }
- * </pre>
- *
- * <pre class="brush: html">
- * <!-- WML -->
- * <Controls.grid:View source="{{_source}}" columns="{{_columns}}">
- *     <ws:footer>
- *         <ws:Array>
- *             <ws:Object startColumn="{{ 2 }}">
- *                 <ws:template>
- *                     <div>Footer column 2 - 4</div>
- *                 </ws:template>
- *             </ws:Object>
- *             <ws:Object startColumn="{{ 4 }}" endColumn="{{ 6 }}">
- *                 <ws:template>
- *                     <div>Footer column 4 - 6</div>
- *                 </ws:template>
- *             </ws:Object>
- *             <ws:Object endColumn="{{ 8 }}" >
- *                 <ws:template>
- *                     <div>Footer column 6 - 8</div>
- *                 </ws:template>
- *             </ws:Object>
- *         </ws:Array>
- *     </ws:footer>
- * </Controls.grid:View>
- * </pre>
+ * @cfg {Array.<IFooterColumn>} Конфигурация колонок {@link /doc/platform/developmentapl/interface-development/controls/list/grid/footer/ подвала таблицы}.
  */
 
 /*
@@ -318,7 +226,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#stickyHeader
- * @cfg {Boolean} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ заголовок} таблицы.
+ * @cfg {Boolean} Закрепляет {@link /doc/platform/developmentapl/interface-development/controls/list/grid/header/ шапку} таблицы.
  * @demo Controls-demo/grid/Header/NoSticky/Index В демо-примере опция stickyHeader установлена в значение false.
  * @demo Controls-demo/grid/Header/Sticky/Index В демо-примере опция stickyHeader установлена в значение true.
  * @default true
@@ -334,7 +242,7 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#columnScroll
- * @cfg {Boolean} Включает горизонтальную прокрутку колонок.
+ * @cfg {Boolean} Включает {@link /doc/platform/developmentapl/interface-development/controls/list/grid/horizontal-scrolling/ горизонтальную прокрутку} колонок.
  * @default false
  * @see Controls/_grid/interface/IGridControl#columnScrollStartPosition
  * @see Controls/_grid/interface/IGridControl#stickyColumnsCount
@@ -363,10 +271,11 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#columnScrollStartPosition
- * @cfg {Controls/_grid/interface/IGridControl/ColumnScrollStartPosition.typedef} Начальное положение горизонтальной прокрутки колонок.
+ * @cfg {Controls/_grid/interface/IGridControl/ColumnScrollStartPosition.typedef} Начальное положение {@link /doc/platform/developmentapl/interface-development/controls/list/grid/horizontal-scrolling/ горизонтальной прокрутки} колонок.
  * @default start
  * @see columnScroll
  * @see stickyColumnsCount
+ * @see dragScrolling
  */
 
 /*
@@ -378,13 +287,14 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#stickyColumnsCount
- * @cfg {Number} Количество зафиксированных колонок, которые не двигаются при горизонтальной прокрутке.
+ * @cfg {Number} Количество зафиксированных колонок, которые не двигаются при {@link /doc/platform/developmentapl/interface-development/controls/list/grid/horizontal-scrolling/ горизонтальной прокрутке}.
  * @default 1
  * @remark
  * Колонка с чекбоксами {@link /doc/platform/developmentapl/interface-development/controls/list/actions/multiselect/ множественного выбора} всегда зафиксирована и не входит в число stickyColumnsCount.
  * @demo Controls-demo/grid/ColumnScroll/Base/Index
  * @see columnScroll
  * @see columnScrollStartPosition
+ * @see dragScrolling
  */
 
 /*
@@ -399,9 +309,12 @@ export interface IGridControl extends IList {
 
 /**
  * @name Controls/_grid/interface/IGridControl#dragScrolling
- * @cfg {Boolean} Включает скроллирование колонок перетаскиванием при горизонтальной прокрутке.
+ * @cfg {Boolean} Включает скроллирование колонок перетаскиванием при {@link /doc/platform/developmentapl/interface-development/controls/list/grid/horizontal-scrolling/ горизонтальной прокрутке}.
  * @remark По умолчанию прокрутка колонок перетаскиванием включена, если в списке нет Drag'N'Drop записей.
  * @default true
+ * @see columnScroll
+ * @see stickyColumnsCount
+ * @see columnScrollStartPosition
  */
 
 /*
