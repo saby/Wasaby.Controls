@@ -394,7 +394,7 @@ const _private = {
     },
 
     attachLoadDownTriggerToNullIfNeed(self, options): boolean {
-        if (!_private.supportAttachLoadTriggerToNull(options, 'down') || !self._listViewModel || !self._listViewModel['[Controls/_display/grid/Collection]']) {
+        if (!_private.supportAttachLoadTriggerToNull(options, 'down') || !self._listViewModel || !self._listViewModel['[Controls/_display/grid/mixins/Grid]']) {
             return false;
         }
         const needAttachLoadDownTriggerToNull = _private.needAttachLoadTriggerToNull(self, 'down');
@@ -732,6 +732,12 @@ const _private = {
         const navigation = self._options.navigation;
         const listViewModel = self._listViewModel;
         const isPortionedLoad = _private.isPortionedLoad(self);
+
+        if (direction === 'down' && this._resetDownTriggerOffset) {
+            // после первого запроса вниз, нижняя ромашка должна работать как обычно
+            this._resetDownTriggerOffset = false;
+            this._attachLoadDownTriggerToNull = false;
+        }
 
         _private.showIndicator(self, direction);
 
@@ -1590,7 +1596,7 @@ const _private = {
             if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length)) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
                 if (_private.attachLoadDownTriggerToNullIfNeed(self, self._options)) {
-                    self._hideDownTrigger = true;
+                    self._resetDownTriggerOffset = true;
                 }
             }
 
@@ -3157,7 +3163,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     // расстояние, на которое поднят верхний триггер, если _attachLoadTopTriggerToNull === true
     _attachedToNullLoadTopTriggerOffset = ATTACHED_TO_NULL_LOAD_TOP_TRIGGER_OFFSET;
     _hideTopTrigger = false;
-    _hideDownTrigger = false;
+    _resetDownTriggerOffset = false;
 
     protected _listViewModel = null;
     _viewModelConstructor = null;
@@ -3488,7 +3494,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                     self._hideTopTrigger = true;
                 }
                 if (_private.attachLoadDownTriggerToNullIfNeed(self, newOptions)) {
-                    self._hideDownTrigger = true;
+                    self._resetDownTriggerOffset = true;
                 }
             }
 
@@ -3610,8 +3616,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
     applyTriggerOffset(offset: {top: number, bottom: number}): void {
         // Устанавливаем напрямую в style, чтобы не ждать и не вызывать лишний цикл синхронизации
         this._children.topVirtualScrollTrigger?.style.top = `${offset.top}px`;
-        this._children.bottomVirtualScrollTrigger?.style.bottom = `${offset.bottom}px`;
+        this._children.bottomVirtualScrollTrigger?.style.bottom = `${this._resetDownTriggerOffset ? 0 : offset.bottom}px`;
     }
+
     protected _viewResize(): void {
         if (this._isMounted) {
             const container = this._children.viewContainer || this._container[0] || this._container;
@@ -3756,16 +3763,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             this._hideTopTrigger = false;
 
             this._attachLoadDownTriggerToNull = false;
-        }
-
-        // если высота элементов меньше вьюпорта, то нужно делать дополнительный запрос за данными
-        const itemsContainerHeight = this._getItemsContainer && this._getItemsContainer()?.offsetHeight || 0;
-        if (itemsContainerHeight < this._viewportSize) {
-            this._attachLoadDownTriggerToNull = false;
-        }
-
-        if (this._hideDownTrigger) {
-            this._hideDownTrigger = false;
         }
     }
 
@@ -4515,9 +4512,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         if (this._hideTopTrigger && this._needScrollToFirstItem) {
             this._hideTopTrigger = false;
-        }
-        if (this._hideDownTrigger) {
-            this._hideDownTrigger = false;
         }
         this._scrollToFirstItemIfNeed();
 
