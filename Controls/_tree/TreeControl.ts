@@ -504,6 +504,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     private _markedLeaf = '';
     private _doAfterItemExpanded = null;
     private _goToNextAfterExpand: true;
+    private _doOnDidUpdate = null;
 
     private _itemOnWhichStartCountDown = null;
     private _timeoutForExpandOnDrag = null;
@@ -524,7 +525,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const superResult = super._beforeMount(...args);
         const doBeforeMount = () => {
             const options = args[0];
-            this._initKeyProperty(options);
 
             if (options.sourceController) {
                 // FIXME для совместимости, т.к. сейчас люди задают опции, которые требуетюся для запроса
@@ -601,10 +601,6 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         const searchValueChanged = this._options.searchValue !== newOptions.searchValue;
         let updateSourceController = false;
 
-        if ((this._options.keyProperty !== newOptions.keyProperty) || (newOptions.source !== this._options.source)) {
-            this._initKeyProperty(newOptions);
-        }
-
         if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             const sourceControllerRoot = sourceController.getState().root;
 
@@ -669,6 +665,13 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         }
     }
 
+    protected _componentDidUpdate() {
+        super._componentDidUpdate(...arguments);
+        if (this._doOnDidUpdate) {
+            this._doOnDidUpdate();
+            this._doOnDidUpdate = null;
+        }
+    }
     protected _afterUpdate(oldOptions: TOptions) {
         super._afterUpdate(...arguments);
 
@@ -682,6 +685,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     protected _beforeUnmount(): void {
+        this._doOnDidUpdate = null;
         this._clearTimeoutForExpandOnDrag();
         super._beforeUnmount(...arguments);
     }
@@ -1061,11 +1065,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
             const expanded = [key];
             let curItem = model.getChildren(key, items)[0];
             while (curItem && curItem.get(options.nodeProperty) !== null) {
-                expanded.push(curItem.get(options.keyProperty));
+                expanded.push(curItem.get(this._keyProperty));
                 curItem = model.getChildren(curItem, items)[0];
             }
             if (curItem && this._doAfterItemExpanded) {
-                this._doAfterItemExpanded(curItem.get(options.keyProperty));
+                this._doAfterItemExpanded(curItem.get(this._keyProperty));
             }
             return expanded;
         }
@@ -1115,8 +1119,11 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                         }
                     }
                 } else {
+                    const itemKey = this._tempItem;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(this._tempItem, true);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, true);
+                    };
                     resolve();
                 }
             } else {
@@ -1159,7 +1166,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this.scrollToItem(itemKey, false);
+                    this._doOnDidUpdate = () => {
+                        this.scrollToItem(itemKey, false);
+                    }
                     resolve();
                 }
             } else {
@@ -1209,7 +1218,7 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
     }
 
     private _isExpanded(item, model): boolean {
-        return model.getExpandedItems().indexOf(item.getContents().get(this._options.keyProperty)) > -1;
+        return model.getExpandedItems().indexOf(item.getContents().get(this._keyProperty)) > -1;
     }
 
     static _theme = [...BaseControl._theme, 'Controls/treeGrid'];

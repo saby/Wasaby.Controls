@@ -80,13 +80,13 @@ export interface IList extends IItemActionsOptions, IMarkerListOptions, IMovable
 
 /**
  * @name Controls/_list/interface/IList#loadingIndicatorTemplate
- * @cfg {string|Function} Определяет шаблон индикатора загрузки данных. В данный момент этот шаблон работает только для индикатора, который отображается при подгрузке по скролу.
+ * @cfg {String|TemplateFunction} Определяет шаблон индикатора загрузки данных. В данный момент этот шаблон работает только для индикатора, который отображается при подгрузке по скролу.
  * @default Controls/list:LoadingIndicatorTemplate
  */
 
 /**
  * @name Controls/_list/interface/IList#continueSearchTemplate
- * @cfg {string|Function} Шаблон отображения блока, который отображается при прерывании {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#batch-filtration-search итеративного поиска}.
+ * @cfg {String|TemplateFunction} Шаблон отображения блока, который отображается при прерывании {@link /doc/platform/developmentapl/interface-development/controls/list/navigation/portion-loading/#batch-filtration-search итеративного поиска}.
  * @default Controls/list:ContinueSearchTemplate
  * @demo Controls-demo/list_new/Searching/PortionedSearch/Index
  * @example

@@ -87,8 +87,8 @@ const FILTER_PANEL_POPUP = 'Controls/filterPanelPopup';
  * При клике на параметры быстрого фильтра открывается панель "Быстрых фильтров", созданная на основе {@link Controls/filterPopup:SimplePanel}.
  *
  * Полезные ссылки:
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter-view/ руководство разработчика по работе с контролом}
- * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter/filter-view/ руководство разработчика по работе с контролом}
+ * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/filter-and-search/ руководство разработчика по организации поиска и фильтрации в реестре}
  * * {@link /doc/platform/developmentapl/interface-development/controls/list/filter-and-search/component-kinds/ руководство разработчика по классификации контролов Wasaby и схеме их взаимодействия}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filter.less переменные тем оформления filter}
  * * {@link https://github.com/saby/wasaby-controls/blob/rc-20.4000/Controls-default-theme/aliases/_filterPopup.less переменные тем оформления filterPopup}
@@ -556,7 +556,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             if (this._isFrequentItem(item) && config?.items) {
                 const sourceController = this._getSourceController(configs[item.name], item.editorOptions.source,
                     item.editorOptions.navigation);
-                sourceController.calculateState(configs[item.name].items);
+                sourceController.setItems(configs[item.name].items);
             }
         });
     }
@@ -613,7 +613,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                     }
                     if (!configs[item.name].sourceController) {
                         const sourceController = this._getSourceController(configs[item.name], item.editorOptions.source, item.editorOptions.navigation);
-                        sourceController.calculateState(popupItem.items);
+                        sourceController.setItems(popupItem.items);
                     }
                     popupItem.hasMoreButton = configs[item.name].sourceController.hasMoreData('down');
                     popupItem.sourceController = configs[item.name].sourceController;

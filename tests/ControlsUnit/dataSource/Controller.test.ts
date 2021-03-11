@@ -487,6 +487,22 @@ describe('Controls/dataSource:SourceController', () => {
             await controller.reload();
             ok(isNavigationParamsChangedCallbackCalled);
         });
+
+        it('updateOptions with new sorting',  async () => {
+            let controllerOptions = getControllerOptions();
+            controllerOptions.sorting = [{testField: 'DESC'}];
+            const controller = getController(controllerOptions);
+
+            // the same sorting
+            controllerOptions = {...controllerOptions};
+            controllerOptions.sorting = [{testField: 'DESC'}];
+            ok(!controller.updateOptions(controllerOptions));
+
+            // another sorting
+            controllerOptions = {...controllerOptions};
+            controllerOptions.sorting = [{testField: 'ASC'}];
+            ok(controller.updateOptions(controllerOptions));
+        });
     });
 
     describe('reload', () => {
@@ -550,6 +566,29 @@ describe('Controls/dataSource:SourceController', () => {
             });
             controller.setItems(newControllerItems);
             ok(hasMoreResult);
+        });
+
+    });
+
+    describe('getKeyProperty', () => {
+
+        it('keyProperty in options', () => {
+            const options = {
+                source: new Memory({
+                    keyProperty: 'testKeyProperty'
+                })
+            };
+            const sourceController = new NewSourceController(options);
+            ok(sourceController.getKeyProperty() === 'testKeyProperty');
+        });
+
+        it('keyProperty from source', () => {
+            const options = {
+                source: new Memory(),
+                keyProperty: 'testKeyProperty'
+            };
+            const sourceController = new NewSourceController(options);
+            ok(sourceController.getKeyProperty() === 'testKeyProperty');
         });
 
     });

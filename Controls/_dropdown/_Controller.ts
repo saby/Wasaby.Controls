@@ -95,7 +95,7 @@ export default class _Controller implements IDropdownController {
    setItems(items?: RecordSet): Promise<SourceController> {
       return this._getSourceController(this._options).then((sourceController) => {
          this._setItems(items);
-         sourceController.calculateState(this._items);
+         sourceController.setItems(this._items);
 
          this._updateSelectedItems(this._options);
          if (this._options.dataLoadCallback) {

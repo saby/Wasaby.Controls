@@ -3125,7 +3125,7 @@ const _private = {
  */
 
 export interface IBaseControlOptions extends IControlOptions {
-
+    sourceController?: SourceController;
 }
 
 export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOptions> extends Control<TOptions>
@@ -3234,7 +3234,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
     _selectionController = null;
     _itemActionsController = null;
-    _sourceController = null;
+    protected _sourceController: SourceController = null;
     _prevRootId = null;
     _loadedBySourceController = false;
 
@@ -3310,6 +3310,13 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         this._dataLoadCallback = _private.dataLoadCallback.bind(this);
         this._uniqueId = Guid.create();
 
+        if (newOptions.sourceController) {
+            this._sourceController = newOptions.sourceController;
+            this._sourceController.updateOptions(newOptions);
+            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
+            _private.validateSourceControllerOptions(this, newOptions);
+        }
+
         _private.checkDeprecated(newOptions);
         this._initKeyProperty(newOptions);
         _private.checkRequiredOptions(this, newOptions);
@@ -3322,16 +3329,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (newOptions.columnScroll && newOptions.columnScrollStartPosition === 'end') {
             const shouldPrevent = newOptions.preventServerSideColumnScroll;
             this._useServerSideColumnScroll = typeof shouldPrevent === 'boolean' ? !shouldPrevent : true;
-        }
-
-        if (newOptions.sourceController) {
-            this._sourceController = newOptions.sourceController as SourceController;
-            this._sourceController.updateOptions(newOptions);
-            _private.validateSourceControllerOptions(this, newOptions);
-        }
-
-        if (this._sourceController) {
-            this._sourceController.setDataLoadCallback(this._dataLoadCallback);
         }
 
         if (newOptions.useNewModel) {
@@ -3519,14 +3516,8 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         return (callback && callback(result)) || result;
     }
 
-    _initKeyProperty(options) {
-        let keyProperty = options.keyProperty;
-        if (keyProperty === undefined) {
-            if (options.source && options.source.getKeyProperty) {
-                keyProperty = options.source.getKeyProperty();
-            }
-        }
-        this._keyProperty = keyProperty;
+    _initKeyProperty(options): void {
+        this._keyProperty = options.keyProperty || (this._sourceController && this._sourceController.getKeyProperty());
     }
 
     scrollMoveSyncHandler(params: IScrollParams): void {
@@ -4711,7 +4702,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         return neededItemsCount <= itemsCount;
     }
     __selectedPageChanged(e, page: number) {
-        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
         const direction = this._currentPage < page ? 'down' : 'up';
         const canScroll = this._canScroll(scrollTop, direction);
         const itemsCount = this._items.getCount();
@@ -4730,7 +4721,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             if (this._scrollController.getParamsToRestoreScrollPosition()) {
                 return;
             }
-            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
             if (!this._canScroll(scrollTop, direction)) {
                 this._shiftToDirection(direction);
             } else {
