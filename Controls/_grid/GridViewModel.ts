@@ -2499,6 +2499,10 @@ var
             return this._options.multiSelectVisibility !== 'hidden' && this._options.multiSelectPosition === 'default';
         },
 
+        hasMultiSelectColumn(): boolean {
+            return this._hasMultiSelectColumn();
+        },
+
         getEmptyTemplateStyles(): string {
             if (GridLayoutUtil.isFullGridSupport()) {
                 const hasColumnScroll: boolean = !!this._options.columnScroll;
