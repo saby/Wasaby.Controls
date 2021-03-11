@@ -172,7 +172,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             wrapperClasses += ` controls-Grid__row-cell-editing_theme-${theme}`;
         }
 
-        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, templateHighlightOnHover, backgroundColorStyle, hoverBackgroundStyle)}`;
+        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, style, templateHighlightOnHover, backgroundColorStyle, hoverBackgroundStyle)}`;
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
@@ -182,13 +182,9 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
         return wrapperClasses;
     }
 
-    protected _getBackgroundColorColumnScrollClasses(backgroundColorStyle: string, theme: string): string {
-        // TODO: Брать от родителя
-        // return options.backgroundStyle || options.style || 'default';
-        return `controls-background-${'default'}_theme-${theme}`;
-    }
     protected _getBackgroundColorWrapperClasses(
        theme: string,
+       style: string,
        templateHighlightOnHover?: boolean,
        backgroundColorStyle?: string,
        hoverBackgroundStyle?: string
@@ -204,8 +200,9 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
             if (backgroundColorStyle !== 'default') {
                 wrapperClasses += `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
             }
-            if (this._$owner.hasColumnScroll()) {
-                wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
+
+            if (backgroundColorStyle !== 'default' || this.getOwner().hasColumnScroll()) {
+                wrapperClasses += `controls-background-${backgroundColorStyle || style}_theme-${theme}`;
             }
         }
         return wrapperClasses;
