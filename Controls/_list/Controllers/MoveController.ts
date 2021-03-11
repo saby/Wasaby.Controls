@@ -1,5 +1,5 @@
 import {Model, Record} from 'Types/entity';
-import {DataSet, SbisService, ICrudPlus, Query, QueryOrderSelector, QueryOrder} from 'Types/source';
+import {DataSet, SbisService, ICrudPlus, Query, QueryOrderSelector} from 'Types/source';
 import {Logger} from 'UI/Utils';
 import {ISelectionObject} from 'Controls/interface';
 import {Confirmation, Dialog, IBasePopupOptions} from 'Controls/popup';
