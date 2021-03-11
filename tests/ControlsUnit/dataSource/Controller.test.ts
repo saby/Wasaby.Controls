@@ -150,14 +150,19 @@ describe('Controls/dataSource:SourceController', () => {
             controllerState = controller.getState();
             ok(controllerState.parentProperty === parentProperty);
             ok(controllerState.root === root);
+            ok(!controllerState.keyProperty);
 
             hierarchyOptions = {
-                parentProperty
+                parentProperty,
+                source: new Memory({
+                    keyProperty: 'testKeyProperty'
+                })
             };
             controller = new NewSourceController(hierarchyOptions);
             controllerState = controller.getState();
             ok(controllerState.parentProperty === parentProperty);
             ok(controllerState.root === null);
+            ok(controllerState.keyProperty === 'testKeyProperty');
         });
     });
 
