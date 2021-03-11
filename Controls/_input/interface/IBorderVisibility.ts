@@ -3,7 +3,7 @@ import {descriptor} from 'Types/entity';
 export type TBorderVisibility = 'visible' | 'partial' | 'hidden';
 
 export interface IBorderVisibilityOptions {
-    borderVisibility: TBorderVisibility;
+    borderVisibility?: TBorderVisibility;
 }
 
 export function getDefaultBorderVisibilityOptions(): Partial<IBorderVisibilityOptions> {
