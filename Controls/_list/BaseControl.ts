@@ -3332,11 +3332,8 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             }
         };
 
-        // Prepare collapsed groups if need.
-        addOperation(() => this._prepareGroups(newOptions));
-
         // Prepare items on mount
-        addOperation((collapsedGroups) => this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups));
+        addOperation(() => this._prepareItemsOnMount(this, newOptions, receivedState));
 
         // Try to start initial editing
         addOperation(() => {
@@ -3397,7 +3394,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
     }
 
-    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups): Promise<unknown> | void {
+    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}): Promise<unknown> | void {
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
         let collapsedGroups;
