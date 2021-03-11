@@ -15,6 +15,7 @@ import {factory} from 'Types/chain';
 
 import TabButtonsTpl = require('wml!Controls/_tabs/Buttons/Buttons');
 import ItemTemplate = require('wml!Controls/_tabs/Buttons/ItemTemplate');
+import Marker from './Buttons/Marker';
 
 interface ITabButtonItem {
     isMainTab?: boolean;
@@ -90,6 +91,8 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
     protected _template: TemplateFunction = TabButtonsTpl;
     protected _defaultItemTemplate: TemplateFunction = ItemTemplate;
     protected _itemsArray: ITabButtonItem[];
+    protected _marker: Marker = new Marker();
+    protected _markerCssClass: string = '';
     private _itemsOrder: number[];
     private _lastRightOrder: number;
     private _items: RecordSet;
@@ -118,12 +121,64 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         if (newOptions.source && newOptions.source !== this._options.source) {
             this._initItems(newOptions.source).then((result) => {
                 this._prepareState(result);
+                this._marker.reset();
+                this._updateMarker();
             });
         }
         if (newOptions.items && newOptions.items !== this._options.items) {
             const itemsData = this._prepareItems(newOptions.items);
             this._prepareState(itemsData);
+            this._marker.reset();
         }
+        if (newOptions.selectedKey !== this._options.selectedKey) {
+            this._updateMarkerSelectedIndex(newOptions);
+        }
+        if (newOptions.style !== this._options.style || newOptions.markerThickness !== this._options.markerThickness) {
+            this._updateMarkerCssClass(newOptions);
+        }
+    }
+
+    protected _mouseEnterHandler(): void {
+        this._updateMarker();
+    }
+
+    protected _touchStartHandler(): void {
+        this._updateMarker();
+    }
+
+    protected _resizeHandler(): void {
+        this._marker.reset();
+        this._updateMarker();
+    }
+
+    protected _updateMarker(): void {
+        if (this._marker.isInitialized()) {
+            return;
+        }
+        const tabElements: HTMLElement[] = this._itemsArray.map((item: ITabButtonItem, key: number) => {
+            return this._children[`Tab${key}`];
+        });
+        this._marker.updatePosition(tabElements, this._container);
+        this._updateMarkerSelectedIndex(this._options);
+        if (!this._markerCssClass) {
+            this._updateMarkerCssClass(this._options);
+        }
+    }
+
+    protected _updateMarkerSelectedIndex(options: ITabsButtonsOptions): void {
+        if (!this._marker.isInitialized()) {
+            return;
+        }
+        const index: number = this._itemsArray.findIndex((item: ITabButtonItem) => {
+            return item[options.keyProperty] === options.selectedKey;
+        });
+        this._marker.setSelectedIndex(index);
+    }
+
+    protected _updateMarkerCssClass(options: ITabsButtonsOptions): void {
+        const style = TabsButtons._prepareStyle(options.style);
+        this._markerCssClass = `controls-Tabs__marker_style-${style}_theme-${options.theme} ` +
+                               `controls-Tabs__marker_thickness-${options.markerThickness}_theme-${options.theme}`;
     }
 
     protected _onItemClick(event: SyntheticEvent<MouseEvent>, key: string): void {
@@ -136,6 +191,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         const order: number = this._itemsOrder[index];
         const options: ITabsButtonsOptions = this._options;
         const theme = options.theme;
+        const horizontalPadding: string = options.horizontalPadding;
         const classes: string[] = ['controls-Tabs__item controls-Tabs__item_theme_' + theme +
         ' controls-Tabs__item_inlineHeight-' + options.inlineHeight + '_theme-' + theme];
 
@@ -150,11 +206,11 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
             classes.push('controls-Tabs__item_extreme controls-Tabs__item_extreme_theme_' + theme);
         }
         if (order === 1) {
-            classes.push('controls-Tabs__item_extreme_first controls-Tabs__item_extreme_first_theme_' + theme);
+            classes.push(`controls-Tabs__item_extreme_first controls-Tabs__item_extreme_first_horizontalPadding-${horizontalPadding}_theme_${theme}`);
         } else if (isLastItem) {
-            classes.push('controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_theme_' + theme);
+            classes.push(`controls-Tabs__item_extreme_last controls-Tabs__item_extreme_last_horizontalPadding-${horizontalPadding}_theme_${theme}`);
         } else {
-            classes.push('controls-Tabs__item_default controls-Tabs__item_default_theme_' + theme);
+            classes.push(`controls-Tabs__item_default controls-Tabs__item_default_horizontalPadding-${horizontalPadding}_theme_${theme}`);
         }
 
         const itemType: string = item.type;
@@ -181,12 +237,25 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
         if (item[options.keyProperty] === options.selectedKey) {
             classes.push(`controls-Tabs_style_${style}__item_state_selected ` +
                 `controls-Tabs_style_${style}__item_state_selected_theme_${options.theme}`);
+
             classes.push('controls-Tabs__item_state_selected ' +
-            `controls-Tabs__item_state_selected_theme_${options.theme}`);
+                `controls-Tabs__item_state_selected_theme_${options.theme}`);
+
+            // Если маркеры которые рисуются с абсолютной позицией не инициализированы, то нарисуем маркер
+            // внтри вкладки. Это можно сделать быстрее. Но невозможно анимировано передвигать его между вкладками.
+            // Инициализируем и переключимся на другой механизм маркеров после ховера.
+            if (!this._marker.isInitialized()) {
+                classes.push(`controls-Tabs_style_${style}__item-marker_state_selected_theme_${options.theme}`);
+            }
         } else {
             classes.push('controls-Tabs__item_state_default controls-Tabs__item_state_default_theme_' + options.theme);
         }
         return classes.join(' ');
+    }
+
+    protected _prepareItemTypeClass(item: ITabButtonItem): string {
+        const itemType: string = item.type || 'default';
+        return `controls-Tabs__itemClickableArea_type-${itemType}`;
     }
 
     protected _prepareItemOrder(index: number): string {
@@ -317,7 +386,8 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
             markerThickness: 'l',
             borderVisible: true,
             separatorVisible: true,
-            displayProperty: 'title'
+            displayProperty: 'title',
+            horizontalPadding: 'm'
         };
     }
 }

@@ -1,7 +1,7 @@
 <div class="controls-Tabs controls-Tabs_theme_{{_options.theme}}
             controls-Tabs_inlineHeight-{{_options.inlineHeight}}_theme-{{_options.theme}}
             {{_options.borderVisible ? 'controls-Tabs_border-' + _options.markerThickness + '_theme-' + _options.theme}}">
-    <div class="controls-Tabs-wrapper">
+    <div class="controls-Tabs-wrapper" on:mouseenter="_mouseEnterHandler()" on:touchstart="_touchStartHandler()">
         <ws:for data="index, item in _itemsArray">
             <div attr:class="{{_prepareItemClass(item, index)}}"
                  attr:style="{{_prepareItemOrder(index)}}"
@@ -13,19 +13,23 @@
                                 index="{{index}}"
                                 item="{{_items.at(index)}}" />
                 </ws:if>
-                <ws:partial
-                        attr:class="controls-Tabs__itemClickableArea controls-Tabs__itemClickableArea_theme_{{_options.theme}}
-                        controls-Tabs__itemClickableArea_inlineHeight-{{_options.inlineHeight}}_theme-{{_options.theme}}
-                        controls-Tabs__itemClickableArea_markerThickness-{{ _options.markerThickness }}_theme-{{_options.theme}}
-                        {{_prepareItemSelectedClass(item)}}"
-                        template="{{ _getTemplate(_options.itemTemplate, item, _options.itemTemplateProperty) || _defaultItemTemplate}}"
-                        selected="{{item[_options.keyProperty] === _options.selectedKey}}"
-                        displayProperty="{{_options.displayProperty}}"
-                        inlineHeight="{{_options.inlineHeight}}"
-                        markerThickness="{{ _options.markerThickness }}"
-                        keyProperty="{{_options.keyProperty}}"
-                        index="{{index}}"
-                        item="{{_items.at(index)}}"/>
+                <div name="Tab{{index}}"
+                     class="controls-Tabs__itemClickableArea
+                            controls-Tabs__itemClickableArea_theme_{{_options.theme}}
+                            controls-Tabs__itemClickableArea_inlineHeight-{{_options.inlineHeight}}_theme-{{_options.theme}}
+                            controls-Tabs__itemClickableArea_markerThickness-{{ _options.markerThickness }}_theme-{{_options.theme}}
+                            {{_prepareItemSelectedClass(item)}}
+                            {{_prepareItemTypeClass(item)}}">
+                    <ws:partial
+                                template="{{ _getTemplate(_options.itemTemplate, item, _options.itemTemplateProperty) || _defaultItemTemplate}}"
+                                selected="{{item[_options.keyProperty] === _options.selectedKey}}"
+                                displayProperty="{{_options.displayProperty}}"
+                                keyProperty="{{_options.keyProperty}}"
+                                index="{{index}}"
+                                item="{{_items.at(index)}}"
+                                on:controlResize="_resizeHandler()"/>
+                </div>
+
                 <ws:if data="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}">
                     <ws:partial template="{{ _getTemplate(_options.itemRightTemplate, item, _options.rightTemplateProperty) }}"
                                 selected="{{item[_options.keyProperty] === _options.selectedKey}}"
@@ -57,4 +61,9 @@
             </ws:if>
         </div>
     </div>
+    <ws:if data="{{_marker.isInitialized()}}">
+        <div class="controls-Tabs__marker {{_markerCssClass}}"
+             style="width:{{_marker.getWidth()}}px; left:{{_marker.getLeft()}}px;"></div>
+    </ws:if>
+
 </div>
