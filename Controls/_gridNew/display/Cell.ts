@@ -199,7 +199,6 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
        hoverBackgroundStyle?: string
     ): string {
         let wrapperClasses = '';
-        wrapperClasses += `controls-background-${backgroundColorStyle || style}_theme-${theme}`;
         const isSingleCellEditableMode = this._$owner.getEditingConfig()?.mode === 'cell';
         if (this._$owner.isEditing() && !isSingleCellEditableMode) {
             const editingBackgroundStyle = this._$owner.getEditingBackgroundStyle();
@@ -210,9 +209,8 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
             if (backgroundColorStyle !== 'default') {
                 wrapperClasses += ` controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
             }
-
-            if (backgroundColorStyle || this.getOwner().hasColumnScroll()) {
-                wrapperClasses += ` controls-background-${backgroundColorStyle || style}_theme-${theme}`;
+            if (backgroundColorStyle !== 'default' || this.getOwner().hasColumnScroll()) {
+                wrapperClasses += `controls-background-${backgroundColorStyle || style}_theme-${theme}`;
             }
         }
         return wrapperClasses;

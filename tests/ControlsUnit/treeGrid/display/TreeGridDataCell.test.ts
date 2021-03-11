@@ -66,7 +66,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
 
    describe('getWrapperClasses', () => {
       it('without multiselect', () => {
-         const expected = ' controls-Grid__row-cell controls-Grid__cell_default controls-background-default_theme-default controls-Grid__row-cell_default_theme-default controls-Grid__row-cell_default_min_height-theme-default controls-TreeGrid__row-cell_theme-default ' +
+         const expected = ' controls-Grid__row-cell controls-Grid__cell_default controls-Grid__row-cell_default_theme-default controls-Grid__row-cell_default_min_height-theme-default controls-TreeGrid__row-cell_theme-default ' +
             'controls-TreeGrid__row-cell_default_theme-default controls-TreeGrid__row-cell__node_theme-default controls-Grid__no-rowSeparator controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__cell_fit ' +
             'controls-Grid__row-cell-background-hover-default_theme-default controls-Grid__cell_spacingFirstCol_default_theme-default controls-background-default_theme-default';
          const cell = treeGridCollection.at(0).getColumns()[0];
@@ -86,7 +86,7 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
       it('with multiselect && not first column', () => {
          treeGridCollection.setMultiSelectVisibility('visible');
 
-         const expected = ' controls-Grid__row-cell controls-Grid__cell_default controls-background-default_theme-default controls-Grid__row-cell_default_theme-default controls-Grid__row-cell_default_min_height-theme-default controls-TreeGrid__row-cell_theme-default ' +
+         const expected = ' controls-Grid__row-cell controls-Grid__cell_default controls-Grid__row-cell_default_theme-default controls-Grid__row-cell_default_min_height-theme-default controls-TreeGrid__row-cell_theme-default ' +
             'controls-TreeGrid__row-cell_default_theme-default controls-TreeGrid__row-cell__node_theme-default controls-Grid__no-rowSeparator controls-Grid__row-cell_withRowSeparator_size-null controls-Grid__cell_fit ' +
             'controls-Grid__row-cell-background-hover-default_theme-default controls-background-default_theme-default';
          const cell = treeGridCollection.at(0).getColumns()[1];
@@ -101,7 +101,17 @@ describe('Controls/_treeGridNew/display/TreeGridDataCell', () => {
             'controls-Grid__row-cell_withRowSeparator_size-null js-controls-ListView__notEditable js-controls-ColumnScroll__notDraggable controls-GridView__checkbox_theme-default controls-GridView__checkbox_position-default_theme-default ' +
             'controls-Grid__row-checkboxCell_rowSpacingTop_default_theme-default controls-Grid__row-cell-background-hover-default_theme-default controls-background-default_theme-default';
          const cell = treeGridCollection.at(0).getColumns()[0];
-         CssClassesAssert.isSame(cell.getWrapperClasses('default', 'default'), expected);
+         CssClassesAssert.isSame(cell.getWrapperClasses('master', 'master'), expected);
+      });
+
+      it('master style', () => {
+         const expected = 'controls-Grid__row-cell controls-Grid__cell_default controls-Grid__row-cell_default_theme-master ' +
+             'controls-Grid__row-cell_default_min_height-theme-master controls-Grid__no-rowSeparator controls-Grid__row-cell_withRowSeparator_size-null ' +
+             'js-controls-ListView__notEditable js-controls-ColumnScroll__notDraggable controls-GridView__checkbox_theme-master ' +
+             'controls-GridView__checkbox_position-default_theme-master controls-Grid__row-checkboxCell_rowSpacingTop_default_theme-master ' +
+             'controls-Grid__row-cell-background-hover-default_theme-master';
+         const cell = treeGridCollection.at(0).getColumns()[0];
+         CssClassesAssert.isSame(cell.getWrapperClasses('master', 'master'), expected);
       });
    });
 
