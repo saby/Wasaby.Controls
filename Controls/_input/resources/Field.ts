@@ -395,6 +395,7 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        this._selectionFromFieldToModel();
         const T_KEY_CODE = 84;
         const PAUSE_KEY_CODE = 19;
 
