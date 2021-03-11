@@ -13,13 +13,11 @@ export default class Mover extends Control<IControlOptions> {
    protected _itemActionsSecond: IItemAction[];
    protected _selectedKeys: any;
    protected _filter: {[p: string]: string};
-   protected _sorting: [{[p: string]: 'ASC' | 'DESC'}];
    protected _viewSource: Memory;
    protected _viewSourceSecond: Memory;
    protected demoItems: any;
 
    protected _beforeMount() {
-      this._sorting = [{id: 'DESC'}];
       this.demoItems = [{
          id: 0,
          title: 'Перемещение записей 1'
