@@ -70,9 +70,12 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
 
         // todo add resultsFormat to here
 
-        if (this._$owner.hasColumnScroll()){
+        if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
-            wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
+        }
+
+        if (backgroundColorStyle !== 'default' || this.getOwner().hasColumnScroll()) {
+            wrapperClasses += `controls-background-${backgroundColorStyle || style}_theme-${theme}`;
         }
 
         return wrapperClasses;
