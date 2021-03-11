@@ -58,7 +58,7 @@ export default class View extends Control<IControlOptions> {
     protected _groupItems: object = {};
     protected _collapsedGroups: unknown[] = [];
     protected _resetCaption: string = rk('все');
-    protected _resetButtonReadOnly: boolean = true;
+    protected _filterReseted: boolean = true;
     protected _itemPadding: IItemPadding = {
         bottom: 'null'
     };
@@ -66,7 +66,7 @@ export default class View extends Control<IControlOptions> {
     protected _beforeMount(options: IViewPanelOptions): void {
         this._setSource(options.source);
         this._updateFilterParams();
-        this._resetButtonReadOnly = this._getResetButtonReadOnly();
+        this._filterReseted = this._isFilterReseted();
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
@@ -74,7 +74,7 @@ export default class View extends Control<IControlOptions> {
             this._setSource(newOptions.source);
             this._updateFilterParams();
         }
-        this._resetButtonReadOnly = this._getResetButtonReadOnly();
+        this._filterReseted = this._isFilterReseted();
     }
 
     protected _resetFilter(): void {
@@ -113,7 +113,7 @@ export default class View extends Control<IControlOptions> {
         }
     }
 
-    private _getResetButtonReadOnly(): boolean {
+    private _isFilterReseted(): boolean {
         return !this._source.some((item) => {
             return !isEqual(item.value, item.resetValue);
         });
