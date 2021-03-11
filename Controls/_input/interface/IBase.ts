@@ -1,6 +1,6 @@
 import {TemplateFunction} from 'UI/Base';
 import {IContrastBackground} from 'Controls/interface';
-import { TBorderVisibility, IBorderVisibilityOptions } from 'Controls/_input/interface/IBorderVisibility';
+import { IBorderVisibilityOptions } from 'Controls/_input/interface/IBorderVisibility';
 export type TextAlign = 'left' | 'right' | 'center';
 
 export type AutoComplete =
@@ -35,7 +35,6 @@ export type AutoComplete =
     | string;
 
 export interface IBaseOptions extends IContrastBackground, IBorderVisibilityOptions {
-    borderVisibility?: TBorderVisibility;
     autoComplete?: AutoComplete;
     textAlign?: TextAlign;
     selectOnClick?: boolean;
