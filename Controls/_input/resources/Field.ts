@@ -394,6 +394,7 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        this._selectionFromFieldToModel();
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
     }
 
