@@ -203,10 +203,9 @@ export class MoveController {
             });
         }
         const query = new Query().orderBy(this._sorting);
-        const orders = query.getOrderBy();
         return this._source.move(selection.selected, targetKey, {
             position,
-            sorting
+            query,
             parentProperty: this._parentProperty
         });
     }
