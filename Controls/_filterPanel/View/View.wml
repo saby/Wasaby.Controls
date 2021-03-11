@@ -5,7 +5,7 @@
             <Controls.buttons:Button viewMode="linkButton"
                                      caption="{{rk('Сбросить')}}"
                                      fontColorStyle="label"
-                                     readOnly="{{_resetButtonReadOnly}}"
+                                     readOnly="{{_filterReseted}}"
                                      on:click="_resetFilter()"/>
             <ws:if data="{{_options.applyButtonCaption}}">
                <div class="controls-FilterViewPanel__applyButton controls-FilterViewPanel__applyButton_theme-{{_options.theme}}"
