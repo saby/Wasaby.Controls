@@ -308,7 +308,7 @@ export default class Controller extends mixin<
             isFilterChanged ||
             isNavigationChanged ||
             isSourceChanged ||
-            newOptions.sorting !== this._options.sorting ||
+            !isEqual(newOptions.sorting, this._options.sorting) ||
             newOptions.keyProperty !== this._options.keyProperty ||
             (this._parentProperty && rootChanged);
 
