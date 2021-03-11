@@ -349,7 +349,7 @@ export default FilterPanel;
 
 /**
  * @name Controls/_filterPopup/DetailPanel#topTemplate
- * @cfg {String|Function} Шаблон отображения заголовка на Панели фильтров.
+ * @cfg {String|TemplateFunction} Шаблон отображения заголовка на Панели фильтров.
  */
 
 /**
