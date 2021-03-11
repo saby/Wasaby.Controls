@@ -3404,7 +3404,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             _private.addShowActionsClass(this);
         }
 
-        return Promise.resolve(this._prepareItemsOnMount(this, newOptions, receivedState)).then((res) => {
+        return Promise.resolve(this._prepareGroups(newOptions, (collapsedGroups) => {
+            return this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups);
+        })).then((res) => {
             const editingConfig = this._getEditingConfig(newOptions);
             return editingConfig.item ? this._startInitialEditing(editingConfig) : res;
         }).then((res) => {
@@ -3459,14 +3461,12 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         _private.prepareFooter(this, cfg, this._sourceController);
     },
 
-    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}) {
+    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups) {
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
-        let collapsedGroups;
 
         if (self._sourceController) {
             receivedData = self._sourceController.getItems();
-            collapsedGroups = self._sourceController.getCollapsedGroups();
         }
 
         if (collapsedGroups) {
@@ -3556,10 +3556,10 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
     _prepareGroups(newOptions, callback: Function) {
         let result = null;
         if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
-            result = Deferred.success(
-                (this._sourceController && this._sourceController.getCollapsedGroups()) ||
-                newOptions.collapsedGroups
-            );
+            result = new Deferred();
+            groupUtil.restoreCollapsedGroups(newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
+                result.callback(collapsedGroupsFromStore || newOptions.collapsedGroups);
+            });
         } else if (newOptions.collapsedGroups) {
             result = new Deferred();
             result.callback(newOptions.collapsedGroups);
@@ -4792,7 +4792,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         return neededItemsCount <= itemsCount;
     },
     __selectedPageChanged(e, page: number) {
-        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+        let scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
         const direction = this._currentPage < page ? 'down' : 'up';
         const canScroll = this._canScroll(scrollTop, direction);
         const itemsCount = this._items.getCount();
@@ -4811,7 +4811,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             if (this._scrollController.getParamsToRestoreScrollPosition()) {
                 return;
             }
-            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page);
+            scrollTop = this._scrollPagingCtr.getScrollTopByPage(page, this._getScrollParams());
             if (!this._canScroll(scrollTop, direction)) {
                 this._shiftToDirection(direction);
             } else {
