@@ -9,7 +9,9 @@ export default class CancelablePromise<T> {
     }
 
     then(callback: (value?: T) => void): Promise<void | T> {
-        return this._promise.then(callback);
+        return this._promise.then(callback).catch(() => {
+            // catch error
+        });
     }
 
     catch(callback: (value: T) => void): Promise<void | T> {
