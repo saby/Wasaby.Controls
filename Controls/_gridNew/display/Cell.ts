@@ -201,7 +201,7 @@ export default class Cell<T, TOwner extends Row<T>> extends mixin<
                 wrapperClasses += `controls-Grid__row-cell_background_${backgroundColorStyle}_theme-${theme} `;
             }
 
-            if (backgroundColorStyle !== 'default' || this.getOwner().hasColumnScroll()) {
+            if (backgroundColorStyle || this.getOwner().hasColumnScroll()) {
                 wrapperClasses += ` controls-background-${backgroundColorStyle || style}_theme-${theme}`;
             }
         }
