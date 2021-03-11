@@ -52,7 +52,8 @@ class BreadCrumbsView extends Control<IControlOptions> {
     private _addWithOverflow(displayProperty: string): void {
         if (this._items.length <= CRUMBS_COUNT) {
             this._items.forEach((item) => {
-                if (!item.isDots && item.item.get(displayProperty)?.length > MIN_COUNT_OF_LETTER) {
+                const itemLength = item.item.get(displayProperty)?.length || 0;
+                if (!item.isDots && itemLength > MIN_COUNT_OF_LETTER) {
                     item.withOverflow = true;
                 }
             });
