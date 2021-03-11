@@ -701,7 +701,7 @@ describe('Controls/list_clean/MoveController', () => {
                     assert.exists(meta.query);
                     const orderBy = meta.query.getOrderBy();
                     assert.equal(orderBy[0].getSelector(), 'field');
-                    assert.equal(orderBy[0].getOrder(), true);
+                    assert.isFalse(orderBy[0].getOrder());
                     return Promise.resolve();
                 });
             return resolveMove(controller, selectionObject, {}, 4, LOCAL_MOVE_POSITION.Before)
