@@ -734,9 +734,8 @@ const _private = {
         const isPortionedLoad = _private.isPortionedLoad(self);
 
         if (direction === 'down' && this._resetDownTriggerOffset) {
-            // после первого запроса вниз, нижняя ромашка должна работать как обычно
+            // после первого запроса остальные запросы нужно загружать заранее
             this._resetDownTriggerOffset = false;
-            this._attachLoadDownTriggerToNull = false;
         }
 
         _private.showIndicator(self, direction);
@@ -786,10 +785,6 @@ const _private = {
                 self._needScrollToFirstItem = false;
                 if (!self._hasMoreData(self._sourceController, direction)) {
                     self._updateShadowModeHandler(self._shadowVisibility);
-                }
-
-                if (direction === 'up') {
-                    self._attachLoadTopTriggerToNull = false;
                 }
 
                 // Скрываем ошибку после успешной загрузки данных
@@ -1593,11 +1588,9 @@ const _private = {
                 }
             }
 
-            if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length)) {
+            if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length) || action === IObservable.ACTION_ADD) {
                 _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
-                if (_private.attachLoadDownTriggerToNullIfNeed(self, self._options)) {
-                    self._resetDownTriggerOffset = true;
-                }
+                _private.attachLoadDownTriggerToNullIfNeed(self, self._options);
             }
 
             if ((action === IObservable.ACTION_REMOVE || action === IObservable.ACTION_REPLACE) &&
