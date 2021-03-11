@@ -78,7 +78,7 @@ const _private = {
         return self.isEditing() ? undefined : self.getItemById(markedKey, self.getKeyProperty());
     },
 
-    getMultiSelectClassList(current, checkboxOnHover: boolean, theme: string): string {
+    getMultiSelectClassList(current, checkboxOnHover: boolean, theme: string, multiSelectPosition: string = 'default'): string {
         const isSelected = current.isSelected();
         const checkboxVisible = isSelected !== false && isSelected !== undefined; // так как null - это тоже выбрано
 
@@ -89,6 +89,7 @@ const _private = {
                            .add(`controls-CheckboxMarker_inList_theme-${theme}`)
                            .add('controls-ListView__checkbox-onhover', checkboxOnHover && !checkboxVisible)
                            .add(`controls-ListView__itemContent_dragging_theme-${theme}`, !!current.isDragging)
+                           .add(`controls-ListView__checkbox_position-${multiSelectPosition}_theme-${theme}`)
                            .compile();
     },
 
@@ -272,7 +273,7 @@ const ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         itemsModelCurrent.itemPadding = _private.getItemPadding(this._options.itemPadding);
         itemsModelCurrent.hasMultiSelect = !!this._options.multiSelectVisibility && this._options.multiSelectVisibility !== 'hidden';
         itemsModelCurrent.multiSelectClassList = itemsModelCurrent.hasMultiSelect ?
-            _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover', theme) : '';
+            _private.getMultiSelectClassList(itemsModelCurrent, this._options.multiSelectVisibility === 'onhover', theme, this.getMultiSelectPosition()) : '';
         itemsModelCurrent.calcCursorClasses = this._calcCursorClasses;
         // Из Controls/scroll:Container прилетает backgroundStyle='default', нужно применять его только если style тоже default
         itemsModelCurrent.backgroundStyle = this._options.style === 'default' && this._options.backgroundStyle ? this._options.backgroundStyle : this._options.style;
