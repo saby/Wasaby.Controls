@@ -5,6 +5,7 @@ import {RecordSet} from 'Types/collection';
 import {Memory, PrefetchProxy, DataSet} from 'Types/source';
 import {NewSourceController} from 'Controls/dataSource';
 import * as sinon from 'sinon';
+import {Logger} from 'UI/Utils';
 
 const getData = (dataCount: number = 0) => {
     const data = [];
@@ -906,12 +907,15 @@ describe('Controls/list_clean/BaseControl', () => {
             await baseControl._beforeMount(baseControlOptions);
             assert.equal(baseControl._keyProperty, 'keyPropertyOptions');
 
+            const loggerErrorStub = sinon.stub(Logger, 'error');
             baseControlOptions = {...baseControlOptions};
             baseControlOptions.keyProperty = undefined;
             baseControlOptions = await getCorrectBaseControlConfigAsync(baseControlOptions);
             baseControl = new BaseControl(baseControlOptions);
             await baseControl._beforeMount(baseControlOptions);
             assert.isFalse(!!baseControl._keyProperty);
+            assert.ok(loggerErrorStub.calledOnce);
+            loggerErrorStub.restore();
         });
 
         it('_beforeMount returns errorConfig', async () => {
