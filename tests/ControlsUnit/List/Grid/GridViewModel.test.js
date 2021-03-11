@@ -3074,7 +3074,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
             // fixed coll with columnScroll
             assert.equal(5, gridMod.GridViewModel._private.getHeaderZIndex(params));
             // sticky coll with columnScroll
-            assert.equal(3, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnIndex: 1}));
+            assert.equal(3, gridMod.GridViewModel._private.getHeaderZIndex({...params, columnIndex: 3}));
          });
 
          it('updates prefix version with ladder only on add and remove', () => {
