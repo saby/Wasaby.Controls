@@ -25,11 +25,21 @@ export default class TreeGridFooterRow<S> extends GridFooterRow<S> {
 
    protected _updateColumnsHasNodeWithChildren(hasNodeWithChildren: boolean): void {
       this._$columnItems.forEach((cell: TreeGridFooterCell<S>) => {
-         cell.setHasNodeWithChildren(hasNodeWithChildren);
+         if (cell.setHasNodeWithChildren) {
+            cell.setHasNodeWithChildren(hasNodeWithChildren);
+         }
       });
    }
 
    // endregion HasNodeWithChildren
+
+   protected getColumnsFactory(): (options: any) => TreeGridFooterCell<any> {
+      const superFactory = super.getColumnsFactory();
+      return (options: any) => {
+         options.hasNodeWithChildren = this._$hasNodeWithChildren;
+         return superFactory.call(this, options);
+      };
+   }
 }
 
 Object.assign(TreeGridFooterRow.prototype, {
