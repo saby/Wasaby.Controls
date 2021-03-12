@@ -7,6 +7,7 @@ import {IFilterItem} from 'Controls/filter';
 import * as clone from 'Core/core-clone';
 import {IItemPadding} from 'Controls/display';
 import rk = require('i18n!Controls');
+import {isEqual} from 'Types/object';
 
 /**
  * Контрол "Панель фильтра с набираемыми параметрами".
@@ -57,6 +58,7 @@ export default class View extends Control<IControlOptions> {
     protected _groupItems: object = {};
     protected _collapsedGroups: unknown[] = [];
     protected _resetCaption: string = rk('все');
+    protected _filterReseted: boolean = true;
     protected _itemPadding: IItemPadding = {
         bottom: 'null'
     };
@@ -109,6 +111,12 @@ export default class View extends Control<IControlOptions> {
         }
     }
 
+    private _isFilterReseted(): boolean {
+        return !this._source.some((item) => {
+            return !isEqual(item.value, item.resetValue);
+        });
+    }
+
     private _setSource(source: IFilterItem[]): void {
         this._source = clone(source);
     }
@@ -148,6 +156,7 @@ export default class View extends Control<IControlOptions> {
             this._setEditingParam(item.name, item.value);
             this._setGroupItem(item.group, item.textValue, item.editorOptions?.afterEditorTemplate);
         });
+        this._filterReseted = this._isFilterReseted();
     }
 
     private _setEditingParam(paramName: string, value: unknown): void {

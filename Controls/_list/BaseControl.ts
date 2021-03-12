@@ -2938,7 +2938,8 @@ const _private = {
     prepareMoverControllerOptions(self, options: IList): IMoveControllerOptions {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
-            parentProperty: options.parentProperty
+            parentProperty: options.parentProperty,
+            sorting: options.sorting
         };
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
@@ -3293,7 +3294,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
-            this._sourceController.updateOptions(newOptions);
             this._sourceController.setDataLoadCallback(this._dataLoadCallback);
             _private.validateSourceControllerOptions(this, newOptions);
         }

@@ -309,7 +309,6 @@ export default class Controller extends mixin<
             isNavigationChanged ||
             isSourceChanged ||
             !isEqual(newOptions.sorting, this._options.sorting) ||
-            newOptions.keyProperty !== this._options.keyProperty ||
             (this._parentProperty && rootChanged);
 
         this._options = newOptions;
@@ -320,7 +319,7 @@ export default class Controller extends mixin<
         const source = Controller._getSource(this._options.source);
 
         return {
-            keyProperty: this._options.keyProperty,
+            keyProperty: this.getKeyProperty(),
             source,
 
             filter: this._filter,
@@ -596,7 +595,7 @@ export default class Controller extends mixin<
         if (this._hasNavigationBySource()) {
             params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
         }
-        return crudWrapper.query(params, this._options.keyProperty);
+        return crudWrapper.query(params, this.getKeyProperty());
     }
 
     private _getFilterHierarchy(
