@@ -8,6 +8,7 @@ export interface IControllerOptions {
     hasMultiSelect: boolean;
     isEmptyTemplateShown?: boolean;
     isFullGridSupport?: boolean;
+    stickyLadderCellsCount?: number;
 
     theme?: string;
     backgroundStyle?: string;
@@ -397,7 +398,7 @@ export default class ColumnScrollController {
             return 0;
         }
 
-        const columnOffset = this._options.hasMultiSelect ? 1 : 0;
+        const columnOffset = (this._options.hasMultiSelect ? 1 : 0) + (this._options.stickyLadderCellsCount || 0);
         const lastStickyColumnIndex = this._options.stickyColumnsCount + columnOffset;
         const lastStickyColumnSelector = `.${JS_SELECTORS.FIXED_ELEMENT}:nth-child(${lastStickyColumnIndex})`;
         const stickyCellContainer = this._contentContainer.querySelector(lastStickyColumnSelector) as HTMLElement;
