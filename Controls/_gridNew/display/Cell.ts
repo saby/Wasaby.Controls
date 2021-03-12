@@ -182,7 +182,7 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
             wrapperClasses += ` controls-Grid__row-cell-editing_theme-${theme}`;
         }
 
-        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, templateHighlightOnHover, backgroundColorStyle, hoverBackgroundStyle, style)}`;
+        wrapperClasses += ` ${this._getBackgroundColorWrapperClasses(theme, style, templateHighlightOnHover, backgroundColorStyle, hoverBackgroundStyle)}`;
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
@@ -194,10 +194,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
     protected _getBackgroundColorWrapperClasses(
        theme: string,
+       style: string,
        templateHighlightOnHover?: boolean,
        backgroundColorStyle?: string,
-       hoverBackgroundStyle?: string,
-       style: string = 'default'
+       hoverBackgroundStyle?: string
     ): string {
         let wrapperClasses = '';
         const isSingleCellEditableMode = this._$owner.getEditingConfig()?.mode === 'cell';
