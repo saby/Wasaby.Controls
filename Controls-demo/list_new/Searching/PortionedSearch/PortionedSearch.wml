@@ -1,4 +1,4 @@
-<div class="controlsDemo__wrapper">
+<div class="controlsDemo__wrapper controlsDemo__width800px controlsDemo__height300">
     <Controls.scroll:Container attr:class="controlsDemo__height300">
         <Controls.scroll:HotKeysContainer>
             <Controls.list:View
