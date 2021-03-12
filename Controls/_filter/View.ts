@@ -137,6 +137,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
     private _detailPanelTemplateName: string;
     private _loadPromise: CancelablePromise<any>;
     private _loadOperationsPanelPromise: Promise<unknown>;
+    private _collapsedFilters: string[]|number[] = null;
 
     openDetailPanel(): void {
         if (this._detailPanelTemplateName) {
@@ -380,6 +381,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
             opener: this,
             templateOptions: {
                 items,
+                collapsedGroups: this._collapsedFilters,
                 historyId: this._options.historyId
             },
             target: this._container[0] || this._container,
@@ -432,9 +434,10 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
                 case 'applyClick': this._applyClick(result); break;
                 case 'selectorResult': this._selectorResult(result); break;
                 case 'moreButtonClick': this._moreButtonClick(result); break;
+                case 'collapsedFiltersChanged': this._collapsedFiltersChanged(result); break;
             }
         }
-        if (result.action !== 'moreButtonClick') {
+        if (result.action !== 'moreButtonClick' && result.action !== 'collapsedFiltersChanged') {
             if (result.history) {
                 this._notify('historyApply', [result.history]);
             }
@@ -1053,6 +1056,10 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
     private _moreButtonClick(result: IResultPopup): void {
         this._idOpenSelector = result.id;
         this._configs[result.id].initSelectorItems = result.selectedItems;
+    }
+
+    private _collapsedFiltersChanged(result: object): void {
+        this._collapsedFilters = result.collapsedFilters;
     }
 
     private _isNeedReload(oldItems: IFilterItem[],
