@@ -394,7 +394,7 @@ const _private = {
     },
 
     attachLoadDownTriggerToNullIfNeed(self, options): boolean {
-        if (!_private.supportAttachLoadTriggerToNull(options, 'down') || !self._listViewModel || !self._listViewModel['[Controls/_display/grid/mixins/Grid]']) {
+        if (!_private.supportAttachLoadTriggerToNull(options, 'down') || !self._listViewModel || !options.useNewModel) {
             return false;
         }
         const needAttachLoadDownTriggerToNull = _private.needAttachLoadTriggerToNull(self, 'down');
