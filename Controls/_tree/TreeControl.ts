@@ -630,7 +630,8 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
     _tempItem: null,
     _markedLeaf: '',
     _goToNextAfterExpand: true,
-    _doOnDidUpdate: null,
+    _scrollToLeaf: null,
+    _scrollToLeafOnDrawItems: false,
 
     _itemOnWhichStartCountDown: null,
     _timeoutForExpandOnDrag: null,
@@ -799,10 +800,10 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         }
     },
     _componentDidUpdate() {
-      if (this._doOnDidUpdate) {
-          this._doOnDidUpdate();
-          this._doOnDidUpdate = null;
-      }
+        if (this._scrollToLeaf && !this._scrollToLeafOnDrawItems) {
+            this._scrollToLeaf();
+            this._scrollToLeaf = null;
+        }
     },
     _afterUpdate: function(oldOptions) {
         let afterUpdateResult;
@@ -834,10 +835,16 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
         return afterUpdateResult;
     },
     _beforeUnmount(): void {
-        this._doOnDidUpdate = null;
+        this._scrollToLeaf = null;
         this._clearTimeoutForExpandOnDrag();
     },
-
+    _onDrawItems(): void {
+        if (this._scrollToLeaf && this._scrollToLeafOnDrawItems) {
+            this._scrollToLeaf();
+            this._scrollToLeaf = null;
+            this._scrollToLeafOnDrawItems = false;
+        }
+    },
     _initKeyProperty(options) {
         let keyProperty = options.keyProperty;
         if (keyProperty === undefined) {
@@ -1182,6 +1189,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         this._doAfterItemExpanded();
                         resolve();
                     } else {
+                        this._scrollToLeafOnDrawItems = true;
                         const expandResult = this.toggleExpanded(this._tempItem, model);
                         if (expandResult instanceof Promise) {
                             expandResult.then(() => {
@@ -1194,7 +1202,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 } else {
                     const itemKey = this._tempItem;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this._doOnDidUpdate = () => {
+                    this._scrollToLeaf = () => {
                         this.scrollToItem(itemKey, true);
                     };
                     resolve();
@@ -1224,6 +1232,7 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                         resolve();
                     } else {
                         this._goToNextAfterExpand = false;
+                        this._scrollToLeafOnDrawItems = true;
                         const expandResult = this.toggleExpanded(itemKey);
                         if (expandResult instanceof Promise) {
                             expandResult.then(() => {
@@ -1238,9 +1247,9 @@ var TreeControl = Control.extend(/** @lends Controls/_tree/TreeControl.prototype
                 } else {
                     this._tempItem = itemKey;
                     this._applyMarkedLeaf(this._tempItem, model, markerController);
-                    this._doOnDidUpdate = () => {
+                    this._scrollToLeaf = () => {
                         this.scrollToItem(itemKey, false);
-                    }
+                    };
                     resolve();
                 }
             } else {
