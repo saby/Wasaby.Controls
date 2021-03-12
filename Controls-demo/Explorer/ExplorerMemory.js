@@ -88,11 +88,11 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                   }
                });
                TreeMemory.superclass.query.apply(this, arguments).addCallback(function(data) {
-                  const originalGetAll = data.getAll;
+                  var originalGetAll = data.getAll;
 
                   data.getAll = function() {
-                     const originResult = originalGetAll.apply(this, arguments);
-                     const meta = originResult.getMetaData();
+                     var originResult = originalGetAll.apply(this, arguments);
+                     var meta = originResult.getMetaData();
 
                      if (parent !== undefined && parent !== null) {
                         meta.path = getFullPath(self._$data, parent, true);
