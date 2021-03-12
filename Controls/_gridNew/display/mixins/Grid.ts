@@ -354,9 +354,7 @@ export default abstract class Grid<S, T extends GridRowMixin<S>> {
         }
 
         this.getViewIterator().each((item: GridRowMixin<S>) => {
-            if (item.LadderSupport) {
-                item.setColumns(this._$columns);
-            }
+            item.setColumns(this._$columns);
         });
     }
 
