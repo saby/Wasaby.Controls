@@ -4588,9 +4588,14 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
-            if (this._doAfterDrawItems) {
-                this._doAfterDrawItems();
-            }
+            this._onDrawItems();
+        }
+    }
+
+    protected _onDrawItems() {
+        if (this._doAfterDrawItems) {
+            this._doAfterDrawItems();
+            this._doAfterDrawItems = null;
         }
     }
 
