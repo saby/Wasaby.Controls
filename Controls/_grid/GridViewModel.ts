@@ -522,7 +522,7 @@ var
             return { left, right };
         },
 
-        prepareLadder(self) {
+        prepareLadder(self, silent?: boolean) {
             if (!self.isSupportLadder(self._options.ladderProperties)) {
                 return {};
             }
@@ -537,7 +537,9 @@ var
             // без nextModelVersion не обновляется itemData и возникают ошибки
             // https://online.sbis.ru/opendoc.html?guid=fc64fa58-7cb7-4bca-a691-f2ed2acf648c
             // https://online.sbis.ru/opendoc.html?guid=98a4f247-3efa-4d3a-a83f-8994678ec335
-            self._nextModelVersion();
+            if (!silent) {
+                self._nextModelVersion();
+            }
 
             const hasVirtualScroll = !!self._options.virtualScrolling || Boolean(self._options.virtualScrollConfig);
             const displayStopIndex = self.getDisplay() ? self.getDisplay().getCount() : 0;
@@ -1427,7 +1429,7 @@ var
 
         _setColumns(columns: IGridColumn[], silent: boolean = false): void {
             this._columns = this._prepareColumns(columns);
-            this._ladder = _private.prepareLadder(this);
+            this._ladder = _private.prepareLadder(this, silent);
             this._prepareResultsColumns(this._columns, this._hasMultiSelectColumn());
             this._prepareColgroupColumns(this._columns, this._hasMultiSelectColumn());
             if (!silent) {
