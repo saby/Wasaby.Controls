@@ -9,6 +9,7 @@
                            on:itemClick="_onItemClick()"
                            on:afterBeginEdit="_onAfterBeginEdit()"
                            on:afterEndEdit="_onAfterEndEdit()"
+                           on:drawItems="_onDrawItems()"
                            errorController="{{_errorController}}"
                            beforeReloadCallback="{{_options.parentProperty !== undefined ? _beforeReloadCallback}}"
                            beforeLoadToDirectionCallback="{{_beforeLoadToDirectionCallback}}"
