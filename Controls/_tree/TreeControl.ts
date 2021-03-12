@@ -182,6 +182,9 @@ const _private = {
                         }
                         self.hideIndicator();
                     }).catch((error: Error) => {
+                        if (error.isCanceled) {
+                            return;
+                        }
                         self._onDataError({ error });
                         // Вернуть элемент модели в предыдущее состояние, т.к. раскрытие не состоялось.
                         _private.toggleExpandedOnModel(self, listViewModel, dispItem, !expanded);
