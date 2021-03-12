@@ -4096,7 +4096,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         if (newOptions.searchValue || this._loadedBySourceController) {
             const isPortionedLoad = _private.isPortionedLoad(this);
-            const hasMoreData = this._hasMoreData(this._sourceController, 'down');
+            const hasMoreData = _private.hasMoreDataInAnyDirection(this, this._sourceController);
             const isSearchReturnsEmptyResult = this._items && !this._items.getCount();
             const needCheckLoadToDirection =
                 hasMoreData &&

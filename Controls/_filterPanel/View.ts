@@ -49,6 +49,7 @@ import {isEqual} from 'Types/object';
 interface IViewPanelOptions {
     source: IFilterItem[];
     applyButtonCaption: string;
+    collapsedGroups: string[]|number[];
 }
 
 export default class View extends Control<IControlOptions> {
@@ -56,7 +57,7 @@ export default class View extends Control<IControlOptions> {
     protected _source: IFilterItem[] = null;
     protected _editingObject: object = {};
     protected _groupItems: object = {};
-    protected _collapsedGroups: unknown[] = [];
+    protected _collapsedGroups: string[]|number[] = [];
     protected _resetCaption: string = rk('все');
     protected _filterReseted: boolean = true;
     protected _itemPadding: IItemPadding = {
@@ -66,12 +67,18 @@ export default class View extends Control<IControlOptions> {
     protected _beforeMount(options: IViewPanelOptions): void {
         this._setSource(options.source);
         this._updateFilterParams();
+        if (options.collapsedGroups) {
+            this._collapsedGroups = options.collapsedGroups;
+        }
     }
 
     protected _beforeUpdate(newOptions: IViewPanelOptions): void {
         if (this._options.source !== newOptions.source) {
             this._setSource(newOptions.source);
             this._updateFilterParams();
+        }
+        if (this._options.collapsedGroups !== newOptions.collapsedGroups) {
+            this._collapsedGroups = newOptions.collapsedGroups;
         }
     }
 
@@ -109,6 +116,7 @@ export default class View extends Control<IControlOptions> {
         } else {
             displayItem.toggleExpanded();
         }
+        this._notify('collapsedGroupsChanged', [this._collapsedGroups]);
     }
 
     private _isFilterReseted(): boolean {

@@ -406,6 +406,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (root !== dataRoot && this._searchController) {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
+            if (this._options.useStore) {
+                Store.sendCommand('resetSearch');
+            }
         }
     }
 
