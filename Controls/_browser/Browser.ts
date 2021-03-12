@@ -734,7 +734,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (this._searchController) {
                 this._searchController.setPath(this._path);
             } else if (this._path) {
-                this._getSearchController().then((searchController) => searchController.setPath(this._path));
+                this._getSearchController()
+                    .then((searchController) => searchController.setPath(this._path))
+                    .catch((error) => error);
             }
         }
 
