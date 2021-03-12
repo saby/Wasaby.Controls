@@ -1954,7 +1954,7 @@ var
                 }
 
                 if (current.columnScroll) {
-                    currentColumn.itemActionsGridCellStyles = ' position: sticky; overflow: visible; display: inline-block; right: 0;';
+                    currentColumn.itemActionsGridCellStyles = ' position: sticky; overflow: visible; display: inline-block; right: 0; z-index: 2;';
                     if (!GridLayoutUtil.isFullGridSupport()) {
                         currentColumn.tableCellStyles = _private.getTableCellStyles(currentColumn);
                     }
