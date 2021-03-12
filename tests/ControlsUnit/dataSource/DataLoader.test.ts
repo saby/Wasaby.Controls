@@ -165,7 +165,7 @@ describe('Controls/dataSource:loadData', () => {
         sinonSandbox.replace(groupUtil, 'restoreCollapsedGroups', () => {
             return Promise.resolve(['testCollapsedGroup1', 'testCollapsedGroup2']);
         });
-        const loadDataResult = await getDataLoaded().load([loadDataConfigWithFilter]);
+        const loadDataResult = await getDataLoader().load([loadDataConfigWithFilter]);
         deepStrictEqual((loadDataResult[0] as ILoadDataResult).collapsedGroups, ['testCollapsedGroup1', 'testCollapsedGroup2']);
         sinonSandbox.restore();
     });
