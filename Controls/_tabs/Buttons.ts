@@ -144,8 +144,7 @@ class TabsButtons extends Control<ITabsOptions> implements ITabsButtons, IItems,
 
         const isLastItem: boolean = order === this._lastRightOrder;
 
-        classes.push(`controls-Tabs__item_align_${align} ` +
-            `controls-Tabs__item_align_${align}`);
+        classes.push(`controls-Tabs__item_align_${align}`);
         if (order === 1 || isLastItem) {
             classes.push('controls-Tabs__item_extreme');
         }
