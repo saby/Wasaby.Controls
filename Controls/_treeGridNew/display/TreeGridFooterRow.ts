@@ -25,7 +25,7 @@ export default class TreeGridFooterRow<S> extends GridFooterRow<S> {
 
    protected _updateColumnsHasNodeWithChildren(hasNodeWithChildren: boolean): void {
       this._$columnItems.forEach((cell: TreeGridFooterCell<S>) => {
-         if (cell.setHasNodeWithChildren) {
+         if (cell['[Controls/treeGrid:TreeGridFooterCell]']) {
             cell.setHasNodeWithChildren(hasNodeWithChildren);
          }
       });
