@@ -8,6 +8,7 @@ import {TKey} from 'Controls/interface';
 // @ts-ignore
 import * as isEmpty from 'Core/helpers/Object/isEmpty';
 import * as ArrayUtil from 'Controls/Utils/ArraySimpleValuesUtil';
+import {Base} from 'Controls/input';
 import 'css!Controls/lookup';
 import 'css!Controls/CommonClasses';
 
@@ -147,8 +148,8 @@ export default abstract class
 
     static getDefaultOptions(): object {
         return {
-            multiSelect: false,
-            horizontalPadding: 'xs'
+            ...Base.getDefaultOptions(),
+            multiSelect: false
         };
     }
 
