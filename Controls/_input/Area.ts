@@ -92,7 +92,7 @@ export default class Area extends Text<IAreaOptions> {
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
-        const additionalProcessedKeys = ['Up', 'Down'];
+        const additionalProcessedKeys = ['ArrowUp', 'ArrowDown', 'Up', 'Down'];
         processKeydownEvent(event, additionalProcessedKeys);
         this._newLineHandler(event, true);
     }
