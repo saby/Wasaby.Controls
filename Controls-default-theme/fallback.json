@@ -1068,5 +1068,12 @@
   "--search-separator_padding-top_menuPopup": "@search-separator_padding-top_treeGrid",
   "--search-separator_padding-bottom_menuPopup": "@search-separator_padding-bottom_treeGrid",
   "--height_itemActions": "var(--inline_height_m)",
-  "--height_breadcrumbsView": "var(--inline_height_default)"
+  "--height_breadcrumbsView": "var(--inline_height_default)",
+  "--height_CutButton": "18px",
+  "--margin-top_s_CutButton": "var(--offset_3xs)",
+  "--margin-top_m_CutButton": "var(--offset_3xs)",
+  "--margin-top_l_CutButton": "var(--offset_xs)",
+  "--margin-left_s_CutButton": "var(--offset_2xs)",
+  "--margin-left_m_CutButton": "var(--offset_xs)",
+  "--margin-left_l_CutButton":"var(--offset_s)"
 }
