@@ -3087,7 +3087,8 @@ const _private = {
     prepareMoverControllerOptions(self, options: IList): IMoveControllerOptions {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
-            parentProperty: options.parentProperty
+            parentProperty: options.parentProperty,
+            sorting: options.sorting
         };
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
