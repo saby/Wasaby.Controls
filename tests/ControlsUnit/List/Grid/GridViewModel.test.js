@@ -2391,7 +2391,7 @@ define(['Controls/grid', 'Core/core-merge', 'Types/collection', 'Types/entity', 
          });
 
          it('getBottomPaddingStyles', function() {
-            assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 10; grid-row-end: 11;', gridViewModel.getBottomPaddingStyles());
+            assert.equal('grid-column-start: 2; grid-column-end: 5; grid-row-start: 17; grid-row-end: 18;', gridViewModel.getBottomPaddingStyles());
          });
 
          it('getColumnAlignGroupStyles', function () {
