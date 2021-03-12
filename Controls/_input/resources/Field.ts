@@ -394,6 +394,11 @@ class Field<Value, ModelOptions>
     }
 
     protected _keyDownHandler(event: SyntheticEvent<KeyboardEvent>): void {
+        /**
+         * При начале выделения и выходе за пределы field, не срабатывает событие click,
+         * из-за чего получаем неправильный selection у модели при вводе.
+         * https://online.sbis.ru/opendoc.html?guid=2d76628b-eacc-48ac-837a-99b26009c4e1
+         */
         this._selectionFromFieldToModel();
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
     }
