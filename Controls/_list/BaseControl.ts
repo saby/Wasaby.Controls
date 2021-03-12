@@ -4530,8 +4530,8 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                              {bubbling: true});
             }
 
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll;
+            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed();
+            needCheckTriggers = this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll || needCheckTriggers;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
