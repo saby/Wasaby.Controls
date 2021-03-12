@@ -27,6 +27,7 @@ interface IColumnScrollOptions {
     itemsDragNDrop?: boolean;
     columnScroll?: boolean;
     onOverlayChangedCallback?: Function;
+    stickyLadderCellsCount?: number;
 }
 
 interface IActualizeOptions {
@@ -261,6 +262,7 @@ export default class ColumnScroll {
             hasMultiSelect: this._options.hasMultiSelectColumn,
             theme: this._options.theme,
             backgroundStyle: this._options.backgroundStyle,
+            stickyLadderCellsCount: this._options.stickyLadderCellsCount,
             isEmptyTemplateShown: options.needShowEmptyTemplate
         });
         this._classes.columnScroll.wrapper = `${COLUMN_SCROLL_JS_SELECTORS.CONTAINER} ${this._columnScroll.getTransformSelector()}`;
