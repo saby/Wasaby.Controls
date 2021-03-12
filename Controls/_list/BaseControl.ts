@@ -3648,6 +3648,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
         if (state) {
             this.handleTriggerVisible(direction);
         }
+        if (detection.isMobilePlatform) {
+            _private.initPaging(this);
+        }
     },
 
     applyTriggerOffset(offset: {top: number, bottom: number}): void {
