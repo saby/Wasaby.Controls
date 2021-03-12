@@ -690,7 +690,9 @@ export class TreeControl<TOptions extends ITreeControlOptions = ITreeControlOpti
         this._clearTimeoutForExpandOnDrag();
         super._beforeUnmount(...arguments);
     }
+
     protected _onDrawItems(): void {
+        super._onDrawItems();
         if (this._scrollToLeaf && this._scrollToLeafOnDrawItems) {
             this._scrollToLeaf();
             this._scrollToLeaf = null;
