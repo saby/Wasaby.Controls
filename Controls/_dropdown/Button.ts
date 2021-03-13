@@ -1,4 +1,5 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
+import {TouchDetect} from 'Env/Touch';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
 import {EventUtils} from 'UI/Events';
@@ -235,6 +236,12 @@ export default class Button extends BaseDropdown {
 
    protected _deactivated(): void {
       this.closeMenu();
+   }
+
+   protected _afterMount(options: IButtonOptions): void {
+      if (options.lazyItemsLoading && TouchDetect.getInstance().isTouch() && this._options.preloadItemsOnTouch) {
+         this._controller.tryPreloadItems();
+      }
    }
 
    static _theme: string[] = ['Controls/dropdown', 'Controls/Classes'];
