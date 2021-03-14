@@ -828,6 +828,9 @@ const _private = {
             allDataCount = _private.getAllDataCount(self);
             if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
                 self._loadMoreCaption = allDataCount - loadedDataCount;
+                if (self._loadMoreCaption === 0) {
+                    self._shouldDrawFooter = false;
+                }
             } else {
                 self._loadMoreCaption = '...';
             }
