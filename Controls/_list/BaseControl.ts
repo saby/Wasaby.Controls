@@ -2953,7 +2953,8 @@ const _private = {
     prepareMoverControllerOptions(self, options: IList): IMoveControllerOptions {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
-            parentProperty: options.parentProperty
+            parentProperty: options.parentProperty,
+            sorting: options.sorting
         };
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
@@ -3310,7 +3311,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         if (newOptions.sourceController) {
             this._sourceController = newOptions.sourceController;
-            this._sourceController.updateOptions(newOptions);
             this._sourceController.setDataLoadCallback(this._dataLoadCallback);
             _private.validateSourceControllerOptions(this, newOptions);
         }
@@ -3602,6 +3602,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         this._scrollController?.setTriggerVisibility(direction, state);
         if (state) {
             this.handleTriggerVisible(direction);
+        }
+        if (detection.isMobilePlatform) {
+            _private.initPaging(this);
         }
     }
 
@@ -4057,7 +4060,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined || this._modelRecreated;
 
         // Если будет выполнена перезагрузка, то мы на событие reset применим новый ключ
-        if (shouldProcessMarker && !needReload) {
+        if (shouldProcessMarker && !needReload && !isSourceControllerLoadingNow) {
             const markerController = _private.getMarkerController(this, newOptions);
             // могут скрыть маркер и занового показать, тогда markedKey из опций нужно проставить даже если он не изменился
             if (this._options.markedKey !== newOptions.markedKey || this._options.markerVisibility === 'hidden' && newOptions.markerVisibility === 'visible' && newOptions.markedKey !== undefined) {
@@ -4117,7 +4120,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
 
         if (newOptions.searchValue || this._loadedBySourceController) {
             const isPortionedLoad = _private.isPortionedLoad(this);
-            const hasMoreData = this._hasMoreData(this._sourceController, 'down');
+            const hasMoreData = _private.hasMoreDataInAnyDirection(this, this._sourceController);
             const isSearchReturnsEmptyResult = this._items && !this._items.getCount();
             const needCheckLoadToDirection =
                 hasMoreData &&
@@ -4484,9 +4487,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
             }
-
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll;
+            const scrollToItemContinued = this._scrollController.continueScrollToItemIfNeed();
+            const virtualScrollCompleted = this._scrollController.completeVirtualScrollIfNeed();
+            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || paramsToRestoreScroll;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'
@@ -4609,9 +4612,14 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             this._notify('drawItems');
             this._shouldNotifyOnDrawItems = false;
             this._itemsChanged = false;
-            if (this._doAfterDrawItems) {
-                this._doAfterDrawItems();
-            }
+            this._onDrawItems();
+        }
+    }
+
+    protected _onDrawItems() {
+        if (this._doAfterDrawItems) {
+            this._doAfterDrawItems();
+            this._doAfterDrawItems = null;
         }
     }
 

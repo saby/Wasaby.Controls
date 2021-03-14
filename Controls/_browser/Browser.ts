@@ -406,6 +406,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (root !== dataRoot && this._searchController) {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
+            if (this._options.useStore) {
+                Store.sendCommand('resetSearch');
+            }
         }
     }
 
@@ -734,7 +737,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (this._searchController) {
                 this._searchController.setPath(this._path);
             } else if (this._path) {
-                this._getSearchController().then((searchController) => searchController.setPath(this._path));
+                this._getSearchController()
+                    .then((searchController) => searchController.setPath(this._path))
+                    .catch((error) => error);
             }
         }
 
