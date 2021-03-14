@@ -31,6 +31,7 @@ import Store from 'Controls/Store';
 import {SHADOW_VISIBILITY} from 'Controls/scroll';
 import {detection} from 'Env/Env';
 import {ICrud, ICrudPlus, IData, PrefetchProxy, QueryWhereExpression} from 'Types/source';
+import {CancelablePromise} from 'Types/entity';
 import {ISearchControllerOptions} from 'Controls/_search/ControllerClass';
 import {IHierarchySearchOptions} from 'Controls/interface/IHierarchySearch';
 import {IMarkerListOptions} from 'Controls/_marker/interface';
@@ -122,7 +123,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
     private _source: ICrudPlus | ICrud & ICrudPlus & IData;
     private _sourceController: SourceController = null;
     private _operationsController: OperationsController = null;
-    private _searchControllerCreatePromise: Promise<SearchController> = null;
+    private _searchControllerCreatePromise: CancelablePromise<typeof import('Controls/search')> = null;
     private _searchController: SearchController = null;
     private _filterController: FilterController = null;
 
@@ -374,6 +375,11 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             this._searchController = null;
         }
 
+        if (this._searchControllerCreatePromise) {
+            this._searchControllerCreatePromise.cancel();
+            this._searchControllerCreatePromise = null;
+        }
+
         if (this._errorRegister) {
             this._errorRegister.destroy();
             this._errorRegister = null;
@@ -431,17 +437,19 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         this._updateContext(controllerState);
     }
 
-    private _getSearchController(options?: IBrowserOptions): Promise<SearchController> {
+    private _getSearchController(options?: IBrowserOptions): Promise<void | SearchController> {
         if (!this._searchController) {
             if (!this._searchControllerCreatePromise) {
-                this._searchControllerCreatePromise = import('Controls/search').then((result) => {
+                this._searchControllerCreatePromise = new CancelablePromise(import('Controls/search'));
+                return this._searchControllerCreatePromise.promise.then((result) => {
                     this._searchController = new result.ControllerClass(
                         this._getSearchControllerOptions(options ?? this._options));
 
                     return this._searchController;
                 });
+            } else {
+                return this._searchControllerCreatePromise.promise.then(() => this._searchController);
             }
-            return this._searchControllerCreatePromise;
         }
 
         return Promise.resolve(this._searchController);
@@ -482,6 +490,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
         if (root !== dataRoot && this._searchController) {
             this._updateFilter(this._searchController);
             this._inputSearchValue = '';
+            if (this._options.useStore) {
+                Store.sendCommand('resetSearch');
+            }
         }
     }
 
@@ -807,7 +818,9 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             if (this._searchController) {
                 this._searchController.setPath(this._path);
             } else if (this._path) {
-                this._getSearchController().then((searchController) => searchController.setPath(this._path));
+                this._getSearchController()
+                    .then((searchController) => searchController.setPath(this._path))
+                    .catch((error) => error);
             }
         }
 

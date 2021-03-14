@@ -3103,7 +3103,8 @@ const _private = {
     prepareMoverControllerOptions(self, options: IList): IMoveControllerOptions {
         const controllerOptions: IMoveControllerOptions = {
             source: options.source,
-            parentProperty: options.parentProperty
+            parentProperty: options.parentProperty,
+            sorting: options.sorting
         };
         if (options.moveDialogTemplate) {
             if (options.moveDialogTemplate.templateName) {
@@ -4103,7 +4104,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
             || newOptions.markerVisibility === 'onactivated' && newOptions.markedKey !== undefined || this._modelRecreated;
 
         // Если будет выполнена перезагрузка, то мы на событие reset применим новый ключ
-        if (shouldProcessMarker && !needReload) {
+        if (shouldProcessMarker && !needReload && !isSourceControllerLoadingNow) {
             const markerController = _private.getMarkerController(this, newOptions);
             // могут скрыть маркер и занового показать, тогда markedKey из опций нужно проставить даже если он не изменился
             if (this._options.markedKey !== newOptions.markedKey || this._options.markerVisibility === 'hidden' && newOptions.markerVisibility === 'visible' && newOptions.markedKey !== undefined) {
@@ -4163,7 +4164,7 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
 
         if (newOptions.searchValue || this._loadedBySourceController) {
             const isPortionedLoad = _private.isPortionedLoad(this);
-            const hasMoreData = _private.hasMoreData(this, this._sourceController, 'down');
+            const hasMoreData = _private.hasMoreDataInAnyDirection(this, this._sourceController);
             const isSearchReturnsEmptyResult = this._items && !this._items.getCount();
             const needCheckLoadToDirection =
                 hasMoreData &&
@@ -4549,9 +4550,9 @@ const BaseControl = Control.extend(/** @lends Controls/_list/BaseControl.prototy
                              [paramsToRestoreScroll.heightDifference, paramsToRestoreScroll.direction, correctingHeight],
                              {bubbling: true});
             }
-
-            let needCheckTriggers = this._scrollController.continueScrollToItemIfNeed() ||
-                this._scrollController.completeVirtualScrollIfNeed() || paramsToRestoreScroll;
+            const scrollToItemContinued = this._scrollController.continueScrollToItemIfNeed();
+            const virtualScrollCompleted = this._scrollController.completeVirtualScrollIfNeed();
+            const needCheckTriggers = scrollToItemContinued || virtualScrollCompleted || paramsToRestoreScroll;
 
             // Для корректного отображения скроллбара во время использования виртуального скролла
             // необходимо, чтобы события 'restoreScrollPosition' и 'updatePlaceholdersSize'

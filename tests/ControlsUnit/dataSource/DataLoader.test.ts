@@ -129,7 +129,10 @@ describe('Controls/dataSource:loadData', () => {
                 }
             ],
             filterHistoryLoader: () => Promise.resolve({
-                historyItems: [{...historyItem}]
+                historyItems: [{...historyItem}],
+                filter: {
+                    city: 'Yaroslavl'
+                }
             })
         };
         const loadDataResult = await getDataLoaded().load([loadDataConfigCustomLoader]);
@@ -137,7 +140,8 @@ describe('Controls/dataSource:loadData', () => {
         deepStrictEqual(
             (loadDataResult[0] as ILoadDataResult).filter,
             {
-                title: 'Sasha'
+                title: 'Sasha',
+                city: 'Yaroslavl'
             }
         );
         deepStrictEqual(loadDataResult[0].historyItems, [{...historyItem}]);

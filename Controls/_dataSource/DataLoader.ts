@@ -79,7 +79,7 @@ function getFilterControllerWithHistoryFromLoader(loadConfig: ILoadDataConfig): 
         .then((result: IFilterHistoryLoaderResult) => {
             const controller = getFilterController({
                 ...loadConfig,
-                result
+                ...result
             } as IFilterControllerOptions);
 
             if (result.historyItems) {
