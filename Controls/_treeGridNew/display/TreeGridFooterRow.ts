@@ -1,7 +1,7 @@
 import { GridFooterRow } from 'Controls/gridNew';
-import TreeGridFooterCell from 'Controls/_treeGridNew/display/TreeGridFooterCell';
+import TreeGridFooterCell from './TreeGridFooterCell';
 
-export default class TreeGridFooterRow<S> extends GridFooterRow<S> {
+export default class TreeGridFooterRow extends GridFooterRow<any> {
    /**
     * Признак, означающий что в списке есть узел с детьми
     */
@@ -9,6 +9,18 @@ export default class TreeGridFooterRow<S> extends GridFooterRow<S> {
 
    getExpanderSize(): string {
       return this.getOwner().getExpanderSize();
+   }
+
+   getExpanderIcon(): string {
+      return this.getOwner().getExpanderIcon();
+   }
+
+   getExpanderPosition(): string {
+      return this.getOwner().getExpanderPosition();
+   }
+
+   getExpanderVisibility(): string {
+      return this.getOwner().getExpanderVisibility();
    }
 
    // region HasNodeWithChildren
@@ -24,7 +36,7 @@ export default class TreeGridFooterRow<S> extends GridFooterRow<S> {
    }
 
    protected _updateColumnsHasNodeWithChildren(hasNodeWithChildren: boolean): void {
-      this._$columnItems.forEach((cell: TreeGridFooterCell<S>) => {
+      this._$columnItems.forEach((cell: TreeGridFooterCell) => {
          if (cell['[Controls/treeGrid:TreeGridFooterCell]']) {
             cell.setHasNodeWithChildren(hasNodeWithChildren);
          }
@@ -33,7 +45,7 @@ export default class TreeGridFooterRow<S> extends GridFooterRow<S> {
 
    // endregion HasNodeWithChildren
 
-   protected getColumnsFactory(): (options: any) => TreeGridFooterCell<any> {
+   getColumnsFactory(): (options: any) => TreeGridFooterCell {
       const superFactory = super.getColumnsFactory();
       return (options: any) => {
          options.hasNodeWithChildren = this._$hasNodeWithChildren;
