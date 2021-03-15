@@ -229,6 +229,7 @@ export default class ColumnScrollController {
         }
         this._scrollableColumns = [];
         let htmlColumns: NodeList;
+        let htmlColumns: NodeList;
         if (!container) {
             return this._scrollableColumns;
         }
@@ -465,6 +466,7 @@ export default class ColumnScrollController {
         }
 
         newHTML += ` .${this._transformSelector} .controls-Grid__cell_fixed_theme-${this._options.theme} { z-index: 3 }`;
+        newHTML += ` .${this._transformSelector} .controls-GridView__footer__cell.controls-GridNew__cell_fixed_theme-${this._options.theme} { z-index: 2 }`;
 
         if (this._stylesContainer.innerHTML !== newHTML) {
             this._stylesContainer.innerHTML = newHTML;
