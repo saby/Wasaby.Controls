@@ -730,12 +730,21 @@ var Filter = Control.extend({
 
     _afterMount: function(options) {
         if (options.useStore) {
-            this._openCallbackId = Store.declareCommand(
-                'openFilterDetailPanel',
-                this.openDetailPanel.bind(this)
-            );
-            this._resetCallbackId = Store.declareCommand('resetFilter', this.reset.bind(this));
+            this._subscribeStoreCommands();
+            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', () => {
+                Store.unsubscribe(this._openCallbackId);
+                Store.unsubscribe(this._resetCallbackId);
+                this._subscribeStoreCommands();
+            }, true);
         }
+    },
+
+    _subscribeStoreCommands(): void {
+        this._openCallbackId = Store.declareCommand(
+            'openFilterDetailPanel',
+            this.openDetailPanel.bind(this)
+        );
+        this._resetCallbackId = Store.declareCommand('resetFilter', this.reset.bind(this));
     },
 
     _mouseEnterHandler: function(event: SyntheticEvent<MouseEvent>) {
@@ -795,6 +804,7 @@ var Filter = Control.extend({
         if (this._options.useStore) {
             Store.unsubscribe(this._openCallbackId);
             Store.unsubscribe(this._resetCallbackId);
+            Store.unsubscribe(this._storeCtxCallbackId);
         }
     },
 
