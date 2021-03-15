@@ -991,6 +991,8 @@
   "--spinner_offset_suggest": "var(--offset_2xs)",
   "--placeholder_padding-top_l_list": "var(--offset_l)",
 
+  "--master_item_background-color_list": "#f8f8f8",
+
   "--box-shadow-size_suggestSearch": "0 0 6px 0",
   "--padding-top_suggestSearch": "var(--offset_s)",
   "--padding-side_suggestSearch": "var(--offset_m)",
