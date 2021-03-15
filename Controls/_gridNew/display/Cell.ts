@@ -154,6 +154,10 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
         return this._$column.displayProperty;
     }
 
+    getTooltipProperty(): string {
+        return this._$column.tooltipProperty;
+    }
+
     getContents(): T {
         return this._$owner.getContents();
     }

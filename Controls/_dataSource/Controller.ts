@@ -304,6 +304,10 @@ export default class Controller extends mixin<
             this.setNavigation(newOptions.navigation);
         }
 
+        if (newOptions.groupHistoryId !== this._options.groupHistoryId && !newOptions.groupHistoryId) {
+            this._collapsedGroups = null;
+        }
+
         const isChanged =
             isFilterChanged ||
             isNavigationChanged ||
