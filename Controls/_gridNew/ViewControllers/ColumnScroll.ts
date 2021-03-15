@@ -247,7 +247,9 @@ export default class ColumnScroll {
 
         // При включении/выключении перемещения записей мышкой необходимо уведомить контроллер скроллирования перетаскиванием.
         // Попадаем сюда, если опции columnScroll и dragScrolling не поменялась и равны true.
-        if (this._options.dragScrolling && this._options.itemsDragNDrop !== oldOptions.itemsDragNDrop) {
+        // При опции dragScrolling = true, контроллера перетаскивания может не существовать, если нет скрола колонок,
+        // поэтому проверка if (options.dragScrolling) не является достоверной.
+        if (this._dragScroll && this._options.itemsDragNDrop !== oldOptions.itemsDragNDrop) {
             this._dragScroll.setStartDragNDropCallback(!this._options.itemsDragNDrop ? null : () => {
                 this._setGrabbing(false);
                 this._options.startDragNDropCallback();
