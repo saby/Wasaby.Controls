@@ -201,10 +201,7 @@ export default class Explorer extends Control<IExplorerOptions> {
                 || item instanceof Array || item.get(this._options.nodeProperty) !== ITEM_TYPES.node;
         };
 
-        // 1. Сначала проставим итему и обновим хлебные крошки
-        this._setItems(cfg.items);
-        // 2. Потом получим корневой рут т.к. его вычисление идет на основании хлебных крошек
-        this._topRoot = this._getTopRoot(cfg);
+        this._setItems(cfg.items, cfg);
         this._dragControlId = randomId();
         this._navigation = cfg.navigation;
 
@@ -234,9 +231,13 @@ export default class Explorer extends Control<IExplorerOptions> {
         const isViewModeChanged = cfg.viewMode !== this._options.viewMode;
         const isRootChanged = cfg.root !== this._options.root;
 
-        if (this._options.items !== cfg.items) {
-            this._setItems(cfg.items);
-            this._topRoot = this._getTopRoot(cfg);
+        // Применяем новые итемы только если они были переданы изначально
+        // или если новые не равны текущим в опциях.
+        // Сейчас items передает только родительский dataContainer. По этому если он есть,
+        // то items будут всегда. Если его нет, то items мы сами получаем через дочерний
+        // DataContainer
+        if (this._options.items || this._options.items !== cfg.items) {
+            this._setItems(cfg.items, cfg);
         }
 
         // Мы не должны ставить маркер до проваливания, т.к. это лишняя синхронизация.
@@ -665,15 +666,34 @@ export default class Explorer extends Control<IExplorerOptions> {
     }
 
     /**
-     * Запоминает новые итемы и обновляет данные для хлебных крошек
+     * * Запоминает новые итемы
+     * * Высчитывает id записи, которая должна быть помечена маркером
+     * * Обновляет данные для хлебных крошек
      */
-    private _setItems(items: RecordSet): void {
+    private _setItems(items: RecordSet, options: IExplorerOptions = this._options): void {
+        // Если ссылка на итемы поменялась, то обновим подписку на изменение данных хлебных крошек
+        // и сохраним новый инстанс итемов
         if (this._items !== items) {
             this._updateSubscriptionOnBreadcrumbs(this._items, items, this._updateHeadingPath);
             this._items = items;
         }
 
+        //region Вычислим id записи которая должна быть помечена маркером
+        const root = this._getRoot(options.root);
+        // Ищем индекс хлебной крошки, которая соответствует текущему root
+        const currCrumbIdx = this._breadCrumbsItems?.findIndex((crumb) => crumb.getKey() === root);
+        // Получаем следующую за ней хлебную крошку
+        const nextCrumb = currCrumbIdx >= 0 && this._breadCrumbsItems[currCrumbIdx + 1];
+        // Если следующая крошка есть, значит её id надо запомнить для последующей пометки
+        if (nextCrumb) {
+            this._potentialMarkedKey = nextCrumb.getKey();
+        }
+        //endregion
+
+        // Обновим данные по которым рисуются хлебные крошки
         this._updateBreadcrumbs(items);
+        // Обновим корневой root
+        this._topRoot = this._getTopRoot(options);
     }
 
     /**
@@ -689,7 +709,7 @@ export default class Explorer extends Control<IExplorerOptions> {
     protected _dataLoadCallback(items: RecordSet, direction: Direction): void {
         // Имеет смысл обновлять хлебные крошки только при получении первой страницы
         if (!direction) {
-            this._updateBreadcrumbs(items);
+            this._setItems(items);
         }
 
         if (this._options.dataLoadCallback) {
