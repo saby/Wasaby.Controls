@@ -1,0 +1,3 @@
+<div class="controls-DateRangeButtonsController">
+    <ws:partial template="{{ _options.content }}"/>
+</div>
