@@ -81,6 +81,16 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             return itemModel[this.getDisplayProperty()];
         }
     }
+
+    getTooltip(): string {
+        const itemModel = this._$owner.getContents();
+
+        if (itemModel instanceof Record) {
+            return itemModel.get(this.getTooltipProperty());
+        } else {
+            return itemModel[this.getTooltipProperty()];
+        }
+    }
     // endregion
 
     // region Аспект "Маркер"
