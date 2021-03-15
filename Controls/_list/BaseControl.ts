@@ -902,7 +902,6 @@ const _private = {
                     const newMarkedKey = _private.getMarkerController(self).onCollectionReset();
                     _private.changeMarkedKey(self, newMarkedKey);
                 }
-                self._needScrollToFirstItem = false;
                 if (!_private.hasMoreData(self, self._sourceController, direction)) {
                     self._updateShadowModeHandler(self._shadowVisibility);
                 }
@@ -1705,7 +1704,12 @@ const _private = {
             }
 
             if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length) || action === IObservable.ACTION_ADD) {
-                _private.attachLoadTopTriggerToNullIfNeed(self, self._options);
+                if (_private.attachLoadTopTriggerToNullIfNeed(self, self._options)) {
+                    // Проскроллить к первому элементу, нужно только когда перезагрузился список
+                    if (action === IObservable.ACTION_ADD) {
+                        self._needScrollToFirstItem = false;
+                    }
+                }
                 _private.attachLoadDownTriggerToNullIfNeed(self, self._options);
             }
 
