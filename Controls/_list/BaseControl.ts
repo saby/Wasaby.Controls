@@ -75,6 +75,7 @@ import {IEditableListOption} from './interface/IEditableList';
 import {default as ScrollController, IScrollParams} from './ScrollController';
 
 import {groupUtil} from 'Controls/dataSource';
+import {TArrayGroupId} from 'Controls/_list/Controllers/Grouping';
 import {IDirection} from './interface/IVirtualScroll';
 import {CssClassList} from './resources/utils/CssClassList';
 import {
@@ -3332,11 +3333,8 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             }
         };
 
-        // Prepare collapsed groups if need.
-        addOperation(() => this._prepareGroups(newOptions));
-
         // Prepare items on mount
-        addOperation((collapsedGroups) => this._prepareItemsOnMount(this, newOptions, receivedState, collapsedGroups));
+        addOperation(() => this._prepareItemsOnMount(this, newOptions, receivedState));
 
         // Try to start initial editing
         addOperation(() => {
@@ -3397,7 +3395,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
     }
 
-    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}, collapsedGroups): Promise<unknown> | void {
+    _prepareItemsOnMount(self, newOptions, receivedState: IReceivedState = {}): Promise<unknown> | void {
         let receivedData = receivedState.data;
         let viewModelConfig = {...newOptions, keyProperty: self._keyProperty};
         let collapsedGroups;
@@ -3408,7 +3406,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
 
         if (collapsedGroups) {
-            viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
+            viewModelConfig = cMerge(viewModelConfig, {collapsedGroups: collapsedGroups || newOptions.collapsedGroups});
         }
 
         if (newOptions.groupProperty) {
@@ -3480,18 +3478,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         } else {
             _private.createScrollController(self, newOptions);
         }
-    }
-
-    _prepareGroups(newOptions, callback?: (...args: unknown[]) => unknown): Promise<TCollapsedGroups> | unknown {
-        let result = null;
-        if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
-            result = (this._sourceController && this._sourceController.getCollapsedGroups()) ||
-                      newOptions.collapsedGroups;
-        } else if (newOptions.collapsedGroups) {
-            result = newOptions.collapsedGroups;
-        }
-
-        return (callback && callback(result)) || result;
     }
 
     _initKeyProperty(options): void {
@@ -4136,11 +4122,13 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
                 }
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
-                this._prepareGroups(newOptions, (collapsedGroups) => {
-                    if (self._listViewModel) {
-                        self._listViewModel.setCollapsedGroups(collapsedGroups ? collapsedGroups : []);
-                    }
-                });
+                if (self._listViewModel) {
+                    self._listViewModel.setCollapsedGroups(
+                        this._sourceController.getCollapsedGroups() ||
+                        newOptions.collapsedGroups ||
+                        []
+                    );
+                }
             }
         }
         // Если поменялись ItemActions, то закрываем свайп
