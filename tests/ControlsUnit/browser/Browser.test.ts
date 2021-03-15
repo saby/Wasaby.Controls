@@ -555,6 +555,20 @@ describe('Controls/browser:Browser', () => {
             assert.ok(browser._errorRegister);
         });
 
+        it('beforeUpdate without source', async () => {
+            let options = getBrowserOptions();
+            const browser = getBrowser();
+
+            await browser._beforeMount(options);
+
+            options = {...options};
+            delete options.source;
+            options.filter = {newFilterField: 'newFilterValue'};
+
+            await browser._beforeUpdate(options);
+            assert.deepStrictEqual(browser._filter, {newFilterField: 'newFilterValue'});
+        });
+
         it('if searchValue is empty, then the same field i filter must be reset', async () => {
             const sandbox = sinon.createSandbox();
             const browser = getBrowser();

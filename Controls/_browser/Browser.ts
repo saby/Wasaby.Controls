@@ -284,7 +284,7 @@ export default class Browser extends Control<IBrowserOptions, IReceivedState> {
             }
         }
 
-        if (isChanged) {
+        if (isChanged && this._source) {
             methodResult = this._reload(newOptions);
         } else if (isChanged) {
             this._afterSourceLoad(sourceController, newOptions);
