@@ -3406,7 +3406,7 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         }
 
         if (collapsedGroups) {
-            viewModelConfig = cMerge(viewModelConfig, {collapsedGroups});
+            viewModelConfig = cMerge(viewModelConfig, {collapsedGroups: collapsedGroups || newOptions.collapsedGroups});
         }
 
         if (newOptions.groupProperty) {
@@ -3478,18 +3478,6 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         } else {
             _private.createScrollController(self, newOptions);
         }
-    }
-
-    _prepareGroups(newOptions): TArrayGroupId {
-        let result = null;
-        if (newOptions.historyIdCollapsedGroups || newOptions.groupHistoryId) {
-            result = (this._sourceController && this._sourceController.getCollapsedGroups()) ||
-                      newOptions.collapsedGroups;
-        } else if (newOptions.collapsedGroups) {
-            result = newOptions.collapsedGroups;
-        }
-
-        return result;
     }
 
     _initKeyProperty(options): void {
@@ -4135,7 +4123,11 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
             });
             if (!isEqual(newOptions.groupHistoryId, this._options.groupHistoryId)) {
                 if (self._listViewModel) {
-                    self._listViewModel.setCollapsedGroups(this._prepareGroups(newOptions) || []);
+                    self._listViewModel.setCollapsedGroups(
+                        this._sourceController.getCollapsedGroups() ||
+                        newOptions.collapsedGroups ||
+                        []
+                    );
                 }
             }
         }
