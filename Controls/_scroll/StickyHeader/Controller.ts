@@ -428,7 +428,7 @@ class StickyHeaderController {
             const header = this._headers[headerId];
 
             if (headers.includes(headerId)) {
-                if (this._getHeaderOffset(headerId, position) <= fixedHeadersHeight + replaceableHeight) {
+                if (this._getHeaderOffset(headerId, position) < fixedHeadersHeight + replaceableHeight) {
                     header.inst.setFixedPosition(POSITION.top);
                 }
             }

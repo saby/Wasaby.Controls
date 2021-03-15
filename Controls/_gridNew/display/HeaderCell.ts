@@ -163,7 +163,8 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
         let wrapperClasses = `controls-Grid__header-cell controls-Grid__cell_${style}`
                           + ` controls-Grid__header-cell_theme-${theme}`
                           + ` ${this._getWrapperPaddingClasses(theme)}`
-                          + ` ${this._getColumnSeparatorClasses(theme)}`;
+                          + ` ${this._getColumnSeparatorClasses(theme)}`
+                          + ` controls-background-${backgroundColorStyle || style}_theme-${theme}`;
 
         const isMultilineHeader = this._$owner.isMultiline();
         const isStickySupport = this._$owner.isStickyHeader();
@@ -187,7 +188,6 @@ export default class HeaderCell<T> extends Cell<T, HeaderRow<T>> {
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
-            wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
 
         // _private.getBackgroundStyle(this._options, true);

@@ -58,7 +58,8 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
                             + ` controls-Grid__cell_${style}`
                             + ` controls-Grid__results-cell_theme-${theme}`
                             + ` ${this._getWrapperPaddingClasses(theme)}`
-                            + ` ${this._getColumnSeparatorClasses(theme)}`;
+                            + ` ${this._getColumnSeparatorClasses(theme)}`
+                            + ` controls-background-${backgroundColorStyle || style}_theme-${theme}`;
 
         if (this._$column.align) {
             wrapperClasses += ` controls-Grid__row-cell__content_halign_${this._$column.align}`;
@@ -70,9 +71,8 @@ export default class ResultsCell<T> extends Cell<T, ResultsRow<T>> {
 
         // todo add resultsFormat to here
 
-        if (this._$owner.hasColumnScroll()){
+        if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
-            wrapperClasses += ` ${this._getBackgroundColorColumnScrollClasses(backgroundColorStyle, theme)}`;
         }
 
         return wrapperClasses;
