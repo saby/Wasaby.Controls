@@ -135,6 +135,9 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
     private _filterPopupOpener: StackOpener | StickyOpener;
     private _stackOpener: StackOpener;
     private _detailPanelTemplateName: string;
+    private _openCallbackId: string;
+    private _resetCallbackId: string;
+    private _storeCtxCallbackId: string;
     private _loadPromise: CancelablePromise<any>;
     private _loadOperationsPanelPromise: Promise<unknown>;
     private _collapsedFilters: string[]|number[] = null;
@@ -195,12 +198,21 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
 
     protected _afterMount(options: IFilterViewOptions): void {
         if (options.useStore) {
-            this._openCallbackId = Store.declareCommand(
-                'openFilterDetailPanel',
-                this.openDetailPanel.bind(this)
-            );
-            this._resetCallbackId = Store.declareCommand('resetFilter', this.reset.bind(this));
+            this._subscribeStoreCommands();
+            this._storeCtxCallbackId = Store.onPropertyChanged('_contextName', () => {
+                Store.unsubscribe(this._openCallbackId);
+                Store.unsubscribe(this._resetCallbackId);
+                this._subscribeStoreCommands();
+            }, true);
         }
+    }
+
+    _subscribeStoreCommands(): void {
+        this._openCallbackId = Store.declareCommand(
+            'openFilterDetailPanel',
+            this.openDetailPanel.bind(this)
+        );
+        this._resetCallbackId = Store.declareCommand('resetFilter', this.reset.bind(this));
     }
 
     protected _beforeUpdate(newOptions: IFilterViewOptions): void {
@@ -249,6 +261,7 @@ class FilterView extends Control<IFilterViewOptions, IFilterReceivedState> imple
         if (this._options.useStore) {
             Store.unsubscribe(this._openCallbackId);
             Store.unsubscribe(this._resetCallbackId);
+            Store.unsubscribe(this._storeCtxCallbackId);
         }
     }
 
