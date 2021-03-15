@@ -190,7 +190,6 @@ export default class Cell<T extends Model, TOwner extends Row<T>> extends mixin<
 
         if (this._$owner.hasColumnScroll()) {
             wrapperClasses += ` ${this._getColumnScrollWrapperClasses(theme)}`;
-
         }
 
         return wrapperClasses;
