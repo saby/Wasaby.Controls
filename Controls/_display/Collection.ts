@@ -119,13 +119,14 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     displayProperty?: string;
     itemTemplateProperty?: string;
     multiSelectVisibility?: string;
-    multiSelectPosition?: 'default'|'custom';
+    multiSelectPosition?: 'default' | 'custom';
     itemPadding?: IItemPadding;
     emptyTemplate?: TemplateFunction;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     theme?: string;
+    style?: string;
     backgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
@@ -871,8 +872,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
         this._$theme = options.theme;
 
-        if (options.hoverBackgroundStyle) {
-            this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
+        if (!options.hoverBackgroundStyle && options.style) {
+            this._$hoverBackgroundStyle = options.style;
         }
 
         this._$collapsedGroups = options.collapsedGroups;
