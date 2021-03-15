@@ -400,7 +400,16 @@ class Field<Value, ModelOptions>
          * Поэтому заново вычисляем selection для модели.
          * https://online.sbis.ru/opendoc.html?guid=2d76628b-eacc-48ac-837a-99b26009c4e1
          */
-        this._selectionFromFieldToModel();
+        const processedKeys: string[] = [
+            'End', 'Home', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown',
+            // Поддержка значений key в IE
+            'Left', 'Right', 'Up', 'Down'
+        ];
+
+        if (!processedKeys.includes(event.nativeEvent.key)) {
+            this._selectionFromFieldToModel();
+        }
+        //this._selectionFromFieldToModel();
         this._changeEventController.keyDownHandler(event, this._getConfigForController('changeEventController'));
     }
 
