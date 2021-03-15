@@ -642,6 +642,8 @@ define('Controls/interface/IEditableList', [
     * Вы можете задать позицию, в которой отображается шаблон редактирования строки. Для этого в опции {@link editingConfig} установите значение для параметра {@link Controls/interface/IEditableList/EditingConfig.typedef addPosition}. Шаблон редактирования строки может отображаться в начале и в конце списка, группы (если включена {@link Controls/interface/IGroupedList#groupProperty группировка}) или узла (для иерархических списков).
     *
     * В случае, когда метод beginAdd вызван без аргументов, добавляемая запись будет создана при помощи установленного на списке источника данных путем вызова у него метода {@link Types/source:ICrud#create create}.
+    * 
+    * Формат полей редактируемой записи может отличаться от формата полей Types/Collection:RecordSet, отображаемый списком. Подробнее читайтет {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ways-to-start/code/#begin-edit-format здесь}.
     * @demo Controls-demo/list_new/EditInPlace/AddItem/Index
     * @demo Controls-demo/list_new/EditInPlace/AddItemInBegin/Index Шаблон редактирования строки отображается в начале списка.
     * @demo Controls-demo/list_new/EditInPlace/AddItemInEnd/Index Шаблон редактирования строки отображается в конце списка.
@@ -737,7 +739,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * Завершает{@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование/добавление по месту} без сохранения введенных данных.
+    * Завершает {@link /doc/platform/developmentapl/interface-development/controls/list/actions/edit/ редактирование/добавление по месту} без сохранения введенных данных.
     * @function Controls/interface/IEditableList#cancelEdit
     * @returns {Promise}
     * @remark
