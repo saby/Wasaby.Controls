@@ -1706,7 +1706,8 @@ const _private = {
             if (action === IObservable.ACTION_RESET && (removedItems && removedItems.length || newItems && newItems.length) || action === IObservable.ACTION_ADD) {
                 if (_private.attachLoadTopTriggerToNullIfNeed(self, self._options)) {
                     // Проскроллить к первому элементу, нужно только когда перезагрузился список
-                    if (action === IObservable.ACTION_ADD) {
+                    // Если были добавлены элементы вниз, то не нужно сбрасывать флаг _needScrollToFirstItem
+                    if (action === IObservable.ACTION_ADD && newItemsIndex === 0) {
                         self._needScrollToFirstItem = false;
                     }
                 }
