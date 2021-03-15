@@ -229,7 +229,7 @@ var
                self._newItemTemplate = null;
             }
             if (self._newBackgroundStyle) {
-               self._backgrounStyle = self._newBackgroundStyle;
+               self._backgroundStyle = self._newBackgroundStyle;
                self._newBackgroundStyle = null;
             }
             if (self._newHeader) {
