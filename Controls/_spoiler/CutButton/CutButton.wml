@@ -1,0 +1,11 @@
+<div class="controls-SpoilerButton__container
+            controls-SpoilerButton__container_position-{{ _options.buttonPosition }} controls_theme-{{_options.theme}}">
+    <Controls.toggle:BigSeparator
+            attr:class="controls-SpoilerButton controls-SpoilerButton_size-{{ _options.iconSize }}"
+            iconSize="{{ _options.iconSize }}"
+            value="{{ _options.expanded }}"
+            readOnly="{{ _options.readOnly }}"
+            contrastBackground="{{ _options.contrastBackground }}"
+            on:click="_clickHandler()"
+    />
+</div>
