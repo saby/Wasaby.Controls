@@ -3583,6 +3583,9 @@ export class BaseControl<TOptions extends IBaseControlOptions = IBaseControlOpti
         if (state) {
             this.handleTriggerVisible(direction);
         }
+        if (detection.isMobilePlatform) {
+            _private.initPaging(this);
+        }
     }
 
     applyTriggerOffset(offset: {top: number, bottom: number}): void {
