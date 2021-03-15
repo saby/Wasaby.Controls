@@ -10,10 +10,6 @@
    width: 100%;
 }
 
-.controls-Cut__ellipsisWrapper_expanded {
-   margin-top: var(--height_CutButton);
-}
-
 .controls-Cut__ellipsis {
    position: absolute;
    bottom: 0;
@@ -35,6 +31,14 @@
       }
       .controls-Cut_lineHeight-@{lineHeight}_lines-@{lines}_height_theme-@{themeName} {
          height: @heightLines;
+      }
+   });
+
+   .for(length(@sizes), {
+      @lineHeight: extract(@sizes, @_i);
+      @lineHeightVariable: "line-height_@{lineHeight}_inputArea";
+      .controls-Cut__ellipsisWrapper_expanded_lineHeight-@{lineHeight}_theme-@{themeName} {
+         margin-top: @@lineHeightVariable;
       }
    });
 }
