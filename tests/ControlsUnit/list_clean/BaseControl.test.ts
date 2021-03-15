@@ -73,18 +73,15 @@ async function getCorrectBaseControlConfigAsync(cfg): Promise<object> {
 }
 
 describe('Controls/list_clean/BaseControl', () => {
-    describe('BaseControl watcher groupHistoryId', () => {
+    describe('BaseControl watcher groupHistoryId', async () => {
 
         const GROUP_HISTORY_ID_NAME: string = 'MY_NEWS';
 
-        const baseControlCfg = getCorrectBaseControlConfig({
+        const baseControlCfg = await getCorrectBaseControlConfigAsync({
             viewName: 'Controls/List/ListView',
             keyProperty: 'id',
             viewModelConstructor: ListViewModel,
-            items: new RecordSet({
-                keyProperty: 'id',
-                rawData: []
-            })
+            source: new Memory()
         });
         let baseControl;
 
