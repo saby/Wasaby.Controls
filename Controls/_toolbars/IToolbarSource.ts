@@ -17,6 +17,7 @@ export default interface IToolbarSource {
 
 /**
  * @typedef {String} Controls/_toolbars/IToolbarSource/ShowType
+ * @default MENU
  * @variant showType.MENU Элемент отображается только в меню.
  * @variant showType.MENU_TOOLBAR Элемент отображается в меню и в тулбаре.
  * @variant showType.TOOLBAR Элемент отображается только в тулбаре.
@@ -58,7 +59,7 @@ export interface IToolBarItem {
  * @property {String} [item.title] Текст элемента.
  * @property {Boolean} [item.showHeader] Определяет, будет ли отображаться шапка у выпадающего списка элемента.
  * @property {String} [item.tooltip] Текст подсказки, при наведении на элемент тулбара. См. {@link Controls/interface/ITooltip#tooltip подробнее}.
- * @property {Controls/_toolbars/IToolbarSource/ShowType.typedef} [item.showType] Определяет, где будет отображаться элемент. Значение берется из утилиты {@link Controls/Utils/Toolbar}.@default MENU
+ * @property {Controls/_toolbars/IToolbarSource/ShowType.typedef} [item.showType] Определяет, где будет отображаться элемент. Значение берется из утилиты {@link Controls/Utils/Toolbar}.
  * @property {String} [item.viewMode] Стиль отображения кнопки элемента. См. {@link Controls/buttons:Button#viewMode подробнее}.
  * @property {Controls/_toolbars/IToolbarSource/CaptionPosition.typedef} [item.captionPosition] Определяет, с какой стороны расположен текст кнопки относительно иконки.
  * @property {String} [item.buttonStyle] Стиль отображения кнопки. См. {@link Controls/buttons:IButton#buttonStyle подробнее}.
