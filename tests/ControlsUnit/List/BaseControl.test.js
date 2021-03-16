@@ -3857,7 +3857,7 @@ define([
             });
          });
       });
-      it('can\'t start drag on readonly list', function() {
+      it('can\'t start drag on readonly list', async function() {
          let
              cfg = {
                 viewName: 'Controls/List/ListView',
@@ -3885,14 +3885,15 @@ define([
                 },
                 readOnly: true,
              },
-             ctrl = new lists.BaseControl();
+             ctrl;
+
+         ctrl = await correctCreateBaseControlAsync(cfg);
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, {key: 1}, {target: { closest: () => null }, nativeEvent: {button: 0}});
          assert.isNull(ctrl._draggingItem);
       });
-      it('can\'t start drag if canStartDragNDrop return false', function () {
+      it('can\'t start drag if canStartDragNDrop return false', async function () {
          let
             cfg = {
                viewName: 'Controls/List/ListView',
@@ -3922,9 +3923,9 @@ define([
                   return false;
                }
             },
-            ctrl = new lists.BaseControl();
+            ctrl;
+         ctrl = await correctCreateBaseControlAsync(cfg);
          ctrl.saveOptions(cfg);
-         ctrl._beforeMount(cfg);
          ctrl.itemsDragNDrop = true;
          ctrl._itemMouseDown({}, { key: 1 }, { target: { closest: () => null }, nativeEvent: { button: 0 } });
          assert.isNull(ctrl._draggingItem);
@@ -4173,10 +4174,11 @@ define([
          };
          var
             dragEnded,
-            ctrl = new lists.BaseControl();
+            ctrl;
 
-         ctrl.saveOptions(cfg);
+         ctrl = await correctCreateBaseControlAsync(cfg);
          await ctrl._beforeMount(cfg);
+         ctrl.saveOptions(cfg);
 
          ctrl._isMounted = true;
          ctrl._scrollTop = 0;
@@ -6573,6 +6575,10 @@ define([
 
             lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [1], 0, [], 0);
             assert.isTrue(control._attachLoadTopTriggerToNull);
+
+             control._attachLoadTopTriggerToNull = false;
+             lists.BaseControl._private.onCollectionChanged(control, {}, 'collectionChanged', 'rs', [], 0, [1], 0);
+             assert.isTrue(control._attachLoadTopTriggerToNull);
           });
        });
 
@@ -8481,6 +8487,31 @@ define([
 
                assert.isFalse(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
                assert.isTrue(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
+            });
+
+            it('not set new marked key, when load items', () => {
+               const sourceController = {
+                  isLoading: () => true,
+                  getState: () => {
+                     return {
+                        source: {}
+                     };
+                  },
+                  getItems: () => new collection.RecordSet({
+                     rawData: data,
+                     keyProperty: 'id'
+                  }),
+                  setDataLoadCallback: () => null
+               };
+               const newCfg = {
+                  ...cfg,
+                  markedKey: 2,
+                  sourceController
+               };
+               baseControl._beforeUpdate(newCfg);
+
+               assert.isTrue(baseControl.getViewModel().getItemBySourceKey(1).isMarked());
+               assert.isFalse(baseControl.getViewModel().getItemBySourceKey(2).isMarked());
             });
          });
       });

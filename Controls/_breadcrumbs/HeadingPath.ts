@@ -32,7 +32,6 @@ const SIZES = {
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
- * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @public
@@ -47,7 +46,6 @@ const SIZES = {
  * @class Controls/_breadcrumbs/HeadingPath
  * @extends UI/Base:Control
  * @mixes Controls/_breadcrumbs/interface/IBreadCrumbs
- * @mixes Controls/interface/IHighlighter
  * @mixes Controls/_interface/IFontColorStyle
  * @mixes Controls/_interface/IFontSize
  * @public

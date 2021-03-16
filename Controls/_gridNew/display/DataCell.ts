@@ -61,11 +61,29 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             if (this.isEditing()) {
                 classes += ` controls-Grid__row-cell_single-cell_editing_theme-${theme}`;
             } else {
-                if (this.getColumnConfig().editable !== false && tmplIsEditable !== false) {
+                if (this.config.editable !== false && tmplIsEditable !== false) {
                     classes += ` controls-Grid__row-cell_single-cell_editable_theme-${theme}`;
                 } else {
                     classes += ` js-controls-ListView__notEditable controls-Grid__row-cell_single-cell_not-editable_theme-${theme}`;
                 }
+            }
+        }
+
+        return classes;
+    }
+
+    getWrapperClasses(theme: string, backgroundColorStyle: string, style: string = 'default', templateHighlightOnHover: boolean): string {
+        let classes = super.getWrapperClasses(theme, backgroundColorStyle, style, templateHighlightOnHover);
+
+        // нужен shouldDisplayMarker именно для всего элемента, т.к. эти стили навешиваются на все ячейки для текста
+        if (this.getOwner().shouldDisplayMarker()) {
+            classes += ` controls-Grid__row-cell_selected controls-Grid__row-cell_selected-${style}_theme-${theme}`;
+
+            if (this.isFirstColumn()) {
+                classes += ` controls-Grid__row-cell_selected__first-${style}_theme-${theme}`;
+            }
+            if (this.isLastColumn()) {
+                classes += ` controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-${style}_theme-${theme}`;
             }
         }
 
@@ -81,10 +99,20 @@ export default class DataCell<T extends Model, TOwner extends DataRow<T>> extend
             return itemModel[this.getDisplayProperty()];
         }
     }
+
+    getTooltip(): string {
+        const itemModel = this._$owner.getContents();
+
+        if (itemModel instanceof Record) {
+            return itemModel.get(this.getTooltipProperty());
+        } else {
+            return itemModel[this.getTooltipProperty()];
+        }
+    }
     // endregion
 
     // region Аспект "Маркер"
-    shouldDisplayMarker(marker: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
+    shouldDisplayMarker(marker?: boolean, markerPosition: 'left' | 'right' = 'left'): boolean {
         if (markerPosition === 'right') {
             return this._$owner.shouldDisplayMarker(marker) && this.isLastColumn();
         } else {

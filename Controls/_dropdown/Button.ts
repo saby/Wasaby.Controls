@@ -1,4 +1,5 @@
-import {Control, TemplateFunction} from 'UI/Base';
+import {TemplateFunction} from 'UI/Base';
+import {TouchDetect} from 'Env/Touch';
 import template = require('wml!Controls/_dropdown/Button/Button');
 import {cssStyleGeneration} from 'Controls/_dropdown/Button/MenuUtils';
 import {EventUtils} from 'UI/Events';
@@ -185,7 +186,9 @@ export default class Button extends BaseDropdown {
    }
     _handleMouseEnter(event: SyntheticEvent<MouseEvent>): void {
       super._handleMouseEnter(event);
-      if (this._options.menuPopupTrigger === 'hover') {
+      const isOpenMenuPopup = !(event.nativeEvent.relatedTarget
+          && event.nativeEvent.relatedTarget.closest('.controls-Menu__popup'));
+      if (this._options.menuPopupTrigger === 'hover' && isOpenMenuPopup) {
          this.openMenu();
       }
     }
@@ -235,6 +238,12 @@ export default class Button extends BaseDropdown {
 
    protected _deactivated(): void {
       this.closeMenu();
+   }
+
+   protected _afterMount(options: IButtonOptions): void {
+      if (options.lazyItemsLoading && TouchDetect.getInstance().isTouch() && this._options.preloadItemsOnTouch) {
+         this._controller.tryPreloadItems();
+      }
    }
 
    static getDefaultOptions(): object {
@@ -316,7 +325,7 @@ export default class Button extends BaseDropdown {
  * @name Controls/_dropdown/Button#menuPopupTrigger
  * @cfg {TMenuPopupTrigger} Название события, которое запускает открытие или закрытие меню.
  * @default click
- * @demo Controls-demo/dropdown_new/Button/PopupTrigger/Index
+ * @demo Controls-demo/dropdown_new/Button/MenuPopupTrigger/Index
  */
 
 /**

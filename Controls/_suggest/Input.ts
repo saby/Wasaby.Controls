@@ -26,6 +26,7 @@ import 'css!Controls/suggest';
  * @mixes Controls/_interface/IValidationStatus
  * @mixes Controls/_input/interface/ITag
  * @mixes Controls/_input/interface/IBase
+ * @mixes Controls/interface:IInputPlaceholder
  * @mixes Controls/_input/interface/IText
  * @mixes Controls/_input/interface/IValue
  *
@@ -95,12 +96,14 @@ var Suggest = Control.extend({
       this._notify('valueChanged', [item.get(this._options.displayProperty || '')]);
    },
 
+   _clearMousedown(event) {
+      event.stopPropagation();
+   },
+
    _clearClick: function() {
       /* move focus to input after clear text, because focus will be lost after hiding cross  */
       this.activate({enableScreenKeyboard: true});
-      if (!this._options.autoDropDown) {
-         this._suggestState = false;
-      }
+      this._suggestState = this._options.autoDropDown;
       this._notify('valueChanged', ['']);
    },
 

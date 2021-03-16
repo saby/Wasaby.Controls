@@ -40,6 +40,7 @@ const SEARCH_DEPS = [
 class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     readonly '[Controls/_menu/interface/IMenuPopup]': boolean;
     protected _template: TemplateFunction = PopupTemplate;
+    protected _headerVisible: boolean = true;
     protected _headerTemplate: TemplateFunction;
     protected _headerTheme: string;
     protected _headingCaption: string;
@@ -56,6 +57,7 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
     protected _beforeMount(options: IMenuPopupOptions): Promise<void>|void {
         this._headerTheme = this._getTheme();
         this._dataLoadCallback = this._dataLoadCallback.bind(this, options);
+        this._dataLoadErrback = this._dataLoadErrback.bind(this, options);
 
         this._setCloseButtonVisibility(options);
         this._prepareHeaderConfig(options);
@@ -170,6 +172,15 @@ class Popup extends Control<IMenuPopupOptions> implements IMenuPopup {
         }
         if (options.dataLoadCallback) {
             options.dataLoadCallback(items);
+        }
+    }
+
+    protected _dataLoadErrback(options: IMenuPopupOptions, error: Error): void {
+        this._headerVisible = false;
+        this._headingCaption = null;
+        this._headerTemplate = null;
+        if (options.dataLoadErrback) {
+            options.dataLoadErrback(error);
         }
     }
 

@@ -121,7 +121,6 @@ define([
             };
 
             component._beforeUnmount();
-            assert.isUndefined(component._observeHandler);
             assert.isUndefined(component._observer);
             sandbox.restore();
          });
@@ -144,6 +143,16 @@ define([
             component._options.mode = 'notSticky';
             component._beforeUpdate(coreMerge({ mode: 'notsticky' }, StickyHeader.getDefaultOptions(), { preferSource: true }));
             assert.isUndefined(component._observer);
+            sinon.restore();
+         });
+
+         it('should call _stickyModeChanged if mode changed', () => {
+            const component = createComponent(StickyHeader, { mode: 'stackable' });
+            const newMode = 'replaceable';
+            const stubStickyModeChanged = sinon.stub(component, '_stickyModeChanged');
+            component._beforeUpdate({ mode: newMode, ...StickyHeader.getDefaultOptions() });
+
+            sinon.assert.calledWith(stubStickyModeChanged, newMode);
             sinon.restore();
          });
       });
@@ -306,6 +315,18 @@ define([
 
             sandbox.restore();
          });
+         describe('offsetTop', function() {
+            it('should return correct top.', function () {
+               const component = createComponent(StickyHeader, {});
+               component._stickyHeadersHeight = {
+                  top: 15,
+                  bottom: 0
+               };
+
+               component._model = {fixedPosition: 'top'};
+               assert.include(component._getStyle('topbottom', 2, undefined, -10), 'top: 5px;');
+            });
+         });
       });
 
       describe('set top', function() {
@@ -366,6 +387,17 @@ define([
             component.bottom = 20;
             sinon.assert.notCalled(component._forceUpdate);
             sinon.restore();
+         });
+      });
+
+      describe('height', function() {
+         it('should should take into account offsetTop option', function() {
+            const component = createComponent(StickyHeader, {offsetTop: 10});
+            component._container = {
+               closest: () => false,
+               offsetHeight: 10
+            };
+            assert.strictEqual(component.height, 20);
          });
       });
 

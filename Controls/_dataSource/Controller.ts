@@ -134,6 +134,7 @@ export default class Controller extends mixin<
 
     private _expandedItems: TKey[];
     private _deepReload: boolean;
+    private _collapsedGroups: TArrayGroupId;
 
     constructor(cfg: IControllerOptions) {
         super();
@@ -200,6 +201,19 @@ export default class Controller extends mixin<
         return this._items;
     }
 
+    getKeyProperty(): string {
+        const options = this._options;
+        let keyProperty;
+
+        if (options.keyProperty) {
+            keyProperty = this._options.keyProperty;
+        } else if (options.source && (options.source as IData).getKeyProperty) {
+            keyProperty = (options.source as IData).getKeyProperty();
+        }
+
+        return keyProperty;
+    }
+
     getLoadError(): Error {
         return this._loadError;
     }
@@ -228,7 +242,6 @@ export default class Controller extends mixin<
         }
     }
 
-    // FIXME, если root задаётся на списке, а не на data(browser)
     setRoot(key: TKey): void {
         this._setRoot(key);
         this._notify('rootChanged', key);
@@ -291,12 +304,15 @@ export default class Controller extends mixin<
             this.setNavigation(newOptions.navigation);
         }
 
+        if (newOptions.groupHistoryId !== this._options.groupHistoryId && !newOptions.groupHistoryId) {
+            this._collapsedGroups = null;
+        }
+
         const isChanged =
             isFilterChanged ||
             isNavigationChanged ||
             isSourceChanged ||
-            newOptions.sorting !== this._options.sorting ||
-            newOptions.keyProperty !== this._options.keyProperty ||
+            !isEqual(newOptions.sorting, this._options.sorting) ||
             (this._parentProperty && rootChanged);
 
         this._options = newOptions;
@@ -307,7 +323,7 @@ export default class Controller extends mixin<
         const source = Controller._getSource(this._options.source);
 
         return {
-            keyProperty: this._options.keyProperty,
+            keyProperty: this.getKeyProperty(),
             source,
 
             filter: this._filter,
@@ -325,6 +341,10 @@ export default class Controller extends mixin<
         };
     }
 
+    getCollapsedGroups(): TArrayGroupId {
+        return this._collapsedGroups;
+    }
+
     // FIXME для работы дерева без bind'a опции expandedItems
     setExpandedItems(expandedItems: TKey[]): void {
         this._expandedItems = expandedItems;
@@ -332,11 +352,6 @@ export default class Controller extends mixin<
 
     getExpandedItems(): TKey[] {
         return this._expandedItems;
-    }
-
-    // FIXME для поддержки nodeSourceControllers в дереве
-    calculateState(items: RecordSet, direction?: Direction, key: TKey = this._root): void {
-        this._updateQueryPropertiesByItems(items, key, undefined, direction);
     }
 
     hasMoreData(direction: Direction, key: TKey = this._root): boolean {
@@ -584,7 +599,7 @@ export default class Controller extends mixin<
         if (this._hasNavigationBySource()) {
             params = this._prepareQueryParams(params, key, navigationSourceConfig, direction);
         }
-        return crudWrapper.query(params, this._options.keyProperty);
+        return crudWrapper.query(params, this.getKeyProperty());
     }
 
     private _getFilterHierarchy(
@@ -631,7 +646,7 @@ export default class Controller extends mixin<
         filter: QueryWhereExpression<unknown>,
         key: TKey
     ): Promise<QueryWhereExpression<unknown>> {
-        return Controller._getFilterForCollapsedGroups(filter, this._options)
+        return this._getFilterForCollapsedGroups(filter, this._options)
             .then((preparedFilter: QueryWhereExpression<unknown>) => {
                 return this._getFilterHierarchy(preparedFilter, this._options, key);
             });
@@ -783,7 +798,7 @@ export default class Controller extends mixin<
         this._dataLoadCallbackFromOptions = dataLoadCallback;
     }
 
-    private static _getFilterForCollapsedGroups(
+    private _getFilterForCollapsedGroups(
         initialFilter: QueryWhereExpression<unknown>,
         options: IControllerOptions
     ): Promise<QueryWhereExpression<unknown>> {
@@ -808,7 +823,8 @@ export default class Controller extends mixin<
             resultFilterPromise = Promise.resolve(getFilterWithCollapsedGroups(collapsedGroups));
         } else if (historyId) {
             resultFilterPromise = groupUtil.restoreCollapsedGroups(historyId).then(
-                (restoredCollapsedGroups?: TArrayGroupId) => getFilterWithCollapsedGroups(restoredCollapsedGroups)
+                (restoredCollapsedGroups?: TArrayGroupId) =>
+                    getFilterWithCollapsedGroups(this._collapsedGroups = restoredCollapsedGroups)
             );
         } else {
             resultFilterPromise = Promise.resolve(initialFilter);

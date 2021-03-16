@@ -43,7 +43,7 @@ const getPropValue = Utils.object.getPropertyValue.bind(Utils);
  * @implements Controls/_menu/interface/IMenuBase
  * @implements Controls/_interface/IFilterChanged
  * @implements Controls/_interface/ISingleSelectable
- * @implements Controls/_interface/IInputPlaceholder
+ * @implements Controls/interface:IInputPlaceholder
  * @implements Controls/_input/interface/ITag
  * @implements Controls/_interface/IValidationStatus
  * @implements Controls/_interface/IFontSize

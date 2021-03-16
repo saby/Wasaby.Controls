@@ -99,7 +99,7 @@ export type StrategyConstructor<
    T extends CollectionItem<S> = CollectionItem<S>
    > = new() => F;
 
-interface ISessionItems<T> extends Array<T> {
+export interface ISessionItems<T> extends Array<T> {
     properties?: object;
 }
 
@@ -120,13 +120,14 @@ export interface IOptions<S, T> extends IAbstractOptions<S> {
     displayProperty?: string;
     itemTemplateProperty?: string;
     multiSelectVisibility?: string;
-    multiSelectPosition?: 'default'|'custom';
+    multiSelectPosition?: 'default' | 'custom';
     itemPadding?: IItemPadding;
     emptyTemplate?: TemplateFunction;
     rowSeparatorSize?: string;
     stickyMarkedItem?: boolean;
     stickyHeader?: boolean;
     theme?: string;
+    style?: string;
     backgroundStyle?: string;
     hoverBackgroundStyle?: string;
     collapsedGroups?: TArrayGroupKey;
@@ -866,8 +867,8 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
         this._$theme = options.theme;
 
-        if (options.hoverBackgroundStyle) {
-            this._$hoverBackgroundStyle = options.hoverBackgroundStyle;
+        if (!options.hoverBackgroundStyle && options.style) {
+            this._$hoverBackgroundStyle = options.style;
         }
 
         this._$collapsedGroups = options.collapsedGroups;
@@ -2142,7 +2143,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             items,
             index
         );
-        this._handleAfterCollectionChange();
+        this._handleAfterCollectionChange(items);
 
         if (VERSION_UPDATE_ITEM_PROPERTIES.indexOf(properties as unknown as string) >= 0) {
             this._nextVersion();
@@ -2234,6 +2235,13 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
 
     getItemTemplateProperty(): string {
         return this._$itemTemplateProperty;
+    }
+
+    setDisplayProperty(displayProperty: string): void {
+        if (this._$displayProperty !== displayProperty) {
+            this._$displayProperty = displayProperty;
+            this._nextVersion();
+        }
     }
 
     getDisplayProperty(): string {
@@ -3074,7 +3082,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
             options.owner = this;
             options.multiSelectVisibility = this._$multiSelectVisibility;
             options.multiSelectAccessibilityProperty = this._$multiSelectAccessibilityProperty;
-            options.backgroundStyle = this._$backgroundStyle;            
+            options.backgroundStyle = this._$backgroundStyle;
             options.theme = this._$theme;
             options.leftPadding = this._$leftPadding;
             options.rightPadding = this._$rightPadding;
@@ -3698,7 +3706,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                     index
                 );
             });
-            this._handleAfterCollectionChange();
+            this._handleAfterCollectionChange(items);
         }
     }
 
@@ -3733,7 +3741,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
                 );
             }
         );
-        this._handleAfterCollectionChange();
+        this._handleAfterCollectionChange(changedItems);
     }
 
     /**
@@ -3836,7 +3844,7 @@ export default class Collection<S extends EntityModel = EntityModel, T extends C
         this._notify('onAfterCollectionChange');
     }
 
-    protected _handleAfterCollectionChange(): void {
+    protected _handleAfterCollectionChange(changedItems: ISessionItems<T> = []): void {
         this._notifyAfterCollectionChange();
         this._updateItemsMultiSelectVisibility(this._$multiSelectVisibility);
     }

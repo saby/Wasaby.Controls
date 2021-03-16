@@ -1,5 +1,5 @@
 <div class="controlsDemo__wrapper controlsDemo_fixedWidth300">
-    <div class="wrap-container">
+    <div class="wrap-container demo-ShadowVisibility__auto">
         <div class="options-value">bottomShadowVisibility = auto</div>
         <Controls.scroll:Container attr:class="controlsDemo__height200"
                                    bottomShadowVisibility="auto">
@@ -17,7 +17,7 @@
             </div>
         </Controls.scroll:Container>
     </div>
-    <div class="wrap-container">
+    <div class="wrap-container demo-ShadowVisibility__visible">
         <div class="options-value">bottomShadowVisibility = visible</div>
         <Controls.scroll:Container attr:class="controlsDemo__height200"
                                    bottomShadowVisibility="visible">
@@ -35,7 +35,7 @@
             </div>
         </Controls.scroll:Container>
     </div>
-    <div class="wrap-container">
+    <div class="wrap-container demo-ShadowVisibility__hidden">
         <div class="options-value">bottomShadowVisibility = hidden</div>
         <Controls.scroll:Container attr:class="controlsDemo__height200"
                                    bottomShadowVisibility="hidden">

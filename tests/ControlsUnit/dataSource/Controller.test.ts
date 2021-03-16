@@ -150,14 +150,19 @@ describe('Controls/dataSource:SourceController', () => {
             controllerState = controller.getState();
             ok(controllerState.parentProperty === parentProperty);
             ok(controllerState.root === root);
+            ok(!controllerState.keyProperty);
 
             hierarchyOptions = {
-                parentProperty
+                parentProperty,
+                source: new Memory({
+                    keyProperty: 'testKeyProperty'
+                })
             };
             controller = new NewSourceController(hierarchyOptions);
             controllerState = controller.getState();
             ok(controllerState.parentProperty === parentProperty);
             ok(controllerState.root === null);
+            ok(controllerState.keyProperty === 'testKeyProperty');
         });
     });
 
@@ -254,6 +259,14 @@ describe('Controls/dataSource:SourceController', () => {
 
             const loadedItems = await controller.reload();
             ok(loadedItems.getCount() === 4);
+            sinonSandbox.restore();
+
+            sinonSandbox.replace(groupUtil, 'restoreCollapsedGroups', () => {
+                return Promise.resolve(['testCollapsedGroup1', 'testCollapsedGroup2']);
+            });
+            await controller.reload();
+            deepStrictEqual(controller.getCollapsedGroups(), ['testCollapsedGroup1', 'testCollapsedGroup2']);
+
             sinonSandbox.restore();
         });
 
@@ -479,6 +492,22 @@ describe('Controls/dataSource:SourceController', () => {
             await controller.reload();
             ok(isNavigationParamsChangedCallbackCalled);
         });
+
+        it('updateOptions with new sorting',  async () => {
+            let controllerOptions = getControllerOptions();
+            controllerOptions.sorting = [{testField: 'DESC'}];
+            const controller = getController(controllerOptions);
+
+            // the same sorting
+            controllerOptions = {...controllerOptions};
+            controllerOptions.sorting = [{testField: 'DESC'}];
+            ok(!controller.updateOptions(controllerOptions));
+
+            // another sorting
+            controllerOptions = {...controllerOptions};
+            controllerOptions.sorting = [{testField: 'ASC'}];
+            ok(controller.updateOptions(controllerOptions));
+        });
     });
 
     describe('reload', () => {
@@ -542,6 +571,29 @@ describe('Controls/dataSource:SourceController', () => {
             });
             controller.setItems(newControllerItems);
             ok(hasMoreResult);
+        });
+
+    });
+
+    describe('getKeyProperty', () => {
+
+        it('keyProperty in options', () => {
+            const options = {
+                source: new Memory({
+                    keyProperty: 'testKeyProperty'
+                })
+            };
+            const sourceController = new NewSourceController(options);
+            ok(sourceController.getKeyProperty() === 'testKeyProperty');
+        });
+
+        it('keyProperty from source', () => {
+            const options = {
+                source: new Memory(),
+                keyProperty: 'testKeyProperty'
+            };
+            const sourceController = new NewSourceController(options);
+            ok(sourceController.getKeyProperty() === 'testKeyProperty');
         });
 
     });
