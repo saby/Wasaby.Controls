@@ -129,7 +129,7 @@ export default class DateRange extends Control<IControlOptions> {
         const newDate = new this._options.dateConstructor(year, month);
         this._notifyPositionChanged(newDate);
         if (newDate.getFullYear() !== this._monthsPosition.getFullYear()) {
-            this._monthsPosition = new Date(newDate.getFullYear(), 0);
+            this._monthsPosition = new this._options.dateConstructor(newDate.getFullYear(), 0);
         }
         this._markedKey = this._dateToId(newDate);
         e.stopPropagation();
