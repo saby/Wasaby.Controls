@@ -98,8 +98,6 @@
                                     mode="{{ (item || itemData).getStickyHeaderMode() }}"
                                     shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                     backgroundStyle="{{ backgroundStyle }}"
-                                    style="{{style}}"
-                                    theme="{{theme}}"
                                     fixedZIndex="{{ column.getZIndex()}}"
                                     attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
                                     attr:style="{{ column.getWrapperStyles(containerSize) }}">

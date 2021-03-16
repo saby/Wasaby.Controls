@@ -83,8 +83,6 @@
         <Controls.scroll:StickyHeader position="{{ (item || itemData).getStickyHeaderPosition() }}"
                                       mode="{{ (item || itemData).getStickyHeaderMode() }}"
                                       backgroundStyle="{{backgroundStyle}}"
-                                      style="{{style}}"
-                                      theme="{{theme}}"
                                       shadowVisibility="{{column.shadowVisibility || 'lastVisible'}}"
                                       fixedZIndex="{{ column.getZIndex()}}"
                                       attr:class="{{ column.getWrapperClasses(theme, backgroundColorStyle, style, highlightOnHover) }}"
