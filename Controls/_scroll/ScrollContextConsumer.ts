@@ -62,4 +62,10 @@ export default class ScrollContextConsumer extends Control {
    ): ReturnType<ScrollContainer['scrollToTop']> {
       return this._children.scrollContainer.scrollToTop(...args);
    }
+
+   getHeadersHeight(
+      ...args: Parameters<ScrollContainer['getHeadersHeight']>
+   ): ReturnType<ScrollContainer['getHeadersHeight']> {
+      return this._children.scrollContainer.getHeadersHeight(...args);
+   }
 }
