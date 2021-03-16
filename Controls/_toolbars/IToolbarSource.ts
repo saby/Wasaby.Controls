@@ -17,7 +17,7 @@ export default interface IToolbarSource {
 
 /**
  * @typedef {String} Controls/_toolbars/IToolbarSource/ShowType
- * @default MENU
+ * @default 0
  * @variant showType.MENU Элемент отображается только в меню.
  * @variant showType.MENU_TOOLBAR Элемент отображается в меню и в тулбаре.
  * @variant showType.TOOLBAR Элемент отображается только в тулбаре.
