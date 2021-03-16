@@ -600,6 +600,10 @@ export default class Container extends ContainerBase<IContainerOptions> implemen
     getHeadersHeight(position: POSITION, type: TYPE_FIXED_HEADERS = TYPE_FIXED_HEADERS.initialFixed): number {
         return this._stickyHeaderController.getHeadersHeight(position, type);
     }
+    // FIXME: костыль для input:Area, чтобы она напрямую в детей не лазала
+    getScrollTop(): number {
+        return this._children.content.scrollTop;
+    }
 
     static _isCssShadowsSupported(): boolean {
         // Ie и Edge неправильно позиционируют фон со стилями
